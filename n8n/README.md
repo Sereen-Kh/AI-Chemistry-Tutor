@@ -1,4 +1,3 @@
-انا فاطمة بحاول اتواصل مع حد من التيم لان الواتس فيه مشكلة انه عمال يتحظر بدون اي سبب فاحتاج من حد يتواصل معايا علي رقمي التاني 201000327015 او علي ايميلي 
 # n8n — Workflow Automation
 
 This folder contains all n8n workflow configurations for the AI Chemistry Tutor project.

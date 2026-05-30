@@ -1,13 +1,53 @@
-from sqlalchemy import Column, Integer, String, DateTime
-from sqlalchemy.sql import func
+"""User and profile model."""
+
+from datetime import date
+from typing import Optional
+
+from sqlalchemy import Boolean, Date, Integer, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from app.database import Base
+from app.models.mixins import TimestampMixin
 
 
-class User(Base):
+class User(Base, TimestampMixin):
+    """Application user with learning preferences stored on the user row."""
+
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, nullable=False)
-    email = Column(String, unique=True, index=True, nullable=False)
-    hashed_password = Column(String, nullable=False)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    first_name: Mapped[str] = mapped_column(String(100), nullable=False)
+    last_name: Mapped[str] = mapped_column(String(100), nullable=False, default="")
+    email: Mapped[str] = mapped_column(String(255), unique=True, index=True, nullable=False)
+    phone: Mapped[Optional[str]] = mapped_column(String(30), nullable=True)
+    hashed_password: Mapped[str] = mapped_column(String, nullable=False)
+    email_verified: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+
+    grade: Mapped[str] = mapped_column(String(50), default="grade_9", nullable=False)
+    subject: Mapped[str] = mapped_column(String(50), default="chemistry", nullable=False)
+    teaching_style: Mapped[str] = mapped_column(String(50), default="real-life", nullable=False)
+    answer_format: Mapped[str] = mapped_column(String(50), default="text", nullable=False)
+    language: Mapped[str] = mapped_column(String(8), default="ar", nullable=False)
+
+    xp: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    level: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+    streak_days: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    last_active_date: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
+
+    interests = relationship("UserInterest", back_populates="user", cascade="all, delete-orphan")
+    chat_sessions = relationship("ChatSession", back_populates="user", cascade="all, delete-orphan")
+    lesson_progress = relationship("LessonProgress", back_populates="user", cascade="all, delete-orphan")
+    quiz_attempts = relationship("QuizAttempt", back_populates="user", cascade="all, delete-orphan")
+    flashcard_progress = relationship(
+        "FlashcardProgress", back_populates="user", cascade="all, delete-orphan"
+    )
+    user_progress = relationship("UserProgress", back_populates="user", cascade="all, delete-orphan")
+    study_plans = relationship("StudyPlan", back_populates="user", cascade="all, delete-orphan")
+    homework_items = relationship("Homework", back_populates="user", cascade="all, delete-orphan")
+    achievements = relationship("Achievement", back_populates="user", cascade="all, delete-orphan")
+    subscriptions = relationship("Subscription", back_populates="user", cascade="all, delete-orphan")
+    device_tokens = relationship("DeviceToken", back_populates="user", cascade="all, delete-orphan")
+
+    @property
+    def name(self) -> str:
+        return f"{self.first_name} {self.last_name}".strip()

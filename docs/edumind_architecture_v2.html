@@ -1,0 +1,100 @@
+
+<h2 class="sr-only">EduMind AI Chemistry app — full product architecture: features, tasks, 3-month timeline, tech stack, folder structure, API design, and AI tutor system</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-size:13px;color:var(--color-text-primary)}
+.tnav{display:flex;gap:2px;flex-wrap:wrap;border-bottom:.5px solid var(--color-border-tertiary);margin-bottom:16px}
+.tb{padding:7px 11px;font-size:11px;cursor:pointer;border:.5px solid transparent;border-radius:6px 6px 0 0;color:var(--color-text-secondary);background:none;margin-bottom:-.5px;white-space:nowrap;font-family:inherit}
+.tb:hover{color:var(--color-text-primary);background:var(--color-background-secondary)}
+.tb.on{color:var(--color-text-primary);background:var(--color-background-primary);border-color:var(--color-border-tertiary);border-bottom-color:var(--color-background-primary);font-weight:500}
+.pn{display:none}.pn.on{display:block}
+.sec{font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.6px;margin:16px 0 8px}
+.card{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:12px 14px;margin-bottom:8px}
+.card-t{font-size:13px;font-weight:500;margin-bottom:4px}
+.card-b{font-size:12px;color:var(--color-text-secondary);line-height:1.65}
+.bx{display:inline-block;font-size:10px;font-weight:500;padding:2px 7px;border-radius:4px;margin:2px 2px 2px 0}
+.bi{background:#EEEDFE;color:#534AB7}.bb{background:#E6F1FB;color:#185FA5}.bg{background:#E1F5EE;color:#0F6E56}
+.ba{background:#FAEEDA;color:#854F0B}.br{background:#FAECE7;color:#993C1D}.bs{background:var(--color-background-secondary);color:var(--color-text-secondary)}
+.fb{border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:10px;overflow:hidden}
+.fh{padding:11px 14px;cursor:pointer;display:flex;align-items:center;gap:9px;background:var(--color-background-secondary)}
+.fh:hover{background:var(--color-background-primary)}
+.fn{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0}
+.ft{font-size:13px;font-weight:500;flex:1}
+.fm{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:500;flex-shrink:0}
+.fa{font-size:10px;color:var(--color-text-tertiary);transition:transform .15s;flex-shrink:0}
+.fa.op{transform:rotate(90deg)}
+.fd{display:none;border-top:.5px solid var(--color-border-tertiary)}
+.fd.op{display:block}
+.tg{padding:10px 14px;border-bottom:.5px solid var(--color-border-tertiary)}
+.tg:last-child{border-bottom:none}
+.tgl{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.tr{display:flex;gap:8px;padding:6px 0;border-bottom:.5px solid var(--color-border-tertiary);align-items:flex-start}
+.tr:last-child{border-bottom:none}
+.tid{font-size:10px;font-weight:500;color:var(--color-text-tertiary);min-width:50px;padding-top:2px;font-family:var(--font-mono)}
+.tb2{flex:1}.tt{font-size:12px;font-weight:500;margin-bottom:2px}
+.td{font-size:11px;color:var(--color-text-secondary);line-height:1.55;margin-bottom:2px}
+.tdep{font-size:10px;color:var(--color-text-tertiary)}
+.te{font-size:10px;font-weight:500;color:var(--color-text-tertiary);flex-shrink:0;padding-top:2px}
+.mb{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:13px 15px;margin-bottom:10px;border:.5px solid var(--color-border-tertiary)}
+.mh{display:flex;align-items:center;gap:9px;margin-bottom:11px}
+.mn{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;flex-shrink:0}
+.mi .mt{font-size:13px;font-weight:500}.mi .ms{font-size:11px;color:var(--color-text-secondary);margin-top:1px}
+.wr{display:grid;grid-template-columns:62px 1fr;gap:9px;margin-bottom:7px;align-items:start}
+.wk{font-size:10px;font-weight:500;padding:3px 7px;border-radius:4px;text-align:center;margin-top:1px;white-space:nowrap}
+.w1{background:#1D9E75;color:#fff}.w2{background:#378ADD;color:#fff}.w3{background:#7F77DD;color:#fff}
+.wc{background:var(--color-background-primary);border-radius:6px;padding:8px 11px;font-size:11px;color:var(--color-text-secondary);line-height:1.6;border:.5px solid var(--color-border-tertiary)}
+.wc strong{color:var(--color-text-primary);font-weight:500}
+.ml{display:flex;align-items:center;gap:6px;padding:7px 10px;background:var(--color-background-primary);border-radius:6px;border:.5px solid var(--color-border-secondary);font-size:11px;margin-top:8px}
+.mld{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.sc{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:11px 12px}
+.sl{font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
+.sn{font-size:13px;font-weight:500;margin-bottom:3px}
+.sw{font-size:11px;color:var(--color-text-secondary);line-height:1.5}
+.tree{font-family:var(--font-mono);font-size:11px;line-height:2;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:11px 13px;border:.5px solid var(--color-border-tertiary)}
+.dir{color:var(--color-text-info);font-weight:500}.file{color:var(--color-text-primary)}.cmt{color:var(--color-text-tertiary)}
+.ar{display:flex;align-items:flex-start;gap:9px;padding:7px 0;border-bottom:.5px solid var(--color-border-tertiary)}
+.ar:last-child{border-bottom:none}
+.mt2{font-size:10px;font-weight:500;padding:2px 6px;border-radius:4px;min-width:38px;text-align:center;flex-shrink:0;margin-top:2px}
+.get{background:#E1F5EE;color:#0F6E56}.post{background:#E6F1FB;color:#185FA5}.put{background:#FAEEDA;color:#854F0B}.del{background:#FAECE7;color:#993C1D}
+.ap{font-family:var(--font-mono);font-size:11px;font-weight:500;color:var(--color-text-primary);margin-bottom:3px}
+.ad{font-size:11px;color:var(--color-text-secondary)}
+.at{font-size:9px;padding:1px 5px;border-radius:3px;background:var(--color-background-secondary);color:var(--color-text-tertiary);flex-shrink:0;margin-top:2px}
+.al{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:11px 13px;margin-bottom:8px}
+.alt{font-size:12px;font-weight:500;margin-bottom:4px;display:flex;align-items:center;gap:7px}
+.ald{font-size:11px;color:var(--color-text-secondary);line-height:1.6}
+.code{font-family:var(--font-mono);font-size:11px;line-height:1.7;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px;border:.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);margin-top:6px;white-space:pre-wrap;word-break:break-all}
+.kw{color:var(--color-text-info)}.str{color:var(--color-text-success)}.cm{color:var(--color-text-tertiary)}
+</style>
+
+<div style="margin-bottom:13px">
+  <div style="font-size:17px;font-weight:500;margin-bottom:3px">EduMind — product architecture</div>
+  <div style="font-size:12px;color:var(--color-text-secondary)">Flutter + FastAPI · 5 features · 3-month plan · AI tutor system</div>
+</div>
+
+<div class="tnav">
+  <button class="tb on" onclick="tab(this,'f')">Features &amp; tasks</button>
+  <button class="tb" onclick="tab(this,'t')">3-month timeline</button>
+  <button class="tb" onclick="tab(this,'s')">Tech stack</button>
+  <button class="tb" onclick="tab(this,'d')">Folder structure</button>
+  <button class="tb" onclick="tab(this,'a')">API design</button>
+  <button class="tb" onclick="tab(this,'ai')">AI tutor system</button>
+</div>
+
+<!-- ── FEATURES ── -->
+<div class="pn on" id="pn-f">
+
+<div class="fb">
+  <div class="fh" onclick="tog(this)">
+    <div class="fn" style="background:#E1F5EE;color:#0F6E56">F1</div>
+    <div class="ft">Auth, onboarding &amp; student profile</div>
+    <span class="fm" style="background:#E1F5EE;color:#0F6E56">Month 1 · week 1–2</span>
+    <span class="fa">▶</span>
+  </div>
+  <div class="fd">
+    <div class="tg">
+      <div class="tgl"><span class="bx bi">INIT</span> Infrastructure</div>
+      <div class="tr"><span class="tid">F1-I-01</span><div class="tb2"><div class="tt">GitHub monorepo</div><div class="td">/backend /frontend /n8n /data /docs. Branch protection on main. PR template. .gitignore Python + Flutter.</div><div class="tdep">Dep: none · 0.5d</div></div></div>
+      <div class="tr"><span class="tid">F1-I-02</span><div class="tb2"><div class="tt">Docker Compose stack</div><div class="td">Services: FastAPI (uvicorn), PostgreSQL 15 + pgvector extension, Redis 7, n8n. Single <code>docker compose up</code>. Health checks on all services.</div><div class="tdep">Dep: F1-I-01 · 1d</div></div></div>
+      <div class="tr"><span class="tid">F1-I-03</span><div class="tb2"><div class="tt">FastAPI boilerplate</div><div class="td">fastapi, uvicorn[standard], sqlmodel, alembic, python-jose[cryptography], passlib[bcrypt], pydantic-settings. app/main.py, app/core/config.py, /health endpoint.</div><div class="tdep">Dep: F1-I-02 · 0.5d</div></div></div>
+      <div class="tr"><span class="tid">F1-I-04</span><div class="tb2"><div class="tt">ERD &amp; first migration</div><div class="td">Full schema covering all Phase 1 tables: users, student_profiles, chapters, lessons, interests. Team sign-off before any model code.

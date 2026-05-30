@@ -1,0 +1,731 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);font-size:13px;color:var(--color-text-primary)}
+
+/* NAV */
+.top-nav{display:flex;gap:2px;flex-wrap:wrap;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:16px}
+.tn{padding:7px 11px;font-size:11px;cursor:pointer;border:0.5px solid transparent;border-radius:6px 6px 0 0;color:var(--color-text-secondary);background:none;margin-bottom:-0.5px;white-space:nowrap}
+.tn:hover{color:var(--color-text-primary);background:var(--color-background-secondary)}
+.tn.on{color:var(--color-text-primary);background:var(--color-background-primary);border-color:var(--color-border-tertiary);border-bottom-color:var(--color-background-primary);font-weight:500}
+.pane{display:none}.pane.on{display:block}
+
+/* SHARED */
+.sec{font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.6px;margin:16px 0 8px}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:12px 15px;margin-bottom:8px}
+.card-t{font-size:13px;font-weight:500;margin-bottom:4px}
+.card-b{font-size:12px;color:var(--color-text-secondary);line-height:1.65}
+.badge{display:inline-block;font-size:10px;font-weight:500;padding:2px 7px;border-radius:4px;margin:2px 2px 2px 0}
+.b-init{background:#EEEDFE;color:#534AB7}
+.b-be{background:#E1F5EE;color:#0F6E56}
+.b-fl{background:#E6F1FB;color:#185FA5}
+.b-dep{background:var(--color-background-secondary);color:var(--color-text-secondary)}
+.b-must{background:#FAECE7;color:#993C1D}
+.b-nice{background:#FAEEDA;color:#854F0B}
+.b-done{background:#EAF3DE;color:#3B6D11}
+
+/* FEATURE BLOCKS */
+.feat-block{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:12px;overflow:hidden}
+.feat-head{padding:12px 15px;cursor:pointer;display:flex;align-items:center;gap:10px;background:var(--color-background-secondary)}
+.feat-head:hover{background:var(--color-background-primary)}
+.feat-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;flex-shrink:0}
+.feat-title{font-size:13px;font-weight:500;flex:1}
+.feat-month{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:500;flex-shrink:0}
+.feat-arrow{font-size:11px;color:var(--color-text-tertiary);transition:transform .15s;flex-shrink:0}
+.feat-arrow.open{transform:rotate(90deg)}
+.feat-body{display:none;border-top:0.5px solid var(--color-border-tertiary)}
+.feat-body.open{display:block}
+
+/* TASK GROUPS */
+.task-group{padding:10px 15px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.task-group:last-child{border-bottom:none}
+.tg-label{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.task-row{display:flex;gap:8px;padding:6px 0;border-bottom:0.5px solid var(--color-border-tertiary);align-items:flex-start}
+.task-row:last-child{border-bottom:none}
+.task-id{font-size:10px;font-weight:500;color:var(--color-text-tertiary);min-width:52px;padding-top:1px;font-family:var(--font-mono)}
+.task-body{flex:1}
+.task-title{font-size:12px;font-weight:500;margin-bottom:3px}
+.task-desc{font-size:11px;color:var(--color-text-secondary);line-height:1.55;margin-bottom:3px}
+.task-dep{font-size:10px;color:var(--color-text-tertiary)}
+.task-est{font-size:10px;font-weight:500;color:var(--color-text-tertiary);flex-shrink:0;padding-top:1px}
+
+/* TIMELINE */
+.month-block{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:14px 16px;margin-bottom:10px;border:0.5px solid var(--color-border-tertiary)}
+.month-hd{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.month-badge{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;flex-shrink:0}
+.month-info .mt{font-size:14px;font-weight:500}
+.month-info .ms{font-size:11px;color:var(--color-text-secondary);margin-top:1px}
+.week-row{display:grid;grid-template-columns:64px 1fr;gap:10px;margin-bottom:7px;align-items:start}
+.wk{font-size:10px;font-weight:500;padding:3px 7px;border-radius:4px;text-align:center;margin-top:1px;white-space:nowrap}
+.wk1{background:#1D9E75;color:#fff}.wk2{background:#378ADD;color:#fff}.wk3{background:#7F77DD;color:#fff}
+.wk-content{background:var(--color-background-primary);border-radius:6px;padding:8px 12px;font-size:11px;color:var(--color-text-secondary);line-height:1.6;border:0.5px solid var(--color-border-tertiary)}
+.wk-content strong{color:var(--color-text-primary);font-weight:500}
+.milestone{display:flex;align-items:center;gap:6px;padding:7px 10px;background:var(--color-background-primary);border-radius:6px;border:0.5px solid var(--color-border-secondary);font-size:11px;margin-top:8px}
+.milestone-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* STACK */
+.stack-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.stack-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:11px 13px}
+.sc-layer{font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.sc-name{font-size:13px;font-weight:500;margin-bottom:3px}
+.sc-why{font-size:11px;color:var(--color-text-secondary);line-height:1.5}
+
+/* FOLDER TREE */
+.tree{font-family:var(--font-mono);font-size:11px;line-height:2;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px 14px;border:0.5px solid var(--color-border-tertiary)}
+.tree .dir{color:var(--color-text-info);font-weight:500}
+.tree .file{color:var(--color-text-primary)}
+.tree .cmt{color:var(--color-text-tertiary)}
+
+/* API */
+.api-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.api-row:last-child{border-bottom:none}
+.method{font-size:10px;font-weight:500;padding:2px 6px;border-radius:4px;min-width:40px;text-align:center;flex-shrink:0;margin-top:1px}
+.get{background:#E1F5EE;color:#0F6E56}
+.post{background:#E6F1FB;color:#185FA5}
+.put{background:#FAEEDA;color:#854F0B}
+.del{background:#FAECE7;color:#993C1D}
+.api-path{font-family:var(--font-mono);font-size:11px;font-weight:500;color:var(--color-text-primary);margin-bottom:3px}
+.api-desc{font-size:11px;color:var(--color-text-secondary)}
+.api-tag{font-size:9px;padding:1px 5px;border-radius:3px;background:var(--color-background-secondary);color:var(--color-text-tertiary);flex-shrink:0;margin-top:2px}
+
+/* AI TUTOR */
+.ai-layer{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:12px 14px;margin-bottom:8px}
+.ai-layer-t{font-size:12px;font-weight:500;margin-bottom:4px;display:flex;align-items:center;gap:7px}
+.ai-layer-d{font-size:11px;color:var(--color-text-secondary);line-height:1.6}
+.code-block{font-family:var(--font-mono);font-size:11px;line-height:1.7;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:11px 13px;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);margin-top:6px;white-space:pre-wrap;word-break:break-all}
+.code-block .kw{color:var(--color-text-info)}
+.code-block .str{color:var(--color-text-success)}
+.code-block .cmt2{color:var(--color-text-tertiary)}
+</style>
+
+<div style="padding:2px 0 0">
+<div style="margin-bottom:14px">
+  <div style="font-size:18px;font-weight:500;margin-bottom:3px">EduMind — Product Architecture</div>
+  <div style="font-size:12px;color:var(--color-text-secondary)">Flutter + FastAPI · 5 features · 120+ tasks · 3-month sprint plan</div>
+</div>
+
+<div class="top-nav">
+  <button class="tn on" onclick="tab(this,'features')">Features & tasks</button>
+  <button class="tn" onclick="tab(this,'timeline')">3-month timeline</button>
+  <button class="tn" onclick="tab(this,'stack')">Tech stack</button>
+  <button class="tn" onclick="tab(this,'folders')">Folder structure</button>
+  <button class="tn" onclick="tab(this,'api')">API design</button>
+  <button class="tn" onclick="tab(this,'ai')">AI tutor system</button>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- FEATURES & TASKS -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="pane on" id="pane-features">
+
+<!-- F1 -->
+<div class="feat-block">
+  <div class="feat-head" onclick="tog(this)">
+    <div class="feat-num" style="background:#E1F5EE;color:#0F6E56">F1</div>
+    <div class="feat-title">Auth, onboarding & student profile</div>
+    <span class="feat-month" style="background:#E1F5EE;color:#0F6E56">Month 1 · Week 1–2</span>
+    <span class="feat-arrow">▶</span>
+  </div>
+  <div class="feat-body">
+    <div class="task-group">
+      <div class="tg-label"><span class="badge b-init">INIT</span> Setup & infrastructure</div>
+      <div class="task-row"><span class="task-id">F1-I-01</span><div class="task-body"><div class="task-title">GitHub monorepo setup</div><div class="task-desc">Create repo with /backend, /frontend, /n8n, /data, /docs. Branch protection on main. PR template. .gitignore for Python + Flutter.</div><div class="task-dep">Dep: none</div></div><span class="task-est">0.5d</span></div>
+      <div class="task-row"><span class="task-id">F1-I-02</span><div class="task-body"><div class="task-title">Docker Compose environment</div><div class="task-desc">Services: FastAPI (uvicorn), PostgreSQL 15 + pgvector extension, Redis 7, n8n. Single `docker compose up` for full local dev. Health checks on all services.</div><div class="task-dep">Dep: F1-I-01</div></div><span class="task-est">1d</span></div>
+      <div class="task-row"><span class="task-id">F1-I-03</span><div class="task-body"><div class="task-title">FastAPI project bootstrap</div><div class="task-desc">Install fastapi, uvicorn[standard], sqlmodel, alembic, python-jose[cryptography], passlib[bcrypt], pydantic-settings, httpx. Setup app/main.py, app/core/config.py (env-based settings), /health endpoint.</div><div class="task-dep">Dep: F1-I-02</div></div><span class="task-est">0.5d</span></div>
+      <div class="task-row"><span class="task-id">F1-I-04</span><div class="task-body"><div class="task-title">Database schema design & first migration</div><div class="task-desc">ERD covering all Phase 1 tables: users, student_profiles, teaching_styles, interests, chapters, lessons. Run `alembic init` and create revision_001. Team sign-off before any model code.</div><div class="task-dep">Dep: F1-I-03</div></div><span class="task-est">1d</span></div>
+      <div class="task-row"><span class="task-id">F1-I-05</span><div class="task-body"><div class="task-title">Flutter project scaffold</div><div class="task-desc">flutter create edumind. Feature-first folder structure: /features/auth, /features/home, /features/lessons, /features/ai_chat, /features/lab, /features/profile. Install: flutter_riverpod, dio, go_router, flutter_secure_storage, flutter_localizations.</div><div class="task-dep">Dep: F1-I-01</div></div><span class="task-est">1d</span></div>
+      <div class="task-row"><span class="task-id">F1-I-06</span><div class="task-body"><div class="task-title">GitHub Actions CI pipeline</div><div class="task-desc">On PR: run `pytest` (backend) + `flutter test` (frontend). Fail PR if tests fail. Lint: ruff (Python), flutter_lints (Dart). Setup secrets for API keys.</div><div class="task-dep">Dep: F1-I-01</div></div><span class="task-est">0.5d</span></div>
+    </div>
+    <div class="task-group">
+      <div class="tg-label"><span class="badge b-be">BACKEND</span> API & logic</div>
+      <div class="task-row"><span class="task-id">F1-B-01</span><div class="task-body"><div class="task-title">User model & Alembic migration</div><div class="task-desc">SQLModel User: id (UUID), email (unique, indexed), password_hash, subscription_status (enum: trial/active/expired), trial_messages_used, stripe_customer_id, email_verified, created_at, last_active_at.</div><div class="task-dep">Dep: F1-I-04</div></div><span class="task-est">0.5d</span></div>
+      <div class="task-row"><span class="task-id">F1-B-02</span><div class="task-body"><div class="task-title">POST /auth/register — email + password</div><div class="task-desc">Validate email uniqueness. Hash password with bcrypt (cost=12). Create user. Trigger n8n welcome email webhook. Return user_id + access_token + refresh_token. Rate limit: 5 req/min per IP.</div><div class="task-dep">Dep: F1-B-01</div></div><span class="task-est">1d</span></div>
+      <div class="task-row"><span class="task-id">F1-B-03</span><div class="task-body"><div class="task-title">POST /auth/login + token refresh</div><div class="task-desc">Verify credentials. Issue JWT access token (15 min expiry) + refresh token (30 days, stored in Redis). POST /auth/refresh validates refresh token, issues new access token. POST /auth/logout deletes refresh from Redis.</div><div class="task-dep">Dep: F1-B-02</div></div><span class="task-est">1d</span></div>
+      <div class="task-row"><span class="task-id">F1-B-04</span><div class="task-body"><div class="task-title">StudentProfile model + CRUD endpoints</div><div class="task-desc">SQLModel StudentProfile: user_id (FK), teaching_style (enum: beginner/step_by_step/real_life/academic/visual/quick_recap), answer_format (jsonb array of: text/image/voice/video), language (AR/EN), interests (jsonb array), exam_date. GET/PUT /students/profile.</div><div class="task-dep">Dep: F1-B-01</div></div><span class="task-est">1d</span></div>
+      <div class="task-row"><span class="task-id">F1-B-05</span><div class="task-body"><div class="task-title">Interest seeding & validation</div><div class="task-desc">Define 12 valid interest slugs in an enum. POST /students/interests accepts array of slugs. Validate against whitelist. Store in student_profiles.interests jsonb. Return updated profile.</div><div class="task-dep">Dep: F1-B-04</div></div><span class="task-est">0.5d</span></div>
+      <div class="task-row"><span class="task-id">F1-B-06</span><div class="task-body"><div class="task-title">Auth middleware (JWT dependency)</div><div class="task-desc">FastAPI dependency `get_current_user` that extracts + validates JWT from Authorization header. Inject into all protected routes. Return 401 on invalid/expired token. Add to app/core/deps.py.</div><div class="task-dep">Dep: F1-B-03</div></div><span class="task-est">0.5d</span></div>
+    </div>
+    <div class="task-group">
+      <div class="tg-label"><span class="badge b-fl">FLUTTER</span> UI & state</div>
+      <div class="task-row"><span class="task-id">F1-F-01</span><div class="task-body"><div class="task-title">API client setup (Dio + interceptors)</div><div class="task-desc">Singleton ApiClient with Dio. BaseOptions: baseUrl from env, 30s timeout. Auth interceptor: attach Bearer token to every request. Refresh interceptor: on 401, call /auth/refresh, retry request. Store tokens in flutter_secure_storage.</div><div class="task-dep">Dep: F1-I-05</div></div><span class="task-est">1d</span></div>
+      <div class="task-row"><span class="task-id">F1-F-02</span><div class="task-body"><div class="task-title">Auth screens — register, login, forgot password</div><div class="task-desc">3 screens with form validation (email regex, password min 8 chars). Loading states on submit. Error handling (show snackbar on API error). Auto-navigate to onboarding after register, to home after login. Use go_router for navigation.</div><div class="task-dep">Dep: F1-F-01, F1-B-02</div></div><span class="task-est">2d</span></div>
+      <div class="task-row"><span class="task-id">F1-F-03</span><div class="task-body"><div class="task-title">Onboarding flow — 4 steps</div><div class="task-desc">Step 1: Interest survey (12 swipeable category cards, multi-select). Step 2: Teaching style picker (6 animated cards with live preview quote). Step 3: Answer format picker (text/image/voice/video — multi-select). Step 4: Exam date picker (calendar widget). Progress indicator dots. Save profile on completion.</div><div class="task-dep">Dep: F1-F-02, F1-B-04</div></div><span class="task-est">3d</span></div>
+      <div class="task-row"><span class="task-id">F1-F-04</span><div class="task-body"><div class="task-title">Auth state management (Riverpod)</div><div class="task-desc">AuthNotifier: states = unauthenticated / loading / authenticated / onboarding. AsyncNotifierProvider. Reads token from secure storage on app start. go_router redirect guards: unauthenticated → /login, authenticated without profile → /onboarding, complete → /home.</div><div class="task-dep">Dep: F1-F-01</div></div><span class="task-est">1d</span></div>
+      <div class="task-row"><span class="task-id">F1-F-05</span><div class="task-body"><div class="task-title">Bottom nav shell + routing</div><div class="task-desc">StatefulShellRoute in go_router for 5 tabs: Home, Lessons, Ask AI, The Lab, Profile. Each tab maintains its own navigation stack. Nav bar matches Figma dark theme: bg #0F1F38, active accent #4E87F5, icons + labels.</div><div class="task-dep">Dep: F1-F-04</div></div><span class="task-est">1d</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- F2 -->
+<div class="feat-block">
+  <div class="feat-head" onclick="tog(this)">
+    <div class="feat-num" style="background:#E6F1FB;color:#185FA5">F2</div>
+    <div class="feat-title">Lessons, chapters & progress tracking</div>
+    <span class="feat-month" style="background:#E6F1FB;color:#185FA5">Month 1 · Week 3–4</span>
+    <span class="feat-arrow">▶</span>
+  </div>
+  <div class="feat-body">
+    <div class="task-group">
+      <div class="tg-label"><span class="badge b-init">INIT</span> Setup</div>
+      <div class="task-row"><span class="task-id">F2-I-01</span><div class="task-body"><div class="task-title">Curriculum data seeding script</div><div class="task-desc">Python script to seed DB from the grade 9 chemistry curriculum JSON: 4 chapters → 18 lessons → subtopics. Lesson fields: title_ar, title_en, content_text, difficulty (easy/medium/hard), estimated_minutes, order_index. Run once via `python seed.py`.</div><div class="task-dep">Dep: F1-I-04</div></div><span class="task-est">1d</span></div>
+      <div class="task-row"><span class="task-id">F2-I-02</span><div class="task-body"><div class="task-title">pgvector + RAG ingestion pipeline</div><div class="task-desc">Install langchain, langchain-openai, pgvector. Script: load student book PDFs with PyPDFLoader → chunk with RecursiveCharacterTextSplitter (size=800, overlap=100) → embed with text-embedding-3-small → upsert to pgvector. Index on lesson_id for filtered search.</div><div class="task-dep">Dep: F2-I-01</div></div><span class="task-est">1.5d</span></div>
+    </div>
+    <div class="task-group">
+      <div class="tg-label"><span class="badge b-be">BACKEND</span> API & logic</div>
+      <div class="task-row"><span class="task-id">F2-B-01</span><div class="task-body"><div class="task-title">Chapter & lesson models + migrations</div><div class="task-desc">Chapter: id, title_ar, title_en, order_index, difficulty_avg. Lesson: id, chapter_id (FK), title_ar/en, content_text, difficulty (enum), estimated_minutes, order_index. Many-to-many: lesson_embeddings table with pgvector column (1536 dims).</div><div class="task-dep">Dep: F2-I-01</div></div><span class="task-est">0.5d</span></div>
+      <div class="task-row"><span class="task-id">F2-B-02</span><div class="task-body"><div class="task-title">GET /chapters + GET /chapters/{id}/lessons</div><div class="task-desc">List all chapters ordered by order_index. For each chapter, include: lesson_count, completed_count (per user), progress_pct. Lesson list includes per-user status (not_started/in_progress/done). Add Redis cache (TTL 1hr) for static chapter data.</div><div class="task-dep">Dep: F2-B-01, F1-B-06</div></div><span class="task-est">1d</span></div>
+      <div class="task-row"><span class="task-id">F2-B-03</span><div class="task-body"><div class="task-title">Progress model + tracking endpoints</div><div class="task-desc">Progress: id, user_id (FK), lesson_id (FK), status (enum), started_at, completed_at, time_spent_seconds. UNIQUE constraint (user_id, lesson_id). POST /progress/lesson/{id}/start, POST /progress/lesson/{id}/complete, GET /progress/summary (overall %, per-chapter %).</div><div class="task-dep">Dep: F2-B-01, F1-B-06</div></div><span class="task-est">1d</span></div>
+      <div class="task-row"><span class="task-id">F2-B-04</span><div class="task-body"><div class="task-title">Study plan model + AI generator endpoint</div><div class="task-desc">StudyPlan: user_id, exam_date, plan_data (jsonb: array of {date, lesson_id, estimated_minutes, is_rest}). POST /study-plan/generate: receive exam_date + chapter_ids → calculate days → weight harder chapters (hard=2x days, medium=1.5x, easy=1x) → insert rest days every 5th day → return plan. GET /study-plan/today.</div><div class="task-dep">Dep: F2-B-01</div></div><span class="task-est">2d</span></div>
+      <div class="task-row"><span class="task-id">F2-B-05</span><div class="task-body"><div class="task-title">Dashboard summary endpoint</div><div class="task-desc">GET /dashboard: single endpoint returning: streak_days, xp_total, level (computed from XP thresholds), today_lesson (from study plan), overall_progress_pct, chapters_progress[], weak_topics[], exam_days_remaining. Cached per user in Redis (TTL 5min).</div><div class="task-dep">Dep: F2-B-03, F2-B-04</div></div><span class="task-est">1d</span></div>
+    </div>
+    <div class="task-group">
+      <div class="tg-label"><span class="badge b-fl">FLUTTER</span> UI & state</div>
+      <div class="task-row"><span class="task-id">F2-F-01</span><div class="task-body"><div class="task-title">Home screen — dashboard</div><div class="task-desc">Hero section: greeting + streak badge + XP badge. Today's mission card (blue accent). 3-stat row (progress %, days to exam, quiz avg). 7-day week strip with colored dots. AI recommendations horizontal scroll. Quick-action 4-icon grid. Notification bar. Pull-to-refresh.</div><div class="task-dep">Dep: F1-F-05, F2-B-05</div></div><span class="task-est">2d</span></div>
+      <div class="task-row"><span class="task-id">F2-F-02</span><div class="task-body"><div class="task-title">Lessons screen — chapter + lesson list</div><div class="task-desc">Overall progress bar. Expandable chapter accordion. Each chapter: colored number badge, title, lesson count, progress %, mini progress bar. Each lesson row: status dot (done/today/hard/upcoming), title, difficulty pill, time estimate. Lesson tap → lesson detail screen.</div><div class="task-dep">Dep: F1-F-05, F2-B-02</div></div><span class="task-est">2d</span></div>
+      <div class="task-row"><span class="task-id">F2-F-03</span><div class="task-body"><div class="task-title">Study plan setup screens</div><div class="task-desc">Screen 1: Calendar date picker (CupertinoDatePicker or table_calendar package) + chapter checklist with difficulty badges. Screen 2: AI generating animation (step-by-step progress list). Screen 3: Day-by-day plan list with week strip, legend, confirm button. Swipeable week navigation.</div><div class="task-dep">Dep: F2-B-04, F1-F-05</div></div><span class="task-est">2.5d</span></div>
+      <div class="task-row"><span class="task-id">F2-F-04</span><div class="task-body"><div class="task-title">Lessons Riverpod providers</div><div class="task-desc">ChaptersNotifier (AsyncNotifierProvider): fetch + cache chapters. LessonProgressNotifier: optimistic updates on complete. DashboardProvider: fetch /dashboard, auto-refresh on lesson complete. StudyPlanNotifier: generate + confirm plan. All use ref.watch patterns.</div><div class="task-dep">Dep: F2-F-01, F2-F-02</div></div><span class="task-est">1.5d</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- F3 -->
+<div class="feat-block">
+  <div class="feat-head" onclick="tog(this)">
+    <div class="feat-num" style="background:#FAEEDA;color:#854F0B">F3</div>
+    <div class="feat-title">AI tutor chat — multi-format responses</div>
+    <span class="feat-month" style="background:#FAEEDA;color:#854F0B">Month 2 · Week 5–7</span>
+    <span class="feat-arrow">▶</span>
+  </div>
+  <div class="feat-body">
+    <div class="task-group">
+      <div class="tg-label"><span class="badge b-init">INIT</span> Setup</div>
+      <div class="task-row"><span class="task-id">F3-I-01</span><div class="task-body"><div class="task-title">LLM + TTS + STT API accounts</div><div class="task-desc">Create Anthropic API account (Claude Sonnet 4). Create OpenAI account for: text-embedding-3-small (vectors), TTS-1 (voice), Whisper (speech-to-text), DALL-E 3 (images). Store all keys in .env. Add pydantic-settings models for each service. Test each API with a basic call.</div><div class="task-dep">Dep: F1-I-03</div></div><span class="task-est">0.5d</span></div>
+      <div class="task-row"><span class="task-id">F3-I-02</span><div class="task-body"><div class="task-title">S3-compatible object storage setup</div><div class="task-desc">Setup Cloudflare R2 bucket (or AWS S3). Install boto3. Create app/core/storage.py: upload_file(key, bytes) → returns CDN URL. Used for: TTS audio MP3s, DALL-E images, reel audio. Add CDN domain to .env. Set CORS for Flutter web (future).</div><div class="task-dep">Dep: F1-I-03</div></div><span class="task-est">0.5d</span></div>
+      <div class="task-row"><span class="task-id">F3-I-03</span><div class="task-body"><div class="task-title">Celery + Redis task queue</div><div class="task-desc">Install celery, redis. Create app/workers/celery_app.py. Register tasks: generate_tts_audio, generate_image, generate_reel. These run async so the API doesn't block. Client polls GET /tasks/{task_id}/status. Add flower for task monitoring dashboard.</div><div class="task-dep">Dep: F1-I-02</div></div><span class="task-est">1d</span></div>
+    </div>
+    <div class="task-group">
+      <div class="tg-label"><span class="badge b-be">BACKEND</span> API & logic</div>
+      <div class="task-row"><span class="task-id">F3-B-01</span><div class="task-body"><div class="task-title">Chat session + message models</div><div class="task-desc">ChatSession: id, user_id (FK), lesson_id (FK, nullable), created_at. ChatMessage: id, session_id (FK), role (user/assistant), content_text, format (text/image/voice/video), media_url, feedback (understood/not_understood/null), created_at. Migration + indexes on (session_id, created_at).</div><div class="task-dep">Dep: F1-B-01</div></div><span class="task-est">0.5d</span></div>
+      <div class="task-row"><span class="task-id">F3-B-02</span><div class="task-body"><div class="task-title">RAG retrieval service</div><div class="task-desc">app/services/rag.py: retrieve_context(query, lesson_id=None, top_k=5) → performs pgvector similarity search with optional lesson_id filter → returns list of text chunks with source metadata. Uses LangChain PGVector retriever. Add re-ranking by relevance score.</div><div class="task-dep">Dep: F2-I-02</div></div><span class="task-est">1.5d</span></div>
+      <div class="task-row"><span class="task-id">F3-B-03</span><div class="task-body"><div class="task-title">Prompt builder service</div><div class="task-desc">app/services/prompt.py: build_system_prompt(profile: StudentProfile) → assembles: base_system_prompt + style_template[profile.teaching_style] + format_instruction[profile.answer_format] + interests_injection[profile.interests]. Returns formatted string. 6 style templates + interest analogy map (12 interests × chemistry topics).</div><div class="task-dep">Dep: F1-B-04</div></div><span class="task-est">2d</span></div>
+      <div class="task-row"><span class="task-id">F3-B-04</span><div class="task-body"><div class="task-title">POST /chat/message — streaming endpoint</div><div class="task-desc">Accepts: session_id, content, format (text/image/voice/video). Retrieves RAG context. Builds system prompt. Calls Claude claude-sonnet-4-20250514 with stream=True. Returns StreamingResponse (text/event-stream). Saves full message to DB after stream ends. Decrement trial_messages_used. Check subscription gate.</div><div class="task-dep">Dep: F3-B-01, F3-B-02, F3-B-03</div></div><span class="task-est">2d</span></div>
+      <div class="task-row"><span class="task-id">F3-B-05</span><div class="task-body"><div class="task-title">Image format — DALL-E generation</div><div class="task-desc">When format includes "image": after text generation, extract key concept → build DALL-E prompt: "Scientific diagram of [concept], minimalist, dark blue background, white lines, labeled, educational". Generate via OpenAI images API. Upload to S3. Return image_url alongside text. Cache by (message_content_hash, lesson_id).</div><div class="task-dep">Dep: F3-B-04, F3-I-02</div></div><span class="task-est">1.5d</span></div>
+      <div class="task-row"><span class="task-id">F3-B-06</span><div class="task-body"><div class="task-title">Voice format — TTS generation</div><div class="task-desc">When format includes "voice": after text stream, dispatch Celery task generate_tts_audio(text, voice="alloy"). Task calls OpenAI TTS-1, uploads MP3 to S3, updates message.media_url. Client polls GET /chat/messages/{id} until media_url is set. Offer speed: 0.75x, 1x, 1.25x client-side.</div><div class="task-dep">Dep: F3-B-04, F3-I-02, F3-I-03</div></div><span class="task-est">1.5d</span></div>
+      <div class="task-row"><span class="task-id">F3-B-07</span><div class="task-body"><div class="task-title">POST /chat/voice-input — Whisper STT</div><div class="task-desc">Accept multipart/form-data with audio file (m4a/mp3/wav max 25MB). Call Whisper API with language hint from student profile. Return {transcript: str}. Flutter then sends the transcript as a regular chat message. Rate limit: 30 req/min per user.</div><div class="task-dep">Dep: F3-I-01</div></div><span class="task-est">0.5d</span></div>
+      <div class="task-row"><span class="task-id">F3-B-08</span><div class="task-body"><div class="task-title">POST /chat/feedback + re-explain</div><div class="task-desc">POST /chat/messages/{id}/feedback: body {feedback: "understood"|"not_understood"}. If not_understood: POST /chat/message with same question, but rebuild prompt using a different interest analogy (cycle through profile.interests, pick next unused one). Save re-explain attempt count per session.</div><div class="task-dep">Dep: F3-B-04</div></div><span class="task-est">1d</span></div>
+      <div class="task-row"><span class="task-id">F3-B-09</span><div class="task-body"><div class="task-title">Micro-reel generation endpoint</div><div class="task-desc">POST /reels/generate: lesson_id. Check cache (Redis): if reel exists, return CDN URL. Generate: LLM writes 100-word narration script + visual_cues[]. Dispatch Celery: TTS audio → upload MP3 → store reel record. GET /reels/lesson/{id}: return {audio_url, script, visual_cues, duration_seconds}.</div><div class="task-dep">Dep: F3-B-03, F3-I-02, F3-I-03</div></div><span class="task-est">2d</span></div>
+    </div>
+    <div class="task-group">
+      <div class="tg-label"><span class="badge b-fl">FLUTTER</span> UI & state</div>
+      <div class="task-row"><span class="task-id">F3-F-01</span><div class="task-body"><div class="task-title">Chat screen — streaming UI</div><div class="task-desc">Chat screen with message list. StreamBuilder connects to SSE endpoint via Dio ResponseBody. Tokens appear word by word. Typing indicator (3 animated dots) while waiting for first token. Auto-scroll to bottom on new message. Message bubbles: AI (dark surface), User (blue). Style tag badge on AI messages.</div><div class="task-dep">Dep: F3-B-04, F1-F-05</div></div><span class="task-est">2.5d</span></div>
+      <div class="task-row"><span class="task-id">F3-F-02</span><div class="task-body"><div class="task-title">Format switcher UI</div><div class="task-desc">Below each AI message: 4 format icons (💬🖼️🎙️🎬). Active icon has accent background. Tap to re-request same answer in new format. Image format: shows CachedNetworkImage with loading shimmer. Voice format: compact audio player with play/pause + speed control. Video format: inline reel player.</div><div class="task-dep">Dep: F3-F-01, F3-B-05, F3-B-06</div></div><span class="task-est">2d</span></div>
+      <div class="task-row"><span class="task-id">F3-F-03</span><div class="task-body"><div class="task-title">Voice input (mic button)</div><div class="task-desc">Mic button in chat input bar. Hold to record (record package). Release → upload audio to POST /chat/voice-input → receive transcript → auto-fill chat input → send. Visual: recording waveform animation during hold. Show transcript preview before send. Request microphone permission on first use.</div><div class="task-dep">Dep: F3-B-07</div></div><span class="task-est">1.5d</span></div>
+      <div class="task-row"><span class="task-id">F3-F-04</span><div class="task-body"><div class="task-title">Reel player screen</div><div class="task-desc">Vertical PageView for swipe-between-reels UX. Each reel: audio plays automatically (just_audio package). Text overlays fade in sync with visual_cues timing. Progress bar at bottom. Like button, save button. "Reels" tab on bottom nav. Preload next reel on scroll. Handle loading/error states.</div><div class="task-dep">Dep: F3-B-09</div></div><span class="task-est">2d</span></div>
+      <div class="task-row"><span class="task-id">F3-F-05</span><div class="task-body"><div class="task-title">Suggest chips + chat session management</div><div class="task-desc">Horizontal scroll of 4 suggestion chips above input (populated from lesson context). Tap chip → fills input. Chat history loads from GET /chat/sessions/{id}/messages paginated (20 at a time). New session auto-created on navigate to Ask AI. Session list accessible from top-right icon.</div><div class="task-dep">Dep: F3-F-01</div></div><span class="task-est">1d</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- F4 -->
+<div class="feat-block">
+  <div class="feat-head" onclick="tog(this)">
+    <div class="feat-num" style="background:#EEEDFE;color:#534AB7">F4</div>
+    <div class="feat-title">Quizzes, flashcards & gamification</div>
+    <span class="feat-month" style="background:#EEEDFE;color:#534AB7">Month 2 · Week 7–8</span>
+    <span class="feat-arrow">▶</span>
+  </div>
+  <div class="feat-body">
+    <div class="task-group">
+      <div class="tg-label"><span class="badge b-be">BACKEND</span> API & logic</div>
+      <div class="task-row"><span class="task-id">F4-B-01</span><div class="task-body"><div class="task-title">Quiz models + AI generation endpoint</div><div class="task-desc">Quiz: id, lesson_id, user_id, type (lesson/chapter/level_exam). QuizQuestion: id, quiz_id, question_text, question_type (mcq/true_false/fill_blank), options (jsonb), correct_answer, explanation. POST /quiz/generate: RAG retrieves content → LLM generates questions in JSON → validate → save. Returns quiz with questions.</div><div class="task-dep">Dep: F3-B-02, F3-B-03</div></div><span class="task-est">2d</span></div>
+      <div class="task-row"><span class="task-id">F4-B-02</span><div class="task-body"><div class="task-title">POST /quiz/submit + weakness detection</div><div class="task-desc">Accept {quiz_id, answers: [{question_id, answer}]}. Score each answer. Return {score_pct, correct_count, explanations[]}. If score < 60% per topic → upsert student_weaknesses(user_id, lesson_id, weakness_score, last_updated). Trigger XP award (correct answers × 10 XP). Store QuizAnswer records.</div><div class="task-dep">Dep: F4-B-01</div></div><span class="task-est">1.5d</span></div>
+      <div class="task-row"><span class="task-id">F4-B-03</span><div class="task-body"><div class="task-title">Flashcard generation + spaced repetition</div><div class="task-desc">POST /flashcards/generate: lesson_id → RAG + LLM → extract {front, back, card_type: term/equation/fact} cards. Save to flashcards table. FlashcardReview: user_id, flashcard_id, next_review_at (SM-2 algorithm: ease_factor, interval, repetitions). GET /flashcards/due: returns cards due today for review.</div><div class="task-dep">Dep: F3-B-02</div></div><span class="task-est">2d</span></div>
+      <div class="task-row"><span class="task-id">F4-B-04</span><div class="task-body"><div class="task-title">XP + achievements + streak system</div><div class="task-desc">XP events: lesson_complete (+50), quiz_pass (+30), quiz_perfect (+100), reel_watched (+10), daily_login (+20), streak_7day (+200). Level thresholds: Novice(0), Explorer(500), Scholar(1200), Expert(2500), Master(5000). Achievements table: slug, unlocked_at. POST /xp/award (internal). GET /students/stats.</div><div class="task-dep">Dep: F2-B-03</div></div><span class="task-est">1.5d</span></div>
+      <div class="task-row"><span class="task-id">F4-B-05</span><div class="task-body"><div class="task-title">GET /recommendations — AI-curated list</div><div class="task-desc">Query student_weaknesses + quiz_answers + chat_message feedback → score lessons by need. Sort by: weakness_score DESC + days_since_studied ASC + in_study_plan. Return top 5 lessons with reason string ("40% on last quiz", "Due tomorrow", "New reel ready"). Cache 30 min per user.</div><div class="task-dep">Dep: F4-B-02, F4-B-03</div></div><span class="task-est">1d</span></div>
+    </div>
+    <div class="task-group">
+      <div class="tg-label"><span class="badge b-fl">FLUTTER</span> UI & state</div>
+      <div class="task-row"><span class="task-id">F4-F-01</span><div class="task-body"><div class="task-title">Quiz screen — questions + results</div><div class="task-desc">Question cards with MCQ option tiles (single select), true/false toggle, fill-blank text field. Optional countdown timer (CountdownTimer widget). Submit screen: score circle, correct/wrong breakdown, explanation cards for wrong answers. "Retake" and "Discuss with AI" buttons. XP earned animation.</div><div class="task-dep">Dep: F4-B-01, F4-B-02</div></div><span class="task-est">2d</span></div>
+      <div class="task-row"><span class="task-id">F4-F-02</span><div class="task-body"><div class="task-title">Flashcard deck screen</div><div class="task-desc">Swipeable card deck (flutter_card_swiper). Front → tap/swipe to flip (3D flip animation). Back shows answer. Swipe right = "Know it" (green), left = "Review again" (red). Session summary: X mastered, Y to review. SM-2 schedule updates on each review. Voice pronunciation button for chemistry terms.</div><div class="task-dep">Dep: F4-B-03</div></div><span class="task-est">2d</span></div>
+      <div class="task-row"><span class="task-id">F4-F-03</span><div class="task-body"><div class="task-title">Profile screen — stats, badges, settings</div><div class="task-desc">Avatar ring (initials). Name + level label. XP progress bar to next level. Stats grid: streak, lessons done, quiz avg. Achievement badge row (horizontal scroll). Locked badges at 40% opacity. Settings list: teaching style, answer format, notifications toggle, language, subscription, privacy. Toggle for notifications.</div><div class="task-dep">Dep: F4-B-04</div></div><span class="task-est">2d</span></div>
+      <div class="task-row"><span class="task-id">F4-F-04</span><div class="task-body"><div class="task-title">XP animations + achievement celebrations</div><div class="task-desc">XP counter ticks up with number animation (TweenAnimationBuilder). Achievement unlocked: full-screen overlay with badge image + confetti (confetti package). Streak increment: streak number bounces. Level up: gradient overlay with level name. Progress bar fills smoothly on lesson complete. All dismissible.</div><div class="task-dep">Dep: F4-F-01</div></div><span class="task-est">1.5d</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- F5 -->
+<div class="feat-block">
+  <div class="feat-head" onclick="tog(this)">
+    <div class="feat-num" style="background:#FAECE7;color:#993C1D">F5</div>
+    <div class="feat-title">The Lab — interactive chemistry tools</div>
+    <span class="feat-month" style="background:#FAECE7;color:#993C1D">Month 3 · Week 9–10</span>
+    <span class="feat-arrow">▶</span>
+  </div>
+  <div class="feat-body">
+    <div class="task-group">
+      <div class="tg-label"><span class="badge b-be">BACKEND</span> API & logic</div>
+      <div class="task-row"><span class="task-id">F5-B-01</span><div class="task-body"><div class="task-title">POST /lab/balance-equation</div><div class="task-desc">Accept unbalanced equation string (e.g. "H2 + O2 → H2O"). Parse reactants and products. Use chempy library (Python) to balance algebraically. Return {balanced: str, steps: [{description, equation}], atom_counts: {before, after}}. Fallback: ask LLM to balance if chempy fails on complex organic equations.</div><div class="task-dep">Dep: F3-B-03</div></div><span class="task-est">2d</span></div>
+      <div class="task-row"><span class="task-id">F5-B-02</span><div class="task-body"><div class="task-title">GET /lab/elements + GET /lab/elements/{symbol}</div><div class="task-desc">Seed periodic table from periodictable library. Return: symbol, name_ar/en, atomic_number, atomic_mass, group, period, category (metal/nonmetal/metalloid/noble_gas), electron_config, common_uses. GET /{symbol}/ai-explain: generates a 3-sentence AI explanation using student's teaching style + interests. Cache in Redis.</div><div class="task-dep">Dep: F1-B-04</div></div><span class="task-est">1.5d</span></div>
+      <div class="task-row"><span class="task-id">F5-B-03</span><div class="task-body"><div class="task-title">POST /lab/ph-simulate</div><div class="task-desc">Accept substance pairs + volumes. Calculate resulting pH using chemistry formulas (strong acid/base = exact, weak = approximation). Return {ph_result, color_hex (indicator color), classification, neutralization_heat}. No LLM needed — pure calculation. Add POST /lab/atom-builder/validate: verify electron configuration is valid.</div><div class="task-dep">none</div></div><span class="task-est">1d</span></div>
+    </div>
+    <div class="task-group">
+      <div class="tg-label"><span class="badge b-fl">FLUTTER</span> UI & state</div>
+      <div class="task-row"><span class="task-id">F5-F-01</span><div class="task-body"><div class="task-title">Lab home — 4 tool cards grid</div><div class="task-desc">2×2 grid of tool cards matching Figma dark theme: Equation Balancer (blue), Periodic Table (teal), pH Simulator (gold), Atom Builder (purple). Each card: icon background, title, description, type badge. Tap → navigate to tool screen. Bottom nav "The Lab" icon.</div><div class="task-dep">Dep: F1-F-05</div></div><span class="task-est">1d</span></div>
+      <div class="task-row"><span class="task-id">F5-F-02</span><div class="task-body"><div class="task-title">Equation balancer tool</div><div class="task-desc">Text input for unbalanced equation. "Balance" button → API call → shows step-by-step solution with monospace font. Atom count table before/after. "Ask AI" button passes equation to chat. Equation input supports chemistry subscript rendering (H₂O). History of last 5 equations.</div><div class="task-dep">Dep: F5-B-01</div></div><span class="task-est">1.5d</span></div>
+      <div class="task-row"><span class="task-id">F5-F-03</span><div class="task-body"><div class="task-title">Interactive periodic table</div><div class="task-desc">Scrollable/zoomable periodic table grid (InteractiveViewer). Elements colored by category (metal=gold, nonmetal=teal, noble=purple, metalloid=coral). Tap element → bottom sheet with: symbol, name, atomic details, AI explanation button. Search bar at top filters by name or symbol. Selected element highlighted.</div><div class="task-dep">Dep: F5-B-02</div></div><span class="task-est">2d</span></div>
+      <div class="task-row"><span class="task-id">F5-F-04</span><div class="task-body"><div class="task-title">pH simulator + atom builder</div><div class="task-desc">pH: sliders for acid/base volume. Liquid container widget changes color based on pH (red→orange→yellow→green→blue→purple). pH value animates. Atom builder: drag-and-drop protons/neutrons/electrons into nucleus/shells. Validate configuration. Show element name when valid. Both tools include "Learn more → AI Chat" CTA.</div><div class="task-dep">Dep: F5-B-03</div></div><span class="task-est">2.5d</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Bonus features -->
+<div class="sec">Month 3 · Week 11–12 — Production features</div>
+<div class="card">
+  <div class="card-t">Notifications, offline mode & launch</div>
+  <div class="card-b">
+    <span class="badge b-init">INIT</span> Firebase project setup · FCM config in Flutter<br>
+    <span class="badge b-be">BACKEND</span> Device token storage · n8n: 6 notification workflows · Stripe webhook handler<br>
+    <span class="badge b-fl">FLUTTER</span> Hive/Isar offline cache · Arabic RTL (flutter_localizations) · Dark mode · Loading skeletons · Sentry integration · App Store + Play Store submission<br>
+    <span class="badge b-dep">ESTIMATED</span> 8–10 days total
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- TIMELINE -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="pane" id="pane-timeline">
+<div class="month-block">
+  <div class="month-hd">
+    <div class="month-badge" style="background:#1D9E75;color:#fff">1</div>
+    <div class="month-info"><div class="mt">Month 1 — Foundation & MVP</div><div class="ms">Features: Auth + Profile (F1) · Lessons + Study Plan (F2)</div></div>
+  </div>
+  <div class="week-row"><span class="wk wk1">Week 1</span><div class="wk-content"><strong>INIT sprint:</strong> GitHub repo, Docker Compose (FastAPI + PG + Redis + n8n), FastAPI boilerplate, Alembic init, Flutter scaffold, CI pipeline. Team ERD session → sign off schema before day 5.</div></div>
+  <div class="week-row"><span class="wk wk1">Week 2</span><div class="wk-content"><strong>Auth:</strong> User model, register/login/refresh API, JWT middleware, Redis refresh tokens. Flutter: API client (Dio + interceptors), auth screens (register/login), Riverpod auth state, go_router guards. Onboarding flow: interest survey → style picker → format picker → exam date.</div></div>
+  <div class="week-row"><span class="wk wk1">Week 3</span><div class="wk-content"><strong>Lessons:</strong> Curriculum seed script, pgvector RAG ingestion (book PDFs → embeddings). Chapter/lesson models + API endpoints. Progress tracking model + endpoints. Dashboard summary endpoint. Flutter: home dashboard screen, lessons accordion screen, Riverpod providers.</div></div>
+  <div class="week-row"><span class="wk wk1">Week 4</span><div class="wk-content"><strong>Study plan:</strong> AI study plan generator (exam date → weighted day-by-day schedule). Flutter: 3-screen study plan setup flow (calendar → AI loading → day list). Bottom nav shell fully wired to all 5 tabs. Internal MVP demo. Bug fix day. Month 1 milestone review.</div></div>
+  <div class="milestone"><span class="milestone-dot" style="background:#1D9E75"></span><strong>Month 1 milestone:</strong> Student can register, set up profile, browse lessons, see today's task, and confirm a study plan.</div>
+</div>
+
+<div class="month-block">
+  <div class="month-hd">
+    <div class="month-badge" style="background:#378ADD;color:#fff">2</div>
+    <div class="month-info"><div class="mt">Month 2 — AI Core & Enhancement</div><div class="ms">Features: AI Chat (F3) · Quizzes + Flashcards (F4)</div></div>
+  </div>
+  <div class="week-row"><span class="wk wk2">Week 5</span><div class="wk-content"><strong>AI chat foundation:</strong> LLM + TTS + STT accounts. S3/R2 storage. Celery + Redis queue. RAG retrieval service. Prompt builder (6 styles × 12 interests). POST /chat/message streaming endpoint. Flutter: streaming chat UI (SSE), message bubbles, typing indicator.</div></div>
+  <div class="week-row"><span class="wk wk2">Week 6</span><div class="wk-content"><strong>Multi-format chat:</strong> Image format (DALL-E). Voice format (TTS Celery task + audio player). Voice input (Whisper STT + mic UI). Feedback + re-explain endpoints. Flutter: format switcher icons, CachedNetworkImage, just_audio player, voice recording mic UI. Style chip in chat header.</div></div>
+  <div class="week-row"><span class="wk wk2">Week 7</span><div class="wk-content"><strong>Reels + Quizzes:</strong> Micro-reel generation endpoint (LLM script → TTS → S3). Flutter reel player (PageView + audio sync). Quiz generation + submit + weakness detection. Flutter quiz screen (MCQ/T-F/fill) + results screen. XP award system. n8n: daily reminder + weekly summary workflows.</div></div>
+  <div class="week-row"><span class="wk wk2">Week 8</span><div class="wk-content"><strong>Flashcards + Gamification:</strong> Flashcard generation (LLM) + SM-2 spaced repetition. Flutter flashcard deck (3D flip). XP/level/achievements backend. Flutter: achievement unlock animation, confetti, XP ticker. Profile screen (stats + badges + settings). Recommendations endpoint. Beta release to 20–30 students.</div></div>
+  <div class="milestone"><span class="milestone-dot" style="background:#378ADD"></span><strong>Month 2 milestone:</strong> Full AI tutor working (text/image/voice/video), quizzes, flashcards, gamification. Beta with real students. RAG accuracy review.</div>
+</div>
+
+<div class="month-block">
+  <div class="month-hd">
+    <div class="month-badge" style="background:#7F77DD;color:#fff">3</div>
+    <div class="month-info"><div class="mt">Month 3 — Lab, Polish & Launch</div><div class="ms">Features: The Lab (F5) · Notifications · Offline · RTL · App Stores</div></div>
+  </div>
+  <div class="week-row"><span class="wk wk3">Week 9</span><div class="wk-content"><strong>The Lab:</strong> Equation balancer (chempy), periodic table API, pH simulator, atom builder validator. Flutter: lab home grid, equation balancer tool, interactive periodic table (InteractiveViewer). Firebase FCM setup. Push notification architecture (device token storage).</div></div>
+  <div class="week-row"><span class="wk wk3">Week 10</span><div class="wk-content"><strong>Notifications + RTL:</strong> n8n: 6 workflows (daily reminder, streak alert, quiz ready, exam countdown, achievement, weekly summary). Flutter: FCM integration, notification handler. Arabic RTL (flutter_localizations + arb files). Lab: pH simulator + atom builder screens. Offline: Hive cache for lessons + flashcards.</div></div>
+  <div class="week-row"><span class="wk wk3">Week 11</span><div class="wk-content"><strong>Production infra:</strong> FastAPI on Fly.io/Railway. PostgreSQL on Neon (pgvector support). Redis on Upstash. n8n on n8n.cloud. GitHub Actions auto-deploy. Sentry (Flutter + FastAPI). UptimeRobot. GDPR: privacy policy, data export endpoint, account deletion. iOS + Android store submissions.</div></div>
+  <div class="week-row"><span class="wk wk3">Week 12</span><div class="wk-content"><strong>Launch:</strong> App store approvals → go live. Mixpanel analytics events wired. Load test (Locust: 200 concurrent users). Monitor Sentry error rate hourly. Hotfix SLA: critical bugs fixed within 2 hours. Stakeholder demo with live metrics. Post-launch user interviews (10 students). Next cycle planning.</div></div>
+  <div class="milestone"><span class="milestone-dot" style="background:#7F77DD"></span><strong>Month 3 milestone:</strong> Live on iOS App Store + Google Play. All 5 features complete. Arabic + English. Push notifications active.</div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- TECH STACK -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="pane" id="pane-stack">
+<div class="sec">Backend</div>
+<div class="stack-grid">
+  <div class="stack-card"><div class="sc-layer">Framework</div><div class="sc-name">FastAPI + Python 3.11+</div><div class="sc-why">Async-first. Native StreamingResponse for LLM token streaming. Auto-generates Swagger docs from type hints. Pydantic v2 for validation. Far better than Django for AI-heavy async workloads.</div></div>
+  <div class="stack-card"><div class="sc-layer">ORM + Migrations</div><div class="sc-name">SQLModel + Alembic</div><div class="sc-why">SQLModel = Pydantic + SQLAlchemy in one class. Works natively with FastAPI request/response models. Alembic handles schema migrations. Use async engine (asyncpg driver) for non-blocking DB calls.</div></div>
+  <div class="stack-card"><div class="sc-layer">Primary database</div><div class="sc-name">PostgreSQL 15 + pgvector</div><div class="sc-why">Single DB for relational data AND vector embeddings. pgvector extension supports cosine similarity search for RAG. Neon (managed, serverless) for production — has native pgvector support.</div></div>
+  <div class="stack-card"><div class="sc-layer">Cache + queues</div><div class="sc-name">Redis 7 + Celery</div><div class="sc-why">Redis: JWT refresh tokens, API response cache (5–60 min TTL), rate limiting. Celery: async tasks for TTS generation, image generation, reel creation — so API never blocks. Upstash Redis for production (serverless).</div></div>
+  <div class="stack-card"><div class="sc-layer">Main LLM</div><div class="sc-name">Claude claude-sonnet-4-20250514</div><div class="sc-why">Best instruction-following for system prompt personalization (teaching styles). Consistent tone control. Streaming support. Use Anthropic SDK. Fallback: GPT-4o if Anthropic is unavailable.</div></div>
+  <div class="stack-card"><div class="sc-layer">Embeddings + TTS + STT</div><div class="sc-name">OpenAI (3 APIs)</div><div class="sc-why">text-embedding-3-small: cheapest, best quality for RAG. TTS-1: natural voice synthesis. Whisper: best Arabic + English STT. DALL-E 3: diagram generation.</div></div>
+  <div class="stack-card"><div class="sc-layer">RAG orchestration</div><div class="sc-name">LangChain + pgvector</div><div class="sc-why">PyPDFLoader → RecursiveCharacterTextSplitter → PGVectorStore. Retrieval chain with MMR (Maximal Marginal Relevance) for diverse context. Filter by lesson_id for scoped search.</div></div>
+  <div class="stack-card"><div class="sc-layer">Object storage</div><div class="sc-name">Cloudflare R2</div><div class="sc-why">S3-compatible. Zero egress fees (unlike AWS S3). Use for: TTS MP3s, DALL-E images, reel audio. boto3 compatible. CDN URL via Cloudflare. Cheap for an early-stage product.</div></div>
+  <div class="stack-card"><div class="sc-layer">Automation</div><div class="sc-name">n8n (self-hosted / n8n.cloud)</div><div class="sc-why">No-code workflow builder for: push notifications, emails, Stripe billing, weekly summaries. Better than writing custom cron jobs. Version-control workflows as JSON in /n8n/workflows/ in repo.</div></div>
+  <div class="stack-card"><div class="sc-layer">Auth</div><div class="sc-name">JWT (python-jose) + bcrypt</div><div class="sc-why">Access tokens (15 min) + Refresh tokens (30 days in Redis). No external auth service needed — keeps costs low and control high. Add Google OAuth in Month 3 if needed.</div></div>
+  <div class="stack-card"><div class="sc-layer">Payments</div><div class="sc-name">Stripe</div><div class="sc-why">Subscription billing. Webhook events: checkout.session.completed → activate, customer.subscription.deleted → expire. n8n handles webhook → DB update flow. Stripe Customer Portal for self-service plan management.</div></div>
+  <div class="stack-card"><div class="sc-layer">Monitoring</div><div class="sc-name">Sentry + UptimeRobot</div><div class="sc-why">Sentry: exception tracking with user context in both FastAPI and Flutter. Alert on error rate spikes. UptimeRobot: uptime + response time monitoring. Free tiers sufficient for launch.</div></div>
+</div>
+
+<div class="sec">Frontend</div>
+<div class="stack-grid">
+  <div class="stack-card"><div class="sc-layer">Framework</div><div class="sc-name">Flutter 3.x (Dart)</div><div class="sc-why">Single codebase for iOS + Android (web later). Strong animation system for XP/achievement effects. Good Arabic RTL support via flutter_localizations.</div></div>
+  <div class="stack-card"><div class="sc-layer">State management</div><div class="sc-name">Riverpod 2.x</div><div class="sc-why">AsyncNotifierProvider for all async data. Compile-time safe. No BuildContext needed in providers. Auto-dispose unused providers. Code gen with riverpod_generator.</div></div>
+  <div class="stack-card"><div class="sc-layer">Navigation</div><div class="sc-name">go_router</div><div class="sc-why">Declarative routing. StatefulShellRoute for bottom nav (each tab keeps its stack). Auth redirect guards. Deep linking support for push notifications.</div></div>
+  <div class="stack-card"><div class="sc-layer">HTTP + streaming</div><div class="sc-name">Dio + custom SSE parser</div><div class="sc-why">Dio for all REST calls. Custom SSE (Server-Sent Events) parser using Dio's ResponseBody for LLM token streaming. Auth interceptor + refresh token retry logic.</div></div>
+  <div class="stack-card"><div class="sc-layer">Local storage</div><div class="sc-name">Hive + flutter_secure_storage</div><div class="sc-why">Hive: offline cache for lessons, flashcards, chat history. Fast NoSQL local DB. flutter_secure_storage: JWT tokens (uses iOS Keychain / Android Keystore).</div></div>
+  <div class="stack-card"><div class="sc-layer">Audio</div><div class="sc-name">just_audio + record</div><div class="sc-why">just_audio: play TTS MP3s with speed control (0.75x–1.5x). record: capture voice input (m4a format). Both cross-platform (iOS + Android).</div></div>
+</div>
+
+<div class="sec">Production hosting</div>
+<div class="card">
+  <div class="card-b">
+    <span class="badge b-be">FastAPI</span> Fly.io or Railway — Docker image deploy. Auto-scale. ~$20/mo to start.<br>
+    <span class="badge b-be">PostgreSQL</span> Neon — serverless, native pgvector, branching for dev/prod. Free tier generous.<br>
+    <span class="badge b-be">Redis</span> Upstash — serverless Redis. Pay per request. Zero idle cost.<br>
+    <span class="badge b-be">n8n</span> n8n.cloud starter plan or self-host on a $6/mo VPS.<br>
+    <span class="badge b-be">Storage</span> Cloudflare R2 — zero egress fees. S3-compatible.<br>
+    <span class="badge b-be">Monitoring</span> Sentry free tier (5K errors/mo) + UptimeRobot free tier.
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- FOLDERS -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="pane" id="pane-folders">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<div>
+  <div class="sec">Backend — /backend</div>
+  <div class="tree">
+<span class="dir">backend/</span>
+├── <span class="dir">app/</span>
+│   ├── <span class="dir">api/</span>          <span class="cmt"># route handlers</span>
+│   │   ├── <span class="file">auth.py</span>
+│   │   ├── <span class="file">students.py</span>
+│   │   ├── <span class="file">chapters.py</span>
+│   │   ├── <span class="file">lessons.py</span>
+│   │   ├── <span class="file">chat.py</span>
+│   │   ├── <span class="file">quiz.py</span>
+│   │   ├── <span class="file">flashcards.py</span>
+│   │   ├── <span class="file">reels.py</span>
+│   │   ├── <span class="file">study_plan.py</span>
+│   │   ├── <span class="file">lab.py</span>
+│   │   └── <span class="file">xp.py</span>
+│   ├── <span class="dir">models/</span>          <span class="cmt"># SQLModel tables</span>
+│   │   ├── <span class="file">user.py</span>
+│   │   ├── <span class="file">student_profile.py</span>
+│   │   ├── <span class="file">lesson.py</span>
+│   │   ├── <span class="file">chat.py</span>
+│   │   ├── <span class="file">quiz.py</span>
+│   │   ├── <span class="file">flashcard.py</span>
+│   │   ├── <span class="file">progress.py</span>
+│   │   └── <span class="file">achievement.py</span>
+│   ├── <span class="dir">schemas/</span>         <span class="cmt"># Pydantic request/response</span>
+│   ├── <span class="dir">services/</span>        <span class="cmt"># business logic</span>
+│   │   ├── <span class="file">rag.py</span>         <span class="cmt"># retrieval</span>
+│   │   ├── <span class="file">prompt.py</span>      <span class="cmt"># prompt builder</span>
+│   │   ├── <span class="file">llm.py</span>         <span class="cmt"># Claude client</span>
+│   │   ├── <span class="file">tts.py</span>         <span class="cmt"># OpenAI TTS</span>
+│   │   ├── <span class="file">stt.py</span>         <span class="cmt"># Whisper</span>
+│   │   ├── <span class="file">image_gen.py</span>   <span class="cmt"># DALL-E</span>
+│   │   ├── <span class="file">xp.py</span>          <span class="cmt"># XP awards</span>
+│   │   └── <span class="file">recommendations.py</span>
+│   ├── <span class="dir">workers/</span>         <span class="cmt"># Celery tasks</span>
+│   │   ├── <span class="file">celery_app.py</span>
+│   │   ├── <span class="file">tts_tasks.py</span>
+│   │   ├── <span class="file">image_tasks.py</span>
+│   │   └── <span class="file">reel_tasks.py</span>
+│   ├── <span class="dir">core/</span>
+│   │   ├── <span class="file">config.py</span>     <span class="cmt"># pydantic-settings</span>
+│   │   ├── <span class="file">database.py</span>   <span class="cmt"># async engine</span>
+│   │   ├── <span class="file">redis.py</span>      <span class="cmt"># Redis client</span>
+│   │   ├── <span class="file">storage.py</span>    <span class="cmt"># R2/S3 client</span>
+│   │   ├── <span class="file">security.py</span>   <span class="cmt"># JWT utils</span>
+│   │   └── <span class="file">deps.py</span>       <span class="cmt"># FastAPI deps</span>
+│   └── <span class="file">main.py</span>
+├── <span class="dir">migrations/</span>       <span class="cmt"># Alembic</span>
+├── <span class="dir">prompts/</span>          <span class="cmt"># style templates</span>
+│   ├── <span class="file">beginner.txt</span>
+│   ├── <span class="file">step_by_step.txt</span>
+│   ├── <span class="file">real_life.txt</span>
+│   ├── <span class="file">academic.txt</span>
+│   ├── <span class="file">visual.txt</span>
+│   └── <span class="file">quick_recap.txt</span>
+├── <span class="dir">tests/</span>
+│   ├── <span class="file">test_auth.py</span>
+│   ├── <span class="file">test_chat.py</span>
+│   └── <span class="file">test_quiz.py</span>
+├── <span class="file">Dockerfile</span>
+├── <span class="file">requirements.txt</span>
+└── <span class="file">.env.example</span>
+  </div>
+</div>
+<div>
+  <div class="sec">Frontend — /frontend</div>
+  <div class="tree">
+<span class="dir">frontend/</span>
+├── <span class="dir">lib/</span>
+│   ├── <span class="dir">core/</span>
+│   │   ├── <span class="file">api_client.dart</span>  <span class="cmt"># Dio</span>
+│   │   ├── <span class="file">router.dart</span>      <span class="cmt"># go_router</span>
+│   │   ├── <span class="file">theme.dart</span>       <span class="cmt"># Figma colors</span>
+│   │   ├── <span class="file">constants.dart</span>
+│   │   └── <span class="file">storage.dart</span>     <span class="cmt"># Hive</span>
+│   ├── <span class="dir">features/</span>
+│   │   ├── <span class="dir">auth/</span>
+│   │   │   ├── <span class="dir">data/</span>      <span class="cmt"># API calls</span>
+│   │   │   ├── <span class="dir">domain/</span>    <span class="cmt"># models</span>
+│   │   │   ├── <span class="dir">providers/</span> <span class="cmt"># Riverpod</span>
+│   │   │   └── <span class="dir">ui/</span>        <span class="cmt"># screens</span>
+│   │   ├── <span class="dir">onboarding/</span>
+│   │   ├── <span class="dir">home/</span>
+│   │   ├── <span class="dir">lessons/</span>
+│   │   │   ├── <span class="dir">data/</span>
+│   │   │   ├── <span class="dir">domain/</span>
+│   │   │   ├── <span class="dir">providers/</span>
+│   │   │   └── <span class="dir">ui/</span>
+│   │   │       ├── <span class="file">lessons_screen.dart</span>
+│   │   │       ├── <span class="file">lesson_detail.dart</span>
+│   │   │       └── <span class="file">study_plan_screens.dart</span>
+│   │   ├── <span class="dir">ai_chat/</span>
+│   │   │   ├── <span class="dir">data/</span>
+│   │   │   ├── <span class="dir">providers/</span>
+│   │   │   └── <span class="dir">ui/</span>
+│   │   │       ├── <span class="file">chat_screen.dart</span>
+│   │   │       ├── <span class="file">message_bubble.dart</span>
+│   │   │       ├── <span class="file">format_switcher.dart</span>
+│   │   │       ├── <span class="file">voice_input.dart</span>
+│   │   │       └── <span class="file">reel_player.dart</span>
+│   │   ├── <span class="dir">quiz/</span>
+│   │   ├── <span class="dir">flashcards/</span>
+│   │   ├── <span class="dir">lab/</span>
+│   │   │   ├── <span class="file">lab_home.dart</span>
+│   │   │   ├── <span class="file">equation_balancer.dart</span>
+│   │   │   ├── <span class="file">periodic_table.dart</span>
+│   │   │   ├── <span class="file">ph_simulator.dart</span>
+│   │   │   └── <span class="file">atom_builder.dart</span>
+│   │   └── <span class="dir">profile/</span>
+│   ├── <span class="dir">shared/</span>
+│   │   ├── <span class="dir">widgets/</span>
+│   │   │   ├── <span class="file">app_button.dart</span>
+│   │   │   ├── <span class="file">progress_bar.dart</span>
+│   │   │   ├── <span class="file">skeleton_loader.dart</span>
+│   │   │   ├── <span class="file">xp_animation.dart</span>
+│   │   │   └── <span class="file">achievement_overlay.dart</span>
+│   │   └── <span class="dir">utils/</span>
+│   └── <span class="file">main.dart</span>
+├── <span class="dir">assets/</span>
+│   ├── <span class="dir">l10n/</span>     <span class="cmt"># AR + EN arb files</span>
+│   └── <span class="dir">images/</span>
+└── <span class="file">pubspec.yaml</span>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- API DESIGN -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="pane" id="pane-api">
+<div class="card">
+  <div class="card-t">API conventions</div>
+  <div class="card-b">Style: REST. Base URL: <code>https://api.edumind.app/v1</code>. Auth: Bearer JWT in Authorization header. All responses: <code>{data: ..., meta: {request_id, timestamp}}</code>. Errors: <code>{error: {code, message, details}}</code>. Pagination: <code>?page=1&limit=20</code> with <code>meta.total, meta.has_next</code>. Streaming: text/event-stream (SSE).</div>
+</div>
+<div class="sec">Auth endpoints</div>
+<div class="card">
+  <div class="api-row"><span class="method post">POST</span><div><div class="api-path">/auth/register</div><div class="api-desc">Body: {email, password, name}. Returns: {access_token, refresh_token, user_id}. Triggers welcome email via n8n.</div></div><span class="api-tag">Public</span></div>
+  <div class="api-row"><span class="method post">POST</span><div><div class="api-path">/auth/login</div><div class="api-desc">Body: {email, password}. Returns: {access_token, refresh_token, has_profile: bool}.</div></div><span class="api-tag">Public</span></div>
+  <div class="api-row"><span class="method post">POST</span><div><div class="api-path">/auth/refresh</div><div class="api-desc">Body: {refresh_token}. Issues new access_token. Rotates refresh token. Old refresh invalidated in Redis.</div></div><span class="api-tag">Public</span></div>
+  <div class="api-row"><span class="method post">POST</span><div><div class="api-path">/auth/logout</div><div class="api-desc">Deletes refresh token from Redis. Subsequent refresh calls fail.</div></div><span class="api-tag">Auth</span></div>
+</div>
+<div class="sec">Student & profile endpoints</div>
+<div class="card">
+  <div class="api-row"><span class="method get">GET</span><div><div class="api-path">/students/profile</div><div class="api-desc">Returns full StudentProfile: teaching_style, answer_format[], interests[], language, exam_date, subscription_status, trial_messages_remaining.</div></div><span class="api-tag">Auth</span></div>
+  <div class="api-row"><span class="method put">PUT</span><div><div class="api-path">/students/profile</div><div class="api-desc">Update any profile field. Partial update supported. Triggers re-cache of all AI prompts for this user.</div></div><span class="api-tag">Auth</span></div>
+  <div class="api-row"><span class="method get">GET</span><div><div class="api-path">/dashboard</div><div class="api-desc">Returns: {streak_days, xp, level, today_lesson, overall_pct, chapters_progress[], weak_topics[], exam_days_remaining, recommendations[]}. 5-min Redis cache.</div></div><span class="api-tag">Auth</span></div>
+  <div class="api-row"><span class="method get">GET</span><div><div class="api-path">/students/stats</div><div class="api-desc">Returns: {lessons_completed, quizzes_taken, quiz_avg_score, flashcards_mastered, total_study_minutes, achievements[]}.</div></div><span class="api-tag">Auth</span></div>
+</div>
+<div class="sec">Lessons & progress</div>
+<div class="card">
+  <div class="api-row"><span class="method get">GET</span><div><div class="api-path">/chapters</div><div class="api-desc">Returns chapters with per-user progress_pct. Cached 1hr (busted on lesson complete). Sorted by order_index.</div></div><span class="api-tag">Auth</span></div>
+  <div class="api-row"><span class="method get">GET</span><div><div class="api-path">/chapters/{id}/lessons</div><div class="api-desc">Returns lessons with per-user status (not_started/in_progress/done), difficulty, estimated_minutes.</div></div><span class="api-tag">Auth</span></div>
+  <div class="api-row"><span class="method post">POST</span><div><div class="api-path">/progress/lesson/{id}/complete</div><div class="api-desc">Marks lesson done. Awards XP. Updates streak. Triggers flashcard generation (Celery). Returns {xp_awarded, new_total_xp, achievement_unlocked?}.</div></div><span class="api-tag">Auth</span></div>
+  <div class="api-row"><span class="method post">POST</span><div><div class="api-path">/study-plan/generate</div><div class="api-desc">Body: {exam_date, chapter_ids[]}. Returns day-by-day plan with lesson assignments. AI weights hard chapters with 2× days. Saves to study_plans table.</div></div><span class="api-tag">Auth</span></div>
+  <div class="api-row"><span class="method get">GET</span><div><div class="api-path">/study-plan/today</div><div class="api-desc">Returns today's scheduled lesson (or null if rest day / no plan). Used by dashboard and push notifications.</div></div><span class="api-tag">Auth</span></div>
+</div>
+<div class="sec">AI Chat</div>
+<div class="card">
+  <div class="api-row"><span class="method post">POST</span><div><div class="api-path">/chat/sessions</div><div class="api-desc">Creates new chat session. Body: {lesson_id?}. Returns session_id. One session per lesson context (or open-ended).</div></div><span class="api-tag">Auth</span></div>
+  <div class="api-row"><span class="method post">POST</span><div><div class="api-path">/chat/message</div><div class="api-desc">Body: {session_id, content, format: text|image|voice|video}. Returns: StreamingResponse (text/event-stream) for text. For image/voice/video: returns text + task_id for async media. Subscription gate: 20 free trial messages.</div></div><span class="api-tag">Auth · Streaming</span></div>
+  <div class="api-row"><span class="method post">POST</span><div><div class="api-path">/chat/voice-input</div><div class="api-desc">Multipart: audio file (m4a/mp3, max 25MB). Returns {transcript: str}. Whisper API with language hint from profile.</div></div><span class="api-tag">Auth</span></div>
+  <div class="api-row"><span class="method post">POST</span><div><div class="api-path">/chat/messages/{id}/feedback</div><div class="api-desc">Body: {feedback: understood|not_understood}. If not_understood: triggers re-explain with next interest analogy. Returns new message or re-explain task.</div></div><span class="api-tag">Auth</span></div>
+  <div class="api-row"><span class="method get">GET</span><div><div class="api-path">/chat/sessions/{id}/messages</div><div class="api-desc">Paginated message history. ?page=1&limit=20. Returns messages with media_url (populated after async tasks complete).</div></div><span class="api-tag">Auth</span></div>
+</div>
+<div class="sec">Quiz, Flashcards, Lab</div>
+<div class="card">
+  <div class="api-row"><span class="method post">POST</span><div><div class="api-path">/quiz/generate</div><div class="api-desc">Body: {lesson_id, count: 5-10, types: [mcq, true_false, fill_blank]}. RAG retrieves content → LLM generates → saves questions. Returns full quiz.</div></div><span class="api-tag">Auth</span></div>
+  <div class="api-row"><span class="method post">POST</span><div><div class="api-path">/quiz/{id}/submit</div><div class="api-desc">Body: {answers: [{question_id, answer}]}. Returns {score_pct, explanations[], xp_awarded, weaknesses_updated[]}.</div></div><span class="api-tag">Auth</span></div>
+  <div class="api-row"><span class="method get">GET</span><div><div class="api-path">/flashcards/due</div><div class="api-desc">Returns flashcards due for review today (SM-2 spaced repetition). Includes lesson + chapter context.</div></div><span class="api-tag">Auth</span></div>
+  <div class="api-row"><span class="method post">POST</span><div><div class="api-path">/flashcards/{id}/review</div><div class="api-desc">Body: {result: knew|didnt_know}. Updates SM-2 ease factor + next_review_at. Returns updated schedule.</div></div><span class="api-tag">Auth</span></div>
+  <div class="api-row"><span class="method post">POST</span><div><div class="api-path">/lab/balance-equation</div><div class="api-desc">Body: {equation: str}. Returns {balanced, steps[], atom_counts: {before, after}, is_valid}. Uses chempy; LLM fallback.</div></div><span class="api-tag">Auth</span></div>
+  <div class="api-row"><span class="method get">GET</span><div><div class="api-path">/lab/elements/{symbol}</div><div class="api-desc">Returns element data + AI explanation in student's teaching style. Cached per (symbol, style) in Redis.</div></div><span class="api-tag">Auth</span></div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════ -->
+<!-- AI TUTOR SYSTEM -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="pane" id="pane-ai">
+<div class="sec">AI tutor architecture — 4 layers</div>
+
+<div class="ai-layer">
+  <div class="ai-layer-t"><span style="font-size:14px">🧠</span> Layer 1 — Prompt builder (personalization)</div>
+  <div class="ai-layer-d">Every chat request builds a custom system prompt from the student's profile. This is the core of personalization — no fine-tuning needed, just smart prompt assembly.</div>
+  <div class="code-block"><span class="cmt2"># app/services/prompt.py</span>
+<span class="kw">def</span> build_system_prompt(profile: StudentProfile) -> str:
+    base = <span class="str">"""You are a Grade 9 chemistry tutor. 
+Only answer from the provided book context.
+If context doesn't cover the question, say so honestly.
+Always answer in {language}."""</span>
+    
+    style = STYLE_TEMPLATES[profile.teaching_style]
+    <span class="cmt2"># e.g. BEGINNER: "Use simple words. Define every term..."</span>
+    <span class="cmt2"># e.g. REAL_LIFE: "Connect to student interests: {interests}..."</span>
+    
+    format_inst = FORMAT_INSTRUCTIONS[profile.answer_format]
+    <span class="cmt2"># e.g. ["text","image"]: "End with: IMAGE: [description]"</span>
+    <span class="cmt2"># e.g. ["voice"]: "Write in natural spoken language..."</span>
+    
+    interests_ctx = build_interests_context(profile.interests)
+    <span class="cmt2"># Maps: football → "Use ball/team/pitch analogies"</span>
+    <span class="cmt2">#       cooking → "Use recipes/ingredients analogies"</span>
+    
+    <span class="kw">return</span> f<span class="str">"{base}\n\n{style}\n\n{format_inst}\n\n{interests_ctx}"</span></div>
+</div>
+
+<div class="ai-layer">
+  <div class="ai-layer-t"><span style="font-size:14px">📚</span> Layer 2 — RAG retrieval (accuracy)</div>
+  <div class="ai-layer-d">All answers grounded in the official chemistry book. Filtered by lesson context for precision. Re-ranking ensures the most relevant chunks surface first.</div>
+  <div class="code-block"><span class="cmt2"># app/services/rag.py</span>
+<span class="kw">async def</span> retrieve_context(
+    query: str,
+    lesson_id: str | <span class="kw">None</span> = <span class="kw">None</span>,
+    top_k: int = 5
+) -> list[str]:
+    
+    <span class="cmt2"># Embed the query</span>
+    query_embedding = <span class="kw">await</span> openai.embed(query)
+    
+    <span class="cmt2"># pgvector similarity search</span>
+    <span class="cmt2"># If lesson_id: filter to that lesson's chunks (scoped)</span>
+    <span class="cmt2"># If None: search entire book (open-ended questions)</span>
+    chunks = <span class="kw">await</span> vector_store.similarity_search(
+        embedding=query_embedding,
+        filter={<span class="str">"lesson_id"</span>: lesson_id} <span class="kw">if</span> lesson_id <span class="kw">else</span> {},
+        k=top_k * 2  <span class="cmt2"># over-retrieve</span>
+    )
+    
+    <span class="cmt2"># Re-rank by relevance score, return top_k</span>
+    <span class="kw">return</span> [c.page_content <span class="kw">for</span> c <span class="kw">in</span> chunks[:top_k]]</div>
+</div>
+
+<div class="ai-layer">
+  <div class="ai-layer-t"><span style="font-size:14px">💬</span> Layer 3 — Conversation memory (context)</div>
+  <div class="ai-layer-d">Short-term memory: last N messages per session (sliding window). Long-term: student weakness profile updated after quizzes. No fine-tuning — memory injected as structured context.</div>
+  <div class="code-block"><span class="cmt2"># Memory strategy per session</span>
+
+SHORT_TERM_WINDOW = 10  <span class="cmt2"># last 10 message pairs</span>
+<span class="cmt2"># Sent as messages[] array to Claude API</span>
+
+<span class="cmt2"># Long-term profile (updated after each quiz/feedback)</span>
+LONG_TERM_CONTEXT = <span class="str">"""
+Student profile (injected into system prompt):
+- Weak topics: {weak_topics}  → "focus more detail here"
+- Past confusions: {not_understood_count} on {topic} → 
+  "try a different analogy"
+- Preferred depth: inferred from feedback history
+"""</span>
+
+<span class="cmt2"># Session memory stored in: PostgreSQL (persistent)</span>
+<span class="cmt2"># Hot session cache: Redis (last 10 msgs, TTL 1hr)</span>
+<span class="cmt2"># Profile memory: student_profiles + student_weaknesses</span></div>
+</div>
+
+<div class="ai-layer">
+  <div class="ai-layer-t"><span style="font-size:14px">🔁</span> Layer 4 — Feedback loop (improvement)</div>
+  <div class="ai-layer-d">Every student interaction updates the personalization model. "Didn't understand" triggers a re-explain with a fresh analogy. Patterns accumulate into the student's long-term profile.</div>
+  <div class="code-block"><span class="cmt2"># Re-explain strategy when feedback = "not_understood"</span>
+<span class="kw">async def</span> re_explain(session_id, message_id, profile):
+    
+    <span class="cmt2"># Find which interest was used last time</span>
+    last_interest = get_last_used_interest(session_id)
+    
+    <span class="cmt2"># Pick the next interest in the student's list</span>
+    next_interest = cycle_to_next(
+        profile.interests,
+        exclude=last_interest
+    )
+    
+    <span class="cmt2"># Override the interests_ctx in the prompt</span>
+    new_prompt = build_system_prompt(
+        profile,
+        force_interest=next_interest,
+        instruction=<span class="str">"Student didn't understand. Try a 
+completely different angle."</span>
+    )
+    
+    <span class="cmt2"># Stream new explanation to client</span>
+    <span class="kw">return await</span> stream_llm_response(
+        system=new_prompt,
+        messages=get_session_messages(session_id)
+    )
+
+<span class="cmt2"># Long-term: after 3+ "not_understood" on same topic →</span>
+<span class="cmt2"># flag as weak in student_weaknesses table →</span>
+<span class="cmt2"># appears in dashboard recommendations</span></div>
+</div>
+
+<div class="sec">Interest analogy map — how interests become chemistry analogies</div>
+<div class="card">
+  <div class="card-b" style="font-family:var(--font-mono);font-size:11px;line-height:1.8">
+    INTERESTS_ANALOGY_MAP = {<br>
+    &nbsp;&nbsp;"football":  "Use ball, team, pitch, formation, player-position analogies",<br>
+    &nbsp;&nbsp;"cooking":   "Use recipe, ingredients, heat, mixing, taste analogies",<br>
+    &nbsp;&nbsp;"gaming":    "Use XP, levels, items, stats, co-op, respawn analogies",<br>
+    &nbsp;&nbsp;"music":     "Use rhythm, frequency, harmony, notes, instrument analogies",<br>
+    &nbsp;&nbsp;"cycling":   "Use gears, friction, momentum, distance, energy analogies",<br>
+    &nbsp;&nbsp;"art":       "Use color, pigment, canvas, mixing, contrast analogies",<br>
+    &nbsp;&nbsp;"tech":      "Use circuits, signals, battery, code, hardware analogies",<br>
+    &nbsp;&nbsp;"nature":    "Use plants, ecosystem, soil, weather, seasons analogies",<br>
+    &nbsp;&nbsp;"movies":    "Use character, plot, scene, director, special-effects analogies",<br>
+    &nbsp;&nbsp;"travel":    "Use journey, destination, map, altitude, environment analogies",<br>
+    &nbsp;&nbsp;"fitness":   "Use muscle, energy, protein, endurance, recovery analogies",<br>
+    &nbsp;&nbsp;"volleyball":"Use serve, net, team, bounce, force analogies"<br>
+    }
+  </div>
+</div>
+
+<div class="sec">Streaming implementation — Flutter side</div>
+<div class="card">
+  <div class="card-b" style="font-family:var(--font-mono);font-size:11px;line-height:1.8">
+    <span style="color:var(--color-text-info)">// chat_provider.dart — SSE streaming with Dio</span><br>
+    final response = await dio.post('/chat/message',<br>
+    &nbsp;&nbsp;data: {session_id, content, format},<br>
+    &nbsp;&nbsp;options: Options(responseType: ResponseType.stream));<br><br>
+    response.data.stream<br>
+    &nbsp;&nbsp;.transform(utf8.decoder)<br>
+    &nbsp;&nbsp;.transform(LineSplitter())<br>
+    &nbsp;&nbsp;.where((line) => line.startsWith('data: '))<br>
+    &nbsp;&nbsp;.map((line) => line.substring(6)) <span style="color:var(--color-text-tertiary)">// strip "data: "</span><br>
+    &nbsp;&nbsp;.listen((token) {<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;state = state.copyWith(streamingText: state.streamingText + token);<br>
+    &nbsp;&nbsp;}, onDone: () {<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--color-text-tertiary)">// Move from streaming → final message</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;state = state.copyWith(messages: [...state.messages, finalMessage]);<br>
+    &nbsp;&nbsp;});
+  </div>
+</div>
+</div>
+
+</div>
+
+<script>
+function tab(btn, id) {
+  document.querySelectorAll('.tn').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('.pane').forEach(p => p.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('pane-' + id).classList.add('on');
+}
+function tog(el) {
+  const body = el.nextElementSibling;
+  const arrow = el.querySelector('.feat-arrow');
+  const open = body.classList.toggle('open');
+  arrow.classList.toggle('open', open);
+}
+</script>

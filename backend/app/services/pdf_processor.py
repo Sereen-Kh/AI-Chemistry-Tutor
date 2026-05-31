@@ -29,16 +29,13 @@ def classify_pages(pdf_path: str) -> dict:
         for index, page in enumerate(pdf.pages, start=1):
             text = (doc[index - 1].get_text("text") or page.extract_text() or "").strip()
             compact_len = len("".join(text.split()))
-            image_count = len(page.images or [])
-            width = float(page.width or 1)
-            height = float(page.height or 1)
-            page_area = width * height
-            image_area = sum(float(img.get("width", 0)) * float(img.get("height", 0)) for img in page.images or [])
-            image_area_ratio = min(image_area / page_area, 1.0) if page_area else 0
+            visual = detect_visual_content(pdf_path, index)
+            image_count = visual["image_count"]
+            image_area_ratio = visual["image_area_ratio"]
             if compact_len <= 50:
                 page_type = "NEEDS_VISION"
                 image_pages.append(index)
-            elif image_count > 0 and image_area_ratio >= 0.15:
+            elif visual["has_important_visual_content"]:
                 page_type = "MIXED_VISION"
                 mixed_pages.append(index)
             else:
@@ -51,6 +48,8 @@ def classify_pages(pdf_path: str) -> dict:
                     "text_chars": len(text),
                     "image_count": image_count,
                     "image_area_ratio": round(image_area_ratio, 4),
+                    "table_count": visual["table_count"],
+                    "has_equation_hints": visual["has_equation_hints"],
                 }
             )
     doc.close()
@@ -95,6 +94,42 @@ def extract_text_page(pdf_path: str, page_num: int) -> str:
     return "\n\n".join(part for part in [text.strip(), table_text.strip()] if part)
 
 
+def extract_selectable_text_page(pdf_path: str, page_num: int) -> str:
+    """Extract selectable page text for ingestion."""
+    return extract_text_page(pdf_path, page_num)
+
+
+def detect_visual_content(pdf_path: str, page_num: int) -> dict:
+    """Detect whether a page likely contains important visual content."""
+    import fitz
+    import pdfplumber
+
+    path = _require_pdf(pdf_path)
+    with pdfplumber.open(path) as pdf:
+        page = pdf.pages[page_num - 1]
+        width = float(page.width or 1)
+        height = float(page.height or 1)
+        page_area = width * height
+        image_count = len(page.images or [])
+        image_area = sum(float(img.get("width", 0)) * float(img.get("height", 0)) for img in page.images or [])
+        image_area_ratio = min(image_area / page_area, 1.0) if page_area else 0
+        table_count = len(page.extract_tables() or [])
+    doc = fitz.open(path)
+    try:
+        text = doc[page_num - 1].get_text("text") or ""
+    finally:
+        doc.close()
+    equation_markers = ["=", "→", "↔", "H₂", "O₂", "CO₂", "NaCl", "مول", "معادلة"]
+    has_equation_hints = any(marker in text for marker in equation_markers)
+    return {
+        "image_count": image_count,
+        "image_area_ratio": round(image_area_ratio, 4),
+        "table_count": table_count,
+        "has_equation_hints": has_equation_hints,
+        "has_important_visual_content": image_area_ratio >= 0.15 or table_count > 0,
+    }
+
+
 def render_page_image(pdf_path: str, page_num: int, dpi: int = 300):
     """Render a one-based PDF page to a PIL image."""
     import fitz
@@ -126,3 +161,13 @@ def render_page_image_file(
     image = render_page_image(pdf_path, page_num, dpi=dpi)
     image.save(image_path, format="PNG")
     return image_path
+
+
+def render_page_to_image(
+    pdf_path: str,
+    page_num: int,
+    output_dir: str | Path,
+    dpi: int = 300,
+) -> Path:
+    """Render a one-based PDF page to a 300 DPI PNG file for Gemini Vision."""
+    return render_page_image_file(pdf_path, page_num, output_dir, dpi=dpi)

@@ -22,6 +22,9 @@ def ingest_pdf_task(
     year: int | None = None,
     max_pages: int | None = None,
     ocr_provider: str | None = None,
+    ingestion_mode: str | None = None,
+    ocr_required_for_vision: bool | None = None,
+    allow_partial_ingestion: bool | None = None,
     clear_existing: bool = False,
 ):
     """Run the full PDF ingestion pipeline and report progress to Celery."""
@@ -42,6 +45,9 @@ def ingest_pdf_task(
                 year=year,
                 max_pages=max_pages,
                 ocr_provider_name=ocr_provider,
+                ingestion_mode=ingestion_mode,
+                ocr_required_for_vision=ocr_required_for_vision,
+                allow_partial_ingestion=allow_partial_ingestion,
                 clear_existing=clear_existing,
                 progress_callback=progress,
             )

@@ -1,0 +1,28 @@
+{
+  "page_number": 38,
+  "page_type": "NEEDS_VISION",
+  "extraction_method": "ocr_unavailable",
+  "status": "skipped_no_provider",
+  "text_layer_content": "",
+  "ocr_content": "",
+  "merged_content": "",
+  "sections": [],
+  "questions": [],
+  "diagrams": [],
+  "tables": [],
+  "equations": [],
+  "warnings": [
+    "OCR provider 'gemini' is unavailable: GEMINI_API_KEY is not configured.",
+    "Vision extraction skipped; text-layer fallback will be used when available."
+  ],
+  "errors": [
+    "NEEDS_VISION page requires OCR, but provider 'gemini' is not configured."
+  ],
+  "char_count": 0,
+  "completeness_score": 0.0,
+  "detected_language": "ar",
+  "ocr_provider": "unavailable",
+  "raw_text": null,
+  "classification": "NEEDS_VISION",
+  "source_id": 1
+}

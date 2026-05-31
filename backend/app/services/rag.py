@@ -8,7 +8,7 @@ from dataclasses import dataclass
 
 from sqlalchemy.orm import Session
 
-from app.models.textbook import RagChunk
+from app.models.textbook import ContentSource, RagChunk
 from app.services.embeddings import embed_query
 
 _CACHE: dict[str, tuple[float, list["RetrievedChunk"]]] = {}
@@ -72,7 +72,14 @@ async def retrieve_context(
         return cached[1]
 
     query_embedding = await embed_query(query)
-    sql = db.query(RagChunk).filter(RagChunk.embedding.isnot(None))
+    sql = (
+        db.query(RagChunk)
+        .join(RagChunk.source)
+        .filter(
+            RagChunk.embedding.isnot(None),
+            ContentSource.status.in_(["completed", "completed_with_warnings"]),
+        )
+    )
     if chapter_id is not None:
         sql = sql.filter(RagChunk.chapter_id == chapter_id)
     if lesson_id is not None:

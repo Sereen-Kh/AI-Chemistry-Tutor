@@ -8,9 +8,9 @@ import sys
 BACKEND_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BACKEND_DIR))
 
-from app.database import Base, SessionLocal, engine
-import app.models  # noqa: F401
-from app.models.interest import InterestCategory
+from app.database import Base, SessionLocal, engine  # noqa: E402
+import app.models  # noqa: E402,F401
+from app.models.interest import InterestCategory  # noqa: E402
 
 INTEREST_CATEGORIES = [
     {"key": "football", "name_ar": "كرة القدم", "name_en": "Football", "icon": "⚽", "order": 1},

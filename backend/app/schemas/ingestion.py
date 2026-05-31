@@ -11,7 +11,10 @@ class IngestionStartRequest(BaseModel):
     subject: str = "chemistry"
     year: int | None = None
     max_pages: int | None = Field(default=None, ge=1)
-    ocr_provider: str | None = None
+    ocr_provider: str | None = Field(default=None, pattern="^(gemini|gemini_vision)$")
+    ingestion_mode: str | None = Field(default=None, pattern="^(production|dry_run)$")
+    ocr_required_for_vision: bool | None = None
+    allow_partial_ingestion: bool | None = None
     chapter_id: int | None = None
     lesson_id: int | None = None
     topic_id: int | None = None
@@ -54,13 +57,33 @@ class IngestionStatusResponse(BaseModel):
     status: str
     progress: int = 0
     source_id: int | None = None
+    source_status: str | None = None
+    total_pages: int = 0
+    pages_to_process: int = 0
+    selectable_text_pages: int = 0
+    needs_vision_pages: int = 0
+    mixed_vision_pages: int = 0
     chunks_created: int = 0
     questions_extracted: int = 0
+    diagrams_extracted: int = 0
+    tables_extracted: int = 0
+    equations_extracted: int = 0
     pages_processed: int = 0
+    pages_completed: int = 0
     pages_failed: int = 0
+    pages_skipped_dry_run: int = 0
     ocr_provider: str | None = None
     ocr_provider_configured: bool | None = None
-    errors: list[str] = []
+    vision_provider: str | None = None
+    vision_provider_configured: bool | None = None
+    ingestion_mode: str | None = None
+    ocr_required_for_vision: bool | None = None
+    allow_partial_ingestion: bool | None = None
+    failed_pages: list[int] = Field(default_factory=list)
+    skipped_dry_run_pages: list[int] = Field(default_factory=list)
+    page_statuses: list[dict] = Field(default_factory=list)
+    warnings: list[str] = Field(default_factory=list)
+    errors: list[str] = Field(default_factory=list)
 
 
 class IngestionStatsResponse(BaseModel):

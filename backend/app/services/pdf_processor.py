@@ -2,26 +2,7 @@
 
 from __future__ import annotations
 
-import asyncio
-from io import BytesIO
 from pathlib import Path
-
-from app.core.config import settings
-
-CHEMISTRY_OCR_PROMPT = """
-You are a chemistry textbook OCR specialist. Extract ALL content from this page exactly as it appears.
-
-Rules:
-1. Extract all Arabic text verbatim and preserve Arabic script exactly.
-2. Convert chemical equations to readable chemistry notation.
-3. Convert mathematical expressions to LaTeX when needed.
-4. Describe diagrams and illustrations as [DIAGRAM: description].
-5. Extract tables as markdown.
-6. Preserve section headings and page structure.
-7. Mark boxes or highlighted sections as [BOX: content].
-
-Output plain text only. Do not summarize.
-"""
 
 
 def _require_pdf(path: str | Path) -> Path:
@@ -34,21 +15,52 @@ def _require_pdf(path: str | Path) -> Path:
 
 
 def classify_pages(pdf_path: str) -> dict:
-    """Classify pages by whether they have enough extractable text."""
+    """Classify pages as SELECTABLE_TEXT, NEEDS_VISION, or MIXED_VISION."""
+    import fitz
     import pdfplumber
 
     path = _require_pdf(pdf_path)
     text_pages: list[int] = []
     image_pages: list[int] = []
+    mixed_pages: list[int] = []
+    pages: list[dict] = []
+    doc = fitz.open(path)
     with pdfplumber.open(path) as pdf:
         for index, page in enumerate(pdf.pages, start=1):
-            text = (page.extract_text() or "").strip()
+            text = (doc[index - 1].get_text("text") or page.extract_text() or "").strip()
             compact_len = len("".join(text.split()))
-            if compact_len > 50:
-                text_pages.append(index)
-            else:
+            image_count = len(page.images or [])
+            width = float(page.width or 1)
+            height = float(page.height or 1)
+            page_area = width * height
+            image_area = sum(float(img.get("width", 0)) * float(img.get("height", 0)) for img in page.images or [])
+            image_area_ratio = min(image_area / page_area, 1.0) if page_area else 0
+            if compact_len <= 50:
+                page_type = "NEEDS_VISION"
                 image_pages.append(index)
-    return {"text_pages": text_pages, "image_pages": image_pages, "total_pages": len(text_pages) + len(image_pages)}
+            elif image_count > 0 and image_area_ratio >= 0.15:
+                page_type = "MIXED_VISION"
+                mixed_pages.append(index)
+            else:
+                page_type = "SELECTABLE_TEXT"
+                text_pages.append(index)
+            pages.append(
+                {
+                    "page_number": index,
+                    "page_type": page_type,
+                    "text_chars": len(text),
+                    "image_count": image_count,
+                    "image_area_ratio": round(image_area_ratio, 4),
+                }
+            )
+    doc.close()
+    return {
+        "text_pages": text_pages,
+        "image_pages": image_pages,
+        "mixed_pages": mixed_pages,
+        "pages": pages,
+        "total_pages": len(pages),
+    }
 
 
 def _table_to_markdown(table: list[list[str | None]]) -> str:
@@ -67,12 +79,17 @@ def _table_to_markdown(table: list[list[str | None]]) -> str:
 
 def extract_text_page(pdf_path: str, page_num: int) -> str:
     """Extract selectable text and tables from a one-based PDF page number."""
+    import fitz
     import pdfplumber
 
     path = _require_pdf(pdf_path)
+    doc = fitz.open(path)
+    try:
+        text = doc[page_num - 1].get_text("text") or ""
+    finally:
+        doc.close()
     with pdfplumber.open(path) as pdf:
         page = pdf.pages[page_num - 1]
-        text = page.extract_text(x_tolerance=3, y_tolerance=3) or ""
         tables = page.extract_tables() or []
     table_text = "\n\n".join(_table_to_markdown(table) for table in tables if table)
     return "\n\n".join(part for part in [text.strip(), table_text.strip()] if part)
@@ -94,22 +111,18 @@ def render_page_image(pdf_path: str, page_num: int, dpi: int = 300):
         doc.close()
 
 
-async def ocr_page_with_gemini(pdf_path: str, page_num: int) -> str:
-    """OCR an image-heavy PDF page with Gemini 2.5 Flash."""
-    if not settings.effective_gemini_api_key:
-        return ""
-
-    def _call() -> str:
-        import google.generativeai as genai
-        from PIL import Image
-
-        genai.configure(api_key=settings.effective_gemini_api_key)
-        model = genai.GenerativeModel(settings.model_name)
-        image = render_page_image(pdf_path, page_num)
-        buffer = BytesIO()
-        image.save(buffer, format="PNG")
-        buffer.seek(0)
-        response = model.generate_content([CHEMISTRY_OCR_PROMPT, Image.open(buffer)])
-        return response.text or ""
-
-    return await asyncio.to_thread(_call)
+def render_page_image_file(
+    pdf_path: str,
+    page_num: int,
+    output_dir: str | Path,
+    dpi: int = 300,
+) -> Path:
+    """Render a one-based PDF page to a PNG file and return its path."""
+    output_path = Path(output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
+    image_path = output_path / f"page_{page_num:03d}.png"
+    if image_path.exists():
+        return image_path
+    image = render_page_image(pdf_path, page_num, dpi=dpi)
+    image.save(image_path, format="PNG")
+    return image_path

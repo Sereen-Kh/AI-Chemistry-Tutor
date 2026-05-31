@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import hashlib
 import math
+import re
 from typing import Iterable
 
 from app.core.config import settings
@@ -13,15 +14,13 @@ EMBEDDING_DIM = 768
 
 
 def _fallback_embedding(text: str, dim: int = EMBEDDING_DIM) -> list[float]:
-    """Create a deterministic local embedding when Gemini credentials are absent."""
-    values: list[float] = []
-    seed = text.encode("utf-8", errors="ignore")
-    counter = 0
-    while len(values) < dim:
-        digest = hashlib.sha256(seed + counter.to_bytes(4, "big")).digest()
-        values.extend((byte / 127.5) - 1.0 for byte in digest)
-        counter += 1
-    vector = values[:dim]
+    """Create a deterministic token-hash embedding when Gemini credentials are absent."""
+    tokens = re.findall(r"[A-Za-z0-9_\u0621-\u064A]+", text.lower())
+    vector = [0.0] * dim
+    for token in tokens or [text]:
+        digest = hashlib.sha256(token.encode("utf-8", errors="ignore")).digest()
+        index = int.from_bytes(digest[:4], "big") % dim
+        vector[index] += 1.0
     norm = math.sqrt(sum(v * v for v in vector)) or 1.0
     return [v / norm for v in vector]
 

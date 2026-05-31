@@ -9,7 +9,21 @@ from app.workers.celery_app import celery_app
 
 
 @celery_app.task(bind=True, name="ingest_pdf")
-def ingest_pdf_task(self, pdf_path: str, chapter_id: int | None = None, clear_existing: bool = False):
+def ingest_pdf_task(
+    self,
+    pdf_path: str,
+    chapter_id: int | None = None,
+    lesson_id: int | None = None,
+    topic_id: int | None = None,
+    source_type: str = "textbook",
+    title: str | None = None,
+    grade: str = "grade_9",
+    subject: str = "chemistry",
+    year: int | None = None,
+    max_pages: int | None = None,
+    ocr_provider: str | None = None,
+    clear_existing: bool = False,
+):
     """Run the full PDF ingestion pipeline and report progress to Celery."""
     def progress(value: int, message: str) -> None:
         self.update_state(state="PROCESSING", meta={"progress": value, "message": message})
@@ -19,6 +33,15 @@ def ingest_pdf_task(self, pdf_path: str, chapter_id: int | None = None, clear_ex
             run_full_ingestion(
                 pdf_path,
                 chapter_id=chapter_id,
+                lesson_id=lesson_id,
+                topic_id=topic_id,
+                source_type=source_type,
+                title=title,
+                grade=grade,
+                subject=subject,
+                year=year,
+                max_pages=max_pages,
+                ocr_provider_name=ocr_provider,
                 clear_existing=clear_existing,
                 progress_callback=progress,
             )

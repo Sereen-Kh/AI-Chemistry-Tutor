@@ -63,13 +63,16 @@ async def send_message(
     db.add(user_message)
     db.flush()
 
-    chunks = await retrieve_context(db, content, top_k=5, min_similarity=0.0)
+    chunks = await retrieve_context(db, content, user_id=user_id, top_k=6, min_similarity=0.0)
     context = format_context(chunks)
-    system_prompt = None
+    system_prompt = (
+        "أجب بالعربية. إذا لم تكن الإجابة موجودة في مصادر الكتاب أو الامتحانات "
+        "المتاحة، قل بوضوح إنك لم تجدها في المصادر المتاحة، ثم يمكنك تقديم شرح عام منفصل."
+    )
     if context:
         system_prompt = (
             "استخدم المقاطع التالية من كتاب الكيمياء للصف التاسع أساساً للإجابة. "
-            "اذكر رقم الصفحة عندما يكون متاحاً.\n\n"
+            "اذكر رقم الصفحة أو المصدر عندما يكون متاحاً. لا تخترع مصادر غير موجودة.\n\n"
             f"{context}"
         )
 

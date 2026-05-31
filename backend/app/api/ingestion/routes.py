@@ -10,13 +10,18 @@ from sqlalchemy.orm import Session
 
 from app.core.dependencies import require_admin
 from app.database import SessionLocal, get_db
-from app.models.textbook import TextbookChunk
+from app.models.textbook import ContentSource, ExtractedQuestion, RagChunk
 from app.schemas.ingestion import (
+    ExtractedQuestionResponse,
     IngestionClearResponse,
     IngestionStartRequest,
     IngestionStartResponse,
     IngestionStatsResponse,
     IngestionStatusResponse,
+    QuestionReviewRequest,
+    SourceDeleteResponse,
+    SourceRegisterRequest,
+    SourceResponse,
     TestChunkResponse,
 )
 from app.services.ingestion_pipeline import run_full_ingestion
@@ -38,7 +43,16 @@ def _update_task(task_id: str, **updates):
 async def _run_ingestion_task(
     task_id: str,
     pdf_path: str,
+    title: str | None,
+    source_type: str,
+    grade: str,
+    subject: str,
+    year: int | None,
+    max_pages: int | None,
+    ocr_provider: str | None,
     chapter_id: int | None,
+    lesson_id: int | None,
+    topic_id: int | None,
     clear_existing: bool,
 ) -> None:
     """Run ingestion in a FastAPI background task for local development."""
@@ -51,6 +65,15 @@ async def _run_ingestion_task(
         result = await run_full_ingestion(
             pdf_path,
             chapter_id=chapter_id,
+            lesson_id=lesson_id,
+            topic_id=topic_id,
+            source_type=source_type,
+            title=title,
+            grade=grade,
+            subject=subject,
+            year=year,
+            max_pages=max_pages,
+            ocr_provider_name=ocr_provider,
             clear_existing=clear_existing,
             progress_callback=progress,
             db=db,
@@ -59,8 +82,13 @@ async def _run_ingestion_task(
             task_id,
             status="done",
             progress=100,
+            source_id=result["source_id"],
             chunks_created=result["chunks_created"],
+            questions_extracted=result["questions_extracted"],
             pages_processed=result["pages_processed"],
+            pages_failed=result["pages_failed"],
+            ocr_provider=result["ocr_provider"],
+            ocr_provider_configured=result["ocr_provider_configured"],
             errors=result["errors"],
         )
     except Exception as exc:
@@ -81,10 +109,42 @@ async def start_ingestion(
         _run_ingestion_task,
         task_id,
         request.pdf_path,
+        request.title,
+        request.source_type,
+        request.grade,
+        request.subject,
+        request.year,
+        request.max_pages,
+        request.ocr_provider,
         request.chapter_id,
+        request.lesson_id,
+        request.topic_id,
         request.clear_existing,
     )
     return IngestionStartResponse(task_id=task_id, status="queued")
+
+
+@router.post("/sources", response_model=SourceResponse, status_code=201)
+def register_source(
+    request: SourceRegisterRequest,
+    _admin=Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    source = ContentSource(
+        source_type=request.source_type,
+        title=request.title,
+        grade=request.grade,
+        subject=request.subject,
+        year=request.year,
+        file_path=request.file_path,
+        original_filename=request.original_filename,
+        status="pending",
+        metadata_json=request.metadata_json,
+    )
+    db.add(source)
+    db.commit()
+    db.refresh(source)
+    return source
 
 
 @router.get("/status/{task_id}", response_model=IngestionStatusResponse)
@@ -100,23 +160,40 @@ def ingestion_stats(
     _admin=Depends(require_admin),
     db: Session = Depends(get_db),
 ):
-    total_chunks = db.query(func.count(TextbookChunk.id)).scalar() or 0
-    avg_chunk_length = db.query(func.avg(func.length(TextbookChunk.content))).scalar() or 0
+    total_sources = db.query(func.count(ContentSource.id)).scalar() or 0
+    total_chunks = db.query(func.count(RagChunk.id)).scalar() or 0
+    total_questions = db.query(func.count(ExtractedQuestion.id)).scalar() or 0
+    unreviewed_questions = (
+        db.query(func.count(ExtractedQuestion.id)).filter(ExtractedQuestion.needs_review.is_(True)).scalar() or 0
+    )
+    reviewed_questions = total_questions - unreviewed_questions
+    avg_chunk_length = db.query(func.avg(func.length(RagChunk.content))).scalar() or 0
     pages_processed = (
-        db.query(func.count(func.distinct(TextbookChunk.page_number)))
-        .filter(TextbookChunk.page_number.isnot(None))
+        db.query(func.count(func.distinct(RagChunk.page_number)))
+        .filter(RagChunk.page_number.isnot(None))
         .scalar()
         or 0
     )
     rows = (
-        db.query(TextbookChunk.chapter_id, func.count(TextbookChunk.id))
-        .group_by(TextbookChunk.chapter_id)
+        db.query(RagChunk.chapter_id, func.count(RagChunk.id))
+        .group_by(RagChunk.chapter_id)
         .all()
     )
     chunks_by_chapter = {str(chapter_id or "none"): count for chapter_id, count in rows}
+    source_type_rows = (
+        db.query(RagChunk.source_type, func.count(RagChunk.id))
+        .group_by(RagChunk.source_type)
+        .all()
+    )
+    chunks_by_source_type = {source_type or "unknown": count for source_type, count in source_type_rows}
     return IngestionStatsResponse(
         total_chunks=total_chunks,
+        total_sources=total_sources,
+        total_questions=total_questions,
+        reviewed_questions=reviewed_questions,
+        unreviewed_questions=unreviewed_questions,
         chunks_by_chapter=chunks_by_chapter,
+        chunks_by_source_type=chunks_by_source_type,
         avg_chunk_length=float(avg_chunk_length),
         pages_processed=pages_processed,
     )
@@ -127,9 +204,29 @@ def clear_ingestion(
     _admin=Depends(require_admin),
     db: Session = Depends(get_db),
 ):
-    deleted = db.query(TextbookChunk).delete(synchronize_session=False)
+    deleted = db.query(RagChunk).delete(synchronize_session=False)
     db.commit()
     return IngestionClearResponse(deleted_chunks=deleted)
+
+
+@router.delete("/source/{source_id}", response_model=SourceDeleteResponse)
+def delete_source(
+    source_id: int,
+    _admin=Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    source = db.get(ContentSource, source_id)
+    if source is None:
+        raise HTTPException(status_code=404, detail="Source not found")
+    deleted_chunks = db.query(RagChunk).filter(RagChunk.source_id == source_id).count()
+    deleted_questions = db.query(ExtractedQuestion).filter(ExtractedQuestion.source_id == source_id).count()
+    db.delete(source)
+    db.commit()
+    return SourceDeleteResponse(
+        deleted_source_id=source_id,
+        deleted_chunks=deleted_chunks,
+        deleted_questions=deleted_questions,
+    )
 
 
 @router.post("/test-chunk/{chunk_id}", response_model=TestChunkResponse)
@@ -138,26 +235,75 @@ async def test_chunk(
     _admin=Depends(require_admin),
     db: Session = Depends(get_db),
 ):
-    chunk = db.get(TextbookChunk, chunk_id)
+    chunk = db.get(RagChunk, chunk_id)
     if chunk is None:
         raise HTTPException(status_code=404, detail="Chunk not found")
     similar = await retrieve_context(db, query=chunk.content, top_k=4)
     return TestChunkResponse(
         chunk={
             "id": chunk.id,
+            "source_id": chunk.source_id,
             "content": chunk.content,
             "page_number": chunk.page_number,
             "chapter_id": chunk.chapter_id,
+            "content_type": chunk.content_type,
+            "source_type": chunk.source_type,
         },
         similar_chunks=[
             {
                 "id": item.id,
+                "source_id": item.source_id,
                 "content": item.content,
                 "page_number": item.page_number,
                 "chapter_id": item.chapter_id,
+                "content_type": item.content_type,
+                "source_type": item.source_type,
                 "similarity_score": item.similarity_score,
             }
             for item in similar
             if item.id != chunk.id
         ][:3],
     )
+
+
+@router.get("/questions/unreviewed", response_model=list[ExtractedQuestionResponse])
+def list_unreviewed_questions(
+    limit: int = 50,
+    _admin=Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    return (
+        db.query(ExtractedQuestion)
+        .filter(ExtractedQuestion.needs_review.is_(True))
+        .order_by(ExtractedQuestion.created_at.asc())
+        .limit(limit)
+        .all()
+    )
+
+
+@router.post("/questions/{question_id}/review", response_model=ExtractedQuestionResponse)
+def review_question(
+    question_id: int,
+    request: QuestionReviewRequest,
+    _admin=Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    question = db.get(ExtractedQuestion, question_id)
+    if question is None:
+        raise HTTPException(status_code=404, detail="Question not found")
+    for field in [
+        "question_text",
+        "question_type",
+        "options",
+        "correct_answer",
+        "explanation",
+        "answer_source",
+        "difficulty",
+        "needs_review",
+    ]:
+        value = getattr(request, field)
+        if value is not None or field == "needs_review":
+            setattr(question, field, value)
+    db.commit()
+    db.refresh(question)
+    return question

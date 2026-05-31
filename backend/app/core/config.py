@@ -17,8 +17,13 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 30
     gemini_api_key: str = ""
     google_api_key: str = ""
+    mistral_api_key: str = ""
     model_name: str = "gemini-2.5-flash"
     embedding_model: str = "models/text-embedding-004"
+    ocr_provider: str = "gemini"
+    ocrarena_cookie: str = ""
+    ocrarena_public_base_url: str = ""
+    ocrarena_model_id: str = ""
     admin_token: str = ""
     redis_url: str = "redis://localhost:6379/0"
     celery_broker_url: str = "redis://localhost:6379/0"

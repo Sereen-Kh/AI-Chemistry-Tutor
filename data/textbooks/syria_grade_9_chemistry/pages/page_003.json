@@ -1,0 +1,14 @@
+{
+  "page_number": 3,
+  "detected_language": "ar",
+  "sections": [],
+  "questions": [],
+  "diagrams": [],
+  "tables": [],
+  "equations": [],
+  "warnings": [
+    "Gemini OCR skipped because API key is not configured."
+  ],
+  "classification": "NEEDS_VISION",
+  "source_id": 1
+}

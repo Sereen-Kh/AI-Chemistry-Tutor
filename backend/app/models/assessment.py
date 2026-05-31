@@ -43,3 +43,20 @@ class QuizAttempt(Base):
 
     user = relationship("User", back_populates="quiz_attempts")
     topic = relationship("Topic", back_populates="quiz_attempts")
+
+
+class QuestionAttempt(Base):
+    """A user's answer to one extracted question."""
+
+    __tablename__ = "question_attempts"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    question_id: Mapped[int] = mapped_column(
+        ForeignKey("extracted_questions.id", ondelete="CASCADE"), index=True
+    )
+    selected_answer: Mapped[str | None] = mapped_column(Text, nullable=True)
+    is_correct: Mapped[bool | None] = mapped_column(nullable=True)
+    score: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    weak_topics: Mapped[dict | list | None] = mapped_column(JSON, nullable=True)
+    completed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())

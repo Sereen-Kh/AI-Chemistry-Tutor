@@ -35,7 +35,7 @@ def _embedding_values(response) -> list[list[float]]:
 
 
 async def embed_text(text: str) -> list[float]:
-    """Embed a document chunk using Google text-embedding-004."""
+    """Embed a document chunk using the configured Gemini embedding model."""
     if not settings.effective_gemini_api_key:
         return _fallback_embedding(text)
 

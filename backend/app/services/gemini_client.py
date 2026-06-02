@@ -53,4 +53,4 @@ def embedding_config(task_type: str):
     """Return Gemini embedding config for document/query vectors."""
     from google.genai import types
 
-    return types.EmbedContentConfig(task_type=task_type)
+    return types.EmbedContentConfig(task_type=task_type, output_dimensionality=768)

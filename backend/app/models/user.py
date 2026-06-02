@@ -7,6 +7,7 @@ from sqlalchemy import Boolean, Date, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
+from app.models.enums import LearningMode, TeachingStyle
 from app.models.mixins import TimestampMixin
 
 
@@ -25,8 +26,8 @@ class User(Base, TimestampMixin):
 
     grade: Mapped[str] = mapped_column(String(50), default="grade_9", nullable=False)
     subject: Mapped[str] = mapped_column(String(50), default="chemistry", nullable=False)
-    teaching_style: Mapped[str] = mapped_column(String(50), default="real-life", nullable=False)
-    answer_format: Mapped[str] = mapped_column(String(50), default="text", nullable=False)
+    teaching_style: Mapped[str] = mapped_column(String(50), default=TeachingStyle.REAL_LIFE_EXAMPLES, nullable=False)
+    answer_format: Mapped[str] = mapped_column(String(50), default=LearningMode.TEXT, nullable=False)
     language: Mapped[str] = mapped_column(String(8), default="ar", nullable=False)
 
     xp: Mapped[int] = mapped_column(Integer, default=0, nullable=False)

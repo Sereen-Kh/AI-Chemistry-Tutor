@@ -13,11 +13,13 @@ from sqlalchemy.orm import selectinload
 from app.core.config import settings
 from app.models.chat import ChatMessage, ChatSession
 from app.services import ai_service
+from app.services.query_router import route_direct_answer
 from app.services.rag import RetrievedChunk, format_context, lexical_relevance_score, retrieve_context
 
 _QUESTION_PASSAGE_HINTS = ("؟", "السؤال", "اختر", "ضع اشارة", "المطلوب", "احسب", "اعط تفسير")
 _LOW_VALUE_PASSAGE_HINTS = ("اهداف", "اﻫﺪاف", "الكلمات المفتاحية", "اﻟﻜﻠﻤﺎت", "نشاط", "ﻧﺸﺎط")
 _PASSAGE_SPLIT_RE = re.compile(r"(?<=[.؟!])\s+")
+_MIN_BOOK_GROUNDED_CONFIDENCE = 0.55
 
 
 def _clean_passage(text: str) -> str:
@@ -308,6 +310,16 @@ async def ask_question(
     source_types: list[str] | None = None,
 ) -> dict:
     """Answer a one-off question with RAG sources."""
+    direct_answer = route_direct_answer(question)
+    if direct_answer:
+        return {
+            "answer": direct_answer.answer,
+            "sources": [],
+            "page_numbers": direct_answer.page_numbers,
+            "confidence": direct_answer.confidence,
+            "suggested_next_action": direct_answer.suggested_next_action,
+        }
+
     chunks = await retrieve_context(
         db,
         question,
@@ -317,6 +329,21 @@ async def ask_question(
         source_types=source_types,
         top_k=6,
     )
+    page_numbers = sorted({chunk.page_number for chunk in chunks if chunk.page_number is not None})
+    confidence = max((chunk.similarity_score for chunk in chunks), default=0.0)
+    if confidence < _MIN_BOOK_GROUNDED_CONFIDENCE:
+        return {
+            "answer": (
+                "لم أجد ذلك بوضوح في مقاطع الكتاب المتاحة.\n\n"
+                "يمكنني الإجابة عندما تحدد الدرس أو تستخدم صياغة أوضح، "
+                "أما الآن فلا أريد أن أعطيك جواباً منسوباً للكتاب بثقة ضعيفة."
+            ),
+            "sources": chunks,
+            "page_numbers": page_numbers,
+            "confidence": round(float(confidence), 4),
+            "suggested_next_action": "جرّب تحديد الدرس أو اسأل عن صيغة/تعريف/معادلة محددة.",
+        }
+
     context = format_context(chunks)
     system_prompt = (
         "أجب بالعربية مع الاستناد إلى المصادر التالية. اذكر الصفحات عندما تكون متاحة.\n\n"
@@ -330,8 +357,6 @@ async def ask_question(
         chunks=chunks,
         system_prompt=system_prompt,
     )
-    page_numbers = sorted({chunk.page_number for chunk in chunks if chunk.page_number is not None})
-    confidence = max((chunk.similarity_score for chunk in chunks), default=0.0)
     return {
         "answer": answer,
         "sources": chunks,

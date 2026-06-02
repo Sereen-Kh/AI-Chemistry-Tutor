@@ -97,6 +97,99 @@ def _score_payload(payload: dict) -> dict:
     }
 
 
+def _preview(text: str, limit: int = 280) -> str:
+    compact = re.sub(r"\s+", " ", text).strip()
+    if len(compact) <= limit:
+        return compact
+    return compact[: limit - 1].rstrip() + "…"
+
+
+def _table_examples(payload: dict) -> list[str]:
+    examples = [str(table.get("markdown") or "").strip() for table in payload.get("tables") or []]
+    if examples:
+        return [_preview(example, 220) for example in examples[:2] if example]
+    table_lines = [line.strip() for line in _text_from_payload(payload).splitlines() if "|" in line]
+    return [_preview(line, 220) for line in table_lines[:2]]
+
+
+def _question_examples(payload: dict) -> list[str]:
+    examples = [str(question.get("question_text") or "").strip() for question in payload.get("questions") or []]
+    if examples:
+        return [_preview(example, 220) for example in examples[:3] if example]
+    text = _text_from_payload(payload)
+    lines = [line.strip() for line in text.splitlines() if "السؤال" in line or "السّ ؤال" in line]
+    return [_preview(line, 220) for line in lines[:3]]
+
+
+def _equation_examples(payload: dict) -> list[str]:
+    examples = [str(equation.get("equation") or "").strip() for equation in payload.get("equations") or []]
+    text = _text_from_payload(payload)
+    examples.extend(match.group(0).strip() for match in _CHEMICAL_RE.finditer(text))
+    seen: set[str] = set()
+    unique = []
+    for example in examples:
+        if example and example not in seen:
+            seen.add(example)
+            unique.append(_preview(example, 160))
+    return unique[:5]
+
+
+def _comparison_report(method_payloads: dict[str, dict], method_scores: dict[str, dict]) -> dict:
+    if not method_payloads:
+        return {
+            "text_previews": {},
+            "missing_content_examples": [],
+            "malformed_equation_examples": {},
+            "table_extraction_comparison": {},
+            "question_extraction_comparison": {},
+            "equation_extraction_comparison": {},
+        }
+
+    best_method = max(method_scores.items(), key=lambda item: item[1]["char_count"])[0]
+    best_chars = method_scores[best_method]["char_count"]
+    missing_examples = []
+    for method, score in method_scores.items():
+        char_count = score["char_count"]
+        if best_chars >= 200 and char_count < best_chars * 0.5:
+            missing_examples.append(
+                {
+                    "method": method,
+                    "issue": f"Only {char_count} chars versus {best_chars} chars in {best_method}.",
+                    "best_method_preview": _preview(_text_from_payload(method_payloads[best_method])),
+                    "method_preview": _preview(_text_from_payload(method_payloads[method])),
+                }
+            )
+
+    malformed_equations: dict[str, list[str]] = {}
+    spaced_formula_pattern = re.compile(r"\b[A-Z](?:\s+[0-9A-Z]){2,}\b")
+    for method, payload in method_payloads.items():
+        text = _text_from_payload(payload)
+        examples = [_preview(match.group(0), 120) for match in spaced_formula_pattern.finditer(text)]
+        if examples:
+            malformed_equations[method] = examples[:3]
+
+    return {
+        "text_previews": {
+            method: _preview(_text_from_payload(payload))
+            for method, payload in method_payloads.items()
+        },
+        "missing_content_examples": missing_examples,
+        "malformed_equation_examples": malformed_equations,
+        "table_extraction_comparison": {
+            method: _table_examples(payload)
+            for method, payload in method_payloads.items()
+        },
+        "question_extraction_comparison": {
+            method: _question_examples(payload)
+            for method, payload in method_payloads.items()
+        },
+        "equation_extraction_comparison": {
+            method: _equation_examples(payload)
+            for method, payload in method_payloads.items()
+        },
+    }
+
+
 def _method_payloads(page_payload: dict, ocrarena_payload: dict | None) -> dict[str, dict]:
     methods = {"current_cache": page_payload}
     for key in ("gemini_pdf_content", "gemini_fallback_model_content", "gemini_image_fallback_content"):
@@ -161,8 +254,9 @@ def build_benchmark(source_slug: str, selected_pages: list[int] | None = None) -
         ocrarena_file = ocrarena_path / f"page_{page_number:03d}.json"
         if ocrarena_file.exists():
             ocrarena_payload = _read_json(ocrarena_file)
+        method_payloads = _method_payloads(page_payload, ocrarena_payload)
         method_scores = {}
-        for method, payload in _method_payloads(page_payload, ocrarena_payload).items():
+        for method, payload in method_payloads.items():
             score = _score_payload(payload)
             method_scores[method] = score
             method_totals[method].append(score["score"])
@@ -172,6 +266,7 @@ def build_benchmark(source_slug: str, selected_pages: list[int] | None = None) -
                 "page_type": page_payload.get("page_type") or page_payload.get("classification"),
                 "status": page_payload.get("status"),
                 "methods": method_scores,
+                "comparison": _comparison_report(method_payloads, method_scores),
                 "recommendation": _recommend(method_scores, ocrarena_available),
             }
         )
@@ -220,6 +315,19 @@ def write_reports(report: dict) -> tuple[Path, Path]:
         lines.append(
             f"| {page['page_number']} | {page['page_type']} | {page['status']} | {method_scores} | {page['recommendation']} |"
         )
+        missing = page["comparison"].get("missing_content_examples") or []
+        if missing:
+            lines.append(
+                f"| {page['page_number']} | gap | content | {len(missing)} missing-content signal(s) | See JSON report. |"
+            )
+        tables = page["comparison"].get("table_extraction_comparison") or {}
+        questions = page["comparison"].get("question_extraction_comparison") or {}
+        equations = page["comparison"].get("equation_extraction_comparison") or {}
+        if any(tables.values()) or any(questions.values()) or any(equations.values()):
+            lines.append(
+                f"| {page['page_number']} | details | extracted signals | tables={sum(bool(v) for v in tables.values())}, "
+                f"questions={sum(bool(v) for v in questions.values())}, equations={sum(bool(v) for v in equations.values())} | See JSON report. |"
+            )
     md_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return json_path, md_path
 

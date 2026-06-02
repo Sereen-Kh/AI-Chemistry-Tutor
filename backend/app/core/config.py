@@ -20,9 +20,9 @@ class Settings(BaseSettings):
     google_api_key: str = ""
     model_name: str = "gemini-3.5-flash"
     ai_request_timeout_seconds: int = 12
-    gemini_document_model: str = "gemini-3.5-flash"
-    gemini_document_fallback_model: str = "gemini-2.5-pro"
-    gemini_embedding_model: str = "text-embedding-004"
+    gemini_document_model: str = "gemini-3-flash-preview"
+    gemini_document_fallback_model: str = "gemini-3.1-flash-lite"
+    gemini_embedding_model: str = "gemini-embedding-001"
     gemini_min_page_chars: int = 40
     gemini_min_completeness_score: float = 0.5
     pdf_direct_extraction_enabled: bool = True

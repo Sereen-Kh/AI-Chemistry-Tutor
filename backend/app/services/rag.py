@@ -19,6 +19,7 @@ from app.services.embeddings import embed_query
 _CACHE: dict[str, tuple[float, list["RetrievedChunk"]]] = {}
 _CACHE_TTL_SECONDS = 3600
 _CACHE_VERSION = "v3"
+_RETRIEVABLE_SOURCE_STATUSES = ["completed", "completed_with_warnings", "dry_run_completed", "dry_run_incomplete"]
 
 _ARABIC_DIACRITICS_RE = re.compile(r"[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED]")
 _TOKEN_RE = re.compile(r"[a-z0-9]+|[\u0621-\u064A]+", re.IGNORECASE)
@@ -268,7 +269,7 @@ async def retrieve_context(
         .join(RagChunk.source)
         .where(
             RagChunk.embedding.isnot(None),
-            ContentSource.status.in_(["completed", "completed_with_warnings"]),
+            ContentSource.status.in_(_RETRIEVABLE_SOURCE_STATUSES),
         )
     )
 

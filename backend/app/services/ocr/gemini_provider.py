@@ -163,6 +163,33 @@ class GeminiVisionProvider(VisionExtractionProvider):
             models.append(fallback)
         return models
 
+    async def prepare_document(self, pdf_path: str) -> UploadedDocument | None:
+        """Upload a PDF once for an ingestion job.
+
+        This method mirrors the document-provider contract while keeping the
+        existing provider-neutral upload_pdf hook used by the ingestion service.
+        """
+        return await self.upload_pdf(pdf_path)
+
+    async def extract_pdf_page(
+        self,
+        uploaded_pdf: UploadedDocument,
+        page_number: int,
+        source_type: str,
+        neighboring_pages: list[int] | None = None,
+    ) -> PageExtractionResult:
+        """Extract one target page directly from an uploaded PDF."""
+        return await self.extract_page_from_pdf(uploaded_pdf, page_number, source_type, neighboring_pages)
+
+    async def extract_page_image_fallback(
+        self,
+        image_path: str,
+        page_number: int,
+        source_type: str,
+    ) -> PageExtractionResult:
+        """Extract a rendered page image after direct PDF extraction fails."""
+        return await self.extract_page(image_path, page_number, source_type)
+
     async def _extract_with_model_routing(
         self,
         *,
@@ -379,3 +406,7 @@ def parse_gemini_json(
         raw_markdown=raw or "",
         raw_text=raw,
     )
+
+
+class GeminiDocumentProvider(GeminiVisionProvider):
+    """Preferred production name for Gemini direct-PDF document extraction."""

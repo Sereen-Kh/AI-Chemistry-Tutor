@@ -4,6 +4,8 @@ from datetime import datetime
 
 from pydantic import BaseModel, EmailStr
 
+from app.models.enums import LearningMode, TeachingStyle
+
 
 class UserPublicResponse(BaseModel):
     id: int
@@ -13,8 +15,8 @@ class UserPublicResponse(BaseModel):
     phone: str | None = None
     grade: str
     subject: str
-    teaching_style: str
-    answer_format: str
+    teaching_style: TeachingStyle
+    answer_format: LearningMode
     language: str
     xp: int
     level: int
@@ -29,6 +31,6 @@ class UserUpdateRequest(BaseModel):
     first_name: str | None = None
     last_name: str | None = None
     phone: str | None = None
-    teaching_style: str | None = None
-    answer_format: str | None = None
+    teaching_style: TeachingStyle | None = None
+    answer_format: LearningMode | None = None
     language: str | None = None

@@ -6,7 +6,7 @@ from pathlib import Path
 from unittest import TestCase
 
 from app.services.ocr.base import PageExtractionResult
-from app.services.ocr.gemini_provider import GeminiVisionProvider, parse_gemini_json
+from app.services.ocr.gemini_provider import GeminiDocumentProvider, GeminiVisionProvider, parse_gemini_json
 from app.services.ocr.quality import evaluate_extraction_quality
 from scripts.benchmark_extraction import _score_payload
 
@@ -32,6 +32,13 @@ class ExtractionContractTests(TestCase):
 
         self.assertIn("google-genai", text)
         self.assertNotIn("google-generativeai", active_lines)
+
+    def test_document_provider_exposes_requested_contract_names(self):
+        provider = GeminiDocumentProvider()
+
+        self.assertTrue(hasattr(provider, "prepare_document"))
+        self.assertTrue(hasattr(provider, "extract_pdf_page"))
+        self.assertTrue(hasattr(provider, "extract_page_image_fallback"))
 
     def test_page_extraction_result_always_has_raw_markdown(self):
         result = PageExtractionResult(

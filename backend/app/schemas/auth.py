@@ -4,6 +4,8 @@ from datetime import datetime
 
 from pydantic import BaseModel, EmailStr, Field, model_validator
 
+from app.models.enums import LearningMode, TeachingStyle
+
 
 class RegisterRequest(BaseModel):
     """Registration request.
@@ -48,8 +50,8 @@ class InterestCategoryResponse(BaseModel):
 
 class OnboardingRequest(BaseModel):
     grade: str = "grade_9"
-    teaching_style: str = "real-life"
-    answer_format: str = "text"
+    teaching_style: TeachingStyle = TeachingStyle.REAL_LIFE_EXAMPLES
+    answer_format: LearningMode = LearningMode.TEXT
     language: str = "ar"
     interest_ids: list[int] = []
 
@@ -63,8 +65,8 @@ class UserResponse(BaseModel):
     phone: str | None = None
     grade: str
     subject: str
-    teaching_style: str
-    answer_format: str
+    teaching_style: TeachingStyle
+    answer_format: LearningMode
     language: str
     xp: int
     level: int

@@ -4,13 +4,15 @@ from datetime import date, datetime
 
 from pydantic import BaseModel
 
+from app.models.enums import TeachingStyle
+
 
 class StudentProfileResponse(BaseModel):
     id: int
     user_id: int
     grade: str
     subject: str
-    learning_style: str
+    learning_style: TeachingStyle
     preferred_language: str
     goals: str | None = None
     target_exam_date: date | None = None
@@ -24,7 +26,7 @@ class StudentProfileResponse(BaseModel):
 class StudentProfileUpsertRequest(BaseModel):
     grade: str = "grade_9"
     subject: str = "chemistry"
-    learning_style: str = "real-life"
+    learning_style: TeachingStyle = TeachingStyle.REAL_LIFE_EXAMPLES
     preferred_language: str = "ar"
     goals: str | None = None
     target_exam_date: date | None = None

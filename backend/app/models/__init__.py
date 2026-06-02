@@ -4,6 +4,7 @@ Import every SQLAlchemy model here so `Base.metadata.create_all()` and future
 Alembic autogeneration can see the complete schema.
 """
 
+from app.models.enums import LearningMode, TeachingStyle  # noqa: F401
 from app.models.achievement import Achievement  # noqa: F401
 from app.models.assessment import Question, QuestionAttempt, QuizAttempt  # noqa: F401
 from app.models.billing import Subscription  # noqa: F401

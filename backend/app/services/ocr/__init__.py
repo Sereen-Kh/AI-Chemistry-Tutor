@@ -1,7 +1,7 @@
 """Gemini-only document extraction provider package for the MVP."""
 
 from app.services.ocr.base import ExtractionQualityReport, PageExtractionResult, UploadedDocument, VisionExtractionProvider
-from app.services.ocr.gemini_provider import GeminiVisionProvider
+from app.services.ocr.gemini_provider import GeminiDocumentProvider, GeminiVisionProvider
 from app.core.config import settings
 
 
@@ -14,11 +14,12 @@ def get_vision_provider(provider_name: str | None = None) -> VisionExtractionPro
     selected = (provider_name or settings.ocr_provider or "gemini").strip().lower()
     if selected not in {"gemini", "gemini_document", "gemini_vision"}:
         raise ValueError("Gemini document extraction is the only supported OCR provider for the MVP.")
-    return GeminiVisionProvider()
+    return GeminiDocumentProvider()
 
 
 __all__ = [
     "GeminiVisionProvider",
+    "GeminiDocumentProvider",
     "ExtractionQualityReport",
     "PageExtractionResult",
     "UploadedDocument",

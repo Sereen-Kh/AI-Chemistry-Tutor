@@ -7,7 +7,7 @@ from unittest import IsolatedAsyncioTestCase, TestCase
 from unittest.mock import Mock, patch
 
 from app.core.config import settings
-from app.services.ingestion_pipeline import _extract_page, _final_ingestion_status
+from app.services.ingestion_pipeline import _extract_page, _final_ingestion_status, _neighboring_pages
 from app.services.ocr.base import PageExtractionResult, UploadedDocument
 from app.services.ocr.gemini_provider import GeminiVisionProvider
 
@@ -29,15 +29,16 @@ class FakePdfVisionProvider(FakeVisionProvider):
     def __init__(self, pdf_result: PageExtractionResult, image_result: PageExtractionResult | None = None):
         super().__init__(image_result or pdf_result)
         self.pdf_result = pdf_result
-        self.pdf_calls: list[tuple[str, int, str]] = []
+        self.pdf_calls: list[tuple[str, int, str, list[int]]] = []
 
     async def extract_page_from_pdf(
         self,
         uploaded_pdf: UploadedDocument,
         page_number: int,
         source_type: str,
+        neighboring_pages: list[int] | None = None,
     ) -> PageExtractionResult:
-        self.pdf_calls.append((uploaded_pdf.uri, page_number, source_type))
+        self.pdf_calls.append((uploaded_pdf.uri, page_number, source_type, neighboring_pages or []))
         return self.pdf_result
 
 
@@ -189,7 +190,7 @@ class IngestionPageExtractionTests(IsolatedAsyncioTestCase):
         self.assertEqual(payload["status"], "completed_with_pdf_extraction")
         self.assertEqual(method, "gemini_pdf_file")
         self.assertEqual(payload["vision_source"], "gemini_files_api_pdf")
-        self.assertEqual(provider.pdf_calls, [("https://gemini.test/files/book", 3, "textbook")])
+        self.assertEqual(provider.pdf_calls, [("https://gemini.test/files/book", 3, "textbook", [])])
         self.assertEqual(provider.calls, [])
         self.assertTrue(payload["gemini_pdf_content"])
         self.assertEqual(payload["gemini_image_fallback_content"], {})
@@ -234,6 +235,36 @@ class IngestionPageExtractionTests(IsolatedAsyncioTestCase):
         render_page.assert_called_once()
         self.assertEqual(render_page.call_args.args[:2], ("book.pdf", 3))
         self.assertEqual(render_page.call_args.kwargs, {"dpi": 300})
+
+    async def test_direct_pdf_extraction_receives_neighboring_page_context(self):
+        result = PageExtractionResult(
+            page_number=4,
+            sections=[
+                {
+                    "heading": None,
+                    "content": "نص عربي كيميائي كاف من الصفحة الهدف مع سياق الصفحات المجاورة.",
+                    "content_type": "text",
+                }
+            ],
+        )
+        provider = FakePdfVisionProvider(result)
+        uploaded_pdf = UploadedDocument(name="files/book", uri="https://gemini.test/files/book", mime_type="application/pdf")
+        with patch("app.services.ingestion_pipeline._structured_text_page", return_value={"sections": []}):
+            payload, _method = await _extract_page(
+                "book.pdf",
+                4,
+                "NEEDS_VISION",
+                "chemistry",
+                "textbook",
+                provider,
+                "production",
+                True,
+                uploaded_pdf,
+                [3, 5],
+            )
+
+        self.assertEqual(provider.pdf_calls, [("https://gemini.test/files/book", 4, "textbook", [3, 5])])
+        self.assertEqual(payload["neighboring_pages"], [3, 5])
 
     async def test_missing_gemini_dry_run_records_skipped_page(self):
         with patch("app.services.ingestion_pipeline._structured_text_page", return_value=text_payload()):
@@ -335,6 +366,11 @@ class IngestionPageExtractionTests(IsolatedAsyncioTestCase):
 
 
 class QuestionExtractionRulesTests(TestCase):
+    def test_neighboring_pages_excludes_out_of_range_pages(self):
+        self.assertEqual(_neighboring_pages(1, 96), [2])
+        self.assertEqual(_neighboring_pages(40, 96), [39, 41])
+        self.assertEqual(_neighboring_pages(96, 96), [95])
+
     def test_dry_run_with_skipped_vision_pages_is_not_completed(self):
         status = _final_ingestion_status(
             ingestion_mode="dry_run",

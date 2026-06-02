@@ -54,6 +54,11 @@ def _final_ingestion_status(
     return "completed"
 
 
+def _neighboring_pages(page_num: int, total_pages: int) -> list[int]:
+    """Return adjacent page numbers that can help Gemini resolve context."""
+    return [page for page in (page_num - 1, page_num + 1) if 1 <= page <= total_pages]
+
+
 def _source_cache_dir(title: str) -> Path:
     return PROJECT_DIR / "data" / "textbooks" / slugify_source(title) / "pages"
 
@@ -116,6 +121,7 @@ def _page_cache_payload(
     uploaded_pdf: UploadedDocument | None = None,
     gemini_pdf_payload: dict | None = None,
     gemini_image_fallback_payload: dict | None = None,
+    neighboring_pages: list[int] | None = None,
 ) -> dict:
     """Build the normalized per-page extraction cache payload."""
     merged_content = _content_from_sections(sections)
@@ -153,6 +159,7 @@ def _page_cache_payload(
         "detected_language": (vision_payload or {}).get("detected_language") or "ar",
         "vision_provider": (vision_payload or {}).get("provider"),
         "vision_source": vision_source,
+        "neighboring_pages": neighboring_pages or [],
         "uploaded_pdf": uploaded_pdf.to_payload() if uploaded_pdf else None,
         "raw_text": (vision_payload or {}).get("raw_text"),
         "quality_report": (vision_payload or {}).get("quality_report") or {},
@@ -209,6 +216,7 @@ async def _extract_page(
     ingestion_mode: str,
     vision_required: bool,
     uploaded_pdf: UploadedDocument | None = None,
+    neighboring_pages: list[int] | None = None,
 ) -> tuple[dict, str]:
     """Extract one page and return structured payload plus extraction method."""
     text_payload = _structured_text_page(pdf_path, page_num)
@@ -278,7 +286,12 @@ async def _extract_page(
     if uploaded_pdf:
         extraction_methods.append("gemini_pdf_file")
         try:
-            vision_result = await vision_provider.extract_page_from_pdf(uploaded_pdf, page_num, source_type)
+            vision_result = await vision_provider.extract_page_from_pdf(
+                uploaded_pdf,
+                page_num,
+                source_type,
+                neighboring_pages=neighboring_pages,
+            )
             vision_source = "gemini_files_api_pdf"
             gemini_pdf_payload = vision_result.to_payload()
             quality_issue = _vision_quality_issue(vision_result.to_payload())
@@ -361,6 +374,7 @@ async def _extract_page(
         uploaded_pdf=uploaded_pdf,
         gemini_pdf_payload=gemini_pdf_payload,
         gemini_image_fallback_payload=gemini_image_fallback_payload,
+        neighboring_pages=neighboring_pages,
     )
     return payload, "+".join(extraction_methods)
 
@@ -641,6 +655,7 @@ async def run_full_ingestion(
                     resolved_ingestion_mode,
                     resolved_ocr_required,
                     uploaded_pdf,
+                    _neighboring_pages(page_num, pages_to_process),
                 )
                 page_payload["classification"] = page_type
                 page_payload["source_id"] = source.id

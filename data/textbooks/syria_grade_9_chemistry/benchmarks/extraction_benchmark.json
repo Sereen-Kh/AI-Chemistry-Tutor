@@ -9,7 +9,7 @@
     4,
     5,
     8,
-    10
+    6
   ],
   "method_averages": {
     "current_cache": 45.0
@@ -22,8 +22,8 @@
       "methods": {
         "current_cache": {
           "score": 30.0,
-          "char_count": 1453,
-          "raw_markdown_chars": 0,
+          "char_count": 1938,
+          "raw_markdown_chars": 483,
           "arabic_ratio": 1.0,
           "table_count": 0,
           "diagram_count": 0,
@@ -33,12 +33,28 @@
           "schema_valid": true
         }
       },
+      "comparison": {
+        "text_previews": {
+          "current_cache": "تكتسـب التَّفاعـ اات الكيميائيَّـة أهمّيَّـة كبـرى فـي حياتنـا، واألنـواعُ المختلفـة مـن األدويـة واألليـاف الصّ ناعيَّـة واألسـمدة مـا هـي إلّ بعـض األمثلـة علـى نواتـج التَّفاعـ اات الكيميائيَّـة. الوحدة الرَّابعة الكيمياء اللَّ عضويَّة أهداف الوحدة الرّابعة - يتعرَّف طبيعة ال…"
+        },
+        "missing_content_examples": [],
+        "malformed_equation_examples": {},
+        "table_extraction_comparison": {
+          "current_cache": []
+        },
+        "question_extraction_comparison": {
+          "current_cache": []
+        },
+        "equation_extraction_comparison": {
+          "current_cache": []
+        }
+      },
       "recommendation": "No cached OCRArena output; inspect current_cache and run improved Gemini extraction for fair comparison."
     },
     {
       "page_number": 3,
       "page_type": "NEEDS_VISION",
-      "status": "skipped_no_provider",
+      "status": "skipped_dry_run",
       "methods": {
         "current_cache": {
           "score": 0.0,
@@ -53,19 +69,35 @@
           "schema_valid": false
         }
       },
+      "comparison": {
+        "text_previews": {
+          "current_cache": ""
+        },
+        "missing_content_examples": [],
+        "malformed_equation_examples": {},
+        "table_extraction_comparison": {
+          "current_cache": []
+        },
+        "question_extraction_comparison": {
+          "current_cache": []
+        },
+        "equation_extraction_comparison": {
+          "current_cache": []
+        }
+      },
       "recommendation": "No cached OCRArena output; inspect current_cache and run improved Gemini extraction for fair comparison."
     },
     {
       "page_number": 2,
       "page_type": "MIXED_VISION",
-      "status": "skipped_no_provider",
+      "status": "skipped_dry_run",
       "methods": {
         "current_cache": {
           "score": 45.0,
-          "char_count": 1429,
-          "raw_markdown_chars": 0,
+          "char_count": 1906,
+          "raw_markdown_chars": 475,
           "arabic_ratio": 0.9503,
-          "table_count": 9,
+          "table_count": 12,
           "diagram_count": 0,
           "equation_signal_count": 0,
           "question_signal_count": 0,
@@ -73,44 +105,109 @@
           "schema_valid": true
         }
       },
+      "comparison": {
+        "text_previews": {
+          "current_cache": ":ا\u001aﻫﺪاف - .ّيتعرَّف المحلول المائي - يميّز أنواع المحاليل المائيّة (متجانسة - غير متجانسة). - يقوم بإجراء تجربة تحضير محلول. - يتعرّف التّركيز الغرامي. - يتعرّف التّركيز المولي. :اﻟﻜﻠﻤﺎت اﻟﻤﻔﺘﺎﺣﻴﺔ .المحلول - المادَّة المذيبة - المادَّة المذابة - التَّركيز الغرامي - التَّركيز الم…"
+        },
+        "missing_content_examples": [],
+        "malformed_equation_examples": {},
+        "table_extraction_comparison": {
+          "current_cache": [
+            "| ةيئاملا ليلاحملا",
+            "َّ | | |"
+          ]
+        },
+        "question_extraction_comparison": {
+          "current_cache": []
+        },
+        "equation_extraction_comparison": {
+          "current_cache": []
+        }
+      },
       "recommendation": "No cached OCRArena output; inspect current_cache and run improved Gemini extraction for fair comparison."
     },
     {
       "page_number": 4,
-      "page_type": "SELECTABLE_TEXT",
-      "status": "completed_text_only",
+      "page_type": "MIXED_VISION",
+      "status": "skipped_dry_run",
       "methods": {
         "current_cache": {
           "score": 65.0,
-          "char_count": 3043,
-          "raw_markdown_chars": 0,
+          "char_count": 4058,
+          "raw_markdown_chars": 1013,
           "arabic_ratio": 0.9306,
-          "table_count": 3,
+          "table_count": 4,
           "diagram_count": 0,
-          "equation_signal_count": 27,
+          "equation_signal_count": 36,
           "question_signal_count": 0,
           "visible_answer_count": 0,
           "schema_valid": true
+        }
+      },
+      "comparison": {
+        "text_previews": {
+          "current_cache": ":ﺗﻔﻜﻴﺮ ﻧﺎﻗﺪ لماذا يُذيب الماء معظم األمالح والحموض، ولكنّه ال يذيب الزّيوت والدُّسم؟ مفهوم تركيز المحلول: :أدوات التّجربة ميزان حسَّاس.- ّ وعاء زجاجي- ملح كلوريد الصوديوم- ماء مقطَّر خطوات التّجربة: أضع كمّيّة من الماء المقطّر (أقلّ من ليتر) في الوعاء الزّجاجيّ.1 . من ملح كلوريد…"
+        },
+        "missing_content_examples": [],
+        "malformed_equation_examples": {},
+        "table_extraction_comparison": {
+          "current_cache": [
+            "| أ 1 |",
+            "| --- |"
+          ]
+        },
+        "question_extraction_comparison": {
+          "current_cache": []
+        },
+        "equation_extraction_comparison": {
+          "current_cache": [
+            "=",
+            "C"
+          ]
         }
       },
       "recommendation": "No cached OCRArena output; inspect current_cache and run improved Gemini extraction for fair comparison."
     },
     {
       "page_number": 5,
-      "page_type": "SELECTABLE_TEXT",
-      "status": "completed_text_only",
+      "page_type": "MIXED_VISION",
+      "status": "skipped_dry_run",
       "methods": {
         "current_cache": {
           "score": 65.0,
-          "char_count": 2602,
-          "raw_markdown_chars": 0,
+          "char_count": 3470,
+          "raw_markdown_chars": 866,
           "arabic_ratio": 0.8515,
-          "table_count": 3,
+          "table_count": 4,
           "diagram_count": 0,
-          "equation_signal_count": 60,
+          "equation_signal_count": 80,
           "question_signal_count": 0,
           "visible_answer_count": 0,
           "schema_valid": true
+        }
+      },
+      "comparison": {
+        "text_previews": {
+          "current_cache": ". من الحمض3.65 g يحوي100 mL محلول لحمض كلور الماء حجمه المطلوب: 1. .احسب التّركيز الغرامي لهذا المحلول 2. .احسب التّركيز المولي لهذا المحلول (H:1,Cl:35.5) :ّعلماً أن الحل: V 100 ml 1000 100 10 1 0.1L = = = = 1. C V m 0.1 3.65 36.5 g.L ( ) g.l 1 1 = = = - - 2. M 35.5 1 36.5 g.mol…"
+        },
+        "missing_content_examples": [],
+        "malformed_equation_examples": {},
+        "table_extraction_comparison": {
+          "current_cache": [
+            "| :لﻮﻠﺤﻣ ﻖﻴﺒﻄﺗ |",
+            "| --- |"
+          ]
+        },
+        "question_extraction_comparison": {
+          "current_cache": []
+        },
+        "equation_extraction_comparison": {
+          "current_cache": [
+            "H",
+            "Cl",
+            "=",
+            "C"
+          ]
         }
       },
       "recommendation": "No cached OCRArena output; inspect current_cache and run improved Gemini extraction for fair comparison."
@@ -122,35 +219,89 @@
       "methods": {
         "current_cache": {
           "score": 45.0,
-          "char_count": 3427,
-          "raw_markdown_chars": 0,
+          "char_count": 4570,
+          "raw_markdown_chars": 1141,
           "arabic_ratio": 0.9366,
           "table_count": 0,
           "diagram_count": 0,
           "equation_signal_count": 0,
-          "question_signal_count": 12,
+          "question_signal_count": 16,
           "visible_answer_count": 0,
           "schema_valid": true
+        }
+      },
+      "comparison": {
+        "text_previews": {
+          "current_cache": ":السّ ؤال األوَّل ضع إشارة (✓) أمام العبارة الصَّحيحة وإشارة (✗) أمام العبارة المغلوطة ثمّ صحّحها: 1. .تركيز المحلول يعبّر عن كميّة المذيب في حجم معيّن من المحلول 2. .مزيج الماء والكحول هو محلول متجانس 3. .تذوب قطعة الصوديوم عند وضعها في الماء 4. .تتغيّر كتلة المادّة المُذابة في…"
+        },
+        "missing_content_examples": [],
+        "malformed_equation_examples": {
+          "current_cache": [
+            "L 1 1",
+            "L 1 1",
+            "L 1 1"
+          ]
+        },
+        "table_extraction_comparison": {
+          "current_cache": []
+        },
+        "question_extraction_comparison": {
+          "current_cache": [
+            ":السّ ؤال األوَّل",
+            "السّ ؤال الثَّاني:",
+            "السّ ؤال الثَّالث:"
+          ]
+        },
+        "equation_extraction_comparison": {
+          "current_cache": []
         }
       },
       "recommendation": "No cached OCRArena output; inspect current_cache and run improved Gemini extraction for fair comparison."
     },
     {
-      "page_number": 10,
+      "page_number": 6,
       "page_type": "MIXED_VISION",
-      "status": "skipped_no_provider",
+      "status": "skipped_dry_run",
       "methods": {
         "current_cache": {
           "score": 65.0,
-          "char_count": 1504,
-          "raw_markdown_chars": 0,
-          "arabic_ratio": 0.9521,
-          "table_count": 9,
+          "char_count": 3378,
+          "raw_markdown_chars": 843,
+          "arabic_ratio": 0.8972,
+          "table_count": 4,
           "diagram_count": 0,
-          "equation_signal_count": 3,
+          "equation_signal_count": 72,
           "question_signal_count": 0,
           "visible_answer_count": 0,
           "schema_valid": true
+        }
+      },
+      "comparison": {
+        "text_previews": {
+          "current_cache": "• عند تمديد محلول ما بإضافة ماء مقطّرإليه يزداد حجم المحلول، ويقلّ تركيزه بينما تبقى كميّة المادّة المُذابة ثابتة. • قانون تمديد المحاليل: (عدد موالت المادة المذابة قبل التّمديد)n n = 1 2 )(عدد موالت المادّة المذابة بعد التّمديد C V C V 1 1 2 2 # # = :أﺳﺘﻨﺘﺞ 00 mL 1 أضيف إليه0.2…"
+        },
+        "missing_content_examples": [],
+        "malformed_equation_examples": {
+          "current_cache": [
+            "C V C V 1 1 2 2",
+            "C V C V 1 1 2 2",
+            "L 2 2 2 1"
+          ]
+        },
+        "table_extraction_comparison": {
+          "current_cache": [
+            "| :لﻮﻠﺤﻣ ﻖﻴﺒﻄﺗ |",
+            "| --- |"
+          ]
+        },
+        "question_extraction_comparison": {
+          "current_cache": []
+        },
+        "equation_extraction_comparison": {
+          "current_cache": [
+            "=",
+            "C"
+          ]
         }
       },
       "recommendation": "No cached OCRArena output; inspect current_cache and run improved Gemini extraction for fair comparison."

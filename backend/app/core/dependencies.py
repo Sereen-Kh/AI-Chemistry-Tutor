@@ -42,8 +42,10 @@ def require_admin(
 ) -> User | None:
     """Protect admin routes.
 
-    If ADMIN_TOKEN is set, that exact bearer token is accepted. Otherwise this
-    falls back to any valid app JWT for local development.
+    If ADMIN_TOKEN is set, that exact bearer token is accepted. Otherwise the
+    authenticated user's email must be listed in ADMIN_EMAILS. If neither admin
+    mechanism is configured, keep local development permissive but do not treat
+    that as production-safe.
     """
     if settings.admin_token and credentials.credentials == settings.admin_token:
         return None
@@ -51,4 +53,13 @@ def require_admin(
     user = db.get(User, user_id)
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
+    if settings.admin_emails and user.email not in settings.admin_emails:
+        raise HTTPException(status_code=403, detail="Admin privileges required")
+    return user
+
+
+def require_configured_admin(user: User | None = Depends(require_admin)) -> User | None:
+    """Require explicit admin configuration for sensitive production paths."""
+    if not settings.admin_token and not settings.admin_emails:
+        raise HTTPException(status_code=403, detail="Set ADMIN_TOKEN or ADMIN_EMAILS to enable admin APIs")
     return user

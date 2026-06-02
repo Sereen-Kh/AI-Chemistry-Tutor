@@ -1,0 +1,39 @@
+# =============================================================================
+# EduMind Docker Ignore
+# Keeps the image small by excluding dev artifacts and local databases
+# =============================================================================
+
+# Python virtual environments
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# Ruff / linter caches
+.ruff_cache/
+
+# Local SQLite databases (not needed in Docker — uses PostgreSQL)
+*.db
+*.db-journal
+
+# IDE / editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Git
+.git/
+.gitignore
+
+# Test artifacts
+.pytest_cache/
+htmlcov/
+.coverage
+
+# OS files
+.DS_Store
+Thumbs.db

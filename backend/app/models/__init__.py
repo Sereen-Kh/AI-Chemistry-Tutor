@@ -13,7 +13,9 @@ from app.models.device import DeviceToken  # noqa: F401
 from app.models.flashcard import Flashcard, FlashcardProgress  # noqa: F401
 from app.models.homework import Homework  # noqa: F401
 from app.models.interest import InterestCategory, UserInterest  # noqa: F401
+from app.models.ingestion import IngestionJob, IngestionPage  # noqa: F401
 from app.models.reel import Reel  # noqa: F401
+from app.models.student_profile import StudentProfile  # noqa: F401
 from app.models.study_plan import StudyPlan  # noqa: F401
 from app.models.textbook import ContentSource, ExtractedQuestion, RagChunk, TextbookChunk  # noqa: F401
 from app.models.topic import Topic  # noqa: F401

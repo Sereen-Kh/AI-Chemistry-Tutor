@@ -35,6 +35,9 @@ class User(Base, TimestampMixin):
     last_active_date: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
 
     interests = relationship("UserInterest", back_populates="user", cascade="all, delete-orphan")
+    student_profile = relationship(
+        "StudentProfile", back_populates="user", cascade="all, delete-orphan", uselist=False
+    )
     chat_sessions = relationship("ChatSession", back_populates="user", cascade="all, delete-orphan")
     lesson_progress = relationship("LessonProgress", back_populates="user", cascade="all, delete-orphan")
     quiz_attempts = relationship("QuizAttempt", back_populates="user", cascade="all, delete-orphan")

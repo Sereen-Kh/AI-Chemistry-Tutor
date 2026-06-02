@@ -169,5 +169,5 @@ def render_page_to_image(
     output_dir: str | Path,
     dpi: int = 300,
 ) -> Path:
-    """Render a one-based PDF page to a 300 DPI PNG file for Gemini Vision."""
+    """Render a one-based PDF page to a 300 DPI PNG file for Gemini image fallback."""
     return render_page_image_file(pdf_path, page_num, output_dir, dpi=dpi)

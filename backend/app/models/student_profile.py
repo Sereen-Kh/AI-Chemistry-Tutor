@@ -1,0 +1,27 @@
+"""Student profile model for personalization."""
+
+from datetime import date
+
+from sqlalchemy import Date, ForeignKey, Integer, JSON, String, Text
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from app.database import Base
+from app.models.mixins import TimestampMixin
+
+
+class StudentProfile(Base, TimestampMixin):
+    """Extended learning profile for a user."""
+
+    __tablename__ = "student_profiles"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), unique=True, index=True)
+    grade: Mapped[str] = mapped_column(String(50), default="grade_9", nullable=False)
+    subject: Mapped[str] = mapped_column(String(80), default="chemistry", nullable=False)
+    learning_style: Mapped[str] = mapped_column(String(80), default="real-life", nullable=False)
+    preferred_language: Mapped[str] = mapped_column(String(8), default="ar", nullable=False)
+    goals: Mapped[str | None] = mapped_column(Text, nullable=True)
+    target_exam_date: Mapped[date | None] = mapped_column(Date, nullable=True)
+    metadata_json: Mapped[dict | list | None] = mapped_column(JSON, nullable=True)
+
+    user = relationship("User", back_populates="student_profile")

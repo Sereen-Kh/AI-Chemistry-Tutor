@@ -1,11 +1,20 @@
 """Chat API routes."""
 
 from fastapi import APIRouter, Depends, Response
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.dependencies import get_current_user_id
-from app.database import get_db
-from app.schemas.chat import MessageResponse, SendMessageRequest, SessionCreate, SessionResponse
+from app.database import get_async_db
+from app.schemas.chat import (
+    ChatAnswerResponse,
+    ChatAskRequest,
+    ChatSourceResponse,
+    MessageFeedbackRequest,
+    MessageResponse,
+    SendMessageRequest,
+    SessionCreate,
+    SessionResponse,
+)
 from app.services import chat_service
 
 router = APIRouter(prefix="/chat", tags=["chat"])
@@ -15,7 +24,7 @@ router = APIRouter(prefix="/chat", tags=["chat"])
 async def create_chat_session(
     request: SessionCreate,
     user_id: int = Depends(get_current_user_id),
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_async_db),
 ):
     return await chat_service.create_session(
         db,
@@ -29,7 +38,7 @@ async def create_chat_session(
 @router.get("/sessions", response_model=list[SessionResponse])
 async def list_chat_sessions(
     user_id: int = Depends(get_current_user_id),
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_async_db),
 ):
     return await chat_service.get_user_sessions(db, user_id)
 
@@ -38,9 +47,9 @@ async def list_chat_sessions(
 async def get_chat_session(
     session_id: int,
     user_id: int = Depends(get_current_user_id),
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_async_db),
 ):
-    return chat_service.get_owned_session(db, session_id, user_id)
+    return await chat_service.get_owned_session(db, session_id, user_id)
 
 
 @router.post("/sessions/{session_id}/messages", response_model=MessageResponse)
@@ -48,7 +57,7 @@ async def send_chat_message(
     session_id: int,
     request: SendMessageRequest,
     user_id: int = Depends(get_current_user_id),
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_async_db),
 ):
     return await chat_service.send_message(
         db,
@@ -59,11 +68,54 @@ async def send_chat_message(
     )
 
 
+@router.post("/ask", response_model=ChatAnswerResponse)
+async def ask_chat(
+    request: ChatAskRequest,
+    user_id: int = Depends(get_current_user_id),
+    db: AsyncSession = Depends(get_async_db),
+):
+    result = await chat_service.ask_question(
+        db,
+        user_id=user_id,
+        question=request.question,
+        lesson_id=request.lesson_id,
+        topic_id=request.topic_id,
+        source_types=request.source_types,
+    )
+    return ChatAnswerResponse(
+        answer=result["answer"],
+        sources=[
+            ChatSourceResponse(
+                chunk_id=chunk.id,
+                source_id=chunk.source_id,
+                source=chunk.source,
+                page_number=chunk.page_number,
+                content_type=chunk.content_type,
+                similarity_score=chunk.similarity_score,
+            )
+            for chunk in result["sources"]
+        ],
+        page_numbers=result["page_numbers"],
+        confidence=result["confidence"],
+        suggested_next_action=result["suggested_next_action"],
+    )
+
+
+@router.post("/messages/{message_id}/feedback", response_model=MessageResponse)
+async def message_feedback(
+    message_id: int,
+    request: MessageFeedbackRequest,
+    user_id: int = Depends(get_current_user_id),
+    db: AsyncSession = Depends(get_async_db),
+):
+    return await chat_service.update_message_feedback(db, message_id, user_id, request.feedback)
+
+
 @router.delete("/sessions/{session_id}", status_code=204)
 async def delete_chat_session(
     session_id: int,
     user_id: int = Depends(get_current_user_id),
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_async_db),
 ):
     await chat_service.delete_session(db, session_id, user_id)
     return Response(status_code=204)

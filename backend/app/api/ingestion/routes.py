@@ -10,14 +10,19 @@ from sqlalchemy.orm import Session
 
 from app.core.dependencies import require_admin
 from app.database import SessionLocal, get_db
+from app.models.ingestion import IngestionJob, IngestionPage
 from app.models.textbook import ContentSource, ExtractedQuestion, RagChunk
 from app.schemas.ingestion import (
     ExtractedQuestionResponse,
     IngestionClearResponse,
+    IngestionPageResponse,
+    IngestionRetryPageResponse,
     IngestionStartRequest,
     IngestionStartResponse,
     IngestionStatsResponse,
     IngestionStatusResponse,
+    IngestionTestQueryRequest,
+    IngestionTestQueryResponse,
     QuestionReviewRequest,
     SourceDeleteResponse,
     SourceRegisterRequest,
@@ -91,6 +96,32 @@ async def _run_ingestion_task(
             progress_callback=progress,
             db=db,
         )
+        job = db.query(IngestionJob).filter(IngestionJob.job_uid == task_id).first()
+        if job:
+            job.source_id = result["source_id"]
+            job.status = result["status"]
+            job.progress = 100
+            job.message = "ingestion finished"
+            job.result_json = result
+            job.errors_json = result["errors"]
+            db.query(IngestionPage).filter(IngestionPage.source_id == result["source_id"]).delete(
+                synchronize_session=False
+            )
+            for page in result["page_statuses"]:
+                db.add(
+                    IngestionPage(
+                        source_id=result["source_id"],
+                        job_id=job.id,
+                        page_number=page["page_number"],
+                        page_type=page["page_type"],
+                        status=page["status"],
+                        extraction_methods=[page.get("extraction_method")],
+                        char_count=page.get("char_count") or 0,
+                        completeness_score=page.get("completeness_score") or 0.0,
+                        content_preview=None,
+                    )
+                )
+            db.commit()
         _update_task(
             task_id,
             status="done" if result["status"] != "failed" else "failed",
@@ -125,6 +156,11 @@ async def _run_ingestion_task(
             errors=result["errors"],
         )
     except Exception as exc:
+        job = db.query(IngestionJob).filter(IngestionJob.job_uid == task_id).first()
+        if job:
+            job.status = "failed"
+            job.errors_json = [str(exc)]
+            db.commit()
         _update_task(task_id, status="failed", errors=[str(exc)])
     finally:
         db.close()
@@ -135,8 +171,11 @@ async def start_ingestion(
     request: IngestionStartRequest,
     background_tasks: BackgroundTasks,
     _admin=Depends(require_admin),
+    db: Session = Depends(get_db),
 ):
     task_id = uuid.uuid4().hex
+    db.add(IngestionJob(job_uid=task_id, status="queued", progress=0, message="queued"))
+    db.commit()
     _update_task(task_id, status="queued", progress=0)
     background_tasks.add_task(
         _run_ingestion_task,
@@ -160,6 +199,14 @@ async def start_ingestion(
     return IngestionStartResponse(task_id=task_id, status="queued")
 
 
+@router.get("/sources", response_model=list[SourceResponse])
+def list_sources(
+    _admin=Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    return db.query(ContentSource).order_by(ContentSource.created_at.desc()).all()
+
+
 @router.post("/sources", response_model=SourceResponse, status_code=201)
 def register_source(
     request: SourceRegisterRequest,
@@ -180,6 +227,18 @@ def register_source(
     db.add(source)
     db.commit()
     db.refresh(source)
+    return source
+
+
+@router.get("/sources/{source_id}", response_model=SourceResponse)
+def get_source(
+    source_id: int,
+    _admin=Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    source = db.get(ContentSource, source_id)
+    if source is None:
+        raise HTTPException(status_code=404, detail="Source not found")
     return source
 
 
@@ -262,6 +321,71 @@ def delete_source(
         deleted_source_id=source_id,
         deleted_chunks=deleted_chunks,
         deleted_questions=deleted_questions,
+    )
+
+
+@router.delete("/sources/{source_id}", response_model=SourceDeleteResponse)
+def delete_source_plural(
+    source_id: int,
+    _admin=Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    return delete_source(source_id, _admin, db)
+
+
+@router.get("/pages/{source_id}", response_model=list[IngestionPageResponse])
+def list_ingestion_pages(
+    source_id: int,
+    _admin=Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    return (
+        db.query(IngestionPage)
+        .filter(IngestionPage.source_id == source_id)
+        .order_by(IngestionPage.page_number.asc())
+        .all()
+    )
+
+
+@router.post("/retry-page/{page_id}", response_model=IngestionRetryPageResponse)
+def retry_ingestion_page(
+    page_id: int,
+    _admin=Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    page = db.get(IngestionPage, page_id)
+    if page is None:
+        raise HTTPException(status_code=404, detail="Ingestion page not found")
+    page.status = "queued_retry"
+    db.commit()
+    return IngestionRetryPageResponse(
+        page_id=page_id,
+        status=page.status,
+        message="Page marked for retry. Full per-page retry worker is not implemented yet.",
+    )
+
+
+@router.post("/test-query", response_model=IngestionTestQueryResponse)
+async def test_query(
+    request: IngestionTestQueryRequest,
+    _admin=Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    chunks = await retrieve_context(db, query=request.query, top_k=request.top_k)
+    return IngestionTestQueryResponse(
+        query=request.query,
+        chunks=[
+            {
+                "id": chunk.id,
+                "source_id": chunk.source_id,
+                "source": chunk.source,
+                "page_number": chunk.page_number,
+                "content_type": chunk.content_type,
+                "similarity_score": chunk.similarity_score,
+                "content": chunk.content,
+            }
+            for chunk in chunks
+        ],
     )
 
 

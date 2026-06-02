@@ -12,19 +12,27 @@ PROJECT_DIR = BACKEND_DIR.parent
 class Settings(BaseSettings):
     app_name: str = "AI Chemistry Tutor"
     debug: bool = False
-    database_url: str = "sqlite:///./chemistry_tutor.db"
+    database_url: str = "postgresql://edumind:edumind_pass@localhost:5432/edumind_db"
+    async_database_url: str = ""
     secret_key: str = "change-me-to-a-long-random-string"
     access_token_expire_minutes: int = 30
     gemini_api_key: str = ""
     google_api_key: str = ""
-    model_name: str = "gemini-2.5-flash"
-    gemini_vision_model: str = "gemini-2.5-flash"
-    embedding_model: str = "models/text-embedding-004"
+    model_name: str = "gemini-3.5-flash"
+    ai_request_timeout_seconds: int = 12
+    gemini_document_model: str = "gemini-3.5-flash"
+    gemini_document_fallback_model: str = "gemini-2.5-pro"
+    gemini_embedding_model: str = "text-embedding-004"
+    gemini_min_page_chars: int = 40
+    gemini_min_completeness_score: float = 0.5
+    pdf_direct_extraction_enabled: bool = True
+    pdf_image_fallback_enabled: bool = True
     ocr_provider: str = "gemini"
     ocr_required_for_vision: bool = True
     allow_partial_ingestion: bool = False
     ingestion_mode: str = "production"
     admin_token: str = ""
+    admin_emails: List[str] = []
     redis_url: str = "redis://localhost:6379/0"
     celery_broker_url: str = "redis://localhost:6379/0"
     celery_result_backend: str = "redis://localhost:6379/1"
@@ -39,6 +47,18 @@ class Settings(BaseSettings):
     def effective_gemini_api_key(self) -> str:
         return self.gemini_api_key or self.google_api_key
 
+    @property
+    def effective_async_database_url(self) -> str:
+        if self.async_database_url:
+            return self.async_database_url
+        if self.database_url.startswith("sqlite:///"):
+            return self.database_url.replace("sqlite:///", "sqlite+aiosqlite:///", 1)
+        if self.database_url.startswith("postgresql://"):
+            return self.database_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+        if self.database_url.startswith("postgres://"):
+            return self.database_url.replace("postgres://", "postgresql+asyncpg://", 1)
+        return self.database_url
+
     @field_validator("debug", mode="before")
     @classmethod
     def parse_debug(cls, value):
@@ -49,6 +69,14 @@ class Settings(BaseSettings):
             if normalized in {"dev", "development", "on", "true", "1"}:
                 return True
         return value
+
+    @field_validator("ingestion_mode", mode="before")
+    @classmethod
+    def validate_ingestion_mode(cls, value):
+        normalized = str(value or "production").strip().lower()
+        if normalized not in {"dry_run", "production"}:
+            raise ValueError("INGESTION_MODE must be either 'dry_run' or 'production'")
+        return normalized
 
     class Config:
         env_file = (PROJECT_DIR / ".env", BACKEND_DIR / ".env")

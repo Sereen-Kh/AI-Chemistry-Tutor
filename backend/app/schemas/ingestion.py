@@ -11,7 +11,7 @@ class IngestionStartRequest(BaseModel):
     subject: str = "chemistry"
     year: int | None = None
     max_pages: int | None = Field(default=None, ge=1)
-    ocr_provider: str | None = Field(default=None, pattern="^(gemini|gemini_vision)$")
+    ocr_provider: str | None = Field(default=None, pattern="^(gemini|gemini_document|gemini_vision)$")
     ingestion_mode: str | None = Field(default=None, pattern="^(production|dry_run)$")
     ocr_required_for_vision: bool | None = None
     allow_partial_ingestion: bool | None = None
@@ -45,6 +45,40 @@ class SourceResponse(BaseModel):
     metadata_json: dict | list | None = None
 
     model_config = {"from_attributes": True}
+
+
+class IngestionPageResponse(BaseModel):
+    id: int | None = None
+    source_id: int
+    job_id: int | None = None
+    page_number: int
+    page_type: str
+    status: str
+    extraction_methods: list | dict | None = None
+    cache_path: str | None = None
+    char_count: int = 0
+    completeness_score: float = 0.0
+    warnings_json: dict | list | None = None
+    errors_json: dict | list | None = None
+    content_preview: str | None = None
+
+    model_config = {"from_attributes": True}
+
+
+class IngestionRetryPageResponse(BaseModel):
+    page_id: int
+    status: str
+    message: str
+
+
+class IngestionTestQueryRequest(BaseModel):
+    query: str
+    top_k: int = Field(default=5, ge=1, le=20)
+
+
+class IngestionTestQueryResponse(BaseModel):
+    query: str
+    chunks: list[dict]
 
 
 class IngestionStartResponse(BaseModel):

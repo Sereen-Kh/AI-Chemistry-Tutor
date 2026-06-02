@@ -1,0 +1,159 @@
+{
+  "source_slug": "syria_grade_9_chemistry",
+  "pages_dir": "/Users/sereenkh/Github-Projects/AI-Chemistry-Tutor/data/textbooks/syria_grade_9_chemistry/pages",
+  "ocrarena_cache_available": false,
+  "selected_pages": [
+    1,
+    3,
+    2,
+    4,
+    5,
+    8,
+    10
+  ],
+  "method_averages": {
+    "current_cache": 45.0
+  },
+  "pages": [
+    {
+      "page_number": 1,
+      "page_type": "SELECTABLE_TEXT",
+      "status": "completed_text_only",
+      "methods": {
+        "current_cache": {
+          "score": 30.0,
+          "char_count": 1453,
+          "raw_markdown_chars": 0,
+          "arabic_ratio": 1.0,
+          "table_count": 0,
+          "diagram_count": 0,
+          "equation_signal_count": 0,
+          "question_signal_count": 0,
+          "visible_answer_count": 0,
+          "schema_valid": true
+        }
+      },
+      "recommendation": "No cached OCRArena output; inspect current_cache and run improved Gemini extraction for fair comparison."
+    },
+    {
+      "page_number": 3,
+      "page_type": "NEEDS_VISION",
+      "status": "skipped_no_provider",
+      "methods": {
+        "current_cache": {
+          "score": 0.0,
+          "char_count": 0,
+          "raw_markdown_chars": 0,
+          "arabic_ratio": 0.0,
+          "table_count": 0,
+          "diagram_count": 0,
+          "equation_signal_count": 0,
+          "question_signal_count": 0,
+          "visible_answer_count": 0,
+          "schema_valid": false
+        }
+      },
+      "recommendation": "No cached OCRArena output; inspect current_cache and run improved Gemini extraction for fair comparison."
+    },
+    {
+      "page_number": 2,
+      "page_type": "MIXED_VISION",
+      "status": "skipped_no_provider",
+      "methods": {
+        "current_cache": {
+          "score": 45.0,
+          "char_count": 1429,
+          "raw_markdown_chars": 0,
+          "arabic_ratio": 0.9503,
+          "table_count": 9,
+          "diagram_count": 0,
+          "equation_signal_count": 0,
+          "question_signal_count": 0,
+          "visible_answer_count": 0,
+          "schema_valid": true
+        }
+      },
+      "recommendation": "No cached OCRArena output; inspect current_cache and run improved Gemini extraction for fair comparison."
+    },
+    {
+      "page_number": 4,
+      "page_type": "SELECTABLE_TEXT",
+      "status": "completed_text_only",
+      "methods": {
+        "current_cache": {
+          "score": 65.0,
+          "char_count": 3043,
+          "raw_markdown_chars": 0,
+          "arabic_ratio": 0.9306,
+          "table_count": 3,
+          "diagram_count": 0,
+          "equation_signal_count": 27,
+          "question_signal_count": 0,
+          "visible_answer_count": 0,
+          "schema_valid": true
+        }
+      },
+      "recommendation": "No cached OCRArena output; inspect current_cache and run improved Gemini extraction for fair comparison."
+    },
+    {
+      "page_number": 5,
+      "page_type": "SELECTABLE_TEXT",
+      "status": "completed_text_only",
+      "methods": {
+        "current_cache": {
+          "score": 65.0,
+          "char_count": 2602,
+          "raw_markdown_chars": 0,
+          "arabic_ratio": 0.8515,
+          "table_count": 3,
+          "diagram_count": 0,
+          "equation_signal_count": 60,
+          "question_signal_count": 0,
+          "visible_answer_count": 0,
+          "schema_valid": true
+        }
+      },
+      "recommendation": "No cached OCRArena output; inspect current_cache and run improved Gemini extraction for fair comparison."
+    },
+    {
+      "page_number": 8,
+      "page_type": "SELECTABLE_TEXT",
+      "status": "completed_text_only",
+      "methods": {
+        "current_cache": {
+          "score": 45.0,
+          "char_count": 3427,
+          "raw_markdown_chars": 0,
+          "arabic_ratio": 0.9366,
+          "table_count": 0,
+          "diagram_count": 0,
+          "equation_signal_count": 0,
+          "question_signal_count": 12,
+          "visible_answer_count": 0,
+          "schema_valid": true
+        }
+      },
+      "recommendation": "No cached OCRArena output; inspect current_cache and run improved Gemini extraction for fair comparison."
+    },
+    {
+      "page_number": 10,
+      "page_type": "MIXED_VISION",
+      "status": "skipped_no_provider",
+      "methods": {
+        "current_cache": {
+          "score": 65.0,
+          "char_count": 1504,
+          "raw_markdown_chars": 0,
+          "arabic_ratio": 0.9521,
+          "table_count": 9,
+          "diagram_count": 0,
+          "equation_signal_count": 3,
+          "question_signal_count": 0,
+          "visible_answer_count": 0,
+          "schema_valid": true
+        }
+      },
+      "recommendation": "No cached OCRArena output; inspect current_cache and run improved Gemini extraction for fair comparison."
+    }
+  ]
+}

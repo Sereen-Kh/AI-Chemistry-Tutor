@@ -1,0 +1,135 @@
+# =============================================================================
+# EduMind — Docker Compose (Full Stack)
+#
+# Services:
+#   postgres       → PostgreSQL 16 + pgvector extension
+#   redis          → Redis 7 (Celery broker + cache)
+#   backend        → FastAPI API server (uvicorn) — Swagger at :8000/docs
+#   celery-worker  → Celery background worker (PDF ingestion)
+#
+# Usage:
+#   docker compose up -d                                    # start all services
+#   docker compose up -d postgres redis                     # infra only (local dev)
+#   docker compose logs -f backend                          # tail API logs
+#   docker compose exec backend ./entrypoint.sh migrate     # run migrations
+#   docker compose exec backend ./entrypoint.sh seed        # seed data
+#   docker compose exec backend python scripts/seed_interests.py  # seed directly
+# =============================================================================
+
+services:
+
+  # ---------------------------------------------------------------------------
+  # PostgreSQL 16 with pgvector for RAG vector similarity search
+  # ---------------------------------------------------------------------------
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: edumind-postgres
+    environment:
+      POSTGRES_DB: edumind
+      POSTGRES_USER: edumind
+      POSTGRES_PASSWORD: edumind
+    ports:
+      - "5432:5432"
+    volumes:
+      - edumind_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U edumind -d edumind"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # Redis 7 — Celery message broker + result backend + future cache layer
+  # ---------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: edumind-redis
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru"]
+    volumes:
+      - edumind_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # FastAPI Backend — Swagger at http://localhost:8000/docs
+  # Entrypoint handles: wait for PG → run migrations → start uvicorn
+  # ---------------------------------------------------------------------------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: edumind-backend
+    env_file:
+      - ./backend/.env
+    environment:
+      # Override database URLs to use Docker-internal hostnames
+      DATABASE_URL: postgresql://edumind:edumind@postgres:5432/edumind
+      ASYNC_DATABASE_URL: postgresql+asyncpg://edumind:edumind@postgres:5432/edumind
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+      # Single-worker in dev to avoid port conflicts; override for prod
+      UVICORN_WORKERS: "1"
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount PDF data directory so ingestion can access textbook files
+      - ./data:/app/data
+      # Persist extracted page caches across container restarts
+      - edumind_textbook_cache:/app/data/textbooks
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 30s
+      retries: 3
+    restart: unless-stopped
+    # Default CMD is "api" (from Dockerfile)
+
+  # ---------------------------------------------------------------------------
+  # Celery Worker — Background PDF ingestion and AI generation tasks
+  # Same image as backend, but entrypoint runs in "celery" mode
+  # ---------------------------------------------------------------------------
+  celery-worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: edumind-celery-worker
+    # Override CMD to run the Celery worker instead of uvicorn
+    command: ["celery"]
+    env_file:
+      - ./backend/.env
+    environment:
+      DATABASE_URL: postgresql://edumind:edumind@postgres:5432/edumind
+      ASYNC_DATABASE_URL: postgresql+asyncpg://edumind:edumind@postgres:5432/edumind
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+      CELERY_CONCURRENCY: "2"
+    volumes:
+      # Same data mount as backend — worker needs access to PDFs and cache
+      - ./data:/app/data
+      - edumind_textbook_cache:/app/data/textbooks
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  edumind_postgres_data:
+  edumind_redis_data:
+  edumind_textbook_cache:

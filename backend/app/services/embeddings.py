@@ -4,13 +4,16 @@ from __future__ import annotations
 
 import asyncio
 import hashlib
+import logging
 import math
 import re
 from typing import Iterable
 
 from app.core.config import settings
+from app.services.gemini_client import embedding_config, get_gemini_client
 
 EMBEDDING_DIM = 768
+logger = logging.getLogger(__name__)
 
 
 def _fallback_embedding(text: str, dim: int = EMBEDDING_DIM) -> list[float]:
@@ -25,12 +28,10 @@ def _fallback_embedding(text: str, dim: int = EMBEDDING_DIM) -> list[float]:
     return [v / norm for v in vector]
 
 
-def _configure_genai():
-    """Import and configure the Gemini SDK lazily."""
-    import google.generativeai as genai
-
-    genai.configure(api_key=settings.effective_gemini_api_key)
-    return genai
+def _embedding_values(response) -> list[list[float]]:
+    embeddings = getattr(response, "embeddings", None) or []
+    values = [list(item.values or []) for item in embeddings]
+    return [item for item in values if item]
 
 
 async def embed_text(text: str) -> list[float]:
@@ -39,15 +40,22 @@ async def embed_text(text: str) -> list[float]:
         return _fallback_embedding(text)
 
     def _call() -> list[float]:
-        genai = _configure_genai()
-        result = genai.embed_content(
-            model=settings.embedding_model,
-            content=text,
-            task_type="retrieval_document",
+        client = get_gemini_client()
+        result = client.models.embed_content(
+            model=settings.gemini_embedding_model,
+            contents=text,
+            config=embedding_config("RETRIEVAL_DOCUMENT"),
         )
-        return result["embedding"]
+        embeddings = _embedding_values(result)
+        if not embeddings:
+            raise RuntimeError("Gemini embedding response did not include vectors.")
+        return embeddings[0]
 
-    return await asyncio.to_thread(_call)
+    try:
+        return await asyncio.to_thread(_call)
+    except Exception as exc:  # pragma: no cover - external API failure
+        logger.exception("Gemini document embedding failed; using fallback embedding: %s", exc)
+        return _fallback_embedding(text)
 
 
 async def embed_query(query: str) -> list[float]:
@@ -56,15 +64,22 @@ async def embed_query(query: str) -> list[float]:
         return _fallback_embedding(query)
 
     def _call() -> list[float]:
-        genai = _configure_genai()
-        result = genai.embed_content(
-            model=settings.embedding_model,
-            content=query,
-            task_type="retrieval_query",
+        client = get_gemini_client()
+        result = client.models.embed_content(
+            model=settings.gemini_embedding_model,
+            contents=query,
+            config=embedding_config("RETRIEVAL_QUERY"),
         )
-        return result["embedding"]
+        embeddings = _embedding_values(result)
+        if not embeddings:
+            raise RuntimeError("Gemini query embedding response did not include vectors.")
+        return embeddings[0]
 
-    return await asyncio.to_thread(_call)
+    try:
+        return await asyncio.to_thread(_call)
+    except Exception as exc:  # pragma: no cover - external API failure
+        logger.exception("Gemini query embedding failed; using fallback embedding: %s", exc)
+        return _fallback_embedding(query)
 
 
 async def embed_batch(texts: Iterable[str], batch_size: int = 100) -> list[list[float]]:
@@ -78,17 +93,22 @@ async def embed_batch(texts: Iterable[str], batch_size: int = 100) -> list[list[
     all_embeddings: list[list[float]] = []
 
     def _embed_batch(batch: list[str]) -> list[list[float]]:
-        genai = _configure_genai()
-        result = genai.embed_content(
-            model=settings.embedding_model,
-            content=batch,
-            task_type="retrieval_document",
+        client = get_gemini_client()
+        result = client.models.embed_content(
+            model=settings.gemini_embedding_model,
+            contents=batch,
+            config=embedding_config("RETRIEVAL_DOCUMENT"),
         )
-        embeddings = result["embedding"]
-        if embeddings and isinstance(embeddings[0], float):
-            return [embeddings]
+        embeddings = _embedding_values(result)
+        if len(embeddings) != len(batch):
+            raise RuntimeError(f"Gemini returned {len(embeddings)} embeddings for {len(batch)} texts.")
         return embeddings
 
     for index in range(0, len(items), batch_size):
-        all_embeddings.extend(await asyncio.to_thread(_embed_batch, items[index : index + batch_size]))
+        batch = items[index : index + batch_size]
+        try:
+            all_embeddings.extend(await asyncio.to_thread(_embed_batch, batch))
+        except Exception as exc:  # pragma: no cover - external API failure
+            logger.exception("Gemini batch embedding failed; using fallback embeddings: %s", exc)
+            all_embeddings.extend(_fallback_embedding(text) for text in batch)
     return all_embeddings

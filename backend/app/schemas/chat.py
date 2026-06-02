@@ -41,3 +41,31 @@ class SessionResponse(BaseModel):
 class SendMessageRequest(BaseModel):
     content: str = Field(..., min_length=1)
     format: str = "text"
+
+
+class ChatAskRequest(BaseModel):
+    question: str = Field(..., min_length=1)
+    lesson_id: int | None = None
+    topic_id: int | None = None
+    source_types: list[str] | None = None
+
+
+class ChatSourceResponse(BaseModel):
+    chunk_id: int
+    source_id: int
+    source: str | None = None
+    page_number: int | None = None
+    content_type: str
+    similarity_score: float
+
+
+class ChatAnswerResponse(BaseModel):
+    answer: str
+    sources: list[ChatSourceResponse] = []
+    page_numbers: list[int] = []
+    confidence: float
+    suggested_next_action: str | None = None
+
+
+class MessageFeedbackRequest(BaseModel):
+    feedback: str = Field(..., pattern="^(up|down|helpful|not_helpful)$")

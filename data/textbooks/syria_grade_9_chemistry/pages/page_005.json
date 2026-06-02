@@ -1,0 +1,530 @@
+{
+  "page_number": 5,
+  "page_type": "MIXED_VISION",
+  "extraction_methods": [
+    "pymupdf",
+    "pdfplumber",
+    "gemini_image_300dpi"
+  ],
+  "extraction_method": "pymupdf+pdfplumber+gemini_image_300dpi",
+  "status": "completed_with_image_fallback",
+  "text_layer_content": ". من الحمض3.65 g  يحوي100 mL محلول لحمض كلور الماء حجمه\nالمطلوب:\n  \n 1.\n.احسب التّركيز الغرامي لهذا المحلول\n  \n 2.\n.احسب التّركيز المولي لهذا المحلول\n \n(H:1,Cl:35.5) :ّعلماً أن\nالحل:\nV\n100 ml\n1000\n100\n10\n1\n0.1L\n=\n=\n=\n=\n  \n 1.\nC\nV\nm\n0.1\n3.65\n36.5 g.L\n(\n)\ng.l\n1\n1 =\n=\n=\n-\n-\n  \n 2.\nM\n35.5\n1\n36.5 g.mol 1\n=\n+\n=\n-  الكتلة الموليّة لحمض كلور الماء\n \nn\nM\nm\n36.5\n3.65\n0.1mol\nC\nV\nn\n0.1\n0.1\n1mol.L\n(\n)\nmol.l\n1\n1\n=\n=\n=\n=\n=\n=\n-\n-\n عدد موالت حمض كلور الماء\n:ﺗﻄﺒﻴﻖ ﻣﺤﻠﻮل\n:ﻧﺸﺎط\n، احسب200 mL  نأخذ منهC\n6 g.L 1\n=\n-  محلول مائيّ لحمض الخلّ تركيزه\n \nكتلة حمض الخلّ في هذا المحلول.\nتمديد المحلول:\n:ﻧﺸﺎط\n1\n1 .\n.أذيب ملعقة سكّر بالماء المقطّ ر في كأس نظيف، وأتذوّ ق المحلول\n2\n2 .\n.أُضيف للمحلول السّ ابق ثالثة أضعاف حجمه ماء، و أتذوّ ق المحلول من جديد\n3\n3 .\n ماذا طرأ بعد عمليّ ة التّ مديد على كلّ من حجم المحلول وتركيزه وكمّ يّ ة السّ كّر\nالمنحلّ فيه.\n111\n\n| :لﻮﻠﺤﻣ ﻖﻴﺒﻄﺗ |\n| --- |\n|  |",
+  "vision_content": {
+    "page_number": 111,
+    "detected_language": "Arabic",
+    "raw_markdown": "# تطبيق محلول\n\nمحلول لحمض كلور الماء، حجمه 100 mL يحوي 3.65 g من الحمض.\nالمطلوب:\n1. احسب التركيز الغرامي لهذا المحلول.\n2. احسب التركيز المولي لهذا المحلول.\nعلماً أن: (H: 1, Cl: 35.5)\n\nالحل:\nV = 100 mL = 100/1000 = 1/10 = 0.1 L\nC(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹ .1\n2. الكتلة المولية لحمض كلور الماء M = 35.5 + 1 = 36.5 g.mol⁻¹\nعدد مولات حمض كلور الماء n = m/M = 3.65/36.5 = 0.1 mol\nC(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹\n\n# نشاط\n\nمحلول مائي لحمض الخل تركيزه C = 6 g.L⁻¹ نأخذ منه 200 mL، احسب كتلة حمض الخل في هذا المحلول.\n\n# تمديد المحلول\n\n## نشاط\n\n1. أذيب ملعقة سكر بالماء المقطر في كأس نظيف، وأتذوق المحلول.\n2. أضيف للمحلول السابق ثلاثة أضعاف حجمه ماء، و أتذوق المحلول من جديد.\n3. ماذا طرأ بعد عملية التمديد على كل من حجم المحلول وتركيزه وكمية السكر المنحل فيه.",
+    "sections": [
+      {
+        "heading": "تطبيق محلول",
+        "content": "محلول لحمض كلور الماء، حجمه 100 mL يحوي 3.65 g من الحمض. المطلوب: 1. احسب التركيز الغرامي لهذا المحلول. 2. احسب التركيز المولي لهذا المحلول. علماً أن: (H: 1, Cl: 35.5) الحل: V = 100 mL = 100/1000 = 1/10 = 0.1 L C(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹ .1 2. الكتلة المولية لحمض كلور الماء M = 35.5 + 1 = 36.5 g.mol⁻¹ عدد مولات حمض كلور الماء n = m/M = 3.65/36.5 = 0.1 mol C(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹",
+        "content_type": "mixed"
+      },
+      {
+        "heading": "نشاط",
+        "content": "محلول مائي لحمض الخل تركيزه C = 6 g.L⁻¹ نأخذ منه 200 mL، احسب كتلة حمض الخل في هذا المحلول.",
+        "content_type": "exercise"
+      },
+      {
+        "heading": "تمديد المحلول",
+        "content": "نشاط: 1. أذيب ملعقة سكر بالماء المقطر في كأس نظيف، وأتذوق المحلول. 2. أضيف للمحلول السابق ثلاثة أضعاف حجمه ماء، و أتذوق المحلول من جديد. 3. ماذا طرأ بعد عملية التمديد على كل من حجم المحلول وتركيزه وكمية السكر المنحل فيه.",
+        "content_type": "exercise"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "احسب التركيز الغرامي لهذا المحلول.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": "C(g.L⁻¹) = 36.5 g.L⁻¹",
+        "explanation": "V = 100 mL = 0.1 L, m = 3.65 g. C(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹",
+        "answer_source": "page"
+      },
+      {
+        "question_text": "احسب التركيز المولي لهذا المحلول.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": "C(mol.L⁻¹) = 1 mol.L⁻¹",
+        "explanation": "Molar mass of HCl (H: 1, Cl: 35.5) = 35.5 + 1 = 36.5 g.mol⁻¹. Number of moles n = m/M = 3.65/36.5 = 0.1 mol. C(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹",
+        "answer_source": "page"
+      },
+      {
+        "question_text": "محلول مائي لحمض الخل تركيزه C = 6 g.L⁻¹ نأخذ منه 200 mL، احسب كتلة حمض الخل في هذا المحلول.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أذيب ملعقة سكر بالماء المقطر في كأس نظيف، وأتذوق المحلول.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أضيف للمحلول السابق ثلاثة أضعاف حجمه ماء، و أتذوق المحلول من جديد.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "ماذا طرأ بعد عملية التمديد على كل من حجم المحلول وتركيزه وكمية السكر المنحل فيه.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "A clear glass bottle or volumetric flask with measurement markings on its side, containing a clear liquid. It is placed on a wooden surface.",
+        "labels": [],
+        "related_text": "محلول لحمض كلور الماء، حجمه 100 mL يحوي 3.65 g من الحمض."
+      }
+    ],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "V = 100 mL = 100/1000 = 1/10 = 0.1 L",
+        "description": "Volume conversion from milliliters to liters"
+      },
+      {
+        "equation": "C(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹",
+        "description": "Calculation of gram concentration"
+      },
+      {
+        "equation": "M = 35.5 + 1 = 36.5 g.mol⁻¹",
+        "description": "Calculation of molar mass for HCl"
+      },
+      {
+        "equation": "n = m/M = 3.65/36.5 = 0.1 mol",
+        "description": "Calculation of number of moles"
+      },
+      {
+        "equation": "C(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹",
+        "description": "Calculation of molar concentration"
+      }
+    ],
+    "warnings": [],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 767,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 111,
+      "schema_valid": true,
+      "raw_markdown_chars": 767,
+      "char_count": 767,
+      "section_count": 3,
+      "question_count": 6,
+      "table_count": 0,
+      "equation_count": 5,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.5553,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 111,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"# تطبيق محلول\\n\\nمحلول لحمض كلور الماء، حجمه 100 mL يحوي 3.65 g من الحمض.\\nالمطلوب:\\n1. احسب التركيز الغرامي لهذا المحلول.\\n2. احسب التركيز المولي لهذا المحلول.\\nعلماً أن: (H: 1, Cl: 35.5)\\n\\nالحل:\\nV = 100 mL = 100/1000 = 1/10 = 0.1 L\\nC(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹ .1\\n2. الكتلة المولية لحمض كلور الماء M = 35.5 + 1 = 36.5 g.mol⁻¹\\nعدد مولات حمض كلور الماء n = m/M = 3.65/36.5 = 0.1 mol\\nC(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹\\n\\n# نشاط\\n\\nمحلول مائي لحمض الخل تركيزه C = 6 g.L⁻¹ نأخذ منه 200 mL، احسب كتلة حمض الخل في هذا المحلول.\\n\\n# تمديد المحلول\\n\\n## نشاط\\n\\n1. أذيب ملعقة سكر بالماء المقطر في كأس نظيف، وأتذوق المحلول.\\n2. أضيف للمحلول السابق ثلاثة أضعاف حجمه ماء، و أتذوق المحلول من جديد.\\n3. ماذا طرأ بعد عملية التمديد على كل من حجم المحلول وتركيزه وكمية السكر المنحل فيه.\",\n  \"sections\": [\n    {\n      \"heading\": \"تطبيق محلول\",\n      \"content\": \"محلول لحمض كلور الماء، حجمه 100 mL يحوي 3.65 g من الحمض. المطلوب: 1. احسب التركيز الغرامي لهذا المحلول. 2. احسب التركيز المولي لهذا المحلول. علماً أن: (H: 1, Cl: 35.5) الحل: V = 100 mL = 100/1000 = 1/10 = 0.1 L C(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹ .1 2. الكتلة المولية لحمض كلور الماء M = 35.5 + 1 = 36.5 g.mol⁻¹ عدد مولات حمض كلور الماء n = m/M = 3.65/36.5 = 0.1 mol C(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹\",\n      \"content_type\": \"mixed\"\n    },\n    {\n      \"heading\": \"نشاط\",\n      \"content\": \"محلول مائي لحمض الخل تركيزه C = 6 g.L⁻¹ نأخذ منه 200 mL، احسب كتلة حمض الخل في هذا المحلول.\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"تمديد المحلول\",\n      \"content\": \"نشاط: 1. أذيب ملعقة سكر بالماء المقطر في كأس نظيف، وأتذوق المحلول. 2. أضيف للمحلول السابق ثلاثة أضعاف حجمه ماء، و أتذوق المحلول من جديد. 3. ماذا طرأ بعد عملية التمديد على كل من حجم المحلول وتركيزه وكمية السكر المنحل فيه.\",\n      \"content_type\": \"exercise\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"احسب التركيز الغرامي لهذا المحلول.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": \"C(g.L⁻¹) = 36.5 g.L⁻¹\",\n      \"explanation\": \"V = 100 mL = 0.1 L, m = 3.65 g. C(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹\",\n      \"answer_source\": \"page\"\n    },\n    {\n      \"question_text\": \"احسب التركيز المولي لهذا المحلول.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": \"C(mol.L⁻¹) = 1 mol.L⁻¹\",\n      \"explanation\": \"Molar mass of HCl (H: 1, Cl: 35.5) = 35.5 + 1 = 36.5 g.mol⁻¹. Number of moles n = m/M = 3.65/36.5 = 0.1 mol. C(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹\",\n      \"answer_source\": \"page\"\n    },\n    {\n      \"question_text\": \"محلول مائي لحمض الخل تركيزه C = 6 g.L⁻¹ نأخذ منه 200 mL، احسب كتلة حمض الخل في هذا المحلول.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أذيب ملعقة سكر بالماء المقطر في كأس نظيف، وأتذوق المحلول.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أضيف للمحلول السابق ثلاثة أضعاف حجمه ماء، و أتذوق المحلول من جديد.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"ماذا طرأ بعد عملية التمديد على كل من حجم المحلول وتركيزه وكمية السكر المنحل فيه.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"A clear glass bottle or volumetric flask with measurement markings on its side, containing a clear liquid. It is placed on a wooden surface.\",\n      \"labels\": [],\n      \"related_text\": \"محلول لحمض كلور الماء، حجمه 100 mL يحوي 3.65 g من الحمض.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"V = 100 mL = 100/1000 = 1/10 = 0.1 L\",\n      \"description\": \"Volume conversion from milliliters to liters\"\n    },\n    {\n      \"equation\": \"C(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹\",\n      \"description\": \"Calculation of gram concentration\"\n    },\n    {\n      \"equation\": \"M = 35.5 + 1 = 36.5 g.mol⁻¹\",\n      \"description\": \"Calculation of molar mass for HCl\"\n    },\n    {\n      \"equation\": \"n = m/M = 3.65/36.5 = 0.1 mol\",\n      \"description\": \"Calculation of number of moles\"\n    },\n    {\n      \"equation\": \"C(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹\",\n      \"description\": \"Calculation of molar concentration\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"Anthropic\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": null,\n  \"completeness_score\": null,\n  \"quality_report\": null,\n  \"raw_text\": null\n}"
+  },
+  "gemini_pdf_content": {},
+  "gemini_fallback_model_content": {
+    "page_number": 111,
+    "detected_language": "Arabic",
+    "raw_markdown": "# تطبيق محلول\n\nمحلول لحمض كلور الماء، حجمه 100 mL يحوي 3.65 g من الحمض.\nالمطلوب:\n1. احسب التركيز الغرامي لهذا المحلول.\n2. احسب التركيز المولي لهذا المحلول.\nعلماً أن: (H: 1, Cl: 35.5)\n\nالحل:\nV = 100 mL = 100/1000 = 1/10 = 0.1 L\nC(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹ .1\n2. الكتلة المولية لحمض كلور الماء M = 35.5 + 1 = 36.5 g.mol⁻¹\nعدد مولات حمض كلور الماء n = m/M = 3.65/36.5 = 0.1 mol\nC(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹\n\n# نشاط\n\nمحلول مائي لحمض الخل تركيزه C = 6 g.L⁻¹ نأخذ منه 200 mL، احسب كتلة حمض الخل في هذا المحلول.\n\n# تمديد المحلول\n\n## نشاط\n\n1. أذيب ملعقة سكر بالماء المقطر في كأس نظيف، وأتذوق المحلول.\n2. أضيف للمحلول السابق ثلاثة أضعاف حجمه ماء، و أتذوق المحلول من جديد.\n3. ماذا طرأ بعد عملية التمديد على كل من حجم المحلول وتركيزه وكمية السكر المنحل فيه.",
+    "sections": [
+      {
+        "heading": "تطبيق محلول",
+        "content": "محلول لحمض كلور الماء، حجمه 100 mL يحوي 3.65 g من الحمض. المطلوب: 1. احسب التركيز الغرامي لهذا المحلول. 2. احسب التركيز المولي لهذا المحلول. علماً أن: (H: 1, Cl: 35.5) الحل: V = 100 mL = 100/1000 = 1/10 = 0.1 L C(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹ .1 2. الكتلة المولية لحمض كلور الماء M = 35.5 + 1 = 36.5 g.mol⁻¹ عدد مولات حمض كلور الماء n = m/M = 3.65/36.5 = 0.1 mol C(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹",
+        "content_type": "mixed"
+      },
+      {
+        "heading": "نشاط",
+        "content": "محلول مائي لحمض الخل تركيزه C = 6 g.L⁻¹ نأخذ منه 200 mL، احسب كتلة حمض الخل في هذا المحلول.",
+        "content_type": "exercise"
+      },
+      {
+        "heading": "تمديد المحلول",
+        "content": "نشاط: 1. أذيب ملعقة سكر بالماء المقطر في كأس نظيف، وأتذوق المحلول. 2. أضيف للمحلول السابق ثلاثة أضعاف حجمه ماء، و أتذوق المحلول من جديد. 3. ماذا طرأ بعد عملية التمديد على كل من حجم المحلول وتركيزه وكمية السكر المنحل فيه.",
+        "content_type": "exercise"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "احسب التركيز الغرامي لهذا المحلول.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": "C(g.L⁻¹) = 36.5 g.L⁻¹",
+        "explanation": "V = 100 mL = 0.1 L, m = 3.65 g. C(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹",
+        "answer_source": "page"
+      },
+      {
+        "question_text": "احسب التركيز المولي لهذا المحلول.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": "C(mol.L⁻¹) = 1 mol.L⁻¹",
+        "explanation": "Molar mass of HCl (H: 1, Cl: 35.5) = 35.5 + 1 = 36.5 g.mol⁻¹. Number of moles n = m/M = 3.65/36.5 = 0.1 mol. C(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹",
+        "answer_source": "page"
+      },
+      {
+        "question_text": "محلول مائي لحمض الخل تركيزه C = 6 g.L⁻¹ نأخذ منه 200 mL، احسب كتلة حمض الخل في هذا المحلول.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أذيب ملعقة سكر بالماء المقطر في كأس نظيف، وأتذوق المحلول.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أضيف للمحلول السابق ثلاثة أضعاف حجمه ماء، و أتذوق المحلول من جديد.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "ماذا طرأ بعد عملية التمديد على كل من حجم المحلول وتركيزه وكمية السكر المنحل فيه.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "A clear glass bottle or volumetric flask with measurement markings on its side, containing a clear liquid. It is placed on a wooden surface.",
+        "labels": [],
+        "related_text": "محلول لحمض كلور الماء، حجمه 100 mL يحوي 3.65 g من الحمض."
+      }
+    ],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "V = 100 mL = 100/1000 = 1/10 = 0.1 L",
+        "description": "Volume conversion from milliliters to liters"
+      },
+      {
+        "equation": "C(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹",
+        "description": "Calculation of gram concentration"
+      },
+      {
+        "equation": "M = 35.5 + 1 = 36.5 g.mol⁻¹",
+        "description": "Calculation of molar mass for HCl"
+      },
+      {
+        "equation": "n = m/M = 3.65/36.5 = 0.1 mol",
+        "description": "Calculation of number of moles"
+      },
+      {
+        "equation": "C(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹",
+        "description": "Calculation of molar concentration"
+      }
+    ],
+    "warnings": [],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 767,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 111,
+      "schema_valid": true,
+      "raw_markdown_chars": 767,
+      "char_count": 767,
+      "section_count": 3,
+      "question_count": 6,
+      "table_count": 0,
+      "equation_count": 5,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.5553,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 111,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"# تطبيق محلول\\n\\nمحلول لحمض كلور الماء، حجمه 100 mL يحوي 3.65 g من الحمض.\\nالمطلوب:\\n1. احسب التركيز الغرامي لهذا المحلول.\\n2. احسب التركيز المولي لهذا المحلول.\\nعلماً أن: (H: 1, Cl: 35.5)\\n\\nالحل:\\nV = 100 mL = 100/1000 = 1/10 = 0.1 L\\nC(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹ .1\\n2. الكتلة المولية لحمض كلور الماء M = 35.5 + 1 = 36.5 g.mol⁻¹\\nعدد مولات حمض كلور الماء n = m/M = 3.65/36.5 = 0.1 mol\\nC(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹\\n\\n# نشاط\\n\\nمحلول مائي لحمض الخل تركيزه C = 6 g.L⁻¹ نأخذ منه 200 mL، احسب كتلة حمض الخل في هذا المحلول.\\n\\n# تمديد المحلول\\n\\n## نشاط\\n\\n1. أذيب ملعقة سكر بالماء المقطر في كأس نظيف، وأتذوق المحلول.\\n2. أضيف للمحلول السابق ثلاثة أضعاف حجمه ماء، و أتذوق المحلول من جديد.\\n3. ماذا طرأ بعد عملية التمديد على كل من حجم المحلول وتركيزه وكمية السكر المنحل فيه.\",\n  \"sections\": [\n    {\n      \"heading\": \"تطبيق محلول\",\n      \"content\": \"محلول لحمض كلور الماء، حجمه 100 mL يحوي 3.65 g من الحمض. المطلوب: 1. احسب التركيز الغرامي لهذا المحلول. 2. احسب التركيز المولي لهذا المحلول. علماً أن: (H: 1, Cl: 35.5) الحل: V = 100 mL = 100/1000 = 1/10 = 0.1 L C(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹ .1 2. الكتلة المولية لحمض كلور الماء M = 35.5 + 1 = 36.5 g.mol⁻¹ عدد مولات حمض كلور الماء n = m/M = 3.65/36.5 = 0.1 mol C(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹\",\n      \"content_type\": \"mixed\"\n    },\n    {\n      \"heading\": \"نشاط\",\n      \"content\": \"محلول مائي لحمض الخل تركيزه C = 6 g.L⁻¹ نأخذ منه 200 mL، احسب كتلة حمض الخل في هذا المحلول.\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"تمديد المحلول\",\n      \"content\": \"نشاط: 1. أذيب ملعقة سكر بالماء المقطر في كأس نظيف، وأتذوق المحلول. 2. أضيف للمحلول السابق ثلاثة أضعاف حجمه ماء، و أتذوق المحلول من جديد. 3. ماذا طرأ بعد عملية التمديد على كل من حجم المحلول وتركيزه وكمية السكر المنحل فيه.\",\n      \"content_type\": \"exercise\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"احسب التركيز الغرامي لهذا المحلول.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": \"C(g.L⁻¹) = 36.5 g.L⁻¹\",\n      \"explanation\": \"V = 100 mL = 0.1 L, m = 3.65 g. C(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹\",\n      \"answer_source\": \"page\"\n    },\n    {\n      \"question_text\": \"احسب التركيز المولي لهذا المحلول.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": \"C(mol.L⁻¹) = 1 mol.L⁻¹\",\n      \"explanation\": \"Molar mass of HCl (H: 1, Cl: 35.5) = 35.5 + 1 = 36.5 g.mol⁻¹. Number of moles n = m/M = 3.65/36.5 = 0.1 mol. C(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹\",\n      \"answer_source\": \"page\"\n    },\n    {\n      \"question_text\": \"محلول مائي لحمض الخل تركيزه C = 6 g.L⁻¹ نأخذ منه 200 mL، احسب كتلة حمض الخل في هذا المحلول.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أذيب ملعقة سكر بالماء المقطر في كأس نظيف، وأتذوق المحلول.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أضيف للمحلول السابق ثلاثة أضعاف حجمه ماء، و أتذوق المحلول من جديد.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"ماذا طرأ بعد عملية التمديد على كل من حجم المحلول وتركيزه وكمية السكر المنحل فيه.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"A clear glass bottle or volumetric flask with measurement markings on its side, containing a clear liquid. It is placed on a wooden surface.\",\n      \"labels\": [],\n      \"related_text\": \"محلول لحمض كلور الماء، حجمه 100 mL يحوي 3.65 g من الحمض.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"V = 100 mL = 100/1000 = 1/10 = 0.1 L\",\n      \"description\": \"Volume conversion from milliliters to liters\"\n    },\n    {\n      \"equation\": \"C(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹\",\n      \"description\": \"Calculation of gram concentration\"\n    },\n    {\n      \"equation\": \"M = 35.5 + 1 = 36.5 g.mol⁻¹\",\n      \"description\": \"Calculation of molar mass for HCl\"\n    },\n    {\n      \"equation\": \"n = m/M = 3.65/36.5 = 0.1 mol\",\n      \"description\": \"Calculation of number of moles\"\n    },\n    {\n      \"equation\": \"C(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹\",\n      \"description\": \"Calculation of molar concentration\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"Anthropic\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": null,\n  \"completeness_score\": null,\n  \"quality_report\": null,\n  \"raw_text\": null\n}"
+  },
+  "gemini_image_fallback_content": {
+    "page_number": 111,
+    "detected_language": "Arabic",
+    "raw_markdown": "# تطبيق محلول\n\nمحلول لحمض كلور الماء، حجمه 100 mL يحوي 3.65 g من الحمض.\nالمطلوب:\n1. احسب التركيز الغرامي لهذا المحلول.\n2. احسب التركيز المولي لهذا المحلول.\nعلماً أن: (H: 1, Cl: 35.5)\n\nالحل:\nV = 100 mL = 100/1000 = 1/10 = 0.1 L\nC(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹ .1\n2. الكتلة المولية لحمض كلور الماء M = 35.5 + 1 = 36.5 g.mol⁻¹\nعدد مولات حمض كلور الماء n = m/M = 3.65/36.5 = 0.1 mol\nC(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹\n\n# نشاط\n\nمحلول مائي لحمض الخل تركيزه C = 6 g.L⁻¹ نأخذ منه 200 mL، احسب كتلة حمض الخل في هذا المحلول.\n\n# تمديد المحلول\n\n## نشاط\n\n1. أذيب ملعقة سكر بالماء المقطر في كأس نظيف، وأتذوق المحلول.\n2. أضيف للمحلول السابق ثلاثة أضعاف حجمه ماء، و أتذوق المحلول من جديد.\n3. ماذا طرأ بعد عملية التمديد على كل من حجم المحلول وتركيزه وكمية السكر المنحل فيه.",
+    "sections": [
+      {
+        "heading": "تطبيق محلول",
+        "content": "محلول لحمض كلور الماء، حجمه 100 mL يحوي 3.65 g من الحمض. المطلوب: 1. احسب التركيز الغرامي لهذا المحلول. 2. احسب التركيز المولي لهذا المحلول. علماً أن: (H: 1, Cl: 35.5) الحل: V = 100 mL = 100/1000 = 1/10 = 0.1 L C(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹ .1 2. الكتلة المولية لحمض كلور الماء M = 35.5 + 1 = 36.5 g.mol⁻¹ عدد مولات حمض كلور الماء n = m/M = 3.65/36.5 = 0.1 mol C(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹",
+        "content_type": "mixed"
+      },
+      {
+        "heading": "نشاط",
+        "content": "محلول مائي لحمض الخل تركيزه C = 6 g.L⁻¹ نأخذ منه 200 mL، احسب كتلة حمض الخل في هذا المحلول.",
+        "content_type": "exercise"
+      },
+      {
+        "heading": "تمديد المحلول",
+        "content": "نشاط: 1. أذيب ملعقة سكر بالماء المقطر في كأس نظيف، وأتذوق المحلول. 2. أضيف للمحلول السابق ثلاثة أضعاف حجمه ماء، و أتذوق المحلول من جديد. 3. ماذا طرأ بعد عملية التمديد على كل من حجم المحلول وتركيزه وكمية السكر المنحل فيه.",
+        "content_type": "exercise"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "احسب التركيز الغرامي لهذا المحلول.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": "C(g.L⁻¹) = 36.5 g.L⁻¹",
+        "explanation": "V = 100 mL = 0.1 L, m = 3.65 g. C(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹",
+        "answer_source": "page"
+      },
+      {
+        "question_text": "احسب التركيز المولي لهذا المحلول.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": "C(mol.L⁻¹) = 1 mol.L⁻¹",
+        "explanation": "Molar mass of HCl (H: 1, Cl: 35.5) = 35.5 + 1 = 36.5 g.mol⁻¹. Number of moles n = m/M = 3.65/36.5 = 0.1 mol. C(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹",
+        "answer_source": "page"
+      },
+      {
+        "question_text": "محلول مائي لحمض الخل تركيزه C = 6 g.L⁻¹ نأخذ منه 200 mL، احسب كتلة حمض الخل في هذا المحلول.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أذيب ملعقة سكر بالماء المقطر في كأس نظيف، وأتذوق المحلول.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أضيف للمحلول السابق ثلاثة أضعاف حجمه ماء، و أتذوق المحلول من جديد.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "ماذا طرأ بعد عملية التمديد على كل من حجم المحلول وتركيزه وكمية السكر المنحل فيه.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "A clear glass bottle or volumetric flask with measurement markings on its side, containing a clear liquid. It is placed on a wooden surface.",
+        "labels": [],
+        "related_text": "محلول لحمض كلور الماء، حجمه 100 mL يحوي 3.65 g من الحمض."
+      }
+    ],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "V = 100 mL = 100/1000 = 1/10 = 0.1 L",
+        "description": "Volume conversion from milliliters to liters"
+      },
+      {
+        "equation": "C(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹",
+        "description": "Calculation of gram concentration"
+      },
+      {
+        "equation": "M = 35.5 + 1 = 36.5 g.mol⁻¹",
+        "description": "Calculation of molar mass for HCl"
+      },
+      {
+        "equation": "n = m/M = 3.65/36.5 = 0.1 mol",
+        "description": "Calculation of number of moles"
+      },
+      {
+        "equation": "C(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹",
+        "description": "Calculation of molar concentration"
+      }
+    ],
+    "warnings": [],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 767,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 111,
+      "schema_valid": true,
+      "raw_markdown_chars": 767,
+      "char_count": 767,
+      "section_count": 3,
+      "question_count": 6,
+      "table_count": 0,
+      "equation_count": 5,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.5553,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 111,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"# تطبيق محلول\\n\\nمحلول لحمض كلور الماء، حجمه 100 mL يحوي 3.65 g من الحمض.\\nالمطلوب:\\n1. احسب التركيز الغرامي لهذا المحلول.\\n2. احسب التركيز المولي لهذا المحلول.\\nعلماً أن: (H: 1, Cl: 35.5)\\n\\nالحل:\\nV = 100 mL = 100/1000 = 1/10 = 0.1 L\\nC(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹ .1\\n2. الكتلة المولية لحمض كلور الماء M = 35.5 + 1 = 36.5 g.mol⁻¹\\nعدد مولات حمض كلور الماء n = m/M = 3.65/36.5 = 0.1 mol\\nC(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹\\n\\n# نشاط\\n\\nمحلول مائي لحمض الخل تركيزه C = 6 g.L⁻¹ نأخذ منه 200 mL، احسب كتلة حمض الخل في هذا المحلول.\\n\\n# تمديد المحلول\\n\\n## نشاط\\n\\n1. أذيب ملعقة سكر بالماء المقطر في كأس نظيف، وأتذوق المحلول.\\n2. أضيف للمحلول السابق ثلاثة أضعاف حجمه ماء، و أتذوق المحلول من جديد.\\n3. ماذا طرأ بعد عملية التمديد على كل من حجم المحلول وتركيزه وكمية السكر المنحل فيه.\",\n  \"sections\": [\n    {\n      \"heading\": \"تطبيق محلول\",\n      \"content\": \"محلول لحمض كلور الماء، حجمه 100 mL يحوي 3.65 g من الحمض. المطلوب: 1. احسب التركيز الغرامي لهذا المحلول. 2. احسب التركيز المولي لهذا المحلول. علماً أن: (H: 1, Cl: 35.5) الحل: V = 100 mL = 100/1000 = 1/10 = 0.1 L C(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹ .1 2. الكتلة المولية لحمض كلور الماء M = 35.5 + 1 = 36.5 g.mol⁻¹ عدد مولات حمض كلور الماء n = m/M = 3.65/36.5 = 0.1 mol C(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹\",\n      \"content_type\": \"mixed\"\n    },\n    {\n      \"heading\": \"نشاط\",\n      \"content\": \"محلول مائي لحمض الخل تركيزه C = 6 g.L⁻¹ نأخذ منه 200 mL، احسب كتلة حمض الخل في هذا المحلول.\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"تمديد المحلول\",\n      \"content\": \"نشاط: 1. أذيب ملعقة سكر بالماء المقطر في كأس نظيف، وأتذوق المحلول. 2. أضيف للمحلول السابق ثلاثة أضعاف حجمه ماء، و أتذوق المحلول من جديد. 3. ماذا طرأ بعد عملية التمديد على كل من حجم المحلول وتركيزه وكمية السكر المنحل فيه.\",\n      \"content_type\": \"exercise\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"احسب التركيز الغرامي لهذا المحلول.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": \"C(g.L⁻¹) = 36.5 g.L⁻¹\",\n      \"explanation\": \"V = 100 mL = 0.1 L, m = 3.65 g. C(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹\",\n      \"answer_source\": \"page\"\n    },\n    {\n      \"question_text\": \"احسب التركيز المولي لهذا المحلول.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": \"C(mol.L⁻¹) = 1 mol.L⁻¹\",\n      \"explanation\": \"Molar mass of HCl (H: 1, Cl: 35.5) = 35.5 + 1 = 36.5 g.mol⁻¹. Number of moles n = m/M = 3.65/36.5 = 0.1 mol. C(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹\",\n      \"answer_source\": \"page\"\n    },\n    {\n      \"question_text\": \"محلول مائي لحمض الخل تركيزه C = 6 g.L⁻¹ نأخذ منه 200 mL، احسب كتلة حمض الخل في هذا المحلول.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أذيب ملعقة سكر بالماء المقطر في كأس نظيف، وأتذوق المحلول.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أضيف للمحلول السابق ثلاثة أضعاف حجمه ماء، و أتذوق المحلول من جديد.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"ماذا طرأ بعد عملية التمديد على كل من حجم المحلول وتركيزه وكمية السكر المنحل فيه.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"A clear glass bottle or volumetric flask with measurement markings on its side, containing a clear liquid. It is placed on a wooden surface.\",\n      \"labels\": [],\n      \"related_text\": \"محلول لحمض كلور الماء، حجمه 100 mL يحوي 3.65 g من الحمض.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"V = 100 mL = 100/1000 = 1/10 = 0.1 L\",\n      \"description\": \"Volume conversion from milliliters to liters\"\n    },\n    {\n      \"equation\": \"C(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹\",\n      \"description\": \"Calculation of gram concentration\"\n    },\n    {\n      \"equation\": \"M = 35.5 + 1 = 36.5 g.mol⁻¹\",\n      \"description\": \"Calculation of molar mass for HCl\"\n    },\n    {\n      \"equation\": \"n = m/M = 3.65/36.5 = 0.1 mol\",\n      \"description\": \"Calculation of number of moles\"\n    },\n    {\n      \"equation\": \"C(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹\",\n      \"description\": \"Calculation of molar concentration\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"Anthropic\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": null,\n  \"completeness_score\": null,\n  \"quality_report\": null,\n  \"raw_text\": null\n}"
+  },
+  "merged_content": ". من الحمض3.65 g  يحوي100 mL محلول لحمض كلور الماء حجمه\nالمطلوب:\n  \n 1.\n.احسب التّركيز الغرامي لهذا المحلول\n  \n 2.\n.احسب التّركيز المولي لهذا المحلول\n \n(H:1,Cl:35.5) :ّعلماً أن\nالحل:\nV\n100 ml\n1000\n100\n10\n1\n0.1L\n=\n=\n=\n=\n  \n 1.\nC\nV\nm\n0.1\n3.65\n36.5 g.L\n(\n)\ng.l\n1\n1 =\n=\n=\n-\n-\n  \n 2.\nM\n35.5\n1\n36.5 g.mol 1\n=\n+\n=\n-  الكتلة الموليّة لحمض كلور الماء\n \nn\nM\nm\n36.5\n3.65\n0.1mol\nC\nV\nn\n0.1\n0.1\n1mol.L\n(\n)\nmol.l\n1\n1\n=\n=\n=\n=\n=\n=\n-\n-\n عدد موالت حمض كلور الماء\n:ﺗﻄﺒﻴﻖ ﻣﺤﻠﻮل\n:ﻧﺸﺎط\n، احسب200 mL  نأخذ منهC\n6 g.L 1\n=\n-  محلول مائيّ لحمض الخلّ تركيزه\n \nكتلة حمض الخلّ في هذا المحلول.\nتمديد المحلول:\n:ﻧﺸﺎط\n1\n1 .\n.أذيب ملعقة سكّر بالماء المقطّ ر في كأس نظيف، وأتذوّ ق المحلول\n2\n2 .\n.أُضيف للمحلول السّ ابق ثالثة أضعاف حجمه ماء، و أتذوّ ق المحلول من جديد\n3\n3 .\n ماذا طرأ بعد عمليّ ة التّ مديد على كلّ من حجم المحلول وتركيزه وكمّ يّ ة السّ كّر\nالمنحلّ فيه.\n111\n\n| :لﻮﻠﺤﻣ ﻖﻴﺒﻄﺗ |\n| --- |\n|  |\n\nتطبيق محلول\nمحلول لحمض كلور الماء، حجمه 100 mL يحوي 3.65 g من الحمض. المطلوب: 1. احسب التركيز الغرامي لهذا المحلول. 2. احسب التركيز المولي لهذا المحلول. علماً أن: (H: 1, Cl: 35.5) الحل: V = 100 mL = 100/1000 = 1/10 = 0.1 L C(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹ .1 2. الكتلة المولية لحمض كلور الماء M = 35.5 + 1 = 36.5 g.mol⁻¹ عدد مولات حمض كلور الماء n = m/M = 3.65/36.5 = 0.1 mol C(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹\n\nنشاط\nمحلول مائي لحمض الخل تركيزه C = 6 g.L⁻¹ نأخذ منه 200 mL، احسب كتلة حمض الخل في هذا المحلول.\n\nتمديد المحلول\nنشاط: 1. أذيب ملعقة سكر بالماء المقطر في كأس نظيف، وأتذوق المحلول. 2. أضيف للمحلول السابق ثلاثة أضعاف حجمه ماء، و أتذوق المحلول من جديد. 3. ماذا طرأ بعد عملية التمديد على كل من حجم المحلول وتركيزه وكمية السكر المنحل فيه.",
+  "raw_markdown": "# تطبيق محلول\n\nمحلول لحمض كلور الماء، حجمه 100 mL يحوي 3.65 g من الحمض.\nالمطلوب:\n1. احسب التركيز الغرامي لهذا المحلول.\n2. احسب التركيز المولي لهذا المحلول.\nعلماً أن: (H: 1, Cl: 35.5)\n\nالحل:\nV = 100 mL = 100/1000 = 1/10 = 0.1 L\nC(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹ .1\n2. الكتلة المولية لحمض كلور الماء M = 35.5 + 1 = 36.5 g.mol⁻¹\nعدد مولات حمض كلور الماء n = m/M = 3.65/36.5 = 0.1 mol\nC(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹\n\n# نشاط\n\nمحلول مائي لحمض الخل تركيزه C = 6 g.L⁻¹ نأخذ منه 200 mL، احسب كتلة حمض الخل في هذا المحلول.\n\n# تمديد المحلول\n\n## نشاط\n\n1. أذيب ملعقة سكر بالماء المقطر في كأس نظيف، وأتذوق المحلول.\n2. أضيف للمحلول السابق ثلاثة أضعاف حجمه ماء، و أتذوق المحلول من جديد.\n3. ماذا طرأ بعد عملية التمديد على كل من حجم المحلول وتركيزه وكمية السكر المنحل فيه.",
+  "sections": [
+    {
+      "heading": null,
+      "content": ". من الحمض3.65 g  يحوي100 mL محلول لحمض كلور الماء حجمه\nالمطلوب:\n  \n 1.\n.احسب التّركيز الغرامي لهذا المحلول\n  \n 2.\n.احسب التّركيز المولي لهذا المحلول\n \n(H:1,Cl:35.5) :ّعلماً أن\nالحل:\nV\n100 ml\n1000\n100\n10\n1\n0.1L\n=\n=\n=\n=\n  \n 1.\nC\nV\nm\n0.1\n3.65\n36.5 g.L\n(\n)\ng.l\n1\n1 =\n=\n=\n-\n-\n  \n 2.\nM\n35.5\n1\n36.5 g.mol 1\n=\n+\n=\n-  الكتلة الموليّة لحمض كلور الماء\n \nn\nM\nm\n36.5\n3.65\n0.1mol\nC\nV\nn\n0.1\n0.1\n1mol.L\n(\n)\nmol.l\n1\n1\n=\n=\n=\n=\n=\n=\n-\n-\n عدد موالت حمض كلور الماء\n:ﺗﻄﺒﻴﻖ ﻣﺤﻠﻮل\n:ﻧﺸﺎط\n، احسب200 mL  نأخذ منهC\n6 g.L 1\n=\n-  محلول مائيّ لحمض الخلّ تركيزه\n \nكتلة حمض الخلّ في هذا المحلول.\nتمديد المحلول:\n:ﻧﺸﺎط\n1\n1 .\n.أذيب ملعقة سكّر بالماء المقطّ ر في كأس نظيف، وأتذوّ ق المحلول\n2\n2 .\n.أُضيف للمحلول السّ ابق ثالثة أضعاف حجمه ماء، و أتذوّ ق المحلول من جديد\n3\n3 .\n ماذا طرأ بعد عمليّ ة التّ مديد على كلّ من حجم المحلول وتركيزه وكمّ يّ ة السّ كّر\nالمنحلّ فيه.\n111\n\n| :لﻮﻠﺤﻣ ﻖﻴﺒﻄﺗ |\n| --- |\n|  |",
+      "content_type": "text"
+    },
+    {
+      "heading": "تطبيق محلول",
+      "content": "محلول لحمض كلور الماء، حجمه 100 mL يحوي 3.65 g من الحمض. المطلوب: 1. احسب التركيز الغرامي لهذا المحلول. 2. احسب التركيز المولي لهذا المحلول. علماً أن: (H: 1, Cl: 35.5) الحل: V = 100 mL = 100/1000 = 1/10 = 0.1 L C(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹ .1 2. الكتلة المولية لحمض كلور الماء M = 35.5 + 1 = 36.5 g.mol⁻¹ عدد مولات حمض كلور الماء n = m/M = 3.65/36.5 = 0.1 mol C(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹",
+      "content_type": "mixed"
+    },
+    {
+      "heading": "نشاط",
+      "content": "محلول مائي لحمض الخل تركيزه C = 6 g.L⁻¹ نأخذ منه 200 mL، احسب كتلة حمض الخل في هذا المحلول.",
+      "content_type": "exercise"
+    },
+    {
+      "heading": "تمديد المحلول",
+      "content": "نشاط: 1. أذيب ملعقة سكر بالماء المقطر في كأس نظيف، وأتذوق المحلول. 2. أضيف للمحلول السابق ثلاثة أضعاف حجمه ماء، و أتذوق المحلول من جديد. 3. ماذا طرأ بعد عملية التمديد على كل من حجم المحلول وتركيزه وكمية السكر المنحل فيه.",
+      "content_type": "exercise"
+    }
+  ],
+  "questions": [
+    {
+      "question_text": "احسب التركيز الغرامي لهذا المحلول.",
+      "question_type": "calculation",
+      "options": null,
+      "correct_answer": "C(g.L⁻¹) = 36.5 g.L⁻¹",
+      "explanation": "V = 100 mL = 0.1 L, m = 3.65 g. C(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹",
+      "answer_source": "page"
+    },
+    {
+      "question_text": "احسب التركيز المولي لهذا المحلول.",
+      "question_type": "calculation",
+      "options": null,
+      "correct_answer": "C(mol.L⁻¹) = 1 mol.L⁻¹",
+      "explanation": "Molar mass of HCl (H: 1, Cl: 35.5) = 35.5 + 1 = 36.5 g.mol⁻¹. Number of moles n = m/M = 3.65/36.5 = 0.1 mol. C(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹",
+      "answer_source": "page"
+    },
+    {
+      "question_text": "محلول مائي لحمض الخل تركيزه C = 6 g.L⁻¹ نأخذ منه 200 mL، احسب كتلة حمض الخل في هذا المحلول.",
+      "question_type": "calculation",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "أذيب ملعقة سكر بالماء المقطر في كأس نظيف، وأتذوق المحلول.",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "أضيف للمحلول السابق ثلاثة أضعاف حجمه ماء، و أتذوق المحلول من جديد.",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "ماذا طرأ بعد عملية التمديد على كل من حجم المحلول وتركيزه وكمية السكر المنحل فيه.",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    }
+  ],
+  "diagrams": [
+    {
+      "title": null,
+      "description": "A clear glass bottle or volumetric flask with measurement markings on its side, containing a clear liquid. It is placed on a wooden surface.",
+      "labels": [],
+      "related_text": "محلول لحمض كلور الماء، حجمه 100 mL يحوي 3.65 g من الحمض."
+    }
+  ],
+  "tables": [],
+  "equations": [
+    {
+      "equation": "V = 100 mL = 100/1000 = 1/10 = 0.1 L",
+      "description": "Volume conversion from milliliters to liters"
+    },
+    {
+      "equation": "C(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹",
+      "description": "Calculation of gram concentration"
+    },
+    {
+      "equation": "M = 35.5 + 1 = 36.5 g.mol⁻¹",
+      "description": "Calculation of molar mass for HCl"
+    },
+    {
+      "equation": "n = m/M = 3.65/36.5 = 0.1 mol",
+      "description": "Calculation of number of moles"
+    },
+    {
+      "equation": "C(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹",
+      "description": "Calculation of molar concentration"
+    }
+  ],
+  "warnings": [],
+  "errors": [],
+  "char_count": 1622,
+  "completeness_score": 1.0,
+  "detected_language": "Arabic",
+  "vision_provider": "gemini_document_image",
+  "vision_source": "gemini_rendered_image_300dpi",
+  "neighboring_pages": [
+    4,
+    6
+  ],
+  "uploaded_pdf": null,
+  "raw_text": "{\n  \"page_number\": 111,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"# تطبيق محلول\\n\\nمحلول لحمض كلور الماء، حجمه 100 mL يحوي 3.65 g من الحمض.\\nالمطلوب:\\n1. احسب التركيز الغرامي لهذا المحلول.\\n2. احسب التركيز المولي لهذا المحلول.\\nعلماً أن: (H: 1, Cl: 35.5)\\n\\nالحل:\\nV = 100 mL = 100/1000 = 1/10 = 0.1 L\\nC(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹ .1\\n2. الكتلة المولية لحمض كلور الماء M = 35.5 + 1 = 36.5 g.mol⁻¹\\nعدد مولات حمض كلور الماء n = m/M = 3.65/36.5 = 0.1 mol\\nC(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹\\n\\n# نشاط\\n\\nمحلول مائي لحمض الخل تركيزه C = 6 g.L⁻¹ نأخذ منه 200 mL، احسب كتلة حمض الخل في هذا المحلول.\\n\\n# تمديد المحلول\\n\\n## نشاط\\n\\n1. أذيب ملعقة سكر بالماء المقطر في كأس نظيف، وأتذوق المحلول.\\n2. أضيف للمحلول السابق ثلاثة أضعاف حجمه ماء، و أتذوق المحلول من جديد.\\n3. ماذا طرأ بعد عملية التمديد على كل من حجم المحلول وتركيزه وكمية السكر المنحل فيه.\",\n  \"sections\": [\n    {\n      \"heading\": \"تطبيق محلول\",\n      \"content\": \"محلول لحمض كلور الماء، حجمه 100 mL يحوي 3.65 g من الحمض. المطلوب: 1. احسب التركيز الغرامي لهذا المحلول. 2. احسب التركيز المولي لهذا المحلول. علماً أن: (H: 1, Cl: 35.5) الحل: V = 100 mL = 100/1000 = 1/10 = 0.1 L C(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹ .1 2. الكتلة المولية لحمض كلور الماء M = 35.5 + 1 = 36.5 g.mol⁻¹ عدد مولات حمض كلور الماء n = m/M = 3.65/36.5 = 0.1 mol C(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹\",\n      \"content_type\": \"mixed\"\n    },\n    {\n      \"heading\": \"نشاط\",\n      \"content\": \"محلول مائي لحمض الخل تركيزه C = 6 g.L⁻¹ نأخذ منه 200 mL، احسب كتلة حمض الخل في هذا المحلول.\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"تمديد المحلول\",\n      \"content\": \"نشاط: 1. أذيب ملعقة سكر بالماء المقطر في كأس نظيف، وأتذوق المحلول. 2. أضيف للمحلول السابق ثلاثة أضعاف حجمه ماء، و أتذوق المحلول من جديد. 3. ماذا طرأ بعد عملية التمديد على كل من حجم المحلول وتركيزه وكمية السكر المنحل فيه.\",\n      \"content_type\": \"exercise\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"احسب التركيز الغرامي لهذا المحلول.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": \"C(g.L⁻¹) = 36.5 g.L⁻¹\",\n      \"explanation\": \"V = 100 mL = 0.1 L, m = 3.65 g. C(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹\",\n      \"answer_source\": \"page\"\n    },\n    {\n      \"question_text\": \"احسب التركيز المولي لهذا المحلول.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": \"C(mol.L⁻¹) = 1 mol.L⁻¹\",\n      \"explanation\": \"Molar mass of HCl (H: 1, Cl: 35.5) = 35.5 + 1 = 36.5 g.mol⁻¹. Number of moles n = m/M = 3.65/36.5 = 0.1 mol. C(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹\",\n      \"answer_source\": \"page\"\n    },\n    {\n      \"question_text\": \"محلول مائي لحمض الخل تركيزه C = 6 g.L⁻¹ نأخذ منه 200 mL، احسب كتلة حمض الخل في هذا المحلول.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أذيب ملعقة سكر بالماء المقطر في كأس نظيف، وأتذوق المحلول.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أضيف للمحلول السابق ثلاثة أضعاف حجمه ماء، و أتذوق المحلول من جديد.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"ماذا طرأ بعد عملية التمديد على كل من حجم المحلول وتركيزه وكمية السكر المنحل فيه.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"A clear glass bottle or volumetric flask with measurement markings on its side, containing a clear liquid. It is placed on a wooden surface.\",\n      \"labels\": [],\n      \"related_text\": \"محلول لحمض كلور الماء، حجمه 100 mL يحوي 3.65 g من الحمض.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"V = 100 mL = 100/1000 = 1/10 = 0.1 L\",\n      \"description\": \"Volume conversion from milliliters to liters\"\n    },\n    {\n      \"equation\": \"C(g.L⁻¹) = m/V = 3.65/0.1 = 36.5 g.L⁻¹\",\n      \"description\": \"Calculation of gram concentration\"\n    },\n    {\n      \"equation\": \"M = 35.5 + 1 = 36.5 g.mol⁻¹\",\n      \"description\": \"Calculation of molar mass for HCl\"\n    },\n    {\n      \"equation\": \"n = m/M = 3.65/36.5 = 0.1 mol\",\n      \"description\": \"Calculation of number of moles\"\n    },\n    {\n      \"equation\": \"C(mol.L⁻¹) = n/V = 0.1/0.1 = 1 mol.L⁻¹\",\n      \"description\": \"Calculation of molar concentration\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"Anthropic\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": null,\n  \"completeness_score\": null,\n  \"quality_report\": null,\n  \"raw_text\": null\n}",
+  "quality_report": {
+    "page_number": 111,
+    "schema_valid": true,
+    "raw_markdown_chars": 767,
+    "char_count": 767,
+    "section_count": 3,
+    "question_count": 6,
+    "table_count": 0,
+    "equation_count": 5,
+    "diagram_count": 1,
+    "warning_count": 0,
+    "arabic_char_ratio": 0.5553,
+    "completeness_score": 1.0,
+    "issues": [],
+    "should_fallback": false
+  },
+  "classification": "MIXED_VISION",
+  "source_id": 1
+}

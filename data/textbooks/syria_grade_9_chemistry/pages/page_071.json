@@ -1,0 +1,41 @@
+{
+  "page_number": 71,
+  "page_type": "SELECTABLE_TEXT",
+  "extraction_methods": [
+    "pymupdf",
+    "pdfplumber"
+  ],
+  "extraction_method": "pymupdf+pdfplumber",
+  "status": "completed_text_only",
+  "text_layer_content": ":السّ ؤال الخامس\nاكتب الصّيغة نصف المنشورة للمركّبات األتية:\n الهكسان.-  البروبان- اإليتان\nالسّ ؤال ا لسادس:\nحلّ المسألة اآلتية:\n من غاز الميتان بأكسجين الهواء وفق المعادلة اآلتية:8 g يحترق\nCH\n2O\nCO\n2H O\n4(g)\n2(g)\n2(g)\n2\n(g)\n$\n+\n+\n:المطلوب حساب\n  \n 1.\n.كتلة بخارالماء النَّاتج\n  \n 2.\n. المتفاعلO2 عدد موالت\n  \n 3.\n. النَّاتج مقاساً في الشَّرطين النّظاميّينCO2 حجم غاز\n \n(H:1, C:\n)\n,\n:\nO\n12\n16\n177",
+  "vision_content": {},
+  "gemini_pdf_content": {},
+  "gemini_fallback_model_content": {},
+  "gemini_image_fallback_content": {},
+  "merged_content": ":السّ ؤال الخامس\nاكتب الصّيغة نصف المنشورة للمركّبات األتية:\n الهكسان.-  البروبان- اإليتان\nالسّ ؤال ا لسادس:\nحلّ المسألة اآلتية:\n من غاز الميتان بأكسجين الهواء وفق المعادلة اآلتية:8 g يحترق\nCH\n2O\nCO\n2H O\n4(g)\n2(g)\n2(g)\n2\n(g)\n$\n+\n+\n:المطلوب حساب\n  \n 1.\n.كتلة بخارالماء النَّاتج\n  \n 2.\n. المتفاعلO2 عدد موالت\n  \n 3.\n. النَّاتج مقاساً في الشَّرطين النّظاميّينCO2 حجم غاز\n \n(H:1, C:\n)\n,\n:\nO\n12\n16\n177",
+  "raw_markdown": ":السّ ؤال الخامس\nاكتب الصّيغة نصف المنشورة للمركّبات األتية:\n الهكسان.-  البروبان- اإليتان\nالسّ ؤال ا لسادس:\nحلّ المسألة اآلتية:\n من غاز الميتان بأكسجين الهواء وفق المعادلة اآلتية:8 g يحترق\nCH\n2O\nCO\n2H O\n4(g)\n2(g)\n2(g)\n2\n(g)\n$\n+\n+\n:المطلوب حساب\n  \n 1.\n.كتلة بخارالماء النَّاتج\n  \n 2.\n. المتفاعلO2 عدد موالت\n  \n 3.\n. النَّاتج مقاساً في الشَّرطين النّظاميّينCO2 حجم غاز\n \n(H:1, C:\n)\n,\n:\nO\n12\n16\n177",
+  "sections": [
+    {
+      "heading": null,
+      "content": ":السّ ؤال الخامس\nاكتب الصّيغة نصف المنشورة للمركّبات األتية:\n الهكسان.-  البروبان- اإليتان\nالسّ ؤال ا لسادس:\nحلّ المسألة اآلتية:\n من غاز الميتان بأكسجين الهواء وفق المعادلة اآلتية:8 g يحترق\nCH\n2O\nCO\n2H O\n4(g)\n2(g)\n2(g)\n2\n(g)\n$\n+\n+\n:المطلوب حساب\n  \n 1.\n.كتلة بخارالماء النَّاتج\n  \n 2.\n. المتفاعلO2 عدد موالت\n  \n 3.\n. النَّاتج مقاساً في الشَّرطين النّظاميّينCO2 حجم غاز\n \n(H:1, C:\n)\n,\n:\nO\n12\n16\n177",
+      "content_type": "text"
+    }
+  ],
+  "questions": [],
+  "diagrams": [],
+  "tables": [],
+  "equations": [],
+  "warnings": [],
+  "errors": [],
+  "char_count": 396,
+  "completeness_score": 1.0,
+  "detected_language": "ar",
+  "vision_provider": null,
+  "vision_source": null,
+  "neighboring_pages": [],
+  "uploaded_pdf": null,
+  "raw_text": null,
+  "quality_report": {},
+  "classification": "SELECTABLE_TEXT",
+  "source_id": 1
+}

@@ -1,0 +1,44 @@
+{
+  "page_number": 40,
+  "page_type": "MIXED_VISION",
+  "extraction_methods": [
+    "pymupdf",
+    "pdfplumber",
+    "gemini_document"
+  ],
+  "extraction_method": "pymupdf+pdfplumber+gemini_document",
+  "status": "skipped_dry_run",
+  "text_layer_content": ":ا\u001aﻫﺪاف\n-  \n.يتعرّف األمالح\n  -\nيستنتج طرائق تشكّل الملح.\n  -\nيثمّن أهميّة األمالح في حياتنا.\n:اﻟﻜﻠﻤﺎت اﻟﻤﻔﺘﺎﺣﻴﺔ\n.الملح - تركيب الملح - ذوبان الملح في الماء\n ّيحـوي مـاء البحـر علـى العديـد مـن األمـ ااح المفيـدة لغـذاء الكائنـات الحيّـة، فمـا هـو الملـح الرئيسـي\nالمسـبّب لملوحـة البحـر؟\n5األمالح\n146\n\n| حلاملأا |  |  |\n| --- | --- | --- |\n|  |  |  |",
+  "vision_content": {},
+  "gemini_pdf_content": {},
+  "gemini_fallback_model_content": {},
+  "gemini_image_fallback_content": {},
+  "merged_content": ":ا\u001aﻫﺪاف\n-  \n.يتعرّف األمالح\n  -\nيستنتج طرائق تشكّل الملح.\n  -\nيثمّن أهميّة األمالح في حياتنا.\n:اﻟﻜﻠﻤﺎت اﻟﻤﻔﺘﺎﺣﻴﺔ\n.الملح - تركيب الملح - ذوبان الملح في الماء\n ّيحـوي مـاء البحـر علـى العديـد مـن األمـ ااح المفيـدة لغـذاء الكائنـات الحيّـة، فمـا هـو الملـح الرئيسـي\nالمسـبّب لملوحـة البحـر؟\n5األمالح\n146\n\n| حلاملأا |  |  |\n| --- | --- | --- |\n|  |  |  |",
+  "raw_markdown": ":ا\u001aﻫﺪاف\n-  \n.يتعرّف األمالح\n  -\nيستنتج طرائق تشكّل الملح.\n  -\nيثمّن أهميّة األمالح في حياتنا.\n:اﻟﻜﻠﻤﺎت اﻟﻤﻔﺘﺎﺣﻴﺔ\n.الملح - تركيب الملح - ذوبان الملح في الماء\n ّيحـوي مـاء البحـر علـى العديـد مـن األمـ ااح المفيـدة لغـذاء الكائنـات الحيّـة، فمـا هـو الملـح الرئيسـي\nالمسـبّب لملوحـة البحـر؟\n5األمالح\n146\n\n| حلاملأا |  |  |\n| --- | --- | --- |\n|  |  |  |",
+  "sections": [
+    {
+      "heading": null,
+      "content": ":ا\u001aﻫﺪاف\n-  \n.يتعرّف األمالح\n  -\nيستنتج طرائق تشكّل الملح.\n  -\nيثمّن أهميّة األمالح في حياتنا.\n:اﻟﻜﻠﻤﺎت اﻟﻤﻔﺘﺎﺣﻴﺔ\n.الملح - تركيب الملح - ذوبان الملح في الماء\n ّيحـوي مـاء البحـر علـى العديـد مـن األمـ ااح المفيـدة لغـذاء الكائنـات الحيّـة، فمـا هـو الملـح الرئيسـي\nالمسـبّب لملوحـة البحـر؟\n5األمالح\n146\n\n| حلاملأا |  |  |\n| --- | --- | --- |\n|  |  |  |",
+      "content_type": "text"
+    }
+  ],
+  "questions": [],
+  "diagrams": [],
+  "tables": [],
+  "equations": [],
+  "warnings": [
+    "Gemini document extraction is not configured. Vision page extraction was skipped."
+  ],
+  "errors": [],
+  "char_count": 351,
+  "completeness_score": 0.45,
+  "detected_language": "ar",
+  "vision_provider": null,
+  "vision_source": null,
+  "neighboring_pages": [],
+  "uploaded_pdf": null,
+  "raw_text": null,
+  "quality_report": {},
+  "classification": "MIXED_VISION",
+  "source_id": 1
+}

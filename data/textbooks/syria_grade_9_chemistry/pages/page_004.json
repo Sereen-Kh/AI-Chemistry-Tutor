@@ -1,0 +1,342 @@
+{
+  "page_number": 4,
+  "page_type": "MIXED_VISION",
+  "extraction_methods": [
+    "pymupdf",
+    "pdfplumber",
+    "gemini_image_300dpi"
+  ],
+  "extraction_method": "pymupdf+pdfplumber+gemini_image_300dpi",
+  "status": "completed_with_image_fallback",
+  "text_layer_content": ":ﺗﻔﻜﻴﺮ ﻧﺎﻗﺪ\nلماذا يُذيب الماء معظم األمالح والحموض، ولكنّه ال يذيب الزّيوت والدُّسم؟\nمفهوم تركيز المحلول:\n:أدوات التّجربة\n ميزان حسَّاس.- ّ وعاء زجاجي-  ملح كلوريد الصوديوم- ماء مقطَّر\nخطوات التّجربة:\nأضع كمّيّة من الماء المقطّر (أقلّ من ليتر) في الوعاء الزّجاجيّ.1\n. من ملح كلوريد الصّ وديوم النّقي بميزان حسّاس58.5 g أزن بدقّة2\nn\nM\nm\n58.5\n......\n..... mol\n=\n=\n=\n أحسب عدد الموالت الموجودة في تلك العيّنة3\n.أذيب الملح في الماء المقطَّر بشكل تامّ، ثمّ أكمل حجم المحلول بالماء المقطّر إلى ليتر واحد4\n. V\nn\n.......\n.......\n=\n أحسب النّسبة5\n. V\n.......\n.......\nm =\n أحسب النّسبة6\n:أﺟﺮب وأﺳﺘﻨﺘﺞ\n• \n تسمّى نسبة عدد موالت المادّة المذابة إلى حجم المحلول بالتَّركيز الموليّ للمحلول (ويساوي\nC\nV\nn\n(mol.l\n)\n1 =\n-\n :عدد الموالت المذابة في ليتر واحد من المحلول)، وتُحسب بالعالقة\n• \nتسمّى نسبة كتلة المادّة المذابة إلى حجم المحلول بالتّركيز الغرامي للمحلول. (ويساوي عدد \nC\nV\nm\n(g.l\n)\n1 =\n-\n :الغرامات المذابة في ليتر واحد من المحلول)، وتُحسب بالعالقة\n:أﺳﺘﻨﺘﺞ\n110\n\n| أ 1 |\n| --- |\n| زأ 2 |\n| أ 3 |\n| أ 4 |\n|  |\n| 5\nأ |\n| أ 6 |",
+  "vision_content": {
+    "page_number": 110,
+    "detected_language": "Arabic",
+    "raw_markdown": "# تفكير ناقد: لماذا يذيب الماء معظم الأملاح والحموض، ولكنه لا يذيب الزيوت والدسم؟ # مفهوم تركيز المحلول # أجرب وأستنتج: ## أدوات التجربة: ماء مقطر - ملح كلوريد الصوديوم - وعاء زجاجي - ميزان حساس. ## خطوات التجربة: 1. أضع كمية من الماء المقطر (أقل من ليتر) في الوعاء الزجاجي. 2. أزن بدقة 58.5g من ملح كلوريد الصوديوم النقي بميزان حساس. 3. أحسب عدد المولات الموجودة في تلك العينة. n = m/M = 58.5 / ...... = ...... mol 4. أذيب الملح في الماء المقطر بشكل تام، ثم أكمل حجم المحلول بالماء المقطر إلى ليتر واحد. 5. أحسب النسبة: n / V = ...... / ...... = ...... 6. أحسب النسبة: m / V = ...... / ...... = ...... # أستنتج: * تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول بالتركيز المولي للمحلول (ويساوي عدد المولات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(mol.l⁻¹) = n / V * تسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول (ويساوي عدد الغرامات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(g.l⁻¹) = m / V",
+    "sections": [
+      {
+        "heading": "مفهوم تركيز المحلول",
+        "content": "",
+        "content_type": "text"
+      },
+      {
+        "heading": "أجرب وأستنتج:",
+        "content": "أدوات التجربة: ماء مقطر - ملح كلوريد الصوديوم - وعاء زجاجي - ميزان حساس. خطوات التجربة: 1. أضع كمية من الماء المقطر (أقل من ليتر) في الوعاء الزجاجي. 2. أزن بدقة 58.5g من ملح كلوريد الصوديوم النقي بميزان حساس. 3. أحسب عدد المولات الموجودة في تلك العينة. n = m/M = 58.5 / ...... = ...... mol 4. أذيب الملح في الماء المقطر بشكل تام، ثم أكمل حجم المحلول بالماء المقطر إلى ليتر واحد. 5. أحسب النسبة: n / V = ...... / ...... = ...... 6. أحسب النسبة: m / V = ...... / ...... = ......",
+        "content_type": "exercise"
+      },
+      {
+        "heading": "أستنتج:",
+        "content": "تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول بالتركيز المولي للمحلول (ويساوي عدد المولات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(mol.l⁻¹) = n / V تسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول (ويساوي عدد الغرامات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(g.l⁻¹) = m / V",
+        "content_type": "text"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "لماذا يذيب الماء معظم الأملاح والحموض، ولكنه لا يذيب الزيوت والدسم؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "n = m/M = 58.5 / ...... = ...... mol",
+        "description": "Equation for calculating the number of moles in a sample."
+      },
+      {
+        "equation": "n / V = ...... / ...... = ......",
+        "description": "Equation for calculating a ratio involving moles and volume."
+      },
+      {
+        "equation": "m / V = ...... / ...... = ......",
+        "description": "Equation for calculating a ratio involving mass and volume."
+      },
+      {
+        "equation": "C(mol.l⁻¹) = n / V",
+        "description": "Equation for molar concentration, defined as the ratio of moles of solute to the volume of the solution."
+      },
+      {
+        "equation": "C(g.l⁻¹) = m / V",
+        "description": "Equation for gram concentration, defined as the ratio of mass of solute to the volume of the solution."
+      }
+    ],
+    "warnings": [],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 941,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 110,
+      "schema_valid": true,
+      "raw_markdown_chars": 941,
+      "char_count": 941,
+      "section_count": 3,
+      "question_count": 1,
+      "table_count": 0,
+      "equation_count": 5,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.7116,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 110,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"# تفكير ناقد: لماذا يذيب الماء معظم الأملاح والحموض، ولكنه لا يذيب الزيوت والدسم؟ # مفهوم تركيز المحلول # أجرب وأستنتج: ## أدوات التجربة: ماء مقطر - ملح كلوريد الصوديوم - وعاء زجاجي - ميزان حساس. ## خطوات التجربة: 1. أضع كمية من الماء المقطر (أقل من ليتر) في الوعاء الزجاجي. 2. أزن بدقة 58.5g من ملح كلوريد الصوديوم النقي بميزان حساس. 3. أحسب عدد المولات الموجودة في تلك العينة. n = m/M = 58.5 / ...... = ...... mol 4. أذيب الملح في الماء المقطر بشكل تام، ثم أكمل حجم المحلول بالماء المقطر إلى ليتر واحد. 5. أحسب النسبة: n / V = ...... / ...... = ...... 6. أحسب النسبة: m / V = ...... / ...... = ...... # أستنتج: * تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول بالتركيز المولي للمحلول (ويساوي عدد المولات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(mol.l⁻¹) = n / V * تسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول (ويساوي عدد الغرامات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(g.l⁻¹) = m / V\",\n  \"sections\": [\n    {\n      \"heading\": \"مفهوم تركيز المحلول\",\n      \"content\": \"\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أجرب وأستنتج:\",\n      \"content\": \"أدوات التجربة: ماء مقطر - ملح كلوريد الصوديوم - وعاء زجاجي - ميزان حساس. خطوات التجربة: 1. أضع كمية من الماء المقطر (أقل من ليتر) في الوعاء الزجاجي. 2. أزن بدقة 58.5g من ملح كلوريد الصوديوم النقي بميزان حساس. 3. أحسب عدد المولات الموجودة في تلك العينة. n = m/M = 58.5 / ...... = ...... mol 4. أذيب الملح في الماء المقطر بشكل تام، ثم أكمل حجم المحلول بالماء المقطر إلى ليتر واحد. 5. أحسب النسبة: n / V = ...... / ...... = ...... 6. أحسب النسبة: m / V = ...... / ...... = ......\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول بالتركيز المولي للمحلول (ويساوي عدد المولات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(mol.l⁻¹) = n / V تسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول (ويساوي عدد الغرامات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(g.l⁻¹) = m / V\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"لماذا يذيب الماء معظم الأملاح والحموض، ولكنه لا يذيب الزيوت والدسم؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"n = m/M = 58.5 / ...... = ...... mol\",\n      \"description\": \"Equation for calculating the number of moles in a sample.\"\n    },\n    {\n      \"equation\": \"n / V = ...... / ...... = ......\",\n      \"description\": \"Equation for calculating a ratio involving moles and volume.\"\n    },\n    {\n      \"equation\": \"m / V = ...... / ...... = ......\",\n      \"description\": \"Equation for calculating a ratio involving mass and volume.\"\n    },\n    {\n      \"equation\": \"C(mol.l⁻¹) = n / V\",\n      \"description\": \"Equation for molar concentration, defined as the ratio of moles of solute to the volume of the solution.\"\n    },\n    {\n      \"equation\": \"C(g.l⁻¹) = m / V\",\n      \"description\": \"Equation for gram concentration, defined as the ratio of mass of solute to the volume of the solution.\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"Anthropic\",\n  \"model_name\": \"claude-3-opus-20240229\",\n  \"schema_valid\": true,\n  \"char_count\": null,\n  \"completeness_score\": null,\n  \"quality_report\": null,\n  \"raw_text\": null\n}"
+  },
+  "gemini_pdf_content": {},
+  "gemini_fallback_model_content": {
+    "page_number": 110,
+    "detected_language": "Arabic",
+    "raw_markdown": "# تفكير ناقد: لماذا يذيب الماء معظم الأملاح والحموض، ولكنه لا يذيب الزيوت والدسم؟ # مفهوم تركيز المحلول # أجرب وأستنتج: ## أدوات التجربة: ماء مقطر - ملح كلوريد الصوديوم - وعاء زجاجي - ميزان حساس. ## خطوات التجربة: 1. أضع كمية من الماء المقطر (أقل من ليتر) في الوعاء الزجاجي. 2. أزن بدقة 58.5g من ملح كلوريد الصوديوم النقي بميزان حساس. 3. أحسب عدد المولات الموجودة في تلك العينة. n = m/M = 58.5 / ...... = ...... mol 4. أذيب الملح في الماء المقطر بشكل تام، ثم أكمل حجم المحلول بالماء المقطر إلى ليتر واحد. 5. أحسب النسبة: n / V = ...... / ...... = ...... 6. أحسب النسبة: m / V = ...... / ...... = ...... # أستنتج: * تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول بالتركيز المولي للمحلول (ويساوي عدد المولات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(mol.l⁻¹) = n / V * تسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول (ويساوي عدد الغرامات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(g.l⁻¹) = m / V",
+    "sections": [
+      {
+        "heading": "مفهوم تركيز المحلول",
+        "content": "",
+        "content_type": "text"
+      },
+      {
+        "heading": "أجرب وأستنتج:",
+        "content": "أدوات التجربة: ماء مقطر - ملح كلوريد الصوديوم - وعاء زجاجي - ميزان حساس. خطوات التجربة: 1. أضع كمية من الماء المقطر (أقل من ليتر) في الوعاء الزجاجي. 2. أزن بدقة 58.5g من ملح كلوريد الصوديوم النقي بميزان حساس. 3. أحسب عدد المولات الموجودة في تلك العينة. n = m/M = 58.5 / ...... = ...... mol 4. أذيب الملح في الماء المقطر بشكل تام، ثم أكمل حجم المحلول بالماء المقطر إلى ليتر واحد. 5. أحسب النسبة: n / V = ...... / ...... = ...... 6. أحسب النسبة: m / V = ...... / ...... = ......",
+        "content_type": "exercise"
+      },
+      {
+        "heading": "أستنتج:",
+        "content": "تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول بالتركيز المولي للمحلول (ويساوي عدد المولات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(mol.l⁻¹) = n / V تسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول (ويساوي عدد الغرامات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(g.l⁻¹) = m / V",
+        "content_type": "text"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "لماذا يذيب الماء معظم الأملاح والحموض، ولكنه لا يذيب الزيوت والدسم؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "n = m/M = 58.5 / ...... = ...... mol",
+        "description": "Equation for calculating the number of moles in a sample."
+      },
+      {
+        "equation": "n / V = ...... / ...... = ......",
+        "description": "Equation for calculating a ratio involving moles and volume."
+      },
+      {
+        "equation": "m / V = ...... / ...... = ......",
+        "description": "Equation for calculating a ratio involving mass and volume."
+      },
+      {
+        "equation": "C(mol.l⁻¹) = n / V",
+        "description": "Equation for molar concentration, defined as the ratio of moles of solute to the volume of the solution."
+      },
+      {
+        "equation": "C(g.l⁻¹) = m / V",
+        "description": "Equation for gram concentration, defined as the ratio of mass of solute to the volume of the solution."
+      }
+    ],
+    "warnings": [],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 941,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 110,
+      "schema_valid": true,
+      "raw_markdown_chars": 941,
+      "char_count": 941,
+      "section_count": 3,
+      "question_count": 1,
+      "table_count": 0,
+      "equation_count": 5,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.7116,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 110,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"# تفكير ناقد: لماذا يذيب الماء معظم الأملاح والحموض، ولكنه لا يذيب الزيوت والدسم؟ # مفهوم تركيز المحلول # أجرب وأستنتج: ## أدوات التجربة: ماء مقطر - ملح كلوريد الصوديوم - وعاء زجاجي - ميزان حساس. ## خطوات التجربة: 1. أضع كمية من الماء المقطر (أقل من ليتر) في الوعاء الزجاجي. 2. أزن بدقة 58.5g من ملح كلوريد الصوديوم النقي بميزان حساس. 3. أحسب عدد المولات الموجودة في تلك العينة. n = m/M = 58.5 / ...... = ...... mol 4. أذيب الملح في الماء المقطر بشكل تام، ثم أكمل حجم المحلول بالماء المقطر إلى ليتر واحد. 5. أحسب النسبة: n / V = ...... / ...... = ...... 6. أحسب النسبة: m / V = ...... / ...... = ...... # أستنتج: * تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول بالتركيز المولي للمحلول (ويساوي عدد المولات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(mol.l⁻¹) = n / V * تسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول (ويساوي عدد الغرامات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(g.l⁻¹) = m / V\",\n  \"sections\": [\n    {\n      \"heading\": \"مفهوم تركيز المحلول\",\n      \"content\": \"\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أجرب وأستنتج:\",\n      \"content\": \"أدوات التجربة: ماء مقطر - ملح كلوريد الصوديوم - وعاء زجاجي - ميزان حساس. خطوات التجربة: 1. أضع كمية من الماء المقطر (أقل من ليتر) في الوعاء الزجاجي. 2. أزن بدقة 58.5g من ملح كلوريد الصوديوم النقي بميزان حساس. 3. أحسب عدد المولات الموجودة في تلك العينة. n = m/M = 58.5 / ...... = ...... mol 4. أذيب الملح في الماء المقطر بشكل تام، ثم أكمل حجم المحلول بالماء المقطر إلى ليتر واحد. 5. أحسب النسبة: n / V = ...... / ...... = ...... 6. أحسب النسبة: m / V = ...... / ...... = ......\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول بالتركيز المولي للمحلول (ويساوي عدد المولات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(mol.l⁻¹) = n / V تسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول (ويساوي عدد الغرامات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(g.l⁻¹) = m / V\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"لماذا يذيب الماء معظم الأملاح والحموض، ولكنه لا يذيب الزيوت والدسم؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"n = m/M = 58.5 / ...... = ...... mol\",\n      \"description\": \"Equation for calculating the number of moles in a sample.\"\n    },\n    {\n      \"equation\": \"n / V = ...... / ...... = ......\",\n      \"description\": \"Equation for calculating a ratio involving moles and volume.\"\n    },\n    {\n      \"equation\": \"m / V = ...... / ...... = ......\",\n      \"description\": \"Equation for calculating a ratio involving mass and volume.\"\n    },\n    {\n      \"equation\": \"C(mol.l⁻¹) = n / V\",\n      \"description\": \"Equation for molar concentration, defined as the ratio of moles of solute to the volume of the solution.\"\n    },\n    {\n      \"equation\": \"C(g.l⁻¹) = m / V\",\n      \"description\": \"Equation for gram concentration, defined as the ratio of mass of solute to the volume of the solution.\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"Anthropic\",\n  \"model_name\": \"claude-3-opus-20240229\",\n  \"schema_valid\": true,\n  \"char_count\": null,\n  \"completeness_score\": null,\n  \"quality_report\": null,\n  \"raw_text\": null\n}"
+  },
+  "gemini_image_fallback_content": {
+    "page_number": 110,
+    "detected_language": "Arabic",
+    "raw_markdown": "# تفكير ناقد: لماذا يذيب الماء معظم الأملاح والحموض، ولكنه لا يذيب الزيوت والدسم؟ # مفهوم تركيز المحلول # أجرب وأستنتج: ## أدوات التجربة: ماء مقطر - ملح كلوريد الصوديوم - وعاء زجاجي - ميزان حساس. ## خطوات التجربة: 1. أضع كمية من الماء المقطر (أقل من ليتر) في الوعاء الزجاجي. 2. أزن بدقة 58.5g من ملح كلوريد الصوديوم النقي بميزان حساس. 3. أحسب عدد المولات الموجودة في تلك العينة. n = m/M = 58.5 / ...... = ...... mol 4. أذيب الملح في الماء المقطر بشكل تام، ثم أكمل حجم المحلول بالماء المقطر إلى ليتر واحد. 5. أحسب النسبة: n / V = ...... / ...... = ...... 6. أحسب النسبة: m / V = ...... / ...... = ...... # أستنتج: * تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول بالتركيز المولي للمحلول (ويساوي عدد المولات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(mol.l⁻¹) = n / V * تسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول (ويساوي عدد الغرامات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(g.l⁻¹) = m / V",
+    "sections": [
+      {
+        "heading": "مفهوم تركيز المحلول",
+        "content": "",
+        "content_type": "text"
+      },
+      {
+        "heading": "أجرب وأستنتج:",
+        "content": "أدوات التجربة: ماء مقطر - ملح كلوريد الصوديوم - وعاء زجاجي - ميزان حساس. خطوات التجربة: 1. أضع كمية من الماء المقطر (أقل من ليتر) في الوعاء الزجاجي. 2. أزن بدقة 58.5g من ملح كلوريد الصوديوم النقي بميزان حساس. 3. أحسب عدد المولات الموجودة في تلك العينة. n = m/M = 58.5 / ...... = ...... mol 4. أذيب الملح في الماء المقطر بشكل تام، ثم أكمل حجم المحلول بالماء المقطر إلى ليتر واحد. 5. أحسب النسبة: n / V = ...... / ...... = ...... 6. أحسب النسبة: m / V = ...... / ...... = ......",
+        "content_type": "exercise"
+      },
+      {
+        "heading": "أستنتج:",
+        "content": "تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول بالتركيز المولي للمحلول (ويساوي عدد المولات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(mol.l⁻¹) = n / V تسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول (ويساوي عدد الغرامات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(g.l⁻¹) = m / V",
+        "content_type": "text"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "لماذا يذيب الماء معظم الأملاح والحموض، ولكنه لا يذيب الزيوت والدسم؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "n = m/M = 58.5 / ...... = ...... mol",
+        "description": "Equation for calculating the number of moles in a sample."
+      },
+      {
+        "equation": "n / V = ...... / ...... = ......",
+        "description": "Equation for calculating a ratio involving moles and volume."
+      },
+      {
+        "equation": "m / V = ...... / ...... = ......",
+        "description": "Equation for calculating a ratio involving mass and volume."
+      },
+      {
+        "equation": "C(mol.l⁻¹) = n / V",
+        "description": "Equation for molar concentration, defined as the ratio of moles of solute to the volume of the solution."
+      },
+      {
+        "equation": "C(g.l⁻¹) = m / V",
+        "description": "Equation for gram concentration, defined as the ratio of mass of solute to the volume of the solution."
+      }
+    ],
+    "warnings": [],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 941,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 110,
+      "schema_valid": true,
+      "raw_markdown_chars": 941,
+      "char_count": 941,
+      "section_count": 3,
+      "question_count": 1,
+      "table_count": 0,
+      "equation_count": 5,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.7116,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 110,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"# تفكير ناقد: لماذا يذيب الماء معظم الأملاح والحموض، ولكنه لا يذيب الزيوت والدسم؟ # مفهوم تركيز المحلول # أجرب وأستنتج: ## أدوات التجربة: ماء مقطر - ملح كلوريد الصوديوم - وعاء زجاجي - ميزان حساس. ## خطوات التجربة: 1. أضع كمية من الماء المقطر (أقل من ليتر) في الوعاء الزجاجي. 2. أزن بدقة 58.5g من ملح كلوريد الصوديوم النقي بميزان حساس. 3. أحسب عدد المولات الموجودة في تلك العينة. n = m/M = 58.5 / ...... = ...... mol 4. أذيب الملح في الماء المقطر بشكل تام، ثم أكمل حجم المحلول بالماء المقطر إلى ليتر واحد. 5. أحسب النسبة: n / V = ...... / ...... = ...... 6. أحسب النسبة: m / V = ...... / ...... = ...... # أستنتج: * تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول بالتركيز المولي للمحلول (ويساوي عدد المولات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(mol.l⁻¹) = n / V * تسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول (ويساوي عدد الغرامات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(g.l⁻¹) = m / V\",\n  \"sections\": [\n    {\n      \"heading\": \"مفهوم تركيز المحلول\",\n      \"content\": \"\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أجرب وأستنتج:\",\n      \"content\": \"أدوات التجربة: ماء مقطر - ملح كلوريد الصوديوم - وعاء زجاجي - ميزان حساس. خطوات التجربة: 1. أضع كمية من الماء المقطر (أقل من ليتر) في الوعاء الزجاجي. 2. أزن بدقة 58.5g من ملح كلوريد الصوديوم النقي بميزان حساس. 3. أحسب عدد المولات الموجودة في تلك العينة. n = m/M = 58.5 / ...... = ...... mol 4. أذيب الملح في الماء المقطر بشكل تام، ثم أكمل حجم المحلول بالماء المقطر إلى ليتر واحد. 5. أحسب النسبة: n / V = ...... / ...... = ...... 6. أحسب النسبة: m / V = ...... / ...... = ......\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول بالتركيز المولي للمحلول (ويساوي عدد المولات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(mol.l⁻¹) = n / V تسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول (ويساوي عدد الغرامات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(g.l⁻¹) = m / V\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"لماذا يذيب الماء معظم الأملاح والحموض، ولكنه لا يذيب الزيوت والدسم؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"n = m/M = 58.5 / ...... = ...... mol\",\n      \"description\": \"Equation for calculating the number of moles in a sample.\"\n    },\n    {\n      \"equation\": \"n / V = ...... / ...... = ......\",\n      \"description\": \"Equation for calculating a ratio involving moles and volume.\"\n    },\n    {\n      \"equation\": \"m / V = ...... / ...... = ......\",\n      \"description\": \"Equation for calculating a ratio involving mass and volume.\"\n    },\n    {\n      \"equation\": \"C(mol.l⁻¹) = n / V\",\n      \"description\": \"Equation for molar concentration, defined as the ratio of moles of solute to the volume of the solution.\"\n    },\n    {\n      \"equation\": \"C(g.l⁻¹) = m / V\",\n      \"description\": \"Equation for gram concentration, defined as the ratio of mass of solute to the volume of the solution.\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"Anthropic\",\n  \"model_name\": \"claude-3-opus-20240229\",\n  \"schema_valid\": true,\n  \"char_count\": null,\n  \"completeness_score\": null,\n  \"quality_report\": null,\n  \"raw_text\": null\n}"
+  },
+  "merged_content": ":ﺗﻔﻜﻴﺮ ﻧﺎﻗﺪ\nلماذا يُذيب الماء معظم األمالح والحموض، ولكنّه ال يذيب الزّيوت والدُّسم؟\nمفهوم تركيز المحلول:\n:أدوات التّجربة\n ميزان حسَّاس.- ّ وعاء زجاجي-  ملح كلوريد الصوديوم- ماء مقطَّر\nخطوات التّجربة:\nأضع كمّيّة من الماء المقطّر (أقلّ من ليتر) في الوعاء الزّجاجيّ.1\n. من ملح كلوريد الصّ وديوم النّقي بميزان حسّاس58.5 g أزن بدقّة2\nn\nM\nm\n58.5\n......\n..... mol\n=\n=\n=\n أحسب عدد الموالت الموجودة في تلك العيّنة3\n.أذيب الملح في الماء المقطَّر بشكل تامّ، ثمّ أكمل حجم المحلول بالماء المقطّر إلى ليتر واحد4\n. V\nn\n.......\n.......\n=\n أحسب النّسبة5\n. V\n.......\n.......\nm =\n أحسب النّسبة6\n:أﺟﺮب وأﺳﺘﻨﺘﺞ\n• \n تسمّى نسبة عدد موالت المادّة المذابة إلى حجم المحلول بالتَّركيز الموليّ للمحلول (ويساوي\nC\nV\nn\n(mol.l\n)\n1 =\n-\n :عدد الموالت المذابة في ليتر واحد من المحلول)، وتُحسب بالعالقة\n• \nتسمّى نسبة كتلة المادّة المذابة إلى حجم المحلول بالتّركيز الغرامي للمحلول. (ويساوي عدد \nC\nV\nm\n(g.l\n)\n1 =\n-\n :الغرامات المذابة في ليتر واحد من المحلول)، وتُحسب بالعالقة\n:أﺳﺘﻨﺘﺞ\n110\n\n| أ 1 |\n| --- |\n| زأ 2 |\n| أ 3 |\n| أ 4 |\n|  |\n| 5\nأ |\n| أ 6 |\n\nمفهوم تركيز المحلول\n\nأجرب وأستنتج:\nأدوات التجربة: ماء مقطر - ملح كلوريد الصوديوم - وعاء زجاجي - ميزان حساس. خطوات التجربة: 1. أضع كمية من الماء المقطر (أقل من ليتر) في الوعاء الزجاجي. 2. أزن بدقة 58.5g من ملح كلوريد الصوديوم النقي بميزان حساس. 3. أحسب عدد المولات الموجودة في تلك العينة. n = m/M = 58.5 / ...... = ...... mol 4. أذيب الملح في الماء المقطر بشكل تام، ثم أكمل حجم المحلول بالماء المقطر إلى ليتر واحد. 5. أحسب النسبة: n / V = ...... / ...... = ...... 6. أحسب النسبة: m / V = ...... / ...... = ......\n\nأستنتج:\nتسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول بالتركيز المولي للمحلول (ويساوي عدد المولات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(mol.l⁻¹) = n / V تسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول (ويساوي عدد الغرامات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(g.l⁻¹) = m / V",
+  "raw_markdown": "# تفكير ناقد: لماذا يذيب الماء معظم الأملاح والحموض، ولكنه لا يذيب الزيوت والدسم؟ # مفهوم تركيز المحلول # أجرب وأستنتج: ## أدوات التجربة: ماء مقطر - ملح كلوريد الصوديوم - وعاء زجاجي - ميزان حساس. ## خطوات التجربة: 1. أضع كمية من الماء المقطر (أقل من ليتر) في الوعاء الزجاجي. 2. أزن بدقة 58.5g من ملح كلوريد الصوديوم النقي بميزان حساس. 3. أحسب عدد المولات الموجودة في تلك العينة. n = m/M = 58.5 / ...... = ...... mol 4. أذيب الملح في الماء المقطر بشكل تام، ثم أكمل حجم المحلول بالماء المقطر إلى ليتر واحد. 5. أحسب النسبة: n / V = ...... / ...... = ...... 6. أحسب النسبة: m / V = ...... / ...... = ...... # أستنتج: * تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول بالتركيز المولي للمحلول (ويساوي عدد المولات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(mol.l⁻¹) = n / V * تسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول (ويساوي عدد الغرامات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(g.l⁻¹) = m / V",
+  "sections": [
+    {
+      "heading": null,
+      "content": ":ﺗﻔﻜﻴﺮ ﻧﺎﻗﺪ\nلماذا يُذيب الماء معظم األمالح والحموض، ولكنّه ال يذيب الزّيوت والدُّسم؟\nمفهوم تركيز المحلول:\n:أدوات التّجربة\n ميزان حسَّاس.- ّ وعاء زجاجي-  ملح كلوريد الصوديوم- ماء مقطَّر\nخطوات التّجربة:\nأضع كمّيّة من الماء المقطّر (أقلّ من ليتر) في الوعاء الزّجاجيّ.1\n. من ملح كلوريد الصّ وديوم النّقي بميزان حسّاس58.5 g أزن بدقّة2\nn\nM\nm\n58.5\n......\n..... mol\n=\n=\n=\n أحسب عدد الموالت الموجودة في تلك العيّنة3\n.أذيب الملح في الماء المقطَّر بشكل تامّ، ثمّ أكمل حجم المحلول بالماء المقطّر إلى ليتر واحد4\n. V\nn\n.......\n.......\n=\n أحسب النّسبة5\n. V\n.......\n.......\nm =\n أحسب النّسبة6\n:أﺟﺮب وأﺳﺘﻨﺘﺞ\n• \n تسمّى نسبة عدد موالت المادّة المذابة إلى حجم المحلول بالتَّركيز الموليّ للمحلول (ويساوي\nC\nV\nn\n(mol.l\n)\n1 =\n-\n :عدد الموالت المذابة في ليتر واحد من المحلول)، وتُحسب بالعالقة\n• \nتسمّى نسبة كتلة المادّة المذابة إلى حجم المحلول بالتّركيز الغرامي للمحلول. (ويساوي عدد \nC\nV\nm\n(g.l\n)\n1 =\n-\n :الغرامات المذابة في ليتر واحد من المحلول)، وتُحسب بالعالقة\n:أﺳﺘﻨﺘﺞ\n110\n\n| أ 1 |\n| --- |\n| زأ 2 |\n| أ 3 |\n| أ 4 |\n|  |\n| 5\nأ |\n| أ 6 |",
+      "content_type": "text"
+    },
+    {
+      "heading": "مفهوم تركيز المحلول",
+      "content": "",
+      "content_type": "text"
+    },
+    {
+      "heading": "أجرب وأستنتج:",
+      "content": "أدوات التجربة: ماء مقطر - ملح كلوريد الصوديوم - وعاء زجاجي - ميزان حساس. خطوات التجربة: 1. أضع كمية من الماء المقطر (أقل من ليتر) في الوعاء الزجاجي. 2. أزن بدقة 58.5g من ملح كلوريد الصوديوم النقي بميزان حساس. 3. أحسب عدد المولات الموجودة في تلك العينة. n = m/M = 58.5 / ...... = ...... mol 4. أذيب الملح في الماء المقطر بشكل تام، ثم أكمل حجم المحلول بالماء المقطر إلى ليتر واحد. 5. أحسب النسبة: n / V = ...... / ...... = ...... 6. أحسب النسبة: m / V = ...... / ...... = ......",
+      "content_type": "exercise"
+    },
+    {
+      "heading": "أستنتج:",
+      "content": "تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول بالتركيز المولي للمحلول (ويساوي عدد المولات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(mol.l⁻¹) = n / V تسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول (ويساوي عدد الغرامات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(g.l⁻¹) = m / V",
+      "content_type": "text"
+    }
+  ],
+  "questions": [
+    {
+      "question_text": "لماذا يذيب الماء معظم الأملاح والحموض، ولكنه لا يذيب الزيوت والدسم؟",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    }
+  ],
+  "diagrams": [],
+  "tables": [],
+  "equations": [
+    {
+      "equation": "n = m/M = 58.5 / ...... = ...... mol",
+      "description": "Equation for calculating the number of moles in a sample."
+    },
+    {
+      "equation": "n / V = ...... / ...... = ......",
+      "description": "Equation for calculating a ratio involving moles and volume."
+    },
+    {
+      "equation": "m / V = ...... / ...... = ......",
+      "description": "Equation for calculating a ratio involving mass and volume."
+    },
+    {
+      "equation": "C(mol.l⁻¹) = n / V",
+      "description": "Equation for molar concentration, defined as the ratio of moles of solute to the volume of the solution."
+    },
+    {
+      "equation": "C(g.l⁻¹) = m / V",
+      "description": "Equation for gram concentration, defined as the ratio of mass of solute to the volume of the solution."
+    }
+  ],
+  "warnings": [],
+  "errors": [],
+  "char_count": 1860,
+  "completeness_score": 1.0,
+  "detected_language": "Arabic",
+  "vision_provider": "gemini_document_image",
+  "vision_source": "gemini_rendered_image_300dpi",
+  "neighboring_pages": [
+    3,
+    5
+  ],
+  "uploaded_pdf": null,
+  "raw_text": "{\n  \"page_number\": 110,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"# تفكير ناقد: لماذا يذيب الماء معظم الأملاح والحموض، ولكنه لا يذيب الزيوت والدسم؟ # مفهوم تركيز المحلول # أجرب وأستنتج: ## أدوات التجربة: ماء مقطر - ملح كلوريد الصوديوم - وعاء زجاجي - ميزان حساس. ## خطوات التجربة: 1. أضع كمية من الماء المقطر (أقل من ليتر) في الوعاء الزجاجي. 2. أزن بدقة 58.5g من ملح كلوريد الصوديوم النقي بميزان حساس. 3. أحسب عدد المولات الموجودة في تلك العينة. n = m/M = 58.5 / ...... = ...... mol 4. أذيب الملح في الماء المقطر بشكل تام، ثم أكمل حجم المحلول بالماء المقطر إلى ليتر واحد. 5. أحسب النسبة: n / V = ...... / ...... = ...... 6. أحسب النسبة: m / V = ...... / ...... = ...... # أستنتج: * تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول بالتركيز المولي للمحلول (ويساوي عدد المولات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(mol.l⁻¹) = n / V * تسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول (ويساوي عدد الغرامات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(g.l⁻¹) = m / V\",\n  \"sections\": [\n    {\n      \"heading\": \"مفهوم تركيز المحلول\",\n      \"content\": \"\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أجرب وأستنتج:\",\n      \"content\": \"أدوات التجربة: ماء مقطر - ملح كلوريد الصوديوم - وعاء زجاجي - ميزان حساس. خطوات التجربة: 1. أضع كمية من الماء المقطر (أقل من ليتر) في الوعاء الزجاجي. 2. أزن بدقة 58.5g من ملح كلوريد الصوديوم النقي بميزان حساس. 3. أحسب عدد المولات الموجودة في تلك العينة. n = m/M = 58.5 / ...... = ...... mol 4. أذيب الملح في الماء المقطر بشكل تام، ثم أكمل حجم المحلول بالماء المقطر إلى ليتر واحد. 5. أحسب النسبة: n / V = ...... / ...... = ...... 6. أحسب النسبة: m / V = ...... / ...... = ......\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول بالتركيز المولي للمحلول (ويساوي عدد المولات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(mol.l⁻¹) = n / V تسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول (ويساوي عدد الغرامات المذابة في ليتر واحد من المحلول)، وتُحسب بالعلاقة: C(g.l⁻¹) = m / V\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"لماذا يذيب الماء معظم الأملاح والحموض، ولكنه لا يذيب الزيوت والدسم؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"n = m/M = 58.5 / ...... = ...... mol\",\n      \"description\": \"Equation for calculating the number of moles in a sample.\"\n    },\n    {\n      \"equation\": \"n / V = ...... / ...... = ......\",\n      \"description\": \"Equation for calculating a ratio involving moles and volume.\"\n    },\n    {\n      \"equation\": \"m / V = ...... / ...... = ......\",\n      \"description\": \"Equation for calculating a ratio involving mass and volume.\"\n    },\n    {\n      \"equation\": \"C(mol.l⁻¹) = n / V\",\n      \"description\": \"Equation for molar concentration, defined as the ratio of moles of solute to the volume of the solution.\"\n    },\n    {\n      \"equation\": \"C(g.l⁻¹) = m / V\",\n      \"description\": \"Equation for gram concentration, defined as the ratio of mass of solute to the volume of the solution.\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"Anthropic\",\n  \"model_name\": \"claude-3-opus-20240229\",\n  \"schema_valid\": true,\n  \"char_count\": null,\n  \"completeness_score\": null,\n  \"quality_report\": null,\n  \"raw_text\": null\n}",
+  "quality_report": {
+    "page_number": 110,
+    "schema_valid": true,
+    "raw_markdown_chars": 941,
+    "char_count": 941,
+    "section_count": 3,
+    "question_count": 1,
+    "table_count": 0,
+    "equation_count": 5,
+    "diagram_count": 0,
+    "warning_count": 0,
+    "arabic_char_ratio": 0.7116,
+    "completeness_score": 1.0,
+    "issues": [],
+    "should_fallback": false
+  },
+  "classification": "MIXED_VISION",
+  "source_id": 1
+}

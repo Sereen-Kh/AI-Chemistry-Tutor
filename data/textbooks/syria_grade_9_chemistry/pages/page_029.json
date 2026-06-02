@@ -1,0 +1,36 @@
+{
+  "page_number": 29,
+  "page_type": "NEEDS_VISION",
+  "extraction_methods": [
+    "gemini_document"
+  ],
+  "extraction_method": "gemini_document",
+  "status": "skipped_dry_run",
+  "text_layer_content": "",
+  "vision_content": {},
+  "gemini_pdf_content": {},
+  "gemini_fallback_model_content": {},
+  "gemini_image_fallback_content": {},
+  "merged_content": "",
+  "raw_markdown": "",
+  "sections": [],
+  "questions": [],
+  "diagrams": [],
+  "tables": [],
+  "equations": [],
+  "warnings": [
+    "Gemini document extraction is not configured. Vision page extraction was skipped."
+  ],
+  "errors": [],
+  "char_count": 0,
+  "completeness_score": 0.0,
+  "detected_language": "ar",
+  "vision_provider": null,
+  "vision_source": null,
+  "neighboring_pages": [],
+  "uploaded_pdf": null,
+  "raw_text": null,
+  "quality_report": {},
+  "classification": "NEEDS_VISION",
+  "source_id": 1
+}

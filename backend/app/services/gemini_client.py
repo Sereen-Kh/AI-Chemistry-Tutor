@@ -20,7 +20,7 @@ def generation_http_options():
 
     return types.HttpOptions(
         timeout=settings.ai_request_timeout_seconds * 1000,
-        retry_options=types.HttpRetryOptions(attempts=1),
+        retry_options=types.HttpRetryOptions(attempts=5),
     )
 
 

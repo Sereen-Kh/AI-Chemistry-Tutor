@@ -1,0 +1,44 @@
+{
+  "page_number": 54,
+  "page_type": "MIXED_VISION",
+  "extraction_methods": [
+    "pymupdf",
+    "pdfplumber",
+    "gemini_document"
+  ],
+  "extraction_method": "pymupdf+pdfplumber+gemini_document",
+  "status": "skipped_dry_run",
+  "text_layer_content": "1\n1 -\n \u0007مدخل إلى الكيمياء\nالعضويَّة\n2\n2 -\n \u0007مشروع الكيمياء تكرير\nالنَّفط\n3\n3 -\u0007المركَّ بات الهدروكربونيَّة\n \n المركَّ بات -١\n الهدروكربونيَّة المشبعة\nاأللكانات (البرافينات)\n \n المركّبات -٢\n الهدروكربونيَّة غير\nالمشبعة\n4\n4 -أسئلة وحدة العضويَّة5",
+  "vision_content": {},
+  "gemini_pdf_content": {},
+  "gemini_fallback_model_content": {},
+  "gemini_image_fallback_content": {},
+  "merged_content": "1\n1 -\n \u0007مدخل إلى الكيمياء\nالعضويَّة\n2\n2 -\n \u0007مشروع الكيمياء تكرير\nالنَّفط\n3\n3 -\u0007المركَّ بات الهدروكربونيَّة\n \n المركَّ بات -١\n الهدروكربونيَّة المشبعة\nاأللكانات (البرافينات)\n \n المركّبات -٢\n الهدروكربونيَّة غير\nالمشبعة\n4\n4 -أسئلة وحدة العضويَّة5",
+  "raw_markdown": "1\n1 -\n \u0007مدخل إلى الكيمياء\nالعضويَّة\n2\n2 -\n \u0007مشروع الكيمياء تكرير\nالنَّفط\n3\n3 -\u0007المركَّ بات الهدروكربونيَّة\n \n المركَّ بات -١\n الهدروكربونيَّة المشبعة\nاأللكانات (البرافينات)\n \n المركّبات -٢\n الهدروكربونيَّة غير\nالمشبعة\n4\n4 -أسئلة وحدة العضويَّة5",
+  "sections": [
+    {
+      "heading": null,
+      "content": "1\n1 -\n \u0007مدخل إلى الكيمياء\nالعضويَّة\n2\n2 -\n \u0007مشروع الكيمياء تكرير\nالنَّفط\n3\n3 -\u0007المركَّ بات الهدروكربونيَّة\n \n المركَّ بات -١\n الهدروكربونيَّة المشبعة\nاأللكانات (البرافينات)\n \n المركّبات -٢\n الهدروكربونيَّة غير\nالمشبعة\n4\n4 -أسئلة وحدة العضويَّة5",
+      "content_type": "text"
+    }
+  ],
+  "questions": [],
+  "diagrams": [],
+  "tables": [],
+  "equations": [],
+  "warnings": [
+    "Gemini document extraction is not configured. Vision page extraction was skipped."
+  ],
+  "errors": [],
+  "char_count": 244,
+  "completeness_score": 0.45,
+  "detected_language": "ar",
+  "vision_provider": null,
+  "vision_source": null,
+  "neighboring_pages": [],
+  "uploaded_pdf": null,
+  "raw_text": null,
+  "quality_report": {},
+  "classification": "MIXED_VISION",
+  "source_id": 1
+}

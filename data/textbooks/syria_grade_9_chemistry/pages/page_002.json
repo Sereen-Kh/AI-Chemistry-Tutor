@@ -1,0 +1,270 @@
+{
+  "page_number": 2,
+  "page_type": "MIXED_VISION",
+  "extraction_methods": [
+    "pymupdf",
+    "pdfplumber",
+    "gemini_image_300dpi"
+  ],
+  "extraction_method": "pymupdf+pdfplumber+gemini_image_300dpi",
+  "status": "completed_with_image_fallback",
+  "text_layer_content": ":ا\u001aﻫﺪاف\n-  \n.ّيتعرَّف المحلول المائي\n  -\nيميّز أنواع المحاليل المائيّة (متجانسة - غير متجانسة).\n  -\nيقوم بإجراء تجربة تحضير محلول.\n  -\nيتعرّف التّركيز الغرامي.\n  -\nيتعرّف التّركيز المولي.\n:اﻟﻜﻠﻤﺎت اﻟﻤﻔﺘﺎﺣﻴﺔ\n.المحلول - المادَّة المذيبة - المادَّة المذابة - التَّركيز الغرامي - التَّركيز المولي\n.تكثُر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقّين، و نبع السّ نّ، و الدّريكيش\n1المحاليل المائيَّة\n108\n\n| ةيئاملا ليلاحملا\nَّ |  |  |\n| --- | --- | --- |\n|  |  |  |",
+  "vision_content": {
+    "page_number": 108,
+    "detected_language": "Arabic",
+    "raw_markdown": "# المحاليل المائية\n\n## الأهداف:\n- يتعرف المحلول المائي.\n- يميز أنواع المحاليل المائية (متجانسة – غير متجانسة).\n- يقوم بإجراء تجربة تحضير محلول.\n- يتعرف التركيز الغرامي.\n- يتعرف التركيز المولي.\n\n## الكلمات المفتاحية:\n- المحلول\n- المادة المذيبة\n- المادة المذابة\n- التركيز الغرامي\n- التركيز المولي\n\nتكثر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقين، و نبع السن، و الدريكيش.\n\n108",
+    "sections": [
+      {
+        "heading": "المحاليل المائية",
+        "content": "",
+        "content_type": "text"
+      },
+      {
+        "heading": "الأهداف:",
+        "content": "يتعرف المحلول المائي. يميز أنواع المحاليل المائية (متجانسة – غير متجانسة). يقوم بإجراء تجربة تحضير محلول. يتعرف التركيز الغرامي. يتعرف التركيز المولي.",
+        "content_type": "text"
+      },
+      {
+        "heading": "الكلمات المفتاحية:",
+        "content": "المحلول. المادة المذيبة. المادة المذابة. التركيز الغرامي. التركيز المولي.",
+        "content_type": "text"
+      },
+      {
+        "heading": null,
+        "content": "تكثر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقين، و نبع السن، و الدريكيش.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "A natural water fountain with water flowing from a stone spout into a small stone basin, set against a backdrop of green hills and blue mountains under a clear sky.",
+        "labels": [],
+        "related_text": "تكثر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقين، و نبع السن، و الدريكيش."
+      }
+    ],
+    "tables": [],
+    "equations": [],
+    "warnings": [],
+    "extraction_notes": "The page number visible on the image is 108, which is used for the 'page_number' field, despite the prompt's internal reference to page 2.",
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 583,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 108,
+      "schema_valid": true,
+      "raw_markdown_chars": 391,
+      "char_count": 583,
+      "section_count": 4,
+      "question_count": 0,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.6146,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 108,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"# المحاليل المائية\\n\\n## الأهداف:\\n- يتعرف المحلول المائي.\\n- يميز أنواع المحاليل المائية (متجانسة – غير متجانسة).\\n- يقوم بإجراء تجربة تحضير محلول.\\n- يتعرف التركيز الغرامي.\\n- يتعرف التركيز المولي.\\n\\n## الكلمات المفتاحية:\\n- المحلول\\n- المادة المذيبة\\n- المادة المذابة\\n- التركيز الغرامي\\n- التركيز المولي\\n\\nتكثر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقين، و نبع السن، و الدريكيش.\\n\\n108\",\n  \"sections\": [\n    {\n      \"heading\": \"المحاليل المائية\",\n      \"content\": \"\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الأهداف:\",\n      \"content\": \"يتعرف المحلول المائي. يميز أنواع المحاليل المائية (متجانسة – غير متجانسة). يقوم بإجراء تجربة تحضير محلول. يتعرف التركيز الغرامي. يتعرف التركيز المولي.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الكلمات المفتاحية:\",\n      \"content\": \"المحلول. المادة المذيبة. المادة المذابة. التركيز الغرامي. التركيز المولي.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": null,\n      \"content\": \"تكثر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقين، و نبع السن، و الدريكيش.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"A natural water fountain with water flowing from a stone spout into a small stone basin, set against a backdrop of green hills and blue mountains under a clear sky.\",\n      \"labels\": [],\n      \"related_text\": \"تكثر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقين، و نبع السن، و الدريكيش.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [],\n  \"warnings\": [],\n  \"extraction_notes\": \"The page number visible on the image is 108, which is used for the 'page_number' field, despite the prompt's internal reference to page 2.\",\n  \"provider\": \"google\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 583,\n  \"completeness_score\": null,\n  \"quality_report\": {\n    \"page_number\": 108,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 440,\n    \"char_count\": 583,\n    \"section_count\": 4,\n    \"question_count\": 0,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 1,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.7,\n    \"completeness_score\": null,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": \"المحاليل المائية الأهداف: يتعرف المحلول المائي. يميز أنواع المحاليل المائية (متجانسة – غير متجانسة). يقوم بإجراء تجربة تحضير محلول. يتعرف التركيز الغرامي. يتعرف التركيز المولي. الكلمات المفتاحية: المحلول المادة المذيبة المادة المذابة التركيز الغرامي التركيز المولي تكثر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقين، و نبع السن، و الدريكيش. 108\"\n}"
+  },
+  "gemini_pdf_content": {},
+  "gemini_fallback_model_content": {
+    "page_number": 108,
+    "detected_language": "Arabic",
+    "raw_markdown": "# المحاليل المائية\n\n## الأهداف:\n- يتعرف المحلول المائي.\n- يميز أنواع المحاليل المائية (متجانسة – غير متجانسة).\n- يقوم بإجراء تجربة تحضير محلول.\n- يتعرف التركيز الغرامي.\n- يتعرف التركيز المولي.\n\n## الكلمات المفتاحية:\n- المحلول\n- المادة المذيبة\n- المادة المذابة\n- التركيز الغرامي\n- التركيز المولي\n\nتكثر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقين، و نبع السن، و الدريكيش.\n\n108",
+    "sections": [
+      {
+        "heading": "المحاليل المائية",
+        "content": "",
+        "content_type": "text"
+      },
+      {
+        "heading": "الأهداف:",
+        "content": "يتعرف المحلول المائي. يميز أنواع المحاليل المائية (متجانسة – غير متجانسة). يقوم بإجراء تجربة تحضير محلول. يتعرف التركيز الغرامي. يتعرف التركيز المولي.",
+        "content_type": "text"
+      },
+      {
+        "heading": "الكلمات المفتاحية:",
+        "content": "المحلول. المادة المذيبة. المادة المذابة. التركيز الغرامي. التركيز المولي.",
+        "content_type": "text"
+      },
+      {
+        "heading": null,
+        "content": "تكثر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقين، و نبع السن، و الدريكيش.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "A natural water fountain with water flowing from a stone spout into a small stone basin, set against a backdrop of green hills and blue mountains under a clear sky.",
+        "labels": [],
+        "related_text": "تكثر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقين، و نبع السن، و الدريكيش."
+      }
+    ],
+    "tables": [],
+    "equations": [],
+    "warnings": [],
+    "extraction_notes": "The page number visible on the image is 108, which is used for the 'page_number' field, despite the prompt's internal reference to page 2.",
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 583,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 108,
+      "schema_valid": true,
+      "raw_markdown_chars": 391,
+      "char_count": 583,
+      "section_count": 4,
+      "question_count": 0,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.6146,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 108,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"# المحاليل المائية\\n\\n## الأهداف:\\n- يتعرف المحلول المائي.\\n- يميز أنواع المحاليل المائية (متجانسة – غير متجانسة).\\n- يقوم بإجراء تجربة تحضير محلول.\\n- يتعرف التركيز الغرامي.\\n- يتعرف التركيز المولي.\\n\\n## الكلمات المفتاحية:\\n- المحلول\\n- المادة المذيبة\\n- المادة المذابة\\n- التركيز الغرامي\\n- التركيز المولي\\n\\nتكثر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقين، و نبع السن، و الدريكيش.\\n\\n108\",\n  \"sections\": [\n    {\n      \"heading\": \"المحاليل المائية\",\n      \"content\": \"\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الأهداف:\",\n      \"content\": \"يتعرف المحلول المائي. يميز أنواع المحاليل المائية (متجانسة – غير متجانسة). يقوم بإجراء تجربة تحضير محلول. يتعرف التركيز الغرامي. يتعرف التركيز المولي.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الكلمات المفتاحية:\",\n      \"content\": \"المحلول. المادة المذيبة. المادة المذابة. التركيز الغرامي. التركيز المولي.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": null,\n      \"content\": \"تكثر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقين، و نبع السن، و الدريكيش.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"A natural water fountain with water flowing from a stone spout into a small stone basin, set against a backdrop of green hills and blue mountains under a clear sky.\",\n      \"labels\": [],\n      \"related_text\": \"تكثر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقين، و نبع السن، و الدريكيش.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [],\n  \"warnings\": [],\n  \"extraction_notes\": \"The page number visible on the image is 108, which is used for the 'page_number' field, despite the prompt's internal reference to page 2.\",\n  \"provider\": \"google\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 583,\n  \"completeness_score\": null,\n  \"quality_report\": {\n    \"page_number\": 108,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 440,\n    \"char_count\": 583,\n    \"section_count\": 4,\n    \"question_count\": 0,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 1,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.7,\n    \"completeness_score\": null,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": \"المحاليل المائية الأهداف: يتعرف المحلول المائي. يميز أنواع المحاليل المائية (متجانسة – غير متجانسة). يقوم بإجراء تجربة تحضير محلول. يتعرف التركيز الغرامي. يتعرف التركيز المولي. الكلمات المفتاحية: المحلول المادة المذيبة المادة المذابة التركيز الغرامي التركيز المولي تكثر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقين، و نبع السن، و الدريكيش. 108\"\n}"
+  },
+  "gemini_image_fallback_content": {
+    "page_number": 108,
+    "detected_language": "Arabic",
+    "raw_markdown": "# المحاليل المائية\n\n## الأهداف:\n- يتعرف المحلول المائي.\n- يميز أنواع المحاليل المائية (متجانسة – غير متجانسة).\n- يقوم بإجراء تجربة تحضير محلول.\n- يتعرف التركيز الغرامي.\n- يتعرف التركيز المولي.\n\n## الكلمات المفتاحية:\n- المحلول\n- المادة المذيبة\n- المادة المذابة\n- التركيز الغرامي\n- التركيز المولي\n\nتكثر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقين، و نبع السن، و الدريكيش.\n\n108",
+    "sections": [
+      {
+        "heading": "المحاليل المائية",
+        "content": "",
+        "content_type": "text"
+      },
+      {
+        "heading": "الأهداف:",
+        "content": "يتعرف المحلول المائي. يميز أنواع المحاليل المائية (متجانسة – غير متجانسة). يقوم بإجراء تجربة تحضير محلول. يتعرف التركيز الغرامي. يتعرف التركيز المولي.",
+        "content_type": "text"
+      },
+      {
+        "heading": "الكلمات المفتاحية:",
+        "content": "المحلول. المادة المذيبة. المادة المذابة. التركيز الغرامي. التركيز المولي.",
+        "content_type": "text"
+      },
+      {
+        "heading": null,
+        "content": "تكثر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقين، و نبع السن، و الدريكيش.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "A natural water fountain with water flowing from a stone spout into a small stone basin, set against a backdrop of green hills and blue mountains under a clear sky.",
+        "labels": [],
+        "related_text": "تكثر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقين، و نبع السن، و الدريكيش."
+      }
+    ],
+    "tables": [],
+    "equations": [],
+    "warnings": [],
+    "extraction_notes": "The page number visible on the image is 108, which is used for the 'page_number' field, despite the prompt's internal reference to page 2.",
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 583,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 108,
+      "schema_valid": true,
+      "raw_markdown_chars": 391,
+      "char_count": 583,
+      "section_count": 4,
+      "question_count": 0,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.6146,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 108,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"# المحاليل المائية\\n\\n## الأهداف:\\n- يتعرف المحلول المائي.\\n- يميز أنواع المحاليل المائية (متجانسة – غير متجانسة).\\n- يقوم بإجراء تجربة تحضير محلول.\\n- يتعرف التركيز الغرامي.\\n- يتعرف التركيز المولي.\\n\\n## الكلمات المفتاحية:\\n- المحلول\\n- المادة المذيبة\\n- المادة المذابة\\n- التركيز الغرامي\\n- التركيز المولي\\n\\nتكثر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقين، و نبع السن، و الدريكيش.\\n\\n108\",\n  \"sections\": [\n    {\n      \"heading\": \"المحاليل المائية\",\n      \"content\": \"\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الأهداف:\",\n      \"content\": \"يتعرف المحلول المائي. يميز أنواع المحاليل المائية (متجانسة – غير متجانسة). يقوم بإجراء تجربة تحضير محلول. يتعرف التركيز الغرامي. يتعرف التركيز المولي.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الكلمات المفتاحية:\",\n      \"content\": \"المحلول. المادة المذيبة. المادة المذابة. التركيز الغرامي. التركيز المولي.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": null,\n      \"content\": \"تكثر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقين، و نبع السن، و الدريكيش.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"A natural water fountain with water flowing from a stone spout into a small stone basin, set against a backdrop of green hills and blue mountains under a clear sky.\",\n      \"labels\": [],\n      \"related_text\": \"تكثر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقين، و نبع السن، و الدريكيش.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [],\n  \"warnings\": [],\n  \"extraction_notes\": \"The page number visible on the image is 108, which is used for the 'page_number' field, despite the prompt's internal reference to page 2.\",\n  \"provider\": \"google\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 583,\n  \"completeness_score\": null,\n  \"quality_report\": {\n    \"page_number\": 108,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 440,\n    \"char_count\": 583,\n    \"section_count\": 4,\n    \"question_count\": 0,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 1,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.7,\n    \"completeness_score\": null,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": \"المحاليل المائية الأهداف: يتعرف المحلول المائي. يميز أنواع المحاليل المائية (متجانسة – غير متجانسة). يقوم بإجراء تجربة تحضير محلول. يتعرف التركيز الغرامي. يتعرف التركيز المولي. الكلمات المفتاحية: المحلول المادة المذيبة المادة المذابة التركيز الغرامي التركيز المولي تكثر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقين، و نبع السن، و الدريكيش. 108\"\n}"
+  },
+  "merged_content": ":ا\u001aﻫﺪاف\n-  \n.ّيتعرَّف المحلول المائي\n  -\nيميّز أنواع المحاليل المائيّة (متجانسة - غير متجانسة).\n  -\nيقوم بإجراء تجربة تحضير محلول.\n  -\nيتعرّف التّركيز الغرامي.\n  -\nيتعرّف التّركيز المولي.\n:اﻟﻜﻠﻤﺎت اﻟﻤﻔﺘﺎﺣﻴﺔ\n.المحلول - المادَّة المذيبة - المادَّة المذابة - التَّركيز الغرامي - التَّركيز المولي\n.تكثُر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقّين، و نبع السّ نّ، و الدّريكيش\n1المحاليل المائيَّة\n108\n\n| ةيئاملا ليلاحملا\nَّ |  |  |\n| --- | --- | --- |\n|  |  |  |\n\nالمحاليل المائية\n\nالأهداف:\nيتعرف المحلول المائي. يميز أنواع المحاليل المائية (متجانسة – غير متجانسة). يقوم بإجراء تجربة تحضير محلول. يتعرف التركيز الغرامي. يتعرف التركيز المولي.\n\nالكلمات المفتاحية:\nالمحلول. المادة المذيبة. المادة المذابة. التركيز الغرامي. التركيز المولي.\n\nتكثر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقين، و نبع السن، و الدريكيش.",
+  "raw_markdown": "# المحاليل المائية\n\n## الأهداف:\n- يتعرف المحلول المائي.\n- يميز أنواع المحاليل المائية (متجانسة – غير متجانسة).\n- يقوم بإجراء تجربة تحضير محلول.\n- يتعرف التركيز الغرامي.\n- يتعرف التركيز المولي.\n\n## الكلمات المفتاحية:\n- المحلول\n- المادة المذيبة\n- المادة المذابة\n- التركيز الغرامي\n- التركيز المولي\n\nتكثر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقين، و نبع السن، و الدريكيش.\n\n108",
+  "sections": [
+    {
+      "heading": null,
+      "content": ":ا\u001aﻫﺪاف\n-  \n.ّيتعرَّف المحلول المائي\n  -\nيميّز أنواع المحاليل المائيّة (متجانسة - غير متجانسة).\n  -\nيقوم بإجراء تجربة تحضير محلول.\n  -\nيتعرّف التّركيز الغرامي.\n  -\nيتعرّف التّركيز المولي.\n:اﻟﻜﻠﻤﺎت اﻟﻤﻔﺘﺎﺣﻴﺔ\n.المحلول - المادَّة المذيبة - المادَّة المذابة - التَّركيز الغرامي - التَّركيز المولي\n.تكثُر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقّين، و نبع السّ نّ، و الدّريكيش\n1المحاليل المائيَّة\n108\n\n| ةيئاملا ليلاحملا\nَّ |  |  |\n| --- | --- | --- |\n|  |  |  |",
+      "content_type": "text"
+    },
+    {
+      "heading": "المحاليل المائية",
+      "content": "",
+      "content_type": "text"
+    },
+    {
+      "heading": "الأهداف:",
+      "content": "يتعرف المحلول المائي. يميز أنواع المحاليل المائية (متجانسة – غير متجانسة). يقوم بإجراء تجربة تحضير محلول. يتعرف التركيز الغرامي. يتعرف التركيز المولي.",
+      "content_type": "text"
+    },
+    {
+      "heading": "الكلمات المفتاحية:",
+      "content": "المحلول. المادة المذيبة. المادة المذابة. التركيز الغرامي. التركيز المولي.",
+      "content_type": "text"
+    },
+    {
+      "heading": null,
+      "content": "تكثر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقين، و نبع السن، و الدريكيش.",
+      "content_type": "text"
+    }
+  ],
+  "questions": [],
+  "diagrams": [
+    {
+      "title": null,
+      "description": "A natural water fountain with water flowing from a stone spout into a small stone basin, set against a backdrop of green hills and blue mountains under a clear sky.",
+      "labels": [],
+      "related_text": "تكثر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقين، و نبع السن، و الدريكيش."
+    }
+  ],
+  "tables": [],
+  "equations": [],
+  "warnings": [],
+  "errors": [],
+  "char_count": 840,
+  "completeness_score": 1.0,
+  "detected_language": "Arabic",
+  "vision_provider": "gemini_document_image",
+  "vision_source": "gemini_rendered_image_300dpi",
+  "neighboring_pages": [
+    1,
+    3
+  ],
+  "uploaded_pdf": null,
+  "raw_text": "{\n  \"page_number\": 108,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"# المحاليل المائية\\n\\n## الأهداف:\\n- يتعرف المحلول المائي.\\n- يميز أنواع المحاليل المائية (متجانسة – غير متجانسة).\\n- يقوم بإجراء تجربة تحضير محلول.\\n- يتعرف التركيز الغرامي.\\n- يتعرف التركيز المولي.\\n\\n## الكلمات المفتاحية:\\n- المحلول\\n- المادة المذيبة\\n- المادة المذابة\\n- التركيز الغرامي\\n- التركيز المولي\\n\\nتكثر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقين، و نبع السن، و الدريكيش.\\n\\n108\",\n  \"sections\": [\n    {\n      \"heading\": \"المحاليل المائية\",\n      \"content\": \"\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الأهداف:\",\n      \"content\": \"يتعرف المحلول المائي. يميز أنواع المحاليل المائية (متجانسة – غير متجانسة). يقوم بإجراء تجربة تحضير محلول. يتعرف التركيز الغرامي. يتعرف التركيز المولي.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الكلمات المفتاحية:\",\n      \"content\": \"المحلول. المادة المذيبة. المادة المذابة. التركيز الغرامي. التركيز المولي.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": null,\n      \"content\": \"تكثر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقين، و نبع السن، و الدريكيش.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"A natural water fountain with water flowing from a stone spout into a small stone basin, set against a backdrop of green hills and blue mountains under a clear sky.\",\n      \"labels\": [],\n      \"related_text\": \"تكثر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقين، و نبع السن، و الدريكيش.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [],\n  \"warnings\": [],\n  \"extraction_notes\": \"The page number visible on the image is 108, which is used for the 'page_number' field, despite the prompt's internal reference to page 2.\",\n  \"provider\": \"google\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 583,\n  \"completeness_score\": null,\n  \"quality_report\": {\n    \"page_number\": 108,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 440,\n    \"char_count\": 583,\n    \"section_count\": 4,\n    \"question_count\": 0,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 1,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.7,\n    \"completeness_score\": null,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": \"المحاليل المائية الأهداف: يتعرف المحلول المائي. يميز أنواع المحاليل المائية (متجانسة – غير متجانسة). يقوم بإجراء تجربة تحضير محلول. يتعرف التركيز الغرامي. يتعرف التركيز المولي. الكلمات المفتاحية: المحلول المادة المذيبة المادة المذابة التركيز الغرامي التركيز المولي تكثر في سورية ينابيع المياه المعدنية كمياه عين الفيجة، و نبع بقين، و نبع السن، و الدريكيش. 108\"\n}",
+  "quality_report": {
+    "page_number": 108,
+    "schema_valid": true,
+    "raw_markdown_chars": 391,
+    "char_count": 583,
+    "section_count": 4,
+    "question_count": 0,
+    "table_count": 0,
+    "equation_count": 0,
+    "diagram_count": 1,
+    "warning_count": 0,
+    "arabic_char_ratio": 0.6146,
+    "completeness_score": 1.0,
+    "issues": [],
+    "should_fallback": false
+  },
+  "classification": "MIXED_VISION",
+  "source_id": 1
+}

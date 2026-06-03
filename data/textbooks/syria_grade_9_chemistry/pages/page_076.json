@@ -2,36 +2,28 @@
   "page_number": 76,
   "page_type": "MIXED_VISION",
   "extraction_methods": [
-    "pymupdf",
-    "pdfplumber",
-    "gemini_document"
+    "exception"
   ],
-  "extraction_method": "pymupdf+pdfplumber+gemini_document",
-  "status": "skipped_dry_run",
-  "text_layer_content": ":ﻧﺸﺎط\n:أكمل الجدول اآلتي\nاأللكينات\nاأللكنات\nالصيغة العامّة\n كربون- نوع الرابطة المميزة كربون\nالالحقة المميزة لالسم\n• \n األلكِ نات: مركبّات هدروكربونيّة غير مشبعة تحتوي على رابطة واحدة مشتركة ثنائية على\nاألقلّ بين ذرّتين من ذرّات الكربون فيه.\n• \n عدد ذرّات الكربون n  حيثC H\nn\n2n :الصّ يغة العامّة لسالسل األلكِ نات المفتوحة هي\n.(n\n2,3,4,5,.......)\n=\n• \n األلكينات: مركبّات هدروكربونيّة غير مشبعة تحتوي على رابطة واحدة مشتركة ثالثية على\nاألقلّ بين ذرّتين من ذرّات الكربون فيه.\n• \n عدد ذرّات الكربون n  حيثC H\nn\nn\n2\n2\n-  :الصّ يغة العامّة لسالسل األلكينات المفتوحة هي\n.(n\n2,3,4,5,.......)\n=\n: ُﺗﻌﻠﻤﺖ\n182\n\n| تانيكللأا | تانكللأا |  |\n| --- | --- | --- |\n|  |  | ةمّ اعلا ةغيصلا |\n|  |  | نوبرك - نوبرك ةزيمملا ةطبارلا عون |\n|  |  | مسلال ةزيمملا ةقحلالا |\n\n| :ﺖﻤﻠﻌﺗ |\n| --- |\n| ُ |\n|  |",
+  "extraction_method": "exception",
+  "status": "failed",
+  "text_layer_content": "",
   "vision_content": {},
   "gemini_pdf_content": {},
   "gemini_fallback_model_content": {},
   "gemini_image_fallback_content": {},
-  "merged_content": ":ﻧﺸﺎط\n:أكمل الجدول اآلتي\nاأللكينات\nاأللكنات\nالصيغة العامّة\n كربون- نوع الرابطة المميزة كربون\nالالحقة المميزة لالسم\n• \n األلكِ نات: مركبّات هدروكربونيّة غير مشبعة تحتوي على رابطة واحدة مشتركة ثنائية على\nاألقلّ بين ذرّتين من ذرّات الكربون فيه.\n• \n عدد ذرّات الكربون n  حيثC H\nn\n2n :الصّ يغة العامّة لسالسل األلكِ نات المفتوحة هي\n.(n\n2,3,4,5,.......)\n=\n• \n األلكينات: مركبّات هدروكربونيّة غير مشبعة تحتوي على رابطة واحدة مشتركة ثالثية على\nاألقلّ بين ذرّتين من ذرّات الكربون فيه.\n• \n عدد ذرّات الكربون n  حيثC H\nn\nn\n2\n2\n-  :الصّ يغة العامّة لسالسل األلكينات المفتوحة هي\n.(n\n2,3,4,5,.......)\n=\n: ُﺗﻌﻠﻤﺖ\n182\n\n| تانيكللأا | تانكللأا |  |\n| --- | --- | --- |\n|  |  | ةمّ اعلا ةغيصلا |\n|  |  | نوبرك - نوبرك ةزيمملا ةطبارلا عون |\n|  |  | مسلال ةزيمملا ةقحلالا |\n\n| :ﺖﻤﻠﻌﺗ |\n| --- |\n| ُ |\n|  |",
-  "raw_markdown": ":ﻧﺸﺎط\n:أكمل الجدول اآلتي\nاأللكينات\nاأللكنات\nالصيغة العامّة\n كربون- نوع الرابطة المميزة كربون\nالالحقة المميزة لالسم\n• \n األلكِ نات: مركبّات هدروكربونيّة غير مشبعة تحتوي على رابطة واحدة مشتركة ثنائية على\nاألقلّ بين ذرّتين من ذرّات الكربون فيه.\n• \n عدد ذرّات الكربون n  حيثC H\nn\n2n :الصّ يغة العامّة لسالسل األلكِ نات المفتوحة هي\n.(n\n2,3,4,5,.......)\n=\n• \n األلكينات: مركبّات هدروكربونيّة غير مشبعة تحتوي على رابطة واحدة مشتركة ثالثية على\nاألقلّ بين ذرّتين من ذرّات الكربون فيه.\n• \n عدد ذرّات الكربون n  حيثC H\nn\nn\n2\n2\n-  :الصّ يغة العامّة لسالسل األلكينات المفتوحة هي\n.(n\n2,3,4,5,.......)\n=\n: ُﺗﻌﻠﻤﺖ\n182\n\n| تانيكللأا | تانكللأا |  |\n| --- | --- | --- |\n|  |  | ةمّ اعلا ةغيصلا |\n|  |  | نوبرك - نوبرك ةزيمملا ةطبارلا عون |\n|  |  | مسلال ةزيمملا ةقحلالا |\n\n| :ﺖﻤﻠﻌﺗ |\n| --- |\n| ُ |\n|  |",
-  "sections": [
-    {
-      "heading": null,
-      "content": ":ﻧﺸﺎط\n:أكمل الجدول اآلتي\nاأللكينات\nاأللكنات\nالصيغة العامّة\n كربون- نوع الرابطة المميزة كربون\nالالحقة المميزة لالسم\n• \n األلكِ نات: مركبّات هدروكربونيّة غير مشبعة تحتوي على رابطة واحدة مشتركة ثنائية على\nاألقلّ بين ذرّتين من ذرّات الكربون فيه.\n• \n عدد ذرّات الكربون n  حيثC H\nn\n2n :الصّ يغة العامّة لسالسل األلكِ نات المفتوحة هي\n.(n\n2,3,4,5,.......)\n=\n• \n األلكينات: مركبّات هدروكربونيّة غير مشبعة تحتوي على رابطة واحدة مشتركة ثالثية على\nاألقلّ بين ذرّتين من ذرّات الكربون فيه.\n• \n عدد ذرّات الكربون n  حيثC H\nn\nn\n2\n2\n-  :الصّ يغة العامّة لسالسل األلكينات المفتوحة هي\n.(n\n2,3,4,5,.......)\n=\n: ُﺗﻌﻠﻤﺖ\n182\n\n| تانيكللأا | تانكللأا |  |\n| --- | --- | --- |\n|  |  | ةمّ اعلا ةغيصلا |\n|  |  | نوبرك - نوبرك ةزيمملا ةطبارلا عون |\n|  |  | مسلال ةزيمملا ةقحلالا |\n\n| :ﺖﻤﻠﻌﺗ |\n| --- |\n| ُ |\n|  |",
-      "content_type": "text"
-    }
-  ],
+  "merged_content": "",
+  "raw_markdown": "",
+  "sections": [],
   "questions": [],
   "diagrams": [],
   "tables": [],
   "equations": [],
-  "warnings": [
-    "Gemini document extraction is not configured. Vision page extraction was skipped."
+  "warnings": [],
+  "errors": [
+    "Gemini document extraction failed quality checks for page 76: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 53.007369779s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '53s'}]}}"
   ],
-  "errors": [],
-  "char_count": 783,
-  "completeness_score": 0.45,
+  "char_count": 0,
+  "completeness_score": 0.0,
   "detected_language": "ar",
   "vision_provider": null,
   "vision_source": null,

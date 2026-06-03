@@ -4,41 +4,311 @@
   "extraction_methods": [
     "pymupdf",
     "pdfplumber",
-    "gemini_document"
+    "gemini_image_300dpi"
   ],
-  "extraction_method": "pymupdf+pdfplumber+gemini_document",
-  "status": "skipped_dry_run",
+  "extraction_method": "pymupdf+pdfplumber+gemini_image_300dpi",
+  "status": "completed_with_image_fallback",
   "text_layer_content": "• في أثناء استعمال المحاليل الحمضيّة والقلويّة  يجب اتّخاذ\nاالحتياطات التّالية:\n• \nعدم لمس أو تذوّق أو استنشاق المحاليل.\n• \nتهوية مكان استعمال هذه المحاليل. \n• \nإضافة الحمض إلى الماء لتفادي تطاير قطرات الحمض.\n• \nعدم إلقاء المحاليل الحمضيّة واألساسيَّة في مجاري المياه حفاظاً \nعلى البيئة.\n• \nتمديد المحاليل الحمضيَّة والقلويّة المركّزة قبل استعمالها.\n• \nارتداء مالبس الحماية حسب الوضعيّة: ثوب مخبري قطني، قفّازات، نظّارات، كمّامة.\nﺗﺤﺬﻳﺮ\nﺩﺍﺋﻤﺎ ﺃﺿﻒ\nﺍﻟﺤﻤﺾ ﺇﻟﻰ ﺍﻟﻤﺎﺀ\nﺣﻤﺾ\n:إﺛﺮاء\n• \n .تسمّى نسبة عدد موالت المادّة المذابة إلى حجم المحلول بالتّركيز المولي للمحلول\n.C\nV\nn\n(mol.l\n)\n1 =\n-\n :وتُحسب بالعالقة\n• \nتسمّى نسبة كتلة المادّة المذابة إلى حجم المحلول بالتّركيز الغرامي للمحلول. وتُحسب \n.C\nV\nm\n(g.l\n)\n1 =\n-\n :بالعالقة\n• \n.C\nV\nC\nV\n1\n1\n2\n2\n#\n#\n=\n قانون التّمديد\n: ُﺗﻌﻠﻤﺖ\n113\n\n|  |  |  |\n| --- | --- | --- |\n|  |  |  |\n\n| :ﺖﻤﻠﻌﺗ |\n| --- |\n| ُ |\n|  |",
-  "vision_content": {},
+  "vision_content": {
+    "page_number": 7,
+    "detected_language": "arabic",
+    "raw_markdown": "# إثراء\n\nفي أثناء استعمال المحاليل الحمضية والقلوية يجب اتخاذ الاحتياطات التالية:\n*   عدم لمس أو تذوق أو استنشاق المحاليل.\n*   تهوية مكان استعمال هذه المحاليل.\n*   إضافة الحمض إلى الماء لتفادي تطاير قطرات الحمض.\n*   عدم إلقاء المحاليل الحمضية والأساسية في مجاري المياه حفاظاً على البيئة.\n*   تمديد المحاليل الحمضية والقلوية المركزة قبل استعمالها.\n*   ارتداء ملابس الحماية حسب الوضعية: ثوب مخبري قطني، قفازات، نظارات، كمامة.\n\n## تحذير\nدائما أضف الحمض إلى الماء\n\n# تعلمت\n\n*   تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول، بالتركيز المولي للمحلول. وتُحسب بالعلاقة: C(mol.l⁻¹) = n/V\n*   تسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول. وتُحسب بالعلاقة: C(g.l⁻¹) = m/V\n*   قانون التمديد C₁ × V₁ = C₂ × V₂",
+    "sections": [
+      {
+        "heading": "إثراء",
+        "content": "في أثناء استعمال المحاليل الحمضية والقلوية يجب اتخاذ الاحتياطات التالية:\n*   عدم لمس أو تذوق أو استنشاق المحاليل.\n*   تهوية مكان استعمال هذه المحاليل.\n*   إضافة الحمض إلى الماء لتفادي تطاير قطرات الحمض.\n*   عدم إلقاء المحاليل الحمضية والأساسية في مجاري المياه حفاظاً على البيئة.\n*   تمديد المحاليل الحمضية والقلوية المركزة قبل استعمالها.\n*   ارتداء ملابس الحماية حسب الوضعية: ثوب مخبري قطني، قفازات، نظارات، كمامة.",
+        "content_type": "text"
+      },
+      {
+        "heading": "تحذير",
+        "content": "دائما أضف الحمض إلى الماء",
+        "content_type": "text"
+      },
+      {
+        "heading": "تعلمت",
+        "content": "تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول، بالتركيز المولي للمحلول. وتُحسب بالعلاقة: C(mol.l⁻¹) = n/V\nتسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول. وتُحسب بالعلاقة: C(g.l⁻¹) = m/V\nقانون التمديد C₁ × V₁ = C₂ × V₂",
+        "content_type": "mixed"
+      }
+    ],
+    "questions": [],
+    "diagrams": [
+      {
+        "title": "تحذير: إضافة الحمض إلى الماء",
+        "description": "A yellow warning sign with a black border. Inside, a bottle labeled 'حمض' (acid) is shown pouring liquid into a beaker. The text 'دائما أضف الحمض إلى الماء' (Always add acid to water) is written below the illustration.",
+        "labels": [
+          "حمض",
+          "ماء"
+        ],
+        "related_text": "دائما أضف الحمض إلى الماء"
+      }
+    ],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "C(mol.l⁻¹) = n/V",
+        "description": "Formula for molar concentration, where C is molar concentration, n is the number of moles, and V is the volume."
+      },
+      {
+        "equation": "C(g.l⁻¹) = m/V",
+        "description": "Formula for mass concentration (gram concentration), where C is mass concentration, m is the mass of the solute, and V is the volume."
+      },
+      {
+        "equation": "C₁ × V₁ = C₂ × V₂",
+        "description": "Dilution law, relating initial concentration and volume to final concentration and volume."
+      }
+    ],
+    "warnings": [],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 668,
+    "completeness_score": 0.95,
+    "quality_report": {
+      "page_number": 7,
+      "schema_valid": true,
+      "raw_markdown_chars": 728,
+      "char_count": 668,
+      "section_count": 3,
+      "question_count": 0,
+      "table_count": 0,
+      "equation_count": 3,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.6768,
+      "completeness_score": 0.95,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 7,\n  \"detected_language\": \"arabic\",\n  \"raw_markdown\": \"# إثراء\\n\\nفي أثناء استعمال المحاليل الحمضية والقلوية يجب اتخاذ الاحتياطات التالية:\\n*   عدم لمس أو تذوق أو استنشاق المحاليل.\\n*   تهوية مكان استعمال هذه المحاليل.\\n*   إضافة الحمض إلى الماء لتفادي تطاير قطرات الحمض.\\n*   عدم إلقاء المحاليل الحمضية والأساسية في مجاري المياه حفاظاً على البيئة.\\n*   تمديد المحاليل الحمضية والقلوية المركزة قبل استعمالها.\\n*   ارتداء ملابس الحماية حسب الوضعية: ثوب مخبري قطني، قفازات، نظارات، كمامة.\\n\\n## تحذير\\nدائما أضف الحمض إلى الماء\\n\\n# تعلمت\\n\\n*   تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول، بالتركيز المولي للمحلول. وتُحسب بالعلاقة: C(mol.l⁻¹) = n/V\\n*   تسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول. وتُحسب بالعلاقة: C(g.l⁻¹) = m/V\\n*   قانون التمديد C₁ × V₁ = C₂ × V₂\",\n  \"sections\": [\n    {\n      \"heading\": \"إثراء\",\n      \"content\": \"في أثناء استعمال المحاليل الحمضية والقلوية يجب اتخاذ الاحتياطات التالية:\\n*   عدم لمس أو تذوق أو استنشاق المحاليل.\\n*   تهوية مكان استعمال هذه المحاليل.\\n*   إضافة الحمض إلى الماء لتفادي تطاير قطرات الحمض.\\n*   عدم إلقاء المحاليل الحمضية والأساسية في مجاري المياه حفاظاً على البيئة.\\n*   تمديد المحاليل الحمضية والقلوية المركزة قبل استعمالها.\\n*   ارتداء ملابس الحماية حسب الوضعية: ثوب مخبري قطني، قفازات، نظارات، كمامة.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"تحذير\",\n      \"content\": \"دائما أضف الحمض إلى الماء\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"تعلمت\",\n      \"content\": \"تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول، بالتركيز المولي للمحلول. وتُحسب بالعلاقة: C(mol.l⁻¹) = n/V\\nتسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول. وتُحسب بالعلاقة: C(g.l⁻¹) = m/V\\nقانون التمديد C₁ × V₁ = C₂ × V₂\",\n      \"content_type\": \"mixed\"\n    }\n  ],\n  \"questions\": [],\n  \"diagrams\": [\n    {\n      \"title\": \"تحذير: إضافة الحمض إلى الماء\",\n      \"description\": \"A yellow warning sign with a black border. Inside, a bottle labeled 'حمض' (acid) is shown pouring liquid into a beaker. The text 'دائما أضف الحمض إلى الماء' (Always add acid to water) is written below the illustration.\",\n      \"labels\": [\"حمض\", \"ماء\"],\n      \"related_text\": \"دائما أضف الحمض إلى الماء\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"C(mol.l⁻¹) = n/V\",\n      \"description\": \"Formula for molar concentration, where C is molar concentration, n is the number of moles, and V is the volume.\"\n    },\n    {\n      \"equation\": \"C(g.l⁻¹) = m/V\",\n      \"description\": \"Formula for mass concentration (gram concentration), where C is mass concentration, m is the mass of the solute, and V is the volume.\"\n    },\n    {\n      \"equation\": \"C₁ × V₁ = C₂ × V₂\",\n      \"description\": \"Dilution law, relating initial concentration and volume to final concentration and volume.\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"Anthropic\",\n  \"model_name\": \"claude-3-opus-20240229\",\n  \"schema_valid\": true,\n  \"char_count\": 668,\n  \"completeness_score\": 0.95,\n  \"quality_report\": {\n    \"page_number\": 7,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 668,\n    \"char_count\": 668,\n    \"section_count\": 3,\n    \"question_count\": 0,\n    \"table_count\": 0,\n    \"equation_count\": 3,\n    \"diagram_count\": 1,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.93,\n    \"completeness_score\": 0.95,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": \"إثراء\\nفي أثناء استعمال المحاليل الحمضية والقلوية يجب اتخاذ الاحتياطات التالية:\\nعدم لمس أو تذوق أو استنشاق المحاليل.\\nتهوية مكان استعمال هذه المحاليل.\\nإضافة الحمض إلى الماء لتفادي تطاير قطرات الحمض.\\nعدم إلقاء المحاليل الحمضية والأساسية في مجاري المياه حفاظاً على البيئة.\\nتمديد المحاليل الحمضية والقلوية المركزة قبل استعمالها.\\nارتداء ملابس الحماية حسب الوضعية: ثوب مخبري قطني، قفازات، نظارات، كمامة.\\nتحذير\\nدائما أضف الحمض إلى الماء\\nتعلمت\\nتسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول، بالتركيز المولي للمحلول. وتُحسب بالعلاقة: C(mol.l⁻¹) = n/V\\nتسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول. وتُحسب بالعلاقة: C(g.l⁻¹) = m/V\\nقانون التمديد C₁ × V₁ = C₂ × V₂\"\n}"
+  },
   "gemini_pdf_content": {},
-  "gemini_fallback_model_content": {},
-  "gemini_image_fallback_content": {},
-  "merged_content": "• في أثناء استعمال المحاليل الحمضيّة والقلويّة  يجب اتّخاذ\nاالحتياطات التّالية:\n• \nعدم لمس أو تذوّق أو استنشاق المحاليل.\n• \nتهوية مكان استعمال هذه المحاليل. \n• \nإضافة الحمض إلى الماء لتفادي تطاير قطرات الحمض.\n• \nعدم إلقاء المحاليل الحمضيّة واألساسيَّة في مجاري المياه حفاظاً \nعلى البيئة.\n• \nتمديد المحاليل الحمضيَّة والقلويّة المركّزة قبل استعمالها.\n• \nارتداء مالبس الحماية حسب الوضعيّة: ثوب مخبري قطني، قفّازات، نظّارات، كمّامة.\nﺗﺤﺬﻳﺮ\nﺩﺍﺋﻤﺎ ﺃﺿﻒ\nﺍﻟﺤﻤﺾ ﺇﻟﻰ ﺍﻟﻤﺎﺀ\nﺣﻤﺾ\n:إﺛﺮاء\n• \n .تسمّى نسبة عدد موالت المادّة المذابة إلى حجم المحلول بالتّركيز المولي للمحلول\n.C\nV\nn\n(mol.l\n)\n1 =\n-\n :وتُحسب بالعالقة\n• \nتسمّى نسبة كتلة المادّة المذابة إلى حجم المحلول بالتّركيز الغرامي للمحلول. وتُحسب \n.C\nV\nm\n(g.l\n)\n1 =\n-\n :بالعالقة\n• \n.C\nV\nC\nV\n1\n1\n2\n2\n#\n#\n=\n قانون التّمديد\n: ُﺗﻌﻠﻤﺖ\n113\n\n|  |  |  |\n| --- | --- | --- |\n|  |  |  |\n\n| :ﺖﻤﻠﻌﺗ |\n| --- |\n| ُ |\n|  |",
-  "raw_markdown": "• في أثناء استعمال المحاليل الحمضيّة والقلويّة  يجب اتّخاذ\nاالحتياطات التّالية:\n• \nعدم لمس أو تذوّق أو استنشاق المحاليل.\n• \nتهوية مكان استعمال هذه المحاليل. \n• \nإضافة الحمض إلى الماء لتفادي تطاير قطرات الحمض.\n• \nعدم إلقاء المحاليل الحمضيّة واألساسيَّة في مجاري المياه حفاظاً \nعلى البيئة.\n• \nتمديد المحاليل الحمضيَّة والقلويّة المركّزة قبل استعمالها.\n• \nارتداء مالبس الحماية حسب الوضعيّة: ثوب مخبري قطني، قفّازات، نظّارات، كمّامة.\nﺗﺤﺬﻳﺮ\nﺩﺍﺋﻤﺎ ﺃﺿﻒ\nﺍﻟﺤﻤﺾ ﺇﻟﻰ ﺍﻟﻤﺎﺀ\nﺣﻤﺾ\n:إﺛﺮاء\n• \n .تسمّى نسبة عدد موالت المادّة المذابة إلى حجم المحلول بالتّركيز المولي للمحلول\n.C\nV\nn\n(mol.l\n)\n1 =\n-\n :وتُحسب بالعالقة\n• \nتسمّى نسبة كتلة المادّة المذابة إلى حجم المحلول بالتّركيز الغرامي للمحلول. وتُحسب \n.C\nV\nm\n(g.l\n)\n1 =\n-\n :بالعالقة\n• \n.C\nV\nC\nV\n1\n1\n2\n2\n#\n#\n=\n قانون التّمديد\n: ُﺗﻌﻠﻤﺖ\n113\n\n|  |  |  |\n| --- | --- | --- |\n|  |  |  |\n\n| :ﺖﻤﻠﻌﺗ |\n| --- |\n| ُ |\n|  |",
+  "gemini_fallback_model_content": {
+    "page_number": 7,
+    "detected_language": "arabic",
+    "raw_markdown": "# إثراء\n\nفي أثناء استعمال المحاليل الحمضية والقلوية يجب اتخاذ الاحتياطات التالية:\n*   عدم لمس أو تذوق أو استنشاق المحاليل.\n*   تهوية مكان استعمال هذه المحاليل.\n*   إضافة الحمض إلى الماء لتفادي تطاير قطرات الحمض.\n*   عدم إلقاء المحاليل الحمضية والأساسية في مجاري المياه حفاظاً على البيئة.\n*   تمديد المحاليل الحمضية والقلوية المركزة قبل استعمالها.\n*   ارتداء ملابس الحماية حسب الوضعية: ثوب مخبري قطني، قفازات، نظارات، كمامة.\n\n## تحذير\nدائما أضف الحمض إلى الماء\n\n# تعلمت\n\n*   تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول، بالتركيز المولي للمحلول. وتُحسب بالعلاقة: C(mol.l⁻¹) = n/V\n*   تسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول. وتُحسب بالعلاقة: C(g.l⁻¹) = m/V\n*   قانون التمديد C₁ × V₁ = C₂ × V₂",
+    "sections": [
+      {
+        "heading": "إثراء",
+        "content": "في أثناء استعمال المحاليل الحمضية والقلوية يجب اتخاذ الاحتياطات التالية:\n*   عدم لمس أو تذوق أو استنشاق المحاليل.\n*   تهوية مكان استعمال هذه المحاليل.\n*   إضافة الحمض إلى الماء لتفادي تطاير قطرات الحمض.\n*   عدم إلقاء المحاليل الحمضية والأساسية في مجاري المياه حفاظاً على البيئة.\n*   تمديد المحاليل الحمضية والقلوية المركزة قبل استعمالها.\n*   ارتداء ملابس الحماية حسب الوضعية: ثوب مخبري قطني، قفازات، نظارات، كمامة.",
+        "content_type": "text"
+      },
+      {
+        "heading": "تحذير",
+        "content": "دائما أضف الحمض إلى الماء",
+        "content_type": "text"
+      },
+      {
+        "heading": "تعلمت",
+        "content": "تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول، بالتركيز المولي للمحلول. وتُحسب بالعلاقة: C(mol.l⁻¹) = n/V\nتسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول. وتُحسب بالعلاقة: C(g.l⁻¹) = m/V\nقانون التمديد C₁ × V₁ = C₂ × V₂",
+        "content_type": "mixed"
+      }
+    ],
+    "questions": [],
+    "diagrams": [
+      {
+        "title": "تحذير: إضافة الحمض إلى الماء",
+        "description": "A yellow warning sign with a black border. Inside, a bottle labeled 'حمض' (acid) is shown pouring liquid into a beaker. The text 'دائما أضف الحمض إلى الماء' (Always add acid to water) is written below the illustration.",
+        "labels": [
+          "حمض",
+          "ماء"
+        ],
+        "related_text": "دائما أضف الحمض إلى الماء"
+      }
+    ],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "C(mol.l⁻¹) = n/V",
+        "description": "Formula for molar concentration, where C is molar concentration, n is the number of moles, and V is the volume."
+      },
+      {
+        "equation": "C(g.l⁻¹) = m/V",
+        "description": "Formula for mass concentration (gram concentration), where C is mass concentration, m is the mass of the solute, and V is the volume."
+      },
+      {
+        "equation": "C₁ × V₁ = C₂ × V₂",
+        "description": "Dilution law, relating initial concentration and volume to final concentration and volume."
+      }
+    ],
+    "warnings": [],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 668,
+    "completeness_score": 0.95,
+    "quality_report": {
+      "page_number": 7,
+      "schema_valid": true,
+      "raw_markdown_chars": 728,
+      "char_count": 668,
+      "section_count": 3,
+      "question_count": 0,
+      "table_count": 0,
+      "equation_count": 3,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.6768,
+      "completeness_score": 0.95,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 7,\n  \"detected_language\": \"arabic\",\n  \"raw_markdown\": \"# إثراء\\n\\nفي أثناء استعمال المحاليل الحمضية والقلوية يجب اتخاذ الاحتياطات التالية:\\n*   عدم لمس أو تذوق أو استنشاق المحاليل.\\n*   تهوية مكان استعمال هذه المحاليل.\\n*   إضافة الحمض إلى الماء لتفادي تطاير قطرات الحمض.\\n*   عدم إلقاء المحاليل الحمضية والأساسية في مجاري المياه حفاظاً على البيئة.\\n*   تمديد المحاليل الحمضية والقلوية المركزة قبل استعمالها.\\n*   ارتداء ملابس الحماية حسب الوضعية: ثوب مخبري قطني، قفازات، نظارات، كمامة.\\n\\n## تحذير\\nدائما أضف الحمض إلى الماء\\n\\n# تعلمت\\n\\n*   تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول، بالتركيز المولي للمحلول. وتُحسب بالعلاقة: C(mol.l⁻¹) = n/V\\n*   تسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول. وتُحسب بالعلاقة: C(g.l⁻¹) = m/V\\n*   قانون التمديد C₁ × V₁ = C₂ × V₂\",\n  \"sections\": [\n    {\n      \"heading\": \"إثراء\",\n      \"content\": \"في أثناء استعمال المحاليل الحمضية والقلوية يجب اتخاذ الاحتياطات التالية:\\n*   عدم لمس أو تذوق أو استنشاق المحاليل.\\n*   تهوية مكان استعمال هذه المحاليل.\\n*   إضافة الحمض إلى الماء لتفادي تطاير قطرات الحمض.\\n*   عدم إلقاء المحاليل الحمضية والأساسية في مجاري المياه حفاظاً على البيئة.\\n*   تمديد المحاليل الحمضية والقلوية المركزة قبل استعمالها.\\n*   ارتداء ملابس الحماية حسب الوضعية: ثوب مخبري قطني، قفازات، نظارات، كمامة.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"تحذير\",\n      \"content\": \"دائما أضف الحمض إلى الماء\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"تعلمت\",\n      \"content\": \"تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول، بالتركيز المولي للمحلول. وتُحسب بالعلاقة: C(mol.l⁻¹) = n/V\\nتسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول. وتُحسب بالعلاقة: C(g.l⁻¹) = m/V\\nقانون التمديد C₁ × V₁ = C₂ × V₂\",\n      \"content_type\": \"mixed\"\n    }\n  ],\n  \"questions\": [],\n  \"diagrams\": [\n    {\n      \"title\": \"تحذير: إضافة الحمض إلى الماء\",\n      \"description\": \"A yellow warning sign with a black border. Inside, a bottle labeled 'حمض' (acid) is shown pouring liquid into a beaker. The text 'دائما أضف الحمض إلى الماء' (Always add acid to water) is written below the illustration.\",\n      \"labels\": [\"حمض\", \"ماء\"],\n      \"related_text\": \"دائما أضف الحمض إلى الماء\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"C(mol.l⁻¹) = n/V\",\n      \"description\": \"Formula for molar concentration, where C is molar concentration, n is the number of moles, and V is the volume.\"\n    },\n    {\n      \"equation\": \"C(g.l⁻¹) = m/V\",\n      \"description\": \"Formula for mass concentration (gram concentration), where C is mass concentration, m is the mass of the solute, and V is the volume.\"\n    },\n    {\n      \"equation\": \"C₁ × V₁ = C₂ × V₂\",\n      \"description\": \"Dilution law, relating initial concentration and volume to final concentration and volume.\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"Anthropic\",\n  \"model_name\": \"claude-3-opus-20240229\",\n  \"schema_valid\": true,\n  \"char_count\": 668,\n  \"completeness_score\": 0.95,\n  \"quality_report\": {\n    \"page_number\": 7,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 668,\n    \"char_count\": 668,\n    \"section_count\": 3,\n    \"question_count\": 0,\n    \"table_count\": 0,\n    \"equation_count\": 3,\n    \"diagram_count\": 1,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.93,\n    \"completeness_score\": 0.95,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": \"إثراء\\nفي أثناء استعمال المحاليل الحمضية والقلوية يجب اتخاذ الاحتياطات التالية:\\nعدم لمس أو تذوق أو استنشاق المحاليل.\\nتهوية مكان استعمال هذه المحاليل.\\nإضافة الحمض إلى الماء لتفادي تطاير قطرات الحمض.\\nعدم إلقاء المحاليل الحمضية والأساسية في مجاري المياه حفاظاً على البيئة.\\nتمديد المحاليل الحمضية والقلوية المركزة قبل استعمالها.\\nارتداء ملابس الحماية حسب الوضعية: ثوب مخبري قطني، قفازات، نظارات، كمامة.\\nتحذير\\nدائما أضف الحمض إلى الماء\\nتعلمت\\nتسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول، بالتركيز المولي للمحلول. وتُحسب بالعلاقة: C(mol.l⁻¹) = n/V\\nتسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول. وتُحسب بالعلاقة: C(g.l⁻¹) = m/V\\nقانون التمديد C₁ × V₁ = C₂ × V₂\"\n}"
+  },
+  "gemini_image_fallback_content": {
+    "page_number": 7,
+    "detected_language": "arabic",
+    "raw_markdown": "# إثراء\n\nفي أثناء استعمال المحاليل الحمضية والقلوية يجب اتخاذ الاحتياطات التالية:\n*   عدم لمس أو تذوق أو استنشاق المحاليل.\n*   تهوية مكان استعمال هذه المحاليل.\n*   إضافة الحمض إلى الماء لتفادي تطاير قطرات الحمض.\n*   عدم إلقاء المحاليل الحمضية والأساسية في مجاري المياه حفاظاً على البيئة.\n*   تمديد المحاليل الحمضية والقلوية المركزة قبل استعمالها.\n*   ارتداء ملابس الحماية حسب الوضعية: ثوب مخبري قطني، قفازات، نظارات، كمامة.\n\n## تحذير\nدائما أضف الحمض إلى الماء\n\n# تعلمت\n\n*   تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول، بالتركيز المولي للمحلول. وتُحسب بالعلاقة: C(mol.l⁻¹) = n/V\n*   تسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول. وتُحسب بالعلاقة: C(g.l⁻¹) = m/V\n*   قانون التمديد C₁ × V₁ = C₂ × V₂",
+    "sections": [
+      {
+        "heading": "إثراء",
+        "content": "في أثناء استعمال المحاليل الحمضية والقلوية يجب اتخاذ الاحتياطات التالية:\n*   عدم لمس أو تذوق أو استنشاق المحاليل.\n*   تهوية مكان استعمال هذه المحاليل.\n*   إضافة الحمض إلى الماء لتفادي تطاير قطرات الحمض.\n*   عدم إلقاء المحاليل الحمضية والأساسية في مجاري المياه حفاظاً على البيئة.\n*   تمديد المحاليل الحمضية والقلوية المركزة قبل استعمالها.\n*   ارتداء ملابس الحماية حسب الوضعية: ثوب مخبري قطني، قفازات، نظارات، كمامة.",
+        "content_type": "text"
+      },
+      {
+        "heading": "تحذير",
+        "content": "دائما أضف الحمض إلى الماء",
+        "content_type": "text"
+      },
+      {
+        "heading": "تعلمت",
+        "content": "تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول، بالتركيز المولي للمحلول. وتُحسب بالعلاقة: C(mol.l⁻¹) = n/V\nتسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول. وتُحسب بالعلاقة: C(g.l⁻¹) = m/V\nقانون التمديد C₁ × V₁ = C₂ × V₂",
+        "content_type": "mixed"
+      }
+    ],
+    "questions": [],
+    "diagrams": [
+      {
+        "title": "تحذير: إضافة الحمض إلى الماء",
+        "description": "A yellow warning sign with a black border. Inside, a bottle labeled 'حمض' (acid) is shown pouring liquid into a beaker. The text 'دائما أضف الحمض إلى الماء' (Always add acid to water) is written below the illustration.",
+        "labels": [
+          "حمض",
+          "ماء"
+        ],
+        "related_text": "دائما أضف الحمض إلى الماء"
+      }
+    ],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "C(mol.l⁻¹) = n/V",
+        "description": "Formula for molar concentration, where C is molar concentration, n is the number of moles, and V is the volume."
+      },
+      {
+        "equation": "C(g.l⁻¹) = m/V",
+        "description": "Formula for mass concentration (gram concentration), where C is mass concentration, m is the mass of the solute, and V is the volume."
+      },
+      {
+        "equation": "C₁ × V₁ = C₂ × V₂",
+        "description": "Dilution law, relating initial concentration and volume to final concentration and volume."
+      }
+    ],
+    "warnings": [],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 668,
+    "completeness_score": 0.95,
+    "quality_report": {
+      "page_number": 7,
+      "schema_valid": true,
+      "raw_markdown_chars": 728,
+      "char_count": 668,
+      "section_count": 3,
+      "question_count": 0,
+      "table_count": 0,
+      "equation_count": 3,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.6768,
+      "completeness_score": 0.95,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 7,\n  \"detected_language\": \"arabic\",\n  \"raw_markdown\": \"# إثراء\\n\\nفي أثناء استعمال المحاليل الحمضية والقلوية يجب اتخاذ الاحتياطات التالية:\\n*   عدم لمس أو تذوق أو استنشاق المحاليل.\\n*   تهوية مكان استعمال هذه المحاليل.\\n*   إضافة الحمض إلى الماء لتفادي تطاير قطرات الحمض.\\n*   عدم إلقاء المحاليل الحمضية والأساسية في مجاري المياه حفاظاً على البيئة.\\n*   تمديد المحاليل الحمضية والقلوية المركزة قبل استعمالها.\\n*   ارتداء ملابس الحماية حسب الوضعية: ثوب مخبري قطني، قفازات، نظارات، كمامة.\\n\\n## تحذير\\nدائما أضف الحمض إلى الماء\\n\\n# تعلمت\\n\\n*   تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول، بالتركيز المولي للمحلول. وتُحسب بالعلاقة: C(mol.l⁻¹) = n/V\\n*   تسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول. وتُحسب بالعلاقة: C(g.l⁻¹) = m/V\\n*   قانون التمديد C₁ × V₁ = C₂ × V₂\",\n  \"sections\": [\n    {\n      \"heading\": \"إثراء\",\n      \"content\": \"في أثناء استعمال المحاليل الحمضية والقلوية يجب اتخاذ الاحتياطات التالية:\\n*   عدم لمس أو تذوق أو استنشاق المحاليل.\\n*   تهوية مكان استعمال هذه المحاليل.\\n*   إضافة الحمض إلى الماء لتفادي تطاير قطرات الحمض.\\n*   عدم إلقاء المحاليل الحمضية والأساسية في مجاري المياه حفاظاً على البيئة.\\n*   تمديد المحاليل الحمضية والقلوية المركزة قبل استعمالها.\\n*   ارتداء ملابس الحماية حسب الوضعية: ثوب مخبري قطني، قفازات، نظارات، كمامة.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"تحذير\",\n      \"content\": \"دائما أضف الحمض إلى الماء\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"تعلمت\",\n      \"content\": \"تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول، بالتركيز المولي للمحلول. وتُحسب بالعلاقة: C(mol.l⁻¹) = n/V\\nتسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول. وتُحسب بالعلاقة: C(g.l⁻¹) = m/V\\nقانون التمديد C₁ × V₁ = C₂ × V₂\",\n      \"content_type\": \"mixed\"\n    }\n  ],\n  \"questions\": [],\n  \"diagrams\": [\n    {\n      \"title\": \"تحذير: إضافة الحمض إلى الماء\",\n      \"description\": \"A yellow warning sign with a black border. Inside, a bottle labeled 'حمض' (acid) is shown pouring liquid into a beaker. The text 'دائما أضف الحمض إلى الماء' (Always add acid to water) is written below the illustration.\",\n      \"labels\": [\"حمض\", \"ماء\"],\n      \"related_text\": \"دائما أضف الحمض إلى الماء\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"C(mol.l⁻¹) = n/V\",\n      \"description\": \"Formula for molar concentration, where C is molar concentration, n is the number of moles, and V is the volume.\"\n    },\n    {\n      \"equation\": \"C(g.l⁻¹) = m/V\",\n      \"description\": \"Formula for mass concentration (gram concentration), where C is mass concentration, m is the mass of the solute, and V is the volume.\"\n    },\n    {\n      \"equation\": \"C₁ × V₁ = C₂ × V₂\",\n      \"description\": \"Dilution law, relating initial concentration and volume to final concentration and volume.\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"Anthropic\",\n  \"model_name\": \"claude-3-opus-20240229\",\n  \"schema_valid\": true,\n  \"char_count\": 668,\n  \"completeness_score\": 0.95,\n  \"quality_report\": {\n    \"page_number\": 7,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 668,\n    \"char_count\": 668,\n    \"section_count\": 3,\n    \"question_count\": 0,\n    \"table_count\": 0,\n    \"equation_count\": 3,\n    \"diagram_count\": 1,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.93,\n    \"completeness_score\": 0.95,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": \"إثراء\\nفي أثناء استعمال المحاليل الحمضية والقلوية يجب اتخاذ الاحتياطات التالية:\\nعدم لمس أو تذوق أو استنشاق المحاليل.\\nتهوية مكان استعمال هذه المحاليل.\\nإضافة الحمض إلى الماء لتفادي تطاير قطرات الحمض.\\nعدم إلقاء المحاليل الحمضية والأساسية في مجاري المياه حفاظاً على البيئة.\\nتمديد المحاليل الحمضية والقلوية المركزة قبل استعمالها.\\nارتداء ملابس الحماية حسب الوضعية: ثوب مخبري قطني، قفازات، نظارات، كمامة.\\nتحذير\\nدائما أضف الحمض إلى الماء\\nتعلمت\\nتسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول، بالتركيز المولي للمحلول. وتُحسب بالعلاقة: C(mol.l⁻¹) = n/V\\nتسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول. وتُحسب بالعلاقة: C(g.l⁻¹) = m/V\\nقانون التمديد C₁ × V₁ = C₂ × V₂\"\n}"
+  },
+  "merged_content": "• في أثناء استعمال المحاليل الحمضيّة والقلويّة  يجب اتّخاذ\nاالحتياطات التّالية:\n• \nعدم لمس أو تذوّق أو استنشاق المحاليل.\n• \nتهوية مكان استعمال هذه المحاليل. \n• \nإضافة الحمض إلى الماء لتفادي تطاير قطرات الحمض.\n• \nعدم إلقاء المحاليل الحمضيّة واألساسيَّة في مجاري المياه حفاظاً \nعلى البيئة.\n• \nتمديد المحاليل الحمضيَّة والقلويّة المركّزة قبل استعمالها.\n• \nارتداء مالبس الحماية حسب الوضعيّة: ثوب مخبري قطني، قفّازات، نظّارات، كمّامة.\nﺗﺤﺬﻳﺮ\nﺩﺍﺋﻤﺎ ﺃﺿﻒ\nﺍﻟﺤﻤﺾ ﺇﻟﻰ ﺍﻟﻤﺎﺀ\nﺣﻤﺾ\n:إﺛﺮاء\n• \n .تسمّى نسبة عدد موالت المادّة المذابة إلى حجم المحلول بالتّركيز المولي للمحلول\n.C\nV\nn\n(mol.l\n)\n1 =\n-\n :وتُحسب بالعالقة\n• \nتسمّى نسبة كتلة المادّة المذابة إلى حجم المحلول بالتّركيز الغرامي للمحلول. وتُحسب \n.C\nV\nm\n(g.l\n)\n1 =\n-\n :بالعالقة\n• \n.C\nV\nC\nV\n1\n1\n2\n2\n#\n#\n=\n قانون التّمديد\n: ُﺗﻌﻠﻤﺖ\n113\n\n|  |  |  |\n| --- | --- | --- |\n|  |  |  |\n\n| :ﺖﻤﻠﻌﺗ |\n| --- |\n| ُ |\n|  |\n\nإثراء\nفي أثناء استعمال المحاليل الحمضية والقلوية يجب اتخاذ الاحتياطات التالية:\n*   عدم لمس أو تذوق أو استنشاق المحاليل.\n*   تهوية مكان استعمال هذه المحاليل.\n*   إضافة الحمض إلى الماء لتفادي تطاير قطرات الحمض.\n*   عدم إلقاء المحاليل الحمضية والأساسية في مجاري المياه حفاظاً على البيئة.\n*   تمديد المحاليل الحمضية والقلوية المركزة قبل استعمالها.\n*   ارتداء ملابس الحماية حسب الوضعية: ثوب مخبري قطني، قفازات، نظارات، كمامة.\n\nتحذير\nدائما أضف الحمض إلى الماء\n\nتعلمت\nتسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول، بالتركيز المولي للمحلول. وتُحسب بالعلاقة: C(mol.l⁻¹) = n/V\nتسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول. وتُحسب بالعلاقة: C(g.l⁻¹) = m/V\nقانون التمديد C₁ × V₁ = C₂ × V₂",
+  "raw_markdown": "# إثراء\n\nفي أثناء استعمال المحاليل الحمضية والقلوية يجب اتخاذ الاحتياطات التالية:\n*   عدم لمس أو تذوق أو استنشاق المحاليل.\n*   تهوية مكان استعمال هذه المحاليل.\n*   إضافة الحمض إلى الماء لتفادي تطاير قطرات الحمض.\n*   عدم إلقاء المحاليل الحمضية والأساسية في مجاري المياه حفاظاً على البيئة.\n*   تمديد المحاليل الحمضية والقلوية المركزة قبل استعمالها.\n*   ارتداء ملابس الحماية حسب الوضعية: ثوب مخبري قطني، قفازات، نظارات، كمامة.\n\n## تحذير\nدائما أضف الحمض إلى الماء\n\n# تعلمت\n\n*   تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول، بالتركيز المولي للمحلول. وتُحسب بالعلاقة: C(mol.l⁻¹) = n/V\n*   تسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول. وتُحسب بالعلاقة: C(g.l⁻¹) = m/V\n*   قانون التمديد C₁ × V₁ = C₂ × V₂",
   "sections": [
     {
       "heading": null,
       "content": "• في أثناء استعمال المحاليل الحمضيّة والقلويّة  يجب اتّخاذ\nاالحتياطات التّالية:\n• \nعدم لمس أو تذوّق أو استنشاق المحاليل.\n• \nتهوية مكان استعمال هذه المحاليل. \n• \nإضافة الحمض إلى الماء لتفادي تطاير قطرات الحمض.\n• \nعدم إلقاء المحاليل الحمضيّة واألساسيَّة في مجاري المياه حفاظاً \nعلى البيئة.\n• \nتمديد المحاليل الحمضيَّة والقلويّة المركّزة قبل استعمالها.\n• \nارتداء مالبس الحماية حسب الوضعيّة: ثوب مخبري قطني، قفّازات، نظّارات، كمّامة.\nﺗﺤﺬﻳﺮ\nﺩﺍﺋﻤﺎ ﺃﺿﻒ\nﺍﻟﺤﻤﺾ ﺇﻟﻰ ﺍﻟﻤﺎﺀ\nﺣﻤﺾ\n:إﺛﺮاء\n• \n .تسمّى نسبة عدد موالت المادّة المذابة إلى حجم المحلول بالتّركيز المولي للمحلول\n.C\nV\nn\n(mol.l\n)\n1 =\n-\n :وتُحسب بالعالقة\n• \nتسمّى نسبة كتلة المادّة المذابة إلى حجم المحلول بالتّركيز الغرامي للمحلول. وتُحسب \n.C\nV\nm\n(g.l\n)\n1 =\n-\n :بالعالقة\n• \n.C\nV\nC\nV\n1\n1\n2\n2\n#\n#\n=\n قانون التّمديد\n: ُﺗﻌﻠﻤﺖ\n113\n\n|  |  |  |\n| --- | --- | --- |\n|  |  |  |\n\n| :ﺖﻤﻠﻌﺗ |\n| --- |\n| ُ |\n|  |",
       "content_type": "text"
+    },
+    {
+      "heading": "إثراء",
+      "content": "في أثناء استعمال المحاليل الحمضية والقلوية يجب اتخاذ الاحتياطات التالية:\n*   عدم لمس أو تذوق أو استنشاق المحاليل.\n*   تهوية مكان استعمال هذه المحاليل.\n*   إضافة الحمض إلى الماء لتفادي تطاير قطرات الحمض.\n*   عدم إلقاء المحاليل الحمضية والأساسية في مجاري المياه حفاظاً على البيئة.\n*   تمديد المحاليل الحمضية والقلوية المركزة قبل استعمالها.\n*   ارتداء ملابس الحماية حسب الوضعية: ثوب مخبري قطني، قفازات، نظارات، كمامة.",
+      "content_type": "text"
+    },
+    {
+      "heading": "تحذير",
+      "content": "دائما أضف الحمض إلى الماء",
+      "content_type": "text"
+    },
+    {
+      "heading": "تعلمت",
+      "content": "تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول، بالتركيز المولي للمحلول. وتُحسب بالعلاقة: C(mol.l⁻¹) = n/V\nتسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول. وتُحسب بالعلاقة: C(g.l⁻¹) = m/V\nقانون التمديد C₁ × V₁ = C₂ × V₂",
+      "content_type": "mixed"
     }
   ],
   "questions": [],
-  "diagrams": [],
-  "tables": [],
-  "equations": [],
-  "warnings": [
-    "Gemini document extraction is not configured. Vision page extraction was skipped."
+  "diagrams": [
+    {
+      "title": "تحذير: إضافة الحمض إلى الماء",
+      "description": "A yellow warning sign with a black border. Inside, a bottle labeled 'حمض' (acid) is shown pouring liquid into a beaker. The text 'دائما أضف الحمض إلى الماء' (Always add acid to water) is written below the illustration.",
+      "labels": [
+        "حمض",
+        "ماء"
+      ],
+      "related_text": "دائما أضف الحمض إلى الماء"
+    }
   ],
+  "tables": [],
+  "equations": [
+    {
+      "equation": "C(mol.l⁻¹) = n/V",
+      "description": "Formula for molar concentration, where C is molar concentration, n is the number of moles, and V is the volume."
+    },
+    {
+      "equation": "C(g.l⁻¹) = m/V",
+      "description": "Formula for mass concentration (gram concentration), where C is mass concentration, m is the mass of the solute, and V is the volume."
+    },
+    {
+      "equation": "C₁ × V₁ = C₂ × V₂",
+      "description": "Dilution law, relating initial concentration and volume to final concentration and volume."
+    }
+  ],
+  "warnings": [],
   "errors": [],
-  "char_count": 841,
-  "completeness_score": 0.45,
-  "detected_language": "ar",
-  "vision_provider": null,
-  "vision_source": null,
-  "neighboring_pages": [],
+  "char_count": 1550,
+  "completeness_score": 1.0,
+  "detected_language": "arabic",
+  "vision_provider": "gemini_document_image",
+  "vision_source": "gemini_rendered_image_300dpi",
+  "neighboring_pages": [
+    6,
+    8
+  ],
   "uploaded_pdf": null,
-  "raw_text": null,
-  "quality_report": {},
+  "raw_text": "{\n  \"page_number\": 7,\n  \"detected_language\": \"arabic\",\n  \"raw_markdown\": \"# إثراء\\n\\nفي أثناء استعمال المحاليل الحمضية والقلوية يجب اتخاذ الاحتياطات التالية:\\n*   عدم لمس أو تذوق أو استنشاق المحاليل.\\n*   تهوية مكان استعمال هذه المحاليل.\\n*   إضافة الحمض إلى الماء لتفادي تطاير قطرات الحمض.\\n*   عدم إلقاء المحاليل الحمضية والأساسية في مجاري المياه حفاظاً على البيئة.\\n*   تمديد المحاليل الحمضية والقلوية المركزة قبل استعمالها.\\n*   ارتداء ملابس الحماية حسب الوضعية: ثوب مخبري قطني، قفازات، نظارات، كمامة.\\n\\n## تحذير\\nدائما أضف الحمض إلى الماء\\n\\n# تعلمت\\n\\n*   تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول، بالتركيز المولي للمحلول. وتُحسب بالعلاقة: C(mol.l⁻¹) = n/V\\n*   تسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول. وتُحسب بالعلاقة: C(g.l⁻¹) = m/V\\n*   قانون التمديد C₁ × V₁ = C₂ × V₂\",\n  \"sections\": [\n    {\n      \"heading\": \"إثراء\",\n      \"content\": \"في أثناء استعمال المحاليل الحمضية والقلوية يجب اتخاذ الاحتياطات التالية:\\n*   عدم لمس أو تذوق أو استنشاق المحاليل.\\n*   تهوية مكان استعمال هذه المحاليل.\\n*   إضافة الحمض إلى الماء لتفادي تطاير قطرات الحمض.\\n*   عدم إلقاء المحاليل الحمضية والأساسية في مجاري المياه حفاظاً على البيئة.\\n*   تمديد المحاليل الحمضية والقلوية المركزة قبل استعمالها.\\n*   ارتداء ملابس الحماية حسب الوضعية: ثوب مخبري قطني، قفازات، نظارات، كمامة.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"تحذير\",\n      \"content\": \"دائما أضف الحمض إلى الماء\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"تعلمت\",\n      \"content\": \"تسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول، بالتركيز المولي للمحلول. وتُحسب بالعلاقة: C(mol.l⁻¹) = n/V\\nتسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول. وتُحسب بالعلاقة: C(g.l⁻¹) = m/V\\nقانون التمديد C₁ × V₁ = C₂ × V₂\",\n      \"content_type\": \"mixed\"\n    }\n  ],\n  \"questions\": [],\n  \"diagrams\": [\n    {\n      \"title\": \"تحذير: إضافة الحمض إلى الماء\",\n      \"description\": \"A yellow warning sign with a black border. Inside, a bottle labeled 'حمض' (acid) is shown pouring liquid into a beaker. The text 'دائما أضف الحمض إلى الماء' (Always add acid to water) is written below the illustration.\",\n      \"labels\": [\"حمض\", \"ماء\"],\n      \"related_text\": \"دائما أضف الحمض إلى الماء\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"C(mol.l⁻¹) = n/V\",\n      \"description\": \"Formula for molar concentration, where C is molar concentration, n is the number of moles, and V is the volume.\"\n    },\n    {\n      \"equation\": \"C(g.l⁻¹) = m/V\",\n      \"description\": \"Formula for mass concentration (gram concentration), where C is mass concentration, m is the mass of the solute, and V is the volume.\"\n    },\n    {\n      \"equation\": \"C₁ × V₁ = C₂ × V₂\",\n      \"description\": \"Dilution law, relating initial concentration and volume to final concentration and volume.\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"Anthropic\",\n  \"model_name\": \"claude-3-opus-20240229\",\n  \"schema_valid\": true,\n  \"char_count\": 668,\n  \"completeness_score\": 0.95,\n  \"quality_report\": {\n    \"page_number\": 7,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 668,\n    \"char_count\": 668,\n    \"section_count\": 3,\n    \"question_count\": 0,\n    \"table_count\": 0,\n    \"equation_count\": 3,\n    \"diagram_count\": 1,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.93,\n    \"completeness_score\": 0.95,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": \"إثراء\\nفي أثناء استعمال المحاليل الحمضية والقلوية يجب اتخاذ الاحتياطات التالية:\\nعدم لمس أو تذوق أو استنشاق المحاليل.\\nتهوية مكان استعمال هذه المحاليل.\\nإضافة الحمض إلى الماء لتفادي تطاير قطرات الحمض.\\nعدم إلقاء المحاليل الحمضية والأساسية في مجاري المياه حفاظاً على البيئة.\\nتمديد المحاليل الحمضية والقلوية المركزة قبل استعمالها.\\nارتداء ملابس الحماية حسب الوضعية: ثوب مخبري قطني، قفازات، نظارات، كمامة.\\nتحذير\\nدائما أضف الحمض إلى الماء\\nتعلمت\\nتسمى نسبة عدد مولات المادة المذابة إلى حجم المحلول، بالتركيز المولي للمحلول. وتُحسب بالعلاقة: C(mol.l⁻¹) = n/V\\nتسمى نسبة كتلة المادة المذابة إلى حجم المحلول بالتركيز الغرامي للمحلول. وتُحسب بالعلاقة: C(g.l⁻¹) = m/V\\nقانون التمديد C₁ × V₁ = C₂ × V₂\"\n}",
+  "quality_report": {
+    "page_number": 7,
+    "schema_valid": true,
+    "raw_markdown_chars": 728,
+    "char_count": 668,
+    "section_count": 3,
+    "question_count": 0,
+    "table_count": 0,
+    "equation_count": 3,
+    "diagram_count": 1,
+    "warning_count": 0,
+    "arabic_char_ratio": 0.6768,
+    "completeness_score": 0.95,
+    "issues": [],
+    "should_fallback": false
+  },
   "classification": "MIXED_VISION",
   "source_id": 1
 }

@@ -2,10 +2,10 @@
   "page_number": 81,
   "page_type": "NEEDS_VISION",
   "extraction_methods": [
-    "gemini_document"
+    "exception"
   ],
-  "extraction_method": "gemini_document",
-  "status": "skipped_dry_run",
+  "extraction_method": "exception",
+  "status": "failed",
   "text_layer_content": "",
   "vision_content": {},
   "gemini_pdf_content": {},
@@ -18,10 +18,10 @@
   "diagrams": [],
   "tables": [],
   "equations": [],
-  "warnings": [
-    "Gemini document extraction is not configured. Vision page extraction was skipped."
+  "warnings": [],
+  "errors": [
+    "Gemini document extraction failed quality checks for page 81: request_failed:503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"
   ],
-  "errors": [],
   "char_count": 0,
   "completeness_score": 0.0,
   "detected_language": "ar",

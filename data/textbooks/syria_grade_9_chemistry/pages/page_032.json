@@ -2,35 +2,462 @@
   "page_number": 32,
   "page_type": "NEEDS_VISION",
   "extraction_methods": [
-    "gemini_document"
+    "gemini_image_300dpi"
   ],
-  "extraction_method": "gemini_document",
-  "status": "skipped_dry_run",
+  "extraction_method": "gemini_image_300dpi",
+  "status": "completed_with_image_fallback",
   "text_layer_content": "",
-  "vision_content": {},
+  "vision_content": {
+    "page_number": 32,
+    "detected_language": "Arabic",
+    "raw_markdown": "138\n\nخطوات التجربة:\n1 أغمس مسمار الحديد في محلول مائي لكبريتات النحاس ذي اللون الأزرق، وأتركه فترة من الزمن.\n* أفسر زوال اللون الأزرق وتشكل اللون الأخضر.\n* أفسر ترسب طبقة حمراء على مسمار الحديد.\n* أكتب معادلة التفاعل الحاصل مفسراً سبب حدوثه.\n* أسمي هذا النوع من التفاعلات.\n2 أكرر التجربة بغمس صفيحة النحاس في محلول كبريتات الحديد II، ماذا ألاحظ؟\n\nأستنتج:\n* في التجربة الأولى استطاع الحديد أن يزيح أيونات النحاس (Cu²⁺(aq)) ذات اللون الأزرق ليتشكل أيونات الحديد (Fe²⁺(aq)) ذات اللون الأخضر لأن الحديد أكثر نشاطاً كيميائياً من النحاس فيترسب طبقة من النحاس الأحمر على قطعة الحديد.\n* يحدث التفاعل وفق المعادلة: Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s)\n* في التجربة الثانية لم يحدث تفاعل كيميائي لأن النحاس أقل نشاطاً كيميائياً من الحديد، وبالتالي لا يمكن أن يزيحه.\n    Cu(s) + FeSO₄(aq) → لا يحدث التفاعل\n* أسمي هذا النوع من التفاعلات بتفاعلات الإزاحة (تبادل أحادي).\n\nأستنتج:\n* تفاعلات الإزاحة: هي التفاعلات التي يحل فيها عنصر نشيط كيميائياً محل عنصر أقل نشاطاً كيميائياً منه.",
+    "sections": [
+      {
+        "heading": "خطوات التجربة:",
+        "content": "1 أغمس مسمار الحديد في محلول مائي لكبريتات النحاس ذي اللون الأزرق، وأتركه فترة من الزمن.\n* أفسر زوال اللون الأزرق وتشكل اللون الأخضر.\n* أفسر ترسب طبقة حمراء على مسمار الحديد.\n* أكتب معادلة التفاعل الحاصل مفسراً سبب حدوثه.\n* أسمي هذا النوع من التفاعلات.\n2 أكرر التجربة بغمس صفيحة النحاس في محلول كبريتات الحديد II، ماذا ألاحظ؟",
+        "content_type": "text"
+      },
+      {
+        "heading": "أستنتج:",
+        "content": "* في التجربة الأولى استطاع الحديد أن يزيح أيونات النحاس (Cu²⁺(aq)) ذات اللون الأزرق ليتشكل أيونات الحديد (Fe²⁺(aq)) ذات اللون الأخضر لأن الحديد أكثر نشاطاً كيميائياً من النحاس فيترسب طبقة من النحاس الأحمر على قطعة الحديد.\n* يحدث التفاعل وفق المعادلة: Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s)\n* في التجربة الثانية لم يحدث تفاعل كيميائي لأن النحاس أقل نشاطاً كيميائياً من الحديد، وبالتالي لا يمكن أن يزيحه.\n    Cu(s) + FeSO₄(aq) → لا يحدث التفاعل\n* أسمي هذا النوع من التفاعلات بتفاعلات الإزاحة (تبادل أحادي).",
+        "content_type": "text"
+      },
+      {
+        "heading": "أستنتج:",
+        "content": "* تفاعلات الإزاحة: هي التفاعلات التي يحل فيها عنصر نشيط كيميائياً محل عنصر أقل نشاطاً كيميائياً منه.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "أفسر زوال اللون الأزرق وتشكل اللون الأخضر.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": "استطاع الحديد أن يزيح أيونات النحاس (Cu²⁺(aq)) ذات اللون الأزرق ليتشكل أيونات الحديد (Fe²⁺(aq)) ذات اللون الأخضر لأن الحديد أكثر نشاطاً كيميائياً من النحاس.",
+        "explanation": null,
+        "answer_source": "page"
+      },
+      {
+        "question_text": "أفسر ترسب طبقة حمراء على مسمار الحديد.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": "يترسب طبقة من النحاس الأحمر على قطعة الحديد.",
+        "explanation": null,
+        "answer_source": "page"
+      },
+      {
+        "question_text": "أكتب معادلة التفاعل الحاصل مفسراً سبب حدوثه.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": "Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s) لأن الحديد أكثر نشاطاً كيميائياً من النحاس.",
+        "explanation": null,
+        "answer_source": "page"
+      },
+      {
+        "question_text": "أسمي هذا النوع من التفاعلات.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": "تفاعلات الإزاحة (تبادل أحادي).",
+        "explanation": null,
+        "answer_source": "page"
+      },
+      {
+        "question_text": "أكرر التجربة بغمس صفيحة النحاس في محلول كبريتات الحديد II، ماذا ألاحظ؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": "لم يحدث تفاعل كيميائي لأن النحاس أقل نشاطاً كيميائياً من الحديد، وبالتالي لا يمكن أن يزيحه.",
+        "explanation": null,
+        "answer_source": "page"
+      }
+    ],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "Two test tubes illustrating a chemical reaction. The first test tube shows an iron nail immersed in a blue copper sulfate solution. The second test tube shows the solution has turned green, and the iron nail is coated with a reddish-brown layer of copper.",
+        "labels": [
+          "مسمار الحديد",
+          "محلول كبريتات النحاس ذي اللون الأزرق",
+          "طبقة حمراء",
+          "اللون الأخضر"
+        ],
+        "related_text": "أغمس مسمار الحديد في محلول مائي لكبريتات النحاس ذي اللون الأزرق، وأتركه فترة من الزمن. أفسر زوال اللون الأزرق وتشكل اللون الأخضر. أفسر ترسب طبقة حمراء على مسمار الحديد."
+      }
+    ],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s)",
+        "description": "Solid iron reacts with aqueous copper(II) sulfate to produce aqueous iron(II) sulfate and solid copper."
+      },
+      {
+        "equation": "Cu(s) + FeSO₄(aq) → لا يحدث التفاعل",
+        "description": "Solid copper does not react with aqueous iron(II) sulfate."
+      }
+    ],
+    "warnings": [],
+    "extraction_notes": "The page number in the image is 138, but the user specified 32. The extraction uses 32 as the page number.",
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 1098,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 32,
+      "schema_valid": true,
+      "raw_markdown_chars": 968,
+      "char_count": 1098,
+      "section_count": 3,
+      "question_count": 5,
+      "table_count": 0,
+      "equation_count": 2,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.6884,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 32,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"138\\n\\nخطوات التجربة:\\n1 أغمس مسمار الحديد في محلول مائي لكبريتات النحاس ذي اللون الأزرق، وأتركه فترة من الزمن.\\n* أفسر زوال اللون الأزرق وتشكل اللون الأخضر.\\n* أفسر ترسب طبقة حمراء على مسمار الحديد.\\n* أكتب معادلة التفاعل الحاصل مفسراً سبب حدوثه.\\n* أسمي هذا النوع من التفاعلات.\\n2 أكرر التجربة بغمس صفيحة النحاس في محلول كبريتات الحديد II، ماذا ألاحظ؟\\n\\nأستنتج:\\n* في التجربة الأولى استطاع الحديد أن يزيح أيونات النحاس (Cu²⁺(aq)) ذات اللون الأزرق ليتشكل أيونات الحديد (Fe²⁺(aq)) ذات اللون الأخضر لأن الحديد أكثر نشاطاً كيميائياً من النحاس فيترسب طبقة من النحاس الأحمر على قطعة الحديد.\\n* يحدث التفاعل وفق المعادلة: Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s)\\n* في التجربة الثانية لم يحدث تفاعل كيميائي لأن النحاس أقل نشاطاً كيميائياً من الحديد، وبالتالي لا يمكن أن يزيحه.\\n    Cu(s) + FeSO₄(aq) → لا يحدث التفاعل\\n* أسمي هذا النوع من التفاعلات بتفاعلات الإزاحة (تبادل أحادي).\\n\\nأستنتج:\\n* تفاعلات الإزاحة: هي التفاعلات التي يحل فيها عنصر نشيط كيميائياً محل عنصر أقل نشاطاً كيميائياً منه.\",\n  \"sections\": [\n    {\n      \"heading\": \"خطوات التجربة:\",\n      \"content\": \"1 أغمس مسمار الحديد في محلول مائي لكبريتات النحاس ذي اللون الأزرق، وأتركه فترة من الزمن.\\n* أفسر زوال اللون الأزرق وتشكل اللون الأخضر.\\n* أفسر ترسب طبقة حمراء على مسمار الحديد.\\n* أكتب معادلة التفاعل الحاصل مفسراً سبب حدوثه.\\n* أسمي هذا النوع من التفاعلات.\\n2 أكرر التجربة بغمس صفيحة النحاس في محلول كبريتات الحديد II، ماذا ألاحظ؟\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"* في التجربة الأولى استطاع الحديد أن يزيح أيونات النحاس (Cu²⁺(aq)) ذات اللون الأزرق ليتشكل أيونات الحديد (Fe²⁺(aq)) ذات اللون الأخضر لأن الحديد أكثر نشاطاً كيميائياً من النحاس فيترسب طبقة من النحاس الأحمر على قطعة الحديد.\\n* يحدث التفاعل وفق المعادلة: Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s)\\n* في التجربة الثانية لم يحدث تفاعل كيميائي لأن النحاس أقل نشاطاً كيميائياً من الحديد، وبالتالي لا يمكن أن يزيحه.\\n    Cu(s) + FeSO₄(aq) → لا يحدث التفاعل\\n* أسمي هذا النوع من التفاعلات بتفاعلات الإزاحة (تبادل أحادي).\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"* تفاعلات الإزاحة: هي التفاعلات التي يحل فيها عنصر نشيط كيميائياً محل عنصر أقل نشاطاً كيميائياً منه.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"أفسر زوال اللون الأزرق وتشكل اللون الأخضر.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": \"استطاع الحديد أن يزيح أيونات النحاس (Cu²⁺(aq)) ذات اللون الأزرق ليتشكل أيونات الحديد (Fe²⁺(aq)) ذات اللون الأخضر لأن الحديد أكثر نشاطاً كيميائياً من النحاس.\",\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    },\n    {\n      \"question_text\": \"أفسر ترسب طبقة حمراء على مسمار الحديد.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": \"يترسب طبقة من النحاس الأحمر على قطعة الحديد.\",\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    },\n    {\n      \"question_text\": \"أكتب معادلة التفاعل الحاصل مفسراً سبب حدوثه.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": \"Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s) لأن الحديد أكثر نشاطاً كيميائياً من النحاس.\",\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    },\n    {\n      \"question_text\": \"أسمي هذا النوع من التفاعلات.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": \"تفاعلات الإزاحة (تبادل أحادي).\",\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    },\n    {\n      \"question_text\": \"أكرر التجربة بغمس صفيحة النحاس في محلول كبريتات الحديد II، ماذا ألاحظ؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": \"لم يحدث تفاعل كيميائي لأن النحاس أقل نشاطاً كيميائياً من الحديد، وبالتالي لا يمكن أن يزيحه.\",\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"Two test tubes illustrating a chemical reaction. The first test tube shows an iron nail immersed in a blue copper sulfate solution. The second test tube shows the solution has turned green, and the iron nail is coated with a reddish-brown layer of copper.\",\n      \"labels\": [\n        \"مسمار الحديد\",\n        \"محلول كبريتات النحاس ذي اللون الأزرق\",\n        \"طبقة حمراء\",\n        \"اللون الأخضر\"\n      ],\n      \"related_text\": \"أغمس مسمار الحديد في محلول مائي لكبريتات النحاس ذي اللون الأزرق، وأتركه فترة من الزمن. أفسر زوال اللون الأزرق وتشكل اللون الأخضر. أفسر ترسب طبقة حمراء على مسمار الحديد.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s)\",\n      \"description\": \"Solid iron reacts with aqueous copper(II) sulfate to produce aqueous iron(II) sulfate and solid copper.\"\n    },\n    {\n      \"equation\": \"Cu(s) + FeSO₄(aq) → لا يحدث التفاعل\",\n      \"description\": \"Solid copper does not react with aqueous iron(II) sulfate.\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": \"The page number in the image is 138, but the user specified 32. The extraction uses 32 as the page number.\",\n  \"provider\": \"Anthropic\",\n  \"model_name\": \"claude-3-opus-20240229\",\n  \"schema_valid\": true,\n  \"char_count\": 1098,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 32,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 1098,\n    \"char_count\": 1098,\n    \"section_count\": 3,\n    \"question_count\": 5,\n    \"table_count\": 0,\n    \"equation_count\": 2,\n    \"diagram_count\": 1,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.98,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": \"138\\n\\nخطوات التجربة:\\n1 أغمس مسمار الحديد في محلول مائي لكبريتات النحاس ذي اللون الأزرق، وأتركه فترة من الزمن.\\n* أفسر زوال اللون الأزرق وتشكل اللون الأخضر.\\n* أفسر ترسب طبقة حمراء على مسمار الحديد.\\n* أكتب معادلة التفاعل الحاصل مفسراً سبب حدوثه.\\n* أسمي هذا النوع من التفاعلات.\\n2 أكرر التجربة بغمس صفيحة النحاس في محلول كبريتات الحديد II، ماذا ألاحظ؟\\n\\nأستنتج:\\n* في التجربة الأولى استطاع الحديد أن يزيح أيونات النحاس (Cu²⁺(aq)) ذات اللون الأزرق ليتشكل أيونات الحديد (Fe²⁺(aq)) ذات اللون الأخضر لأن الحديد أكثر نشاطاً كيميائياً من النحاس فيترسب طبقة من النحاس الأحمر على قطعة الحديد.\\n* يحدث التفاعل وفق المعادلة: Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s)\\n* في التجربة الثانية لم يحدث تفاعل كيميائي لأن النحاس أقل نشاطاً كيميائياً من الحديد، وبالتالي لا يمكن أن يزيحه.\\n    Cu(s) + FeSO₄(aq) → لا يحدث التفاعل\\n* أسمي هذا النوع من التفاعلات بتفاعلات الإزاحة (تبادل أحادي).\\n\\nأستنتج:\\n* تفاعلات الإزاحة: هي التفاعلات التي يحل فيها عنصر نشيط كيميائياً محل عنصر أقل نشاطاً كيميائياً منه.\"\n}"
+  },
   "gemini_pdf_content": {},
-  "gemini_fallback_model_content": {},
-  "gemini_image_fallback_content": {},
-  "merged_content": "",
-  "raw_markdown": "",
-  "sections": [],
-  "questions": [],
-  "diagrams": [],
-  "tables": [],
-  "equations": [],
-  "warnings": [
-    "Gemini document extraction is not configured. Vision page extraction was skipped."
+  "gemini_fallback_model_content": {
+    "page_number": 32,
+    "detected_language": "Arabic",
+    "raw_markdown": "138\n\nخطوات التجربة:\n1 أغمس مسمار الحديد في محلول مائي لكبريتات النحاس ذي اللون الأزرق، وأتركه فترة من الزمن.\n* أفسر زوال اللون الأزرق وتشكل اللون الأخضر.\n* أفسر ترسب طبقة حمراء على مسمار الحديد.\n* أكتب معادلة التفاعل الحاصل مفسراً سبب حدوثه.\n* أسمي هذا النوع من التفاعلات.\n2 أكرر التجربة بغمس صفيحة النحاس في محلول كبريتات الحديد II، ماذا ألاحظ؟\n\nأستنتج:\n* في التجربة الأولى استطاع الحديد أن يزيح أيونات النحاس (Cu²⁺(aq)) ذات اللون الأزرق ليتشكل أيونات الحديد (Fe²⁺(aq)) ذات اللون الأخضر لأن الحديد أكثر نشاطاً كيميائياً من النحاس فيترسب طبقة من النحاس الأحمر على قطعة الحديد.\n* يحدث التفاعل وفق المعادلة: Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s)\n* في التجربة الثانية لم يحدث تفاعل كيميائي لأن النحاس أقل نشاطاً كيميائياً من الحديد، وبالتالي لا يمكن أن يزيحه.\n    Cu(s) + FeSO₄(aq) → لا يحدث التفاعل\n* أسمي هذا النوع من التفاعلات بتفاعلات الإزاحة (تبادل أحادي).\n\nأستنتج:\n* تفاعلات الإزاحة: هي التفاعلات التي يحل فيها عنصر نشيط كيميائياً محل عنصر أقل نشاطاً كيميائياً منه.",
+    "sections": [
+      {
+        "heading": "خطوات التجربة:",
+        "content": "1 أغمس مسمار الحديد في محلول مائي لكبريتات النحاس ذي اللون الأزرق، وأتركه فترة من الزمن.\n* أفسر زوال اللون الأزرق وتشكل اللون الأخضر.\n* أفسر ترسب طبقة حمراء على مسمار الحديد.\n* أكتب معادلة التفاعل الحاصل مفسراً سبب حدوثه.\n* أسمي هذا النوع من التفاعلات.\n2 أكرر التجربة بغمس صفيحة النحاس في محلول كبريتات الحديد II، ماذا ألاحظ؟",
+        "content_type": "text"
+      },
+      {
+        "heading": "أستنتج:",
+        "content": "* في التجربة الأولى استطاع الحديد أن يزيح أيونات النحاس (Cu²⁺(aq)) ذات اللون الأزرق ليتشكل أيونات الحديد (Fe²⁺(aq)) ذات اللون الأخضر لأن الحديد أكثر نشاطاً كيميائياً من النحاس فيترسب طبقة من النحاس الأحمر على قطعة الحديد.\n* يحدث التفاعل وفق المعادلة: Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s)\n* في التجربة الثانية لم يحدث تفاعل كيميائي لأن النحاس أقل نشاطاً كيميائياً من الحديد، وبالتالي لا يمكن أن يزيحه.\n    Cu(s) + FeSO₄(aq) → لا يحدث التفاعل\n* أسمي هذا النوع من التفاعلات بتفاعلات الإزاحة (تبادل أحادي).",
+        "content_type": "text"
+      },
+      {
+        "heading": "أستنتج:",
+        "content": "* تفاعلات الإزاحة: هي التفاعلات التي يحل فيها عنصر نشيط كيميائياً محل عنصر أقل نشاطاً كيميائياً منه.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "أفسر زوال اللون الأزرق وتشكل اللون الأخضر.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": "استطاع الحديد أن يزيح أيونات النحاس (Cu²⁺(aq)) ذات اللون الأزرق ليتشكل أيونات الحديد (Fe²⁺(aq)) ذات اللون الأخضر لأن الحديد أكثر نشاطاً كيميائياً من النحاس.",
+        "explanation": null,
+        "answer_source": "page"
+      },
+      {
+        "question_text": "أفسر ترسب طبقة حمراء على مسمار الحديد.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": "يترسب طبقة من النحاس الأحمر على قطعة الحديد.",
+        "explanation": null,
+        "answer_source": "page"
+      },
+      {
+        "question_text": "أكتب معادلة التفاعل الحاصل مفسراً سبب حدوثه.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": "Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s) لأن الحديد أكثر نشاطاً كيميائياً من النحاس.",
+        "explanation": null,
+        "answer_source": "page"
+      },
+      {
+        "question_text": "أسمي هذا النوع من التفاعلات.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": "تفاعلات الإزاحة (تبادل أحادي).",
+        "explanation": null,
+        "answer_source": "page"
+      },
+      {
+        "question_text": "أكرر التجربة بغمس صفيحة النحاس في محلول كبريتات الحديد II، ماذا ألاحظ؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": "لم يحدث تفاعل كيميائي لأن النحاس أقل نشاطاً كيميائياً من الحديد، وبالتالي لا يمكن أن يزيحه.",
+        "explanation": null,
+        "answer_source": "page"
+      }
+    ],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "Two test tubes illustrating a chemical reaction. The first test tube shows an iron nail immersed in a blue copper sulfate solution. The second test tube shows the solution has turned green, and the iron nail is coated with a reddish-brown layer of copper.",
+        "labels": [
+          "مسمار الحديد",
+          "محلول كبريتات النحاس ذي اللون الأزرق",
+          "طبقة حمراء",
+          "اللون الأخضر"
+        ],
+        "related_text": "أغمس مسمار الحديد في محلول مائي لكبريتات النحاس ذي اللون الأزرق، وأتركه فترة من الزمن. أفسر زوال اللون الأزرق وتشكل اللون الأخضر. أفسر ترسب طبقة حمراء على مسمار الحديد."
+      }
+    ],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s)",
+        "description": "Solid iron reacts with aqueous copper(II) sulfate to produce aqueous iron(II) sulfate and solid copper."
+      },
+      {
+        "equation": "Cu(s) + FeSO₄(aq) → لا يحدث التفاعل",
+        "description": "Solid copper does not react with aqueous iron(II) sulfate."
+      }
+    ],
+    "warnings": [],
+    "extraction_notes": "The page number in the image is 138, but the user specified 32. The extraction uses 32 as the page number.",
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 1098,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 32,
+      "schema_valid": true,
+      "raw_markdown_chars": 968,
+      "char_count": 1098,
+      "section_count": 3,
+      "question_count": 5,
+      "table_count": 0,
+      "equation_count": 2,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.6884,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 32,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"138\\n\\nخطوات التجربة:\\n1 أغمس مسمار الحديد في محلول مائي لكبريتات النحاس ذي اللون الأزرق، وأتركه فترة من الزمن.\\n* أفسر زوال اللون الأزرق وتشكل اللون الأخضر.\\n* أفسر ترسب طبقة حمراء على مسمار الحديد.\\n* أكتب معادلة التفاعل الحاصل مفسراً سبب حدوثه.\\n* أسمي هذا النوع من التفاعلات.\\n2 أكرر التجربة بغمس صفيحة النحاس في محلول كبريتات الحديد II، ماذا ألاحظ؟\\n\\nأستنتج:\\n* في التجربة الأولى استطاع الحديد أن يزيح أيونات النحاس (Cu²⁺(aq)) ذات اللون الأزرق ليتشكل أيونات الحديد (Fe²⁺(aq)) ذات اللون الأخضر لأن الحديد أكثر نشاطاً كيميائياً من النحاس فيترسب طبقة من النحاس الأحمر على قطعة الحديد.\\n* يحدث التفاعل وفق المعادلة: Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s)\\n* في التجربة الثانية لم يحدث تفاعل كيميائي لأن النحاس أقل نشاطاً كيميائياً من الحديد، وبالتالي لا يمكن أن يزيحه.\\n    Cu(s) + FeSO₄(aq) → لا يحدث التفاعل\\n* أسمي هذا النوع من التفاعلات بتفاعلات الإزاحة (تبادل أحادي).\\n\\nأستنتج:\\n* تفاعلات الإزاحة: هي التفاعلات التي يحل فيها عنصر نشيط كيميائياً محل عنصر أقل نشاطاً كيميائياً منه.\",\n  \"sections\": [\n    {\n      \"heading\": \"خطوات التجربة:\",\n      \"content\": \"1 أغمس مسمار الحديد في محلول مائي لكبريتات النحاس ذي اللون الأزرق، وأتركه فترة من الزمن.\\n* أفسر زوال اللون الأزرق وتشكل اللون الأخضر.\\n* أفسر ترسب طبقة حمراء على مسمار الحديد.\\n* أكتب معادلة التفاعل الحاصل مفسراً سبب حدوثه.\\n* أسمي هذا النوع من التفاعلات.\\n2 أكرر التجربة بغمس صفيحة النحاس في محلول كبريتات الحديد II، ماذا ألاحظ؟\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"* في التجربة الأولى استطاع الحديد أن يزيح أيونات النحاس (Cu²⁺(aq)) ذات اللون الأزرق ليتشكل أيونات الحديد (Fe²⁺(aq)) ذات اللون الأخضر لأن الحديد أكثر نشاطاً كيميائياً من النحاس فيترسب طبقة من النحاس الأحمر على قطعة الحديد.\\n* يحدث التفاعل وفق المعادلة: Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s)\\n* في التجربة الثانية لم يحدث تفاعل كيميائي لأن النحاس أقل نشاطاً كيميائياً من الحديد، وبالتالي لا يمكن أن يزيحه.\\n    Cu(s) + FeSO₄(aq) → لا يحدث التفاعل\\n* أسمي هذا النوع من التفاعلات بتفاعلات الإزاحة (تبادل أحادي).\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"* تفاعلات الإزاحة: هي التفاعلات التي يحل فيها عنصر نشيط كيميائياً محل عنصر أقل نشاطاً كيميائياً منه.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"أفسر زوال اللون الأزرق وتشكل اللون الأخضر.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": \"استطاع الحديد أن يزيح أيونات النحاس (Cu²⁺(aq)) ذات اللون الأزرق ليتشكل أيونات الحديد (Fe²⁺(aq)) ذات اللون الأخضر لأن الحديد أكثر نشاطاً كيميائياً من النحاس.\",\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    },\n    {\n      \"question_text\": \"أفسر ترسب طبقة حمراء على مسمار الحديد.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": \"يترسب طبقة من النحاس الأحمر على قطعة الحديد.\",\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    },\n    {\n      \"question_text\": \"أكتب معادلة التفاعل الحاصل مفسراً سبب حدوثه.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": \"Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s) لأن الحديد أكثر نشاطاً كيميائياً من النحاس.\",\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    },\n    {\n      \"question_text\": \"أسمي هذا النوع من التفاعلات.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": \"تفاعلات الإزاحة (تبادل أحادي).\",\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    },\n    {\n      \"question_text\": \"أكرر التجربة بغمس صفيحة النحاس في محلول كبريتات الحديد II، ماذا ألاحظ؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": \"لم يحدث تفاعل كيميائي لأن النحاس أقل نشاطاً كيميائياً من الحديد، وبالتالي لا يمكن أن يزيحه.\",\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"Two test tubes illustrating a chemical reaction. The first test tube shows an iron nail immersed in a blue copper sulfate solution. The second test tube shows the solution has turned green, and the iron nail is coated with a reddish-brown layer of copper.\",\n      \"labels\": [\n        \"مسمار الحديد\",\n        \"محلول كبريتات النحاس ذي اللون الأزرق\",\n        \"طبقة حمراء\",\n        \"اللون الأخضر\"\n      ],\n      \"related_text\": \"أغمس مسمار الحديد في محلول مائي لكبريتات النحاس ذي اللون الأزرق، وأتركه فترة من الزمن. أفسر زوال اللون الأزرق وتشكل اللون الأخضر. أفسر ترسب طبقة حمراء على مسمار الحديد.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s)\",\n      \"description\": \"Solid iron reacts with aqueous copper(II) sulfate to produce aqueous iron(II) sulfate and solid copper.\"\n    },\n    {\n      \"equation\": \"Cu(s) + FeSO₄(aq) → لا يحدث التفاعل\",\n      \"description\": \"Solid copper does not react with aqueous iron(II) sulfate.\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": \"The page number in the image is 138, but the user specified 32. The extraction uses 32 as the page number.\",\n  \"provider\": \"Anthropic\",\n  \"model_name\": \"claude-3-opus-20240229\",\n  \"schema_valid\": true,\n  \"char_count\": 1098,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 32,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 1098,\n    \"char_count\": 1098,\n    \"section_count\": 3,\n    \"question_count\": 5,\n    \"table_count\": 0,\n    \"equation_count\": 2,\n    \"diagram_count\": 1,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.98,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": \"138\\n\\nخطوات التجربة:\\n1 أغمس مسمار الحديد في محلول مائي لكبريتات النحاس ذي اللون الأزرق، وأتركه فترة من الزمن.\\n* أفسر زوال اللون الأزرق وتشكل اللون الأخضر.\\n* أفسر ترسب طبقة حمراء على مسمار الحديد.\\n* أكتب معادلة التفاعل الحاصل مفسراً سبب حدوثه.\\n* أسمي هذا النوع من التفاعلات.\\n2 أكرر التجربة بغمس صفيحة النحاس في محلول كبريتات الحديد II، ماذا ألاحظ؟\\n\\nأستنتج:\\n* في التجربة الأولى استطاع الحديد أن يزيح أيونات النحاس (Cu²⁺(aq)) ذات اللون الأزرق ليتشكل أيونات الحديد (Fe²⁺(aq)) ذات اللون الأخضر لأن الحديد أكثر نشاطاً كيميائياً من النحاس فيترسب طبقة من النحاس الأحمر على قطعة الحديد.\\n* يحدث التفاعل وفق المعادلة: Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s)\\n* في التجربة الثانية لم يحدث تفاعل كيميائي لأن النحاس أقل نشاطاً كيميائياً من الحديد، وبالتالي لا يمكن أن يزيحه.\\n    Cu(s) + FeSO₄(aq) → لا يحدث التفاعل\\n* أسمي هذا النوع من التفاعلات بتفاعلات الإزاحة (تبادل أحادي).\\n\\nأستنتج:\\n* تفاعلات الإزاحة: هي التفاعلات التي يحل فيها عنصر نشيط كيميائياً محل عنصر أقل نشاطاً كيميائياً منه.\"\n}"
+  },
+  "gemini_image_fallback_content": {
+    "page_number": 32,
+    "detected_language": "Arabic",
+    "raw_markdown": "138\n\nخطوات التجربة:\n1 أغمس مسمار الحديد في محلول مائي لكبريتات النحاس ذي اللون الأزرق، وأتركه فترة من الزمن.\n* أفسر زوال اللون الأزرق وتشكل اللون الأخضر.\n* أفسر ترسب طبقة حمراء على مسمار الحديد.\n* أكتب معادلة التفاعل الحاصل مفسراً سبب حدوثه.\n* أسمي هذا النوع من التفاعلات.\n2 أكرر التجربة بغمس صفيحة النحاس في محلول كبريتات الحديد II، ماذا ألاحظ؟\n\nأستنتج:\n* في التجربة الأولى استطاع الحديد أن يزيح أيونات النحاس (Cu²⁺(aq)) ذات اللون الأزرق ليتشكل أيونات الحديد (Fe²⁺(aq)) ذات اللون الأخضر لأن الحديد أكثر نشاطاً كيميائياً من النحاس فيترسب طبقة من النحاس الأحمر على قطعة الحديد.\n* يحدث التفاعل وفق المعادلة: Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s)\n* في التجربة الثانية لم يحدث تفاعل كيميائي لأن النحاس أقل نشاطاً كيميائياً من الحديد، وبالتالي لا يمكن أن يزيحه.\n    Cu(s) + FeSO₄(aq) → لا يحدث التفاعل\n* أسمي هذا النوع من التفاعلات بتفاعلات الإزاحة (تبادل أحادي).\n\nأستنتج:\n* تفاعلات الإزاحة: هي التفاعلات التي يحل فيها عنصر نشيط كيميائياً محل عنصر أقل نشاطاً كيميائياً منه.",
+    "sections": [
+      {
+        "heading": "خطوات التجربة:",
+        "content": "1 أغمس مسمار الحديد في محلول مائي لكبريتات النحاس ذي اللون الأزرق، وأتركه فترة من الزمن.\n* أفسر زوال اللون الأزرق وتشكل اللون الأخضر.\n* أفسر ترسب طبقة حمراء على مسمار الحديد.\n* أكتب معادلة التفاعل الحاصل مفسراً سبب حدوثه.\n* أسمي هذا النوع من التفاعلات.\n2 أكرر التجربة بغمس صفيحة النحاس في محلول كبريتات الحديد II، ماذا ألاحظ؟",
+        "content_type": "text"
+      },
+      {
+        "heading": "أستنتج:",
+        "content": "* في التجربة الأولى استطاع الحديد أن يزيح أيونات النحاس (Cu²⁺(aq)) ذات اللون الأزرق ليتشكل أيونات الحديد (Fe²⁺(aq)) ذات اللون الأخضر لأن الحديد أكثر نشاطاً كيميائياً من النحاس فيترسب طبقة من النحاس الأحمر على قطعة الحديد.\n* يحدث التفاعل وفق المعادلة: Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s)\n* في التجربة الثانية لم يحدث تفاعل كيميائي لأن النحاس أقل نشاطاً كيميائياً من الحديد، وبالتالي لا يمكن أن يزيحه.\n    Cu(s) + FeSO₄(aq) → لا يحدث التفاعل\n* أسمي هذا النوع من التفاعلات بتفاعلات الإزاحة (تبادل أحادي).",
+        "content_type": "text"
+      },
+      {
+        "heading": "أستنتج:",
+        "content": "* تفاعلات الإزاحة: هي التفاعلات التي يحل فيها عنصر نشيط كيميائياً محل عنصر أقل نشاطاً كيميائياً منه.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "أفسر زوال اللون الأزرق وتشكل اللون الأخضر.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": "استطاع الحديد أن يزيح أيونات النحاس (Cu²⁺(aq)) ذات اللون الأزرق ليتشكل أيونات الحديد (Fe²⁺(aq)) ذات اللون الأخضر لأن الحديد أكثر نشاطاً كيميائياً من النحاس.",
+        "explanation": null,
+        "answer_source": "page"
+      },
+      {
+        "question_text": "أفسر ترسب طبقة حمراء على مسمار الحديد.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": "يترسب طبقة من النحاس الأحمر على قطعة الحديد.",
+        "explanation": null,
+        "answer_source": "page"
+      },
+      {
+        "question_text": "أكتب معادلة التفاعل الحاصل مفسراً سبب حدوثه.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": "Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s) لأن الحديد أكثر نشاطاً كيميائياً من النحاس.",
+        "explanation": null,
+        "answer_source": "page"
+      },
+      {
+        "question_text": "أسمي هذا النوع من التفاعلات.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": "تفاعلات الإزاحة (تبادل أحادي).",
+        "explanation": null,
+        "answer_source": "page"
+      },
+      {
+        "question_text": "أكرر التجربة بغمس صفيحة النحاس في محلول كبريتات الحديد II، ماذا ألاحظ؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": "لم يحدث تفاعل كيميائي لأن النحاس أقل نشاطاً كيميائياً من الحديد، وبالتالي لا يمكن أن يزيحه.",
+        "explanation": null,
+        "answer_source": "page"
+      }
+    ],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "Two test tubes illustrating a chemical reaction. The first test tube shows an iron nail immersed in a blue copper sulfate solution. The second test tube shows the solution has turned green, and the iron nail is coated with a reddish-brown layer of copper.",
+        "labels": [
+          "مسمار الحديد",
+          "محلول كبريتات النحاس ذي اللون الأزرق",
+          "طبقة حمراء",
+          "اللون الأخضر"
+        ],
+        "related_text": "أغمس مسمار الحديد في محلول مائي لكبريتات النحاس ذي اللون الأزرق، وأتركه فترة من الزمن. أفسر زوال اللون الأزرق وتشكل اللون الأخضر. أفسر ترسب طبقة حمراء على مسمار الحديد."
+      }
+    ],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s)",
+        "description": "Solid iron reacts with aqueous copper(II) sulfate to produce aqueous iron(II) sulfate and solid copper."
+      },
+      {
+        "equation": "Cu(s) + FeSO₄(aq) → لا يحدث التفاعل",
+        "description": "Solid copper does not react with aqueous iron(II) sulfate."
+      }
+    ],
+    "warnings": [],
+    "extraction_notes": "The page number in the image is 138, but the user specified 32. The extraction uses 32 as the page number.",
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 1098,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 32,
+      "schema_valid": true,
+      "raw_markdown_chars": 968,
+      "char_count": 1098,
+      "section_count": 3,
+      "question_count": 5,
+      "table_count": 0,
+      "equation_count": 2,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.6884,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 32,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"138\\n\\nخطوات التجربة:\\n1 أغمس مسمار الحديد في محلول مائي لكبريتات النحاس ذي اللون الأزرق، وأتركه فترة من الزمن.\\n* أفسر زوال اللون الأزرق وتشكل اللون الأخضر.\\n* أفسر ترسب طبقة حمراء على مسمار الحديد.\\n* أكتب معادلة التفاعل الحاصل مفسراً سبب حدوثه.\\n* أسمي هذا النوع من التفاعلات.\\n2 أكرر التجربة بغمس صفيحة النحاس في محلول كبريتات الحديد II، ماذا ألاحظ؟\\n\\nأستنتج:\\n* في التجربة الأولى استطاع الحديد أن يزيح أيونات النحاس (Cu²⁺(aq)) ذات اللون الأزرق ليتشكل أيونات الحديد (Fe²⁺(aq)) ذات اللون الأخضر لأن الحديد أكثر نشاطاً كيميائياً من النحاس فيترسب طبقة من النحاس الأحمر على قطعة الحديد.\\n* يحدث التفاعل وفق المعادلة: Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s)\\n* في التجربة الثانية لم يحدث تفاعل كيميائي لأن النحاس أقل نشاطاً كيميائياً من الحديد، وبالتالي لا يمكن أن يزيحه.\\n    Cu(s) + FeSO₄(aq) → لا يحدث التفاعل\\n* أسمي هذا النوع من التفاعلات بتفاعلات الإزاحة (تبادل أحادي).\\n\\nأستنتج:\\n* تفاعلات الإزاحة: هي التفاعلات التي يحل فيها عنصر نشيط كيميائياً محل عنصر أقل نشاطاً كيميائياً منه.\",\n  \"sections\": [\n    {\n      \"heading\": \"خطوات التجربة:\",\n      \"content\": \"1 أغمس مسمار الحديد في محلول مائي لكبريتات النحاس ذي اللون الأزرق، وأتركه فترة من الزمن.\\n* أفسر زوال اللون الأزرق وتشكل اللون الأخضر.\\n* أفسر ترسب طبقة حمراء على مسمار الحديد.\\n* أكتب معادلة التفاعل الحاصل مفسراً سبب حدوثه.\\n* أسمي هذا النوع من التفاعلات.\\n2 أكرر التجربة بغمس صفيحة النحاس في محلول كبريتات الحديد II، ماذا ألاحظ؟\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"* في التجربة الأولى استطاع الحديد أن يزيح أيونات النحاس (Cu²⁺(aq)) ذات اللون الأزرق ليتشكل أيونات الحديد (Fe²⁺(aq)) ذات اللون الأخضر لأن الحديد أكثر نشاطاً كيميائياً من النحاس فيترسب طبقة من النحاس الأحمر على قطعة الحديد.\\n* يحدث التفاعل وفق المعادلة: Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s)\\n* في التجربة الثانية لم يحدث تفاعل كيميائي لأن النحاس أقل نشاطاً كيميائياً من الحديد، وبالتالي لا يمكن أن يزيحه.\\n    Cu(s) + FeSO₄(aq) → لا يحدث التفاعل\\n* أسمي هذا النوع من التفاعلات بتفاعلات الإزاحة (تبادل أحادي).\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"* تفاعلات الإزاحة: هي التفاعلات التي يحل فيها عنصر نشيط كيميائياً محل عنصر أقل نشاطاً كيميائياً منه.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"أفسر زوال اللون الأزرق وتشكل اللون الأخضر.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": \"استطاع الحديد أن يزيح أيونات النحاس (Cu²⁺(aq)) ذات اللون الأزرق ليتشكل أيونات الحديد (Fe²⁺(aq)) ذات اللون الأخضر لأن الحديد أكثر نشاطاً كيميائياً من النحاس.\",\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    },\n    {\n      \"question_text\": \"أفسر ترسب طبقة حمراء على مسمار الحديد.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": \"يترسب طبقة من النحاس الأحمر على قطعة الحديد.\",\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    },\n    {\n      \"question_text\": \"أكتب معادلة التفاعل الحاصل مفسراً سبب حدوثه.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": \"Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s) لأن الحديد أكثر نشاطاً كيميائياً من النحاس.\",\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    },\n    {\n      \"question_text\": \"أسمي هذا النوع من التفاعلات.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": \"تفاعلات الإزاحة (تبادل أحادي).\",\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    },\n    {\n      \"question_text\": \"أكرر التجربة بغمس صفيحة النحاس في محلول كبريتات الحديد II، ماذا ألاحظ؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": \"لم يحدث تفاعل كيميائي لأن النحاس أقل نشاطاً كيميائياً من الحديد، وبالتالي لا يمكن أن يزيحه.\",\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"Two test tubes illustrating a chemical reaction. The first test tube shows an iron nail immersed in a blue copper sulfate solution. The second test tube shows the solution has turned green, and the iron nail is coated with a reddish-brown layer of copper.\",\n      \"labels\": [\n        \"مسمار الحديد\",\n        \"محلول كبريتات النحاس ذي اللون الأزرق\",\n        \"طبقة حمراء\",\n        \"اللون الأخضر\"\n      ],\n      \"related_text\": \"أغمس مسمار الحديد في محلول مائي لكبريتات النحاس ذي اللون الأزرق، وأتركه فترة من الزمن. أفسر زوال اللون الأزرق وتشكل اللون الأخضر. أفسر ترسب طبقة حمراء على مسمار الحديد.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s)\",\n      \"description\": \"Solid iron reacts with aqueous copper(II) sulfate to produce aqueous iron(II) sulfate and solid copper.\"\n    },\n    {\n      \"equation\": \"Cu(s) + FeSO₄(aq) → لا يحدث التفاعل\",\n      \"description\": \"Solid copper does not react with aqueous iron(II) sulfate.\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": \"The page number in the image is 138, but the user specified 32. The extraction uses 32 as the page number.\",\n  \"provider\": \"Anthropic\",\n  \"model_name\": \"claude-3-opus-20240229\",\n  \"schema_valid\": true,\n  \"char_count\": 1098,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 32,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 1098,\n    \"char_count\": 1098,\n    \"section_count\": 3,\n    \"question_count\": 5,\n    \"table_count\": 0,\n    \"equation_count\": 2,\n    \"diagram_count\": 1,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.98,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": \"138\\n\\nخطوات التجربة:\\n1 أغمس مسمار الحديد في محلول مائي لكبريتات النحاس ذي اللون الأزرق، وأتركه فترة من الزمن.\\n* أفسر زوال اللون الأزرق وتشكل اللون الأخضر.\\n* أفسر ترسب طبقة حمراء على مسمار الحديد.\\n* أكتب معادلة التفاعل الحاصل مفسراً سبب حدوثه.\\n* أسمي هذا النوع من التفاعلات.\\n2 أكرر التجربة بغمس صفيحة النحاس في محلول كبريتات الحديد II، ماذا ألاحظ؟\\n\\nأستنتج:\\n* في التجربة الأولى استطاع الحديد أن يزيح أيونات النحاس (Cu²⁺(aq)) ذات اللون الأزرق ليتشكل أيونات الحديد (Fe²⁺(aq)) ذات اللون الأخضر لأن الحديد أكثر نشاطاً كيميائياً من النحاس فيترسب طبقة من النحاس الأحمر على قطعة الحديد.\\n* يحدث التفاعل وفق المعادلة: Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s)\\n* في التجربة الثانية لم يحدث تفاعل كيميائي لأن النحاس أقل نشاطاً كيميائياً من الحديد، وبالتالي لا يمكن أن يزيحه.\\n    Cu(s) + FeSO₄(aq) → لا يحدث التفاعل\\n* أسمي هذا النوع من التفاعلات بتفاعلات الإزاحة (تبادل أحادي).\\n\\nأستنتج:\\n* تفاعلات الإزاحة: هي التفاعلات التي يحل فيها عنصر نشيط كيميائياً محل عنصر أقل نشاطاً كيميائياً منه.\"\n}"
+  },
+  "merged_content": "خطوات التجربة:\n1 أغمس مسمار الحديد في محلول مائي لكبريتات النحاس ذي اللون الأزرق، وأتركه فترة من الزمن.\n* أفسر زوال اللون الأزرق وتشكل اللون الأخضر.\n* أفسر ترسب طبقة حمراء على مسمار الحديد.\n* أكتب معادلة التفاعل الحاصل مفسراً سبب حدوثه.\n* أسمي هذا النوع من التفاعلات.\n2 أكرر التجربة بغمس صفيحة النحاس في محلول كبريتات الحديد II، ماذا ألاحظ؟\n\nأستنتج:\n* في التجربة الأولى استطاع الحديد أن يزيح أيونات النحاس (Cu²⁺(aq)) ذات اللون الأزرق ليتشكل أيونات الحديد (Fe²⁺(aq)) ذات اللون الأخضر لأن الحديد أكثر نشاطاً كيميائياً من النحاس فيترسب طبقة من النحاس الأحمر على قطعة الحديد.\n* يحدث التفاعل وفق المعادلة: Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s)\n* في التجربة الثانية لم يحدث تفاعل كيميائي لأن النحاس أقل نشاطاً كيميائياً من الحديد، وبالتالي لا يمكن أن يزيحه.\n    Cu(s) + FeSO₄(aq) → لا يحدث التفاعل\n* أسمي هذا النوع من التفاعلات بتفاعلات الإزاحة (تبادل أحادي).\n\nأستنتج:\n* تفاعلات الإزاحة: هي التفاعلات التي يحل فيها عنصر نشيط كيميائياً محل عنصر أقل نشاطاً كيميائياً منه.",
+  "raw_markdown": "138\n\nخطوات التجربة:\n1 أغمس مسمار الحديد في محلول مائي لكبريتات النحاس ذي اللون الأزرق، وأتركه فترة من الزمن.\n* أفسر زوال اللون الأزرق وتشكل اللون الأخضر.\n* أفسر ترسب طبقة حمراء على مسمار الحديد.\n* أكتب معادلة التفاعل الحاصل مفسراً سبب حدوثه.\n* أسمي هذا النوع من التفاعلات.\n2 أكرر التجربة بغمس صفيحة النحاس في محلول كبريتات الحديد II، ماذا ألاحظ؟\n\nأستنتج:\n* في التجربة الأولى استطاع الحديد أن يزيح أيونات النحاس (Cu²⁺(aq)) ذات اللون الأزرق ليتشكل أيونات الحديد (Fe²⁺(aq)) ذات اللون الأخضر لأن الحديد أكثر نشاطاً كيميائياً من النحاس فيترسب طبقة من النحاس الأحمر على قطعة الحديد.\n* يحدث التفاعل وفق المعادلة: Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s)\n* في التجربة الثانية لم يحدث تفاعل كيميائي لأن النحاس أقل نشاطاً كيميائياً من الحديد، وبالتالي لا يمكن أن يزيحه.\n    Cu(s) + FeSO₄(aq) → لا يحدث التفاعل\n* أسمي هذا النوع من التفاعلات بتفاعلات الإزاحة (تبادل أحادي).\n\nأستنتج:\n* تفاعلات الإزاحة: هي التفاعلات التي يحل فيها عنصر نشيط كيميائياً محل عنصر أقل نشاطاً كيميائياً منه.",
+  "sections": [
+    {
+      "heading": "خطوات التجربة:",
+      "content": "1 أغمس مسمار الحديد في محلول مائي لكبريتات النحاس ذي اللون الأزرق، وأتركه فترة من الزمن.\n* أفسر زوال اللون الأزرق وتشكل اللون الأخضر.\n* أفسر ترسب طبقة حمراء على مسمار الحديد.\n* أكتب معادلة التفاعل الحاصل مفسراً سبب حدوثه.\n* أسمي هذا النوع من التفاعلات.\n2 أكرر التجربة بغمس صفيحة النحاس في محلول كبريتات الحديد II، ماذا ألاحظ؟",
+      "content_type": "text"
+    },
+    {
+      "heading": "أستنتج:",
+      "content": "* في التجربة الأولى استطاع الحديد أن يزيح أيونات النحاس (Cu²⁺(aq)) ذات اللون الأزرق ليتشكل أيونات الحديد (Fe²⁺(aq)) ذات اللون الأخضر لأن الحديد أكثر نشاطاً كيميائياً من النحاس فيترسب طبقة من النحاس الأحمر على قطعة الحديد.\n* يحدث التفاعل وفق المعادلة: Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s)\n* في التجربة الثانية لم يحدث تفاعل كيميائي لأن النحاس أقل نشاطاً كيميائياً من الحديد، وبالتالي لا يمكن أن يزيحه.\n    Cu(s) + FeSO₄(aq) → لا يحدث التفاعل\n* أسمي هذا النوع من التفاعلات بتفاعلات الإزاحة (تبادل أحادي).",
+      "content_type": "text"
+    },
+    {
+      "heading": "أستنتج:",
+      "content": "* تفاعلات الإزاحة: هي التفاعلات التي يحل فيها عنصر نشيط كيميائياً محل عنصر أقل نشاطاً كيميائياً منه.",
+      "content_type": "text"
+    }
   ],
+  "questions": [
+    {
+      "question_text": "أفسر زوال اللون الأزرق وتشكل اللون الأخضر.",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": "استطاع الحديد أن يزيح أيونات النحاس (Cu²⁺(aq)) ذات اللون الأزرق ليتشكل أيونات الحديد (Fe²⁺(aq)) ذات اللون الأخضر لأن الحديد أكثر نشاطاً كيميائياً من النحاس.",
+      "explanation": null,
+      "answer_source": "page"
+    },
+    {
+      "question_text": "أفسر ترسب طبقة حمراء على مسمار الحديد.",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": "يترسب طبقة من النحاس الأحمر على قطعة الحديد.",
+      "explanation": null,
+      "answer_source": "page"
+    },
+    {
+      "question_text": "أكتب معادلة التفاعل الحاصل مفسراً سبب حدوثه.",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": "Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s) لأن الحديد أكثر نشاطاً كيميائياً من النحاس.",
+      "explanation": null,
+      "answer_source": "page"
+    },
+    {
+      "question_text": "أسمي هذا النوع من التفاعلات.",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": "تفاعلات الإزاحة (تبادل أحادي).",
+      "explanation": null,
+      "answer_source": "page"
+    },
+    {
+      "question_text": "أكرر التجربة بغمس صفيحة النحاس في محلول كبريتات الحديد II، ماذا ألاحظ؟",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": "لم يحدث تفاعل كيميائي لأن النحاس أقل نشاطاً كيميائياً من الحديد، وبالتالي لا يمكن أن يزيحه.",
+      "explanation": null,
+      "answer_source": "page"
+    }
+  ],
+  "diagrams": [
+    {
+      "title": null,
+      "description": "Two test tubes illustrating a chemical reaction. The first test tube shows an iron nail immersed in a blue copper sulfate solution. The second test tube shows the solution has turned green, and the iron nail is coated with a reddish-brown layer of copper.",
+      "labels": [
+        "مسمار الحديد",
+        "محلول كبريتات النحاس ذي اللون الأزرق",
+        "طبقة حمراء",
+        "اللون الأخضر"
+      ],
+      "related_text": "أغمس مسمار الحديد في محلول مائي لكبريتات النحاس ذي اللون الأزرق، وأتركه فترة من الزمن. أفسر زوال اللون الأزرق وتشكل اللون الأخضر. أفسر ترسب طبقة حمراء على مسمار الحديد."
+    }
+  ],
+  "tables": [],
+  "equations": [
+    {
+      "equation": "Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s)",
+      "description": "Solid iron reacts with aqueous copper(II) sulfate to produce aqueous iron(II) sulfate and solid copper."
+    },
+    {
+      "equation": "Cu(s) + FeSO₄(aq) → لا يحدث التفاعل",
+      "description": "Solid copper does not react with aqueous iron(II) sulfate."
+    }
+  ],
+  "warnings": [],
   "errors": [],
-  "char_count": 0,
-  "completeness_score": 0.0,
-  "detected_language": "ar",
-  "vision_provider": null,
-  "vision_source": null,
-  "neighboring_pages": [],
+  "char_count": 963,
+  "completeness_score": 1.0,
+  "detected_language": "Arabic",
+  "vision_provider": "gemini_document_image",
+  "vision_source": "gemini_rendered_image_300dpi",
+  "neighboring_pages": [
+    31,
+    33
+  ],
   "uploaded_pdf": null,
-  "raw_text": null,
-  "quality_report": {},
+  "raw_text": "{\n  \"page_number\": 32,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"138\\n\\nخطوات التجربة:\\n1 أغمس مسمار الحديد في محلول مائي لكبريتات النحاس ذي اللون الأزرق، وأتركه فترة من الزمن.\\n* أفسر زوال اللون الأزرق وتشكل اللون الأخضر.\\n* أفسر ترسب طبقة حمراء على مسمار الحديد.\\n* أكتب معادلة التفاعل الحاصل مفسراً سبب حدوثه.\\n* أسمي هذا النوع من التفاعلات.\\n2 أكرر التجربة بغمس صفيحة النحاس في محلول كبريتات الحديد II، ماذا ألاحظ؟\\n\\nأستنتج:\\n* في التجربة الأولى استطاع الحديد أن يزيح أيونات النحاس (Cu²⁺(aq)) ذات اللون الأزرق ليتشكل أيونات الحديد (Fe²⁺(aq)) ذات اللون الأخضر لأن الحديد أكثر نشاطاً كيميائياً من النحاس فيترسب طبقة من النحاس الأحمر على قطعة الحديد.\\n* يحدث التفاعل وفق المعادلة: Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s)\\n* في التجربة الثانية لم يحدث تفاعل كيميائي لأن النحاس أقل نشاطاً كيميائياً من الحديد، وبالتالي لا يمكن أن يزيحه.\\n    Cu(s) + FeSO₄(aq) → لا يحدث التفاعل\\n* أسمي هذا النوع من التفاعلات بتفاعلات الإزاحة (تبادل أحادي).\\n\\nأستنتج:\\n* تفاعلات الإزاحة: هي التفاعلات التي يحل فيها عنصر نشيط كيميائياً محل عنصر أقل نشاطاً كيميائياً منه.\",\n  \"sections\": [\n    {\n      \"heading\": \"خطوات التجربة:\",\n      \"content\": \"1 أغمس مسمار الحديد في محلول مائي لكبريتات النحاس ذي اللون الأزرق، وأتركه فترة من الزمن.\\n* أفسر زوال اللون الأزرق وتشكل اللون الأخضر.\\n* أفسر ترسب طبقة حمراء على مسمار الحديد.\\n* أكتب معادلة التفاعل الحاصل مفسراً سبب حدوثه.\\n* أسمي هذا النوع من التفاعلات.\\n2 أكرر التجربة بغمس صفيحة النحاس في محلول كبريتات الحديد II، ماذا ألاحظ؟\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"* في التجربة الأولى استطاع الحديد أن يزيح أيونات النحاس (Cu²⁺(aq)) ذات اللون الأزرق ليتشكل أيونات الحديد (Fe²⁺(aq)) ذات اللون الأخضر لأن الحديد أكثر نشاطاً كيميائياً من النحاس فيترسب طبقة من النحاس الأحمر على قطعة الحديد.\\n* يحدث التفاعل وفق المعادلة: Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s)\\n* في التجربة الثانية لم يحدث تفاعل كيميائي لأن النحاس أقل نشاطاً كيميائياً من الحديد، وبالتالي لا يمكن أن يزيحه.\\n    Cu(s) + FeSO₄(aq) → لا يحدث التفاعل\\n* أسمي هذا النوع من التفاعلات بتفاعلات الإزاحة (تبادل أحادي).\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"* تفاعلات الإزاحة: هي التفاعلات التي يحل فيها عنصر نشيط كيميائياً محل عنصر أقل نشاطاً كيميائياً منه.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"أفسر زوال اللون الأزرق وتشكل اللون الأخضر.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": \"استطاع الحديد أن يزيح أيونات النحاس (Cu²⁺(aq)) ذات اللون الأزرق ليتشكل أيونات الحديد (Fe²⁺(aq)) ذات اللون الأخضر لأن الحديد أكثر نشاطاً كيميائياً من النحاس.\",\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    },\n    {\n      \"question_text\": \"أفسر ترسب طبقة حمراء على مسمار الحديد.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": \"يترسب طبقة من النحاس الأحمر على قطعة الحديد.\",\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    },\n    {\n      \"question_text\": \"أكتب معادلة التفاعل الحاصل مفسراً سبب حدوثه.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": \"Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s) لأن الحديد أكثر نشاطاً كيميائياً من النحاس.\",\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    },\n    {\n      \"question_text\": \"أسمي هذا النوع من التفاعلات.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": \"تفاعلات الإزاحة (تبادل أحادي).\",\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    },\n    {\n      \"question_text\": \"أكرر التجربة بغمس صفيحة النحاس في محلول كبريتات الحديد II، ماذا ألاحظ؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": \"لم يحدث تفاعل كيميائي لأن النحاس أقل نشاطاً كيميائياً من الحديد، وبالتالي لا يمكن أن يزيحه.\",\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"Two test tubes illustrating a chemical reaction. The first test tube shows an iron nail immersed in a blue copper sulfate solution. The second test tube shows the solution has turned green, and the iron nail is coated with a reddish-brown layer of copper.\",\n      \"labels\": [\n        \"مسمار الحديد\",\n        \"محلول كبريتات النحاس ذي اللون الأزرق\",\n        \"طبقة حمراء\",\n        \"اللون الأخضر\"\n      ],\n      \"related_text\": \"أغمس مسمار الحديد في محلول مائي لكبريتات النحاس ذي اللون الأزرق، وأتركه فترة من الزمن. أفسر زوال اللون الأزرق وتشكل اللون الأخضر. أفسر ترسب طبقة حمراء على مسمار الحديد.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s)\",\n      \"description\": \"Solid iron reacts with aqueous copper(II) sulfate to produce aqueous iron(II) sulfate and solid copper.\"\n    },\n    {\n      \"equation\": \"Cu(s) + FeSO₄(aq) → لا يحدث التفاعل\",\n      \"description\": \"Solid copper does not react with aqueous iron(II) sulfate.\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": \"The page number in the image is 138, but the user specified 32. The extraction uses 32 as the page number.\",\n  \"provider\": \"Anthropic\",\n  \"model_name\": \"claude-3-opus-20240229\",\n  \"schema_valid\": true,\n  \"char_count\": 1098,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 32,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 1098,\n    \"char_count\": 1098,\n    \"section_count\": 3,\n    \"question_count\": 5,\n    \"table_count\": 0,\n    \"equation_count\": 2,\n    \"diagram_count\": 1,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.98,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": \"138\\n\\nخطوات التجربة:\\n1 أغمس مسمار الحديد في محلول مائي لكبريتات النحاس ذي اللون الأزرق، وأتركه فترة من الزمن.\\n* أفسر زوال اللون الأزرق وتشكل اللون الأخضر.\\n* أفسر ترسب طبقة حمراء على مسمار الحديد.\\n* أكتب معادلة التفاعل الحاصل مفسراً سبب حدوثه.\\n* أسمي هذا النوع من التفاعلات.\\n2 أكرر التجربة بغمس صفيحة النحاس في محلول كبريتات الحديد II، ماذا ألاحظ؟\\n\\nأستنتج:\\n* في التجربة الأولى استطاع الحديد أن يزيح أيونات النحاس (Cu²⁺(aq)) ذات اللون الأزرق ليتشكل أيونات الحديد (Fe²⁺(aq)) ذات اللون الأخضر لأن الحديد أكثر نشاطاً كيميائياً من النحاس فيترسب طبقة من النحاس الأحمر على قطعة الحديد.\\n* يحدث التفاعل وفق المعادلة: Fe(s) + CuSO₄(aq) → FeSO₄(aq) + Cu(s)\\n* في التجربة الثانية لم يحدث تفاعل كيميائي لأن النحاس أقل نشاطاً كيميائياً من الحديد، وبالتالي لا يمكن أن يزيحه.\\n    Cu(s) + FeSO₄(aq) → لا يحدث التفاعل\\n* أسمي هذا النوع من التفاعلات بتفاعلات الإزاحة (تبادل أحادي).\\n\\nأستنتج:\\n* تفاعلات الإزاحة: هي التفاعلات التي يحل فيها عنصر نشيط كيميائياً محل عنصر أقل نشاطاً كيميائياً منه.\"\n}",
+  "quality_report": {
+    "page_number": 32,
+    "schema_valid": true,
+    "raw_markdown_chars": 968,
+    "char_count": 1098,
+    "section_count": 3,
+    "question_count": 5,
+    "table_count": 0,
+    "equation_count": 2,
+    "diagram_count": 1,
+    "warning_count": 0,
+    "arabic_char_ratio": 0.6884,
+    "completeness_score": 1.0,
+    "issues": [],
+    "should_fallback": false
+  },
   "classification": "NEEDS_VISION",
   "source_id": 1
 }

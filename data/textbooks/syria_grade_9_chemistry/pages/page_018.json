@@ -4,41 +4,267 @@
   "extraction_methods": [
     "pymupdf",
     "pdfplumber",
-    "gemini_document"
+    "gemini_image_300dpi"
   ],
-  "extraction_method": "pymupdf+pdfplumber+gemini_document",
-  "status": "skipped_dry_run",
+  "extraction_method": "pymupdf+pdfplumber+gemini_image_300dpi",
+  "status": "completed_with_image_fallback",
   "text_layer_content": ":ا\u001aﻫﺪاف\n-  \n.يتعرَّف الوظيفة األساسيَّة\n  -\nيميّز بالتَّجربة بين األسس القويَّة واألسس الضَّ عيفة.\n  -\nيشرح خواص المحاليل األساسيَّة.\n  -\nيبيّن أهميَّة األسس.\n:اﻟﻜﻠﻤﺎت اﻟﻤﻔﺘﺎﺣﻴﺔ\n.عدد الوظائف األساسيَّة - أساس قوي - أساس ضعيف\n ،ًّتُحلّـل البكتيريـا الموجـودة داخـل الفـم بقايـا الطَّعـام بيـن األسـنان ممَّـا يجعـل وسـط الفـم حمضيَّـا\nوهـذا يسـبّب تـآكل األسـنان عنـد بقائـه فتـرة طويلـة عليهـا.\nالمحاليل األساسيَّة3\n124\n\n| ةيساسلأا ليلاحملا\nَّ |  |  |\n| --- | --- | --- |\n|  |  |  |",
-  "vision_content": {},
+  "vision_content": {
+    "page_number": 124,
+    "detected_language": "Arabic",
+    "raw_markdown": "المحاليل الأساسية\n3\n\nالأهداف:\n- يتعرف الوظيفة الأساسية.\n- يميز بالتجربة بين الأسس القوية والأسس الضعيفة.\n- يشرح خواص المحاليل الأساسية.\n- يبين أهمية الأسس.\n\nالكلمات المفتاحية:\nعدد الوظائف الأساسية - أساس قوي - أساس ضعيف.\n\nتُحلّل البكتيريا الموجودة داخل الفم بقايا الطعام بين الأسنان مما يجعل وسط الفم حمضياً، وهذا يسبب تأكل الأسنان عند بقائه فترة طويلة عليها.\n124",
+    "sections": [
+      {
+        "heading": "المحاليل الأساسية",
+        "content": "3",
+        "content_type": "text"
+      },
+      {
+        "heading": "الأهداف:",
+        "content": "- يتعرف الوظيفة الأساسية.- يميز بالتجربة بين الأسس القوية والأسس الضعيفة.- يشرح خواص المحاليل الأساسية.- يبين أهمية الأسس.",
+        "content_type": "text"
+      },
+      {
+        "heading": "الكلمات المفتاحية:",
+        "content": "عدد الوظائف الأساسية - أساس قوي - أساس ضعيف.",
+        "content_type": "text"
+      },
+      {
+        "heading": null,
+        "content": "تُحلّل البكتيريا الموجودة داخل الفم بقايا الطعام بين الأسنان مما يجعل وسط الفم حمضياً، وهذا يسبب تأكل الأسنان عند بقائه فترة طويلة عليها.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "A toothbrush with blue and white handle and red bristles, and a tube of toothpaste with a blue and green design, are standing upright in a clear glass.",
+        "labels": [],
+        "related_text": "تُحلّل البكتيريا الموجودة داخل الفم بقايا الطعام بين الأسنان مما يجعل وسط الفم حمضياً، وهذا يسبب تأكل الأسنان عند بقائه فترة طويلة عليها."
+      }
+    ],
+    "tables": [],
+    "equations": [],
+    "warnings": [],
+    "extraction_notes": "The page number in the prompt (18) differs from the page number visible in the image (124). The visible page number 124 was used. The number '3' at the top of the page appears to be a chapter or unit number.",
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 304,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 124,
+      "schema_valid": true,
+      "raw_markdown_chars": 363,
+      "char_count": 304,
+      "section_count": 4,
+      "question_count": 0,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.6075,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 124,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"المحاليل الأساسية\\n3\\n\\nالأهداف:\\n- يتعرف الوظيفة الأساسية.\\n- يميز بالتجربة بين الأسس القوية والأسس الضعيفة.\\n- يشرح خواص المحاليل الأساسية.\\n- يبين أهمية الأسس.\\n\\nالكلمات المفتاحية:\\nعدد الوظائف الأساسية - أساس قوي - أساس ضعيف.\\n\\nتُحلّل البكتيريا الموجودة داخل الفم بقايا الطعام بين الأسنان مما يجعل وسط الفم حمضياً، وهذا يسبب تأكل الأسنان عند بقائه فترة طويلة عليها.\\n124\",\n  \"sections\": [\n    {\n      \"heading\": \"المحاليل الأساسية\",\n      \"content\": \"3\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الأهداف:\",\n      \"content\": \"- يتعرف الوظيفة الأساسية.- يميز بالتجربة بين الأسس القوية والأسس الضعيفة.- يشرح خواص المحاليل الأساسية.- يبين أهمية الأسس.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الكلمات المفتاحية:\",\n      \"content\": \"عدد الوظائف الأساسية - أساس قوي - أساس ضعيف.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": null,\n      \"content\": \"تُحلّل البكتيريا الموجودة داخل الفم بقايا الطعام بين الأسنان مما يجعل وسط الفم حمضياً، وهذا يسبب تأكل الأسنان عند بقائه فترة طويلة عليها.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"A toothbrush with blue and white handle and red bristles, and a tube of toothpaste with a blue and green design, are standing upright in a clear glass.\",\n      \"labels\": [],\n      \"related_text\": \"تُحلّل البكتيريا الموجودة داخل الفم بقايا الطعام بين الأسنان مما يجعل وسط الفم حمضياً، وهذا يسبب تأكل الأسنان عند بقائه فترة طويلة عليها.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [],\n  \"warnings\": [],\n  \"extraction_notes\": \"The page number in the prompt (18) differs from the page number visible in the image (124). The visible page number 124 was used. The number '3' at the top of the page appears to be a chapter or unit number.\",\n  \"provider\": \"google\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 304,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 124,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 304,\n    \"char_count\": 304,\n    \"section_count\": 4,\n    \"question_count\": 0,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 1,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.98,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": \"المحاليل الأساسية\\n3\\n\\nالأهداف:\\n- يتعرف الوظيفة الأساسية.\\n- يميز بالتجربة بين الأسس القوية والأسس الضعيفة.\\n- يشرح خواص المحاليل الأساسية.\\n- يبين أهمية الأسس.\\n\\nالكلمات المفتاحية:\\nعدد الوظائف الأساسية - أساس قوي - أساس ضعيف.\\n\\nتُحلّل البكتيريا الموجودة داخل الفم بقايا الطعام بين الأسنان مما يجعل وسط الفم حمضياً، وهذا يسبب تأكل الأسنان عند بقائه فترة طويلة عليها.\\n124\"\n}"
+  },
   "gemini_pdf_content": {},
-  "gemini_fallback_model_content": {},
-  "gemini_image_fallback_content": {},
-  "merged_content": ":ا\u001aﻫﺪاف\n-  \n.يتعرَّف الوظيفة األساسيَّة\n  -\nيميّز بالتَّجربة بين األسس القويَّة واألسس الضَّ عيفة.\n  -\nيشرح خواص المحاليل األساسيَّة.\n  -\nيبيّن أهميَّة األسس.\n:اﻟﻜﻠﻤﺎت اﻟﻤﻔﺘﺎﺣﻴﺔ\n.عدد الوظائف األساسيَّة - أساس قوي - أساس ضعيف\n ،ًّتُحلّـل البكتيريـا الموجـودة داخـل الفـم بقايـا الطَّعـام بيـن األسـنان ممَّـا يجعـل وسـط الفـم حمضيَّـا\nوهـذا يسـبّب تـآكل األسـنان عنـد بقائـه فتـرة طويلـة عليهـا.\nالمحاليل األساسيَّة3\n124\n\n| ةيساسلأا ليلاحملا\nَّ |  |  |\n| --- | --- | --- |\n|  |  |  |",
-  "raw_markdown": ":ا\u001aﻫﺪاف\n-  \n.يتعرَّف الوظيفة األساسيَّة\n  -\nيميّز بالتَّجربة بين األسس القويَّة واألسس الضَّ عيفة.\n  -\nيشرح خواص المحاليل األساسيَّة.\n  -\nيبيّن أهميَّة األسس.\n:اﻟﻜﻠﻤﺎت اﻟﻤﻔﺘﺎﺣﻴﺔ\n.عدد الوظائف األساسيَّة - أساس قوي - أساس ضعيف\n ،ًّتُحلّـل البكتيريـا الموجـودة داخـل الفـم بقايـا الطَّعـام بيـن األسـنان ممَّـا يجعـل وسـط الفـم حمضيَّـا\nوهـذا يسـبّب تـآكل األسـنان عنـد بقائـه فتـرة طويلـة عليهـا.\nالمحاليل األساسيَّة3\n124\n\n| ةيساسلأا ليلاحملا\nَّ |  |  |\n| --- | --- | --- |\n|  |  |  |",
+  "gemini_fallback_model_content": {
+    "page_number": 124,
+    "detected_language": "Arabic",
+    "raw_markdown": "المحاليل الأساسية\n3\n\nالأهداف:\n- يتعرف الوظيفة الأساسية.\n- يميز بالتجربة بين الأسس القوية والأسس الضعيفة.\n- يشرح خواص المحاليل الأساسية.\n- يبين أهمية الأسس.\n\nالكلمات المفتاحية:\nعدد الوظائف الأساسية - أساس قوي - أساس ضعيف.\n\nتُحلّل البكتيريا الموجودة داخل الفم بقايا الطعام بين الأسنان مما يجعل وسط الفم حمضياً، وهذا يسبب تأكل الأسنان عند بقائه فترة طويلة عليها.\n124",
+    "sections": [
+      {
+        "heading": "المحاليل الأساسية",
+        "content": "3",
+        "content_type": "text"
+      },
+      {
+        "heading": "الأهداف:",
+        "content": "- يتعرف الوظيفة الأساسية.- يميز بالتجربة بين الأسس القوية والأسس الضعيفة.- يشرح خواص المحاليل الأساسية.- يبين أهمية الأسس.",
+        "content_type": "text"
+      },
+      {
+        "heading": "الكلمات المفتاحية:",
+        "content": "عدد الوظائف الأساسية - أساس قوي - أساس ضعيف.",
+        "content_type": "text"
+      },
+      {
+        "heading": null,
+        "content": "تُحلّل البكتيريا الموجودة داخل الفم بقايا الطعام بين الأسنان مما يجعل وسط الفم حمضياً، وهذا يسبب تأكل الأسنان عند بقائه فترة طويلة عليها.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "A toothbrush with blue and white handle and red bristles, and a tube of toothpaste with a blue and green design, are standing upright in a clear glass.",
+        "labels": [],
+        "related_text": "تُحلّل البكتيريا الموجودة داخل الفم بقايا الطعام بين الأسنان مما يجعل وسط الفم حمضياً، وهذا يسبب تأكل الأسنان عند بقائه فترة طويلة عليها."
+      }
+    ],
+    "tables": [],
+    "equations": [],
+    "warnings": [],
+    "extraction_notes": "The page number in the prompt (18) differs from the page number visible in the image (124). The visible page number 124 was used. The number '3' at the top of the page appears to be a chapter or unit number.",
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 304,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 124,
+      "schema_valid": true,
+      "raw_markdown_chars": 363,
+      "char_count": 304,
+      "section_count": 4,
+      "question_count": 0,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.6075,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 124,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"المحاليل الأساسية\\n3\\n\\nالأهداف:\\n- يتعرف الوظيفة الأساسية.\\n- يميز بالتجربة بين الأسس القوية والأسس الضعيفة.\\n- يشرح خواص المحاليل الأساسية.\\n- يبين أهمية الأسس.\\n\\nالكلمات المفتاحية:\\nعدد الوظائف الأساسية - أساس قوي - أساس ضعيف.\\n\\nتُحلّل البكتيريا الموجودة داخل الفم بقايا الطعام بين الأسنان مما يجعل وسط الفم حمضياً، وهذا يسبب تأكل الأسنان عند بقائه فترة طويلة عليها.\\n124\",\n  \"sections\": [\n    {\n      \"heading\": \"المحاليل الأساسية\",\n      \"content\": \"3\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الأهداف:\",\n      \"content\": \"- يتعرف الوظيفة الأساسية.- يميز بالتجربة بين الأسس القوية والأسس الضعيفة.- يشرح خواص المحاليل الأساسية.- يبين أهمية الأسس.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الكلمات المفتاحية:\",\n      \"content\": \"عدد الوظائف الأساسية - أساس قوي - أساس ضعيف.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": null,\n      \"content\": \"تُحلّل البكتيريا الموجودة داخل الفم بقايا الطعام بين الأسنان مما يجعل وسط الفم حمضياً، وهذا يسبب تأكل الأسنان عند بقائه فترة طويلة عليها.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"A toothbrush with blue and white handle and red bristles, and a tube of toothpaste with a blue and green design, are standing upright in a clear glass.\",\n      \"labels\": [],\n      \"related_text\": \"تُحلّل البكتيريا الموجودة داخل الفم بقايا الطعام بين الأسنان مما يجعل وسط الفم حمضياً، وهذا يسبب تأكل الأسنان عند بقائه فترة طويلة عليها.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [],\n  \"warnings\": [],\n  \"extraction_notes\": \"The page number in the prompt (18) differs from the page number visible in the image (124). The visible page number 124 was used. The number '3' at the top of the page appears to be a chapter or unit number.\",\n  \"provider\": \"google\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 304,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 124,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 304,\n    \"char_count\": 304,\n    \"section_count\": 4,\n    \"question_count\": 0,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 1,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.98,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": \"المحاليل الأساسية\\n3\\n\\nالأهداف:\\n- يتعرف الوظيفة الأساسية.\\n- يميز بالتجربة بين الأسس القوية والأسس الضعيفة.\\n- يشرح خواص المحاليل الأساسية.\\n- يبين أهمية الأسس.\\n\\nالكلمات المفتاحية:\\nعدد الوظائف الأساسية - أساس قوي - أساس ضعيف.\\n\\nتُحلّل البكتيريا الموجودة داخل الفم بقايا الطعام بين الأسنان مما يجعل وسط الفم حمضياً، وهذا يسبب تأكل الأسنان عند بقائه فترة طويلة عليها.\\n124\"\n}"
+  },
+  "gemini_image_fallback_content": {
+    "page_number": 124,
+    "detected_language": "Arabic",
+    "raw_markdown": "المحاليل الأساسية\n3\n\nالأهداف:\n- يتعرف الوظيفة الأساسية.\n- يميز بالتجربة بين الأسس القوية والأسس الضعيفة.\n- يشرح خواص المحاليل الأساسية.\n- يبين أهمية الأسس.\n\nالكلمات المفتاحية:\nعدد الوظائف الأساسية - أساس قوي - أساس ضعيف.\n\nتُحلّل البكتيريا الموجودة داخل الفم بقايا الطعام بين الأسنان مما يجعل وسط الفم حمضياً، وهذا يسبب تأكل الأسنان عند بقائه فترة طويلة عليها.\n124",
+    "sections": [
+      {
+        "heading": "المحاليل الأساسية",
+        "content": "3",
+        "content_type": "text"
+      },
+      {
+        "heading": "الأهداف:",
+        "content": "- يتعرف الوظيفة الأساسية.- يميز بالتجربة بين الأسس القوية والأسس الضعيفة.- يشرح خواص المحاليل الأساسية.- يبين أهمية الأسس.",
+        "content_type": "text"
+      },
+      {
+        "heading": "الكلمات المفتاحية:",
+        "content": "عدد الوظائف الأساسية - أساس قوي - أساس ضعيف.",
+        "content_type": "text"
+      },
+      {
+        "heading": null,
+        "content": "تُحلّل البكتيريا الموجودة داخل الفم بقايا الطعام بين الأسنان مما يجعل وسط الفم حمضياً، وهذا يسبب تأكل الأسنان عند بقائه فترة طويلة عليها.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "A toothbrush with blue and white handle and red bristles, and a tube of toothpaste with a blue and green design, are standing upright in a clear glass.",
+        "labels": [],
+        "related_text": "تُحلّل البكتيريا الموجودة داخل الفم بقايا الطعام بين الأسنان مما يجعل وسط الفم حمضياً، وهذا يسبب تأكل الأسنان عند بقائه فترة طويلة عليها."
+      }
+    ],
+    "tables": [],
+    "equations": [],
+    "warnings": [],
+    "extraction_notes": "The page number in the prompt (18) differs from the page number visible in the image (124). The visible page number 124 was used. The number '3' at the top of the page appears to be a chapter or unit number.",
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 304,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 124,
+      "schema_valid": true,
+      "raw_markdown_chars": 363,
+      "char_count": 304,
+      "section_count": 4,
+      "question_count": 0,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.6075,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 124,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"المحاليل الأساسية\\n3\\n\\nالأهداف:\\n- يتعرف الوظيفة الأساسية.\\n- يميز بالتجربة بين الأسس القوية والأسس الضعيفة.\\n- يشرح خواص المحاليل الأساسية.\\n- يبين أهمية الأسس.\\n\\nالكلمات المفتاحية:\\nعدد الوظائف الأساسية - أساس قوي - أساس ضعيف.\\n\\nتُحلّل البكتيريا الموجودة داخل الفم بقايا الطعام بين الأسنان مما يجعل وسط الفم حمضياً، وهذا يسبب تأكل الأسنان عند بقائه فترة طويلة عليها.\\n124\",\n  \"sections\": [\n    {\n      \"heading\": \"المحاليل الأساسية\",\n      \"content\": \"3\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الأهداف:\",\n      \"content\": \"- يتعرف الوظيفة الأساسية.- يميز بالتجربة بين الأسس القوية والأسس الضعيفة.- يشرح خواص المحاليل الأساسية.- يبين أهمية الأسس.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الكلمات المفتاحية:\",\n      \"content\": \"عدد الوظائف الأساسية - أساس قوي - أساس ضعيف.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": null,\n      \"content\": \"تُحلّل البكتيريا الموجودة داخل الفم بقايا الطعام بين الأسنان مما يجعل وسط الفم حمضياً، وهذا يسبب تأكل الأسنان عند بقائه فترة طويلة عليها.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"A toothbrush with blue and white handle and red bristles, and a tube of toothpaste with a blue and green design, are standing upright in a clear glass.\",\n      \"labels\": [],\n      \"related_text\": \"تُحلّل البكتيريا الموجودة داخل الفم بقايا الطعام بين الأسنان مما يجعل وسط الفم حمضياً، وهذا يسبب تأكل الأسنان عند بقائه فترة طويلة عليها.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [],\n  \"warnings\": [],\n  \"extraction_notes\": \"The page number in the prompt (18) differs from the page number visible in the image (124). The visible page number 124 was used. The number '3' at the top of the page appears to be a chapter or unit number.\",\n  \"provider\": \"google\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 304,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 124,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 304,\n    \"char_count\": 304,\n    \"section_count\": 4,\n    \"question_count\": 0,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 1,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.98,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": \"المحاليل الأساسية\\n3\\n\\nالأهداف:\\n- يتعرف الوظيفة الأساسية.\\n- يميز بالتجربة بين الأسس القوية والأسس الضعيفة.\\n- يشرح خواص المحاليل الأساسية.\\n- يبين أهمية الأسس.\\n\\nالكلمات المفتاحية:\\nعدد الوظائف الأساسية - أساس قوي - أساس ضعيف.\\n\\nتُحلّل البكتيريا الموجودة داخل الفم بقايا الطعام بين الأسنان مما يجعل وسط الفم حمضياً، وهذا يسبب تأكل الأسنان عند بقائه فترة طويلة عليها.\\n124\"\n}"
+  },
+  "merged_content": ":ا\u001aﻫﺪاف\n-  \n.يتعرَّف الوظيفة األساسيَّة\n  -\nيميّز بالتَّجربة بين األسس القويَّة واألسس الضَّ عيفة.\n  -\nيشرح خواص المحاليل األساسيَّة.\n  -\nيبيّن أهميَّة األسس.\n:اﻟﻜﻠﻤﺎت اﻟﻤﻔﺘﺎﺣﻴﺔ\n.عدد الوظائف األساسيَّة - أساس قوي - أساس ضعيف\n ،ًّتُحلّـل البكتيريـا الموجـودة داخـل الفـم بقايـا الطَّعـام بيـن األسـنان ممَّـا يجعـل وسـط الفـم حمضيَّـا\nوهـذا يسـبّب تـآكل األسـنان عنـد بقائـه فتـرة طويلـة عليهـا.\nالمحاليل األساسيَّة3\n124\n\n| ةيساسلأا ليلاحملا\nَّ |  |  |\n| --- | --- | --- |\n|  |  |  |\n\nالمحاليل الأساسية\n3\n\nالأهداف:\n- يتعرف الوظيفة الأساسية.- يميز بالتجربة بين الأسس القوية والأسس الضعيفة.- يشرح خواص المحاليل الأساسية.- يبين أهمية الأسس.\n\nالكلمات المفتاحية:\nعدد الوظائف الأساسية - أساس قوي - أساس ضعيف.\n\nتُحلّل البكتيريا الموجودة داخل الفم بقايا الطعام بين الأسنان مما يجعل وسط الفم حمضياً، وهذا يسبب تأكل الأسنان عند بقائه فترة طويلة عليها.",
+  "raw_markdown": "المحاليل الأساسية\n3\n\nالأهداف:\n- يتعرف الوظيفة الأساسية.\n- يميز بالتجربة بين الأسس القوية والأسس الضعيفة.\n- يشرح خواص المحاليل الأساسية.\n- يبين أهمية الأسس.\n\nالكلمات المفتاحية:\nعدد الوظائف الأساسية - أساس قوي - أساس ضعيف.\n\nتُحلّل البكتيريا الموجودة داخل الفم بقايا الطعام بين الأسنان مما يجعل وسط الفم حمضياً، وهذا يسبب تأكل الأسنان عند بقائه فترة طويلة عليها.\n124",
   "sections": [
     {
       "heading": null,
       "content": ":ا\u001aﻫﺪاف\n-  \n.يتعرَّف الوظيفة األساسيَّة\n  -\nيميّز بالتَّجربة بين األسس القويَّة واألسس الضَّ عيفة.\n  -\nيشرح خواص المحاليل األساسيَّة.\n  -\nيبيّن أهميَّة األسس.\n:اﻟﻜﻠﻤﺎت اﻟﻤﻔﺘﺎﺣﻴﺔ\n.عدد الوظائف األساسيَّة - أساس قوي - أساس ضعيف\n ،ًّتُحلّـل البكتيريـا الموجـودة داخـل الفـم بقايـا الطَّعـام بيـن األسـنان ممَّـا يجعـل وسـط الفـم حمضيَّـا\nوهـذا يسـبّب تـآكل األسـنان عنـد بقائـه فتـرة طويلـة عليهـا.\nالمحاليل األساسيَّة3\n124\n\n| ةيساسلأا ليلاحملا\nَّ |  |  |\n| --- | --- | --- |\n|  |  |  |",
       "content_type": "text"
+    },
+    {
+      "heading": "المحاليل الأساسية",
+      "content": "3",
+      "content_type": "text"
+    },
+    {
+      "heading": "الأهداف:",
+      "content": "- يتعرف الوظيفة الأساسية.- يميز بالتجربة بين الأسس القوية والأسس الضعيفة.- يشرح خواص المحاليل الأساسية.- يبين أهمية الأسس.",
+      "content_type": "text"
+    },
+    {
+      "heading": "الكلمات المفتاحية:",
+      "content": "عدد الوظائف الأساسية - أساس قوي - أساس ضعيف.",
+      "content_type": "text"
+    },
+    {
+      "heading": null,
+      "content": "تُحلّل البكتيريا الموجودة داخل الفم بقايا الطعام بين الأسنان مما يجعل وسط الفم حمضياً، وهذا يسبب تأكل الأسنان عند بقائه فترة طويلة عليها.",
+      "content_type": "text"
     }
   ],
   "questions": [],
-  "diagrams": [],
+  "diagrams": [
+    {
+      "title": null,
+      "description": "A toothbrush with blue and white handle and red bristles, and a tube of toothpaste with a blue and green design, are standing upright in a clear glass.",
+      "labels": [],
+      "related_text": "تُحلّل البكتيريا الموجودة داخل الفم بقايا الطعام بين الأسنان مما يجعل وسط الفم حمضياً، وهذا يسبب تأكل الأسنان عند بقائه فترة طويلة عليها."
+    }
+  ],
   "tables": [],
   "equations": [],
-  "warnings": [
-    "Gemini document extraction is not configured. Vision page extraction was skipped."
-  ],
+  "warnings": [],
   "errors": [],
-  "char_count": 482,
-  "completeness_score": 0.45,
-  "detected_language": "ar",
-  "vision_provider": null,
-  "vision_source": null,
-  "neighboring_pages": [],
+  "char_count": 840,
+  "completeness_score": 1.0,
+  "detected_language": "Arabic",
+  "vision_provider": "gemini_document_image",
+  "vision_source": "gemini_rendered_image_300dpi",
+  "neighboring_pages": [
+    17,
+    19
+  ],
   "uploaded_pdf": null,
-  "raw_text": null,
-  "quality_report": {},
+  "raw_text": "{\n  \"page_number\": 124,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"المحاليل الأساسية\\n3\\n\\nالأهداف:\\n- يتعرف الوظيفة الأساسية.\\n- يميز بالتجربة بين الأسس القوية والأسس الضعيفة.\\n- يشرح خواص المحاليل الأساسية.\\n- يبين أهمية الأسس.\\n\\nالكلمات المفتاحية:\\nعدد الوظائف الأساسية - أساس قوي - أساس ضعيف.\\n\\nتُحلّل البكتيريا الموجودة داخل الفم بقايا الطعام بين الأسنان مما يجعل وسط الفم حمضياً، وهذا يسبب تأكل الأسنان عند بقائه فترة طويلة عليها.\\n124\",\n  \"sections\": [\n    {\n      \"heading\": \"المحاليل الأساسية\",\n      \"content\": \"3\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الأهداف:\",\n      \"content\": \"- يتعرف الوظيفة الأساسية.- يميز بالتجربة بين الأسس القوية والأسس الضعيفة.- يشرح خواص المحاليل الأساسية.- يبين أهمية الأسس.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الكلمات المفتاحية:\",\n      \"content\": \"عدد الوظائف الأساسية - أساس قوي - أساس ضعيف.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": null,\n      \"content\": \"تُحلّل البكتيريا الموجودة داخل الفم بقايا الطعام بين الأسنان مما يجعل وسط الفم حمضياً، وهذا يسبب تأكل الأسنان عند بقائه فترة طويلة عليها.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"A toothbrush with blue and white handle and red bristles, and a tube of toothpaste with a blue and green design, are standing upright in a clear glass.\",\n      \"labels\": [],\n      \"related_text\": \"تُحلّل البكتيريا الموجودة داخل الفم بقايا الطعام بين الأسنان مما يجعل وسط الفم حمضياً، وهذا يسبب تأكل الأسنان عند بقائه فترة طويلة عليها.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [],\n  \"warnings\": [],\n  \"extraction_notes\": \"The page number in the prompt (18) differs from the page number visible in the image (124). The visible page number 124 was used. The number '3' at the top of the page appears to be a chapter or unit number.\",\n  \"provider\": \"google\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 304,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 124,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 304,\n    \"char_count\": 304,\n    \"section_count\": 4,\n    \"question_count\": 0,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 1,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.98,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": \"المحاليل الأساسية\\n3\\n\\nالأهداف:\\n- يتعرف الوظيفة الأساسية.\\n- يميز بالتجربة بين الأسس القوية والأسس الضعيفة.\\n- يشرح خواص المحاليل الأساسية.\\n- يبين أهمية الأسس.\\n\\nالكلمات المفتاحية:\\nعدد الوظائف الأساسية - أساس قوي - أساس ضعيف.\\n\\nتُحلّل البكتيريا الموجودة داخل الفم بقايا الطعام بين الأسنان مما يجعل وسط الفم حمضياً، وهذا يسبب تأكل الأسنان عند بقائه فترة طويلة عليها.\\n124\"\n}",
+  "quality_report": {
+    "page_number": 124,
+    "schema_valid": true,
+    "raw_markdown_chars": 363,
+    "char_count": 304,
+    "section_count": 4,
+    "question_count": 0,
+    "table_count": 0,
+    "equation_count": 0,
+    "diagram_count": 1,
+    "warning_count": 0,
+    "arabic_char_ratio": 0.6075,
+    "completeness_score": 1.0,
+    "issues": [],
+    "should_fallback": false
+  },
   "classification": "MIXED_VISION",
   "source_id": 1
 }

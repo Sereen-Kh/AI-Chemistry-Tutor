@@ -2,35 +2,394 @@
   "page_number": 20,
   "page_type": "NEEDS_VISION",
   "extraction_methods": [
-    "gemini_document"
+    "gemini_image_300dpi"
   ],
-  "extraction_method": "gemini_document",
-  "status": "skipped_dry_run",
+  "extraction_method": "gemini_image_300dpi",
+  "status": "completed_with_image_fallback",
   "text_layer_content": "",
-  "vision_content": {},
+  "vision_content": {
+    "page_number": 126,
+    "detected_language": "Arabic",
+    "raw_markdown": "# قوة الأساس:\n\n# أجرب وأستنتج:\n\n## أدوات التجربة:\nوعاء فولتا – أسلاك توصيل – قاطعة – منبع تيار متواصل – مصباح – محلول هيدروكسيد الصوديوم – محلول هيدروكسيد الأمونيوم لهما التركيز ذاته.\n\n## خطوات التجربة:\n1. أصل الدارة كما في الشكل المجاور.\n2. أضع في وعاء فولتا محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\n3. أضع محلول هيدروكسيد الأمونيوم بدلاً من محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\n4. أقارن بين ناقلية محلول هيدروكسيد الصوديوم ومحلول هيدروكسيد الأمونيوم، فسر ذلك.\n\n## أستنتج:\n* يتأين هيدروكسيد الصوديوم تأيناً كلياً في الماء، ويُعبر عن ذلك وفق المعادلة:\nNaOH → Na⁺ + OH⁻\n* يتأين هيدروكسيد الأمونيوم تأيناً جزئياً في الماء، ويُعبر عن ذلك وفق المعادلة:\nNH₄OH ⇌ NH₄⁺ + OH⁻",
+    "sections": [
+      {
+        "heading": "قوة الأساس:",
+        "content": "",
+        "content_type": "text"
+      },
+      {
+        "heading": "أجرب وأستنتج:",
+        "content": "",
+        "content_type": "text"
+      },
+      {
+        "heading": "أدوات التجربة:",
+        "content": "وعاء فولتا – أسلاك توصيل – قاطعة – منبع تيار متواصل – مصباح – محلول هيدروكسيد الصوديوم – محلول هيدروكسيد الأمونيوم لهما التركيز ذاته.",
+        "content_type": "text"
+      },
+      {
+        "heading": "خطوات التجربة:",
+        "content": "1. أصل الدارة كما في الشكل المجاور.\n2. أضع في وعاء فولتا محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\n3. أضع محلول هيدروكسيد الأمونيوم بدلاً من محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\n4. أقارن بين ناقلية محلول هيدروكسيد الصوديوم ومحلول هيدروكسيد الأمونيوم، فسر ذلك.",
+        "content_type": "text"
+      },
+      {
+        "heading": "أستنتج:",
+        "content": "* يتأين هيدروكسيد الصوديوم تأيناً كلياً في الماء، ويُعبر عن ذلك وفق المعادلة:\n* يتأين هيدروكسيد الأمونيوم تأيناً جزئياً في الماء، ويُعبر عن ذلك وفق المعادلة:",
+        "content_type": "text"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "أقارن بين ناقلية محلول هيدروكسيد الصوديوم ومحلول هيدروكسيد الأمونيوم، فسر ذلك.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "A diagram showing an electrical circuit with a beaker containing a solution, two electrodes connected to a power source and a light bulb. The solution is labeled 'أساس ضعيف' (Weak base). The bulb is dimly lit, and the solution shows fewer dissociated ions (one positive, one negative, and one undissociated molecule).",
+        "labels": [
+          "أساس ضعيف"
+        ],
+        "related_text": "أصل الدارة كما في الشكل المجاور."
+      },
+      {
+        "title": null,
+        "description": "A diagram showing an electrical circuit with a beaker containing a solution, two electrodes connected to a power source and a light bulb. The solution is labeled 'أساس قوي' (Strong base). The bulb is brightly lit, and the solution shows many dissociated ions (multiple positive and negative ions).",
+        "labels": [
+          "أساس قوي"
+        ],
+        "related_text": "أصل الدارة كما في الشكل المجاور."
+      }
+    ],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "NaOH → Na⁺ + OH⁻",
+        "description": "Equation showing the complete dissociation of Sodium Hydroxide in water."
+      },
+      {
+        "equation": "NH₄OH ⇌ NH₄⁺ + OH⁻",
+        "description": "Equation showing the partial dissociation of Ammonium Hydroxide in water."
+      }
+    ],
+    "warnings": [],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 769,
+    "completeness_score": 0.95,
+    "quality_report": {
+      "page_number": 126,
+      "schema_valid": true,
+      "raw_markdown_chars": 693,
+      "char_count": 769,
+      "section_count": 5,
+      "question_count": 1,
+      "table_count": 0,
+      "equation_count": 2,
+      "diagram_count": 2,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.5793,
+      "completeness_score": 0.95,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 126,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"# قوة الأساس:\\n\\n# أجرب وأستنتج:\\n\\n## أدوات التجربة:\\nوعاء فولتا – أسلاك توصيل – قاطعة – منبع تيار متواصل – مصباح – محلول هيدروكسيد الصوديوم – محلول هيدروكسيد الأمونيوم لهما التركيز ذاته.\\n\\n## خطوات التجربة:\\n1. أصل الدارة كما في الشكل المجاور.\\n2. أضع في وعاء فولتا محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\\n3. أضع محلول هيدروكسيد الأمونيوم بدلاً من محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\\n4. أقارن بين ناقلية محلول هيدروكسيد الصوديوم ومحلول هيدروكسيد الأمونيوم، فسر ذلك.\\n\\n## أستنتج:\\n* يتأين هيدروكسيد الصوديوم تأيناً كلياً في الماء، ويُعبر عن ذلك وفق المعادلة:\\nNaOH → Na⁺ + OH⁻\\n* يتأين هيدروكسيد الأمونيوم تأيناً جزئياً في الماء، ويُعبر عن ذلك وفق المعادلة:\\nNH₄OH ⇌ NH₄⁺ + OH⁻\",\n  \"sections\": [\n    {\n      \"heading\": \"قوة الأساس:\",\n      \"content\": \"\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أجرب وأستنتج:\",\n      \"content\": \"\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أدوات التجربة:\",\n      \"content\": \"وعاء فولتا – أسلاك توصيل – قاطعة – منبع تيار متواصل – مصباح – محلول هيدروكسيد الصوديوم – محلول هيدروكسيد الأمونيوم لهما التركيز ذاته.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"خطوات التجربة:\",\n      \"content\": \"1. أصل الدارة كما في الشكل المجاور.\\n2. أضع في وعاء فولتا محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\\n3. أضع محلول هيدروكسيد الأمونيوم بدلاً من محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\\n4. أقارن بين ناقلية محلول هيدروكسيد الصوديوم ومحلول هيدروكسيد الأمونيوم، فسر ذلك.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"* يتأين هيدروكسيد الصوديوم تأيناً كلياً في الماء، ويُعبر عن ذلك وفق المعادلة:\\n* يتأين هيدروكسيد الأمونيوم تأيناً جزئياً في الماء، ويُعبر عن ذلك وفق المعادلة:\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"أقارن بين ناقلية محلول هيدروكسيد الصوديوم ومحلول هيدروكسيد الأمونيوم، فسر ذلك.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"A diagram showing an electrical circuit with a beaker containing a solution, two electrodes connected to a power source and a light bulb. The solution is labeled 'أساس ضعيف' (Weak base). The bulb is dimly lit, and the solution shows fewer dissociated ions (one positive, one negative, and one undissociated molecule).\",\n      \"labels\": [\"أساس ضعيف\"],\n      \"related_text\": \"أصل الدارة كما في الشكل المجاور.\"\n    },\n    {\n      \"title\": null,\n      \"description\": \"A diagram showing an electrical circuit with a beaker containing a solution, two electrodes connected to a power source and a light bulb. The solution is labeled 'أساس قوي' (Strong base). The bulb is brightly lit, and the solution shows many dissociated ions (multiple positive and negative ions).\",\n      \"labels\": [\"أساس قوي\"],\n      \"related_text\": \"أصل الدارة كما في الشكل المجاور.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"NaOH → Na⁺ + OH⁻\",\n      \"description\": \"Equation showing the complete dissociation of Sodium Hydroxide in water.\"\n    },\n    {\n      \"equation\": \"NH₄OH ⇌ NH₄⁺ + OH⁻\",\n      \"description\": \"Equation showing the partial dissociation of Ammonium Hydroxide in water.\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"Anthropic\",\n  \"model_name\": \"claude-3-opus-20240229\",\n  \"schema_valid\": true,\n  \"char_count\": 769,\n  \"completeness_score\": 0.95,\n  \"quality_report\": {\n    \"page_number\": 126,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 769,\n    \"char_count\": 769,\n    \"section_count\": 5,\n    \"question_count\": 1,\n    \"table_count\": 0,\n    \"equation_count\": 2,\n    \"diagram_count\": 2,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.93,\n    \"completeness_score\": 0.95,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": \"قوة الأساس:\\nأجرب وأستنتج:\\nأدوات التجربة:\\nوعاء فولتا – أسلاك توصيل – قاطعة – منبع تيار متواصل – مصباح – محلول هيدروكسيد الصوديوم – محلول هيدروكسيد الأمونيوم لهما التركيز ذاته.\\nخطوات التجربة:\\n1. أصل الدارة كما في الشكل المجاور.\\n2. أضع في وعاء فولتا محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\\n3. أضع محلول هيدروكسيد الأمونيوم بدلاً من محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\\n4. أقارن بين ناقلية محلول هيدروكسيد الصوديوم ومحلول هيدروكسيد الأمونيوم، فسر ذلك.\\nأستنتج:\\nيتأين هيدروكسيد الصوديوم تأيناً كلياً في الماء، ويُعبر عن ذلك وفق المعادلة:\\nNaOH → Na⁺ + OH⁻\\nيتأين هيدروكسيد الأمونيوم تأيناً جزئياً في الماء، ويُعبر عن ذلك وفق المعادلة:\\nNH₄OH ⇌ NH₄⁺ + OH⁻\"\n}"
+  },
   "gemini_pdf_content": {},
-  "gemini_fallback_model_content": {},
-  "gemini_image_fallback_content": {},
-  "merged_content": "",
-  "raw_markdown": "",
-  "sections": [],
-  "questions": [],
-  "diagrams": [],
-  "tables": [],
-  "equations": [],
-  "warnings": [
-    "Gemini document extraction is not configured. Vision page extraction was skipped."
+  "gemini_fallback_model_content": {
+    "page_number": 126,
+    "detected_language": "Arabic",
+    "raw_markdown": "# قوة الأساس:\n\n# أجرب وأستنتج:\n\n## أدوات التجربة:\nوعاء فولتا – أسلاك توصيل – قاطعة – منبع تيار متواصل – مصباح – محلول هيدروكسيد الصوديوم – محلول هيدروكسيد الأمونيوم لهما التركيز ذاته.\n\n## خطوات التجربة:\n1. أصل الدارة كما في الشكل المجاور.\n2. أضع في وعاء فولتا محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\n3. أضع محلول هيدروكسيد الأمونيوم بدلاً من محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\n4. أقارن بين ناقلية محلول هيدروكسيد الصوديوم ومحلول هيدروكسيد الأمونيوم، فسر ذلك.\n\n## أستنتج:\n* يتأين هيدروكسيد الصوديوم تأيناً كلياً في الماء، ويُعبر عن ذلك وفق المعادلة:\nNaOH → Na⁺ + OH⁻\n* يتأين هيدروكسيد الأمونيوم تأيناً جزئياً في الماء، ويُعبر عن ذلك وفق المعادلة:\nNH₄OH ⇌ NH₄⁺ + OH⁻",
+    "sections": [
+      {
+        "heading": "قوة الأساس:",
+        "content": "",
+        "content_type": "text"
+      },
+      {
+        "heading": "أجرب وأستنتج:",
+        "content": "",
+        "content_type": "text"
+      },
+      {
+        "heading": "أدوات التجربة:",
+        "content": "وعاء فولتا – أسلاك توصيل – قاطعة – منبع تيار متواصل – مصباح – محلول هيدروكسيد الصوديوم – محلول هيدروكسيد الأمونيوم لهما التركيز ذاته.",
+        "content_type": "text"
+      },
+      {
+        "heading": "خطوات التجربة:",
+        "content": "1. أصل الدارة كما في الشكل المجاور.\n2. أضع في وعاء فولتا محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\n3. أضع محلول هيدروكسيد الأمونيوم بدلاً من محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\n4. أقارن بين ناقلية محلول هيدروكسيد الصوديوم ومحلول هيدروكسيد الأمونيوم، فسر ذلك.",
+        "content_type": "text"
+      },
+      {
+        "heading": "أستنتج:",
+        "content": "* يتأين هيدروكسيد الصوديوم تأيناً كلياً في الماء، ويُعبر عن ذلك وفق المعادلة:\n* يتأين هيدروكسيد الأمونيوم تأيناً جزئياً في الماء، ويُعبر عن ذلك وفق المعادلة:",
+        "content_type": "text"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "أقارن بين ناقلية محلول هيدروكسيد الصوديوم ومحلول هيدروكسيد الأمونيوم، فسر ذلك.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "A diagram showing an electrical circuit with a beaker containing a solution, two electrodes connected to a power source and a light bulb. The solution is labeled 'أساس ضعيف' (Weak base). The bulb is dimly lit, and the solution shows fewer dissociated ions (one positive, one negative, and one undissociated molecule).",
+        "labels": [
+          "أساس ضعيف"
+        ],
+        "related_text": "أصل الدارة كما في الشكل المجاور."
+      },
+      {
+        "title": null,
+        "description": "A diagram showing an electrical circuit with a beaker containing a solution, two electrodes connected to a power source and a light bulb. The solution is labeled 'أساس قوي' (Strong base). The bulb is brightly lit, and the solution shows many dissociated ions (multiple positive and negative ions).",
+        "labels": [
+          "أساس قوي"
+        ],
+        "related_text": "أصل الدارة كما في الشكل المجاور."
+      }
+    ],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "NaOH → Na⁺ + OH⁻",
+        "description": "Equation showing the complete dissociation of Sodium Hydroxide in water."
+      },
+      {
+        "equation": "NH₄OH ⇌ NH₄⁺ + OH⁻",
+        "description": "Equation showing the partial dissociation of Ammonium Hydroxide in water."
+      }
+    ],
+    "warnings": [],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 769,
+    "completeness_score": 0.95,
+    "quality_report": {
+      "page_number": 126,
+      "schema_valid": true,
+      "raw_markdown_chars": 693,
+      "char_count": 769,
+      "section_count": 5,
+      "question_count": 1,
+      "table_count": 0,
+      "equation_count": 2,
+      "diagram_count": 2,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.5793,
+      "completeness_score": 0.95,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 126,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"# قوة الأساس:\\n\\n# أجرب وأستنتج:\\n\\n## أدوات التجربة:\\nوعاء فولتا – أسلاك توصيل – قاطعة – منبع تيار متواصل – مصباح – محلول هيدروكسيد الصوديوم – محلول هيدروكسيد الأمونيوم لهما التركيز ذاته.\\n\\n## خطوات التجربة:\\n1. أصل الدارة كما في الشكل المجاور.\\n2. أضع في وعاء فولتا محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\\n3. أضع محلول هيدروكسيد الأمونيوم بدلاً من محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\\n4. أقارن بين ناقلية محلول هيدروكسيد الصوديوم ومحلول هيدروكسيد الأمونيوم، فسر ذلك.\\n\\n## أستنتج:\\n* يتأين هيدروكسيد الصوديوم تأيناً كلياً في الماء، ويُعبر عن ذلك وفق المعادلة:\\nNaOH → Na⁺ + OH⁻\\n* يتأين هيدروكسيد الأمونيوم تأيناً جزئياً في الماء، ويُعبر عن ذلك وفق المعادلة:\\nNH₄OH ⇌ NH₄⁺ + OH⁻\",\n  \"sections\": [\n    {\n      \"heading\": \"قوة الأساس:\",\n      \"content\": \"\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أجرب وأستنتج:\",\n      \"content\": \"\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أدوات التجربة:\",\n      \"content\": \"وعاء فولتا – أسلاك توصيل – قاطعة – منبع تيار متواصل – مصباح – محلول هيدروكسيد الصوديوم – محلول هيدروكسيد الأمونيوم لهما التركيز ذاته.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"خطوات التجربة:\",\n      \"content\": \"1. أصل الدارة كما في الشكل المجاور.\\n2. أضع في وعاء فولتا محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\\n3. أضع محلول هيدروكسيد الأمونيوم بدلاً من محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\\n4. أقارن بين ناقلية محلول هيدروكسيد الصوديوم ومحلول هيدروكسيد الأمونيوم، فسر ذلك.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"* يتأين هيدروكسيد الصوديوم تأيناً كلياً في الماء، ويُعبر عن ذلك وفق المعادلة:\\n* يتأين هيدروكسيد الأمونيوم تأيناً جزئياً في الماء، ويُعبر عن ذلك وفق المعادلة:\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"أقارن بين ناقلية محلول هيدروكسيد الصوديوم ومحلول هيدروكسيد الأمونيوم، فسر ذلك.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"A diagram showing an electrical circuit with a beaker containing a solution, two electrodes connected to a power source and a light bulb. The solution is labeled 'أساس ضعيف' (Weak base). The bulb is dimly lit, and the solution shows fewer dissociated ions (one positive, one negative, and one undissociated molecule).\",\n      \"labels\": [\"أساس ضعيف\"],\n      \"related_text\": \"أصل الدارة كما في الشكل المجاور.\"\n    },\n    {\n      \"title\": null,\n      \"description\": \"A diagram showing an electrical circuit with a beaker containing a solution, two electrodes connected to a power source and a light bulb. The solution is labeled 'أساس قوي' (Strong base). The bulb is brightly lit, and the solution shows many dissociated ions (multiple positive and negative ions).\",\n      \"labels\": [\"أساس قوي\"],\n      \"related_text\": \"أصل الدارة كما في الشكل المجاور.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"NaOH → Na⁺ + OH⁻\",\n      \"description\": \"Equation showing the complete dissociation of Sodium Hydroxide in water.\"\n    },\n    {\n      \"equation\": \"NH₄OH ⇌ NH₄⁺ + OH⁻\",\n      \"description\": \"Equation showing the partial dissociation of Ammonium Hydroxide in water.\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"Anthropic\",\n  \"model_name\": \"claude-3-opus-20240229\",\n  \"schema_valid\": true,\n  \"char_count\": 769,\n  \"completeness_score\": 0.95,\n  \"quality_report\": {\n    \"page_number\": 126,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 769,\n    \"char_count\": 769,\n    \"section_count\": 5,\n    \"question_count\": 1,\n    \"table_count\": 0,\n    \"equation_count\": 2,\n    \"diagram_count\": 2,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.93,\n    \"completeness_score\": 0.95,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": \"قوة الأساس:\\nأجرب وأستنتج:\\nأدوات التجربة:\\nوعاء فولتا – أسلاك توصيل – قاطعة – منبع تيار متواصل – مصباح – محلول هيدروكسيد الصوديوم – محلول هيدروكسيد الأمونيوم لهما التركيز ذاته.\\nخطوات التجربة:\\n1. أصل الدارة كما في الشكل المجاور.\\n2. أضع في وعاء فولتا محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\\n3. أضع محلول هيدروكسيد الأمونيوم بدلاً من محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\\n4. أقارن بين ناقلية محلول هيدروكسيد الصوديوم ومحلول هيدروكسيد الأمونيوم، فسر ذلك.\\nأستنتج:\\nيتأين هيدروكسيد الصوديوم تأيناً كلياً في الماء، ويُعبر عن ذلك وفق المعادلة:\\nNaOH → Na⁺ + OH⁻\\nيتأين هيدروكسيد الأمونيوم تأيناً جزئياً في الماء، ويُعبر عن ذلك وفق المعادلة:\\nNH₄OH ⇌ NH₄⁺ + OH⁻\"\n}"
+  },
+  "gemini_image_fallback_content": {
+    "page_number": 126,
+    "detected_language": "Arabic",
+    "raw_markdown": "# قوة الأساس:\n\n# أجرب وأستنتج:\n\n## أدوات التجربة:\nوعاء فولتا – أسلاك توصيل – قاطعة – منبع تيار متواصل – مصباح – محلول هيدروكسيد الصوديوم – محلول هيدروكسيد الأمونيوم لهما التركيز ذاته.\n\n## خطوات التجربة:\n1. أصل الدارة كما في الشكل المجاور.\n2. أضع في وعاء فولتا محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\n3. أضع محلول هيدروكسيد الأمونيوم بدلاً من محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\n4. أقارن بين ناقلية محلول هيدروكسيد الصوديوم ومحلول هيدروكسيد الأمونيوم، فسر ذلك.\n\n## أستنتج:\n* يتأين هيدروكسيد الصوديوم تأيناً كلياً في الماء، ويُعبر عن ذلك وفق المعادلة:\nNaOH → Na⁺ + OH⁻\n* يتأين هيدروكسيد الأمونيوم تأيناً جزئياً في الماء، ويُعبر عن ذلك وفق المعادلة:\nNH₄OH ⇌ NH₄⁺ + OH⁻",
+    "sections": [
+      {
+        "heading": "قوة الأساس:",
+        "content": "",
+        "content_type": "text"
+      },
+      {
+        "heading": "أجرب وأستنتج:",
+        "content": "",
+        "content_type": "text"
+      },
+      {
+        "heading": "أدوات التجربة:",
+        "content": "وعاء فولتا – أسلاك توصيل – قاطعة – منبع تيار متواصل – مصباح – محلول هيدروكسيد الصوديوم – محلول هيدروكسيد الأمونيوم لهما التركيز ذاته.",
+        "content_type": "text"
+      },
+      {
+        "heading": "خطوات التجربة:",
+        "content": "1. أصل الدارة كما في الشكل المجاور.\n2. أضع في وعاء فولتا محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\n3. أضع محلول هيدروكسيد الأمونيوم بدلاً من محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\n4. أقارن بين ناقلية محلول هيدروكسيد الصوديوم ومحلول هيدروكسيد الأمونيوم، فسر ذلك.",
+        "content_type": "text"
+      },
+      {
+        "heading": "أستنتج:",
+        "content": "* يتأين هيدروكسيد الصوديوم تأيناً كلياً في الماء، ويُعبر عن ذلك وفق المعادلة:\n* يتأين هيدروكسيد الأمونيوم تأيناً جزئياً في الماء، ويُعبر عن ذلك وفق المعادلة:",
+        "content_type": "text"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "أقارن بين ناقلية محلول هيدروكسيد الصوديوم ومحلول هيدروكسيد الأمونيوم، فسر ذلك.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "A diagram showing an electrical circuit with a beaker containing a solution, two electrodes connected to a power source and a light bulb. The solution is labeled 'أساس ضعيف' (Weak base). The bulb is dimly lit, and the solution shows fewer dissociated ions (one positive, one negative, and one undissociated molecule).",
+        "labels": [
+          "أساس ضعيف"
+        ],
+        "related_text": "أصل الدارة كما في الشكل المجاور."
+      },
+      {
+        "title": null,
+        "description": "A diagram showing an electrical circuit with a beaker containing a solution, two electrodes connected to a power source and a light bulb. The solution is labeled 'أساس قوي' (Strong base). The bulb is brightly lit, and the solution shows many dissociated ions (multiple positive and negative ions).",
+        "labels": [
+          "أساس قوي"
+        ],
+        "related_text": "أصل الدارة كما في الشكل المجاور."
+      }
+    ],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "NaOH → Na⁺ + OH⁻",
+        "description": "Equation showing the complete dissociation of Sodium Hydroxide in water."
+      },
+      {
+        "equation": "NH₄OH ⇌ NH₄⁺ + OH⁻",
+        "description": "Equation showing the partial dissociation of Ammonium Hydroxide in water."
+      }
+    ],
+    "warnings": [],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 769,
+    "completeness_score": 0.95,
+    "quality_report": {
+      "page_number": 126,
+      "schema_valid": true,
+      "raw_markdown_chars": 693,
+      "char_count": 769,
+      "section_count": 5,
+      "question_count": 1,
+      "table_count": 0,
+      "equation_count": 2,
+      "diagram_count": 2,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.5793,
+      "completeness_score": 0.95,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 126,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"# قوة الأساس:\\n\\n# أجرب وأستنتج:\\n\\n## أدوات التجربة:\\nوعاء فولتا – أسلاك توصيل – قاطعة – منبع تيار متواصل – مصباح – محلول هيدروكسيد الصوديوم – محلول هيدروكسيد الأمونيوم لهما التركيز ذاته.\\n\\n## خطوات التجربة:\\n1. أصل الدارة كما في الشكل المجاور.\\n2. أضع في وعاء فولتا محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\\n3. أضع محلول هيدروكسيد الأمونيوم بدلاً من محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\\n4. أقارن بين ناقلية محلول هيدروكسيد الصوديوم ومحلول هيدروكسيد الأمونيوم، فسر ذلك.\\n\\n## أستنتج:\\n* يتأين هيدروكسيد الصوديوم تأيناً كلياً في الماء، ويُعبر عن ذلك وفق المعادلة:\\nNaOH → Na⁺ + OH⁻\\n* يتأين هيدروكسيد الأمونيوم تأيناً جزئياً في الماء، ويُعبر عن ذلك وفق المعادلة:\\nNH₄OH ⇌ NH₄⁺ + OH⁻\",\n  \"sections\": [\n    {\n      \"heading\": \"قوة الأساس:\",\n      \"content\": \"\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أجرب وأستنتج:\",\n      \"content\": \"\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أدوات التجربة:\",\n      \"content\": \"وعاء فولتا – أسلاك توصيل – قاطعة – منبع تيار متواصل – مصباح – محلول هيدروكسيد الصوديوم – محلول هيدروكسيد الأمونيوم لهما التركيز ذاته.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"خطوات التجربة:\",\n      \"content\": \"1. أصل الدارة كما في الشكل المجاور.\\n2. أضع في وعاء فولتا محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\\n3. أضع محلول هيدروكسيد الأمونيوم بدلاً من محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\\n4. أقارن بين ناقلية محلول هيدروكسيد الصوديوم ومحلول هيدروكسيد الأمونيوم، فسر ذلك.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"* يتأين هيدروكسيد الصوديوم تأيناً كلياً في الماء، ويُعبر عن ذلك وفق المعادلة:\\n* يتأين هيدروكسيد الأمونيوم تأيناً جزئياً في الماء، ويُعبر عن ذلك وفق المعادلة:\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"أقارن بين ناقلية محلول هيدروكسيد الصوديوم ومحلول هيدروكسيد الأمونيوم، فسر ذلك.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"A diagram showing an electrical circuit with a beaker containing a solution, two electrodes connected to a power source and a light bulb. The solution is labeled 'أساس ضعيف' (Weak base). The bulb is dimly lit, and the solution shows fewer dissociated ions (one positive, one negative, and one undissociated molecule).\",\n      \"labels\": [\"أساس ضعيف\"],\n      \"related_text\": \"أصل الدارة كما في الشكل المجاور.\"\n    },\n    {\n      \"title\": null,\n      \"description\": \"A diagram showing an electrical circuit with a beaker containing a solution, two electrodes connected to a power source and a light bulb. The solution is labeled 'أساس قوي' (Strong base). The bulb is brightly lit, and the solution shows many dissociated ions (multiple positive and negative ions).\",\n      \"labels\": [\"أساس قوي\"],\n      \"related_text\": \"أصل الدارة كما في الشكل المجاور.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"NaOH → Na⁺ + OH⁻\",\n      \"description\": \"Equation showing the complete dissociation of Sodium Hydroxide in water.\"\n    },\n    {\n      \"equation\": \"NH₄OH ⇌ NH₄⁺ + OH⁻\",\n      \"description\": \"Equation showing the partial dissociation of Ammonium Hydroxide in water.\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"Anthropic\",\n  \"model_name\": \"claude-3-opus-20240229\",\n  \"schema_valid\": true,\n  \"char_count\": 769,\n  \"completeness_score\": 0.95,\n  \"quality_report\": {\n    \"page_number\": 126,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 769,\n    \"char_count\": 769,\n    \"section_count\": 5,\n    \"question_count\": 1,\n    \"table_count\": 0,\n    \"equation_count\": 2,\n    \"diagram_count\": 2,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.93,\n    \"completeness_score\": 0.95,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": \"قوة الأساس:\\nأجرب وأستنتج:\\nأدوات التجربة:\\nوعاء فولتا – أسلاك توصيل – قاطعة – منبع تيار متواصل – مصباح – محلول هيدروكسيد الصوديوم – محلول هيدروكسيد الأمونيوم لهما التركيز ذاته.\\nخطوات التجربة:\\n1. أصل الدارة كما في الشكل المجاور.\\n2. أضع في وعاء فولتا محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\\n3. أضع محلول هيدروكسيد الأمونيوم بدلاً من محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\\n4. أقارن بين ناقلية محلول هيدروكسيد الصوديوم ومحلول هيدروكسيد الأمونيوم، فسر ذلك.\\nأستنتج:\\nيتأين هيدروكسيد الصوديوم تأيناً كلياً في الماء، ويُعبر عن ذلك وفق المعادلة:\\nNaOH → Na⁺ + OH⁻\\nيتأين هيدروكسيد الأمونيوم تأيناً جزئياً في الماء، ويُعبر عن ذلك وفق المعادلة:\\nNH₄OH ⇌ NH₄⁺ + OH⁻\"\n}"
+  },
+  "merged_content": "قوة الأساس:\n\nأجرب وأستنتج:\n\nأدوات التجربة:\nوعاء فولتا – أسلاك توصيل – قاطعة – منبع تيار متواصل – مصباح – محلول هيدروكسيد الصوديوم – محلول هيدروكسيد الأمونيوم لهما التركيز ذاته.\n\nخطوات التجربة:\n1. أصل الدارة كما في الشكل المجاور.\n2. أضع في وعاء فولتا محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\n3. أضع محلول هيدروكسيد الأمونيوم بدلاً من محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\n4. أقارن بين ناقلية محلول هيدروكسيد الصوديوم ومحلول هيدروكسيد الأمونيوم، فسر ذلك.\n\nأستنتج:\n* يتأين هيدروكسيد الصوديوم تأيناً كلياً في الماء، ويُعبر عن ذلك وفق المعادلة:\n* يتأين هيدروكسيد الأمونيوم تأيناً جزئياً في الماء، ويُعبر عن ذلك وفق المعادلة:",
+  "raw_markdown": "# قوة الأساس:\n\n# أجرب وأستنتج:\n\n## أدوات التجربة:\nوعاء فولتا – أسلاك توصيل – قاطعة – منبع تيار متواصل – مصباح – محلول هيدروكسيد الصوديوم – محلول هيدروكسيد الأمونيوم لهما التركيز ذاته.\n\n## خطوات التجربة:\n1. أصل الدارة كما في الشكل المجاور.\n2. أضع في وعاء فولتا محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\n3. أضع محلول هيدروكسيد الأمونيوم بدلاً من محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\n4. أقارن بين ناقلية محلول هيدروكسيد الصوديوم ومحلول هيدروكسيد الأمونيوم، فسر ذلك.\n\n## أستنتج:\n* يتأين هيدروكسيد الصوديوم تأيناً كلياً في الماء، ويُعبر عن ذلك وفق المعادلة:\nNaOH → Na⁺ + OH⁻\n* يتأين هيدروكسيد الأمونيوم تأيناً جزئياً في الماء، ويُعبر عن ذلك وفق المعادلة:\nNH₄OH ⇌ NH₄⁺ + OH⁻",
+  "sections": [
+    {
+      "heading": "قوة الأساس:",
+      "content": "",
+      "content_type": "text"
+    },
+    {
+      "heading": "أجرب وأستنتج:",
+      "content": "",
+      "content_type": "text"
+    },
+    {
+      "heading": "أدوات التجربة:",
+      "content": "وعاء فولتا – أسلاك توصيل – قاطعة – منبع تيار متواصل – مصباح – محلول هيدروكسيد الصوديوم – محلول هيدروكسيد الأمونيوم لهما التركيز ذاته.",
+      "content_type": "text"
+    },
+    {
+      "heading": "خطوات التجربة:",
+      "content": "1. أصل الدارة كما في الشكل المجاور.\n2. أضع في وعاء فولتا محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\n3. أضع محلول هيدروكسيد الأمونيوم بدلاً من محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\n4. أقارن بين ناقلية محلول هيدروكسيد الصوديوم ومحلول هيدروكسيد الأمونيوم، فسر ذلك.",
+      "content_type": "text"
+    },
+    {
+      "heading": "أستنتج:",
+      "content": "* يتأين هيدروكسيد الصوديوم تأيناً كلياً في الماء، ويُعبر عن ذلك وفق المعادلة:\n* يتأين هيدروكسيد الأمونيوم تأيناً جزئياً في الماء، ويُعبر عن ذلك وفق المعادلة:",
+      "content_type": "text"
+    }
   ],
+  "questions": [
+    {
+      "question_text": "أقارن بين ناقلية محلول هيدروكسيد الصوديوم ومحلول هيدروكسيد الأمونيوم، فسر ذلك.",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    }
+  ],
+  "diagrams": [
+    {
+      "title": null,
+      "description": "A diagram showing an electrical circuit with a beaker containing a solution, two electrodes connected to a power source and a light bulb. The solution is labeled 'أساس ضعيف' (Weak base). The bulb is dimly lit, and the solution shows fewer dissociated ions (one positive, one negative, and one undissociated molecule).",
+      "labels": [
+        "أساس ضعيف"
+      ],
+      "related_text": "أصل الدارة كما في الشكل المجاور."
+    },
+    {
+      "title": null,
+      "description": "A diagram showing an electrical circuit with a beaker containing a solution, two electrodes connected to a power source and a light bulb. The solution is labeled 'أساس قوي' (Strong base). The bulb is brightly lit, and the solution shows many dissociated ions (multiple positive and negative ions).",
+      "labels": [
+        "أساس قوي"
+      ],
+      "related_text": "أصل الدارة كما في الشكل المجاور."
+    }
+  ],
+  "tables": [],
+  "equations": [
+    {
+      "equation": "NaOH → Na⁺ + OH⁻",
+      "description": "Equation showing the complete dissociation of Sodium Hydroxide in water."
+    },
+    {
+      "equation": "NH₄OH ⇌ NH₄⁺ + OH⁻",
+      "description": "Equation showing the partial dissociation of Ammonium Hydroxide in water."
+    }
+  ],
+  "warnings": [],
   "errors": [],
-  "char_count": 0,
-  "completeness_score": 0.0,
-  "detected_language": "ar",
-  "vision_provider": null,
-  "vision_source": null,
-  "neighboring_pages": [],
+  "char_count": 644,
+  "completeness_score": 1.0,
+  "detected_language": "Arabic",
+  "vision_provider": "gemini_document_image",
+  "vision_source": "gemini_rendered_image_300dpi",
+  "neighboring_pages": [
+    19,
+    21
+  ],
   "uploaded_pdf": null,
-  "raw_text": null,
-  "quality_report": {},
+  "raw_text": "{\n  \"page_number\": 126,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"# قوة الأساس:\\n\\n# أجرب وأستنتج:\\n\\n## أدوات التجربة:\\nوعاء فولتا – أسلاك توصيل – قاطعة – منبع تيار متواصل – مصباح – محلول هيدروكسيد الصوديوم – محلول هيدروكسيد الأمونيوم لهما التركيز ذاته.\\n\\n## خطوات التجربة:\\n1. أصل الدارة كما في الشكل المجاور.\\n2. أضع في وعاء فولتا محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\\n3. أضع محلول هيدروكسيد الأمونيوم بدلاً من محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\\n4. أقارن بين ناقلية محلول هيدروكسيد الصوديوم ومحلول هيدروكسيد الأمونيوم، فسر ذلك.\\n\\n## أستنتج:\\n* يتأين هيدروكسيد الصوديوم تأيناً كلياً في الماء، ويُعبر عن ذلك وفق المعادلة:\\nNaOH → Na⁺ + OH⁻\\n* يتأين هيدروكسيد الأمونيوم تأيناً جزئياً في الماء، ويُعبر عن ذلك وفق المعادلة:\\nNH₄OH ⇌ NH₄⁺ + OH⁻\",\n  \"sections\": [\n    {\n      \"heading\": \"قوة الأساس:\",\n      \"content\": \"\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أجرب وأستنتج:\",\n      \"content\": \"\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أدوات التجربة:\",\n      \"content\": \"وعاء فولتا – أسلاك توصيل – قاطعة – منبع تيار متواصل – مصباح – محلول هيدروكسيد الصوديوم – محلول هيدروكسيد الأمونيوم لهما التركيز ذاته.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"خطوات التجربة:\",\n      \"content\": \"1. أصل الدارة كما في الشكل المجاور.\\n2. أضع في وعاء فولتا محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\\n3. أضع محلول هيدروكسيد الأمونيوم بدلاً من محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\\n4. أقارن بين ناقلية محلول هيدروكسيد الصوديوم ومحلول هيدروكسيد الأمونيوم، فسر ذلك.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"* يتأين هيدروكسيد الصوديوم تأيناً كلياً في الماء، ويُعبر عن ذلك وفق المعادلة:\\n* يتأين هيدروكسيد الأمونيوم تأيناً جزئياً في الماء، ويُعبر عن ذلك وفق المعادلة:\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"أقارن بين ناقلية محلول هيدروكسيد الصوديوم ومحلول هيدروكسيد الأمونيوم، فسر ذلك.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"A diagram showing an electrical circuit with a beaker containing a solution, two electrodes connected to a power source and a light bulb. The solution is labeled 'أساس ضعيف' (Weak base). The bulb is dimly lit, and the solution shows fewer dissociated ions (one positive, one negative, and one undissociated molecule).\",\n      \"labels\": [\"أساس ضعيف\"],\n      \"related_text\": \"أصل الدارة كما في الشكل المجاور.\"\n    },\n    {\n      \"title\": null,\n      \"description\": \"A diagram showing an electrical circuit with a beaker containing a solution, two electrodes connected to a power source and a light bulb. The solution is labeled 'أساس قوي' (Strong base). The bulb is brightly lit, and the solution shows many dissociated ions (multiple positive and negative ions).\",\n      \"labels\": [\"أساس قوي\"],\n      \"related_text\": \"أصل الدارة كما في الشكل المجاور.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"NaOH → Na⁺ + OH⁻\",\n      \"description\": \"Equation showing the complete dissociation of Sodium Hydroxide in water.\"\n    },\n    {\n      \"equation\": \"NH₄OH ⇌ NH₄⁺ + OH⁻\",\n      \"description\": \"Equation showing the partial dissociation of Ammonium Hydroxide in water.\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"Anthropic\",\n  \"model_name\": \"claude-3-opus-20240229\",\n  \"schema_valid\": true,\n  \"char_count\": 769,\n  \"completeness_score\": 0.95,\n  \"quality_report\": {\n    \"page_number\": 126,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 769,\n    \"char_count\": 769,\n    \"section_count\": 5,\n    \"question_count\": 1,\n    \"table_count\": 0,\n    \"equation_count\": 2,\n    \"diagram_count\": 2,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.93,\n    \"completeness_score\": 0.95,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": \"قوة الأساس:\\nأجرب وأستنتج:\\nأدوات التجربة:\\nوعاء فولتا – أسلاك توصيل – قاطعة – منبع تيار متواصل – مصباح – محلول هيدروكسيد الصوديوم – محلول هيدروكسيد الأمونيوم لهما التركيز ذاته.\\nخطوات التجربة:\\n1. أصل الدارة كما في الشكل المجاور.\\n2. أضع في وعاء فولتا محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\\n3. أضع محلول هيدروكسيد الأمونيوم بدلاً من محلول هيدروكسيد الصوديوم، وألاحظ شدة إضاءة المصباح.\\n4. أقارن بين ناقلية محلول هيدروكسيد الصوديوم ومحلول هيدروكسيد الأمونيوم، فسر ذلك.\\nأستنتج:\\nيتأين هيدروكسيد الصوديوم تأيناً كلياً في الماء، ويُعبر عن ذلك وفق المعادلة:\\nNaOH → Na⁺ + OH⁻\\nيتأين هيدروكسيد الأمونيوم تأيناً جزئياً في الماء، ويُعبر عن ذلك وفق المعادلة:\\nNH₄OH ⇌ NH₄⁺ + OH⁻\"\n}",
+  "quality_report": {
+    "page_number": 126,
+    "schema_valid": true,
+    "raw_markdown_chars": 693,
+    "char_count": 769,
+    "section_count": 5,
+    "question_count": 1,
+    "table_count": 0,
+    "equation_count": 2,
+    "diagram_count": 2,
+    "warning_count": 0,
+    "arabic_char_ratio": 0.5793,
+    "completeness_score": 0.95,
+    "issues": [],
+    "should_fallback": false
+  },
   "classification": "NEEDS_VISION",
   "source_id": 1
 }

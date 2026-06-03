@@ -4,41 +4,611 @@
   "extraction_methods": [
     "pymupdf",
     "pdfplumber",
-    "gemini_document"
+    "gemini_image_300dpi"
   ],
-  "extraction_method": "pymupdf+pdfplumber+gemini_document",
-  "status": "skipped_dry_run",
+  "extraction_method": "pymupdf+pdfplumber+gemini_image_300dpi",
+  "status": "completed_with_image_fallback",
   "text_layer_content": ":ﻧﺸﺎط\nاعتماداً على سلسلة النَّ شاط الكيميائيّ ، اكتب المعادالت المعبّ رة عن\n \nالتَّ فاعالت القابلة للحدوث.\n1\n1 .\n.الحديد مع كبريتات الزّ نك\n2\n2 .\n.األلمنيوم مع حمض كلور الماء\n3\n3 .\n.الذَّ هب مع حمض كلور الماء\n4\n4 .\n.النّ حاس مع حمض الكبريت الممدَّ د\n5\n5 .\n.البروم مع كلوريد الصّ وديوم\n. تفاعالت التّبادل الثّنائيّ:٤\n:أدوات التجربة\n محلول كلوريد الصّ وديوم.-  محلول نترات الفضَّة- أنبوبا اختبار\nخطوات التّجربة:\n\u0007أضيف محلوالً من كلوريد الصّ وديوم إلى محلول نترات الفضَّة كما في الشَّكل، ماذا أالحظ؟1\n.أكتب معادلة التَّفاعل الحاصل2\n.أكتب المعادلة األيونيَّة3\n.أفسّر حدوث التّفاعل4\n أسمّي هذا النّوع من5\n.التّفاعالت\nAgNO3\nNaCl\n:أﺟﺮب وأﺳﺘﻨﺘﺞ\n140\n\n| أ 1 |\n| --- |\n| أ 2 |\n| أ 3 |\n| فأ 4 |\n|  |\n| 5\nأ |\n\n|  |  |\n| --- | --- |\n|  |  |",
-  "vision_content": {},
+  "vision_content": {
+    "page_number": 34,
+    "detected_language": "Arabic",
+    "raw_markdown": "# نشاط\n\nاعتماداً على سلسلة النشاط الكيميائي، اكتب المعادلات المعتبرة عن التفاعلات القابلة للحدوث.\n١. الحديد مع كبريتات الزنك.\n٢. الألومنيوم مع حمض كلور الماء.\n٣. الذهب مع حمض كلور الماء.\n٤. النحاس مع حمض الكبريت الممدد.\n٥. البروم مع كلوريد الصوديوم.\n\n٤. تفاعلات التبادل الثنائي\n\nأجرب وأستنتج:\n\n## أدوات التجربة:\nأنبوبا اختبار - محلول نترات الفضة - محلول كلوريد الصوديوم.\n\n## خطوات التجربة:\n١. أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل، ماذا ألاحظ؟\n٢. أكتب معادلة التفاعل الحاصل.\n٣. أكتب المعادلة الأيونية.\n٤. أفسر حدوث التفاعل.\n٥. أسمي هذا النوع من التفاعلات.",
+    "sections": [
+      {
+        "heading": "نشاط",
+        "content": "اعتماداً على سلسلة النشاط الكيميائي، اكتب المعادلات المعتبرة عن التفاعلات القابلة للحدوث. ١. الحديد مع كبريتات الزنك. ٢. الألومنيوم مع حمض كلور الماء. ٣. الذهب مع حمض كلور الماء. ٤. النحاس مع حمض الكبريت الممدد. ٥. البروم مع كلوريد الصوديوم.",
+        "content_type": "exercise"
+      },
+      {
+        "heading": "٤. تفاعلات التبادل الثنائي",
+        "content": "أجرب وأستنتج:",
+        "content_type": "text"
+      },
+      {
+        "heading": "أدوات التجربة:",
+        "content": "أنبوبا اختبار - محلول نترات الفضة - محلول كلوريد الصوديوم.",
+        "content_type": "text"
+      },
+      {
+        "heading": "خطوات التجربة:",
+        "content": "١. أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل، ماذا ألاحظ؟ ٢. أكتب معادلة التفاعل الحاصل. ٣. أكتب المعادلة الأيونية. ٤. أفسر حدوث التفاعل. ٥. أسمي هذا النوع من التفاعلات.",
+        "content_type": "exercise"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: الحديد مع كبريتات الزنك.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: الألومنيوم مع حمض كلور الماء.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: الذهب مع حمض كلور الماء.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: النحاس مع حمض الكبريت الممدد.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: البروم مع كلوريد الصوديوم.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل، ماذا ألاحظ؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أكتب معادلة التفاعل الحاصل.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أكتب المعادلة الأيونية.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أفسر حدوث التفاعل.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أسمي هذا النوع من التفاعلات.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "A sequence of two images showing an experiment. The first image displays two separate beakers, one containing silver nitrate (AgNO₃) solution and the other containing sodium chloride (NaCl) solution. The second image shows a hand pouring the NaCl solution from one beaker into the AgNO₃ solution in the other beaker, resulting in the formation of a white, cloudy precipitate, indicating a reaction has occurred.",
+        "labels": [
+          "AgNO₃",
+          "NaCl"
+        ],
+        "related_text": "أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل"
+      }
+    ],
+    "tables": [],
+    "equations": [],
+    "warnings": [
+      "The visible page number on the image is 140, but the prompt requested extraction for page 34. Content is extracted based on the image provided."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 409,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 34,
+      "schema_valid": true,
+      "raw_markdown_chars": 583,
+      "char_count": 409,
+      "section_count": 4,
+      "question_count": 10,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 1,
+      "warning_count": 1,
+      "arabic_char_ratio": 0.5231,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 34,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"# نشاط\\n\\nاعتماداً على سلسلة النشاط الكيميائي، اكتب المعادلات المعتبرة عن التفاعلات القابلة للحدوث.\\n١. الحديد مع كبريتات الزنك.\\n٢. الألومنيوم مع حمض كلور الماء.\\n٣. الذهب مع حمض كلور الماء.\\n٤. النحاس مع حمض الكبريت الممدد.\\n٥. البروم مع كلوريد الصوديوم.\\n\\n٤. تفاعلات التبادل الثنائي\\n\\nأجرب وأستنتج:\\n\\n## أدوات التجربة:\\nأنبوبا اختبار - محلول نترات الفضة - محلول كلوريد الصوديوم.\\n\\n## خطوات التجربة:\\n١. أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل، ماذا ألاحظ؟\\n٢. أكتب معادلة التفاعل الحاصل.\\n٣. أكتب المعادلة الأيونية.\\n٤. أفسر حدوث التفاعل.\\n٥. أسمي هذا النوع من التفاعلات.\",\n  \"sections\": [\n    {\n      \"heading\": \"نشاط\",\n      \"content\": \"اعتماداً على سلسلة النشاط الكيميائي، اكتب المعادلات المعتبرة عن التفاعلات القابلة للحدوث. ١. الحديد مع كبريتات الزنك. ٢. الألومنيوم مع حمض كلور الماء. ٣. الذهب مع حمض كلور الماء. ٤. النحاس مع حمض الكبريت الممدد. ٥. البروم مع كلوريد الصوديوم.\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"٤. تفاعلات التبادل الثنائي\",\n      \"content\": \"أجرب وأستنتج:\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أدوات التجربة:\",\n      \"content\": \"أنبوبا اختبار - محلول نترات الفضة - محلول كلوريد الصوديوم.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"خطوات التجربة:\",\n      \"content\": \"١. أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل، ماذا ألاحظ؟ ٢. أكتب معادلة التفاعل الحاصل. ٣. أكتب المعادلة الأيونية. ٤. أفسر حدوث التفاعل. ٥. أسمي هذا النوع من التفاعلات.\",\n      \"content_type\": \"exercise\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: الحديد مع كبريتات الزنك.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: الألومنيوم مع حمض كلور الماء.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: الذهب مع حمض كلور الماء.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: النحاس مع حمض الكبريت الممدد.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: البروم مع كلوريد الصوديوم.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل، ماذا ألاحظ؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أكتب معادلة التفاعل الحاصل.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أكتب المعادلة الأيونية.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أفسر حدوث التفاعل.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أسمي هذا النوع من التفاعلات.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"A sequence of two images showing an experiment. The first image displays two separate beakers, one containing silver nitrate (AgNO₃) solution and the other containing sodium chloride (NaCl) solution. The second image shows a hand pouring the NaCl solution from one beaker into the AgNO₃ solution in the other beaker, resulting in the formation of a white, cloudy precipitate, indicating a reaction has occurred.\",\n      \"labels\": [\n        \"AgNO₃\",\n        \"NaCl\"\n      ],\n      \"related_text\": \"أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [],\n  \"warnings\": [\n    \"The visible page number on the image is 140, but the prompt requested extraction for page 34. Content is extracted based on the image provided.\"\n  ],\n  \"extraction_notes\": null,\n  \"provider\": \"google\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 409,\n  \"completeness_score\": null,\n  \"quality_report\": {\n    \"page_number\": 34,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 409,\n    \"char_count\": 409,\n    \"section_count\": 4,\n    \"question_count\": 10,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 1,\n    \"warning_count\": 1,\n    \"arabic_char_ratio\": 0.98,\n    \"completeness_score\": null,\n    \"issues\": [\n      \"Visible page number (140) differs from requested page number (34). Content extracted based on the image provided.\"\n    ],\n    \"should_fallback\": false\n  },\n  \"raw_text\": null\n}"
+  },
   "gemini_pdf_content": {},
-  "gemini_fallback_model_content": {},
-  "gemini_image_fallback_content": {},
-  "merged_content": ":ﻧﺸﺎط\nاعتماداً على سلسلة النَّ شاط الكيميائيّ ، اكتب المعادالت المعبّ رة عن\n \nالتَّ فاعالت القابلة للحدوث.\n1\n1 .\n.الحديد مع كبريتات الزّ نك\n2\n2 .\n.األلمنيوم مع حمض كلور الماء\n3\n3 .\n.الذَّ هب مع حمض كلور الماء\n4\n4 .\n.النّ حاس مع حمض الكبريت الممدَّ د\n5\n5 .\n.البروم مع كلوريد الصّ وديوم\n. تفاعالت التّبادل الثّنائيّ:٤\n:أدوات التجربة\n محلول كلوريد الصّ وديوم.-  محلول نترات الفضَّة- أنبوبا اختبار\nخطوات التّجربة:\n\u0007أضيف محلوالً من كلوريد الصّ وديوم إلى محلول نترات الفضَّة كما في الشَّكل، ماذا أالحظ؟1\n.أكتب معادلة التَّفاعل الحاصل2\n.أكتب المعادلة األيونيَّة3\n.أفسّر حدوث التّفاعل4\n أسمّي هذا النّوع من5\n.التّفاعالت\nAgNO3\nNaCl\n:أﺟﺮب وأﺳﺘﻨﺘﺞ\n140\n\n| أ 1 |\n| --- |\n| أ 2 |\n| أ 3 |\n| فأ 4 |\n|  |\n| 5\nأ |\n\n|  |  |\n| --- | --- |\n|  |  |",
-  "raw_markdown": ":ﻧﺸﺎط\nاعتماداً على سلسلة النَّ شاط الكيميائيّ ، اكتب المعادالت المعبّ رة عن\n \nالتَّ فاعالت القابلة للحدوث.\n1\n1 .\n.الحديد مع كبريتات الزّ نك\n2\n2 .\n.األلمنيوم مع حمض كلور الماء\n3\n3 .\n.الذَّ هب مع حمض كلور الماء\n4\n4 .\n.النّ حاس مع حمض الكبريت الممدَّ د\n5\n5 .\n.البروم مع كلوريد الصّ وديوم\n. تفاعالت التّبادل الثّنائيّ:٤\n:أدوات التجربة\n محلول كلوريد الصّ وديوم.-  محلول نترات الفضَّة- أنبوبا اختبار\nخطوات التّجربة:\n\u0007أضيف محلوالً من كلوريد الصّ وديوم إلى محلول نترات الفضَّة كما في الشَّكل، ماذا أالحظ؟1\n.أكتب معادلة التَّفاعل الحاصل2\n.أكتب المعادلة األيونيَّة3\n.أفسّر حدوث التّفاعل4\n أسمّي هذا النّوع من5\n.التّفاعالت\nAgNO3\nNaCl\n:أﺟﺮب وأﺳﺘﻨﺘﺞ\n140\n\n| أ 1 |\n| --- |\n| أ 2 |\n| أ 3 |\n| فأ 4 |\n|  |\n| 5\nأ |\n\n|  |  |\n| --- | --- |\n|  |  |",
+  "gemini_fallback_model_content": {
+    "page_number": 34,
+    "detected_language": "Arabic",
+    "raw_markdown": "# نشاط\n\nاعتماداً على سلسلة النشاط الكيميائي، اكتب المعادلات المعتبرة عن التفاعلات القابلة للحدوث.\n١. الحديد مع كبريتات الزنك.\n٢. الألومنيوم مع حمض كلور الماء.\n٣. الذهب مع حمض كلور الماء.\n٤. النحاس مع حمض الكبريت الممدد.\n٥. البروم مع كلوريد الصوديوم.\n\n٤. تفاعلات التبادل الثنائي\n\nأجرب وأستنتج:\n\n## أدوات التجربة:\nأنبوبا اختبار - محلول نترات الفضة - محلول كلوريد الصوديوم.\n\n## خطوات التجربة:\n١. أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل، ماذا ألاحظ؟\n٢. أكتب معادلة التفاعل الحاصل.\n٣. أكتب المعادلة الأيونية.\n٤. أفسر حدوث التفاعل.\n٥. أسمي هذا النوع من التفاعلات.",
+    "sections": [
+      {
+        "heading": "نشاط",
+        "content": "اعتماداً على سلسلة النشاط الكيميائي، اكتب المعادلات المعتبرة عن التفاعلات القابلة للحدوث. ١. الحديد مع كبريتات الزنك. ٢. الألومنيوم مع حمض كلور الماء. ٣. الذهب مع حمض كلور الماء. ٤. النحاس مع حمض الكبريت الممدد. ٥. البروم مع كلوريد الصوديوم.",
+        "content_type": "exercise"
+      },
+      {
+        "heading": "٤. تفاعلات التبادل الثنائي",
+        "content": "أجرب وأستنتج:",
+        "content_type": "text"
+      },
+      {
+        "heading": "أدوات التجربة:",
+        "content": "أنبوبا اختبار - محلول نترات الفضة - محلول كلوريد الصوديوم.",
+        "content_type": "text"
+      },
+      {
+        "heading": "خطوات التجربة:",
+        "content": "١. أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل، ماذا ألاحظ؟ ٢. أكتب معادلة التفاعل الحاصل. ٣. أكتب المعادلة الأيونية. ٤. أفسر حدوث التفاعل. ٥. أسمي هذا النوع من التفاعلات.",
+        "content_type": "exercise"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: الحديد مع كبريتات الزنك.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: الألومنيوم مع حمض كلور الماء.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: الذهب مع حمض كلور الماء.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: النحاس مع حمض الكبريت الممدد.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: البروم مع كلوريد الصوديوم.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل، ماذا ألاحظ؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أكتب معادلة التفاعل الحاصل.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أكتب المعادلة الأيونية.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أفسر حدوث التفاعل.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أسمي هذا النوع من التفاعلات.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "A sequence of two images showing an experiment. The first image displays two separate beakers, one containing silver nitrate (AgNO₃) solution and the other containing sodium chloride (NaCl) solution. The second image shows a hand pouring the NaCl solution from one beaker into the AgNO₃ solution in the other beaker, resulting in the formation of a white, cloudy precipitate, indicating a reaction has occurred.",
+        "labels": [
+          "AgNO₃",
+          "NaCl"
+        ],
+        "related_text": "أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل"
+      }
+    ],
+    "tables": [],
+    "equations": [],
+    "warnings": [
+      "The visible page number on the image is 140, but the prompt requested extraction for page 34. Content is extracted based on the image provided."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 409,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 34,
+      "schema_valid": true,
+      "raw_markdown_chars": 583,
+      "char_count": 409,
+      "section_count": 4,
+      "question_count": 10,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 1,
+      "warning_count": 1,
+      "arabic_char_ratio": 0.5231,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 34,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"# نشاط\\n\\nاعتماداً على سلسلة النشاط الكيميائي، اكتب المعادلات المعتبرة عن التفاعلات القابلة للحدوث.\\n١. الحديد مع كبريتات الزنك.\\n٢. الألومنيوم مع حمض كلور الماء.\\n٣. الذهب مع حمض كلور الماء.\\n٤. النحاس مع حمض الكبريت الممدد.\\n٥. البروم مع كلوريد الصوديوم.\\n\\n٤. تفاعلات التبادل الثنائي\\n\\nأجرب وأستنتج:\\n\\n## أدوات التجربة:\\nأنبوبا اختبار - محلول نترات الفضة - محلول كلوريد الصوديوم.\\n\\n## خطوات التجربة:\\n١. أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل، ماذا ألاحظ؟\\n٢. أكتب معادلة التفاعل الحاصل.\\n٣. أكتب المعادلة الأيونية.\\n٤. أفسر حدوث التفاعل.\\n٥. أسمي هذا النوع من التفاعلات.\",\n  \"sections\": [\n    {\n      \"heading\": \"نشاط\",\n      \"content\": \"اعتماداً على سلسلة النشاط الكيميائي، اكتب المعادلات المعتبرة عن التفاعلات القابلة للحدوث. ١. الحديد مع كبريتات الزنك. ٢. الألومنيوم مع حمض كلور الماء. ٣. الذهب مع حمض كلور الماء. ٤. النحاس مع حمض الكبريت الممدد. ٥. البروم مع كلوريد الصوديوم.\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"٤. تفاعلات التبادل الثنائي\",\n      \"content\": \"أجرب وأستنتج:\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أدوات التجربة:\",\n      \"content\": \"أنبوبا اختبار - محلول نترات الفضة - محلول كلوريد الصوديوم.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"خطوات التجربة:\",\n      \"content\": \"١. أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل، ماذا ألاحظ؟ ٢. أكتب معادلة التفاعل الحاصل. ٣. أكتب المعادلة الأيونية. ٤. أفسر حدوث التفاعل. ٥. أسمي هذا النوع من التفاعلات.\",\n      \"content_type\": \"exercise\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: الحديد مع كبريتات الزنك.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: الألومنيوم مع حمض كلور الماء.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: الذهب مع حمض كلور الماء.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: النحاس مع حمض الكبريت الممدد.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: البروم مع كلوريد الصوديوم.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل، ماذا ألاحظ؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أكتب معادلة التفاعل الحاصل.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أكتب المعادلة الأيونية.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أفسر حدوث التفاعل.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أسمي هذا النوع من التفاعلات.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"A sequence of two images showing an experiment. The first image displays two separate beakers, one containing silver nitrate (AgNO₃) solution and the other containing sodium chloride (NaCl) solution. The second image shows a hand pouring the NaCl solution from one beaker into the AgNO₃ solution in the other beaker, resulting in the formation of a white, cloudy precipitate, indicating a reaction has occurred.\",\n      \"labels\": [\n        \"AgNO₃\",\n        \"NaCl\"\n      ],\n      \"related_text\": \"أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [],\n  \"warnings\": [\n    \"The visible page number on the image is 140, but the prompt requested extraction for page 34. Content is extracted based on the image provided.\"\n  ],\n  \"extraction_notes\": null,\n  \"provider\": \"google\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 409,\n  \"completeness_score\": null,\n  \"quality_report\": {\n    \"page_number\": 34,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 409,\n    \"char_count\": 409,\n    \"section_count\": 4,\n    \"question_count\": 10,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 1,\n    \"warning_count\": 1,\n    \"arabic_char_ratio\": 0.98,\n    \"completeness_score\": null,\n    \"issues\": [\n      \"Visible page number (140) differs from requested page number (34). Content extracted based on the image provided.\"\n    ],\n    \"should_fallback\": false\n  },\n  \"raw_text\": null\n}"
+  },
+  "gemini_image_fallback_content": {
+    "page_number": 34,
+    "detected_language": "Arabic",
+    "raw_markdown": "# نشاط\n\nاعتماداً على سلسلة النشاط الكيميائي، اكتب المعادلات المعتبرة عن التفاعلات القابلة للحدوث.\n١. الحديد مع كبريتات الزنك.\n٢. الألومنيوم مع حمض كلور الماء.\n٣. الذهب مع حمض كلور الماء.\n٤. النحاس مع حمض الكبريت الممدد.\n٥. البروم مع كلوريد الصوديوم.\n\n٤. تفاعلات التبادل الثنائي\n\nأجرب وأستنتج:\n\n## أدوات التجربة:\nأنبوبا اختبار - محلول نترات الفضة - محلول كلوريد الصوديوم.\n\n## خطوات التجربة:\n١. أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل، ماذا ألاحظ؟\n٢. أكتب معادلة التفاعل الحاصل.\n٣. أكتب المعادلة الأيونية.\n٤. أفسر حدوث التفاعل.\n٥. أسمي هذا النوع من التفاعلات.",
+    "sections": [
+      {
+        "heading": "نشاط",
+        "content": "اعتماداً على سلسلة النشاط الكيميائي، اكتب المعادلات المعتبرة عن التفاعلات القابلة للحدوث. ١. الحديد مع كبريتات الزنك. ٢. الألومنيوم مع حمض كلور الماء. ٣. الذهب مع حمض كلور الماء. ٤. النحاس مع حمض الكبريت الممدد. ٥. البروم مع كلوريد الصوديوم.",
+        "content_type": "exercise"
+      },
+      {
+        "heading": "٤. تفاعلات التبادل الثنائي",
+        "content": "أجرب وأستنتج:",
+        "content_type": "text"
+      },
+      {
+        "heading": "أدوات التجربة:",
+        "content": "أنبوبا اختبار - محلول نترات الفضة - محلول كلوريد الصوديوم.",
+        "content_type": "text"
+      },
+      {
+        "heading": "خطوات التجربة:",
+        "content": "١. أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل، ماذا ألاحظ؟ ٢. أكتب معادلة التفاعل الحاصل. ٣. أكتب المعادلة الأيونية. ٤. أفسر حدوث التفاعل. ٥. أسمي هذا النوع من التفاعلات.",
+        "content_type": "exercise"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: الحديد مع كبريتات الزنك.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: الألومنيوم مع حمض كلور الماء.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: الذهب مع حمض كلور الماء.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: النحاس مع حمض الكبريت الممدد.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: البروم مع كلوريد الصوديوم.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل، ماذا ألاحظ؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أكتب معادلة التفاعل الحاصل.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أكتب المعادلة الأيونية.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أفسر حدوث التفاعل.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أسمي هذا النوع من التفاعلات.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "A sequence of two images showing an experiment. The first image displays two separate beakers, one containing silver nitrate (AgNO₃) solution and the other containing sodium chloride (NaCl) solution. The second image shows a hand pouring the NaCl solution from one beaker into the AgNO₃ solution in the other beaker, resulting in the formation of a white, cloudy precipitate, indicating a reaction has occurred.",
+        "labels": [
+          "AgNO₃",
+          "NaCl"
+        ],
+        "related_text": "أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل"
+      }
+    ],
+    "tables": [],
+    "equations": [],
+    "warnings": [
+      "The visible page number on the image is 140, but the prompt requested extraction for page 34. Content is extracted based on the image provided."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 409,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 34,
+      "schema_valid": true,
+      "raw_markdown_chars": 583,
+      "char_count": 409,
+      "section_count": 4,
+      "question_count": 10,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 1,
+      "warning_count": 1,
+      "arabic_char_ratio": 0.5231,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 34,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"# نشاط\\n\\nاعتماداً على سلسلة النشاط الكيميائي، اكتب المعادلات المعتبرة عن التفاعلات القابلة للحدوث.\\n١. الحديد مع كبريتات الزنك.\\n٢. الألومنيوم مع حمض كلور الماء.\\n٣. الذهب مع حمض كلور الماء.\\n٤. النحاس مع حمض الكبريت الممدد.\\n٥. البروم مع كلوريد الصوديوم.\\n\\n٤. تفاعلات التبادل الثنائي\\n\\nأجرب وأستنتج:\\n\\n## أدوات التجربة:\\nأنبوبا اختبار - محلول نترات الفضة - محلول كلوريد الصوديوم.\\n\\n## خطوات التجربة:\\n١. أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل، ماذا ألاحظ؟\\n٢. أكتب معادلة التفاعل الحاصل.\\n٣. أكتب المعادلة الأيونية.\\n٤. أفسر حدوث التفاعل.\\n٥. أسمي هذا النوع من التفاعلات.\",\n  \"sections\": [\n    {\n      \"heading\": \"نشاط\",\n      \"content\": \"اعتماداً على سلسلة النشاط الكيميائي، اكتب المعادلات المعتبرة عن التفاعلات القابلة للحدوث. ١. الحديد مع كبريتات الزنك. ٢. الألومنيوم مع حمض كلور الماء. ٣. الذهب مع حمض كلور الماء. ٤. النحاس مع حمض الكبريت الممدد. ٥. البروم مع كلوريد الصوديوم.\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"٤. تفاعلات التبادل الثنائي\",\n      \"content\": \"أجرب وأستنتج:\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أدوات التجربة:\",\n      \"content\": \"أنبوبا اختبار - محلول نترات الفضة - محلول كلوريد الصوديوم.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"خطوات التجربة:\",\n      \"content\": \"١. أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل، ماذا ألاحظ؟ ٢. أكتب معادلة التفاعل الحاصل. ٣. أكتب المعادلة الأيونية. ٤. أفسر حدوث التفاعل. ٥. أسمي هذا النوع من التفاعلات.\",\n      \"content_type\": \"exercise\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: الحديد مع كبريتات الزنك.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: الألومنيوم مع حمض كلور الماء.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: الذهب مع حمض كلور الماء.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: النحاس مع حمض الكبريت الممدد.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: البروم مع كلوريد الصوديوم.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل، ماذا ألاحظ؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أكتب معادلة التفاعل الحاصل.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أكتب المعادلة الأيونية.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أفسر حدوث التفاعل.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أسمي هذا النوع من التفاعلات.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"A sequence of two images showing an experiment. The first image displays two separate beakers, one containing silver nitrate (AgNO₃) solution and the other containing sodium chloride (NaCl) solution. The second image shows a hand pouring the NaCl solution from one beaker into the AgNO₃ solution in the other beaker, resulting in the formation of a white, cloudy precipitate, indicating a reaction has occurred.\",\n      \"labels\": [\n        \"AgNO₃\",\n        \"NaCl\"\n      ],\n      \"related_text\": \"أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [],\n  \"warnings\": [\n    \"The visible page number on the image is 140, but the prompt requested extraction for page 34. Content is extracted based on the image provided.\"\n  ],\n  \"extraction_notes\": null,\n  \"provider\": \"google\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 409,\n  \"completeness_score\": null,\n  \"quality_report\": {\n    \"page_number\": 34,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 409,\n    \"char_count\": 409,\n    \"section_count\": 4,\n    \"question_count\": 10,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 1,\n    \"warning_count\": 1,\n    \"arabic_char_ratio\": 0.98,\n    \"completeness_score\": null,\n    \"issues\": [\n      \"Visible page number (140) differs from requested page number (34). Content extracted based on the image provided.\"\n    ],\n    \"should_fallback\": false\n  },\n  \"raw_text\": null\n}"
+  },
+  "merged_content": ":ﻧﺸﺎط\nاعتماداً على سلسلة النَّ شاط الكيميائيّ ، اكتب المعادالت المعبّ رة عن\n \nالتَّ فاعالت القابلة للحدوث.\n1\n1 .\n.الحديد مع كبريتات الزّ نك\n2\n2 .\n.األلمنيوم مع حمض كلور الماء\n3\n3 .\n.الذَّ هب مع حمض كلور الماء\n4\n4 .\n.النّ حاس مع حمض الكبريت الممدَّ د\n5\n5 .\n.البروم مع كلوريد الصّ وديوم\n. تفاعالت التّبادل الثّنائيّ:٤\n:أدوات التجربة\n محلول كلوريد الصّ وديوم.-  محلول نترات الفضَّة- أنبوبا اختبار\nخطوات التّجربة:\n\u0007أضيف محلوالً من كلوريد الصّ وديوم إلى محلول نترات الفضَّة كما في الشَّكل، ماذا أالحظ؟1\n.أكتب معادلة التَّفاعل الحاصل2\n.أكتب المعادلة األيونيَّة3\n.أفسّر حدوث التّفاعل4\n أسمّي هذا النّوع من5\n.التّفاعالت\nAgNO3\nNaCl\n:أﺟﺮب وأﺳﺘﻨﺘﺞ\n140\n\n| أ 1 |\n| --- |\n| أ 2 |\n| أ 3 |\n| فأ 4 |\n|  |\n| 5\nأ |\n\n|  |  |\n| --- | --- |\n|  |  |\n\nنشاط\nاعتماداً على سلسلة النشاط الكيميائي، اكتب المعادلات المعتبرة عن التفاعلات القابلة للحدوث. ١. الحديد مع كبريتات الزنك. ٢. الألومنيوم مع حمض كلور الماء. ٣. الذهب مع حمض كلور الماء. ٤. النحاس مع حمض الكبريت الممدد. ٥. البروم مع كلوريد الصوديوم.\n\n٤. تفاعلات التبادل الثنائي\nأجرب وأستنتج:\n\nأدوات التجربة:\nأنبوبا اختبار - محلول نترات الفضة - محلول كلوريد الصوديوم.\n\nخطوات التجربة:\n١. أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل، ماذا ألاحظ؟ ٢. أكتب معادلة التفاعل الحاصل. ٣. أكتب المعادلة الأيونية. ٤. أفسر حدوث التفاعل. ٥. أسمي هذا النوع من التفاعلات.",
+  "raw_markdown": "# نشاط\n\nاعتماداً على سلسلة النشاط الكيميائي، اكتب المعادلات المعتبرة عن التفاعلات القابلة للحدوث.\n١. الحديد مع كبريتات الزنك.\n٢. الألومنيوم مع حمض كلور الماء.\n٣. الذهب مع حمض كلور الماء.\n٤. النحاس مع حمض الكبريت الممدد.\n٥. البروم مع كلوريد الصوديوم.\n\n٤. تفاعلات التبادل الثنائي\n\nأجرب وأستنتج:\n\n## أدوات التجربة:\nأنبوبا اختبار - محلول نترات الفضة - محلول كلوريد الصوديوم.\n\n## خطوات التجربة:\n١. أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل، ماذا ألاحظ؟\n٢. أكتب معادلة التفاعل الحاصل.\n٣. أكتب المعادلة الأيونية.\n٤. أفسر حدوث التفاعل.\n٥. أسمي هذا النوع من التفاعلات.",
   "sections": [
     {
       "heading": null,
       "content": ":ﻧﺸﺎط\nاعتماداً على سلسلة النَّ شاط الكيميائيّ ، اكتب المعادالت المعبّ رة عن\n \nالتَّ فاعالت القابلة للحدوث.\n1\n1 .\n.الحديد مع كبريتات الزّ نك\n2\n2 .\n.األلمنيوم مع حمض كلور الماء\n3\n3 .\n.الذَّ هب مع حمض كلور الماء\n4\n4 .\n.النّ حاس مع حمض الكبريت الممدَّ د\n5\n5 .\n.البروم مع كلوريد الصّ وديوم\n. تفاعالت التّبادل الثّنائيّ:٤\n:أدوات التجربة\n محلول كلوريد الصّ وديوم.-  محلول نترات الفضَّة- أنبوبا اختبار\nخطوات التّجربة:\n\u0007أضيف محلوالً من كلوريد الصّ وديوم إلى محلول نترات الفضَّة كما في الشَّكل، ماذا أالحظ؟1\n.أكتب معادلة التَّفاعل الحاصل2\n.أكتب المعادلة األيونيَّة3\n.أفسّر حدوث التّفاعل4\n أسمّي هذا النّوع من5\n.التّفاعالت\nAgNO3\nNaCl\n:أﺟﺮب وأﺳﺘﻨﺘﺞ\n140\n\n| أ 1 |\n| --- |\n| أ 2 |\n| أ 3 |\n| فأ 4 |\n|  |\n| 5\nأ |\n\n|  |  |\n| --- | --- |\n|  |  |",
       "content_type": "text"
+    },
+    {
+      "heading": "نشاط",
+      "content": "اعتماداً على سلسلة النشاط الكيميائي، اكتب المعادلات المعتبرة عن التفاعلات القابلة للحدوث. ١. الحديد مع كبريتات الزنك. ٢. الألومنيوم مع حمض كلور الماء. ٣. الذهب مع حمض كلور الماء. ٤. النحاس مع حمض الكبريت الممدد. ٥. البروم مع كلوريد الصوديوم.",
+      "content_type": "exercise"
+    },
+    {
+      "heading": "٤. تفاعلات التبادل الثنائي",
+      "content": "أجرب وأستنتج:",
+      "content_type": "text"
+    },
+    {
+      "heading": "أدوات التجربة:",
+      "content": "أنبوبا اختبار - محلول نترات الفضة - محلول كلوريد الصوديوم.",
+      "content_type": "text"
+    },
+    {
+      "heading": "خطوات التجربة:",
+      "content": "١. أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل، ماذا ألاحظ؟ ٢. أكتب معادلة التفاعل الحاصل. ٣. أكتب المعادلة الأيونية. ٤. أفسر حدوث التفاعل. ٥. أسمي هذا النوع من التفاعلات.",
+      "content_type": "exercise"
     }
   ],
-  "questions": [],
-  "diagrams": [],
+  "questions": [
+    {
+      "question_text": "اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: الحديد مع كبريتات الزنك.",
+      "question_type": "calculation",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: الألومنيوم مع حمض كلور الماء.",
+      "question_type": "calculation",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: الذهب مع حمض كلور الماء.",
+      "question_type": "calculation",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: النحاس مع حمض الكبريت الممدد.",
+      "question_type": "calculation",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: البروم مع كلوريد الصوديوم.",
+      "question_type": "calculation",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل، ماذا ألاحظ؟",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "أكتب معادلة التفاعل الحاصل.",
+      "question_type": "calculation",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "أكتب المعادلة الأيونية.",
+      "question_type": "calculation",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "أفسر حدوث التفاعل.",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "أسمي هذا النوع من التفاعلات.",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    }
+  ],
+  "diagrams": [
+    {
+      "title": null,
+      "description": "A sequence of two images showing an experiment. The first image displays two separate beakers, one containing silver nitrate (AgNO₃) solution and the other containing sodium chloride (NaCl) solution. The second image shows a hand pouring the NaCl solution from one beaker into the AgNO₃ solution in the other beaker, resulting in the formation of a white, cloudy precipitate, indicating a reaction has occurred.",
+      "labels": [
+        "AgNO₃",
+        "NaCl"
+      ],
+      "related_text": "أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل"
+    }
+  ],
   "tables": [],
   "equations": [],
   "warnings": [
-    "Gemini document extraction is not configured. Vision page extraction was skipped."
+    "The visible page number on the image is 140, but the prompt requested extraction for page 34. Content is extracted based on the image provided."
   ],
   "errors": [],
-  "char_count": 726,
-  "completeness_score": 0.45,
-  "detected_language": "ar",
-  "vision_provider": null,
-  "vision_source": null,
-  "neighboring_pages": [],
+  "char_count": 1301,
+  "completeness_score": 1.0,
+  "detected_language": "Arabic",
+  "vision_provider": "gemini_document_image",
+  "vision_source": "gemini_rendered_image_300dpi",
+  "neighboring_pages": [
+    33,
+    35
+  ],
   "uploaded_pdf": null,
-  "raw_text": null,
-  "quality_report": {},
+  "raw_text": "{\n  \"page_number\": 34,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"# نشاط\\n\\nاعتماداً على سلسلة النشاط الكيميائي، اكتب المعادلات المعتبرة عن التفاعلات القابلة للحدوث.\\n١. الحديد مع كبريتات الزنك.\\n٢. الألومنيوم مع حمض كلور الماء.\\n٣. الذهب مع حمض كلور الماء.\\n٤. النحاس مع حمض الكبريت الممدد.\\n٥. البروم مع كلوريد الصوديوم.\\n\\n٤. تفاعلات التبادل الثنائي\\n\\nأجرب وأستنتج:\\n\\n## أدوات التجربة:\\nأنبوبا اختبار - محلول نترات الفضة - محلول كلوريد الصوديوم.\\n\\n## خطوات التجربة:\\n١. أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل، ماذا ألاحظ؟\\n٢. أكتب معادلة التفاعل الحاصل.\\n٣. أكتب المعادلة الأيونية.\\n٤. أفسر حدوث التفاعل.\\n٥. أسمي هذا النوع من التفاعلات.\",\n  \"sections\": [\n    {\n      \"heading\": \"نشاط\",\n      \"content\": \"اعتماداً على سلسلة النشاط الكيميائي، اكتب المعادلات المعتبرة عن التفاعلات القابلة للحدوث. ١. الحديد مع كبريتات الزنك. ٢. الألومنيوم مع حمض كلور الماء. ٣. الذهب مع حمض كلور الماء. ٤. النحاس مع حمض الكبريت الممدد. ٥. البروم مع كلوريد الصوديوم.\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"٤. تفاعلات التبادل الثنائي\",\n      \"content\": \"أجرب وأستنتج:\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أدوات التجربة:\",\n      \"content\": \"أنبوبا اختبار - محلول نترات الفضة - محلول كلوريد الصوديوم.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"خطوات التجربة:\",\n      \"content\": \"١. أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل، ماذا ألاحظ؟ ٢. أكتب معادلة التفاعل الحاصل. ٣. أكتب المعادلة الأيونية. ٤. أفسر حدوث التفاعل. ٥. أسمي هذا النوع من التفاعلات.\",\n      \"content_type\": \"exercise\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: الحديد مع كبريتات الزنك.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: الألومنيوم مع حمض كلور الماء.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: الذهب مع حمض كلور الماء.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: النحاس مع حمض الكبريت الممدد.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"اكتب المعادلة المعتبرة عن التفاعل القابل للحدوث: البروم مع كلوريد الصوديوم.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل، ماذا ألاحظ؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أكتب معادلة التفاعل الحاصل.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أكتب المعادلة الأيونية.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أفسر حدوث التفاعل.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أسمي هذا النوع من التفاعلات.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"A sequence of two images showing an experiment. The first image displays two separate beakers, one containing silver nitrate (AgNO₃) solution and the other containing sodium chloride (NaCl) solution. The second image shows a hand pouring the NaCl solution from one beaker into the AgNO₃ solution in the other beaker, resulting in the formation of a white, cloudy precipitate, indicating a reaction has occurred.\",\n      \"labels\": [\n        \"AgNO₃\",\n        \"NaCl\"\n      ],\n      \"related_text\": \"أضف محلولاً من كلوريد الصوديوم إلى محلول نترات الفضة كما في الشكل\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [],\n  \"warnings\": [\n    \"The visible page number on the image is 140, but the prompt requested extraction for page 34. Content is extracted based on the image provided.\"\n  ],\n  \"extraction_notes\": null,\n  \"provider\": \"google\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 409,\n  \"completeness_score\": null,\n  \"quality_report\": {\n    \"page_number\": 34,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 409,\n    \"char_count\": 409,\n    \"section_count\": 4,\n    \"question_count\": 10,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 1,\n    \"warning_count\": 1,\n    \"arabic_char_ratio\": 0.98,\n    \"completeness_score\": null,\n    \"issues\": [\n      \"Visible page number (140) differs from requested page number (34). Content extracted based on the image provided.\"\n    ],\n    \"should_fallback\": false\n  },\n  \"raw_text\": null\n}",
+  "quality_report": {
+    "page_number": 34,
+    "schema_valid": true,
+    "raw_markdown_chars": 583,
+    "char_count": 409,
+    "section_count": 4,
+    "question_count": 10,
+    "table_count": 0,
+    "equation_count": 0,
+    "diagram_count": 1,
+    "warning_count": 1,
+    "arabic_char_ratio": 0.5231,
+    "completeness_score": 1.0,
+    "issues": [],
+    "should_fallback": false
+  },
   "classification": "MIXED_VISION",
   "source_id": 1
 }

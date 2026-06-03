@@ -1,10 +1,10 @@
 """RAG retrieval API routes."""
 
 from fastapi import APIRouter, Depends, Query
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.dependencies import get_current_user_id
-from app.database import get_db
+from app.database import get_async_db
 from app.schemas.rag import RagRetrieveRequest, RagRetrieveResponse, RetrievedChunkResponse
 from app.services.rag import retrieve_context
 
@@ -39,7 +39,7 @@ async def search_rag(
     top_k: int = Query(5, ge=1, le=20),
     min_similarity: float = Query(0.0, ge=-1.0, le=1.0),
     user_id: int = Depends(get_current_user_id),
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_async_db),
 ):
     chunks = await retrieve_context(
         db,
@@ -60,7 +60,7 @@ async def search_rag(
 async def retrieve_rag(
     request: RagRetrieveRequest,
     user_id: int = Depends(get_current_user_id),
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_async_db),
 ):
     chunks = await retrieve_context(
         db,

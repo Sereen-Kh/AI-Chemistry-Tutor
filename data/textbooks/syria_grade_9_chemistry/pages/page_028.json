@@ -2,35 +2,382 @@
   "page_number": 28,
   "page_type": "NEEDS_VISION",
   "extraction_methods": [
-    "gemini_document"
+    "gemini_image_300dpi"
   ],
-  "extraction_method": "gemini_document",
-  "status": "skipped_dry_run",
+  "extraction_method": "gemini_image_300dpi",
+  "status": "completed_with_image_fallback",
   "text_layer_content": "",
-  "vision_content": {},
+  "vision_content": {
+    "page_number": 28,
+    "detected_language": "Arabic",
+    "raw_markdown": "نشاط :\n١. عند تقريب أنبوب يحتوي على غاز كلور الهيدروجين عديم اللون من أنبوب يحتوي على غاز النشادر عديم اللون، فنلاحظ تشكل دخان أبيض كما في الشكل المجاور.\n٢. أكتب معادلة التفاعل الحاصل.\n٣. ما عدد المواد الناتجة في التفاعل؟\n\nأستنتج :\nيتحد النشادر مع غاز كلور الهيدروجين، فيتشكل دخان أبيض من كلوريد الأمونيوم وفق المعادلة:\nNH₃(g) + HCl(g) → NH₄Cl(s)\n\nنتيجة :\nتفاعلات الاتحاد: هي التغيرات الكيميائية التي تتفاعل فيها عدة مواد، فيتشكل مادة واحدة.\n\nتطبيق محلول :\nيتفاعل الحديد مع الكبريت بالحرارة مشكلاً كبريتيد الحديد، المطلوب: أكتب المعادلة المعبرة عن التفاعل الحاصل، محدداً نوعه.\nالحل:\nFe(s) + S(s) → FeS(s)\nتفاعل اتحاد",
+    "sections": [
+      {
+        "heading": "نشاط",
+        "content": "١. عند تقريب أنبوب يحتوي على غاز كلور الهيدروجين عديم اللون من أنبوب يحتوي على غاز النشادر عديم اللون، فنلاحظ تشكل دخان أبيض كما في الشكل المجاور.\n٢. أكتب معادلة التفاعل الحاصل.\n٣. ما عدد المواد الناتجة في التفاعل؟",
+        "content_type": "text"
+      },
+      {
+        "heading": "أستنتج",
+        "content": "يتحد النشادر مع غاز كلور الهيدروجين، فيتشكل دخان أبيض من كلوريد الأمونيوم وفق المعادلة:\nNH₃(g) + HCl(g) → NH₄Cl(s)",
+        "content_type": "mixed"
+      },
+      {
+        "heading": "نتيجة",
+        "content": "تفاعلات الاتحاد: هي التغيرات الكيميائية التي تتفاعل فيها عدة مواد، فيتشكل مادة واحدة.",
+        "content_type": "text"
+      },
+      {
+        "heading": "تطبيق محلول",
+        "content": "يتفاعل الحديد مع الكبريت بالحرارة مشكلاً كبريتيد الحديد، المطلوب: أكتب المعادلة المعبرة عن التفاعل الحاصل، محدداً نوعه.\nالحل:\nFe(s) + S(s) → FeS(s)\nتفاعل اتحاد",
+        "content_type": "example"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "أكتب معادلة التفاعل الحاصل.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": "NH₃(g) + HCl(g) → NH₄Cl(s)",
+        "explanation": null,
+        "answer_source": "page"
+      },
+      {
+        "question_text": "ما عدد المواد الناتجة في التفاعل؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": "مادة واحدة",
+        "explanation": null,
+        "answer_source": "page"
+      }
+    ],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "A diagram illustrating the reaction between ammonia gas (NH₃) and hydrogen chloride gas (HCl). It shows two test tubes, one containing NH₃(g) and the other HCl(g). When the mouths of the tubes are brought close, white smoke, identified as ammonium chloride (NH₄Cl(s)), forms between them.",
+        "labels": [
+          "NH₃(g)",
+          "HCl(g)",
+          "NH₄Cl(s)"
+        ],
+        "related_text": "عند تقريب أنبوب يحتوي على غاز كلور الهيدروجين عديم اللون من أنبوب يحتوي على غاز النشادر عديم اللون، فنلاحظ تشكل دخان أبيض كما في الشكل المجاور."
+      }
+    ],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "NH₃(g) + HCl(g) → NH₄Cl(s)",
+        "description": "Reaction of ammonia gas with hydrogen chloride gas to form solid ammonium chloride."
+      },
+      {
+        "equation": "Fe(s) + S(s) → FeS(s)",
+        "description": "Reaction of solid iron with solid sulfur to form solid iron sulfide."
+      }
+    ],
+    "warnings": [],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 498,
+    "completeness_score": 0.95,
+    "quality_report": {
+      "page_number": 28,
+      "schema_valid": true,
+      "raw_markdown_chars": 616,
+      "char_count": 498,
+      "section_count": 4,
+      "question_count": 2,
+      "table_count": 0,
+      "equation_count": 2,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.615,
+      "completeness_score": 0.95,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 28,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"نشاط :\\n١. عند تقريب أنبوب يحتوي على غاز كلور الهيدروجين عديم اللون من أنبوب يحتوي على غاز النشادر عديم اللون، فنلاحظ تشكل دخان أبيض كما في الشكل المجاور.\\n٢. أكتب معادلة التفاعل الحاصل.\\n٣. ما عدد المواد الناتجة في التفاعل؟\\n\\nأستنتج :\\nيتحد النشادر مع غاز كلور الهيدروجين، فيتشكل دخان أبيض من كلوريد الأمونيوم وفق المعادلة:\\nNH₃(g) + HCl(g) → NH₄Cl(s)\\n\\nنتيجة :\\nتفاعلات الاتحاد: هي التغيرات الكيميائية التي تتفاعل فيها عدة مواد، فيتشكل مادة واحدة.\\n\\nتطبيق محلول :\\nيتفاعل الحديد مع الكبريت بالحرارة مشكلاً كبريتيد الحديد، المطلوب: أكتب المعادلة المعبرة عن التفاعل الحاصل، محدداً نوعه.\\nالحل:\\nFe(s) + S(s) → FeS(s)\\nتفاعل اتحاد\",\n  \"sections\": [\n    {\n      \"heading\": \"نشاط\",\n      \"content\": \"١. عند تقريب أنبوب يحتوي على غاز كلور الهيدروجين عديم اللون من أنبوب يحتوي على غاز النشادر عديم اللون، فنلاحظ تشكل دخان أبيض كما في الشكل المجاور.\\n٢. أكتب معادلة التفاعل الحاصل.\\n٣. ما عدد المواد الناتجة في التفاعل؟\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أستنتج\",\n      \"content\": \"يتحد النشادر مع غاز كلور الهيدروجين، فيتشكل دخان أبيض من كلوريد الأمونيوم وفق المعادلة:\\nNH₃(g) + HCl(g) → NH₄Cl(s)\",\n      \"content_type\": \"mixed\"\n    },\n    {\n      \"heading\": \"نتيجة\",\n      \"content\": \"تفاعلات الاتحاد: هي التغيرات الكيميائية التي تتفاعل فيها عدة مواد، فيتشكل مادة واحدة.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"تطبيق محلول\",\n      \"content\": \"يتفاعل الحديد مع الكبريت بالحرارة مشكلاً كبريتيد الحديد، المطلوب: أكتب المعادلة المعبرة عن التفاعل الحاصل، محدداً نوعه.\\nالحل:\\nFe(s) + S(s) → FeS(s)\\nتفاعل اتحاد\",\n      \"content_type\": \"example\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"أكتب معادلة التفاعل الحاصل.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": \"NH₃(g) + HCl(g) → NH₄Cl(s)\",\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    },\n    {\n      \"question_text\": \"ما عدد المواد الناتجة في التفاعل؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": \"مادة واحدة\",\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"A diagram illustrating the reaction between ammonia gas (NH₃) and hydrogen chloride gas (HCl). It shows two test tubes, one containing NH₃(g) and the other HCl(g). When the mouths of the tubes are brought close, white smoke, identified as ammonium chloride (NH₄Cl(s)), forms between them.\",\n      \"labels\": [\n        \"NH₃(g)\",\n        \"HCl(g)\",\n        \"NH₄Cl(s)\"\n      ],\n      \"related_text\": \"عند تقريب أنبوب يحتوي على غاز كلور الهيدروجين عديم اللون من أنبوب يحتوي على غاز النشادر عديم اللون، فنلاحظ تشكل دخان أبيض كما في الشكل المجاور.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"NH₃(g) + HCl(g) → NH₄Cl(s)\",\n      \"description\": \"Reaction of ammonia gas with hydrogen chloride gas to form solid ammonium chloride.\"\n    },\n    {\n      \"equation\": \"Fe(s) + S(s) → FeS(s)\",\n      \"description\": \"Reaction of solid iron with solid sulfur to form solid iron sulfide.\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"google\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 498,\n  \"completeness_score\": 0.95,\n  \"quality_report\": {\n    \"page_number\": 28,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 498,\n    \"char_count\": 498,\n    \"section_count\": 4,\n    \"question_count\": 2,\n    \"table_count\": 0,\n    \"equation_count\": 2,\n    \"diagram_count\": 1,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.85,\n    \"completeness_score\": 0.95,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": \"نشاط : ١. عند تقريب أنبوب يحتوي على غاز كلور الهيدروجين عديم اللون من أنبوب يحتوي على غاز النشادر عديم اللون، فنلاحظ تشكل دخان أبيض كما في الشكل المجاور. ٢. أكتب معادلة التفاعل الحاصل. ٣. ما عدد المواد الناتجة في التفاعل؟ أستنتج : يتحد النشادر مع غاز كلور الهيدروجين، فيتشكل دخان أبيض من كلوريد الأمونيوم وفق المعادلة: NH₃(g) + HCl(g) → NH₄Cl(s) نتيجة : تفاعلات الاتحاد: هي التغيرات الكيميائية التي تتفاعل فيها عدة مواد، فيتشكل مادة واحدة. تطبيق محلول : يتفاعل الحديد مع الكبريت بالحرارة مشكلاً كبريتيد الحديد، المطلوب: أكتب المعادلة المعبرة عن التفاعل الحاصل، محدداً نوعه. الحل: Fe(s) + S(s) → FeS(s) تفاعل اتحاد\"\n}"
+  },
   "gemini_pdf_content": {},
-  "gemini_fallback_model_content": {},
-  "gemini_image_fallback_content": {},
-  "merged_content": "",
-  "raw_markdown": "",
-  "sections": [],
-  "questions": [],
-  "diagrams": [],
-  "tables": [],
-  "equations": [],
-  "warnings": [
-    "Gemini document extraction is not configured. Vision page extraction was skipped."
+  "gemini_fallback_model_content": {
+    "page_number": 28,
+    "detected_language": "Arabic",
+    "raw_markdown": "نشاط :\n١. عند تقريب أنبوب يحتوي على غاز كلور الهيدروجين عديم اللون من أنبوب يحتوي على غاز النشادر عديم اللون، فنلاحظ تشكل دخان أبيض كما في الشكل المجاور.\n٢. أكتب معادلة التفاعل الحاصل.\n٣. ما عدد المواد الناتجة في التفاعل؟\n\nأستنتج :\nيتحد النشادر مع غاز كلور الهيدروجين، فيتشكل دخان أبيض من كلوريد الأمونيوم وفق المعادلة:\nNH₃(g) + HCl(g) → NH₄Cl(s)\n\nنتيجة :\nتفاعلات الاتحاد: هي التغيرات الكيميائية التي تتفاعل فيها عدة مواد، فيتشكل مادة واحدة.\n\nتطبيق محلول :\nيتفاعل الحديد مع الكبريت بالحرارة مشكلاً كبريتيد الحديد، المطلوب: أكتب المعادلة المعبرة عن التفاعل الحاصل، محدداً نوعه.\nالحل:\nFe(s) + S(s) → FeS(s)\nتفاعل اتحاد",
+    "sections": [
+      {
+        "heading": "نشاط",
+        "content": "١. عند تقريب أنبوب يحتوي على غاز كلور الهيدروجين عديم اللون من أنبوب يحتوي على غاز النشادر عديم اللون، فنلاحظ تشكل دخان أبيض كما في الشكل المجاور.\n٢. أكتب معادلة التفاعل الحاصل.\n٣. ما عدد المواد الناتجة في التفاعل؟",
+        "content_type": "text"
+      },
+      {
+        "heading": "أستنتج",
+        "content": "يتحد النشادر مع غاز كلور الهيدروجين، فيتشكل دخان أبيض من كلوريد الأمونيوم وفق المعادلة:\nNH₃(g) + HCl(g) → NH₄Cl(s)",
+        "content_type": "mixed"
+      },
+      {
+        "heading": "نتيجة",
+        "content": "تفاعلات الاتحاد: هي التغيرات الكيميائية التي تتفاعل فيها عدة مواد، فيتشكل مادة واحدة.",
+        "content_type": "text"
+      },
+      {
+        "heading": "تطبيق محلول",
+        "content": "يتفاعل الحديد مع الكبريت بالحرارة مشكلاً كبريتيد الحديد، المطلوب: أكتب المعادلة المعبرة عن التفاعل الحاصل، محدداً نوعه.\nالحل:\nFe(s) + S(s) → FeS(s)\nتفاعل اتحاد",
+        "content_type": "example"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "أكتب معادلة التفاعل الحاصل.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": "NH₃(g) + HCl(g) → NH₄Cl(s)",
+        "explanation": null,
+        "answer_source": "page"
+      },
+      {
+        "question_text": "ما عدد المواد الناتجة في التفاعل؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": "مادة واحدة",
+        "explanation": null,
+        "answer_source": "page"
+      }
+    ],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "A diagram illustrating the reaction between ammonia gas (NH₃) and hydrogen chloride gas (HCl). It shows two test tubes, one containing NH₃(g) and the other HCl(g). When the mouths of the tubes are brought close, white smoke, identified as ammonium chloride (NH₄Cl(s)), forms between them.",
+        "labels": [
+          "NH₃(g)",
+          "HCl(g)",
+          "NH₄Cl(s)"
+        ],
+        "related_text": "عند تقريب أنبوب يحتوي على غاز كلور الهيدروجين عديم اللون من أنبوب يحتوي على غاز النشادر عديم اللون، فنلاحظ تشكل دخان أبيض كما في الشكل المجاور."
+      }
+    ],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "NH₃(g) + HCl(g) → NH₄Cl(s)",
+        "description": "Reaction of ammonia gas with hydrogen chloride gas to form solid ammonium chloride."
+      },
+      {
+        "equation": "Fe(s) + S(s) → FeS(s)",
+        "description": "Reaction of solid iron with solid sulfur to form solid iron sulfide."
+      }
+    ],
+    "warnings": [],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 498,
+    "completeness_score": 0.95,
+    "quality_report": {
+      "page_number": 28,
+      "schema_valid": true,
+      "raw_markdown_chars": 616,
+      "char_count": 498,
+      "section_count": 4,
+      "question_count": 2,
+      "table_count": 0,
+      "equation_count": 2,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.615,
+      "completeness_score": 0.95,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 28,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"نشاط :\\n١. عند تقريب أنبوب يحتوي على غاز كلور الهيدروجين عديم اللون من أنبوب يحتوي على غاز النشادر عديم اللون، فنلاحظ تشكل دخان أبيض كما في الشكل المجاور.\\n٢. أكتب معادلة التفاعل الحاصل.\\n٣. ما عدد المواد الناتجة في التفاعل؟\\n\\nأستنتج :\\nيتحد النشادر مع غاز كلور الهيدروجين، فيتشكل دخان أبيض من كلوريد الأمونيوم وفق المعادلة:\\nNH₃(g) + HCl(g) → NH₄Cl(s)\\n\\nنتيجة :\\nتفاعلات الاتحاد: هي التغيرات الكيميائية التي تتفاعل فيها عدة مواد، فيتشكل مادة واحدة.\\n\\nتطبيق محلول :\\nيتفاعل الحديد مع الكبريت بالحرارة مشكلاً كبريتيد الحديد، المطلوب: أكتب المعادلة المعبرة عن التفاعل الحاصل، محدداً نوعه.\\nالحل:\\nFe(s) + S(s) → FeS(s)\\nتفاعل اتحاد\",\n  \"sections\": [\n    {\n      \"heading\": \"نشاط\",\n      \"content\": \"١. عند تقريب أنبوب يحتوي على غاز كلور الهيدروجين عديم اللون من أنبوب يحتوي على غاز النشادر عديم اللون، فنلاحظ تشكل دخان أبيض كما في الشكل المجاور.\\n٢. أكتب معادلة التفاعل الحاصل.\\n٣. ما عدد المواد الناتجة في التفاعل؟\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أستنتج\",\n      \"content\": \"يتحد النشادر مع غاز كلور الهيدروجين، فيتشكل دخان أبيض من كلوريد الأمونيوم وفق المعادلة:\\nNH₃(g) + HCl(g) → NH₄Cl(s)\",\n      \"content_type\": \"mixed\"\n    },\n    {\n      \"heading\": \"نتيجة\",\n      \"content\": \"تفاعلات الاتحاد: هي التغيرات الكيميائية التي تتفاعل فيها عدة مواد، فيتشكل مادة واحدة.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"تطبيق محلول\",\n      \"content\": \"يتفاعل الحديد مع الكبريت بالحرارة مشكلاً كبريتيد الحديد، المطلوب: أكتب المعادلة المعبرة عن التفاعل الحاصل، محدداً نوعه.\\nالحل:\\nFe(s) + S(s) → FeS(s)\\nتفاعل اتحاد\",\n      \"content_type\": \"example\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"أكتب معادلة التفاعل الحاصل.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": \"NH₃(g) + HCl(g) → NH₄Cl(s)\",\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    },\n    {\n      \"question_text\": \"ما عدد المواد الناتجة في التفاعل؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": \"مادة واحدة\",\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"A diagram illustrating the reaction between ammonia gas (NH₃) and hydrogen chloride gas (HCl). It shows two test tubes, one containing NH₃(g) and the other HCl(g). When the mouths of the tubes are brought close, white smoke, identified as ammonium chloride (NH₄Cl(s)), forms between them.\",\n      \"labels\": [\n        \"NH₃(g)\",\n        \"HCl(g)\",\n        \"NH₄Cl(s)\"\n      ],\n      \"related_text\": \"عند تقريب أنبوب يحتوي على غاز كلور الهيدروجين عديم اللون من أنبوب يحتوي على غاز النشادر عديم اللون، فنلاحظ تشكل دخان أبيض كما في الشكل المجاور.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"NH₃(g) + HCl(g) → NH₄Cl(s)\",\n      \"description\": \"Reaction of ammonia gas with hydrogen chloride gas to form solid ammonium chloride.\"\n    },\n    {\n      \"equation\": \"Fe(s) + S(s) → FeS(s)\",\n      \"description\": \"Reaction of solid iron with solid sulfur to form solid iron sulfide.\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"google\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 498,\n  \"completeness_score\": 0.95,\n  \"quality_report\": {\n    \"page_number\": 28,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 498,\n    \"char_count\": 498,\n    \"section_count\": 4,\n    \"question_count\": 2,\n    \"table_count\": 0,\n    \"equation_count\": 2,\n    \"diagram_count\": 1,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.85,\n    \"completeness_score\": 0.95,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": \"نشاط : ١. عند تقريب أنبوب يحتوي على غاز كلور الهيدروجين عديم اللون من أنبوب يحتوي على غاز النشادر عديم اللون، فنلاحظ تشكل دخان أبيض كما في الشكل المجاور. ٢. أكتب معادلة التفاعل الحاصل. ٣. ما عدد المواد الناتجة في التفاعل؟ أستنتج : يتحد النشادر مع غاز كلور الهيدروجين، فيتشكل دخان أبيض من كلوريد الأمونيوم وفق المعادلة: NH₃(g) + HCl(g) → NH₄Cl(s) نتيجة : تفاعلات الاتحاد: هي التغيرات الكيميائية التي تتفاعل فيها عدة مواد، فيتشكل مادة واحدة. تطبيق محلول : يتفاعل الحديد مع الكبريت بالحرارة مشكلاً كبريتيد الحديد، المطلوب: أكتب المعادلة المعبرة عن التفاعل الحاصل، محدداً نوعه. الحل: Fe(s) + S(s) → FeS(s) تفاعل اتحاد\"\n}"
+  },
+  "gemini_image_fallback_content": {
+    "page_number": 28,
+    "detected_language": "Arabic",
+    "raw_markdown": "نشاط :\n١. عند تقريب أنبوب يحتوي على غاز كلور الهيدروجين عديم اللون من أنبوب يحتوي على غاز النشادر عديم اللون، فنلاحظ تشكل دخان أبيض كما في الشكل المجاور.\n٢. أكتب معادلة التفاعل الحاصل.\n٣. ما عدد المواد الناتجة في التفاعل؟\n\nأستنتج :\nيتحد النشادر مع غاز كلور الهيدروجين، فيتشكل دخان أبيض من كلوريد الأمونيوم وفق المعادلة:\nNH₃(g) + HCl(g) → NH₄Cl(s)\n\nنتيجة :\nتفاعلات الاتحاد: هي التغيرات الكيميائية التي تتفاعل فيها عدة مواد، فيتشكل مادة واحدة.\n\nتطبيق محلول :\nيتفاعل الحديد مع الكبريت بالحرارة مشكلاً كبريتيد الحديد، المطلوب: أكتب المعادلة المعبرة عن التفاعل الحاصل، محدداً نوعه.\nالحل:\nFe(s) + S(s) → FeS(s)\nتفاعل اتحاد",
+    "sections": [
+      {
+        "heading": "نشاط",
+        "content": "١. عند تقريب أنبوب يحتوي على غاز كلور الهيدروجين عديم اللون من أنبوب يحتوي على غاز النشادر عديم اللون، فنلاحظ تشكل دخان أبيض كما في الشكل المجاور.\n٢. أكتب معادلة التفاعل الحاصل.\n٣. ما عدد المواد الناتجة في التفاعل؟",
+        "content_type": "text"
+      },
+      {
+        "heading": "أستنتج",
+        "content": "يتحد النشادر مع غاز كلور الهيدروجين، فيتشكل دخان أبيض من كلوريد الأمونيوم وفق المعادلة:\nNH₃(g) + HCl(g) → NH₄Cl(s)",
+        "content_type": "mixed"
+      },
+      {
+        "heading": "نتيجة",
+        "content": "تفاعلات الاتحاد: هي التغيرات الكيميائية التي تتفاعل فيها عدة مواد، فيتشكل مادة واحدة.",
+        "content_type": "text"
+      },
+      {
+        "heading": "تطبيق محلول",
+        "content": "يتفاعل الحديد مع الكبريت بالحرارة مشكلاً كبريتيد الحديد، المطلوب: أكتب المعادلة المعبرة عن التفاعل الحاصل، محدداً نوعه.\nالحل:\nFe(s) + S(s) → FeS(s)\nتفاعل اتحاد",
+        "content_type": "example"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "أكتب معادلة التفاعل الحاصل.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": "NH₃(g) + HCl(g) → NH₄Cl(s)",
+        "explanation": null,
+        "answer_source": "page"
+      },
+      {
+        "question_text": "ما عدد المواد الناتجة في التفاعل؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": "مادة واحدة",
+        "explanation": null,
+        "answer_source": "page"
+      }
+    ],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "A diagram illustrating the reaction between ammonia gas (NH₃) and hydrogen chloride gas (HCl). It shows two test tubes, one containing NH₃(g) and the other HCl(g). When the mouths of the tubes are brought close, white smoke, identified as ammonium chloride (NH₄Cl(s)), forms between them.",
+        "labels": [
+          "NH₃(g)",
+          "HCl(g)",
+          "NH₄Cl(s)"
+        ],
+        "related_text": "عند تقريب أنبوب يحتوي على غاز كلور الهيدروجين عديم اللون من أنبوب يحتوي على غاز النشادر عديم اللون، فنلاحظ تشكل دخان أبيض كما في الشكل المجاور."
+      }
+    ],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "NH₃(g) + HCl(g) → NH₄Cl(s)",
+        "description": "Reaction of ammonia gas with hydrogen chloride gas to form solid ammonium chloride."
+      },
+      {
+        "equation": "Fe(s) + S(s) → FeS(s)",
+        "description": "Reaction of solid iron with solid sulfur to form solid iron sulfide."
+      }
+    ],
+    "warnings": [],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 498,
+    "completeness_score": 0.95,
+    "quality_report": {
+      "page_number": 28,
+      "schema_valid": true,
+      "raw_markdown_chars": 616,
+      "char_count": 498,
+      "section_count": 4,
+      "question_count": 2,
+      "table_count": 0,
+      "equation_count": 2,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.615,
+      "completeness_score": 0.95,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 28,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"نشاط :\\n١. عند تقريب أنبوب يحتوي على غاز كلور الهيدروجين عديم اللون من أنبوب يحتوي على غاز النشادر عديم اللون، فنلاحظ تشكل دخان أبيض كما في الشكل المجاور.\\n٢. أكتب معادلة التفاعل الحاصل.\\n٣. ما عدد المواد الناتجة في التفاعل؟\\n\\nأستنتج :\\nيتحد النشادر مع غاز كلور الهيدروجين، فيتشكل دخان أبيض من كلوريد الأمونيوم وفق المعادلة:\\nNH₃(g) + HCl(g) → NH₄Cl(s)\\n\\nنتيجة :\\nتفاعلات الاتحاد: هي التغيرات الكيميائية التي تتفاعل فيها عدة مواد، فيتشكل مادة واحدة.\\n\\nتطبيق محلول :\\nيتفاعل الحديد مع الكبريت بالحرارة مشكلاً كبريتيد الحديد، المطلوب: أكتب المعادلة المعبرة عن التفاعل الحاصل، محدداً نوعه.\\nالحل:\\nFe(s) + S(s) → FeS(s)\\nتفاعل اتحاد\",\n  \"sections\": [\n    {\n      \"heading\": \"نشاط\",\n      \"content\": \"١. عند تقريب أنبوب يحتوي على غاز كلور الهيدروجين عديم اللون من أنبوب يحتوي على غاز النشادر عديم اللون، فنلاحظ تشكل دخان أبيض كما في الشكل المجاور.\\n٢. أكتب معادلة التفاعل الحاصل.\\n٣. ما عدد المواد الناتجة في التفاعل؟\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أستنتج\",\n      \"content\": \"يتحد النشادر مع غاز كلور الهيدروجين، فيتشكل دخان أبيض من كلوريد الأمونيوم وفق المعادلة:\\nNH₃(g) + HCl(g) → NH₄Cl(s)\",\n      \"content_type\": \"mixed\"\n    },\n    {\n      \"heading\": \"نتيجة\",\n      \"content\": \"تفاعلات الاتحاد: هي التغيرات الكيميائية التي تتفاعل فيها عدة مواد، فيتشكل مادة واحدة.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"تطبيق محلول\",\n      \"content\": \"يتفاعل الحديد مع الكبريت بالحرارة مشكلاً كبريتيد الحديد، المطلوب: أكتب المعادلة المعبرة عن التفاعل الحاصل، محدداً نوعه.\\nالحل:\\nFe(s) + S(s) → FeS(s)\\nتفاعل اتحاد\",\n      \"content_type\": \"example\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"أكتب معادلة التفاعل الحاصل.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": \"NH₃(g) + HCl(g) → NH₄Cl(s)\",\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    },\n    {\n      \"question_text\": \"ما عدد المواد الناتجة في التفاعل؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": \"مادة واحدة\",\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"A diagram illustrating the reaction between ammonia gas (NH₃) and hydrogen chloride gas (HCl). It shows two test tubes, one containing NH₃(g) and the other HCl(g). When the mouths of the tubes are brought close, white smoke, identified as ammonium chloride (NH₄Cl(s)), forms between them.\",\n      \"labels\": [\n        \"NH₃(g)\",\n        \"HCl(g)\",\n        \"NH₄Cl(s)\"\n      ],\n      \"related_text\": \"عند تقريب أنبوب يحتوي على غاز كلور الهيدروجين عديم اللون من أنبوب يحتوي على غاز النشادر عديم اللون، فنلاحظ تشكل دخان أبيض كما في الشكل المجاور.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"NH₃(g) + HCl(g) → NH₄Cl(s)\",\n      \"description\": \"Reaction of ammonia gas with hydrogen chloride gas to form solid ammonium chloride.\"\n    },\n    {\n      \"equation\": \"Fe(s) + S(s) → FeS(s)\",\n      \"description\": \"Reaction of solid iron with solid sulfur to form solid iron sulfide.\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"google\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 498,\n  \"completeness_score\": 0.95,\n  \"quality_report\": {\n    \"page_number\": 28,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 498,\n    \"char_count\": 498,\n    \"section_count\": 4,\n    \"question_count\": 2,\n    \"table_count\": 0,\n    \"equation_count\": 2,\n    \"diagram_count\": 1,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.85,\n    \"completeness_score\": 0.95,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": \"نشاط : ١. عند تقريب أنبوب يحتوي على غاز كلور الهيدروجين عديم اللون من أنبوب يحتوي على غاز النشادر عديم اللون، فنلاحظ تشكل دخان أبيض كما في الشكل المجاور. ٢. أكتب معادلة التفاعل الحاصل. ٣. ما عدد المواد الناتجة في التفاعل؟ أستنتج : يتحد النشادر مع غاز كلور الهيدروجين، فيتشكل دخان أبيض من كلوريد الأمونيوم وفق المعادلة: NH₃(g) + HCl(g) → NH₄Cl(s) نتيجة : تفاعلات الاتحاد: هي التغيرات الكيميائية التي تتفاعل فيها عدة مواد، فيتشكل مادة واحدة. تطبيق محلول : يتفاعل الحديد مع الكبريت بالحرارة مشكلاً كبريتيد الحديد، المطلوب: أكتب المعادلة المعبرة عن التفاعل الحاصل، محدداً نوعه. الحل: Fe(s) + S(s) → FeS(s) تفاعل اتحاد\"\n}"
+  },
+  "merged_content": "نشاط\n١. عند تقريب أنبوب يحتوي على غاز كلور الهيدروجين عديم اللون من أنبوب يحتوي على غاز النشادر عديم اللون، فنلاحظ تشكل دخان أبيض كما في الشكل المجاور.\n٢. أكتب معادلة التفاعل الحاصل.\n٣. ما عدد المواد الناتجة في التفاعل؟\n\nأستنتج\nيتحد النشادر مع غاز كلور الهيدروجين، فيتشكل دخان أبيض من كلوريد الأمونيوم وفق المعادلة:\nNH₃(g) + HCl(g) → NH₄Cl(s)\n\nنتيجة\nتفاعلات الاتحاد: هي التغيرات الكيميائية التي تتفاعل فيها عدة مواد، فيتشكل مادة واحدة.\n\nتطبيق محلول\nيتفاعل الحديد مع الكبريت بالحرارة مشكلاً كبريتيد الحديد، المطلوب: أكتب المعادلة المعبرة عن التفاعل الحاصل، محدداً نوعه.\nالحل:\nFe(s) + S(s) → FeS(s)\nتفاعل اتحاد",
+  "raw_markdown": "نشاط :\n١. عند تقريب أنبوب يحتوي على غاز كلور الهيدروجين عديم اللون من أنبوب يحتوي على غاز النشادر عديم اللون، فنلاحظ تشكل دخان أبيض كما في الشكل المجاور.\n٢. أكتب معادلة التفاعل الحاصل.\n٣. ما عدد المواد الناتجة في التفاعل؟\n\nأستنتج :\nيتحد النشادر مع غاز كلور الهيدروجين، فيتشكل دخان أبيض من كلوريد الأمونيوم وفق المعادلة:\nNH₃(g) + HCl(g) → NH₄Cl(s)\n\nنتيجة :\nتفاعلات الاتحاد: هي التغيرات الكيميائية التي تتفاعل فيها عدة مواد، فيتشكل مادة واحدة.\n\nتطبيق محلول :\nيتفاعل الحديد مع الكبريت بالحرارة مشكلاً كبريتيد الحديد، المطلوب: أكتب المعادلة المعبرة عن التفاعل الحاصل، محدداً نوعه.\nالحل:\nFe(s) + S(s) → FeS(s)\nتفاعل اتحاد",
+  "sections": [
+    {
+      "heading": "نشاط",
+      "content": "١. عند تقريب أنبوب يحتوي على غاز كلور الهيدروجين عديم اللون من أنبوب يحتوي على غاز النشادر عديم اللون، فنلاحظ تشكل دخان أبيض كما في الشكل المجاور.\n٢. أكتب معادلة التفاعل الحاصل.\n٣. ما عدد المواد الناتجة في التفاعل؟",
+      "content_type": "text"
+    },
+    {
+      "heading": "أستنتج",
+      "content": "يتحد النشادر مع غاز كلور الهيدروجين، فيتشكل دخان أبيض من كلوريد الأمونيوم وفق المعادلة:\nNH₃(g) + HCl(g) → NH₄Cl(s)",
+      "content_type": "mixed"
+    },
+    {
+      "heading": "نتيجة",
+      "content": "تفاعلات الاتحاد: هي التغيرات الكيميائية التي تتفاعل فيها عدة مواد، فيتشكل مادة واحدة.",
+      "content_type": "text"
+    },
+    {
+      "heading": "تطبيق محلول",
+      "content": "يتفاعل الحديد مع الكبريت بالحرارة مشكلاً كبريتيد الحديد، المطلوب: أكتب المعادلة المعبرة عن التفاعل الحاصل، محدداً نوعه.\nالحل:\nFe(s) + S(s) → FeS(s)\nتفاعل اتحاد",
+      "content_type": "example"
+    }
   ],
+  "questions": [
+    {
+      "question_text": "أكتب معادلة التفاعل الحاصل.",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": "NH₃(g) + HCl(g) → NH₄Cl(s)",
+      "explanation": null,
+      "answer_source": "page"
+    },
+    {
+      "question_text": "ما عدد المواد الناتجة في التفاعل؟",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": "مادة واحدة",
+      "explanation": null,
+      "answer_source": "page"
+    }
+  ],
+  "diagrams": [
+    {
+      "title": null,
+      "description": "A diagram illustrating the reaction between ammonia gas (NH₃) and hydrogen chloride gas (HCl). It shows two test tubes, one containing NH₃(g) and the other HCl(g). When the mouths of the tubes are brought close, white smoke, identified as ammonium chloride (NH₄Cl(s)), forms between them.",
+      "labels": [
+        "NH₃(g)",
+        "HCl(g)",
+        "NH₄Cl(s)"
+      ],
+      "related_text": "عند تقريب أنبوب يحتوي على غاز كلور الهيدروجين عديم اللون من أنبوب يحتوي على غاز النشادر عديم اللون، فنلاحظ تشكل دخان أبيض كما في الشكل المجاور."
+    }
+  ],
+  "tables": [],
+  "equations": [
+    {
+      "equation": "NH₃(g) + HCl(g) → NH₄Cl(s)",
+      "description": "Reaction of ammonia gas with hydrogen chloride gas to form solid ammonium chloride."
+    },
+    {
+      "equation": "Fe(s) + S(s) → FeS(s)",
+      "description": "Reaction of solid iron with solid sulfur to form solid iron sulfide."
+    }
+  ],
+  "warnings": [],
   "errors": [],
-  "char_count": 0,
-  "completeness_score": 0.0,
-  "detected_language": "ar",
-  "vision_provider": null,
-  "vision_source": null,
-  "neighboring_pages": [],
+  "char_count": 608,
+  "completeness_score": 1.0,
+  "detected_language": "Arabic",
+  "vision_provider": "gemini_document_image",
+  "vision_source": "gemini_rendered_image_300dpi",
+  "neighboring_pages": [
+    27,
+    29
+  ],
   "uploaded_pdf": null,
-  "raw_text": null,
-  "quality_report": {},
+  "raw_text": "{\n  \"page_number\": 28,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"نشاط :\\n١. عند تقريب أنبوب يحتوي على غاز كلور الهيدروجين عديم اللون من أنبوب يحتوي على غاز النشادر عديم اللون، فنلاحظ تشكل دخان أبيض كما في الشكل المجاور.\\n٢. أكتب معادلة التفاعل الحاصل.\\n٣. ما عدد المواد الناتجة في التفاعل؟\\n\\nأستنتج :\\nيتحد النشادر مع غاز كلور الهيدروجين، فيتشكل دخان أبيض من كلوريد الأمونيوم وفق المعادلة:\\nNH₃(g) + HCl(g) → NH₄Cl(s)\\n\\nنتيجة :\\nتفاعلات الاتحاد: هي التغيرات الكيميائية التي تتفاعل فيها عدة مواد، فيتشكل مادة واحدة.\\n\\nتطبيق محلول :\\nيتفاعل الحديد مع الكبريت بالحرارة مشكلاً كبريتيد الحديد، المطلوب: أكتب المعادلة المعبرة عن التفاعل الحاصل، محدداً نوعه.\\nالحل:\\nFe(s) + S(s) → FeS(s)\\nتفاعل اتحاد\",\n  \"sections\": [\n    {\n      \"heading\": \"نشاط\",\n      \"content\": \"١. عند تقريب أنبوب يحتوي على غاز كلور الهيدروجين عديم اللون من أنبوب يحتوي على غاز النشادر عديم اللون، فنلاحظ تشكل دخان أبيض كما في الشكل المجاور.\\n٢. أكتب معادلة التفاعل الحاصل.\\n٣. ما عدد المواد الناتجة في التفاعل؟\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أستنتج\",\n      \"content\": \"يتحد النشادر مع غاز كلور الهيدروجين، فيتشكل دخان أبيض من كلوريد الأمونيوم وفق المعادلة:\\nNH₃(g) + HCl(g) → NH₄Cl(s)\",\n      \"content_type\": \"mixed\"\n    },\n    {\n      \"heading\": \"نتيجة\",\n      \"content\": \"تفاعلات الاتحاد: هي التغيرات الكيميائية التي تتفاعل فيها عدة مواد، فيتشكل مادة واحدة.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"تطبيق محلول\",\n      \"content\": \"يتفاعل الحديد مع الكبريت بالحرارة مشكلاً كبريتيد الحديد، المطلوب: أكتب المعادلة المعبرة عن التفاعل الحاصل، محدداً نوعه.\\nالحل:\\nFe(s) + S(s) → FeS(s)\\nتفاعل اتحاد\",\n      \"content_type\": \"example\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"أكتب معادلة التفاعل الحاصل.\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": \"NH₃(g) + HCl(g) → NH₄Cl(s)\",\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    },\n    {\n      \"question_text\": \"ما عدد المواد الناتجة في التفاعل؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": \"مادة واحدة\",\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"A diagram illustrating the reaction between ammonia gas (NH₃) and hydrogen chloride gas (HCl). It shows two test tubes, one containing NH₃(g) and the other HCl(g). When the mouths of the tubes are brought close, white smoke, identified as ammonium chloride (NH₄Cl(s)), forms between them.\",\n      \"labels\": [\n        \"NH₃(g)\",\n        \"HCl(g)\",\n        \"NH₄Cl(s)\"\n      ],\n      \"related_text\": \"عند تقريب أنبوب يحتوي على غاز كلور الهيدروجين عديم اللون من أنبوب يحتوي على غاز النشادر عديم اللون، فنلاحظ تشكل دخان أبيض كما في الشكل المجاور.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"NH₃(g) + HCl(g) → NH₄Cl(s)\",\n      \"description\": \"Reaction of ammonia gas with hydrogen chloride gas to form solid ammonium chloride.\"\n    },\n    {\n      \"equation\": \"Fe(s) + S(s) → FeS(s)\",\n      \"description\": \"Reaction of solid iron with solid sulfur to form solid iron sulfide.\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"google\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 498,\n  \"completeness_score\": 0.95,\n  \"quality_report\": {\n    \"page_number\": 28,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 498,\n    \"char_count\": 498,\n    \"section_count\": 4,\n    \"question_count\": 2,\n    \"table_count\": 0,\n    \"equation_count\": 2,\n    \"diagram_count\": 1,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.85,\n    \"completeness_score\": 0.95,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": \"نشاط : ١. عند تقريب أنبوب يحتوي على غاز كلور الهيدروجين عديم اللون من أنبوب يحتوي على غاز النشادر عديم اللون، فنلاحظ تشكل دخان أبيض كما في الشكل المجاور. ٢. أكتب معادلة التفاعل الحاصل. ٣. ما عدد المواد الناتجة في التفاعل؟ أستنتج : يتحد النشادر مع غاز كلور الهيدروجين، فيتشكل دخان أبيض من كلوريد الأمونيوم وفق المعادلة: NH₃(g) + HCl(g) → NH₄Cl(s) نتيجة : تفاعلات الاتحاد: هي التغيرات الكيميائية التي تتفاعل فيها عدة مواد، فيتشكل مادة واحدة. تطبيق محلول : يتفاعل الحديد مع الكبريت بالحرارة مشكلاً كبريتيد الحديد، المطلوب: أكتب المعادلة المعبرة عن التفاعل الحاصل، محدداً نوعه. الحل: Fe(s) + S(s) → FeS(s) تفاعل اتحاد\"\n}",
+  "quality_report": {
+    "page_number": 28,
+    "schema_valid": true,
+    "raw_markdown_chars": 616,
+    "char_count": 498,
+    "section_count": 4,
+    "question_count": 2,
+    "table_count": 0,
+    "equation_count": 2,
+    "diagram_count": 1,
+    "warning_count": 0,
+    "arabic_char_ratio": 0.615,
+    "completeness_score": 0.95,
+    "issues": [],
+    "should_fallback": false
+  },
   "classification": "NEEDS_VISION",
   "source_id": 1
 }

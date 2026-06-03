@@ -2,35 +2,358 @@
   "page_number": 12,
   "page_type": "NEEDS_VISION",
   "extraction_methods": [
-    "gemini_document"
+    "gemini_image_300dpi"
   ],
-  "extraction_method": "gemini_document",
-  "status": "skipped_dry_run",
+  "extraction_method": "gemini_image_300dpi",
+  "status": "completed_with_image_fallback",
   "text_layer_content": "",
-  "vision_content": {},
+  "vision_content": {
+    "page_number": 12,
+    "detected_language": "Arabic",
+    "raw_markdown": "# قوة الحمض:\n## أجرب وأستنتج:\n### أدوات التجربة:\nوعاء فولتا – أسلاك توصيل – قاطعة – منبع للتيار المتواصل – مصباح – محلول ممدد لحمض كلور الماء – محلول ممدد لحمض الخل لهما التركيز ذاته.\n### خطوات التجربة:\n1. أصل الدارة كما في الشكل المجاور.\n2. أضع في وعاء فولتا محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\n3. أضع محلول حمض الخل بدلاً من محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\n4. أقارن بين ناقلية محلول حمض كلور الماء ومحلول حمض الخل، ماذا أستنتج؟\n\n## أستنتج:\n* يتأين جزيئات حمض كلور الماء تأيناً كلياً في الماء، ويُعبّر عن ذلك وفق المعادلة:\n  HCl → H⁺ + Cl⁻\n* يتأين حمض الخل تأيناً جزئياً في الماء، ويُعبّر عن ذلك وفق المعادلة:\n  CH₃COOH ⇌ CH₃COO⁻ + H⁺",
+    "sections": [
+      {
+        "heading": "أجرب وأستنتج:",
+        "content": "**أدوات التجربة:** وعاء فولتا – أسلاك توصيل – قاطعة – منبع للتيار المتواصل – مصباح – محلول ممدد لحمض كلور الماء – محلول ممدد لحمض الخل لهما التركيز ذاته.\n**خطوات التجربة:**\n1. أصل الدارة كما في الشكل المجاور.\n2. أضع في وعاء فولتا محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\n3. أضع محلول حمض الخل بدلاً من محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.",
+        "content_type": "text"
+      },
+      {
+        "heading": "أستنتج:",
+        "content": "يتأين جزيئات حمض كلور الماء تأيناً كلياً في الماء، ويُعبّر عن ذلك وفق المعادلة: HCl → H⁺ + Cl⁻\nيتأين حمض الخل تأيناً جزئياً في الماء، ويُعبّر عن ذلك وفق المعادلة: CH₃COOH ⇌ CH₃COO⁻ + H⁺",
+        "content_type": "mixed"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "أقارن بين ناقلية محلول حمض كلور الماء ومحلول حمض الخل، ماذا أستنتج؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "page"
+      }
+    ],
+    "diagrams": [
+      {
+        "title": "حمض ضعيف",
+        "description": "A diagram showing an electrical circuit with a beaker containing a weak acid solution. The circuit includes a voltmeter, electrodes, and a dimly lit light bulb, indicating low conductivity. The solution shows fewer dissociated ions (red positive, black negative) between the electrodes.",
+        "labels": [
+          "V",
+          "+",
+          "-",
+          "حمض ضعيف"
+        ],
+        "related_text": "أضع محلول حمض الخل بدلاً من محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح."
+      },
+      {
+        "title": "حمض قوي",
+        "description": "A diagram showing an electrical circuit with a beaker containing a strong acid solution. The circuit includes a voltmeter, electrodes, and a brightly lit light bulb, indicating high conductivity. The solution shows many dissociated ions (red positive, black negative) between the electrodes.",
+        "labels": [
+          "V",
+          "+",
+          "-",
+          "حمض قوي"
+        ],
+        "related_text": "أضع في وعاء فولتا محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح."
+      }
+    ],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "HCl → H⁺ + Cl⁻",
+        "description": "Ionization of hydrochloric acid in water."
+      },
+      {
+        "equation": "CH₃COOH ⇌ CH₃COO⁻ + H⁺",
+        "description": "Partial ionization of acetic acid in water."
+      }
+    ],
+    "warnings": [],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 750,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 12,
+      "schema_valid": true,
+      "raw_markdown_chars": 663,
+      "char_count": 750,
+      "section_count": 2,
+      "question_count": 1,
+      "table_count": 0,
+      "equation_count": 2,
+      "diagram_count": 2,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.5407,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 12,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"# قوة الحمض:\\n## أجرب وأستنتج:\\n### أدوات التجربة:\\nوعاء فولتا – أسلاك توصيل – قاطعة – منبع للتيار المتواصل – مصباح – محلول ممدد لحمض كلور الماء – محلول ممدد لحمض الخل لهما التركيز ذاته.\\n### خطوات التجربة:\\n1. أصل الدارة كما في الشكل المجاور.\\n2. أضع في وعاء فولتا محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\\n3. أضع محلول حمض الخل بدلاً من محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\\n4. أقارن بين ناقلية محلول حمض كلور الماء ومحلول حمض الخل، ماذا أستنتج؟\\n\\n## أستنتج:\\n* يتأين جزيئات حمض كلور الماء تأيناً كلياً في الماء، ويُعبّر عن ذلك وفق المعادلة:\\n  HCl → H⁺ + Cl⁻\\n* يتأين حمض الخل تأيناً جزئياً في الماء، ويُعبّر عن ذلك وفق المعادلة:\\n  CH₃COOH ⇌ CH₃COO⁻ + H⁺\",\n  \"sections\": [\n    {\n      \"heading\": \"أجرب وأستنتج:\",\n      \"content\": \"**أدوات التجربة:** وعاء فولتا – أسلاك توصيل – قاطعة – منبع للتيار المتواصل – مصباح – محلول ممدد لحمض كلور الماء – محلول ممدد لحمض الخل لهما التركيز ذاته.\\n**خطوات التجربة:**\\n1. أصل الدارة كما في الشكل المجاور.\\n2. أضع في وعاء فولتا محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\\n3. أضع محلول حمض الخل بدلاً من محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"يتأين جزيئات حمض كلور الماء تأيناً كلياً في الماء، ويُعبّر عن ذلك وفق المعادلة: HCl → H⁺ + Cl⁻\\nيتأين حمض الخل تأيناً جزئياً في الماء، ويُعبّر عن ذلك وفق المعادلة: CH₃COOH ⇌ CH₃COO⁻ + H⁺\",\n      \"content_type\": \"mixed\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"أقارن بين ناقلية محلول حمض كلور الماء ومحلول حمض الخل، ماذا أستنتج؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": \"حمض ضعيف\",\n      \"description\": \"A diagram showing an electrical circuit with a beaker containing a weak acid solution. The circuit includes a voltmeter, electrodes, and a dimly lit light bulb, indicating low conductivity. The solution shows fewer dissociated ions (red positive, black negative) between the electrodes.\",\n      \"labels\": [\"V\", \"+\", \"-\",\"حمض ضعيف\"],\n      \"related_text\": \"أضع محلول حمض الخل بدلاً من محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\"\n    },\n    {\n      \"title\": \"حمض قوي\",\n      \"description\": \"A diagram showing an electrical circuit with a beaker containing a strong acid solution. The circuit includes a voltmeter, electrodes, and a brightly lit light bulb, indicating high conductivity. The solution shows many dissociated ions (red positive, black negative) between the electrodes.\",\n      \"labels\": [\"V\", \"+\", \"-\",\"حمض قوي\"],\n      \"related_text\": \"أضع في وعاء فولتا محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"HCl → H⁺ + Cl⁻\",\n      \"description\": \"Ionization of hydrochloric acid in water.\"\n    },\n    {\n      \"equation\": \"CH₃COOH ⇌ CH₃COO⁻ + H⁺\",\n      \"description\": \"Partial ionization of acetic acid in water.\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"google\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 750,\n  \"completeness_score\": null,\n  \"quality_report\": null,\n  \"raw_text\": null\n}"
+  },
   "gemini_pdf_content": {},
-  "gemini_fallback_model_content": {},
-  "gemini_image_fallback_content": {},
-  "merged_content": "",
-  "raw_markdown": "",
-  "sections": [],
-  "questions": [],
-  "diagrams": [],
-  "tables": [],
-  "equations": [],
-  "warnings": [
-    "Gemini document extraction is not configured. Vision page extraction was skipped."
+  "gemini_fallback_model_content": {
+    "page_number": 12,
+    "detected_language": "Arabic",
+    "raw_markdown": "# قوة الحمض:\n## أجرب وأستنتج:\n### أدوات التجربة:\nوعاء فولتا – أسلاك توصيل – قاطعة – منبع للتيار المتواصل – مصباح – محلول ممدد لحمض كلور الماء – محلول ممدد لحمض الخل لهما التركيز ذاته.\n### خطوات التجربة:\n1. أصل الدارة كما في الشكل المجاور.\n2. أضع في وعاء فولتا محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\n3. أضع محلول حمض الخل بدلاً من محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\n4. أقارن بين ناقلية محلول حمض كلور الماء ومحلول حمض الخل، ماذا أستنتج؟\n\n## أستنتج:\n* يتأين جزيئات حمض كلور الماء تأيناً كلياً في الماء، ويُعبّر عن ذلك وفق المعادلة:\n  HCl → H⁺ + Cl⁻\n* يتأين حمض الخل تأيناً جزئياً في الماء، ويُعبّر عن ذلك وفق المعادلة:\n  CH₃COOH ⇌ CH₃COO⁻ + H⁺",
+    "sections": [
+      {
+        "heading": "أجرب وأستنتج:",
+        "content": "**أدوات التجربة:** وعاء فولتا – أسلاك توصيل – قاطعة – منبع للتيار المتواصل – مصباح – محلول ممدد لحمض كلور الماء – محلول ممدد لحمض الخل لهما التركيز ذاته.\n**خطوات التجربة:**\n1. أصل الدارة كما في الشكل المجاور.\n2. أضع في وعاء فولتا محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\n3. أضع محلول حمض الخل بدلاً من محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.",
+        "content_type": "text"
+      },
+      {
+        "heading": "أستنتج:",
+        "content": "يتأين جزيئات حمض كلور الماء تأيناً كلياً في الماء، ويُعبّر عن ذلك وفق المعادلة: HCl → H⁺ + Cl⁻\nيتأين حمض الخل تأيناً جزئياً في الماء، ويُعبّر عن ذلك وفق المعادلة: CH₃COOH ⇌ CH₃COO⁻ + H⁺",
+        "content_type": "mixed"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "أقارن بين ناقلية محلول حمض كلور الماء ومحلول حمض الخل، ماذا أستنتج؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "page"
+      }
+    ],
+    "diagrams": [
+      {
+        "title": "حمض ضعيف",
+        "description": "A diagram showing an electrical circuit with a beaker containing a weak acid solution. The circuit includes a voltmeter, electrodes, and a dimly lit light bulb, indicating low conductivity. The solution shows fewer dissociated ions (red positive, black negative) between the electrodes.",
+        "labels": [
+          "V",
+          "+",
+          "-",
+          "حمض ضعيف"
+        ],
+        "related_text": "أضع محلول حمض الخل بدلاً من محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح."
+      },
+      {
+        "title": "حمض قوي",
+        "description": "A diagram showing an electrical circuit with a beaker containing a strong acid solution. The circuit includes a voltmeter, electrodes, and a brightly lit light bulb, indicating high conductivity. The solution shows many dissociated ions (red positive, black negative) between the electrodes.",
+        "labels": [
+          "V",
+          "+",
+          "-",
+          "حمض قوي"
+        ],
+        "related_text": "أضع في وعاء فولتا محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح."
+      }
+    ],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "HCl → H⁺ + Cl⁻",
+        "description": "Ionization of hydrochloric acid in water."
+      },
+      {
+        "equation": "CH₃COOH ⇌ CH₃COO⁻ + H⁺",
+        "description": "Partial ionization of acetic acid in water."
+      }
+    ],
+    "warnings": [],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 750,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 12,
+      "schema_valid": true,
+      "raw_markdown_chars": 663,
+      "char_count": 750,
+      "section_count": 2,
+      "question_count": 1,
+      "table_count": 0,
+      "equation_count": 2,
+      "diagram_count": 2,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.5407,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 12,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"# قوة الحمض:\\n## أجرب وأستنتج:\\n### أدوات التجربة:\\nوعاء فولتا – أسلاك توصيل – قاطعة – منبع للتيار المتواصل – مصباح – محلول ممدد لحمض كلور الماء – محلول ممدد لحمض الخل لهما التركيز ذاته.\\n### خطوات التجربة:\\n1. أصل الدارة كما في الشكل المجاور.\\n2. أضع في وعاء فولتا محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\\n3. أضع محلول حمض الخل بدلاً من محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\\n4. أقارن بين ناقلية محلول حمض كلور الماء ومحلول حمض الخل، ماذا أستنتج؟\\n\\n## أستنتج:\\n* يتأين جزيئات حمض كلور الماء تأيناً كلياً في الماء، ويُعبّر عن ذلك وفق المعادلة:\\n  HCl → H⁺ + Cl⁻\\n* يتأين حمض الخل تأيناً جزئياً في الماء، ويُعبّر عن ذلك وفق المعادلة:\\n  CH₃COOH ⇌ CH₃COO⁻ + H⁺\",\n  \"sections\": [\n    {\n      \"heading\": \"أجرب وأستنتج:\",\n      \"content\": \"**أدوات التجربة:** وعاء فولتا – أسلاك توصيل – قاطعة – منبع للتيار المتواصل – مصباح – محلول ممدد لحمض كلور الماء – محلول ممدد لحمض الخل لهما التركيز ذاته.\\n**خطوات التجربة:**\\n1. أصل الدارة كما في الشكل المجاور.\\n2. أضع في وعاء فولتا محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\\n3. أضع محلول حمض الخل بدلاً من محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"يتأين جزيئات حمض كلور الماء تأيناً كلياً في الماء، ويُعبّر عن ذلك وفق المعادلة: HCl → H⁺ + Cl⁻\\nيتأين حمض الخل تأيناً جزئياً في الماء، ويُعبّر عن ذلك وفق المعادلة: CH₃COOH ⇌ CH₃COO⁻ + H⁺\",\n      \"content_type\": \"mixed\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"أقارن بين ناقلية محلول حمض كلور الماء ومحلول حمض الخل، ماذا أستنتج؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": \"حمض ضعيف\",\n      \"description\": \"A diagram showing an electrical circuit with a beaker containing a weak acid solution. The circuit includes a voltmeter, electrodes, and a dimly lit light bulb, indicating low conductivity. The solution shows fewer dissociated ions (red positive, black negative) between the electrodes.\",\n      \"labels\": [\"V\", \"+\", \"-\",\"حمض ضعيف\"],\n      \"related_text\": \"أضع محلول حمض الخل بدلاً من محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\"\n    },\n    {\n      \"title\": \"حمض قوي\",\n      \"description\": \"A diagram showing an electrical circuit with a beaker containing a strong acid solution. The circuit includes a voltmeter, electrodes, and a brightly lit light bulb, indicating high conductivity. The solution shows many dissociated ions (red positive, black negative) between the electrodes.\",\n      \"labels\": [\"V\", \"+\", \"-\",\"حمض قوي\"],\n      \"related_text\": \"أضع في وعاء فولتا محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"HCl → H⁺ + Cl⁻\",\n      \"description\": \"Ionization of hydrochloric acid in water.\"\n    },\n    {\n      \"equation\": \"CH₃COOH ⇌ CH₃COO⁻ + H⁺\",\n      \"description\": \"Partial ionization of acetic acid in water.\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"google\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 750,\n  \"completeness_score\": null,\n  \"quality_report\": null,\n  \"raw_text\": null\n}"
+  },
+  "gemini_image_fallback_content": {
+    "page_number": 12,
+    "detected_language": "Arabic",
+    "raw_markdown": "# قوة الحمض:\n## أجرب وأستنتج:\n### أدوات التجربة:\nوعاء فولتا – أسلاك توصيل – قاطعة – منبع للتيار المتواصل – مصباح – محلول ممدد لحمض كلور الماء – محلول ممدد لحمض الخل لهما التركيز ذاته.\n### خطوات التجربة:\n1. أصل الدارة كما في الشكل المجاور.\n2. أضع في وعاء فولتا محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\n3. أضع محلول حمض الخل بدلاً من محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\n4. أقارن بين ناقلية محلول حمض كلور الماء ومحلول حمض الخل، ماذا أستنتج؟\n\n## أستنتج:\n* يتأين جزيئات حمض كلور الماء تأيناً كلياً في الماء، ويُعبّر عن ذلك وفق المعادلة:\n  HCl → H⁺ + Cl⁻\n* يتأين حمض الخل تأيناً جزئياً في الماء، ويُعبّر عن ذلك وفق المعادلة:\n  CH₃COOH ⇌ CH₃COO⁻ + H⁺",
+    "sections": [
+      {
+        "heading": "أجرب وأستنتج:",
+        "content": "**أدوات التجربة:** وعاء فولتا – أسلاك توصيل – قاطعة – منبع للتيار المتواصل – مصباح – محلول ممدد لحمض كلور الماء – محلول ممدد لحمض الخل لهما التركيز ذاته.\n**خطوات التجربة:**\n1. أصل الدارة كما في الشكل المجاور.\n2. أضع في وعاء فولتا محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\n3. أضع محلول حمض الخل بدلاً من محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.",
+        "content_type": "text"
+      },
+      {
+        "heading": "أستنتج:",
+        "content": "يتأين جزيئات حمض كلور الماء تأيناً كلياً في الماء، ويُعبّر عن ذلك وفق المعادلة: HCl → H⁺ + Cl⁻\nيتأين حمض الخل تأيناً جزئياً في الماء، ويُعبّر عن ذلك وفق المعادلة: CH₃COOH ⇌ CH₃COO⁻ + H⁺",
+        "content_type": "mixed"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "أقارن بين ناقلية محلول حمض كلور الماء ومحلول حمض الخل، ماذا أستنتج؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "page"
+      }
+    ],
+    "diagrams": [
+      {
+        "title": "حمض ضعيف",
+        "description": "A diagram showing an electrical circuit with a beaker containing a weak acid solution. The circuit includes a voltmeter, electrodes, and a dimly lit light bulb, indicating low conductivity. The solution shows fewer dissociated ions (red positive, black negative) between the electrodes.",
+        "labels": [
+          "V",
+          "+",
+          "-",
+          "حمض ضعيف"
+        ],
+        "related_text": "أضع محلول حمض الخل بدلاً من محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح."
+      },
+      {
+        "title": "حمض قوي",
+        "description": "A diagram showing an electrical circuit with a beaker containing a strong acid solution. The circuit includes a voltmeter, electrodes, and a brightly lit light bulb, indicating high conductivity. The solution shows many dissociated ions (red positive, black negative) between the electrodes.",
+        "labels": [
+          "V",
+          "+",
+          "-",
+          "حمض قوي"
+        ],
+        "related_text": "أضع في وعاء فولتا محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح."
+      }
+    ],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "HCl → H⁺ + Cl⁻",
+        "description": "Ionization of hydrochloric acid in water."
+      },
+      {
+        "equation": "CH₃COOH ⇌ CH₃COO⁻ + H⁺",
+        "description": "Partial ionization of acetic acid in water."
+      }
+    ],
+    "warnings": [],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 750,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 12,
+      "schema_valid": true,
+      "raw_markdown_chars": 663,
+      "char_count": 750,
+      "section_count": 2,
+      "question_count": 1,
+      "table_count": 0,
+      "equation_count": 2,
+      "diagram_count": 2,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.5407,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 12,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"# قوة الحمض:\\n## أجرب وأستنتج:\\n### أدوات التجربة:\\nوعاء فولتا – أسلاك توصيل – قاطعة – منبع للتيار المتواصل – مصباح – محلول ممدد لحمض كلور الماء – محلول ممدد لحمض الخل لهما التركيز ذاته.\\n### خطوات التجربة:\\n1. أصل الدارة كما في الشكل المجاور.\\n2. أضع في وعاء فولتا محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\\n3. أضع محلول حمض الخل بدلاً من محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\\n4. أقارن بين ناقلية محلول حمض كلور الماء ومحلول حمض الخل، ماذا أستنتج؟\\n\\n## أستنتج:\\n* يتأين جزيئات حمض كلور الماء تأيناً كلياً في الماء، ويُعبّر عن ذلك وفق المعادلة:\\n  HCl → H⁺ + Cl⁻\\n* يتأين حمض الخل تأيناً جزئياً في الماء، ويُعبّر عن ذلك وفق المعادلة:\\n  CH₃COOH ⇌ CH₃COO⁻ + H⁺\",\n  \"sections\": [\n    {\n      \"heading\": \"أجرب وأستنتج:\",\n      \"content\": \"**أدوات التجربة:** وعاء فولتا – أسلاك توصيل – قاطعة – منبع للتيار المتواصل – مصباح – محلول ممدد لحمض كلور الماء – محلول ممدد لحمض الخل لهما التركيز ذاته.\\n**خطوات التجربة:**\\n1. أصل الدارة كما في الشكل المجاور.\\n2. أضع في وعاء فولتا محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\\n3. أضع محلول حمض الخل بدلاً من محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"يتأين جزيئات حمض كلور الماء تأيناً كلياً في الماء، ويُعبّر عن ذلك وفق المعادلة: HCl → H⁺ + Cl⁻\\nيتأين حمض الخل تأيناً جزئياً في الماء، ويُعبّر عن ذلك وفق المعادلة: CH₃COOH ⇌ CH₃COO⁻ + H⁺\",\n      \"content_type\": \"mixed\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"أقارن بين ناقلية محلول حمض كلور الماء ومحلول حمض الخل، ماذا أستنتج؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": \"حمض ضعيف\",\n      \"description\": \"A diagram showing an electrical circuit with a beaker containing a weak acid solution. The circuit includes a voltmeter, electrodes, and a dimly lit light bulb, indicating low conductivity. The solution shows fewer dissociated ions (red positive, black negative) between the electrodes.\",\n      \"labels\": [\"V\", \"+\", \"-\",\"حمض ضعيف\"],\n      \"related_text\": \"أضع محلول حمض الخل بدلاً من محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\"\n    },\n    {\n      \"title\": \"حمض قوي\",\n      \"description\": \"A diagram showing an electrical circuit with a beaker containing a strong acid solution. The circuit includes a voltmeter, electrodes, and a brightly lit light bulb, indicating high conductivity. The solution shows many dissociated ions (red positive, black negative) between the electrodes.\",\n      \"labels\": [\"V\", \"+\", \"-\",\"حمض قوي\"],\n      \"related_text\": \"أضع في وعاء فولتا محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"HCl → H⁺ + Cl⁻\",\n      \"description\": \"Ionization of hydrochloric acid in water.\"\n    },\n    {\n      \"equation\": \"CH₃COOH ⇌ CH₃COO⁻ + H⁺\",\n      \"description\": \"Partial ionization of acetic acid in water.\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"google\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 750,\n  \"completeness_score\": null,\n  \"quality_report\": null,\n  \"raw_text\": null\n}"
+  },
+  "merged_content": "أجرب وأستنتج:\n**أدوات التجربة:** وعاء فولتا – أسلاك توصيل – قاطعة – منبع للتيار المتواصل – مصباح – محلول ممدد لحمض كلور الماء – محلول ممدد لحمض الخل لهما التركيز ذاته.\n**خطوات التجربة:**\n1. أصل الدارة كما في الشكل المجاور.\n2. أضع في وعاء فولتا محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\n3. أضع محلول حمض الخل بدلاً من محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\n\nأستنتج:\nيتأين جزيئات حمض كلور الماء تأيناً كلياً في الماء، ويُعبّر عن ذلك وفق المعادلة: HCl → H⁺ + Cl⁻\nيتأين حمض الخل تأيناً جزئياً في الماء، ويُعبّر عن ذلك وفق المعادلة: CH₃COOH ⇌ CH₃COO⁻ + H⁺",
+  "raw_markdown": "# قوة الحمض:\n## أجرب وأستنتج:\n### أدوات التجربة:\nوعاء فولتا – أسلاك توصيل – قاطعة – منبع للتيار المتواصل – مصباح – محلول ممدد لحمض كلور الماء – محلول ممدد لحمض الخل لهما التركيز ذاته.\n### خطوات التجربة:\n1. أصل الدارة كما في الشكل المجاور.\n2. أضع في وعاء فولتا محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\n3. أضع محلول حمض الخل بدلاً من محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\n4. أقارن بين ناقلية محلول حمض كلور الماء ومحلول حمض الخل، ماذا أستنتج؟\n\n## أستنتج:\n* يتأين جزيئات حمض كلور الماء تأيناً كلياً في الماء، ويُعبّر عن ذلك وفق المعادلة:\n  HCl → H⁺ + Cl⁻\n* يتأين حمض الخل تأيناً جزئياً في الماء، ويُعبّر عن ذلك وفق المعادلة:\n  CH₃COOH ⇌ CH₃COO⁻ + H⁺",
+  "sections": [
+    {
+      "heading": "أجرب وأستنتج:",
+      "content": "**أدوات التجربة:** وعاء فولتا – أسلاك توصيل – قاطعة – منبع للتيار المتواصل – مصباح – محلول ممدد لحمض كلور الماء – محلول ممدد لحمض الخل لهما التركيز ذاته.\n**خطوات التجربة:**\n1. أصل الدارة كما في الشكل المجاور.\n2. أضع في وعاء فولتا محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\n3. أضع محلول حمض الخل بدلاً من محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.",
+      "content_type": "text"
+    },
+    {
+      "heading": "أستنتج:",
+      "content": "يتأين جزيئات حمض كلور الماء تأيناً كلياً في الماء، ويُعبّر عن ذلك وفق المعادلة: HCl → H⁺ + Cl⁻\nيتأين حمض الخل تأيناً جزئياً في الماء، ويُعبّر عن ذلك وفق المعادلة: CH₃COOH ⇌ CH₃COO⁻ + H⁺",
+      "content_type": "mixed"
+    }
   ],
+  "questions": [
+    {
+      "question_text": "أقارن بين ناقلية محلول حمض كلور الماء ومحلول حمض الخل، ماذا أستنتج؟",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "page"
+    }
+  ],
+  "diagrams": [
+    {
+      "title": "حمض ضعيف",
+      "description": "A diagram showing an electrical circuit with a beaker containing a weak acid solution. The circuit includes a voltmeter, electrodes, and a dimly lit light bulb, indicating low conductivity. The solution shows fewer dissociated ions (red positive, black negative) between the electrodes.",
+      "labels": [
+        "V",
+        "+",
+        "-",
+        "حمض ضعيف"
+      ],
+      "related_text": "أضع محلول حمض الخل بدلاً من محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح."
+    },
+    {
+      "title": "حمض قوي",
+      "description": "A diagram showing an electrical circuit with a beaker containing a strong acid solution. The circuit includes a voltmeter, electrodes, and a brightly lit light bulb, indicating high conductivity. The solution shows many dissociated ions (red positive, black negative) between the electrodes.",
+      "labels": [
+        "V",
+        "+",
+        "-",
+        "حمض قوي"
+      ],
+      "related_text": "أضع في وعاء فولتا محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح."
+    }
+  ],
+  "tables": [],
+  "equations": [
+    {
+      "equation": "HCl → H⁺ + Cl⁻",
+      "description": "Ionization of hydrochloric acid in water."
+    },
+    {
+      "equation": "CH₃COOH ⇌ CH₃COO⁻ + H⁺",
+      "description": "Partial ionization of acetic acid in water."
+    }
+  ],
+  "warnings": [],
   "errors": [],
-  "char_count": 0,
-  "completeness_score": 0.0,
-  "detected_language": "ar",
-  "vision_provider": null,
-  "vision_source": null,
-  "neighboring_pages": [],
+  "char_count": 565,
+  "completeness_score": 1.0,
+  "detected_language": "Arabic",
+  "vision_provider": "gemini_document_image",
+  "vision_source": "gemini_rendered_image_300dpi",
+  "neighboring_pages": [
+    11,
+    13
+  ],
   "uploaded_pdf": null,
-  "raw_text": null,
-  "quality_report": {},
+  "raw_text": "{\n  \"page_number\": 12,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"# قوة الحمض:\\n## أجرب وأستنتج:\\n### أدوات التجربة:\\nوعاء فولتا – أسلاك توصيل – قاطعة – منبع للتيار المتواصل – مصباح – محلول ممدد لحمض كلور الماء – محلول ممدد لحمض الخل لهما التركيز ذاته.\\n### خطوات التجربة:\\n1. أصل الدارة كما في الشكل المجاور.\\n2. أضع في وعاء فولتا محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\\n3. أضع محلول حمض الخل بدلاً من محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\\n4. أقارن بين ناقلية محلول حمض كلور الماء ومحلول حمض الخل، ماذا أستنتج؟\\n\\n## أستنتج:\\n* يتأين جزيئات حمض كلور الماء تأيناً كلياً في الماء، ويُعبّر عن ذلك وفق المعادلة:\\n  HCl → H⁺ + Cl⁻\\n* يتأين حمض الخل تأيناً جزئياً في الماء، ويُعبّر عن ذلك وفق المعادلة:\\n  CH₃COOH ⇌ CH₃COO⁻ + H⁺\",\n  \"sections\": [\n    {\n      \"heading\": \"أجرب وأستنتج:\",\n      \"content\": \"**أدوات التجربة:** وعاء فولتا – أسلاك توصيل – قاطعة – منبع للتيار المتواصل – مصباح – محلول ممدد لحمض كلور الماء – محلول ممدد لحمض الخل لهما التركيز ذاته.\\n**خطوات التجربة:**\\n1. أصل الدارة كما في الشكل المجاور.\\n2. أضع في وعاء فولتا محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\\n3. أضع محلول حمض الخل بدلاً من محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"يتأين جزيئات حمض كلور الماء تأيناً كلياً في الماء، ويُعبّر عن ذلك وفق المعادلة: HCl → H⁺ + Cl⁻\\nيتأين حمض الخل تأيناً جزئياً في الماء، ويُعبّر عن ذلك وفق المعادلة: CH₃COOH ⇌ CH₃COO⁻ + H⁺\",\n      \"content_type\": \"mixed\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"أقارن بين ناقلية محلول حمض كلور الماء ومحلول حمض الخل، ماذا أستنتج؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"page\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": \"حمض ضعيف\",\n      \"description\": \"A diagram showing an electrical circuit with a beaker containing a weak acid solution. The circuit includes a voltmeter, electrodes, and a dimly lit light bulb, indicating low conductivity. The solution shows fewer dissociated ions (red positive, black negative) between the electrodes.\",\n      \"labels\": [\"V\", \"+\", \"-\",\"حمض ضعيف\"],\n      \"related_text\": \"أضع محلول حمض الخل بدلاً من محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\"\n    },\n    {\n      \"title\": \"حمض قوي\",\n      \"description\": \"A diagram showing an electrical circuit with a beaker containing a strong acid solution. The circuit includes a voltmeter, electrodes, and a brightly lit light bulb, indicating high conductivity. The solution shows many dissociated ions (red positive, black negative) between the electrodes.\",\n      \"labels\": [\"V\", \"+\", \"-\",\"حمض قوي\"],\n      \"related_text\": \"أضع في وعاء فولتا محلول حمض كلور الماء، وألاحظ شدة إضاءة المصباح.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"HCl → H⁺ + Cl⁻\",\n      \"description\": \"Ionization of hydrochloric acid in water.\"\n    },\n    {\n      \"equation\": \"CH₃COOH ⇌ CH₃COO⁻ + H⁺\",\n      \"description\": \"Partial ionization of acetic acid in water.\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"google\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 750,\n  \"completeness_score\": null,\n  \"quality_report\": null,\n  \"raw_text\": null\n}",
+  "quality_report": {
+    "page_number": 12,
+    "schema_valid": true,
+    "raw_markdown_chars": 663,
+    "char_count": 750,
+    "section_count": 2,
+    "question_count": 1,
+    "table_count": 0,
+    "equation_count": 2,
+    "diagram_count": 2,
+    "warning_count": 0,
+    "arabic_char_ratio": 0.5407,
+    "completeness_score": 1.0,
+    "issues": [],
+    "should_fallback": false
+  },
   "classification": "NEEDS_VISION",
   "source_id": 1
 }

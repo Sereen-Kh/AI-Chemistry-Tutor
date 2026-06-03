@@ -4,41 +4,407 @@
   "extraction_methods": [
     "pymupdf",
     "pdfplumber",
-    "gemini_document"
+    "gemini_image_300dpi"
   ],
-  "extraction_method": "pymupdf+pdfplumber+gemini_document",
-  "status": "skipped_dry_run",
+  "extraction_method": "pymupdf+pdfplumber+gemini_image_300dpi",
+  "status": "completed_with_image_fallback",
   "text_layer_content": ":الحموض\n:ﻧﺸﺎط\n:أتمّ م الجدول اآلتي وأستنتج\n في الصّ يغة األيونيّةH+ عدد أيونات\nالصّ يغة األيونيّة\nالصّ يغة الجزيئيّة\nاسم الحمض\n1\nH\nCl\n+\n+\n-حمض كلور الماء\n2-\n2H\nSO\n+\n+\n4حمض الكبريت\n3\n3-\n3H\nPO\n+\n+\n4\nH PO\n3\n4حمض الفوسفور\nCH COO\nH\n3\n+\n-\n+حمض الخل\n1\n1 .ما األيون المشترك في الصّ يغ األيونيّ ة للحموض السَّ ابقة؟\n2\n2 .ما األيون المسؤول عن الوظيفة الحمضيَّ ة؟\n3\n3 .ما عدد الوظائف الحمضيَّ ة في كلّ من الحموض السَّ ابقة؟\n4\n4 .ما تعريف الحمض؟\n• \n. في صيغتها األيونيةH+ تحتوي الحموض على أيون الهدروجين\n• \nعدد الوظائف الحمضيَّة: هو عدد أيونات الهدروجين في الصّ يغة األيونيَّة للحمض.\n• \nالحموض: موادّ تُعطي عند انحاللها في الماء أيَّونات الهدروجين.\n:أﺳﺘﻨﺘﺞ\n:ﻧﺸﺎط\n:أكمل الجدول اآلتي\n في الصّ يغة األيونيّةH+ عدد أيونات\nالصّ يغة األيونيّة\nالصّ يغة الجزيئيّة\nاسم الحمض\nH O\nN\n3\nHCOO\nH\n+\n-\n+حمض النَّمل\nH\nO\nC\n2\n3حمض الكربون\n117\n\n| ةيّنويلأا ةغيصّ لا يف H+ تانويأ ددع | ةيّنويلأا ةغيصّ لا | ةيّئيزجلا ةغيصّ لا | ضمحلا مسا |\n| --- | --- | --- | --- |\n| 1 | H++Cl- |  | ءاملا رولك ضمح |\n|  | 2H++SO2-\n4 |  | تيربكلا ضمح |\n| 3 | 3H++PO3-\n4 | H PO\n3 4 | روفسوفلا ضمح |\n|  | CH COO-+H+\n3 |  | لخلا ضمح |\n\n| ةيّنويلأا ةغيصّ لا يف H+ تانويأ ددع | ةيّنويلأا ةغيصّ لا | ةيّئيزجلا ةغيصّ لا | ضمحلا مسا |\n| --- | --- | --- | --- |\n|  |  | HNO\n3 |  |\n|  | HCOO-+H+ |  | لمنَّلا ضمح |\n|  |  | H CO\n2 3 | نوبركلا ضمح |",
-  "vision_content": {},
+  "vision_content": {
+    "page_number": 117,
+    "detected_language": "Arabic",
+    "raw_markdown": "الحموض:\n\nنشاط:\nأتمم الجدول الآتي واستنتج:\n\n| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\n|---|---|---|---|\n| حمض كلور الماء | | H⁺ + Cl⁻ | 1 |\n| حمض الكبريت | | 2H⁺ + SO₄²⁻ | |\n| حمض الفوسفور | H₃PO₄ | 3H⁺ + PO₄³⁻ | 3 |\n| حمض الخل | | CH₃COO⁻ + H⁺ | |\n\n1. ما الأيون المشترك في الصيغ الأيونية للحموض السابقة؟\n2. ما الأيون المسؤول عن الوظيفة الحمضية؟\n3. ما عدد الوظائف الحمضية في كل من الحموض السابقة؟\n4. ما تعريف الحمض؟\n\nأستنتج:\n* تحتوي الحموض على أيون الهيدروجين H⁺ في صيغتها الأيونية.\n* عدد الوظائف الحمضية: هو عدد أيونات الهيدروجين في الصيغة الأيونية للحمض.\n* الحموض: مواد تُعطي عند انحلالها في الماء أيونات الهيدروجين.\n\nنشاط:\nأكمل الجدول الآتي:\n\n| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\n|---|---|---|---|\n| | HNO₃ | | |\n| حمض النمل | | HCOO⁻ + H⁺ | |\n| حمض الكربون | H₂CO₃ | | |\n\n117",
+    "sections": [
+      {
+        "heading": "الحموض:",
+        "content": "",
+        "content_type": "text"
+      },
+      {
+        "heading": "نشاط:",
+        "content": "أتمم الجدول الآتي واستنتج:",
+        "content_type": "text"
+      },
+      {
+        "heading": "أستنتج:",
+        "content": "* تحتوي الحموض على أيون الهيدروجين H⁺ في صيغتها الأيونية.\n* عدد الوظائف الحمضية: هو عدد أيونات الهيدروجين في الصيغة الأيونية للحمض.\n* الحموض: مواد تُعطي عند انحلالها في الماء أيونات الهيدروجين.",
+        "content_type": "text"
+      },
+      {
+        "heading": "نشاط:",
+        "content": "أكمل الجدول الآتي:",
+        "content_type": "text"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "1. ما الأيون المشترك في الصيغ الأيونية للحموض السابقة؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "2. ما الأيون المسؤول عن الوظيفة الحمضية؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "3. ما عدد الوظائف الحمضية في كل من الحموض السابقة؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "4. ما تعريف الحمض؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [],
+    "tables": [
+      {
+        "title": "أتمم الجدول الآتي واستنتج:",
+        "markdown": "| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\n|---|---|---|---|\n| حمض كلور الماء | | H⁺ + Cl⁻ | 1 |\n| حمض الكبريت | | 2H⁺ + SO₄²⁻ | |\n| حمض الفوسفور | H₃PO₄ | 3H⁺ + PO₄³⁻ | 3 |\n| حمض الخل | | CH₃COO⁻ + H⁺ | |"
+      },
+      {
+        "title": "أكمل الجدول الآتي:",
+        "markdown": "| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\n|---|---|---|---|\n| | HNO₃ | | |\n| حمض النمل | | HCOO⁻ + H⁺ | |\n| حمض الكربون | H₂CO₃ | | |"
+      }
+    ],
+    "equations": [],
+    "warnings": [],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 590,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 117,
+      "schema_valid": true,
+      "raw_markdown_chars": 869,
+      "char_count": 590,
+      "section_count": 4,
+      "question_count": 4,
+      "table_count": 2,
+      "equation_count": 0,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.6564,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 117,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"الحموض:\\n\\nنشاط:\\nأتمم الجدول الآتي واستنتج:\\n\\n| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\\n|---|---|---|---|\\n| حمض كلور الماء | | H⁺ + Cl⁻ | 1 |\\n| حمض الكبريت | | 2H⁺ + SO₄²⁻ | |\\n| حمض الفوسفور | H₃PO₄ | 3H⁺ + PO₄³⁻ | 3 |\\n| حمض الخل | | CH₃COO⁻ + H⁺ | |\\n\\n1. ما الأيون المشترك في الصيغ الأيونية للحموض السابقة؟\\n2. ما الأيون المسؤول عن الوظيفة الحمضية؟\\n3. ما عدد الوظائف الحمضية في كل من الحموض السابقة؟\\n4. ما تعريف الحمض؟\\n\\nأستنتج:\\n* تحتوي الحموض على أيون الهيدروجين H⁺ في صيغتها الأيونية.\\n* عدد الوظائف الحمضية: هو عدد أيونات الهيدروجين في الصيغة الأيونية للحمض.\\n* الحموض: مواد تُعطي عند انحلالها في الماء أيونات الهيدروجين.\\n\\nنشاط:\\nأكمل الجدول الآتي:\\n\\n| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\\n|---|---|---|---|\\n| | HNO₃ | | |\\n| حمض النمل | | HCOO⁻ + H⁺ | |\\n| حمض الكربون | H₂CO₃ | | |\\n\\n117\",\n  \"sections\": [\n    {\n      \"heading\": \"الحموض:\",\n      \"content\": \"\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"نشاط:\",\n      \"content\": \"أتمم الجدول الآتي واستنتج:\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"* تحتوي الحموض على أيون الهيدروجين H⁺ في صيغتها الأيونية.\\n* عدد الوظائف الحمضية: هو عدد أيونات الهيدروجين في الصيغة الأيونية للحمض.\\n* الحموض: مواد تُعطي عند انحلالها في الماء أيونات الهيدروجين.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"نشاط:\",\n      \"content\": \"أكمل الجدول الآتي:\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"1. ما الأيون المشترك في الصيغ الأيونية للحموض السابقة؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"2. ما الأيون المسؤول عن الوظيفة الحمضية؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"3. ما عدد الوظائف الحمضية في كل من الحموض السابقة؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"4. ما تعريف الحمض؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [],\n  \"tables\": [\n    {\n      \"title\": \"أتمم الجدول الآتي واستنتج:\",\n      \"markdown\": \"| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\\n|---|---|---|---|\\n| حمض كلور الماء | | H⁺ + Cl⁻ | 1 |\\n| حمض الكبريت | | 2H⁺ + SO₄²⁻ | |\\n| حمض الفوسفور | H₃PO₄ | 3H⁺ + PO₄³⁻ | 3 |\\n| حمض الخل | | CH₃COO⁻ + H⁺ | |\"\n    },\n    {\n      \"title\": \"أكمل الجدول الآتي:\",\n      \"markdown\": \"| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\\n|---|---|---|---|\\n| | HNO₃ | | |\\n| حمض النمل | | HCOO⁻ + H⁺ | |\\n| حمض الكربون | H₂CO₃ | | |\"\n    }\n  ],\n  \"equations\": [],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"google\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 590,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 117,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 590,\n    \"char_count\": 590,\n    \"section_count\": 4,\n    \"question_count\": 4,\n    \"table_count\": 2,\n    \"equation_count\": 0,\n    \"diagram_count\": 0,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.91,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": null\n}"
+  },
   "gemini_pdf_content": {},
-  "gemini_fallback_model_content": {},
-  "gemini_image_fallback_content": {},
-  "merged_content": ":الحموض\n:ﻧﺸﺎط\n:أتمّ م الجدول اآلتي وأستنتج\n في الصّ يغة األيونيّةH+ عدد أيونات\nالصّ يغة األيونيّة\nالصّ يغة الجزيئيّة\nاسم الحمض\n1\nH\nCl\n+\n+\n-حمض كلور الماء\n2-\n2H\nSO\n+\n+\n4حمض الكبريت\n3\n3-\n3H\nPO\n+\n+\n4\nH PO\n3\n4حمض الفوسفور\nCH COO\nH\n3\n+\n-\n+حمض الخل\n1\n1 .ما األيون المشترك في الصّ يغ األيونيّ ة للحموض السَّ ابقة؟\n2\n2 .ما األيون المسؤول عن الوظيفة الحمضيَّ ة؟\n3\n3 .ما عدد الوظائف الحمضيَّ ة في كلّ من الحموض السَّ ابقة؟\n4\n4 .ما تعريف الحمض؟\n• \n. في صيغتها األيونيةH+ تحتوي الحموض على أيون الهدروجين\n• \nعدد الوظائف الحمضيَّة: هو عدد أيونات الهدروجين في الصّ يغة األيونيَّة للحمض.\n• \nالحموض: موادّ تُعطي عند انحاللها في الماء أيَّونات الهدروجين.\n:أﺳﺘﻨﺘﺞ\n:ﻧﺸﺎط\n:أكمل الجدول اآلتي\n في الصّ يغة األيونيّةH+ عدد أيونات\nالصّ يغة األيونيّة\nالصّ يغة الجزيئيّة\nاسم الحمض\nH O\nN\n3\nHCOO\nH\n+\n-\n+حمض النَّمل\nH\nO\nC\n2\n3حمض الكربون\n117\n\n| ةيّنويلأا ةغيصّ لا يف H+ تانويأ ددع | ةيّنويلأا ةغيصّ لا | ةيّئيزجلا ةغيصّ لا | ضمحلا مسا |\n| --- | --- | --- | --- |\n| 1 | H++Cl- |  | ءاملا رولك ضمح |\n|  | 2H++SO2-\n4 |  | تيربكلا ضمح |\n| 3 | 3H++PO3-\n4 | H PO\n3 4 | روفسوفلا ضمح |\n|  | CH COO-+H+\n3 |  | لخلا ضمح |\n\n| ةيّنويلأا ةغيصّ لا يف H+ تانويأ ددع | ةيّنويلأا ةغيصّ لا | ةيّئيزجلا ةغيصّ لا | ضمحلا مسا |\n| --- | --- | --- | --- |\n|  |  | HNO\n3 |  |\n|  | HCOO-+H+ |  | لمنَّلا ضمح |\n|  |  | H CO\n2 3 | نوبركلا ضمح |",
-  "raw_markdown": ":الحموض\n:ﻧﺸﺎط\n:أتمّ م الجدول اآلتي وأستنتج\n في الصّ يغة األيونيّةH+ عدد أيونات\nالصّ يغة األيونيّة\nالصّ يغة الجزيئيّة\nاسم الحمض\n1\nH\nCl\n+\n+\n-حمض كلور الماء\n2-\n2H\nSO\n+\n+\n4حمض الكبريت\n3\n3-\n3H\nPO\n+\n+\n4\nH PO\n3\n4حمض الفوسفور\nCH COO\nH\n3\n+\n-\n+حمض الخل\n1\n1 .ما األيون المشترك في الصّ يغ األيونيّ ة للحموض السَّ ابقة؟\n2\n2 .ما األيون المسؤول عن الوظيفة الحمضيَّ ة؟\n3\n3 .ما عدد الوظائف الحمضيَّ ة في كلّ من الحموض السَّ ابقة؟\n4\n4 .ما تعريف الحمض؟\n• \n. في صيغتها األيونيةH+ تحتوي الحموض على أيون الهدروجين\n• \nعدد الوظائف الحمضيَّة: هو عدد أيونات الهدروجين في الصّ يغة األيونيَّة للحمض.\n• \nالحموض: موادّ تُعطي عند انحاللها في الماء أيَّونات الهدروجين.\n:أﺳﺘﻨﺘﺞ\n:ﻧﺸﺎط\n:أكمل الجدول اآلتي\n في الصّ يغة األيونيّةH+ عدد أيونات\nالصّ يغة األيونيّة\nالصّ يغة الجزيئيّة\nاسم الحمض\nH O\nN\n3\nHCOO\nH\n+\n-\n+حمض النَّمل\nH\nO\nC\n2\n3حمض الكربون\n117\n\n| ةيّنويلأا ةغيصّ لا يف H+ تانويأ ددع | ةيّنويلأا ةغيصّ لا | ةيّئيزجلا ةغيصّ لا | ضمحلا مسا |\n| --- | --- | --- | --- |\n| 1 | H++Cl- |  | ءاملا رولك ضمح |\n|  | 2H++SO2-\n4 |  | تيربكلا ضمح |\n| 3 | 3H++PO3-\n4 | H PO\n3 4 | روفسوفلا ضمح |\n|  | CH COO-+H+\n3 |  | لخلا ضمح |\n\n| ةيّنويلأا ةغيصّ لا يف H+ تانويأ ددع | ةيّنويلأا ةغيصّ لا | ةيّئيزجلا ةغيصّ لا | ضمحلا مسا |\n| --- | --- | --- | --- |\n|  |  | HNO\n3 |  |\n|  | HCOO-+H+ |  | لمنَّلا ضمح |\n|  |  | H CO\n2 3 | نوبركلا ضمح |",
+  "gemini_fallback_model_content": {
+    "page_number": 117,
+    "detected_language": "Arabic",
+    "raw_markdown": "الحموض:\n\nنشاط:\nأتمم الجدول الآتي واستنتج:\n\n| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\n|---|---|---|---|\n| حمض كلور الماء | | H⁺ + Cl⁻ | 1 |\n| حمض الكبريت | | 2H⁺ + SO₄²⁻ | |\n| حمض الفوسفور | H₃PO₄ | 3H⁺ + PO₄³⁻ | 3 |\n| حمض الخل | | CH₃COO⁻ + H⁺ | |\n\n1. ما الأيون المشترك في الصيغ الأيونية للحموض السابقة؟\n2. ما الأيون المسؤول عن الوظيفة الحمضية؟\n3. ما عدد الوظائف الحمضية في كل من الحموض السابقة؟\n4. ما تعريف الحمض؟\n\nأستنتج:\n* تحتوي الحموض على أيون الهيدروجين H⁺ في صيغتها الأيونية.\n* عدد الوظائف الحمضية: هو عدد أيونات الهيدروجين في الصيغة الأيونية للحمض.\n* الحموض: مواد تُعطي عند انحلالها في الماء أيونات الهيدروجين.\n\nنشاط:\nأكمل الجدول الآتي:\n\n| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\n|---|---|---|---|\n| | HNO₃ | | |\n| حمض النمل | | HCOO⁻ + H⁺ | |\n| حمض الكربون | H₂CO₃ | | |\n\n117",
+    "sections": [
+      {
+        "heading": "الحموض:",
+        "content": "",
+        "content_type": "text"
+      },
+      {
+        "heading": "نشاط:",
+        "content": "أتمم الجدول الآتي واستنتج:",
+        "content_type": "text"
+      },
+      {
+        "heading": "أستنتج:",
+        "content": "* تحتوي الحموض على أيون الهيدروجين H⁺ في صيغتها الأيونية.\n* عدد الوظائف الحمضية: هو عدد أيونات الهيدروجين في الصيغة الأيونية للحمض.\n* الحموض: مواد تُعطي عند انحلالها في الماء أيونات الهيدروجين.",
+        "content_type": "text"
+      },
+      {
+        "heading": "نشاط:",
+        "content": "أكمل الجدول الآتي:",
+        "content_type": "text"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "1. ما الأيون المشترك في الصيغ الأيونية للحموض السابقة؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "2. ما الأيون المسؤول عن الوظيفة الحمضية؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "3. ما عدد الوظائف الحمضية في كل من الحموض السابقة؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "4. ما تعريف الحمض؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [],
+    "tables": [
+      {
+        "title": "أتمم الجدول الآتي واستنتج:",
+        "markdown": "| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\n|---|---|---|---|\n| حمض كلور الماء | | H⁺ + Cl⁻ | 1 |\n| حمض الكبريت | | 2H⁺ + SO₄²⁻ | |\n| حمض الفوسفور | H₃PO₄ | 3H⁺ + PO₄³⁻ | 3 |\n| حمض الخل | | CH₃COO⁻ + H⁺ | |"
+      },
+      {
+        "title": "أكمل الجدول الآتي:",
+        "markdown": "| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\n|---|---|---|---|\n| | HNO₃ | | |\n| حمض النمل | | HCOO⁻ + H⁺ | |\n| حمض الكربون | H₂CO₃ | | |"
+      }
+    ],
+    "equations": [],
+    "warnings": [],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 590,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 117,
+      "schema_valid": true,
+      "raw_markdown_chars": 869,
+      "char_count": 590,
+      "section_count": 4,
+      "question_count": 4,
+      "table_count": 2,
+      "equation_count": 0,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.6564,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 117,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"الحموض:\\n\\nنشاط:\\nأتمم الجدول الآتي واستنتج:\\n\\n| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\\n|---|---|---|---|\\n| حمض كلور الماء | | H⁺ + Cl⁻ | 1 |\\n| حمض الكبريت | | 2H⁺ + SO₄²⁻ | |\\n| حمض الفوسفور | H₃PO₄ | 3H⁺ + PO₄³⁻ | 3 |\\n| حمض الخل | | CH₃COO⁻ + H⁺ | |\\n\\n1. ما الأيون المشترك في الصيغ الأيونية للحموض السابقة؟\\n2. ما الأيون المسؤول عن الوظيفة الحمضية؟\\n3. ما عدد الوظائف الحمضية في كل من الحموض السابقة؟\\n4. ما تعريف الحمض؟\\n\\nأستنتج:\\n* تحتوي الحموض على أيون الهيدروجين H⁺ في صيغتها الأيونية.\\n* عدد الوظائف الحمضية: هو عدد أيونات الهيدروجين في الصيغة الأيونية للحمض.\\n* الحموض: مواد تُعطي عند انحلالها في الماء أيونات الهيدروجين.\\n\\nنشاط:\\nأكمل الجدول الآتي:\\n\\n| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\\n|---|---|---|---|\\n| | HNO₃ | | |\\n| حمض النمل | | HCOO⁻ + H⁺ | |\\n| حمض الكربون | H₂CO₃ | | |\\n\\n117\",\n  \"sections\": [\n    {\n      \"heading\": \"الحموض:\",\n      \"content\": \"\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"نشاط:\",\n      \"content\": \"أتمم الجدول الآتي واستنتج:\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"* تحتوي الحموض على أيون الهيدروجين H⁺ في صيغتها الأيونية.\\n* عدد الوظائف الحمضية: هو عدد أيونات الهيدروجين في الصيغة الأيونية للحمض.\\n* الحموض: مواد تُعطي عند انحلالها في الماء أيونات الهيدروجين.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"نشاط:\",\n      \"content\": \"أكمل الجدول الآتي:\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"1. ما الأيون المشترك في الصيغ الأيونية للحموض السابقة؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"2. ما الأيون المسؤول عن الوظيفة الحمضية؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"3. ما عدد الوظائف الحمضية في كل من الحموض السابقة؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"4. ما تعريف الحمض؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [],\n  \"tables\": [\n    {\n      \"title\": \"أتمم الجدول الآتي واستنتج:\",\n      \"markdown\": \"| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\\n|---|---|---|---|\\n| حمض كلور الماء | | H⁺ + Cl⁻ | 1 |\\n| حمض الكبريت | | 2H⁺ + SO₄²⁻ | |\\n| حمض الفوسفور | H₃PO₄ | 3H⁺ + PO₄³⁻ | 3 |\\n| حمض الخل | | CH₃COO⁻ + H⁺ | |\"\n    },\n    {\n      \"title\": \"أكمل الجدول الآتي:\",\n      \"markdown\": \"| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\\n|---|---|---|---|\\n| | HNO₃ | | |\\n| حمض النمل | | HCOO⁻ + H⁺ | |\\n| حمض الكربون | H₂CO₃ | | |\"\n    }\n  ],\n  \"equations\": [],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"google\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 590,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 117,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 590,\n    \"char_count\": 590,\n    \"section_count\": 4,\n    \"question_count\": 4,\n    \"table_count\": 2,\n    \"equation_count\": 0,\n    \"diagram_count\": 0,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.91,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": null\n}"
+  },
+  "gemini_image_fallback_content": {
+    "page_number": 117,
+    "detected_language": "Arabic",
+    "raw_markdown": "الحموض:\n\nنشاط:\nأتمم الجدول الآتي واستنتج:\n\n| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\n|---|---|---|---|\n| حمض كلور الماء | | H⁺ + Cl⁻ | 1 |\n| حمض الكبريت | | 2H⁺ + SO₄²⁻ | |\n| حمض الفوسفور | H₃PO₄ | 3H⁺ + PO₄³⁻ | 3 |\n| حمض الخل | | CH₃COO⁻ + H⁺ | |\n\n1. ما الأيون المشترك في الصيغ الأيونية للحموض السابقة؟\n2. ما الأيون المسؤول عن الوظيفة الحمضية؟\n3. ما عدد الوظائف الحمضية في كل من الحموض السابقة؟\n4. ما تعريف الحمض؟\n\nأستنتج:\n* تحتوي الحموض على أيون الهيدروجين H⁺ في صيغتها الأيونية.\n* عدد الوظائف الحمضية: هو عدد أيونات الهيدروجين في الصيغة الأيونية للحمض.\n* الحموض: مواد تُعطي عند انحلالها في الماء أيونات الهيدروجين.\n\nنشاط:\nأكمل الجدول الآتي:\n\n| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\n|---|---|---|---|\n| | HNO₃ | | |\n| حمض النمل | | HCOO⁻ + H⁺ | |\n| حمض الكربون | H₂CO₃ | | |\n\n117",
+    "sections": [
+      {
+        "heading": "الحموض:",
+        "content": "",
+        "content_type": "text"
+      },
+      {
+        "heading": "نشاط:",
+        "content": "أتمم الجدول الآتي واستنتج:",
+        "content_type": "text"
+      },
+      {
+        "heading": "أستنتج:",
+        "content": "* تحتوي الحموض على أيون الهيدروجين H⁺ في صيغتها الأيونية.\n* عدد الوظائف الحمضية: هو عدد أيونات الهيدروجين في الصيغة الأيونية للحمض.\n* الحموض: مواد تُعطي عند انحلالها في الماء أيونات الهيدروجين.",
+        "content_type": "text"
+      },
+      {
+        "heading": "نشاط:",
+        "content": "أكمل الجدول الآتي:",
+        "content_type": "text"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "1. ما الأيون المشترك في الصيغ الأيونية للحموض السابقة؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "2. ما الأيون المسؤول عن الوظيفة الحمضية؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "3. ما عدد الوظائف الحمضية في كل من الحموض السابقة؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "4. ما تعريف الحمض؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [],
+    "tables": [
+      {
+        "title": "أتمم الجدول الآتي واستنتج:",
+        "markdown": "| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\n|---|---|---|---|\n| حمض كلور الماء | | H⁺ + Cl⁻ | 1 |\n| حمض الكبريت | | 2H⁺ + SO₄²⁻ | |\n| حمض الفوسفور | H₃PO₄ | 3H⁺ + PO₄³⁻ | 3 |\n| حمض الخل | | CH₃COO⁻ + H⁺ | |"
+      },
+      {
+        "title": "أكمل الجدول الآتي:",
+        "markdown": "| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\n|---|---|---|---|\n| | HNO₃ | | |\n| حمض النمل | | HCOO⁻ + H⁺ | |\n| حمض الكربون | H₂CO₃ | | |"
+      }
+    ],
+    "equations": [],
+    "warnings": [],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 590,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 117,
+      "schema_valid": true,
+      "raw_markdown_chars": 869,
+      "char_count": 590,
+      "section_count": 4,
+      "question_count": 4,
+      "table_count": 2,
+      "equation_count": 0,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.6564,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 117,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"الحموض:\\n\\nنشاط:\\nأتمم الجدول الآتي واستنتج:\\n\\n| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\\n|---|---|---|---|\\n| حمض كلور الماء | | H⁺ + Cl⁻ | 1 |\\n| حمض الكبريت | | 2H⁺ + SO₄²⁻ | |\\n| حمض الفوسفور | H₃PO₄ | 3H⁺ + PO₄³⁻ | 3 |\\n| حمض الخل | | CH₃COO⁻ + H⁺ | |\\n\\n1. ما الأيون المشترك في الصيغ الأيونية للحموض السابقة؟\\n2. ما الأيون المسؤول عن الوظيفة الحمضية؟\\n3. ما عدد الوظائف الحمضية في كل من الحموض السابقة؟\\n4. ما تعريف الحمض؟\\n\\nأستنتج:\\n* تحتوي الحموض على أيون الهيدروجين H⁺ في صيغتها الأيونية.\\n* عدد الوظائف الحمضية: هو عدد أيونات الهيدروجين في الصيغة الأيونية للحمض.\\n* الحموض: مواد تُعطي عند انحلالها في الماء أيونات الهيدروجين.\\n\\nنشاط:\\nأكمل الجدول الآتي:\\n\\n| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\\n|---|---|---|---|\\n| | HNO₃ | | |\\n| حمض النمل | | HCOO⁻ + H⁺ | |\\n| حمض الكربون | H₂CO₃ | | |\\n\\n117\",\n  \"sections\": [\n    {\n      \"heading\": \"الحموض:\",\n      \"content\": \"\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"نشاط:\",\n      \"content\": \"أتمم الجدول الآتي واستنتج:\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"* تحتوي الحموض على أيون الهيدروجين H⁺ في صيغتها الأيونية.\\n* عدد الوظائف الحمضية: هو عدد أيونات الهيدروجين في الصيغة الأيونية للحمض.\\n* الحموض: مواد تُعطي عند انحلالها في الماء أيونات الهيدروجين.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"نشاط:\",\n      \"content\": \"أكمل الجدول الآتي:\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"1. ما الأيون المشترك في الصيغ الأيونية للحموض السابقة؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"2. ما الأيون المسؤول عن الوظيفة الحمضية؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"3. ما عدد الوظائف الحمضية في كل من الحموض السابقة؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"4. ما تعريف الحمض؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [],\n  \"tables\": [\n    {\n      \"title\": \"أتمم الجدول الآتي واستنتج:\",\n      \"markdown\": \"| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\\n|---|---|---|---|\\n| حمض كلور الماء | | H⁺ + Cl⁻ | 1 |\\n| حمض الكبريت | | 2H⁺ + SO₄²⁻ | |\\n| حمض الفوسفور | H₃PO₄ | 3H⁺ + PO₄³⁻ | 3 |\\n| حمض الخل | | CH₃COO⁻ + H⁺ | |\"\n    },\n    {\n      \"title\": \"أكمل الجدول الآتي:\",\n      \"markdown\": \"| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\\n|---|---|---|---|\\n| | HNO₃ | | |\\n| حمض النمل | | HCOO⁻ + H⁺ | |\\n| حمض الكربون | H₂CO₃ | | |\"\n    }\n  ],\n  \"equations\": [],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"google\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 590,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 117,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 590,\n    \"char_count\": 590,\n    \"section_count\": 4,\n    \"question_count\": 4,\n    \"table_count\": 2,\n    \"equation_count\": 0,\n    \"diagram_count\": 0,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.91,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": null\n}"
+  },
+  "merged_content": ":الحموض\n:ﻧﺸﺎط\n:أتمّ م الجدول اآلتي وأستنتج\n في الصّ يغة األيونيّةH+ عدد أيونات\nالصّ يغة األيونيّة\nالصّ يغة الجزيئيّة\nاسم الحمض\n1\nH\nCl\n+\n+\n-حمض كلور الماء\n2-\n2H\nSO\n+\n+\n4حمض الكبريت\n3\n3-\n3H\nPO\n+\n+\n4\nH PO\n3\n4حمض الفوسفور\nCH COO\nH\n3\n+\n-\n+حمض الخل\n1\n1 .ما األيون المشترك في الصّ يغ األيونيّ ة للحموض السَّ ابقة؟\n2\n2 .ما األيون المسؤول عن الوظيفة الحمضيَّ ة؟\n3\n3 .ما عدد الوظائف الحمضيَّ ة في كلّ من الحموض السَّ ابقة؟\n4\n4 .ما تعريف الحمض؟\n• \n. في صيغتها األيونيةH+ تحتوي الحموض على أيون الهدروجين\n• \nعدد الوظائف الحمضيَّة: هو عدد أيونات الهدروجين في الصّ يغة األيونيَّة للحمض.\n• \nالحموض: موادّ تُعطي عند انحاللها في الماء أيَّونات الهدروجين.\n:أﺳﺘﻨﺘﺞ\n:ﻧﺸﺎط\n:أكمل الجدول اآلتي\n في الصّ يغة األيونيّةH+ عدد أيونات\nالصّ يغة األيونيّة\nالصّ يغة الجزيئيّة\nاسم الحمض\nH O\nN\n3\nHCOO\nH\n+\n-\n+حمض النَّمل\nH\nO\nC\n2\n3حمض الكربون\n117\n\n| ةيّنويلأا ةغيصّ لا يف H+ تانويأ ددع | ةيّنويلأا ةغيصّ لا | ةيّئيزجلا ةغيصّ لا | ضمحلا مسا |\n| --- | --- | --- | --- |\n| 1 | H++Cl- |  | ءاملا رولك ضمح |\n|  | 2H++SO2-\n4 |  | تيربكلا ضمح |\n| 3 | 3H++PO3-\n4 | H PO\n3 4 | روفسوفلا ضمح |\n|  | CH COO-+H+\n3 |  | لخلا ضمح |\n\n| ةيّنويلأا ةغيصّ لا يف H+ تانويأ ددع | ةيّنويلأا ةغيصّ لا | ةيّئيزجلا ةغيصّ لا | ضمحلا مسا |\n| --- | --- | --- | --- |\n|  |  | HNO\n3 |  |\n|  | HCOO-+H+ |  | لمنَّلا ضمح |\n|  |  | H CO\n2 3 | نوبركلا ضمح |\n\nالحموض:\n\nنشاط:\nأتمم الجدول الآتي واستنتج:\n\nأستنتج:\n* تحتوي الحموض على أيون الهيدروجين H⁺ في صيغتها الأيونية.\n* عدد الوظائف الحمضية: هو عدد أيونات الهيدروجين في الصيغة الأيونية للحمض.\n* الحموض: مواد تُعطي عند انحلالها في الماء أيونات الهيدروجين.\n\nنشاط:\nأكمل الجدول الآتي:",
+  "raw_markdown": "الحموض:\n\nنشاط:\nأتمم الجدول الآتي واستنتج:\n\n| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\n|---|---|---|---|\n| حمض كلور الماء | | H⁺ + Cl⁻ | 1 |\n| حمض الكبريت | | 2H⁺ + SO₄²⁻ | |\n| حمض الفوسفور | H₃PO₄ | 3H⁺ + PO₄³⁻ | 3 |\n| حمض الخل | | CH₃COO⁻ + H⁺ | |\n\n1. ما الأيون المشترك في الصيغ الأيونية للحموض السابقة؟\n2. ما الأيون المسؤول عن الوظيفة الحمضية؟\n3. ما عدد الوظائف الحمضية في كل من الحموض السابقة؟\n4. ما تعريف الحمض؟\n\nأستنتج:\n* تحتوي الحموض على أيون الهيدروجين H⁺ في صيغتها الأيونية.\n* عدد الوظائف الحمضية: هو عدد أيونات الهيدروجين في الصيغة الأيونية للحمض.\n* الحموض: مواد تُعطي عند انحلالها في الماء أيونات الهيدروجين.\n\nنشاط:\nأكمل الجدول الآتي:\n\n| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\n|---|---|---|---|\n| | HNO₃ | | |\n| حمض النمل | | HCOO⁻ + H⁺ | |\n| حمض الكربون | H₂CO₃ | | |\n\n117",
   "sections": [
     {
       "heading": null,
       "content": ":الحموض\n:ﻧﺸﺎط\n:أتمّ م الجدول اآلتي وأستنتج\n في الصّ يغة األيونيّةH+ عدد أيونات\nالصّ يغة األيونيّة\nالصّ يغة الجزيئيّة\nاسم الحمض\n1\nH\nCl\n+\n+\n-حمض كلور الماء\n2-\n2H\nSO\n+\n+\n4حمض الكبريت\n3\n3-\n3H\nPO\n+\n+\n4\nH PO\n3\n4حمض الفوسفور\nCH COO\nH\n3\n+\n-\n+حمض الخل\n1\n1 .ما األيون المشترك في الصّ يغ األيونيّ ة للحموض السَّ ابقة؟\n2\n2 .ما األيون المسؤول عن الوظيفة الحمضيَّ ة؟\n3\n3 .ما عدد الوظائف الحمضيَّ ة في كلّ من الحموض السَّ ابقة؟\n4\n4 .ما تعريف الحمض؟\n• \n. في صيغتها األيونيةH+ تحتوي الحموض على أيون الهدروجين\n• \nعدد الوظائف الحمضيَّة: هو عدد أيونات الهدروجين في الصّ يغة األيونيَّة للحمض.\n• \nالحموض: موادّ تُعطي عند انحاللها في الماء أيَّونات الهدروجين.\n:أﺳﺘﻨﺘﺞ\n:ﻧﺸﺎط\n:أكمل الجدول اآلتي\n في الصّ يغة األيونيّةH+ عدد أيونات\nالصّ يغة األيونيّة\nالصّ يغة الجزيئيّة\nاسم الحمض\nH O\nN\n3\nHCOO\nH\n+\n-\n+حمض النَّمل\nH\nO\nC\n2\n3حمض الكربون\n117\n\n| ةيّنويلأا ةغيصّ لا يف H+ تانويأ ددع | ةيّنويلأا ةغيصّ لا | ةيّئيزجلا ةغيصّ لا | ضمحلا مسا |\n| --- | --- | --- | --- |\n| 1 | H++Cl- |  | ءاملا رولك ضمح |\n|  | 2H++SO2-\n4 |  | تيربكلا ضمح |\n| 3 | 3H++PO3-\n4 | H PO\n3 4 | روفسوفلا ضمح |\n|  | CH COO-+H+\n3 |  | لخلا ضمح |\n\n| ةيّنويلأا ةغيصّ لا يف H+ تانويأ ددع | ةيّنويلأا ةغيصّ لا | ةيّئيزجلا ةغيصّ لا | ضمحلا مسا |\n| --- | --- | --- | --- |\n|  |  | HNO\n3 |  |\n|  | HCOO-+H+ |  | لمنَّلا ضمح |\n|  |  | H CO\n2 3 | نوبركلا ضمح |",
       "content_type": "text"
+    },
+    {
+      "heading": "الحموض:",
+      "content": "",
+      "content_type": "text"
+    },
+    {
+      "heading": "نشاط:",
+      "content": "أتمم الجدول الآتي واستنتج:",
+      "content_type": "text"
+    },
+    {
+      "heading": "أستنتج:",
+      "content": "* تحتوي الحموض على أيون الهيدروجين H⁺ في صيغتها الأيونية.\n* عدد الوظائف الحمضية: هو عدد أيونات الهيدروجين في الصيغة الأيونية للحمض.\n* الحموض: مواد تُعطي عند انحلالها في الماء أيونات الهيدروجين.",
+      "content_type": "text"
+    },
+    {
+      "heading": "نشاط:",
+      "content": "أكمل الجدول الآتي:",
+      "content_type": "text"
     }
   ],
-  "questions": [],
-  "diagrams": [],
-  "tables": [],
-  "equations": [],
-  "warnings": [
-    "Gemini document extraction is not configured. Vision page extraction was skipped."
+  "questions": [
+    {
+      "question_text": "1. ما الأيون المشترك في الصيغ الأيونية للحموض السابقة؟",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "2. ما الأيون المسؤول عن الوظيفة الحمضية؟",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "3. ما عدد الوظائف الحمضية في كل من الحموض السابقة؟",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "4. ما تعريف الحمض؟",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    }
   ],
+  "diagrams": [],
+  "tables": [
+    {
+      "title": "أتمم الجدول الآتي واستنتج:",
+      "markdown": "| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\n|---|---|---|---|\n| حمض كلور الماء | | H⁺ + Cl⁻ | 1 |\n| حمض الكبريت | | 2H⁺ + SO₄²⁻ | |\n| حمض الفوسفور | H₃PO₄ | 3H⁺ + PO₄³⁻ | 3 |\n| حمض الخل | | CH₃COO⁻ + H⁺ | |"
+    },
+    {
+      "title": "أكمل الجدول الآتي:",
+      "markdown": "| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\n|---|---|---|---|\n| | HNO₃ | | |\n| حمض النمل | | HCOO⁻ + H⁺ | |\n| حمض الكربون | H₂CO₃ | | |"
+    }
+  ],
+  "equations": [],
+  "warnings": [],
   "errors": [],
-  "char_count": 1286,
-  "completeness_score": 0.45,
-  "detected_language": "ar",
-  "vision_provider": null,
-  "vision_source": null,
-  "neighboring_pages": [],
+  "char_count": 1558,
+  "completeness_score": 1.0,
+  "detected_language": "Arabic",
+  "vision_provider": "gemini_document_image",
+  "vision_source": "gemini_rendered_image_300dpi",
+  "neighboring_pages": [
+    10,
+    12
+  ],
   "uploaded_pdf": null,
-  "raw_text": null,
-  "quality_report": {},
+  "raw_text": "{\n  \"page_number\": 117,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"الحموض:\\n\\nنشاط:\\nأتمم الجدول الآتي واستنتج:\\n\\n| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\\n|---|---|---|---|\\n| حمض كلور الماء | | H⁺ + Cl⁻ | 1 |\\n| حمض الكبريت | | 2H⁺ + SO₄²⁻ | |\\n| حمض الفوسفور | H₃PO₄ | 3H⁺ + PO₄³⁻ | 3 |\\n| حمض الخل | | CH₃COO⁻ + H⁺ | |\\n\\n1. ما الأيون المشترك في الصيغ الأيونية للحموض السابقة؟\\n2. ما الأيون المسؤول عن الوظيفة الحمضية؟\\n3. ما عدد الوظائف الحمضية في كل من الحموض السابقة؟\\n4. ما تعريف الحمض؟\\n\\nأستنتج:\\n* تحتوي الحموض على أيون الهيدروجين H⁺ في صيغتها الأيونية.\\n* عدد الوظائف الحمضية: هو عدد أيونات الهيدروجين في الصيغة الأيونية للحمض.\\n* الحموض: مواد تُعطي عند انحلالها في الماء أيونات الهيدروجين.\\n\\nنشاط:\\nأكمل الجدول الآتي:\\n\\n| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\\n|---|---|---|---|\\n| | HNO₃ | | |\\n| حمض النمل | | HCOO⁻ + H⁺ | |\\n| حمض الكربون | H₂CO₃ | | |\\n\\n117\",\n  \"sections\": [\n    {\n      \"heading\": \"الحموض:\",\n      \"content\": \"\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"نشاط:\",\n      \"content\": \"أتمم الجدول الآتي واستنتج:\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"* تحتوي الحموض على أيون الهيدروجين H⁺ في صيغتها الأيونية.\\n* عدد الوظائف الحمضية: هو عدد أيونات الهيدروجين في الصيغة الأيونية للحمض.\\n* الحموض: مواد تُعطي عند انحلالها في الماء أيونات الهيدروجين.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"نشاط:\",\n      \"content\": \"أكمل الجدول الآتي:\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"1. ما الأيون المشترك في الصيغ الأيونية للحموض السابقة؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"2. ما الأيون المسؤول عن الوظيفة الحمضية؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"3. ما عدد الوظائف الحمضية في كل من الحموض السابقة؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"4. ما تعريف الحمض؟\",\n      \"question_type\": \"short_answer\",\n      \"options\": null,\n      \"correct_answer\": null,\n      \"explanation\": null,\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [],\n  \"tables\": [\n    {\n      \"title\": \"أتمم الجدول الآتي واستنتج:\",\n      \"markdown\": \"| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\\n|---|---|---|---|\\n| حمض كلور الماء | | H⁺ + Cl⁻ | 1 |\\n| حمض الكبريت | | 2H⁺ + SO₄²⁻ | |\\n| حمض الفوسفور | H₃PO₄ | 3H⁺ + PO₄³⁻ | 3 |\\n| حمض الخل | | CH₃COO⁻ + H⁺ | |\"\n    },\n    {\n      \"title\": \"أكمل الجدول الآتي:\",\n      \"markdown\": \"| اسم الحمض | الصيغة الجزيئية | الصيغة الأيونية | عدد أيونات H⁺ في الصيغة الأيونية |\\n|---|---|---|---|\\n| | HNO₃ | | |\\n| حمض النمل | | HCOO⁻ + H⁺ | |\\n| حمض الكربون | H₂CO₃ | | |\"\n    }\n  ],\n  \"equations\": [],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"google\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 590,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 117,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 590,\n    \"char_count\": 590,\n    \"section_count\": 4,\n    \"question_count\": 4,\n    \"table_count\": 2,\n    \"equation_count\": 0,\n    \"diagram_count\": 0,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.91,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": null\n}",
+  "quality_report": {
+    "page_number": 117,
+    "schema_valid": true,
+    "raw_markdown_chars": 869,
+    "char_count": 590,
+    "section_count": 4,
+    "question_count": 4,
+    "table_count": 2,
+    "equation_count": 0,
+    "diagram_count": 0,
+    "warning_count": 0,
+    "arabic_char_ratio": 0.6564,
+    "completeness_score": 1.0,
+    "issues": [],
+    "should_fallback": false
+  },
   "classification": "MIXED_VISION",
   "source_id": 1
 }

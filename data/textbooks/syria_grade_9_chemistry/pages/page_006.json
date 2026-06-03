@@ -4,41 +4,299 @@
   "extraction_methods": [
     "pymupdf",
     "pdfplumber",
-    "gemini_document"
+    "gemini_image_300dpi"
   ],
-  "extraction_method": "pymupdf+pdfplumber+gemini_document",
-  "status": "skipped_dry_run",
+  "extraction_method": "pymupdf+pdfplumber+gemini_image_300dpi",
+  "status": "completed_with_image_fallback",
   "text_layer_content": "• \n عند تمديد محلول ما بإضافة ماء مقطّرإليه يزداد حجم المحلول، ويقلّ تركيزه بينما تبقى كميّة\nالمادّة المُذابة ثابتة.\n• \nقانون تمديد المحاليل:\n \n (عدد موالت المادة المذابة قبل التّمديد)n\nn\n=\n1\n2 )(عدد موالت المادّة المذابة بعد التّمديد\nC\nV\nC\nV\n1\n1\n2\n2\n#\n#\n=\n:أﺳﺘﻨﺘﺞ\n 00 mL\n1\n  أضيف إليه0.2 mol.L 1\n-   من محلول لهيدروكسيد الصّ وديوم  تركيزه00 mL\n1\n لديك\nمن الماء المقطّر، احسب تركيز محلول هيدروكسيد الصّ وديوم بعد التّمديد.\nالحل:\n(نعلم أنّ كميّة المادّة المذابة ال تتغيّر بالتّمديد، والّذي تغيّر هو حجم المحلول وتركيزه)\n (عدد موالت المادة المذابة قبل التّمديد)n\nn\n=\n1\n2 )(عدد موالت المادّة المذابة بعد التّمديد\nC\nV\nC\nV\n1\n1\n2\n2\n#\n#\n=\n. حجم الماء المضاف+ حجم المحلول بعد التّمديد = حجم المحلول قبل التّمديد\nC\n20\n2\n0\nV\n100\n100\n200 mL\n0.2\n100\nC\n200\n200\n20\n1\n1\n0.1mol.L\n2\n2\n2\n1\n(\n#\n#\n=\n+\n=\n=\n=\n=\n=\n=\n-\n:ﺗﻄﺒﻴﻖ ﻣﺤﻠﻮل\n112\n\n| :لﻮﻠﺤﻣ ﻖﻴﺒﻄﺗ |\n| --- |\n|  |",
-  "vision_content": {},
+  "vision_content": {
+    "page_number": 112,
+    "detected_language": "Arabic",
+    "raw_markdown": "أستنتج: عند تمديد محلول ما بإضافة ماء مقطر إليه يزداد حجم المحلول، ويقل تركيزه بينما تبقى كمية المادة المذابة ثابتة. قانون تمديد المحاليل: (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂ تطبيق محلول: لديك 100 mL من محلول لهيدروكسيد الصوديوم تركيزه 0.2 mol.L⁻¹ أضيف إليه 100 mL من الماء المقطر، احسب تركيز محلول هيدروكسيد الصوديوم بعد التمديد. الحل: (نعلم أن كمية المادة المذابة لا تتغير بالتمديد، والذي تغير هو حجم المحلول وتركيزه) (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂ حجم المحلول بعد التمديد = حجم المحلول قبل التمديد + حجم الماء المضاف. V₂ = 100 + 100 = 200 mL 0.2 × 100 = C₂ × 200 C₂ = 20/200 = 2/20 = 1/10 = 0.1 mol.L⁻¹",
+    "sections": [
+      {
+        "heading": "أستنتج",
+        "content": "عند تمديد محلول ما بإضافة ماء مقطر إليه يزداد حجم المحلول، ويقل تركيزه بينما تبقى كمية المادة المذابة ثابتة. قانون تمديد المحاليل: (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂",
+        "content_type": "text"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "لديك 100 mL من محلول لهيدروكسيد الصوديوم تركيزه 0.2 mol.L⁻¹ أضيف إليه 100 mL من الماء المقطر، احسب تركيز محلول هيدروكسيد الصوديوم بعد التمديد.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": "0.1 mol.L⁻¹",
+        "explanation": "الحل: (نعلم أن كمية المادة المذابة لا تتغير بالتمديد، والذي تغير هو حجم المحلول وتركيزه) (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂ حجم المحلول بعد التمديد = حجم المحلول قبل التمديد + حجم الماء المضاف. V₂ = 100 + 100 = 200 mL 0.2 × 100 = C₂ × 200 C₂ = 20/200 = 2/20 = 1/10 = 0.1 mol.L⁻¹",
+        "answer_source": "page"
+      }
+    ],
+    "diagrams": [],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "n₁ = n₂",
+        "description": "Number of moles of dissolved substance before and after dilution"
+      },
+      {
+        "equation": "C₁ × V₁ = C₂ × V₂",
+        "description": "Law of solution dilution"
+      },
+      {
+        "equation": "V₂ = 100 + 100 = 200 mL",
+        "description": "Calculation of final volume after adding water"
+      },
+      {
+        "equation": "0.2 × 100 = C₂ × 200",
+        "description": "Applying dilution law to find C₂"
+      },
+      {
+        "equation": "C₂ = 20/200 = 2/20 = 1/10 = 0.1 mol.L⁻¹",
+        "description": "Final concentration of sodium hydroxide solution after dilution"
+      }
+    ],
+    "warnings": [],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 1085,
+    "completeness_score": 1.643939393939394,
+    "quality_report": {
+      "page_number": 112,
+      "schema_valid": true,
+      "raw_markdown_chars": 746,
+      "char_count": 1085,
+      "section_count": 1,
+      "question_count": 1,
+      "table_count": 0,
+      "equation_count": 5,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.6419,
+      "completeness_score": 1.643939393939394,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 112,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"أستنتج: عند تمديد محلول ما بإضافة ماء مقطر إليه يزداد حجم المحلول، ويقل تركيزه بينما تبقى كمية المادة المذابة ثابتة. قانون تمديد المحاليل: (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂ تطبيق محلول: لديك 100 mL من محلول لهيدروكسيد الصوديوم تركيزه 0.2 mol.L⁻¹ أضيف إليه 100 mL من الماء المقطر، احسب تركيز محلول هيدروكسيد الصوديوم بعد التمديد. الحل: (نعلم أن كمية المادة المذابة لا تتغير بالتمديد، والذي تغير هو حجم المحلول وتركيزه) (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂ حجم المحلول بعد التمديد = حجم المحلول قبل التمديد + حجم الماء المضاف. V₂ = 100 + 100 = 200 mL 0.2 × 100 = C₂ × 200 C₂ = 20/200 = 2/20 = 1/10 = 0.1 mol.L⁻¹\",\n  \"sections\": [\n    {\n      \"heading\": \"أستنتج\",\n      \"content\": \"عند تمديد محلول ما بإضافة ماء مقطر إليه يزداد حجم المحلول، ويقل تركيزه بينما تبقى كمية المادة المذابة ثابتة. قانون تمديد المحاليل: (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"لديك 100 mL من محلول لهيدروكسيد الصوديوم تركيزه 0.2 mol.L⁻¹ أضيف إليه 100 mL من الماء المقطر، احسب تركيز محلول هيدروكسيد الصوديوم بعد التمديد.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": \"0.1 mol.L⁻¹\",\n      \"explanation\": \"الحل: (نعلم أن كمية المادة المذابة لا تتغير بالتمديد، والذي تغير هو حجم المحلول وتركيزه) (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂ حجم المحلول بعد التمديد = حجم المحلول قبل التمديد + حجم الماء المضاف. V₂ = 100 + 100 = 200 mL 0.2 × 100 = C₂ × 200 C₂ = 20/200 = 2/20 = 1/10 = 0.1 mol.L⁻¹\",\n      \"answer_source\": \"page\"\n    }\n  ],\n  \"diagrams\": [],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"n₁ = n₂\",\n      \"description\": \"Number of moles of dissolved substance before and after dilution\"\n    },\n    {\n      \"equation\": \"C₁ × V₁ = C₂ × V₂\",\n      \"description\": \"Law of solution dilution\"\n    },\n    {\n      \"equation\": \"V₂ = 100 + 100 = 200 mL\",\n      \"description\": \"Calculation of final volume after adding water\"\n    },\n    {\n      \"equation\": \"0.2 × 100 = C₂ × 200\",\n      \"description\": \"Applying dilution law to find C₂\"\n    },\n    {\n      \"equation\": \"C₂ = 20/200 = 2/20 = 1/10 = 0.1 mol.L⁻¹\",\n      \"description\": \"Final concentration of sodium hydroxide solution after dilution\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"gemini\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 1085,\n  \"completeness_score\": 1.643939393939394,\n  \"quality_report\": {\n    \"page_number\": 112,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 660,\n    \"char_count\": 1085,\n    \"section_count\": 1,\n    \"question_count\": 1,\n    \"table_count\": 0,\n    \"equation_count\": 5,\n    \"diagram_count\": 0,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.696969696969697,\n    \"completeness_score\": 1.643939393939394,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": null\n}"
+  },
   "gemini_pdf_content": {},
-  "gemini_fallback_model_content": {},
-  "gemini_image_fallback_content": {},
-  "merged_content": "• \n عند تمديد محلول ما بإضافة ماء مقطّرإليه يزداد حجم المحلول، ويقلّ تركيزه بينما تبقى كميّة\nالمادّة المُذابة ثابتة.\n• \nقانون تمديد المحاليل:\n \n (عدد موالت المادة المذابة قبل التّمديد)n\nn\n=\n1\n2 )(عدد موالت المادّة المذابة بعد التّمديد\nC\nV\nC\nV\n1\n1\n2\n2\n#\n#\n=\n:أﺳﺘﻨﺘﺞ\n 00 mL\n1\n  أضيف إليه0.2 mol.L 1\n-   من محلول لهيدروكسيد الصّ وديوم  تركيزه00 mL\n1\n لديك\nمن الماء المقطّر، احسب تركيز محلول هيدروكسيد الصّ وديوم بعد التّمديد.\nالحل:\n(نعلم أنّ كميّة المادّة المذابة ال تتغيّر بالتّمديد، والّذي تغيّر هو حجم المحلول وتركيزه)\n (عدد موالت المادة المذابة قبل التّمديد)n\nn\n=\n1\n2 )(عدد موالت المادّة المذابة بعد التّمديد\nC\nV\nC\nV\n1\n1\n2\n2\n#\n#\n=\n. حجم الماء المضاف+ حجم المحلول بعد التّمديد = حجم المحلول قبل التّمديد\nC\n20\n2\n0\nV\n100\n100\n200 mL\n0.2\n100\nC\n200\n200\n20\n1\n1\n0.1mol.L\n2\n2\n2\n1\n(\n#\n#\n=\n+\n=\n=\n=\n=\n=\n=\n-\n:ﺗﻄﺒﻴﻖ ﻣﺤﻠﻮل\n112\n\n| :لﻮﻠﺤﻣ ﻖﻴﺒﻄﺗ |\n| --- |\n|  |",
-  "raw_markdown": "• \n عند تمديد محلول ما بإضافة ماء مقطّرإليه يزداد حجم المحلول، ويقلّ تركيزه بينما تبقى كميّة\nالمادّة المُذابة ثابتة.\n• \nقانون تمديد المحاليل:\n \n (عدد موالت المادة المذابة قبل التّمديد)n\nn\n=\n1\n2 )(عدد موالت المادّة المذابة بعد التّمديد\nC\nV\nC\nV\n1\n1\n2\n2\n#\n#\n=\n:أﺳﺘﻨﺘﺞ\n 00 mL\n1\n  أضيف إليه0.2 mol.L 1\n-   من محلول لهيدروكسيد الصّ وديوم  تركيزه00 mL\n1\n لديك\nمن الماء المقطّر، احسب تركيز محلول هيدروكسيد الصّ وديوم بعد التّمديد.\nالحل:\n(نعلم أنّ كميّة المادّة المذابة ال تتغيّر بالتّمديد، والّذي تغيّر هو حجم المحلول وتركيزه)\n (عدد موالت المادة المذابة قبل التّمديد)n\nn\n=\n1\n2 )(عدد موالت المادّة المذابة بعد التّمديد\nC\nV\nC\nV\n1\n1\n2\n2\n#\n#\n=\n. حجم الماء المضاف+ حجم المحلول بعد التّمديد = حجم المحلول قبل التّمديد\nC\n20\n2\n0\nV\n100\n100\n200 mL\n0.2\n100\nC\n200\n200\n20\n1\n1\n0.1mol.L\n2\n2\n2\n1\n(\n#\n#\n=\n+\n=\n=\n=\n=\n=\n=\n-\n:ﺗﻄﺒﻴﻖ ﻣﺤﻠﻮل\n112\n\n| :لﻮﻠﺤﻣ ﻖﻴﺒﻄﺗ |\n| --- |\n|  |",
+  "gemini_fallback_model_content": {
+    "page_number": 112,
+    "detected_language": "Arabic",
+    "raw_markdown": "أستنتج: عند تمديد محلول ما بإضافة ماء مقطر إليه يزداد حجم المحلول، ويقل تركيزه بينما تبقى كمية المادة المذابة ثابتة. قانون تمديد المحاليل: (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂ تطبيق محلول: لديك 100 mL من محلول لهيدروكسيد الصوديوم تركيزه 0.2 mol.L⁻¹ أضيف إليه 100 mL من الماء المقطر، احسب تركيز محلول هيدروكسيد الصوديوم بعد التمديد. الحل: (نعلم أن كمية المادة المذابة لا تتغير بالتمديد، والذي تغير هو حجم المحلول وتركيزه) (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂ حجم المحلول بعد التمديد = حجم المحلول قبل التمديد + حجم الماء المضاف. V₂ = 100 + 100 = 200 mL 0.2 × 100 = C₂ × 200 C₂ = 20/200 = 2/20 = 1/10 = 0.1 mol.L⁻¹",
+    "sections": [
+      {
+        "heading": "أستنتج",
+        "content": "عند تمديد محلول ما بإضافة ماء مقطر إليه يزداد حجم المحلول، ويقل تركيزه بينما تبقى كمية المادة المذابة ثابتة. قانون تمديد المحاليل: (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂",
+        "content_type": "text"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "لديك 100 mL من محلول لهيدروكسيد الصوديوم تركيزه 0.2 mol.L⁻¹ أضيف إليه 100 mL من الماء المقطر، احسب تركيز محلول هيدروكسيد الصوديوم بعد التمديد.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": "0.1 mol.L⁻¹",
+        "explanation": "الحل: (نعلم أن كمية المادة المذابة لا تتغير بالتمديد، والذي تغير هو حجم المحلول وتركيزه) (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂ حجم المحلول بعد التمديد = حجم المحلول قبل التمديد + حجم الماء المضاف. V₂ = 100 + 100 = 200 mL 0.2 × 100 = C₂ × 200 C₂ = 20/200 = 2/20 = 1/10 = 0.1 mol.L⁻¹",
+        "answer_source": "page"
+      }
+    ],
+    "diagrams": [],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "n₁ = n₂",
+        "description": "Number of moles of dissolved substance before and after dilution"
+      },
+      {
+        "equation": "C₁ × V₁ = C₂ × V₂",
+        "description": "Law of solution dilution"
+      },
+      {
+        "equation": "V₂ = 100 + 100 = 200 mL",
+        "description": "Calculation of final volume after adding water"
+      },
+      {
+        "equation": "0.2 × 100 = C₂ × 200",
+        "description": "Applying dilution law to find C₂"
+      },
+      {
+        "equation": "C₂ = 20/200 = 2/20 = 1/10 = 0.1 mol.L⁻¹",
+        "description": "Final concentration of sodium hydroxide solution after dilution"
+      }
+    ],
+    "warnings": [],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 1085,
+    "completeness_score": 1.643939393939394,
+    "quality_report": {
+      "page_number": 112,
+      "schema_valid": true,
+      "raw_markdown_chars": 746,
+      "char_count": 1085,
+      "section_count": 1,
+      "question_count": 1,
+      "table_count": 0,
+      "equation_count": 5,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.6419,
+      "completeness_score": 1.643939393939394,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 112,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"أستنتج: عند تمديد محلول ما بإضافة ماء مقطر إليه يزداد حجم المحلول، ويقل تركيزه بينما تبقى كمية المادة المذابة ثابتة. قانون تمديد المحاليل: (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂ تطبيق محلول: لديك 100 mL من محلول لهيدروكسيد الصوديوم تركيزه 0.2 mol.L⁻¹ أضيف إليه 100 mL من الماء المقطر، احسب تركيز محلول هيدروكسيد الصوديوم بعد التمديد. الحل: (نعلم أن كمية المادة المذابة لا تتغير بالتمديد، والذي تغير هو حجم المحلول وتركيزه) (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂ حجم المحلول بعد التمديد = حجم المحلول قبل التمديد + حجم الماء المضاف. V₂ = 100 + 100 = 200 mL 0.2 × 100 = C₂ × 200 C₂ = 20/200 = 2/20 = 1/10 = 0.1 mol.L⁻¹\",\n  \"sections\": [\n    {\n      \"heading\": \"أستنتج\",\n      \"content\": \"عند تمديد محلول ما بإضافة ماء مقطر إليه يزداد حجم المحلول، ويقل تركيزه بينما تبقى كمية المادة المذابة ثابتة. قانون تمديد المحاليل: (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"لديك 100 mL من محلول لهيدروكسيد الصوديوم تركيزه 0.2 mol.L⁻¹ أضيف إليه 100 mL من الماء المقطر، احسب تركيز محلول هيدروكسيد الصوديوم بعد التمديد.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": \"0.1 mol.L⁻¹\",\n      \"explanation\": \"الحل: (نعلم أن كمية المادة المذابة لا تتغير بالتمديد، والذي تغير هو حجم المحلول وتركيزه) (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂ حجم المحلول بعد التمديد = حجم المحلول قبل التمديد + حجم الماء المضاف. V₂ = 100 + 100 = 200 mL 0.2 × 100 = C₂ × 200 C₂ = 20/200 = 2/20 = 1/10 = 0.1 mol.L⁻¹\",\n      \"answer_source\": \"page\"\n    }\n  ],\n  \"diagrams\": [],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"n₁ = n₂\",\n      \"description\": \"Number of moles of dissolved substance before and after dilution\"\n    },\n    {\n      \"equation\": \"C₁ × V₁ = C₂ × V₂\",\n      \"description\": \"Law of solution dilution\"\n    },\n    {\n      \"equation\": \"V₂ = 100 + 100 = 200 mL\",\n      \"description\": \"Calculation of final volume after adding water\"\n    },\n    {\n      \"equation\": \"0.2 × 100 = C₂ × 200\",\n      \"description\": \"Applying dilution law to find C₂\"\n    },\n    {\n      \"equation\": \"C₂ = 20/200 = 2/20 = 1/10 = 0.1 mol.L⁻¹\",\n      \"description\": \"Final concentration of sodium hydroxide solution after dilution\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"gemini\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 1085,\n  \"completeness_score\": 1.643939393939394,\n  \"quality_report\": {\n    \"page_number\": 112,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 660,\n    \"char_count\": 1085,\n    \"section_count\": 1,\n    \"question_count\": 1,\n    \"table_count\": 0,\n    \"equation_count\": 5,\n    \"diagram_count\": 0,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.696969696969697,\n    \"completeness_score\": 1.643939393939394,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": null\n}"
+  },
+  "gemini_image_fallback_content": {
+    "page_number": 112,
+    "detected_language": "Arabic",
+    "raw_markdown": "أستنتج: عند تمديد محلول ما بإضافة ماء مقطر إليه يزداد حجم المحلول، ويقل تركيزه بينما تبقى كمية المادة المذابة ثابتة. قانون تمديد المحاليل: (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂ تطبيق محلول: لديك 100 mL من محلول لهيدروكسيد الصوديوم تركيزه 0.2 mol.L⁻¹ أضيف إليه 100 mL من الماء المقطر، احسب تركيز محلول هيدروكسيد الصوديوم بعد التمديد. الحل: (نعلم أن كمية المادة المذابة لا تتغير بالتمديد، والذي تغير هو حجم المحلول وتركيزه) (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂ حجم المحلول بعد التمديد = حجم المحلول قبل التمديد + حجم الماء المضاف. V₂ = 100 + 100 = 200 mL 0.2 × 100 = C₂ × 200 C₂ = 20/200 = 2/20 = 1/10 = 0.1 mol.L⁻¹",
+    "sections": [
+      {
+        "heading": "أستنتج",
+        "content": "عند تمديد محلول ما بإضافة ماء مقطر إليه يزداد حجم المحلول، ويقل تركيزه بينما تبقى كمية المادة المذابة ثابتة. قانون تمديد المحاليل: (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂",
+        "content_type": "text"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "لديك 100 mL من محلول لهيدروكسيد الصوديوم تركيزه 0.2 mol.L⁻¹ أضيف إليه 100 mL من الماء المقطر، احسب تركيز محلول هيدروكسيد الصوديوم بعد التمديد.",
+        "question_type": "calculation",
+        "options": null,
+        "correct_answer": "0.1 mol.L⁻¹",
+        "explanation": "الحل: (نعلم أن كمية المادة المذابة لا تتغير بالتمديد، والذي تغير هو حجم المحلول وتركيزه) (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂ حجم المحلول بعد التمديد = حجم المحلول قبل التمديد + حجم الماء المضاف. V₂ = 100 + 100 = 200 mL 0.2 × 100 = C₂ × 200 C₂ = 20/200 = 2/20 = 1/10 = 0.1 mol.L⁻¹",
+        "answer_source": "page"
+      }
+    ],
+    "diagrams": [],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "n₁ = n₂",
+        "description": "Number of moles of dissolved substance before and after dilution"
+      },
+      {
+        "equation": "C₁ × V₁ = C₂ × V₂",
+        "description": "Law of solution dilution"
+      },
+      {
+        "equation": "V₂ = 100 + 100 = 200 mL",
+        "description": "Calculation of final volume after adding water"
+      },
+      {
+        "equation": "0.2 × 100 = C₂ × 200",
+        "description": "Applying dilution law to find C₂"
+      },
+      {
+        "equation": "C₂ = 20/200 = 2/20 = 1/10 = 0.1 mol.L⁻¹",
+        "description": "Final concentration of sodium hydroxide solution after dilution"
+      }
+    ],
+    "warnings": [],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 1085,
+    "completeness_score": 1.643939393939394,
+    "quality_report": {
+      "page_number": 112,
+      "schema_valid": true,
+      "raw_markdown_chars": 746,
+      "char_count": 1085,
+      "section_count": 1,
+      "question_count": 1,
+      "table_count": 0,
+      "equation_count": 5,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.6419,
+      "completeness_score": 1.643939393939394,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 112,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"أستنتج: عند تمديد محلول ما بإضافة ماء مقطر إليه يزداد حجم المحلول، ويقل تركيزه بينما تبقى كمية المادة المذابة ثابتة. قانون تمديد المحاليل: (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂ تطبيق محلول: لديك 100 mL من محلول لهيدروكسيد الصوديوم تركيزه 0.2 mol.L⁻¹ أضيف إليه 100 mL من الماء المقطر، احسب تركيز محلول هيدروكسيد الصوديوم بعد التمديد. الحل: (نعلم أن كمية المادة المذابة لا تتغير بالتمديد، والذي تغير هو حجم المحلول وتركيزه) (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂ حجم المحلول بعد التمديد = حجم المحلول قبل التمديد + حجم الماء المضاف. V₂ = 100 + 100 = 200 mL 0.2 × 100 = C₂ × 200 C₂ = 20/200 = 2/20 = 1/10 = 0.1 mol.L⁻¹\",\n  \"sections\": [\n    {\n      \"heading\": \"أستنتج\",\n      \"content\": \"عند تمديد محلول ما بإضافة ماء مقطر إليه يزداد حجم المحلول، ويقل تركيزه بينما تبقى كمية المادة المذابة ثابتة. قانون تمديد المحاليل: (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"لديك 100 mL من محلول لهيدروكسيد الصوديوم تركيزه 0.2 mol.L⁻¹ أضيف إليه 100 mL من الماء المقطر، احسب تركيز محلول هيدروكسيد الصوديوم بعد التمديد.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": \"0.1 mol.L⁻¹\",\n      \"explanation\": \"الحل: (نعلم أن كمية المادة المذابة لا تتغير بالتمديد، والذي تغير هو حجم المحلول وتركيزه) (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂ حجم المحلول بعد التمديد = حجم المحلول قبل التمديد + حجم الماء المضاف. V₂ = 100 + 100 = 200 mL 0.2 × 100 = C₂ × 200 C₂ = 20/200 = 2/20 = 1/10 = 0.1 mol.L⁻¹\",\n      \"answer_source\": \"page\"\n    }\n  ],\n  \"diagrams\": [],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"n₁ = n₂\",\n      \"description\": \"Number of moles of dissolved substance before and after dilution\"\n    },\n    {\n      \"equation\": \"C₁ × V₁ = C₂ × V₂\",\n      \"description\": \"Law of solution dilution\"\n    },\n    {\n      \"equation\": \"V₂ = 100 + 100 = 200 mL\",\n      \"description\": \"Calculation of final volume after adding water\"\n    },\n    {\n      \"equation\": \"0.2 × 100 = C₂ × 200\",\n      \"description\": \"Applying dilution law to find C₂\"\n    },\n    {\n      \"equation\": \"C₂ = 20/200 = 2/20 = 1/10 = 0.1 mol.L⁻¹\",\n      \"description\": \"Final concentration of sodium hydroxide solution after dilution\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"gemini\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 1085,\n  \"completeness_score\": 1.643939393939394,\n  \"quality_report\": {\n    \"page_number\": 112,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 660,\n    \"char_count\": 1085,\n    \"section_count\": 1,\n    \"question_count\": 1,\n    \"table_count\": 0,\n    \"equation_count\": 5,\n    \"diagram_count\": 0,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.696969696969697,\n    \"completeness_score\": 1.643939393939394,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": null\n}"
+  },
+  "merged_content": "• \n عند تمديد محلول ما بإضافة ماء مقطّرإليه يزداد حجم المحلول، ويقلّ تركيزه بينما تبقى كميّة\nالمادّة المُذابة ثابتة.\n• \nقانون تمديد المحاليل:\n \n (عدد موالت المادة المذابة قبل التّمديد)n\nn\n=\n1\n2 )(عدد موالت المادّة المذابة بعد التّمديد\nC\nV\nC\nV\n1\n1\n2\n2\n#\n#\n=\n:أﺳﺘﻨﺘﺞ\n 00 mL\n1\n  أضيف إليه0.2 mol.L 1\n-   من محلول لهيدروكسيد الصّ وديوم  تركيزه00 mL\n1\n لديك\nمن الماء المقطّر، احسب تركيز محلول هيدروكسيد الصّ وديوم بعد التّمديد.\nالحل:\n(نعلم أنّ كميّة المادّة المذابة ال تتغيّر بالتّمديد، والّذي تغيّر هو حجم المحلول وتركيزه)\n (عدد موالت المادة المذابة قبل التّمديد)n\nn\n=\n1\n2 )(عدد موالت المادّة المذابة بعد التّمديد\nC\nV\nC\nV\n1\n1\n2\n2\n#\n#\n=\n. حجم الماء المضاف+ حجم المحلول بعد التّمديد = حجم المحلول قبل التّمديد\nC\n20\n2\n0\nV\n100\n100\n200 mL\n0.2\n100\nC\n200\n200\n20\n1\n1\n0.1mol.L\n2\n2\n2\n1\n(\n#\n#\n=\n+\n=\n=\n=\n=\n=\n=\n-\n:ﺗﻄﺒﻴﻖ ﻣﺤﻠﻮل\n112\n\n| :لﻮﻠﺤﻣ ﻖﻴﺒﻄﺗ |\n| --- |\n|  |\n\nأستنتج\nعند تمديد محلول ما بإضافة ماء مقطر إليه يزداد حجم المحلول، ويقل تركيزه بينما تبقى كمية المادة المذابة ثابتة. قانون تمديد المحاليل: (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂",
+  "raw_markdown": "أستنتج: عند تمديد محلول ما بإضافة ماء مقطر إليه يزداد حجم المحلول، ويقل تركيزه بينما تبقى كمية المادة المذابة ثابتة. قانون تمديد المحاليل: (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂ تطبيق محلول: لديك 100 mL من محلول لهيدروكسيد الصوديوم تركيزه 0.2 mol.L⁻¹ أضيف إليه 100 mL من الماء المقطر، احسب تركيز محلول هيدروكسيد الصوديوم بعد التمديد. الحل: (نعلم أن كمية المادة المذابة لا تتغير بالتمديد، والذي تغير هو حجم المحلول وتركيزه) (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂ حجم المحلول بعد التمديد = حجم المحلول قبل التمديد + حجم الماء المضاف. V₂ = 100 + 100 = 200 mL 0.2 × 100 = C₂ × 200 C₂ = 20/200 = 2/20 = 1/10 = 0.1 mol.L⁻¹",
   "sections": [
     {
       "heading": null,
       "content": "• \n عند تمديد محلول ما بإضافة ماء مقطّرإليه يزداد حجم المحلول، ويقلّ تركيزه بينما تبقى كميّة\nالمادّة المُذابة ثابتة.\n• \nقانون تمديد المحاليل:\n \n (عدد موالت المادة المذابة قبل التّمديد)n\nn\n=\n1\n2 )(عدد موالت المادّة المذابة بعد التّمديد\nC\nV\nC\nV\n1\n1\n2\n2\n#\n#\n=\n:أﺳﺘﻨﺘﺞ\n 00 mL\n1\n  أضيف إليه0.2 mol.L 1\n-   من محلول لهيدروكسيد الصّ وديوم  تركيزه00 mL\n1\n لديك\nمن الماء المقطّر، احسب تركيز محلول هيدروكسيد الصّ وديوم بعد التّمديد.\nالحل:\n(نعلم أنّ كميّة المادّة المذابة ال تتغيّر بالتّمديد، والّذي تغيّر هو حجم المحلول وتركيزه)\n (عدد موالت المادة المذابة قبل التّمديد)n\nn\n=\n1\n2 )(عدد موالت المادّة المذابة بعد التّمديد\nC\nV\nC\nV\n1\n1\n2\n2\n#\n#\n=\n. حجم الماء المضاف+ حجم المحلول بعد التّمديد = حجم المحلول قبل التّمديد\nC\n20\n2\n0\nV\n100\n100\n200 mL\n0.2\n100\nC\n200\n200\n20\n1\n1\n0.1mol.L\n2\n2\n2\n1\n(\n#\n#\n=\n+\n=\n=\n=\n=\n=\n=\n-\n:ﺗﻄﺒﻴﻖ ﻣﺤﻠﻮل\n112\n\n| :لﻮﻠﺤﻣ ﻖﻴﺒﻄﺗ |\n| --- |\n|  |",
       "content_type": "text"
+    },
+    {
+      "heading": "أستنتج",
+      "content": "عند تمديد محلول ما بإضافة ماء مقطر إليه يزداد حجم المحلول، ويقل تركيزه بينما تبقى كمية المادة المذابة ثابتة. قانون تمديد المحاليل: (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂",
+      "content_type": "text"
     }
   ],
-  "questions": [],
+  "questions": [
+    {
+      "question_text": "لديك 100 mL من محلول لهيدروكسيد الصوديوم تركيزه 0.2 mol.L⁻¹ أضيف إليه 100 mL من الماء المقطر، احسب تركيز محلول هيدروكسيد الصوديوم بعد التمديد.",
+      "question_type": "calculation",
+      "options": null,
+      "correct_answer": "0.1 mol.L⁻¹",
+      "explanation": "الحل: (نعلم أن كمية المادة المذابة لا تتغير بالتمديد، والذي تغير هو حجم المحلول وتركيزه) (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂ حجم المحلول بعد التمديد = حجم المحلول قبل التمديد + حجم الماء المضاف. V₂ = 100 + 100 = 200 mL 0.2 × 100 = C₂ × 200 C₂ = 20/200 = 2/20 = 1/10 = 0.1 mol.L⁻¹",
+      "answer_source": "page"
+    }
+  ],
   "diagrams": [],
   "tables": [],
-  "equations": [],
-  "warnings": [
-    "Gemini document extraction is not configured. Vision page extraction was skipped."
+  "equations": [
+    {
+      "equation": "n₁ = n₂",
+      "description": "Number of moles of dissolved substance before and after dilution"
+    },
+    {
+      "equation": "C₁ × V₁ = C₂ × V₂",
+      "description": "Law of solution dilution"
+    },
+    {
+      "equation": "V₂ = 100 + 100 = 200 mL",
+      "description": "Calculation of final volume after adding water"
+    },
+    {
+      "equation": "0.2 × 100 = C₂ × 200",
+      "description": "Applying dilution law to find C₂"
+    },
+    {
+      "equation": "C₂ = 20/200 = 2/20 = 1/10 = 0.1 mol.L⁻¹",
+      "description": "Final concentration of sodium hydroxide solution after dilution"
+    }
   ],
+  "warnings": [],
   "errors": [],
-  "char_count": 843,
-  "completeness_score": 0.45,
-  "detected_language": "ar",
-  "vision_provider": null,
-  "vision_source": null,
-  "neighboring_pages": [],
+  "char_count": 1086,
+  "completeness_score": 1.0,
+  "detected_language": "Arabic",
+  "vision_provider": "gemini_document_image",
+  "vision_source": "gemini_rendered_image_300dpi",
+  "neighboring_pages": [
+    5,
+    7
+  ],
   "uploaded_pdf": null,
-  "raw_text": null,
-  "quality_report": {},
+  "raw_text": "{\n  \"page_number\": 112,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"أستنتج: عند تمديد محلول ما بإضافة ماء مقطر إليه يزداد حجم المحلول، ويقل تركيزه بينما تبقى كمية المادة المذابة ثابتة. قانون تمديد المحاليل: (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂ تطبيق محلول: لديك 100 mL من محلول لهيدروكسيد الصوديوم تركيزه 0.2 mol.L⁻¹ أضيف إليه 100 mL من الماء المقطر، احسب تركيز محلول هيدروكسيد الصوديوم بعد التمديد. الحل: (نعلم أن كمية المادة المذابة لا تتغير بالتمديد، والذي تغير هو حجم المحلول وتركيزه) (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂ حجم المحلول بعد التمديد = حجم المحلول قبل التمديد + حجم الماء المضاف. V₂ = 100 + 100 = 200 mL 0.2 × 100 = C₂ × 200 C₂ = 20/200 = 2/20 = 1/10 = 0.1 mol.L⁻¹\",\n  \"sections\": [\n    {\n      \"heading\": \"أستنتج\",\n      \"content\": \"عند تمديد محلول ما بإضافة ماء مقطر إليه يزداد حجم المحلول، ويقل تركيزه بينما تبقى كمية المادة المذابة ثابتة. قانون تمديد المحاليل: (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"لديك 100 mL من محلول لهيدروكسيد الصوديوم تركيزه 0.2 mol.L⁻¹ أضيف إليه 100 mL من الماء المقطر، احسب تركيز محلول هيدروكسيد الصوديوم بعد التمديد.\",\n      \"question_type\": \"calculation\",\n      \"options\": null,\n      \"correct_answer\": \"0.1 mol.L⁻¹\",\n      \"explanation\": \"الحل: (نعلم أن كمية المادة المذابة لا تتغير بالتمديد، والذي تغير هو حجم المحلول وتركيزه) (عدد مولات المادة المذابة قبل التمديد) n₁ = n₂ (عدد مولات المادة المذابة بعد التمديد) C₁ × V₁ = C₂ × V₂ حجم المحلول بعد التمديد = حجم المحلول قبل التمديد + حجم الماء المضاف. V₂ = 100 + 100 = 200 mL 0.2 × 100 = C₂ × 200 C₂ = 20/200 = 2/20 = 1/10 = 0.1 mol.L⁻¹\",\n      \"answer_source\": \"page\"\n    }\n  ],\n  \"diagrams\": [],\n  \"tables\": [],\n  \"equations\": [\n    {\n      \"equation\": \"n₁ = n₂\",\n      \"description\": \"Number of moles of dissolved substance before and after dilution\"\n    },\n    {\n      \"equation\": \"C₁ × V₁ = C₂ × V₂\",\n      \"description\": \"Law of solution dilution\"\n    },\n    {\n      \"equation\": \"V₂ = 100 + 100 = 200 mL\",\n      \"description\": \"Calculation of final volume after adding water\"\n    },\n    {\n      \"equation\": \"0.2 × 100 = C₂ × 200\",\n      \"description\": \"Applying dilution law to find C₂\"\n    },\n    {\n      \"equation\": \"C₂ = 20/200 = 2/20 = 1/10 = 0.1 mol.L⁻¹\",\n      \"description\": \"Final concentration of sodium hydroxide solution after dilution\"\n    }\n  ],\n  \"warnings\": [],\n  \"extraction_notes\": null,\n  \"provider\": \"gemini\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 1085,\n  \"completeness_score\": 1.643939393939394,\n  \"quality_report\": {\n    \"page_number\": 112,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 660,\n    \"char_count\": 1085,\n    \"section_count\": 1,\n    \"question_count\": 1,\n    \"table_count\": 0,\n    \"equation_count\": 5,\n    \"diagram_count\": 0,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.696969696969697,\n    \"completeness_score\": 1.643939393939394,\n    \"issues\": [],\n    \"should_fallback\": false\n  },\n  \"raw_text\": null\n}",
+  "quality_report": {
+    "page_number": 112,
+    "schema_valid": true,
+    "raw_markdown_chars": 746,
+    "char_count": 1085,
+    "section_count": 1,
+    "question_count": 1,
+    "table_count": 0,
+    "equation_count": 5,
+    "diagram_count": 0,
+    "warning_count": 0,
+    "arabic_char_ratio": 0.6419,
+    "completeness_score": 1.643939393939394,
+    "issues": [],
+    "should_fallback": false
+  },
   "classification": "MIXED_VISION",
   "source_id": 1
 }

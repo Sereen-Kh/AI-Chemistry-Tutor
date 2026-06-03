@@ -4,41 +4,255 @@
   "extraction_methods": [
     "pymupdf",
     "pdfplumber",
-    "gemini_document"
+    "gemini_image_300dpi"
   ],
-  "extraction_method": "pymupdf+pdfplumber+gemini_document",
-  "status": "skipped_dry_run",
+  "extraction_method": "pymupdf+pdfplumber+gemini_image_300dpi",
+  "status": "completed_with_image_fallback",
   "text_layer_content": ":ا\u001aﻫﺪاف\n-  \n.يتعرَّف الوظيفة الحمضيَّة\n  -\nيميّز بالتَّجربة بين الحموض القويّة والحموض الضَّ عيفة. \n  -\nيشرح خواصّ المحاليل الحمضيَّة.\n  -\nيبيّن أهمّيَّة الحموض.\n:اﻟﻜﻠﻤﺎت اﻟﻤﻔﺘﺎﺣﻴﺔ\n.عدد الوظائف الحمضيَّة - حمض قويّ - حمض ضعيف\n تشـتهر سـوريا بزراعـة الحمضيّـات والتـي تعـدّ ثمارهـا ذات فوائـد غذائيَّـة كبيـرة لإلنسـان الحتوائهـا\n) وبذلـك تكتسـب الحمضيـات طعمـاً منعشـاً.C علـى حمضـي السّ ـتريك واالسـكوربيك (فيتاميـن\nالمحاليل الحمضيّة2\n116\n\n| ةيضمحلا ليلاحملا\nّ |  |  |\n| --- | --- | --- |\n|  |  |  |",
-  "vision_content": {},
+  "vision_content": {
+    "page_number": 10,
+    "detected_language": "Arabic",
+    "raw_markdown": "# 2\n## المحاليل الحمضية\n\n### الأهداف:\n*   يتعرف الوظيفة الحمضية.\n*   يميز بالتجربة بين الحموض القوية والحموض الضعيفة.\n*   يشرح خواص المحاليل الحمضية.\n*   يبين أهمية الحموض.\n\n### الكلمات المفتاحية:\n*   عدد الوظائف الحمضية – حمض قوي – حمض ضعيف.\n\nتشتهر سوريا بزراعة الحمضيات والتي تعد ثمارها ذات فوائد غذائية كبيرة للإنسان لاحتوائها على حمضي الستريك والأسكوربيك (فيتامين C) وبذلك تكتسب الحمضيات طعماً منعشاً.",
+    "sections": [
+      {
+        "heading": "الأهداف:",
+        "content": "يتعرف الوظيفة الحمضية. يميز بالتجربة بين الحموض القوية والحموض الضعيفة. يشرح خواص المحاليل الحمضية. يبين أهمية الحموض.",
+        "content_type": "text"
+      },
+      {
+        "heading": "الكلمات المفتاحية:",
+        "content": "عدد الوظائف الحمضية – حمض قوي – حمض ضعيف.",
+        "content_type": "text"
+      },
+      {
+        "heading": null,
+        "content": "تشتهر سوريا بزراعة الحمضيات والتي تعد ثمارها ذات فوائد غذائية كبيرة للإنسان لاحتوائها على حمضي الستريك والأسكوربيك (فيتامين C) وبذلك تكتسب الحمضيات طعماً منعشاً.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "A close-up image of several ripe yellow lemons hanging from a tree branch, surrounded by green leaves. The lemons appear fresh and vibrant under natural light.",
+        "labels": [],
+        "related_text": "تشتهر سوريا بزراعة الحمضيات والتي تعد ثمارها ذات فوائد غذائية كبيرة للإنسان لاحتوائها على حمضي الستريك والأسكوربيك (فيتامين C) وبذلك تكتسب الحمضيات طعماً منعشاً."
+      }
+    ],
+    "tables": [],
+    "equations": [],
+    "warnings": [
+      "The page number visible in the image (116) differs from the provided target page number (10). Extracting content for page 10 as requested."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 368,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 10,
+      "schema_valid": true,
+      "raw_markdown_chars": 405,
+      "char_count": 368,
+      "section_count": 3,
+      "question_count": 0,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 1,
+      "warning_count": 1,
+      "arabic_char_ratio": 0.6284,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 10,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"# 2\\n## المحاليل الحمضية\\n\\n### الأهداف:\\n*   يتعرف الوظيفة الحمضية.\\n*   يميز بالتجربة بين الحموض القوية والحموض الضعيفة.\\n*   يشرح خواص المحاليل الحمضية.\\n*   يبين أهمية الحموض.\\n\\n### الكلمات المفتاحية:\\n*   عدد الوظائف الحمضية – حمض قوي – حمض ضعيف.\\n\\nتشتهر سوريا بزراعة الحمضيات والتي تعد ثمارها ذات فوائد غذائية كبيرة للإنسان لاحتوائها على حمضي الستريك والأسكوربيك (فيتامين C) وبذلك تكتسب الحمضيات طعماً منعشاً.\",\n  \"sections\": [\n    {\n      \"heading\": \"الأهداف:\",\n      \"content\": \"يتعرف الوظيفة الحمضية. يميز بالتجربة بين الحموض القوية والحموض الضعيفة. يشرح خواص المحاليل الحمضية. يبين أهمية الحموض.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الكلمات المفتاحية:\",\n      \"content\": \"عدد الوظائف الحمضية – حمض قوي – حمض ضعيف.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": null,\n      \"content\": \"تشتهر سوريا بزراعة الحمضيات والتي تعد ثمارها ذات فوائد غذائية كبيرة للإنسان لاحتوائها على حمضي الستريك والأسكوربيك (فيتامين C) وبذلك تكتسب الحمضيات طعماً منعشاً.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"A close-up image of several ripe yellow lemons hanging from a tree branch, surrounded by green leaves. The lemons appear fresh and vibrant under natural light.\",\n      \"labels\": [],\n      \"related_text\": \"تشتهر سوريا بزراعة الحمضيات والتي تعد ثمارها ذات فوائد غذائية كبيرة للإنسان لاحتوائها على حمضي الستريك والأسكوربيك (فيتامين C) وبذلك تكتسب الحمضيات طعماً منعشاً.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [],\n  \"warnings\": [\n    \"The page number visible in the image (116) differs from the provided target page number (10). Extracting content for page 10 as requested.\"\n  ],\n  \"extraction_notes\": null,\n  \"provider\": \"gemini\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 368,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 10,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 399,\n    \"char_count\": 368,\n    \"section_count\": 3,\n    \"question_count\": 0,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 1,\n    \"warning_count\": 1,\n    \"arabic_char_ratio\": 0.967,\n    \"completeness_score\": 1.0,\n    \"issues\": [\n      \"Page number discrepancy between image and prompt.\"\n    ],\n    \"should_fallback\": false\n  },\n  \"raw_text\": \"2 المحاليل الحمضية الأهداف: يتعرف الوظيفة الحمضية. يميز بالتجربة بين الحموض القوية والحموض الضعيفة. يشرح خواص المحاليل الحمضية. يبين أهمية الحموض. الكلمات المفتاحية: عدد الوظائف الحمضية – حمض قوي – حمض ضعيف. تشتهر سوريا بزراعة الحمضيات والتي تعد ثمارها ذات فوائد غذائية كبيرة للإنسان لاحتوائها على حمضي الستريك والأسكوربيك (فيتامين C) وبذلك تكتسب الحمضيات طعماً منعشاً.\"\n}"
+  },
   "gemini_pdf_content": {},
-  "gemini_fallback_model_content": {},
-  "gemini_image_fallback_content": {},
-  "merged_content": ":ا\u001aﻫﺪاف\n-  \n.يتعرَّف الوظيفة الحمضيَّة\n  -\nيميّز بالتَّجربة بين الحموض القويّة والحموض الضَّ عيفة. \n  -\nيشرح خواصّ المحاليل الحمضيَّة.\n  -\nيبيّن أهمّيَّة الحموض.\n:اﻟﻜﻠﻤﺎت اﻟﻤﻔﺘﺎﺣﻴﺔ\n.عدد الوظائف الحمضيَّة - حمض قويّ - حمض ضعيف\n تشـتهر سـوريا بزراعـة الحمضيّـات والتـي تعـدّ ثمارهـا ذات فوائـد غذائيَّـة كبيـرة لإلنسـان الحتوائهـا\n) وبذلـك تكتسـب الحمضيـات طعمـاً منعشـاً.C علـى حمضـي السّ ـتريك واالسـكوربيك (فيتاميـن\nالمحاليل الحمضيّة2\n116\n\n| ةيضمحلا ليلاحملا\nّ |  |  |\n| --- | --- | --- |\n|  |  |  |",
-  "raw_markdown": ":ا\u001aﻫﺪاف\n-  \n.يتعرَّف الوظيفة الحمضيَّة\n  -\nيميّز بالتَّجربة بين الحموض القويّة والحموض الضَّ عيفة. \n  -\nيشرح خواصّ المحاليل الحمضيَّة.\n  -\nيبيّن أهمّيَّة الحموض.\n:اﻟﻜﻠﻤﺎت اﻟﻤﻔﺘﺎﺣﻴﺔ\n.عدد الوظائف الحمضيَّة - حمض قويّ - حمض ضعيف\n تشـتهر سـوريا بزراعـة الحمضيّـات والتـي تعـدّ ثمارهـا ذات فوائـد غذائيَّـة كبيـرة لإلنسـان الحتوائهـا\n) وبذلـك تكتسـب الحمضيـات طعمـاً منعشـاً.C علـى حمضـي السّ ـتريك واالسـكوربيك (فيتاميـن\nالمحاليل الحمضيّة2\n116\n\n| ةيضمحلا ليلاحملا\nّ |  |  |\n| --- | --- | --- |\n|  |  |  |",
+  "gemini_fallback_model_content": {
+    "page_number": 10,
+    "detected_language": "Arabic",
+    "raw_markdown": "# 2\n## المحاليل الحمضية\n\n### الأهداف:\n*   يتعرف الوظيفة الحمضية.\n*   يميز بالتجربة بين الحموض القوية والحموض الضعيفة.\n*   يشرح خواص المحاليل الحمضية.\n*   يبين أهمية الحموض.\n\n### الكلمات المفتاحية:\n*   عدد الوظائف الحمضية – حمض قوي – حمض ضعيف.\n\nتشتهر سوريا بزراعة الحمضيات والتي تعد ثمارها ذات فوائد غذائية كبيرة للإنسان لاحتوائها على حمضي الستريك والأسكوربيك (فيتامين C) وبذلك تكتسب الحمضيات طعماً منعشاً.",
+    "sections": [
+      {
+        "heading": "الأهداف:",
+        "content": "يتعرف الوظيفة الحمضية. يميز بالتجربة بين الحموض القوية والحموض الضعيفة. يشرح خواص المحاليل الحمضية. يبين أهمية الحموض.",
+        "content_type": "text"
+      },
+      {
+        "heading": "الكلمات المفتاحية:",
+        "content": "عدد الوظائف الحمضية – حمض قوي – حمض ضعيف.",
+        "content_type": "text"
+      },
+      {
+        "heading": null,
+        "content": "تشتهر سوريا بزراعة الحمضيات والتي تعد ثمارها ذات فوائد غذائية كبيرة للإنسان لاحتوائها على حمضي الستريك والأسكوربيك (فيتامين C) وبذلك تكتسب الحمضيات طعماً منعشاً.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "A close-up image of several ripe yellow lemons hanging from a tree branch, surrounded by green leaves. The lemons appear fresh and vibrant under natural light.",
+        "labels": [],
+        "related_text": "تشتهر سوريا بزراعة الحمضيات والتي تعد ثمارها ذات فوائد غذائية كبيرة للإنسان لاحتوائها على حمضي الستريك والأسكوربيك (فيتامين C) وبذلك تكتسب الحمضيات طعماً منعشاً."
+      }
+    ],
+    "tables": [],
+    "equations": [],
+    "warnings": [
+      "The page number visible in the image (116) differs from the provided target page number (10). Extracting content for page 10 as requested."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 368,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 10,
+      "schema_valid": true,
+      "raw_markdown_chars": 405,
+      "char_count": 368,
+      "section_count": 3,
+      "question_count": 0,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 1,
+      "warning_count": 1,
+      "arabic_char_ratio": 0.6284,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 10,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"# 2\\n## المحاليل الحمضية\\n\\n### الأهداف:\\n*   يتعرف الوظيفة الحمضية.\\n*   يميز بالتجربة بين الحموض القوية والحموض الضعيفة.\\n*   يشرح خواص المحاليل الحمضية.\\n*   يبين أهمية الحموض.\\n\\n### الكلمات المفتاحية:\\n*   عدد الوظائف الحمضية – حمض قوي – حمض ضعيف.\\n\\nتشتهر سوريا بزراعة الحمضيات والتي تعد ثمارها ذات فوائد غذائية كبيرة للإنسان لاحتوائها على حمضي الستريك والأسكوربيك (فيتامين C) وبذلك تكتسب الحمضيات طعماً منعشاً.\",\n  \"sections\": [\n    {\n      \"heading\": \"الأهداف:\",\n      \"content\": \"يتعرف الوظيفة الحمضية. يميز بالتجربة بين الحموض القوية والحموض الضعيفة. يشرح خواص المحاليل الحمضية. يبين أهمية الحموض.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الكلمات المفتاحية:\",\n      \"content\": \"عدد الوظائف الحمضية – حمض قوي – حمض ضعيف.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": null,\n      \"content\": \"تشتهر سوريا بزراعة الحمضيات والتي تعد ثمارها ذات فوائد غذائية كبيرة للإنسان لاحتوائها على حمضي الستريك والأسكوربيك (فيتامين C) وبذلك تكتسب الحمضيات طعماً منعشاً.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"A close-up image of several ripe yellow lemons hanging from a tree branch, surrounded by green leaves. The lemons appear fresh and vibrant under natural light.\",\n      \"labels\": [],\n      \"related_text\": \"تشتهر سوريا بزراعة الحمضيات والتي تعد ثمارها ذات فوائد غذائية كبيرة للإنسان لاحتوائها على حمضي الستريك والأسكوربيك (فيتامين C) وبذلك تكتسب الحمضيات طعماً منعشاً.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [],\n  \"warnings\": [\n    \"The page number visible in the image (116) differs from the provided target page number (10). Extracting content for page 10 as requested.\"\n  ],\n  \"extraction_notes\": null,\n  \"provider\": \"gemini\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 368,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 10,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 399,\n    \"char_count\": 368,\n    \"section_count\": 3,\n    \"question_count\": 0,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 1,\n    \"warning_count\": 1,\n    \"arabic_char_ratio\": 0.967,\n    \"completeness_score\": 1.0,\n    \"issues\": [\n      \"Page number discrepancy between image and prompt.\"\n    ],\n    \"should_fallback\": false\n  },\n  \"raw_text\": \"2 المحاليل الحمضية الأهداف: يتعرف الوظيفة الحمضية. يميز بالتجربة بين الحموض القوية والحموض الضعيفة. يشرح خواص المحاليل الحمضية. يبين أهمية الحموض. الكلمات المفتاحية: عدد الوظائف الحمضية – حمض قوي – حمض ضعيف. تشتهر سوريا بزراعة الحمضيات والتي تعد ثمارها ذات فوائد غذائية كبيرة للإنسان لاحتوائها على حمضي الستريك والأسكوربيك (فيتامين C) وبذلك تكتسب الحمضيات طعماً منعشاً.\"\n}"
+  },
+  "gemini_image_fallback_content": {
+    "page_number": 10,
+    "detected_language": "Arabic",
+    "raw_markdown": "# 2\n## المحاليل الحمضية\n\n### الأهداف:\n*   يتعرف الوظيفة الحمضية.\n*   يميز بالتجربة بين الحموض القوية والحموض الضعيفة.\n*   يشرح خواص المحاليل الحمضية.\n*   يبين أهمية الحموض.\n\n### الكلمات المفتاحية:\n*   عدد الوظائف الحمضية – حمض قوي – حمض ضعيف.\n\nتشتهر سوريا بزراعة الحمضيات والتي تعد ثمارها ذات فوائد غذائية كبيرة للإنسان لاحتوائها على حمضي الستريك والأسكوربيك (فيتامين C) وبذلك تكتسب الحمضيات طعماً منعشاً.",
+    "sections": [
+      {
+        "heading": "الأهداف:",
+        "content": "يتعرف الوظيفة الحمضية. يميز بالتجربة بين الحموض القوية والحموض الضعيفة. يشرح خواص المحاليل الحمضية. يبين أهمية الحموض.",
+        "content_type": "text"
+      },
+      {
+        "heading": "الكلمات المفتاحية:",
+        "content": "عدد الوظائف الحمضية – حمض قوي – حمض ضعيف.",
+        "content_type": "text"
+      },
+      {
+        "heading": null,
+        "content": "تشتهر سوريا بزراعة الحمضيات والتي تعد ثمارها ذات فوائد غذائية كبيرة للإنسان لاحتوائها على حمضي الستريك والأسكوربيك (فيتامين C) وبذلك تكتسب الحمضيات طعماً منعشاً.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "A close-up image of several ripe yellow lemons hanging from a tree branch, surrounded by green leaves. The lemons appear fresh and vibrant under natural light.",
+        "labels": [],
+        "related_text": "تشتهر سوريا بزراعة الحمضيات والتي تعد ثمارها ذات فوائد غذائية كبيرة للإنسان لاحتوائها على حمضي الستريك والأسكوربيك (فيتامين C) وبذلك تكتسب الحمضيات طعماً منعشاً."
+      }
+    ],
+    "tables": [],
+    "equations": [],
+    "warnings": [
+      "The page number visible in the image (116) differs from the provided target page number (10). Extracting content for page 10 as requested."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-2.5-flash",
+    "schema_valid": true,
+    "char_count": 368,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 10,
+      "schema_valid": true,
+      "raw_markdown_chars": 405,
+      "char_count": 368,
+      "section_count": 3,
+      "question_count": 0,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 1,
+      "warning_count": 1,
+      "arabic_char_ratio": 0.6284,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 10,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"# 2\\n## المحاليل الحمضية\\n\\n### الأهداف:\\n*   يتعرف الوظيفة الحمضية.\\n*   يميز بالتجربة بين الحموض القوية والحموض الضعيفة.\\n*   يشرح خواص المحاليل الحمضية.\\n*   يبين أهمية الحموض.\\n\\n### الكلمات المفتاحية:\\n*   عدد الوظائف الحمضية – حمض قوي – حمض ضعيف.\\n\\nتشتهر سوريا بزراعة الحمضيات والتي تعد ثمارها ذات فوائد غذائية كبيرة للإنسان لاحتوائها على حمضي الستريك والأسكوربيك (فيتامين C) وبذلك تكتسب الحمضيات طعماً منعشاً.\",\n  \"sections\": [\n    {\n      \"heading\": \"الأهداف:\",\n      \"content\": \"يتعرف الوظيفة الحمضية. يميز بالتجربة بين الحموض القوية والحموض الضعيفة. يشرح خواص المحاليل الحمضية. يبين أهمية الحموض.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الكلمات المفتاحية:\",\n      \"content\": \"عدد الوظائف الحمضية – حمض قوي – حمض ضعيف.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": null,\n      \"content\": \"تشتهر سوريا بزراعة الحمضيات والتي تعد ثمارها ذات فوائد غذائية كبيرة للإنسان لاحتوائها على حمضي الستريك والأسكوربيك (فيتامين C) وبذلك تكتسب الحمضيات طعماً منعشاً.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"A close-up image of several ripe yellow lemons hanging from a tree branch, surrounded by green leaves. The lemons appear fresh and vibrant under natural light.\",\n      \"labels\": [],\n      \"related_text\": \"تشتهر سوريا بزراعة الحمضيات والتي تعد ثمارها ذات فوائد غذائية كبيرة للإنسان لاحتوائها على حمضي الستريك والأسكوربيك (فيتامين C) وبذلك تكتسب الحمضيات طعماً منعشاً.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [],\n  \"warnings\": [\n    \"The page number visible in the image (116) differs from the provided target page number (10). Extracting content for page 10 as requested.\"\n  ],\n  \"extraction_notes\": null,\n  \"provider\": \"gemini\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 368,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 10,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 399,\n    \"char_count\": 368,\n    \"section_count\": 3,\n    \"question_count\": 0,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 1,\n    \"warning_count\": 1,\n    \"arabic_char_ratio\": 0.967,\n    \"completeness_score\": 1.0,\n    \"issues\": [\n      \"Page number discrepancy between image and prompt.\"\n    ],\n    \"should_fallback\": false\n  },\n  \"raw_text\": \"2 المحاليل الحمضية الأهداف: يتعرف الوظيفة الحمضية. يميز بالتجربة بين الحموض القوية والحموض الضعيفة. يشرح خواص المحاليل الحمضية. يبين أهمية الحموض. الكلمات المفتاحية: عدد الوظائف الحمضية – حمض قوي – حمض ضعيف. تشتهر سوريا بزراعة الحمضيات والتي تعد ثمارها ذات فوائد غذائية كبيرة للإنسان لاحتوائها على حمضي الستريك والأسكوربيك (فيتامين C) وبذلك تكتسب الحمضيات طعماً منعشاً.\"\n}"
+  },
+  "merged_content": ":ا\u001aﻫﺪاف\n-  \n.يتعرَّف الوظيفة الحمضيَّة\n  -\nيميّز بالتَّجربة بين الحموض القويّة والحموض الضَّ عيفة. \n  -\nيشرح خواصّ المحاليل الحمضيَّة.\n  -\nيبيّن أهمّيَّة الحموض.\n:اﻟﻜﻠﻤﺎت اﻟﻤﻔﺘﺎﺣﻴﺔ\n.عدد الوظائف الحمضيَّة - حمض قويّ - حمض ضعيف\n تشـتهر سـوريا بزراعـة الحمضيّـات والتـي تعـدّ ثمارهـا ذات فوائـد غذائيَّـة كبيـرة لإلنسـان الحتوائهـا\n) وبذلـك تكتسـب الحمضيـات طعمـاً منعشـاً.C علـى حمضـي السّ ـتريك واالسـكوربيك (فيتاميـن\nالمحاليل الحمضيّة2\n116\n\n| ةيضمحلا ليلاحملا\nّ |  |  |\n| --- | --- | --- |\n|  |  |  |\n\nالأهداف:\nيتعرف الوظيفة الحمضية. يميز بالتجربة بين الحموض القوية والحموض الضعيفة. يشرح خواص المحاليل الحمضية. يبين أهمية الحموض.\n\nالكلمات المفتاحية:\nعدد الوظائف الحمضية – حمض قوي – حمض ضعيف.\n\nتشتهر سوريا بزراعة الحمضيات والتي تعد ثمارها ذات فوائد غذائية كبيرة للإنسان لاحتوائها على حمضي الستريك والأسكوربيك (فيتامين C) وبذلك تكتسب الحمضيات طعماً منعشاً.",
+  "raw_markdown": "# 2\n## المحاليل الحمضية\n\n### الأهداف:\n*   يتعرف الوظيفة الحمضية.\n*   يميز بالتجربة بين الحموض القوية والحموض الضعيفة.\n*   يشرح خواص المحاليل الحمضية.\n*   يبين أهمية الحموض.\n\n### الكلمات المفتاحية:\n*   عدد الوظائف الحمضية – حمض قوي – حمض ضعيف.\n\nتشتهر سوريا بزراعة الحمضيات والتي تعد ثمارها ذات فوائد غذائية كبيرة للإنسان لاحتوائها على حمضي الستريك والأسكوربيك (فيتامين C) وبذلك تكتسب الحمضيات طعماً منعشاً.",
   "sections": [
     {
       "heading": null,
       "content": ":ا\u001aﻫﺪاف\n-  \n.يتعرَّف الوظيفة الحمضيَّة\n  -\nيميّز بالتَّجربة بين الحموض القويّة والحموض الضَّ عيفة. \n  -\nيشرح خواصّ المحاليل الحمضيَّة.\n  -\nيبيّن أهمّيَّة الحموض.\n:اﻟﻜﻠﻤﺎت اﻟﻤﻔﺘﺎﺣﻴﺔ\n.عدد الوظائف الحمضيَّة - حمض قويّ - حمض ضعيف\n تشـتهر سـوريا بزراعـة الحمضيّـات والتـي تعـدّ ثمارهـا ذات فوائـد غذائيَّـة كبيـرة لإلنسـان الحتوائهـا\n) وبذلـك تكتسـب الحمضيـات طعمـاً منعشـاً.C علـى حمضـي السّ ـتريك واالسـكوربيك (فيتاميـن\nالمحاليل الحمضيّة2\n116\n\n| ةيضمحلا ليلاحملا\nّ |  |  |\n| --- | --- | --- |\n|  |  |  |",
       "content_type": "text"
+    },
+    {
+      "heading": "الأهداف:",
+      "content": "يتعرف الوظيفة الحمضية. يميز بالتجربة بين الحموض القوية والحموض الضعيفة. يشرح خواص المحاليل الحمضية. يبين أهمية الحموض.",
+      "content_type": "text"
+    },
+    {
+      "heading": "الكلمات المفتاحية:",
+      "content": "عدد الوظائف الحمضية – حمض قوي – حمض ضعيف.",
+      "content_type": "text"
+    },
+    {
+      "heading": null,
+      "content": "تشتهر سوريا بزراعة الحمضيات والتي تعد ثمارها ذات فوائد غذائية كبيرة للإنسان لاحتوائها على حمضي الستريك والأسكوربيك (فيتامين C) وبذلك تكتسب الحمضيات طعماً منعشاً.",
+      "content_type": "text"
     }
   ],
   "questions": [],
-  "diagrams": [],
+  "diagrams": [
+    {
+      "title": null,
+      "description": "A close-up image of several ripe yellow lemons hanging from a tree branch, surrounded by green leaves. The lemons appear fresh and vibrant under natural light.",
+      "labels": [],
+      "related_text": "تشتهر سوريا بزراعة الحمضيات والتي تعد ثمارها ذات فوائد غذائية كبيرة للإنسان لاحتوائها على حمضي الستريك والأسكوربيك (فيتامين C) وبذلك تكتسب الحمضيات طعماً منعشاً."
+    }
+  ],
   "tables": [],
   "equations": [],
   "warnings": [
-    "Gemini document extraction is not configured. Vision page extraction was skipped."
+    "The page number visible in the image (116) differs from the provided target page number (10). Extracting content for page 10 as requested."
   ],
   "errors": [],
-  "char_count": 500,
-  "completeness_score": 0.45,
-  "detected_language": "ar",
-  "vision_provider": null,
-  "vision_source": null,
-  "neighboring_pages": [],
+  "char_count": 854,
+  "completeness_score": 1.0,
+  "detected_language": "Arabic",
+  "vision_provider": "gemini_document_image",
+  "vision_source": "gemini_rendered_image_300dpi",
+  "neighboring_pages": [
+    9,
+    11
+  ],
   "uploaded_pdf": null,
-  "raw_text": null,
-  "quality_report": {},
+  "raw_text": "{\n  \"page_number\": 10,\n  \"detected_language\": \"Arabic\",\n  \"raw_markdown\": \"# 2\\n## المحاليل الحمضية\\n\\n### الأهداف:\\n*   يتعرف الوظيفة الحمضية.\\n*   يميز بالتجربة بين الحموض القوية والحموض الضعيفة.\\n*   يشرح خواص المحاليل الحمضية.\\n*   يبين أهمية الحموض.\\n\\n### الكلمات المفتاحية:\\n*   عدد الوظائف الحمضية – حمض قوي – حمض ضعيف.\\n\\nتشتهر سوريا بزراعة الحمضيات والتي تعد ثمارها ذات فوائد غذائية كبيرة للإنسان لاحتوائها على حمضي الستريك والأسكوربيك (فيتامين C) وبذلك تكتسب الحمضيات طعماً منعشاً.\",\n  \"sections\": [\n    {\n      \"heading\": \"الأهداف:\",\n      \"content\": \"يتعرف الوظيفة الحمضية. يميز بالتجربة بين الحموض القوية والحموض الضعيفة. يشرح خواص المحاليل الحمضية. يبين أهمية الحموض.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الكلمات المفتاحية:\",\n      \"content\": \"عدد الوظائف الحمضية – حمض قوي – حمض ضعيف.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": null,\n      \"content\": \"تشتهر سوريا بزراعة الحمضيات والتي تعد ثمارها ذات فوائد غذائية كبيرة للإنسان لاحتوائها على حمضي الستريك والأسكوربيك (فيتامين C) وبذلك تكتسب الحمضيات طعماً منعشاً.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [],\n  \"diagrams\": [\n    {\n      \"title\": null,\n      \"description\": \"A close-up image of several ripe yellow lemons hanging from a tree branch, surrounded by green leaves. The lemons appear fresh and vibrant under natural light.\",\n      \"labels\": [],\n      \"related_text\": \"تشتهر سوريا بزراعة الحمضيات والتي تعد ثمارها ذات فوائد غذائية كبيرة للإنسان لاحتوائها على حمضي الستريك والأسكوربيك (فيتامين C) وبذلك تكتسب الحمضيات طعماً منعشاً.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [],\n  \"warnings\": [\n    \"The page number visible in the image (116) differs from the provided target page number (10). Extracting content for page 10 as requested.\"\n  ],\n  \"extraction_notes\": null,\n  \"provider\": \"gemini\",\n  \"model_name\": null,\n  \"schema_valid\": true,\n  \"char_count\": 368,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 10,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 399,\n    \"char_count\": 368,\n    \"section_count\": 3,\n    \"question_count\": 0,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 1,\n    \"warning_count\": 1,\n    \"arabic_char_ratio\": 0.967,\n    \"completeness_score\": 1.0,\n    \"issues\": [\n      \"Page number discrepancy between image and prompt.\"\n    ],\n    \"should_fallback\": false\n  },\n  \"raw_text\": \"2 المحاليل الحمضية الأهداف: يتعرف الوظيفة الحمضية. يميز بالتجربة بين الحموض القوية والحموض الضعيفة. يشرح خواص المحاليل الحمضية. يبين أهمية الحموض. الكلمات المفتاحية: عدد الوظائف الحمضية – حمض قوي – حمض ضعيف. تشتهر سوريا بزراعة الحمضيات والتي تعد ثمارها ذات فوائد غذائية كبيرة للإنسان لاحتوائها على حمضي الستريك والأسكوربيك (فيتامين C) وبذلك تكتسب الحمضيات طعماً منعشاً.\"\n}",
+  "quality_report": {
+    "page_number": 10,
+    "schema_valid": true,
+    "raw_markdown_chars": 405,
+    "char_count": 368,
+    "section_count": 3,
+    "question_count": 0,
+    "table_count": 0,
+    "equation_count": 0,
+    "diagram_count": 1,
+    "warning_count": 1,
+    "arabic_char_ratio": 0.6284,
+    "completeness_score": 1.0,
+    "issues": [],
+    "should_fallback": false
+  },
   "classification": "MIXED_VISION",
   "source_id": 1
 }

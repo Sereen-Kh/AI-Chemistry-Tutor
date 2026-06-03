@@ -2,36 +2,28 @@
   "page_number": 73,
   "page_type": "MIXED_VISION",
   "extraction_methods": [
-    "pymupdf",
-    "pdfplumber",
-    "gemini_document"
+    "exception"
   ],
-  "extraction_method": "pymupdf+pdfplumber+gemini_document",
-  "status": "skipped_dry_run",
-  "text_layer_content": "• \nصيغته المنشورة\nصيغته المجملة الصّ يغة نصف المنشورة\nالمركّب\nH C\nCH\n2\n2\n=\nC H4\n2اإليتن\n \n(اإليتلين)\n• \nصيغته المنشورة\nصيغته المجملة الصّ يغة نصف المنشورة\nالمركّب\nH C\nCH\nCH\n3\n2\n-\n=\nC H6\n3البروبن\n \n(البروبلن)\n:أﺳﺘﻨﺘﺞ\n:نتيجة\n• \nاأللكِ نات: مركبّات هدروكربونيّة غير مشبعة تحوي رابطة واحدة مشتركة ثنائية على األقلّ بين \nذرّتين من ذرّات الكربون فيه.\n• \n عدد ذرّات الكربون n  حيثC H\nn\n2n الصّ يغة العامّة لسالسل األلكِ نات المفتوحة\n.(n\n2,3,4,5,........)\n=\n• \n تستبدل بالالحقة (آن) في أسماء األلكانات الالحقة (ـِن) في اسماء األلكنات، وذلك وفق االتّحاد\n.IUPAC الدّوليّ للكيمياء البحتة والتّطبيقيّة\nأهمّيّة اإليتلن:\n• \nاإليتلن يساعد في عمليّة النّضج السّريع للفاكهة \nخاصة في األماكن المغلقة.\n179\n\n| ةروشنملا هتغيص | ةروشنملا فصن ةغيصّ لا | ةلمجملا هتغيص | ّ\nبكرملا |\n| --- | --- | --- | --- |\n|  | H C = CH\n2 2 | C H\n2 4 | ن تيلإا\n)نيلتيلإا( |\n\n| ةروشنملا هتغيص | ةروشنملا فصن ةغيصّ لا | ةلمجملا هتغيص | ّ\nبكرملا |\n| --- | --- | --- | --- |\n|  | H C-CH = CH\n3 2 | C H\n3 6 | ن بوربلا\n)نلبوربلا( |",
+  "extraction_method": "exception",
+  "status": "failed",
+  "text_layer_content": "",
   "vision_content": {},
   "gemini_pdf_content": {},
   "gemini_fallback_model_content": {},
   "gemini_image_fallback_content": {},
-  "merged_content": "• \nصيغته المنشورة\nصيغته المجملة الصّ يغة نصف المنشورة\nالمركّب\nH C\nCH\n2\n2\n=\nC H4\n2اإليتن\n \n(اإليتلين)\n• \nصيغته المنشورة\nصيغته المجملة الصّ يغة نصف المنشورة\nالمركّب\nH C\nCH\nCH\n3\n2\n-\n=\nC H6\n3البروبن\n \n(البروبلن)\n:أﺳﺘﻨﺘﺞ\n:نتيجة\n• \nاأللكِ نات: مركبّات هدروكربونيّة غير مشبعة تحوي رابطة واحدة مشتركة ثنائية على األقلّ بين \nذرّتين من ذرّات الكربون فيه.\n• \n عدد ذرّات الكربون n  حيثC H\nn\n2n الصّ يغة العامّة لسالسل األلكِ نات المفتوحة\n.(n\n2,3,4,5,........)\n=\n• \n تستبدل بالالحقة (آن) في أسماء األلكانات الالحقة (ـِن) في اسماء األلكنات، وذلك وفق االتّحاد\n.IUPAC الدّوليّ للكيمياء البحتة والتّطبيقيّة\nأهمّيّة اإليتلن:\n• \nاإليتلن يساعد في عمليّة النّضج السّريع للفاكهة \nخاصة في األماكن المغلقة.\n179\n\n| ةروشنملا هتغيص | ةروشنملا فصن ةغيصّ لا | ةلمجملا هتغيص | ّ\nبكرملا |\n| --- | --- | --- | --- |\n|  | H C = CH\n2 2 | C H\n2 4 | ن تيلإا\n)نيلتيلإا( |\n\n| ةروشنملا هتغيص | ةروشنملا فصن ةغيصّ لا | ةلمجملا هتغيص | ّ\nبكرملا |\n| --- | --- | --- | --- |\n|  | H C-CH = CH\n3 2 | C H\n3 6 | ن بوربلا\n)نلبوربلا( |",
-  "raw_markdown": "• \nصيغته المنشورة\nصيغته المجملة الصّ يغة نصف المنشورة\nالمركّب\nH C\nCH\n2\n2\n=\nC H4\n2اإليتن\n \n(اإليتلين)\n• \nصيغته المنشورة\nصيغته المجملة الصّ يغة نصف المنشورة\nالمركّب\nH C\nCH\nCH\n3\n2\n-\n=\nC H6\n3البروبن\n \n(البروبلن)\n:أﺳﺘﻨﺘﺞ\n:نتيجة\n• \nاأللكِ نات: مركبّات هدروكربونيّة غير مشبعة تحوي رابطة واحدة مشتركة ثنائية على األقلّ بين \nذرّتين من ذرّات الكربون فيه.\n• \n عدد ذرّات الكربون n  حيثC H\nn\n2n الصّ يغة العامّة لسالسل األلكِ نات المفتوحة\n.(n\n2,3,4,5,........)\n=\n• \n تستبدل بالالحقة (آن) في أسماء األلكانات الالحقة (ـِن) في اسماء األلكنات، وذلك وفق االتّحاد\n.IUPAC الدّوليّ للكيمياء البحتة والتّطبيقيّة\nأهمّيّة اإليتلن:\n• \nاإليتلن يساعد في عمليّة النّضج السّريع للفاكهة \nخاصة في األماكن المغلقة.\n179\n\n| ةروشنملا هتغيص | ةروشنملا فصن ةغيصّ لا | ةلمجملا هتغيص | ّ\nبكرملا |\n| --- | --- | --- | --- |\n|  | H C = CH\n2 2 | C H\n2 4 | ن تيلإا\n)نيلتيلإا( |\n\n| ةروشنملا هتغيص | ةروشنملا فصن ةغيصّ لا | ةلمجملا هتغيص | ّ\nبكرملا |\n| --- | --- | --- | --- |\n|  | H C-CH = CH\n3 2 | C H\n3 6 | ن بوربلا\n)نلبوربلا( |",
-  "sections": [
-    {
-      "heading": null,
-      "content": "• \nصيغته المنشورة\nصيغته المجملة الصّ يغة نصف المنشورة\nالمركّب\nH C\nCH\n2\n2\n=\nC H4\n2اإليتن\n \n(اإليتلين)\n• \nصيغته المنشورة\nصيغته المجملة الصّ يغة نصف المنشورة\nالمركّب\nH C\nCH\nCH\n3\n2\n-\n=\nC H6\n3البروبن\n \n(البروبلن)\n:أﺳﺘﻨﺘﺞ\n:نتيجة\n• \nاأللكِ نات: مركبّات هدروكربونيّة غير مشبعة تحوي رابطة واحدة مشتركة ثنائية على األقلّ بين \nذرّتين من ذرّات الكربون فيه.\n• \n عدد ذرّات الكربون n  حيثC H\nn\n2n الصّ يغة العامّة لسالسل األلكِ نات المفتوحة\n.(n\n2,3,4,5,........)\n=\n• \n تستبدل بالالحقة (آن) في أسماء األلكانات الالحقة (ـِن) في اسماء األلكنات، وذلك وفق االتّحاد\n.IUPAC الدّوليّ للكيمياء البحتة والتّطبيقيّة\nأهمّيّة اإليتلن:\n• \nاإليتلن يساعد في عمليّة النّضج السّريع للفاكهة \nخاصة في األماكن المغلقة.\n179\n\n| ةروشنملا هتغيص | ةروشنملا فصن ةغيصّ لا | ةلمجملا هتغيص | ّ\nبكرملا |\n| --- | --- | --- | --- |\n|  | H C = CH\n2 2 | C H\n2 4 | ن تيلإا\n)نيلتيلإا( |\n\n| ةروشنملا هتغيص | ةروشنملا فصن ةغيصّ لا | ةلمجملا هتغيص | ّ\nبكرملا |\n| --- | --- | --- | --- |\n|  | H C-CH = CH\n3 2 | C H\n3 6 | ن بوربلا\n)نلبوربلا( |",
-      "content_type": "text"
-    }
-  ],
+  "merged_content": "",
+  "raw_markdown": "",
+  "sections": [],
   "questions": [],
   "diagrams": [],
   "tables": [],
   "equations": [],
-  "warnings": [
-    "Gemini document extraction is not configured. Vision page extraction was skipped."
+  "warnings": [],
+  "errors": [
+    "Gemini document extraction failed quality checks for page 73: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 52.865223778s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.5-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '52s'}]}}"
   ],
-  "errors": [],
-  "char_count": 986,
-  "completeness_score": 0.45,
+  "char_count": 0,
+  "completeness_score": 0.0,
   "detected_language": "ar",
   "vision_provider": null,
   "vision_source": null,

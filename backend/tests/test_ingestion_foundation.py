@@ -320,16 +320,20 @@ class IngestionPageExtractionTests(IsolatedAsyncioTestCase):
             ],
         )
 
-        with patch.object(provider, "_generate_result", side_effect=[primary_result, fallback_result]) as generate:
+        with (
+            patch.object(settings, "gemini_document_model", "model-primary"),
+            patch.object(settings, "gemini_document_fallback_model", "model-fallback"),
+            patch.object(provider, "_generate_result", side_effect=[primary_result, fallback_result]) as generate,
+        ):
             result = await provider._extract_with_model_routing(
                 page_number=1,
                 provider="gemini_document_pdf",
                 build_contents=lambda: ["pdf_part", "prompt_part"],
             )
 
-        self.assertEqual(generate.call_args_list[0].args[1], settings.gemini_document_model)
-        self.assertEqual(generate.call_args_list[1].args[1], settings.gemini_document_fallback_model)
-        self.assertEqual(result.model_name, settings.gemini_document_fallback_model)
+        self.assertEqual(generate.call_args_list[0].args[1], "model-primary")
+        self.assertEqual(generate.call_args_list[1].args[1], "model-fallback")
+        self.assertEqual(result.model_name, "model-fallback")
         self.assertEqual(result.provider, "gemini_document_pdf")
         self.assertTrue(result.schema_valid)
         self.assertGreaterEqual(result.char_count or 0, 40)
@@ -349,20 +353,24 @@ class IngestionPageExtractionTests(IsolatedAsyncioTestCase):
             ],
         )
 
-        with patch.object(
-            provider,
-            "_generate_result",
-            side_effect=[RuntimeError("model unavailable"), fallback_result],
-        ) as generate:
+        with (
+            patch.object(settings, "gemini_document_model", "model-primary"),
+            patch.object(settings, "gemini_document_fallback_model", "model-fallback"),
+            patch.object(
+                provider,
+                "_generate_result",
+                side_effect=[RuntimeError("model unavailable"), fallback_result],
+            ) as generate,
+        ):
             result = await provider._extract_with_model_routing(
                 page_number=1,
                 provider="gemini_document_pdf",
                 build_contents=lambda: ["pdf_part", "prompt_part"],
             )
 
-        self.assertEqual(generate.call_args_list[0].args[1], settings.gemini_document_model)
-        self.assertEqual(generate.call_args_list[1].args[1], settings.gemini_document_fallback_model)
-        self.assertEqual(result.model_name, settings.gemini_document_fallback_model)
+        self.assertEqual(generate.call_args_list[0].args[1], "model-primary")
+        self.assertEqual(generate.call_args_list[1].args[1], "model-fallback")
+        self.assertEqual(result.model_name, "model-fallback")
 
 
 class QuestionExtractionRulesTests(TestCase):

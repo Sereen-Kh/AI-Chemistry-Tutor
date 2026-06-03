@@ -55,3 +55,7 @@ build/
 *.swo
 .DS_Store
 Thumbs.db
+
+# Textbook PDFs and binary datasets
+data/**/*.pdf
+data/textbooks/syria_grade_9/

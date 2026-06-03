@@ -2,6 +2,9 @@ import axios from 'axios';
 
 // By default in dev, the backend runs on localhost:8000
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+const API_ORIGIN = API_BASE_URL.startsWith('http')
+  ? new URL(API_BASE_URL).origin
+  : window.location.origin;
 const DEMO_EMAIL = 'rag_demo@example.com';
 const DEMO_PASSWORD = 'password123';
 const TOKEN_KEY = 'edumind_demo_token';
@@ -61,13 +64,45 @@ export interface ChatSource {
   similarity_score: number;
 }
 
+export type PreferredAnswerType = 'auto' | 'text' | 'image' | 'video' | 'mixed';
+export type AnswerScope = 'auto' | 'book_only' | 'tutor_general';
+
+export interface AnswerBlock {
+  type: 'text' | 'equation' | 'table' | 'source_page' | 'image' | 'video_script' | 'clarification' | string;
+  content: string;
+  page?: number | null;
+  image_url?: string | null;
+  metadata?: Record<string, unknown>;
+}
+
+export interface AnswerSourceBlock {
+  book_id?: string | null;
+  page?: number | null;
+  chunk_id: number;
+  chunk_type: string;
+  score: number;
+}
+
 export interface ChatAnswer {
   answer: string;
+  answer_type: string;
+  route: string;
+  grounding: string;
+  answer_scope: AnswerScope;
+  blocks: AnswerBlock[];
   sources: ChatSource[];
+  source_blocks?: AnswerSourceBlock[];
   page_numbers: number[];
   confidence: number;
+  diagnostics?: Record<string, unknown>;
   suggested_next_action?: string | null;
 }
+
+export const resolveMediaUrl = (url?: string | null): string => {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  return `${API_ORIGIN}${url}`;
+};
 
 // API methods
 export const getHealth = async (): Promise<HealthResponse> => {
@@ -116,12 +151,18 @@ export const ensureDemoToken = async (): Promise<string> => {
   return login();
 };
 
-export const askChemistry = async (question: string): Promise<ChatAnswer> => {
+export const askChemistry = async (
+  question: string,
+  preferredAnswerType: PreferredAnswerType = 'auto',
+  answerScope: AnswerScope = 'auto'
+): Promise<ChatAnswer> => {
   await ensureDemoToken();
   try {
     const { data } = await api.post<ChatAnswer>('/chat/ask', {
       question,
       source_types: ['textbook'],
+      preferred_answer_type: preferredAnswerType,
+      answer_scope: answerScope,
     });
     return data;
   } catch (error) {
@@ -131,6 +172,8 @@ export const askChemistry = async (question: string): Promise<ChatAnswer> => {
       const { data } = await api.post<ChatAnswer>('/chat/ask', {
         question,
         source_types: ['textbook'],
+        preferred_answer_type: preferredAnswerType,
+        answer_scope: answerScope,
       });
       return data;
     }

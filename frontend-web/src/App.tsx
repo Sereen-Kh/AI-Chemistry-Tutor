@@ -1,6 +1,13 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { askChemistry, getHealth, type ChatAnswer } from './api';
+import {
+  askChemistry,
+  getHealth,
+  resolveMediaUrl,
+  type AnswerBlock,
+  type ChatAnswer,
+  type PreferredAnswerType,
+} from './api';
 
 // Pages
 const Dashboard = () => {
@@ -50,8 +57,66 @@ type ChatMessage = {
   result?: ChatAnswer;
 };
 
+const ANSWER_TYPE_OPTIONS: Array<{ value: PreferredAnswerType; label: string }> = [
+  { value: 'auto', label: 'تلقائي' },
+  { value: 'text', label: 'نص' },
+  { value: 'image', label: 'صورة' },
+  { value: 'video', label: 'فيديو' },
+  { value: 'mixed', label: 'مختلط' },
+];
+
+const renderAnswerBlock = (block: AnswerBlock, index: number) => {
+  const key = `${block.type}-${block.page ?? 'none'}-${index}`;
+
+  if (block.type === 'equation') {
+    return (
+      <div key={key} className="equation-block" dir="ltr">
+        {block.content}
+      </div>
+    );
+  }
+
+  if (block.type === 'source_page' || block.type === 'image') {
+    const imageUrl = resolveMediaUrl(block.image_url);
+    if (!imageUrl) return null;
+    return (
+      <a key={key} className="source-page-thumb" href={imageUrl} target="_blank" rel="noreferrer">
+        <img src={imageUrl} alt={`صفحة ${block.page ?? ''}`} loading="lazy" />
+        <span>صفحة {block.page ?? '-'}</span>
+      </a>
+    );
+  }
+
+  if (block.type === 'video_script') {
+    return (
+      <div key={key} className="video-script-card">
+        {block.content}
+      </div>
+    );
+  }
+
+  if (block.type === 'clarification') {
+    return (
+      <div key={key} className="clarification-card">
+        {block.content}
+      </div>
+    );
+  }
+
+  if (block.type === 'table') {
+    return (
+      <pre key={key} className="table-block">
+        {block.content}
+      </pre>
+    );
+  }
+
+  return <p key={key}>{block.content}</p>;
+};
+
 const Chat = () => {
-  const [question, setQuestion] = useState('اشرح لي ما هي الحموض من الكتاب؟');
+  const [question, setQuestion] = useState('ما هي المعادلة الكيميائية للنحاس مع حمض الكبريت الممدد؟');
+  const [answerType, setAnswerType] = useState<PreferredAnswerType>('auto');
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: 'assistant',
@@ -71,7 +136,7 @@ const Chat = () => {
     setMessages((current) => [...current, { role: 'user', content: text }]);
 
     try {
-      const result = await askChemistry(text);
+      const result = await askChemistry(text, answerType);
       setMessages((current) => [
         ...current,
         {
@@ -105,9 +170,16 @@ const Chat = () => {
       <div className="chat-messages">
         {messages.map((message, index) => (
           <div key={`${message.role}-${index}`} className={`chat-message ${message.role}`}>
-            <p>{message.content}</p>
+            {message.result?.blocks?.length ? (
+              <div className="answer-blocks">
+                {message.result.blocks.map((block, blockIndex) => renderAnswerBlock(block, blockIndex))}
+              </div>
+            ) : (
+              <p>{message.content}</p>
+            )}
             {message.result && (
               <div className="source-strip">
+                <span>{message.result.answer_type}</span>
                 <span>الثقة: {Math.round(message.result.confidence * 100)}%</span>
                 {message.result.page_numbers.length > 0 && (
                   <span>الصفحات: {message.result.page_numbers.join(', ')}</span>
@@ -124,6 +196,23 @@ const Chat = () => {
       </div>
 
       {error && <div className="chat-error">{error}</div>}
+
+      <div className="chat-controls-row">
+        <label className="answer-type-selector">
+          <span>نوع الإجابة</span>
+          <select
+            value={answerType}
+            onChange={(event) => setAnswerType(event.target.value as PreferredAnswerType)}
+            disabled={loading}
+          >
+            {ANSWER_TYPE_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
 
       <div className="chat-input-row">
         <textarea

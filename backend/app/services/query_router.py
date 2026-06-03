@@ -8,6 +8,7 @@ from pathlib import Path
 import re
 
 from app.core.config import PROJECT_DIR
+from app.services.chemistry_rules import answer_metal_dilute_acid_reaction
 
 _DIACRITICS_RE = re.compile(r"[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED]")
 _TATWEEL_RE = re.compile(r"\u0640+")
@@ -268,4 +269,13 @@ def _answer_lesson_navigation(query: str) -> RoutedAnswer | None:
 
 def route_direct_answer(query: str) -> RoutedAnswer | None:
     """Return a deterministic answer for intents that should not start with vector search."""
+    reaction = answer_metal_dilute_acid_reaction(query)
+    if reaction:
+        return RoutedAnswer(
+            intent=reaction.intent,
+            answer=reaction.answer,
+            confidence=reaction.confidence,
+            page_numbers=reaction.page_numbers,
+            suggested_next_action=reaction.suggested_next_action,
+        )
     return _answer_water_equation(query) or _answer_formula(query) or _answer_lesson_navigation(query)

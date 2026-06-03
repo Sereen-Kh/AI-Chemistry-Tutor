@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import math
 import re
 from dataclasses import dataclass
@@ -15,11 +16,21 @@ from sqlalchemy.orm import selectinload
 from app.core.redis import get_redis_client
 from app.models.textbook import ContentSource, RagChunk
 from app.services.embeddings import embed_query
+from app.services.rag_diagnostics import CandidateInfo, RetrievalDiagnostics
+
+logger = logging.getLogger(__name__)
 
 _CACHE: dict[str, tuple[float, list["RetrievedChunk"]]] = {}
 _CACHE_TTL_SECONDS = 3600
-_CACHE_VERSION = "v3"
-_RETRIEVABLE_SOURCE_STATUSES = ["completed", "completed_with_warnings", "dry_run_completed", "dry_run_incomplete"]
+_CACHE_VERSION = "v6"
+# Allow local dry-run sources for retrieval/debugging without marking ingestion complete.
+_RETRIEVABLE_SOURCE_STATUSES = [
+    "completed",
+    "completed_with_warnings",
+    "dry_run_incomplete",
+    "completed_text_only",
+    "completed_with_image_fallback",
+]
 
 _ARABIC_DIACRITICS_RE = re.compile(r"[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED]")
 _TOKEN_RE = re.compile(r"[a-z0-9]+|[\u0621-\u064A]+", re.IGNORECASE)
@@ -35,70 +46,189 @@ _ARABIC_NORMALIZATION = str.maketrans(
         "ة": "ه",
     }
 )
+
+# ---------------------------------------------------------------------------
+# Stop-words removed from queries before retrieval
+# ---------------------------------------------------------------------------
 _QUERY_STOPWORDS = {
-    "اشرح",
-    "شرح",
-    "فسر",
-    "عرف",
-    "تعريف",
-    "ما",
-    "ماذا",
-    "من",
-    "في",
-    "عن",
-    "على",
-    "الى",
-    "الي",
-    "هو",
-    "هي",
-    "هذا",
-    "هذه",
-    "ذلك",
-    "تلك",
-    "لي",
-    "لنا",
-    "انا",
-    "اريد",
-    "بدي",
-    "كتاب",
-    "الكتاب",
-    "كيمياء",
-    "الكيمياء",
+    # Instruction verbs
+    "اشرح", "شرح", "فسر", "عرف", "تعريف", "وضح", "بين", "اذكر",
+    "قولي", "تقولي", "قلي", "خبرني", "اخبرني", "ممكن", "يمكنك",
+    "ساعدني", "اعطني", "اعطيني",
+    # Question particles & pronouns
+    "ما", "ماذا", "من", "في", "عن", "على", "الى", "الي",
+    "هو", "هي", "هذا", "هذه", "ذلك", "تلك",
+    "لي", "لنا", "انا", "اريد", "بدي",
+    # Book/subject references (noise for retrieval)
+    "كتاب", "الكتاب", "كيمياء", "الكيمياء",
+    "درس", "الدرس", "صفحه", "الصفحه",
+    "سؤال", "السؤال", "جواب", "الجواب",
 }
+
+# ---------------------------------------------------------------------------
+# Term expansion — maps a normalized root to related terms for recall boost
+# ---------------------------------------------------------------------------
 _TERM_EXPANSIONS = {
     "حموض": {
-        "حموض",
-        "الحموض",
-        "حمض",
-        "الحمض",
-        "حمضي",
-        "حمضيه",
-        "الحمضيه",
-        "احماض",
-        "الاحماض",
-        "هيدروجين",
-        "الهيدروجين",
-        "هدروجين",
-        "الهدروجين",
-        "هدرونيوم",
+        "حموض", "الحموض", "حمض", "الحمض", "حمضي", "حمضيه", "الحمضيه",
+        "احماض", "الاحماض",
+        "هيدروجين", "الهيدروجين", "هدروجين", "الهدروجين", "هدرونيوم",
     },
     "حمض": {
-        "حموض",
-        "الحموض",
-        "حمض",
-        "الحمض",
-        "حمضي",
-        "حمضيه",
-        "الحمضيه",
-        "احماض",
-        "الاحماض",
-        "هيدروجين",
-        "الهيدروجين",
-        "هدروجين",
-        "الهدروجين",
-        "هدرونيوم",
+        "حموض", "الحموض", "حمض", "الحمض", "حمضي", "حمضيه", "الحمضيه",
+        "احماض", "الاحماض",
+        "هيدروجين", "الهيدروجين", "هدروجين", "الهدروجين", "هدرونيوم",
+    },
+    "اسس": {
+        "اسس", "الاسس", "اساس", "قاعده", "القاعده", "قواعد", "القواعد",
+        "قلوي", "القلوي", "هيدروكسيد", "الهيدروكسيد",
+        "ايونات الهدروكسيد", "ايون الهدروكسيد", "oh", "oh-",
+        "مواد تعطي", "انحلالها", "المحاليل الاساسيه",
+    },
+    "قاعده": {
+        "اسس", "الاسس", "قاعده", "القاعده", "قواعد", "القواعد",
+        "قلوي", "القلوي", "هيدروكسيد", "الهيدروكسيد",
+        "ايونات الهدروكسيد", "ايون الهدروكسيد", "oh", "oh-",
+        "مواد تعطي", "انحلالها", "المحاليل الاساسيه",
+    },
+    "اساس": {
+        "اسس", "الاسس", "اساس", "قاعده", "القاعده", "قواعد", "القواعد",
+        "هيدروكسيد", "الهيدروكسيد", "ايونات الهدروكسيد", "oh-",
+        "مواد تعطي", "انحلالها", "المحاليل الاساسيه",
+    },
+    "هيدروكسيد": {
+        "هيدروكسيد", "الهيدروكسيد", "ايون الهدروكسيد", "ايونات الهدروكسيد",
+        "oh", "oh-", "اسس", "الاسس", "قواعد", "القواعد",
+    },
+    "املاح": {
+        "املاح", "الاملاح", "ملح", "الملح", "تعديل", "التعديل",
+    },
+    "تاكسد": {
+        "تاكسد", "التاكسد", "اكسده", "الاكسده", "ارجاع", "الارجاع",
+        "مؤكسد", "المؤكسد", "مرجع", "المرجع",
+    },
+    "ذره": {
+        "ذره", "الذره", "ذرات", "الذرات", "نواه", "النواه",
+        "الكترون", "الكترونات", "بروتون", "بروتونات", "نيوترون",
+    },
+    "ايون": {
+        "ايون", "الايون", "ايونات", "الايونات", "شارده", "الشارده",
+        "شوارد", "الشوارد", "تاين", "التاين",
+    },
+    "تفاعل": {
+        "تفاعل", "التفاعل", "تفاعلات", "التفاعلات",
+        "معادله", "المعادله", "ناتج", "النواتج", "متفاعل", "المتفاعلات",
+        "ازاحه", "الازاحه", "احلال", "سلسله النشاط", "النشاط الكيميائي",
+        "لا يحدث", "يزيح", "يزاح", "هيدروجين", "الهيدروجين",
+    },
+    "معادله": {
+        "معادله", "المعادله", "تفاعل", "التفاعل", "تفاعلات",
+        "موزونه", "وازن", "ناتج", "نواتج", "متفاعلات",
+        "ازاحه", "احلال", "سلسله النشاط",
+    },
+    "نحاس": {
+        "نحاس", "النحاس", "cu", "كبريتات النحاس", "اكسيد النحاس",
+        "سلسله النشاط", "النشاط الكيميائي", "ازاحه", "احلال",
+        "لا يحدث", "اقل نشاطا", "حمض الكبريت",
+    },
+    "حديد": {
+        "حديد", "الحديد", "fe", "كبريتات الحديد", "كلوريد الحديد",
+        "سلسله النشاط", "النشاط الكيميائي", "ازاحه", "احلال",
+    },
+    "زنك": {
+        "زنك", "الزنك", "خارصين", "الخارصين", "zn",
+        "حمض الكبريت", "حمض كلور الماء", "غاز الهدروجين", "هيدروجين",
+    },
+    "كبريت": {
+        "كبريت", "الكبريت", "حمض الكبريت", "h2so4", "كبريتات",
+        "حمض الكبريت الممدد", "الممدد", "الممدده",
+    },
+    "ممدد": {
+        "ممدد", "الممدد", "ممدده", "الممدده", "حمض الكبريت",
+        "حمض كلور الماء", "غاز الهدروجين",
     },
 }
+
+# Content types that get a boost when the intent is definition_lookup
+_DEFINITION_CONTENT_TYPES = {"definition", "summary", "concept", "key_point", "learned_summary", "result"}
+_OBJECTIVE_CONTENT_TYPES = {"objectives", "objective"}
+_EQUATION_CONTENT_TYPES = {"equation", "activity", "result", "exercise", "mixed", "full_page"}
+_DEFINITION_PENALTY_MARKERS = (
+    "الاهداف",
+    "اﻫﺪاف",
+    "يتعرف",
+    "يتعرّف",
+    "يميز",
+    "يميّز",
+    "احتياطات",
+    "اثناء استعمال المحاليل",
+    "أثناء استعمال المحاليل",
+)
+
+# ---------------------------------------------------------------------------
+# Query cleanup & rewriting
+# ---------------------------------------------------------------------------
+
+# Phrases stripped entirely from the query before processing
+_NOISE_PHRASES_RE = re.compile(
+    r"(?:اشرح\s*لي|شرح\s*لي|وضح\s*لي|فسر\s*لي|عرف\s*لي|قول\s*لي|"
+    r"ممكن\s*تقولي|ممكن\s*توضح|ممكن\s*تشرح|ممكن\s*تعطيني|"
+    r"من\s*الكتاب|في\s*الكتاب|حسب\s*الكتاب|بحسب\s*الكتاب|"
+    r"من\s*كتاب\s*الكيمياء|بالتفصيل|لو\s*سمحت|من\s*فضلك)",
+    re.IGNORECASE,
+)
+
+
+def clean_query(raw_query: str) -> str:
+    """Strip instruction-based noise and keep only content-bearing terms."""
+    cleaned = _NOISE_PHRASES_RE.sub(" ", raw_query)
+    cleaned = re.sub(r"[؟?!.،,؛;]+", " ", cleaned)
+    cleaned = " ".join(cleaned.split()).strip()
+    return cleaned or raw_query.strip()
+
+
+def rewrite_query(cleaned_query: str) -> str:
+    """Expand a cleaned query with semantically related terms for better recall."""
+    terms = _query_terms(cleaned_query)
+    original_tokens = [t for t in _tokens(cleaned_query) if t not in _QUERY_STOPWORDS and len(t) > 1]
+    # Keep originals first, then add expansions
+    all_parts = list(original_tokens)
+    for term in terms:
+        if term not in all_parts:
+            all_parts.append(term)
+    normalized = _normalize_lexical_text(cleaned_query)
+    if any(term in normalized for term in ("تفاعل", "معادله", "معادلة")):
+        for term in ("تفاعلات الازاحه", "سلسله النشاط", "النشاط الكيميائي", "لا يحدث تفاعل"):
+            if term not in all_parts:
+                all_parts.append(term)
+    if any(term in normalized for term in ("اسس", "الاسس", "اساس", "قاعده", "قواعد")):
+        for term in (
+            "تعريف الاسس",
+            "الاساس",
+            "ايونات الهدروكسيد",
+            "oh-",
+            "المحاليل الاساسيه",
+            "مواد تعطي",
+            "عند انحلالها في الماء",
+        ):
+            if term not in all_parts:
+                all_parts.append(term)
+    if any(term in normalized for term in ("حموض", "احماض", "حمض")):
+        for term in (
+            "تعريف الحموض",
+            "ايونات الهدروجين",
+            "h+",
+            "المحاليل الحمضيه",
+            "مواد تعطي",
+            "عند انحلالها في الماء",
+        ):
+            if term not in all_parts:
+                all_parts.append(term)
+    if "نحاس" in normalized and "حمض الكبريت" in normalized:
+        for term in ("النحاس حمض الكبريت الممدد", "اقل نشاطا من الهيدروجين", "لا يحدث تفاعل"):
+            if term not in all_parts:
+                all_parts.append(term)
+    return " ".join(all_parts)
 
 
 @dataclass
@@ -194,17 +324,73 @@ def lexical_relevance_score(query: str, content: str) -> float:
         or "h+" in normalized_content
     ):
         score += 0.16
+    if any(term in {"اسس", "اساس", "قاعده", "قواعد"} for term in terms) and (
+        "ايون الهدروكسيد" in normalized_content
+        or "ايونات الهدروكسيد" in normalized_content
+        or "oh-" in normalized_content
+        or "oh⁻" in normalized_content
+    ):
+        score += 0.22
 
     return round(min(score, 1.0), 4)
 
 
-def _hybrid_score(query: str, content: str, vector_score: float) -> float:
+def _hybrid_score(
+    query: str,
+    content: str,
+    vector_score: float,
+    *,
+    intent: str = "general",
+    content_type: str = "text",
+) -> float:
+    """Compute a blended vector+lexical score with intent-based boosting."""
     lexical_score = lexical_relevance_score(query, content)
     if lexical_score <= 0:
         return round(max(vector_score, 0.0), 4)
     blended = (0.35 * max(vector_score, 0.0)) + (0.65 * lexical_score)
     # Exact lexical matches in the textbook should outrank weak local/hash embeddings.
-    return round(min(max(blended, lexical_score, vector_score), 1.0), 4)
+    score = max(blended, lexical_score, vector_score)
+
+    normalized = _normalize_lexical_text(content)
+    query_norm = _normalize_lexical_text(query)
+
+    # Content-type boost for definition-oriented intents
+    if intent == "definition_lookup":
+        if content_type in _DEFINITION_CONTENT_TYPES:
+            score += 0.18
+        if content_type in _OBJECTIVE_CONTENT_TYPES or any(marker in normalized for marker in _DEFINITION_PENALTY_MARKERS):
+            score -= 0.32
+        if "مواد تعطي" in normalized:
+            score += 0.16
+        if "عند انحلالها في الماء" in normalized or "انحلالها في الماء" in normalized:
+            score += 0.14
+        if any(term in query_norm for term in ("اسس", "اساس", "قاعده", "قواعد")):
+            if "ايونات الهدروكسيد" in normalized or "ايون الهدروكسيد" in normalized or "oh-" in normalized:
+                score += 0.28
+            if "المحاليل الاساسيه" in normalized:
+                score += 0.10
+        if any(term in query_norm for term in ("حموض", "احماض", "حمض")):
+            if "ايونات الهدروجين" in normalized or "ايون الهدروجين" in normalized or "h+" in normalized:
+                score += 0.24
+    elif intent in {"equation_lookup", "reaction_query"}:
+        if content_type in _EQUATION_CONTENT_TYPES:
+            score += 0.18
+        if content_type in _DEFINITION_CONTENT_TYPES:
+            score -= 0.10
+        if "نحاس" in query_norm and "حمض الكبريت" in query_norm:
+            if "النحاس مع حمض الكبريت" in normalized:
+                score += 0.30
+            if "سلسله النشاط" in normalized or "تفاعلات الازاحه" in normalized:
+                score += 0.18
+            if "لا يحدث" in normalized:
+                score += 0.22
+
+    # Entity match boost for chemical formula presence
+    if any(formula in normalized for formula in ("h+", "oh-", "h2o", "h2so4", "hcl", "naoh")):
+        if any(formula in query_norm for formula in ("h+", "oh-", "h2o", "h2so4", "hcl", "naoh")):
+            score += 0.10
+
+    return round(min(max(score, 0.0), 1.0), 4)
 
 
 def _retrieved_from_chunk(chunk: RagChunk, score: float) -> RetrievedChunk:
@@ -235,15 +421,29 @@ async def retrieve_context(
     content_types: list[str] | None = None,
     top_k: int = 6,
     min_similarity: float = 0.0,
+    intent: str = "general",
 ) -> list[RetrievedChunk]:
     """Retrieve relevant source chunks for a query.
 
     Uses PostgreSQL pgvector if available, otherwise falls back to Python-based
     cosine similarity for SQLite local development. Uses Redis for caching.
     """
+    diag = RetrievalDiagnostics()
+    diag.original_query = query
+    diag.detected_intent = intent
+    diag.start_timer()
+
+    # --- Query cleanup & rewriting ---
+    cleaned = clean_query(query)
+    diag.normalized_query = cleaned
+    rewritten = rewrite_query(cleaned)
+    diag.rewritten_query = rewritten
+    terms = _query_terms(cleaned)
+    diag.query_terms = sorted(terms)
+
     cache_key_raw = (
         f"{query}|{user_id}|{chapter_id}|{lesson_id}|{topic_id}|"
-        f"{source_types}|{content_types}|{top_k}|{min_similarity}"
+        f"{source_types}|{content_types}|{top_k}|{min_similarity}|{intent}"
     )
     cache_key = f"rag_cache:{_CACHE_VERSION}:" + hashlib.md5(cache_key_raw.encode()).hexdigest()
 
@@ -252,6 +452,9 @@ async def retrieve_context(
         cached = await redis.get(cache_key)
         if cached:
             chunks_dict = json.loads(cached)
+            diag.cache_hit = True
+            diag.final_confidence = max((c.get("similarity_score", 0) for c in chunks_dict), default=0)
+            diag.emit()
             return [RetrievedChunk(**c) for c in chunks_dict]
     except Exception:
         pass
@@ -261,7 +464,9 @@ async def retrieve_context(
         except Exception:
             pass
 
-    query_embedding = await embed_query(query)
+    # Use the rewritten query for embeddings and lexical scoring (more recall for Arabic synonyms).
+    retrieval_query = rewritten or cleaned
+    query_embedding = await embed_query(retrieval_query)
 
     stmt = (
         select(RagChunk)
@@ -285,6 +490,7 @@ async def retrieve_context(
         stmt = stmt.where(RagChunk.content_type.in_(content_types))
 
     scored: list[RetrievedChunk] = []
+    all_candidates: list[CandidateInfo] = []
 
     # Check if we are running on PostgreSQL
     is_postgres = db.bind.dialect.name == "postgresql" if db.bind else False
@@ -292,30 +498,66 @@ async def retrieve_context(
     if is_postgres:
         # pgvector SQL path (cosine distance)
         # Pull extra candidates, then rerank with lexical matches to handle Arabic OCR text.
-        candidate_limit = max(top_k * 8, 32)
+        candidate_limit = max(top_k * 12, 48)
         stmt = stmt.order_by(RagChunk.embedding.cosine_distance(query_embedding)).limit(candidate_limit)
         result = await db.execute(stmt)
-        for chunk in result.scalars().all():
-            vector_score = _cosine_similarity(query_embedding, chunk.embedding or [])
-            lexical_content = f"{chunk.normalized_content or ''}\n{chunk.content}"
-            score = _hybrid_score(query, lexical_content, vector_score)
-            if score >= min_similarity:
-                scored.append(_retrieved_from_chunk(chunk, score))
-        scored.sort(key=lambda item: item.similarity_score, reverse=True)
-        scored = scored[:top_k]
+        chunks_list = list(result.scalars().all())
     else:
-        # SQLite Python fallback path
+        # SQLite Python fallback path — load all and score in Python
         result = await db.execute(stmt)
-        for chunk in result.scalars().all():
-            vector_score = _cosine_similarity(query_embedding, chunk.embedding or [])
-            lexical_content = f"{chunk.normalized_content or ''}\n{chunk.content}"
-            score = _hybrid_score(query, lexical_content, vector_score)
-            if score >= min_similarity:
-                scored.append(_retrieved_from_chunk(chunk, score))
+        chunks_list = list(result.scalars().all())
 
-        scored.sort(key=lambda item: item.similarity_score, reverse=True)
-        scored = scored[:top_k]
+    diag.total_candidates_scanned = len(chunks_list)
 
+    for chunk in chunks_list:
+        vector_score = _cosine_similarity(query_embedding, chunk.embedding or [])
+        # Use both original content and normalized content for lexical matching
+        lexical_content = f"{chunk.normalized_content or ''}\n{chunk.content}"
+        lex_score = lexical_relevance_score(retrieval_query, lexical_content)
+        score = _hybrid_score(
+            retrieval_query, lexical_content, vector_score,
+            intent=intent, content_type=chunk.content_type,
+        )
+
+        # Track all candidates for diagnostics
+        candidate = CandidateInfo(
+            chunk_id=chunk.id,
+            page_number=chunk.page_number,
+            source_type=chunk.source_type,
+            content_type=chunk.content_type,
+            vector_score=round(vector_score, 4),
+            lexical_score=round(lex_score, 4),
+            hybrid_score=round(score, 4),
+            snippet=chunk.content[:120].replace("\n", " "),
+        )
+        all_candidates.append(candidate)
+
+        if score >= min_similarity:
+            scored.append(_retrieved_from_chunk(chunk, score))
+
+    scored.sort(key=lambda item: item.similarity_score, reverse=True)
+    scored = scored[:top_k]
+
+    # --- Diagnostics ---
+    all_candidates.sort(key=lambda c: c.hybrid_score, reverse=True)
+    diag.top_candidates = all_candidates[:10]
+    diag.final_top_k = [
+        CandidateInfo(
+            chunk_id=s.id,
+            page_number=s.page_number,
+            source_type=s.source_type,
+            content_type=s.content_type,
+            vector_score=0.0,  # not stored in RetrievedChunk
+            lexical_score=0.0,
+            hybrid_score=s.similarity_score,
+            snippet=s.content[:120].replace("\n", " "),
+        )
+        for s in scored
+    ]
+    diag.final_confidence = max((s.similarity_score for s in scored), default=0.0)
+    diag.emit()
+
+    # --- Cache ---
     redis = get_redis_client()
     try:
         data_to_cache = [c.__dict__ for c in scored]

@@ -6,6 +6,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.dependencies import get_current_user_id
 from app.database import get_async_db
 from app.schemas.chat import (
+    AnswerBlock,
+    AnswerSourceBlock,
     ChatAnswerResponse,
     ChatAskRequest,
     ChatSourceResponse,
@@ -81,9 +83,16 @@ async def ask_chat(
         lesson_id=request.lesson_id,
         topic_id=request.topic_id,
         source_types=request.source_types,
+        preferred_answer_type=request.preferred_answer_type,
+        answer_scope=request.answer_scope,
     )
     return ChatAnswerResponse(
         answer=result["answer"],
+        answer_type=result["answer_type"],
+        route=result.get("route", "textbook_rag"),
+        grounding=result.get("grounding", "book"),
+        answer_scope=result.get("answer_scope", request.answer_scope),
+        blocks=[AnswerBlock(**block) for block in result["blocks"]],
         sources=[
             ChatSourceResponse(
                 chunk_id=chunk.id,
@@ -95,8 +104,10 @@ async def ask_chat(
             )
             for chunk in result["sources"]
         ],
+        source_blocks=[AnswerSourceBlock(**block) for block in result.get("source_blocks", [])],
         page_numbers=result["page_numbers"],
         confidence=result["confidence"],
+        diagnostics=result.get("diagnostics", {}),
         suggested_next_action=result["suggested_next_action"],
     )
 

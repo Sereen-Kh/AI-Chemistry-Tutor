@@ -4,10 +4,11 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 import app.models  # noqa: F401
 from app.api.router import api_router
-from app.core.config import settings
+from app.core.config import PROJECT_DIR, settings
 from app.core.middleware import RateLimitMiddleware
 from app.schemas.common import HealthResponse
 
@@ -52,6 +53,12 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+)
+
+app.mount(
+    "/media/books",
+    StaticFiles(directory=str(PROJECT_DIR / "data" / "textbooks"), check_dir=False),
+    name="book_media",
 )
 
 app.include_router(api_router, prefix="/api/v1")

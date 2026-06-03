@@ -40,6 +40,16 @@ class QueryRouterTests(TestCase):
         self.assertIn("2H₂O", result.answer)
         self.assertIn(30, result.page_numbers)
 
+    def test_copper_dilute_sulfuric_acid_reaction_is_direct(self):
+        result = route_direct_answer("ما هي المعادلة الكيميائية للنحاس مع حمض الكبريت الممدد؟")
+
+        self.assertIsNotNone(result)
+        assert result is not None
+        self.assertEqual(result.intent, "reaction_query")
+        self.assertIn("لا يحدث تفاعل", result.answer)
+        self.assertNotIn("الحموض هي مواد", result.answer)
+        self.assertGreaterEqual(result.confidence, 0.65)
+
     def test_lesson_one_navigation_uses_book_structure(self):
         result = route_direct_answer("اعطني ماذا يحتوي الدرس الاول؟")
 

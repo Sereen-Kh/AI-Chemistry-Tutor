@@ -1,6 +1,7 @@
 """Pydantic schemas for chat endpoints."""
 
 from datetime import datetime
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -48,6 +49,8 @@ class ChatAskRequest(BaseModel):
     lesson_id: int | None = None
     topic_id: int | None = None
     source_types: list[str] | None = None
+    preferred_answer_type: str = Field("auto", pattern="^(auto|text|image|video|mixed)$")
+    answer_scope: str = Field("auto", pattern="^(auto|book_only|tutor_general)$")
 
 
 class ChatSourceResponse(BaseModel):
@@ -59,11 +62,34 @@ class ChatSourceResponse(BaseModel):
     similarity_score: float
 
 
+class AnswerBlock(BaseModel):
+    type: str
+    content: str = ""
+    page: int | None = None
+    image_url: str | None = None
+    metadata: dict[str, Any] = Field(default_factory=dict)
+
+
+class AnswerSourceBlock(BaseModel):
+    book_id: str | None = None
+    page: int | None = None
+    chunk_id: int
+    chunk_type: str
+    score: float
+
+
 class ChatAnswerResponse(BaseModel):
     answer: str
-    sources: list[ChatSourceResponse] = []
-    page_numbers: list[int] = []
+    answer_type: str = "text"
+    route: str = "textbook_rag"
+    grounding: str = "book"
+    answer_scope: str = "auto"
+    blocks: list[AnswerBlock] = Field(default_factory=list)
+    sources: list[ChatSourceResponse] = Field(default_factory=list)
+    source_blocks: list[AnswerSourceBlock] = Field(default_factory=list)
+    page_numbers: list[int] = Field(default_factory=list)
     confidence: float
+    diagnostics: dict[str, Any] = Field(default_factory=dict)
     suggested_next_action: str | None = None
 
 

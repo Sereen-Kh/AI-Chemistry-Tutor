@@ -8,6 +8,7 @@ import logging
 import math
 import re
 from dataclasses import dataclass
+from collections.abc import Callable
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -15,6 +16,7 @@ from sqlalchemy.orm import selectinload
 
 from app.core.redis import get_redis_client
 from app.models.textbook import ContentSource, RagChunk
+from app.services.chunking import extract_formula_terms, normalize_formula
 from app.services.embeddings import embed_query
 from app.services.rag_diagnostics import CandidateInfo, RetrievalDiagnostics
 
@@ -22,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 _CACHE: dict[str, tuple[float, list["RetrievedChunk"]]] = {}
 _CACHE_TTL_SECONDS = 3600
-_CACHE_VERSION = "v6"
+_CACHE_VERSION = "v7"
 # Allow local dry-run sources for retrieval/debugging without marking ingestion complete.
 _RETRIEVABLE_SOURCE_STATUSES = [
     "completed",
@@ -69,6 +71,17 @@ _QUERY_STOPWORDS = {
 # Term expansion — maps a normalized root to related terms for recall boost
 # ---------------------------------------------------------------------------
 _TERM_EXPANSIONS = {
+    "ماء": {"ماء", "الماء", "h2o", "h₂o", "مائي", "مائيه", "محلول", "المحلول"},
+    "الماء": {"ماء", "الماء", "h2o", "h₂o", "مائي", "مائيه", "محلول", "المحلول"},
+    "تفكك": {"تفكك", "التفكك", "يتفكك", "تتفكك", "تفاعلات التفكك", "تفكك الماء", "وعاء فولتا"},
+    "تاين": {"تاين", "التاين", "يتاين", "تتاين", "كليا", "جزئيا", "ايونات"},
+    "تركيز": {"تركيز", "التركيز", "مولاري", "مولي", "غرامي", "تمديد", "المحاليل"},
+    "محلول": {"محلول", "المحلول", "محاليل", "المحاليل", "مذاب", "مذيب", "مائي"},
+    "كالسيوم": {
+        "كالسيوم", "الكالسيوم", "اكسيد الكالسيوم", "أكسيد الكالسيوم",
+        "هيدروكسيد الكالسيوم", "cao", "ca(oh)2", "ca(oh)₂",
+    },
+    "اكسيد": {"اكسيد", "أكسيد", "اكاسيد", "اوكسيد", "cao", "mgo", "co2"},
     "حموض": {
         "حموض", "الحموض", "حمض", "الحمض", "حمضي", "حمضيه", "الحمضيه",
         "احماض", "الاحماض",
@@ -147,12 +160,61 @@ _TERM_EXPANSIONS = {
         "ممدد", "الممدد", "ممدده", "الممدده", "حمض الكبريت",
         "حمض كلور الماء", "غاز الهدروجين",
     },
+    "اوكسجين": {
+        "اوكسجين", "الاوكسجين", "أوكسجين", "الأوكسجين",
+        "أكسجين", "الأكسجين", "اكسجين", "الاكسجين",
+        "o2", "غاز الأكسجين", "غاز الاوكسجين", "الاحتراق",
+    },
+    "عضويه": {
+        "عضويه", "العضويه", "الكيمياء العضويه", "الكربون", "مركبات الكربون",
+        "مركبات عضويه", "هيدروكربونات",
+    },
+    "كربون": {"كربون", "الكربون", "مركبات الكربون", "الكيمياء العضويه", "روابط الكربون"},
+    "اشعاعي": {"اشعاعي", "اشعاعيه", "النشاط الاشعاعي", "العناصر المشعه", "الفا", "بيتا", "غاما"},
+    "أكسجين": {
+        "اوكسجين", "الاوكسجين", "أوكسجين", "الأوكسجين",
+        "أكسجين", "الأكسجين", "اكسجين", "الاكسجين",
+        "o2", "غاز الأكسجين", "غاز الاوكسجين", "الاحتراق",
+    },
 }
 
 # Content types that get a boost when the intent is definition_lookup
 _DEFINITION_CONTENT_TYPES = {"definition", "summary", "concept", "key_point", "learned_summary", "result"}
 _OBJECTIVE_CONTENT_TYPES = {"objectives", "objective"}
 _EQUATION_CONTENT_TYPES = {"equation", "activity", "result", "exercise", "mixed", "full_page"}
+_INTENT_CONTENT_TYPE_BOOSTS = {
+    "definition_lookup": {
+        "definition": 0.24,
+        "learned_summary": 0.16,
+        "result": 0.14,
+        "table": 0.04,
+    },
+    "formula_lookup": {
+        "definition": 0.10,
+        "equation": 0.18,
+        "table": 0.12,
+        "learned_summary": 0.08,
+    },
+    "equation_lookup": {
+        "equation": 0.30,
+        "result": 0.16,
+        "learned_summary": 0.12,
+        "exercise": 0.10,
+        "table": 0.08,
+    },
+    "reaction_query": {
+        "equation": 0.28,
+        "result": 0.16,
+        "exercise": 0.12,
+        "table": 0.08,
+    },
+    "property_lookup": {
+        "definition": 0.12,
+        "result": 0.18,
+        "learned_summary": 0.18,
+        "table": 0.08,
+    },
+}
 _DEFINITION_PENALTY_MARKERS = (
     "الاهداف",
     "اﻫﺪاف",
@@ -295,6 +357,41 @@ def _query_terms(query: str) -> set[str]:
     return expanded
 
 
+def _matched_query_terms(query: str, content: str) -> list[str]:
+    terms = _query_terms(query)
+    normalized_content = _normalize_lexical_text(content)
+    content_tokens = set(_tokens(content))
+    matched = sorted(term for term in terms if term in content_tokens or term in normalized_content)
+    return matched[:30]
+
+
+def _formula_overlap(query: str, content: str) -> set[str]:
+    query_formulas = {normalize_formula(item).lower() for item in extract_formula_terms(query)}
+    content_formulas = {normalize_formula(item).lower() for item in extract_formula_terms(content)}
+    return query_formulas & content_formulas
+
+
+def _candidate_reasons(query: str, content: str, *, intent: str, content_type: str) -> list[str]:
+    reasons: list[str] = []
+    matched = _matched_query_terms(query, content)
+    normalized = _normalize_lexical_text(content)
+    query_norm = _normalize_lexical_text(query)
+    if matched:
+        reasons.append(f"matched_terms:{','.join(matched[:8])}")
+    if content_type in _INTENT_CONTENT_TYPE_BOOSTS.get(intent, {}):
+        reasons.append(f"intent_content_type_boost:{intent}:{content_type}")
+    formulas = _formula_overlap(query, content)
+    if formulas:
+        reasons.append(f"exact_formula:{','.join(sorted(formulas))}")
+    if "عباد الشمس" in query_norm and "عباد الشمس" in normalized:
+        reasons.append("exact_entity:litmus")
+    if "اكسيد الكالسيوم" in query_norm and (
+        "اكسيد الكالسيوم" in normalized or "هيدروكسيد الكالسيوم" in normalized or "cao" in normalized
+    ):
+        reasons.append("exact_entity:calcium_oxide")
+    return reasons[:8]
+
+
 def lexical_relevance_score(query: str, content: str) -> float:
     """Return a 0..1 Arabic lexical relevance score for a query/content pair."""
     terms = _query_terms(query)
@@ -385,10 +482,20 @@ def _hybrid_score(
             if "لا يحدث" in normalized:
                 score += 0.22
 
+    score += _INTENT_CONTENT_TYPE_BOOSTS.get(intent, {}).get(content_type, 0.0)
+
     # Entity match boost for chemical formula presence
-    if any(formula in normalized for formula in ("h+", "oh-", "h2o", "h2so4", "hcl", "naoh")):
-        if any(formula in query_norm for formula in ("h+", "oh-", "h2o", "h2so4", "hcl", "naoh")):
-            score += 0.10
+    formula_overlap = _formula_overlap(query, content)
+    if formula_overlap:
+        score += min(0.24, 0.08 * len(formula_overlap))
+    if "عباد الشمس" in query_norm and "عباد الشمس" in normalized:
+        score += 0.20
+    if "اكسيد الكالسيوم" in query_norm and (
+        "اكسيد الكالسيوم" in normalized or "هيدروكسيد الكالسيوم" in normalized or "cao" in normalized
+    ):
+        score += 0.28
+    if "تفكك الماء" in query_norm and ("وعاء فولتا" in normalized or "h2o" in normalized):
+        score += 0.20
 
     return round(min(max(score, 0.0), 1.0), 4)
 
@@ -422,6 +529,7 @@ async def retrieve_context(
     top_k: int = 6,
     min_similarity: float = 0.0,
     intent: str = "general",
+    diagnostics_callback: Callable[[dict], None] | None = None,
 ) -> list[RetrievedChunk]:
     """Retrieve relevant source chunks for a query.
 
@@ -454,6 +562,8 @@ async def retrieve_context(
             chunks_dict = json.loads(cached)
             diag.cache_hit = True
             diag.final_confidence = max((c.get("similarity_score", 0) for c in chunks_dict), default=0)
+            if diagnostics_callback:
+                diagnostics_callback(diag.as_payload())
             diag.emit()
             return [RetrievedChunk(**c) for c in chunks_dict]
     except Exception:
@@ -529,6 +639,13 @@ async def retrieve_context(
             lexical_score=round(lex_score, 4),
             hybrid_score=round(score, 4),
             snippet=chunk.content[:120].replace("\n", " "),
+            matched_terms=_matched_query_terms(retrieval_query, lexical_content),
+            reasons=_candidate_reasons(
+                retrieval_query,
+                lexical_content,
+                intent=intent,
+                content_type=chunk.content_type,
+            ),
         )
         all_candidates.append(candidate)
 
@@ -551,10 +668,19 @@ async def retrieve_context(
             lexical_score=0.0,
             hybrid_score=s.similarity_score,
             snippet=s.content[:120].replace("\n", " "),
+            matched_terms=_matched_query_terms(retrieval_query, s.content),
+            reasons=_candidate_reasons(
+                retrieval_query,
+                s.content,
+                intent=intent,
+                content_type=s.content_type,
+            ),
         )
         for s in scored
     ]
     diag.final_confidence = max((s.similarity_score for s in scored), default=0.0)
+    if diagnostics_callback:
+        diagnostics_callback(diag.as_payload())
     diag.emit()
 
     # --- Cache ---

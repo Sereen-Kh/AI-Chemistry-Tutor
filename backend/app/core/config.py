@@ -23,6 +23,8 @@ class Settings(BaseSettings):
     gemini_document_model: str = "gemini-3-flash-preview"
     gemini_document_fallback_model: str = "gemini-3.1-flash-lite"
     gemini_embedding_model: str = "gemini-embedding-001"
+    embedding_provider: str = "auto"
+    local_embedding_model: str = "intfloat/multilingual-e5-base"
     gemini_min_page_chars: int = 40
     gemini_min_completeness_score: float = 0.5
     pdf_direct_extraction_enabled: bool = True
@@ -41,6 +43,10 @@ class Settings(BaseSettings):
         "http://127.0.0.1:3000",
         "http://localhost:8080",
         "http://127.0.0.1:8080",
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:5174",
+        "http://127.0.0.1:5174",
     ]
 
     @property
@@ -76,6 +82,15 @@ class Settings(BaseSettings):
         normalized = str(value or "production").strip().lower()
         if normalized not in {"dry_run", "production"}:
             raise ValueError("INGESTION_MODE must be either 'dry_run' or 'production'")
+        return normalized
+
+    @field_validator("embedding_provider", mode="before")
+    @classmethod
+    def validate_embedding_provider(cls, value):
+        normalized = str(value or "auto").strip().lower()
+        allowed = {"auto", "gemini", "local_multilingual", "local_hash"}
+        if normalized not in allowed:
+            raise ValueError(f"EMBEDDING_PROVIDER must be one of: {', '.join(sorted(allowed))}")
         return normalized
 
     class Config:

@@ -15,6 +15,10 @@ from sqlalchemy.orm import selectinload
 
 from app.core.config import PROJECT_DIR, settings
 from app.models.chat import ChatMessage, ChatSession
+from app.rag.answer_verifier import verify_answer
+from app.rag.arabic_normalizer import normalize_arabic
+from app.rag.book_knowledge import BookKnowledgeAnswer, answer_from_book_knowledge
+from app.rag.chunk_validator import validate_chunks
 from app.services import ai_service
 from app.services.chemistry_rules import answer_metal_dilute_acid_reaction, detect_metal_and_acid
 from app.services.query_router import route_direct_answer
@@ -48,7 +52,7 @@ _FORMULA_TRIGGERS = ("صيغة", "الصيغة", "رمز", "الرمز", "formul
 _EQUATION_TRIGGERS = ("معادلة", "المعادلة", "وازن", "موزونة", "اكتب المعادلة")
 _REACTION_TRIGGERS = ("تفاعل", "يتفاعل", "تتفاعل", "مع حمض", "مع الماء", "ناتج", "الناتج")
 _TABLE_TRIGGERS = ("جدول", "الجدول", "سلسلة", "السلسلة")
-_VALID_ANSWER_TYPES = {"auto", "text", "image", "video", "mixed"}
+_VALID_ANSWER_TYPES = {"auto", "text", "image", "audio", "video", "mixed"}
 _EQUATION_LINE_RE = re.compile(
     r"(?=.*(?:→|⇌|->|=))(?=.*(?:[A-Z][a-z]?\d*|H2|HCl|H2SO4|NaOH|Cu|Fe|Zn|Mg|Al)).+"
 )
@@ -159,7 +163,7 @@ _DEFINITION_CHUNK_PENALTY_MARKERS = (
 )
 
 _ANSWER_SCOPES = {"auto", "book_only", "tutor_general"}
-_CHEMISTRY_DICTIONARY_PATH = PROJECT_DIR / "backend" / "app" / "services" / "chemistry_entities.json"
+_CHEMISTRY_DICTIONARY_PATH = PROJECT_DIR / "backend" / "app" / "rag" / "data" / "chemistry_entities.json"
 _CHEMISTRY_DICTIONARY_CACHE: list[ChemistryDictionaryEntry] | None = None
 
 
@@ -274,6 +278,34 @@ def _classify_question(question: str) -> dict:
     return {"intent": base_intent, "answer_style": "normal", **entity_payload}
 
 
+_FOLLOWUP_REPHRASE_TRIGGERS = (
+    "اشرح بطريقة اخرى",
+    "اشرح بطريقه اخرى",
+    "اشرح بطريقة أبسط",
+    "اشرح بطريقه ابسط",
+    "اشرح ببساطة",
+    "اشرح ببساطه",
+    "لم افهم",
+    "لم أفهم",
+    "اعطني مثالا ابسط",
+    "اعطني مثال ابسط",
+    "أعطني مثالاً أبسط",
+    "explain this differently",
+    "try differently",
+    "simpler example",
+    "simple example",
+    "rephrase",
+)
+
+
+def _is_followup_rephrase(question: str, action: str | None = None) -> bool:
+    normalized = _normalize_intent_text(question)
+    action_normalized = (action or "").strip().lower()
+    if action_normalized in {"rephrase_previous", "try_differently", "simplify_previous"}:
+        return True
+    return any(_normalize_intent_text(trigger) in normalized for trigger in _FOLLOWUP_REPHRASE_TRIGGERS)
+
+
 def _classify_intent(question: str) -> str:
     """Classify the user's intent to guide retrieval behaviour.
 
@@ -349,6 +381,27 @@ def _source_page_blocks(chunks: list[RetrievedChunk], page_numbers: list[int] | 
                 }
             )
     return blocks
+
+
+def _append_audio_unavailable_if_requested(
+    blocks: list[dict],
+    *,
+    preferred_answer_type: str,
+    diagnostics: dict,
+) -> None:
+    if (preferred_answer_type or "").strip().lower() != "audio":
+        return
+    diagnostics["audio_requested_but_tts_unavailable"] = True
+    blocks.append(
+        {
+            "type": "audio",
+            "content": "Audio generation is still processing.",
+            "url": None,
+            "page": None,
+            "image_url": None,
+            "metadata": {"tts_available": False},
+        }
+    )
 
 
 def _source_blocks(chunks: list[RetrievedChunk]) -> list[dict]:
@@ -479,21 +532,32 @@ def _retrieval_diagnostics(
     rewritten = entity.rewrite if entity else rewrite_query(cleaned)
     top_score = max((chunk.similarity_score for chunk in chunks), default=0.0)
     lexical_scores = [lexical_relevance_score(rewritten, chunk.content) for chunk in chunks]
+    validations = validate_chunks(
+        question,
+        chunks,
+        entity=entity.entity if entity else None,
+        intent=intent,
+    )
     return {
         "original_query": question,
         "normalized_query": cleaned,
+        "normalized_question": normalize_arabic(question),
         "intent": intent,
         "entity": entity.entity if entity else None,
         "normalized_entity": entity.normalized_entity if entity else None,
         "rewritten_query": rewritten,
         "retrieved_chunks": [
             {
-                "page": chunk.page_number,
+                "chunk_id": validation.chunk_id,
+                "page": validation.page,
                 "chunk_type": chunk.content_type,
-                "score": round(float(chunk.similarity_score), 4),
-                "content_preview": _chunk_preview(chunk),
+                "score": validation.score,
+                "valid_for_answer": validation.valid_for_answer,
+                "rejection_reason": validation.rejection_reason,
+                "preview": validation.preview,
+                "content_preview": validation.preview,
             }
-            for chunk in chunks
+            for chunk, validation in zip(chunks, validations, strict=False)
         ],
         "rejected_chunks": rejected_chunks or [],
         "final_context": [
@@ -559,6 +623,11 @@ def _direct_definition_response(
         diagnostics["selected_source_pages"] = pages
     diagnostics.update({"fallback_used": "definition_template", "answer_style": "direct"})
     diagnostics.update({"route": route, "grounding": grounding, "answer_scope": answer_scope})
+    _append_audio_unavailable_if_requested(
+        text_blocks,
+        preferred_answer_type=preferred_answer_type,
+        diagnostics=diagnostics,
+    )
 
     return {
         "answer": answer,
@@ -607,7 +676,16 @@ def _direct_property_response(
             "fallback_used": "property_template",
             "answer_style": "direct",
             "gemini_available": bool(settings.effective_gemini_api_key),
+            "route": "dictionary_first",
+            "grounding": "approved_dictionary",
+            "answer_scope": diagnostics.get("answer_scope", "auto"),
+            "rag_search_skipped": True,
         }
+    )
+    _append_audio_unavailable_if_requested(
+        blocks,
+        preferred_answer_type=preferred_answer_type,
+        diagnostics=diagnostics,
     )
     return {
         "answer": answer,
@@ -716,7 +794,13 @@ def _dictionary_response(
             "dictionary_entry_id": entry.id,
             "dictionary_source_type": entry.source_type,
             "fallback_used": "approved_dictionary",
+            "rag_search_skipped": not bool(chunks),
         }
+    )
+    _append_audio_unavailable_if_requested(
+        blocks,
+        preferred_answer_type=preferred_answer_type,
+        diagnostics=diagnostics,
     )
     return {
         "answer": answer,
@@ -731,6 +815,128 @@ def _dictionary_response(
         "confidence": round(float(entry.confidence), 4),
         "diagnostics": diagnostics,
         "suggested_next_action": "يمكنك أن تطلب مثالاً أو سؤالاً تدريبياً مرتبطاً.",
+    }
+
+
+def _litmus_rule_response(
+    *,
+    question: str,
+    preferred_answer_type: str,
+    answer_scope: str,
+    diagnostics: dict,
+) -> dict | None:
+    normalized = _normalize_intent_text(question)
+    if not ("عباد الشمس" in normalized or "ورقه عباد" in normalized or "ورقة عباد" in question):
+        return None
+    acidic = any(term in normalized for term in ("حمضي", "حمضيه", "حموض", "حمض", "احماض"))
+    basic = any(term in normalized for term in ("اساسي", "اساسيه", "اسس", "قاعد", "قلوي"))
+    if not acidic and not basic:
+        return None
+    if acidic:
+        answer = "تتلون ورقة عباد الشمس باللون الأحمر في المحاليل الحمضية."
+        entity_name = "المحاليل الحمضية"
+        pages = [13]
+    else:
+        answer = "تتلون ورقة عباد الشمس باللون الأزرق في المحاليل الأساسية."
+        entity_name = "المحاليل الأساسية"
+        pages = [23]
+    answer_type = _select_answer_type("property_lookup", preferred_answer_type)
+    diagnostics.update(
+        {
+            "intent": "property_lookup",
+            "entity": entity_name,
+            "route": "chemistry_rule",
+            "grounding": "book_knowledge",
+            "answer_scope": answer_scope,
+            "rule_engine": "litmus_color",
+            "retrieved_chunks": [],
+            "selected_context": [],
+            "confidence": 0.95,
+            "rag_search_skipped": True,
+        }
+    )
+    return {
+        "answer": answer,
+        "answer_type": answer_type,
+        "route": "chemistry_rule",
+        "grounding": "book_knowledge",
+        "answer_scope": answer_scope,
+        "blocks": _build_answer_blocks(
+            answer,
+            [],
+            answer_type=answer_type,
+            preferred_answer_type=preferred_answer_type,
+            page_numbers=pages,
+            diagnostics=diagnostics,
+        ),
+        "sources": [],
+        "source_blocks": [
+            {
+                "book_id": _SOURCE_SLUG,
+                "page": page,
+                "chunk_id": 0,
+                "chunk_type": "chemistry_rule",
+                "score": 0.95,
+            }
+            for page in pages
+        ],
+        "page_numbers": pages,
+        "confidence": 0.95,
+        "diagnostics": diagnostics,
+        "suggested_next_action": "يمكنك أن تسأل عن تجربة التمييز بين المحاليل الحمضية والأساسية.",
+    }
+
+
+def _book_knowledge_response(
+    *,
+    item: BookKnowledgeAnswer,
+    preferred_answer_type: str,
+    answer_scope: str,
+    diagnostics: dict,
+) -> dict:
+    answer_type = _select_answer_type(item.intent, preferred_answer_type)
+    diagnostics.update(
+        {
+            "intent": item.intent,
+            "route": "book_knowledge",
+            "grounding": "book",
+            "answer_scope": answer_scope,
+            "book_knowledge_key": item.key,
+            "retrieved_chunks": [],
+            "selected_context": [],
+            "confidence": item.confidence,
+            "rag_search_skipped": True,
+        }
+    )
+    return {
+        "answer": item.answer,
+        "answer_type": answer_type,
+        "route": "book_knowledge",
+        "grounding": "book",
+        "answer_scope": answer_scope,
+        "blocks": _build_answer_blocks(
+            item.answer,
+            [],
+            answer_type=answer_type,
+            preferred_answer_type=preferred_answer_type,
+            page_numbers=item.page_numbers,
+            diagnostics=diagnostics,
+        ),
+        "sources": [],
+        "source_blocks": [
+            {
+                "book_id": _SOURCE_SLUG,
+                "page": page,
+                "chunk_id": 0,
+                "chunk_type": item.source_type,
+                "score": item.confidence,
+            }
+            for page in item.page_numbers
+        ],
+        "page_numbers": item.page_numbers,
+        "confidence": round(float(item.confidence), 4),
+        "diagnostics": diagnostics,
+        "suggested_next_action": "يمكنك أن تطلب مثالاً مشابهاً أو سؤالاً تدريبياً.",
     }
 
 
@@ -774,6 +980,157 @@ def _not_found_response(
         "confidence": 0.0,
         "diagnostics": diagnostics,
         "suggested_next_action": "أعد صياغة السؤال أو جرّب سؤالاً موجوداً نصاً في الكتاب.",
+    }
+
+
+def _previous_page_numbers(previous_sources: list[dict] | None, previous_selected_chunks: list[dict] | None) -> list[int]:
+    pages: set[int] = set()
+    for item in (previous_sources or []) + (previous_selected_chunks or []):
+        page = item.get("page") if isinstance(item, dict) else None
+        if page is None:
+            page = item.get("page_number") if isinstance(item, dict) else None
+        try:
+            if page is not None:
+                pages.add(int(page))
+        except (TypeError, ValueError):
+            continue
+    return sorted(pages)
+
+
+def _previous_source_blocks(previous_sources: list[dict] | None, previous_selected_chunks: list[dict] | None) -> list[dict]:
+    blocks: list[dict] = []
+    for item in (previous_selected_chunks or []) + (previous_sources or []):
+        if not isinstance(item, dict):
+            continue
+        chunk_id = item.get("chunk_id") or item.get("id") or 0
+        page = item.get("page") if item.get("page") is not None else item.get("page_number")
+        score = item.get("score") if item.get("score") is not None else item.get("similarity_score")
+        try:
+            score_value = round(float(score), 4) if score is not None else 0.0
+        except (TypeError, ValueError):
+            score_value = 0.0
+        blocks.append(
+            {
+                "book_id": item.get("book_id") or item.get("source") or _SOURCE_SLUG,
+                "page": page,
+                "chunk_id": chunk_id,
+                "chunk_type": item.get("chunk_type") or item.get("content_type") or "previous_context",
+                "score": score_value,
+            }
+        )
+    deduped: list[dict] = []
+    seen: set[tuple[object, object]] = set()
+    for block in blocks:
+        key = (block["chunk_id"], block["page"])
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(block)
+    return deduped
+
+
+def _simplify_previous_answer(previous_answer: str, previous_question: str | None = None) -> str:
+    normalized_previous = _normalize_intent_text(previous_answer)
+    normalized_question = _normalize_intent_text(previous_question or "")
+    if "ايونات الهدروجين" in normalized_previous or "h+" in normalized_previous or "حموض" in normalized_question:
+        return (
+            "ببساطة: الحمض مثل مادة عندما تذوب في الماء تترك أيونات الهدروجين H⁺.\n\n"
+            "مثال: حمض كلور الماء HCl عندما يوجد في الماء يعطي أيونات H⁺، "
+            "ولهذا نعدّه حمضاً."
+        )
+    if "ايونات الهدروكسيد" in normalized_previous or "oh" in normalized_previous or "اسس" in normalized_question:
+        return (
+            "ببساطة: الأساس مادة عندما تذوب في الماء تترك أيونات الهدروكسيد OH⁻.\n\n"
+            "مثال: هيدروكسيد الصوديوم NaOH يعطي OH⁻ في الماء، لذلك يعد من الأسس."
+        )
+    if "h2o" in normalized_previous or "ماء" in normalized_question:
+        return (
+            "ببساطة: الماء مركب وليس عنصراً واحداً. صيغته H₂O، "
+            "أي أن كل جزيء ماء يتكون من ذرتي هيدروجين وذرة أكسجين."
+        )
+    cleaned = _clean_display_arabic(previous_answer)
+    return f"بصياغة أبسط:\n{cleaned}"
+
+
+def _followup_rephrase_response(
+    *,
+    question: str,
+    previous_question: str | None,
+    previous_answer: str | None,
+    previous_sources: list[dict] | None,
+    previous_selected_chunks: list[dict] | None,
+    answer_scope: str,
+    preferred_answer_type: str,
+    conversation_id: str | None,
+    parent_message_id: str | None,
+    diagnostics: dict,
+) -> dict:
+    if not previous_answer:
+        answer = (
+            "أحتاج إلى السؤال أو الإجابة السابقة حتى أشرحها بطريقة أبسط. "
+            "أرسل السؤال السابق أو اسأل من جديد."
+        )
+        diagnostics.update({"route": "followup_rephrase", "missing_previous_context": True})
+        return {
+            "answer": answer,
+            "answer_type": "clarification",
+            "route": "followup_rephrase",
+            "grounding": "previous_context",
+            "answer_scope": answer_scope,
+            "blocks": [{"type": "clarification", "content": answer, "page": None, "image_url": None, "metadata": {}}],
+            "sources": [],
+            "source_blocks": [],
+            "page_numbers": [],
+            "confidence": 0.0,
+            "diagnostics": diagnostics,
+            "suggested_next_action": "اسأل السؤال الأصلي مرة أخرى ثم اضغط Try differently.",
+        }
+
+    answer = _simplify_previous_answer(previous_answer, previous_question)
+    page_numbers = _previous_page_numbers(previous_sources, previous_selected_chunks)
+    source_blocks = _previous_source_blocks(previous_sources, previous_selected_chunks)
+    answer_type = _select_answer_type("followup_rephrase", preferred_answer_type)
+    if answer_type == "auto":
+        answer_type = "text"
+    diagnostics.update(
+        {
+            "original_question": question,
+            "resolved_question": previous_question or question,
+            "is_followup": True,
+            "conversation_id": conversation_id,
+            "parent_message_id": parent_message_id,
+            "answer_scope": answer_scope,
+            "preferred_answer_type": preferred_answer_type,
+            "intent": "followup_rephrase",
+            "entity": None,
+            "route": "followup_rephrase",
+            "grounding": "previous_context",
+            "retrieved_chunks": [],
+            "selected_context": previous_selected_chunks or previous_sources or [],
+            "confidence": 0.86,
+            "rag_search_skipped": True,
+        }
+    )
+    return {
+        "answer": answer,
+        "answer_type": answer_type,
+        "route": "followup_rephrase",
+        "grounding": "previous_context",
+        "answer_scope": answer_scope,
+        "blocks": _build_answer_blocks(
+            answer,
+            [],
+            answer_type=answer_type,
+            preferred_answer_type=preferred_answer_type,
+            page_numbers=page_numbers,
+            diagnostics=diagnostics,
+        ),
+        "sources": [],
+        "source_blocks": source_blocks,
+        "page_numbers": page_numbers,
+        "confidence": 0.86,
+        "diagnostics": diagnostics,
+        "suggested_next_action": "يمكنك طلب مثال آخر أو سؤال تدريبي على نفس الفكرة.",
     }
 
 
@@ -842,7 +1199,35 @@ def _build_answer_blocks(
             }
         )
 
+    if preferred_answer_type == "audio":
+        if diagnostics is not None:
+            diagnostics["audio_requested_but_tts_unavailable"] = True
+        blocks.append(
+            {
+                "type": "audio",
+                "content": "Audio generation is still processing.",
+                "url": None,
+                "page": None,
+                "image_url": None,
+                "metadata": {"tts_available": False},
+            }
+        )
+
     return blocks
+
+
+def _finalize_answer(result: dict, question: str) -> dict:
+    diagnostics = result.setdefault("diagnostics", {})
+    diagnostics.setdefault("original_question", question)
+    diagnostics.setdefault("normalized_question", normalize_arabic(question))
+    diagnostics.setdefault("route", result.get("route"))
+    diagnostics.setdefault("grounding", result.get("grounding"))
+    diagnostics.setdefault("confidence", result.get("confidence"))
+    verification = verify_answer(question, result.get("answer", ""))
+    diagnostics["verification"] = verification.as_dict()
+    if not verification.passed:
+        diagnostics["verification_failed"] = True
+    return result
 
 
 # ---------------------------------------------------------------------------
@@ -1209,6 +1594,47 @@ async def send_message(
     return assistant_message
 
 
+async def _context_from_parent_message(
+    db: AsyncSession | None,
+    user_id: int,
+    parent_message_id: str | None,
+) -> tuple[str | None, str | None]:
+    if db is None or not parent_message_id:
+        return None, None
+    try:
+        message_id = int(parent_message_id)
+    except (TypeError, ValueError):
+        return None, None
+
+    result = await db.execute(
+        select(ChatMessage)
+        .options(selectinload(ChatMessage.session))
+        .where(ChatMessage.id == message_id)
+    )
+    parent = result.scalars().first()
+    if parent is None or parent.session.user_id != user_id:
+        return None, None
+
+    previous_answer = parent.content if parent.role == "assistant" else None
+    previous_question = None
+    if parent.role == "assistant":
+        previous_result = await db.execute(
+            select(ChatMessage)
+            .where(
+                ChatMessage.session_id == parent.session_id,
+                ChatMessage.role == "user",
+                ChatMessage.created_at <= parent.created_at,
+            )
+            .order_by(ChatMessage.created_at.desc())
+            .limit(1)
+        )
+        previous_user_message = previous_result.scalars().first()
+        previous_question = previous_user_message.content if previous_user_message else None
+    else:
+        previous_question = parent.content
+    return previous_question, previous_answer
+
+
 async def ask_question(
     db: AsyncSession,
     user_id: int,
@@ -1216,11 +1642,51 @@ async def ask_question(
     lesson_id: int | None = None,
     topic_id: int | None = None,
     source_types: list[str] | None = None,
-    preferred_answer_type: str = "auto",
+    preferred_answer_type: str = "text",
     answer_scope: str = "auto",
+    conversation_id: str | None = None,
+    parent_message_id: str | None = None,
+    teaching_style: str | None = None,
+    action: str | None = None,
+    previous_question: str | None = None,
+    previous_answer: str | None = None,
+    previous_sources: list[dict] | None = None,
+    previous_selected_chunks: list[dict] | None = None,
 ) -> dict:
     """Answer a one-off question with RAG sources."""
     answer_scope = _normalize_answer_scope(answer_scope)
+
+    if _is_followup_rephrase(question, action=action):
+        parent_question, parent_answer = await _context_from_parent_message(db, user_id, parent_message_id)
+        diagnostics = {
+            "original_query": question,
+            "original_question": question,
+            "normalized_question": normalize_arabic(question),
+            "resolved_question": previous_question or parent_question or question,
+            "is_followup": True,
+            "conversation_id": conversation_id,
+            "parent_message_id": parent_message_id,
+            "answer_scope": answer_scope,
+            "preferred_answer_type": preferred_answer_type,
+            "teaching_style": teaching_style,
+            "action": action,
+            "intent": "followup_rephrase",
+            "entity": None,
+            "gemini_available": bool(settings.effective_gemini_api_key),
+        }
+        return _finalize_answer(_followup_rephrase_response(
+            question=question,
+            previous_question=previous_question or parent_question,
+            previous_answer=previous_answer or parent_answer,
+            previous_sources=previous_sources or [],
+            previous_selected_chunks=previous_selected_chunks or [],
+            answer_scope=answer_scope,
+            preferred_answer_type=preferred_answer_type,
+            conversation_id=conversation_id,
+            parent_message_id=parent_message_id,
+            diagnostics=diagnostics,
+        ), question)
+
     classification = _classify_question(question)
     intent = classification["intent"]
     entity = _definition_entity_for_question(question)
@@ -1229,13 +1695,21 @@ async def ask_question(
     metal, acid = detect_metal_and_acid(question)
     diagnostics: dict = {
         "original_query": question,
+        "original_question": question,
+        "resolved_question": question,
+        "is_followup": False,
+        "conversation_id": conversation_id,
+        "parent_message_id": parent_message_id,
         "normalized_query": clean_query(question),
+        "normalized_question": normalize_arabic(question),
         "intent": intent,
         "entity": classification.get("entity"),
         "normalized_entity": classification.get("normalized_entity"),
         "answer_style": classification.get("answer_style"),
         "preferred_answer_type": preferred_answer_type,
         "answer_scope": answer_scope,
+        "teaching_style": teaching_style,
+        "action": action,
         "explicit_book_requested": explicit_book,
         "dictionary_entry_id": dictionary_entry.id if dictionary_entry else None,
         "reactants": {
@@ -1246,13 +1720,23 @@ async def ask_question(
     }
 
     simple_dictionary_intents = {"definition_lookup", "formula_lookup", "property_lookup"}
+
+    litmus_rule = _litmus_rule_response(
+        question=question,
+        preferred_answer_type=preferred_answer_type,
+        answer_scope=answer_scope,
+        diagnostics=diagnostics,
+    )
+    if litmus_rule and answer_scope != "book_only":
+        return _finalize_answer(litmus_rule, question)
+
     if (
         dictionary_entry
         and answer_scope in {"auto", "tutor_general"}
         and not explicit_book
         and (intent in simple_dictionary_intents or answer_scope == "tutor_general")
     ):
-        return _dictionary_response(
+        return _finalize_answer(_dictionary_response(
             entry=dictionary_entry,
             question=question,
             answer_scope=answer_scope,
@@ -1260,7 +1744,7 @@ async def ask_question(
             route="dictionary_first",
             grounding="approved_dictionary" if answer_scope == "auto" else "general_tutor",
             diagnostics=diagnostics,
-        )
+        ), question)
 
     if intent == "property_lookup" and entity and answer_scope != "book_only" and not explicit_book:
         property_response = _direct_property_response(
@@ -1269,7 +1753,7 @@ async def ask_question(
             diagnostics=diagnostics,
         )
         if property_response:
-            return property_response
+            return _finalize_answer(property_response, question)
 
     reaction_answer = answer_metal_dilute_acid_reaction(question)
     if reaction_answer and answer_scope != "book_only":
@@ -1277,19 +1761,22 @@ async def ask_question(
         diagnostics.update(
             {
                 "intent": reaction_answer.intent,
-                "route": "dictionary_first",
-                "grounding": "approved_dictionary",
+                "route": "chemistry_rule",
+                "grounding": "book_knowledge",
                 "rule_engine": "activity_series",
                 "reaction_happens": reaction_answer.reaction_happens,
                 "equation": reaction_answer.equation,
                 "warnings": reaction_answer.warnings,
+                "retrieved_chunks": [],
+                "selected_context": [],
+                "rag_search_skipped": True,
             }
         )
-        return {
+        return _finalize_answer({
             "answer": reaction_answer.answer,
             "answer_type": answer_type,
-            "route": "dictionary_first",
-            "grounding": "approved_dictionary",
+            "route": "chemistry_rule",
+            "grounding": "book_knowledge",
             "answer_scope": answer_scope,
             "blocks": _build_answer_blocks(
                 reaction_answer.answer,
@@ -1305,7 +1792,19 @@ async def ask_question(
             "confidence": round(float(reaction_answer.confidence), 4),
             "diagnostics": diagnostics,
             "suggested_next_action": reaction_answer.suggested_next_action,
-        }
+        }, question)
+
+    book_knowledge = answer_from_book_knowledge(question, intent=intent)
+    if book_knowledge and answer_scope in {"auto", "book_only"}:
+        return _finalize_answer(
+            _book_knowledge_response(
+                item=book_knowledge,
+                preferred_answer_type=preferred_answer_type,
+                answer_scope=answer_scope,
+                diagnostics=diagnostics,
+            ),
+            question,
+        )
 
     direct_answer = route_direct_answer(question)
     if direct_answer and answer_scope != "book_only":
@@ -1318,7 +1817,7 @@ async def ask_question(
                 "grounding": "approved_dictionary",
             }
         )
-        return {
+        return _finalize_answer({
             "answer": direct_answer.answer,
             "answer_type": answer_type,
             "route": "dictionary_first",
@@ -1338,7 +1837,7 @@ async def ask_question(
             "confidence": direct_answer.confidence,
             "diagnostics": diagnostics,
             "suggested_next_action": direct_answer.suggested_next_action,
-        }
+        }, question)
 
     logger.info("Ask intent classified: %s for query: %s", intent, question[:80])
     if dictionary_entry and (explicit_book or answer_scope == "book_only"):
@@ -1364,6 +1863,15 @@ async def ask_question(
             "retrieved_chunk_ids": [chunk.id for chunk in chunks],
             "retrieved_pages": page_numbers,
             "top_score": max((chunk.similarity_score for chunk in chunks), default=0.0),
+            "selected_context": [
+                {
+                    "chunk_id": chunk.id,
+                    "page": chunk.page_number,
+                    "score": round(float(chunk.similarity_score), 4),
+                    "preview": _chunk_preview(chunk),
+                }
+                for chunk in chunks
+            ],
         }
     )
     diagnostics.update(
@@ -1389,14 +1897,14 @@ async def ask_question(
     if dictionary_entry and (explicit_book or answer_scope == "book_only"):
         if answer_scope == "book_only":
             if not dictionary_valid_chunks:
-                return _not_found_response(
+                return _finalize_answer(_not_found_response(
                     question=question,
                     answer_scope=answer_scope,
                     preferred_answer_type=preferred_answer_type,
                     diagnostics=diagnostics,
                     chunks=chunks,
                     rejected_chunks=dictionary_rejected_chunks,
-                )
+                ), question)
             book_answer = _local_rag_answer(question, dictionary_valid_chunks)
             book_confidence = _compute_confidence(question, dictionary_valid_chunks)
             diagnostics.update(
@@ -1421,7 +1929,7 @@ async def ask_question(
                 {chunk.page_number for chunk in dictionary_valid_chunks if chunk.page_number is not None}
             )
             answer_type = _select_answer_type(intent, preferred_answer_type)
-            return {
+            return _finalize_answer({
                 "answer": book_answer,
                 "answer_type": answer_type,
                 "route": "textbook_rag",
@@ -1441,10 +1949,10 @@ async def ask_question(
                 "confidence": round(float(book_confidence), 4),
                 "diagnostics": diagnostics,
                 "suggested_next_action": "يمكنك أن تسأل عن مصدر آخر من الكتاب.",
-            }
+            }, question)
 
         if dictionary_valid_chunks:
-            return _dictionary_response(
+            return _finalize_answer(_dictionary_response(
                 entry=dictionary_entry,
                 question=question,
                 answer_scope=answer_scope,
@@ -1454,8 +1962,8 @@ async def ask_question(
                 diagnostics=diagnostics,
                 chunks=dictionary_valid_chunks,
                 rejected_chunks=dictionary_rejected_chunks,
-            )
-        return _dictionary_response(
+            ), question)
+        return _finalize_answer(_dictionary_response(
             entry=dictionary_entry,
             question=question,
             answer_scope=answer_scope,
@@ -1466,20 +1974,20 @@ async def ask_question(
             chunks=[],
             label="لم أجد ذلك بوضوح في مقاطع الكتاب المسترجعة، لكن من القاموس الكيميائي المعتمد:",
             rejected_chunks=dictionary_rejected_chunks,
-        )
+        ), question)
 
     if intent == "definition_lookup" and entity:
         supporting_chunks, rejected_chunks = _definition_context(entity, chunks)
         if answer_scope == "book_only" and not supporting_chunks:
-            return _not_found_response(
+            return _finalize_answer(_not_found_response(
                 question=question,
                 answer_scope=answer_scope,
                 preferred_answer_type=preferred_answer_type,
                 diagnostics=diagnostics,
                 chunks=chunks,
                 rejected_chunks=rejected_chunks,
-            )
-        return _direct_definition_response(
+            ), question)
+        return _finalize_answer(_direct_definition_response(
             entity=entity,
             chunks=chunks,
             preferred_answer_type=preferred_answer_type,
@@ -1487,17 +1995,17 @@ async def ask_question(
             answer_scope=answer_scope,
             route="textbook_rag" if supporting_chunks else "book_first",
             grounding="book" if supporting_chunks else "approved_dictionary",
-        )
+        ), question)
 
     if confidence < _MIN_BOOK_GROUNDED_CONFIDENCE:
         if answer_scope == "book_only":
-            return _not_found_response(
+            return _finalize_answer(_not_found_response(
                 question=question,
                 answer_scope=answer_scope,
                 preferred_answer_type=preferred_answer_type,
                 diagnostics=diagnostics,
                 chunks=chunks,
-            )
+            ), question)
         answer = (
             "لم أجد ذلك بوضوح في مقاطع الكتاب المتاحة.\n\n"
             "يمكنني الإجابة عندما تحدد الدرس أو تستخدم صياغة أوضح، "
@@ -1506,7 +2014,7 @@ async def ask_question(
         answer_type = "not_found"
         diagnostics.update({"low_confidence": True, "confidence_threshold": _MIN_BOOK_GROUNDED_CONFIDENCE})
         diagnostics["confidence_components"]["final_confidence"] = round(float(confidence), 4)
-        return {
+        return _finalize_answer({
             "answer": answer,
             "answer_type": answer_type,
             "route": "not_found",
@@ -1526,7 +2034,7 @@ async def ask_question(
             "confidence": round(float(confidence), 4),
             "diagnostics": diagnostics,
             "suggested_next_action": "جرّب تحديد الدرس أو اسأل عن صيغة/تعريف/معادلة محددة.",
-        }
+        }, question)
 
     context = format_context(chunks)
     if context:
@@ -1550,7 +2058,7 @@ async def ask_question(
         }
     )
     diagnostics["confidence_components"]["final_confidence"] = round(float(confidence), 4)
-    return {
+    return _finalize_answer({
         "answer": answer,
         "answer_type": answer_type,
         "route": "textbook_rag",
@@ -1570,7 +2078,7 @@ async def ask_question(
         "confidence": round(float(confidence), 4),
         "diagnostics": diagnostics,
         "suggested_next_action": "جرّب سؤالاً تدريبياً مرتبطاً بالمصدر." if chunks else "أعد صياغة السؤال أو حدد الدرس.",
-    }
+    }, question)
 
 
 async def update_message_feedback(db: AsyncSession, message_id: int, user_id: int, feedback: str) -> ChatMessage:

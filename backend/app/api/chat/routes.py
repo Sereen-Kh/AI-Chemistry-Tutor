@@ -85,6 +85,14 @@ async def ask_chat(
         source_types=request.source_types,
         preferred_answer_type=request.preferred_answer_type,
         answer_scope=request.answer_scope,
+        conversation_id=request.conversation_id,
+        parent_message_id=request.parent_message_id,
+        teaching_style=request.teaching_style,
+        action=request.action,
+        previous_question=request.previous_question,
+        previous_answer=request.previous_answer,
+        previous_sources=request.previous_sources,
+        previous_selected_chunks=request.previous_selected_chunks,
     )
     return ChatAnswerResponse(
         answer=result["answer"],

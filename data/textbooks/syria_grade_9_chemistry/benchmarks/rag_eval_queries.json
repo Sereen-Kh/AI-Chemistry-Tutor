@@ -1,0 +1,240 @@
+[
+  {
+    "id": "acid_definition",
+    "question": "ما هي الحموض؟",
+    "intent": "definition_lookup",
+    "expected_pages": [11, 15],
+    "must_contain": ["أيون", "هيدروجين", "H"]
+  },
+  {
+    "id": "acid_function_count",
+    "question": "ما المقصود بعدد الوظائف الحمضية؟",
+    "intent": "definition_lookup",
+    "expected_pages": [11, 15],
+    "must_contain": ["عدد", "أيونات", "الهيدروجين"]
+  },
+  {
+    "id": "acid_ion",
+    "question": "ما الأيون المسؤول عن الوظيفة الحمضية؟",
+    "intent": "definition_lookup",
+    "expected_pages": [11],
+    "must_contain": ["H", "أيون", "الهيدروجين"]
+  },
+  {
+    "id": "strong_weak_acids",
+    "question": "ما الفرق بين الحموض القوية والحموض الضعيفة؟",
+    "intent": "definition_lookup",
+    "expected_pages": [12, 13, 15],
+    "must_contain": ["كلي", "جزئي", "تتأين"]
+  },
+  {
+    "id": "acid_litmus",
+    "question": "ما لون ورقة عباد الشمس في المحاليل الحمضية؟",
+    "intent": "property_lookup",
+    "expected_pages": [13, 15],
+    "must_contain": ["عباد الشمس", "الأحمر"]
+  },
+  {
+    "id": "acid_dilution_safety",
+    "question": "لماذا نضيف الحمض إلى الماء عند التمديد؟",
+    "intent": "property_lookup",
+    "expected_pages": [7],
+    "must_contain": ["الحمض", "الماء", "الاحتياطات"]
+  },
+  {
+    "id": "solution_concentration",
+    "question": "ما مفهوم تركيز المحلول؟",
+    "intent": "definition_lookup",
+    "expected_pages": [4],
+    "must_contain": ["تركيز", "المحلول"]
+  },
+  {
+    "id": "dilution_law",
+    "question": "ما قانون تمديد المحاليل؟",
+    "intent": "formula_lookup",
+    "expected_pages": [6],
+    "must_contain": ["تمديد", "المحاليل", "عدد مولات"]
+  },
+  {
+    "id": "hcl_concentration_problem",
+    "question": "كيف أحسب التركيز الغرامي والمولي لمحلول حمض كلور الماء؟",
+    "intent": "exercise_lookup",
+    "expected_pages": [5],
+    "must_contain": ["حمض كلور الماء", "التركيز", "المولي"]
+  },
+  {
+    "id": "base_definition",
+    "question": "ما هي الأسس؟",
+    "intent": "definition_lookup",
+    "expected_pages": [18, 19, 21],
+    "must_contain": ["هيدروكسيد", "OH"]
+  },
+  {
+    "id": "strong_weak_bases",
+    "question": "ما الفرق بين الأسس القوية والأسس الضعيفة؟",
+    "intent": "definition_lookup",
+    "expected_pages": [20, 21],
+    "must_contain": ["قوية", "ضعيفة", "تتأين"]
+  },
+  {
+    "id": "base_litmus",
+    "question": "ما لون ورقة عباد الشمس في المحاليل الأساسية؟",
+    "intent": "property_lookup",
+    "expected_pages": [22],
+    "must_contain": ["عباد الشمس", "أساسي"]
+  },
+  {
+    "id": "koh_ionization",
+    "question": "اكتب معادلة تأين هيدروكسيد البوتاسيوم في الماء.",
+    "intent": "equation_lookup",
+    "expected_pages": [25],
+    "must_contain": ["KOH", "هيدروكسيد البوتاسيوم"]
+  },
+  {
+    "id": "neutralization",
+    "question": "ما تفاعل التعديل بين الحمض والأساس؟",
+    "intent": "reaction_query",
+    "expected_pages": [28],
+    "must_contain": ["ملح", "ماء", "تعديل"]
+  },
+  {
+    "id": "water_decomposition",
+    "question": "ما معادلة تفكك الماء في وعاء فولتا؟",
+    "intent": "equation_lookup",
+    "expected_pages": [30],
+    "must_contain": ["الماء", "الهيدروجين", "الأكسجين"]
+  },
+  {
+    "id": "calcium_carbonate_decomposition",
+    "question": "إلى ماذا تتفكك كربونات الكالسيوم بالتسخين؟",
+    "intent": "equation_lookup",
+    "expected_pages": [30],
+    "must_contain": ["كربونات الكالسيوم", "أكسيد الكالسيوم", "ثنائي أكسيد الكربون"]
+  },
+  {
+    "id": "sodium_bicarbonate_decomposition",
+    "question": "ما نواتج تفكك بيكربونات الصوديوم بالتسخين؟",
+    "intent": "equation_lookup",
+    "expected_pages": [31],
+    "must_contain": ["بيكربونات الصوديوم", "NaHCO"]
+  },
+  {
+    "id": "iron_copper_sulfate",
+    "question": "ماذا يحدث عند غمس مسمار حديد في محلول كبريتات النحاس؟",
+    "intent": "reaction_query",
+    "expected_pages": [32],
+    "must_contain": ["الحديد", "كبريتات النحاس", "اللون الأزرق"]
+  },
+  {
+    "id": "activity_series_copper_acid",
+    "question": "هل يتفاعل النحاس مع حمض الكبريت الممدد؟",
+    "intent": "reaction_query",
+    "expected_pages": [34],
+    "must_contain": ["النحاس", "حمض الكبريت", "لا يحدث"]
+  },
+  {
+    "id": "silver_nitrate_sodium_chloride",
+    "question": "ما التفاعل بين نترات الفضة وكلوريد الصوديوم؟",
+    "intent": "reaction_query",
+    "expected_pages": [34],
+    "must_contain": ["نترات الفضة", "كلوريد الصوديوم", "تبادل ثنائي"]
+  },
+  {
+    "id": "exam_metal_iron_sulfate",
+    "question": "أي معدن يمكن أن يتفاعل مع كبريتات الحديد؟",
+    "intent": "exercise_lookup",
+    "expected_pages": [37],
+    "must_contain": ["كبريتات الحديد", "الزنك"]
+  },
+  {
+    "id": "zinc_sulfuric_acid_problem",
+    "question": "كيف أحل مسألة تفاعل الزنك مع حمض الكبريت الممدد؟",
+    "intent": "exercise_lookup",
+    "expected_pages": [39],
+    "must_contain": ["الزنك", "حمض الكبريت", "حجم الغاز"]
+  },
+  {
+    "id": "sodium_salt",
+    "question": "كيف نحصل على أحد أملاح الصوديوم؟",
+    "intent": "exercise_lookup",
+    "expected_pages": [50],
+    "must_contain": ["أملاح الصوديوم", "غاز الكلور"]
+  },
+  {
+    "id": "hcl_moles",
+    "question": "كيف أحسب عدد مولات محلول HCl من الحجم والتركيز؟",
+    "intent": "exercise_lookup",
+    "expected_pages": [51],
+    "must_contain": ["HCl", "مولات", "تركيز"]
+  },
+  {
+    "id": "organic_chemistry_definition",
+    "question": "ما هي الكيمياء العضوية؟",
+    "intent": "definition_lookup",
+    "expected_pages": [55, 58],
+    "must_contain": ["الكربون", "الكيمياء العضوية"]
+  },
+  {
+    "id": "organic_compounds_carbon",
+    "question": "ما العنصر الرئيسي المشترك في المركبات العضوية؟",
+    "intent": "definition_lookup",
+    "expected_pages": [58],
+    "must_contain": ["الكربون", "المركبات العضوية"]
+  },
+  {
+    "id": "carbon_bonds",
+    "question": "ما أنواع الروابط المشتركة بين ذرات الكربون؟",
+    "intent": "definition_lookup",
+    "expected_pages": [60],
+    "must_contain": ["أحادية", "ثنائية", "ثلاثية"]
+  },
+  {
+    "id": "organic_conductivity",
+    "question": "هل محاليل المركبات العضوية جيدة التوصيل للتيار الكهربائي؟",
+    "intent": "property_lookup",
+    "expected_pages": [61],
+    "must_contain": ["رديئة", "التوصيل", "التيار الكهربائي"]
+  },
+  {
+    "id": "organic_solvent",
+    "question": "لماذا يزيل الأسيتون طلاء الأظافر؟",
+    "intent": "property_lookup",
+    "expected_pages": [62],
+    "must_contain": ["الأسيتون", "المذيب العضوي", "طلاء الأظافر"]
+  },
+  {
+    "id": "ethene_formula",
+    "question": "ما صيغة الإيتن؟",
+    "intent": "formula_lookup",
+    "expected_pages": [77],
+    "must_contain": ["C", "H", "الإيتن"]
+  },
+  {
+    "id": "radioactivity_discovery",
+    "question": "من اكتشف النشاط الإشعاعي ومتى؟",
+    "intent": "definition_lookup",
+    "expected_pages": [85],
+    "must_contain": ["بكريل", "1896", "النشاط الإشعاعي"]
+  },
+  {
+    "id": "radioactive_rock_age",
+    "question": "كيف قدر العلماء عمر صخرة مأخوذة من القمر؟",
+    "intent": "definition_lookup",
+    "expected_pages": [87],
+    "must_contain": ["عمر", "صخرة", "القمر"]
+  },
+  {
+    "id": "radioactive_uses",
+    "question": "اذكر بعض استخدامات العناصر المشعة في الطب والصناعة.",
+    "intent": "definition_lookup",
+    "expected_pages": [93],
+    "must_contain": ["العناصر المشعة", "الطب", "الصناعة"]
+  },
+  {
+    "id": "calcium_oxide_water",
+    "question": "ما معادلة تفاعل أكسيد الكالسيوم مع الماء؟",
+    "intent": "equation_lookup",
+    "expected_pages": [41],
+    "must_contain": ["CaO", "H2O", "Ca(OH)2"]
+  }
+]

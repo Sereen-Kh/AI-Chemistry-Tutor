@@ -21,6 +21,39 @@ class IngestionStartRequest(BaseModel):
     clear_existing: bool = False
 
 
+class IngestionRebuildCacheRequest(BaseModel):
+    cache_dir: str = "data/textbooks/syria_grade_9_chemistry/pages"
+    title: str = "syria_grade_9_chemistry"
+    source_type: str = "textbook"
+    grade: str = "grade_9"
+    subject: str = "chemistry"
+    year: int | None = None
+    file_path: str | None = "data/textbooks/syria_grade_9/Chemistry.pdf"
+    chapter_id: int | None = None
+    lesson_id: int | None = None
+    topic_id: int | None = None
+    clear_existing: bool = True
+
+
+class IngestionRebuildCacheResponse(BaseModel):
+    source_id: int
+    source_title: str
+    source_status: str
+    cache_dir: str
+    total_cache_pages: int
+    readable_pages: int
+    stored_pages: int
+    empty_pages: int
+    failed_pages: list[int] = Field(default_factory=list)
+    skipped_pages: list[int] = Field(default_factory=list)
+    chunks_deleted: int = 0
+    questions_deleted: int = 0
+    chunks_created: int = 0
+    questions_created: int = 0
+    content_type_counts: dict[str, int] = Field(default_factory=dict)
+    embedding_provider: dict = Field(default_factory=dict)
+
+
 class SourceRegisterRequest(BaseModel):
     source_type: str
     title: str

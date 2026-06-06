@@ -45,12 +45,20 @@ class SendMessageRequest(BaseModel):
 
 
 class ChatAskRequest(BaseModel):
+    conversation_id: str | None = None
+    parent_message_id: str | None = None
     question: str = Field(..., min_length=1)
     lesson_id: int | None = None
     topic_id: int | None = None
-    source_types: list[str] | None = None
-    preferred_answer_type: str = Field("auto", pattern="^(auto|text|image|video|mixed)$")
+    source_types: list[str] = Field(default_factory=lambda: ["textbook"])
+    preferred_answer_type: str = Field("text", pattern="^(auto|text|image|audio|video|mixed)$")
     answer_scope: str = Field("auto", pattern="^(auto|book_only|tutor_general)$")
+    teaching_style: str | None = None
+    action: str | None = None
+    previous_question: str | None = None
+    previous_answer: str | None = None
+    previous_sources: list[dict[str, Any]] = Field(default_factory=list)
+    previous_selected_chunks: list[dict[str, Any]] = Field(default_factory=list)
 
 
 class ChatSourceResponse(BaseModel):
@@ -65,6 +73,7 @@ class ChatSourceResponse(BaseModel):
 class AnswerBlock(BaseModel):
     type: str
     content: str = ""
+    url: str | None = None
     page: int | None = None
     image_url: str | None = None
     metadata: dict[str, Any] = Field(default_factory=dict)

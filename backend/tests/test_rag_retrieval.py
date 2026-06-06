@@ -316,3 +316,159 @@ class ArabicRagRankingTests(TestCase):
 
         self.assertEqual(result["route"], "dictionary_first")
         self.assertIn("الأحمر", result["answer"])
+
+    def test_water_formula_uses_dictionary_before_rag(self):
+        result = asyncio.run(
+            ask_question(
+                db=None,
+                user_id=1,
+                question="ما هو رمز الماء؟",
+                answer_scope="auto",
+            )
+        )
+
+        self.assertEqual(result["route"], "dictionary_first")
+        self.assertEqual(result["diagnostics"]["intent"], "formula_lookup")
+        self.assertIn("H₂O", result["answer"])
+        self.assertNotIn("لم أجد", result["answer"])
+
+    def test_acids_auto_answer_is_dictionary_first_not_unrelated_rag(self):
+        result = asyncio.run(
+            ask_question(
+                db=None,
+                user_id=1,
+                question="ما هي الحموض؟",
+                answer_scope="auto",
+            )
+        )
+
+        self.assertEqual(result["route"], "dictionary_first")
+        self.assertIn("أيونات الهدروجين", result["answer"])
+        self.assertIn("H⁺", result["answer"])
+        self.assertNotIn("لم أجد", result["answer"])
+
+    def test_bases_auto_answer_is_dictionary_first_not_objectives(self):
+        result = asyncio.run(
+            ask_question(
+                db=None,
+                user_id=1,
+                question="ما هي الأسس؟",
+                answer_scope="auto",
+            )
+        )
+
+        self.assertEqual(result["route"], "dictionary_first")
+        self.assertIn("أيونات الهدروكسيد", result["answer"])
+        self.assertIn("OH⁻", result["answer"])
+        self.assertNotIn("الأهداف", result["answer"])
+        self.assertNotIn("احتياطات", result["answer"])
+
+    def test_litmus_color_rules_run_before_rag(self):
+        acid = asyncio.run(
+            ask_question(
+                db=None,
+                user_id=1,
+                question="ما لون ورقة عباد الشمس في الوسط الحمضي؟",
+                answer_scope="auto",
+            )
+        )
+        base = asyncio.run(
+            ask_question(
+                db=None,
+                user_id=1,
+                question="ما لون ورقة عباد الشمس في محلول أساسي؟",
+                answer_scope="auto",
+            )
+        )
+
+        self.assertEqual(acid["route"], "chemistry_rule")
+        self.assertEqual(acid["diagnostics"]["rule_engine"], "litmus_color")
+        self.assertTrue(acid["diagnostics"]["rag_search_skipped"])
+        self.assertIn("الأحمر", acid["answer"])
+        self.assertEqual(base["route"], "chemistry_rule")
+        self.assertIn("الأزرق", base["answer"])
+
+    def test_copper_with_dilute_sulfuric_acid_uses_activity_series_rule(self):
+        result = asyncio.run(
+            ask_question(
+                db=None,
+                user_id=1,
+                question="ما هي المعادلة الكيميائية للنحاس مع حمض الكبريت الممدد؟",
+                answer_scope="auto",
+            )
+        )
+
+        self.assertEqual(result["route"], "chemistry_rule")
+        self.assertEqual(result["diagnostics"]["rule_engine"], "activity_series")
+        self.assertTrue(result["diagnostics"]["rag_search_skipped"])
+        self.assertIn("لا يحدث تفاعل", result["answer"])
+        self.assertIn("النحاس أقل نشاطاً من الهيدروجين", result["answer"])
+
+    def test_calcium_oxide_water_equation_uses_book_knowledge_before_rag(self):
+        result = asyncio.run(
+            ask_question(
+                db=None,
+                user_id=1,
+                question="ما هي معادلة تفاعل أكسيد الكالسيوم مع الماء؟",
+                answer_scope="auto",
+            )
+        )
+
+        self.assertEqual(result["route"], "book_knowledge")
+        self.assertEqual(result["diagnostics"]["book_knowledge_key"], "cao_water")
+        self.assertTrue(result["diagnostics"]["rag_search_skipped"])
+        self.assertIn("CaO", result["answer"])
+        self.assertIn("H₂O", result["answer"])
+        self.assertIn("Ca(OH)₂", result["answer"])
+
+    def test_arabic_followup_rephrase_reuses_previous_context_without_rag(self):
+        result = asyncio.run(
+            ask_question(
+                db=None,
+                user_id=1,
+                question="اشرح بطريقة أخرى",
+                action="rephrase_previous",
+                previous_question="ما هي الحموض؟",
+                previous_answer="الحموض هي مواد تعطي عند انحلالها في الماء أيونات الهدروجين H⁺.",
+                previous_sources=[{"page": 11, "chunk_id": 12, "chunk_type": "definition", "score": 0.9}],
+            )
+        )
+
+        self.assertEqual(result["route"], "followup_rephrase")
+        self.assertTrue(result["diagnostics"]["rag_search_skipped"])
+        self.assertIn("H⁺", result["answer"])
+        self.assertIn(11, result["page_numbers"])
+
+    def test_english_followup_rephrase_reuses_previous_context_without_rag(self):
+        result = asyncio.run(
+            ask_question(
+                db=None,
+                user_id=1,
+                question="Explain this differently with a simpler example.",
+                action="rephrase_previous",
+                previous_question="What are acids?",
+                previous_answer="الحموض هي مواد تعطي عند انحلالها في الماء أيونات الهدروجين H⁺.",
+                previous_selected_chunks=[{"page": 11, "chunk_id": 12, "chunk_type": "definition", "score": 0.9}],
+            )
+        )
+
+        self.assertEqual(result["route"], "followup_rephrase")
+        self.assertTrue(result["diagnostics"]["rag_search_skipped"])
+        self.assertIn("H⁺", result["answer"])
+        self.assertEqual(result["diagnostics"]["selected_context"][0]["chunk_id"], 12)
+
+    def test_audio_request_returns_text_plus_tts_unavailable_diagnostics(self):
+        result = asyncio.run(
+            ask_question(
+                db=None,
+                user_id=1,
+                question="ما هو رمز الماء؟",
+                answer_scope="auto",
+                preferred_answer_type="audio",
+            )
+        )
+
+        self.assertEqual(result["answer_type"], "audio")
+        self.assertIn("H₂O", result["answer"])
+        self.assertTrue(result["diagnostics"]["audio_requested_but_tts_unavailable"])
+        self.assertIn("audio", {block["type"] for block in result["blocks"]})

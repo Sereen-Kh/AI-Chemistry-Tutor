@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.dependencies import get_current_user_id
 from app.database import get_async_db
-from app.schemas.rag import RagRetrieveRequest, RagRetrieveResponse, RetrievedChunkResponse
+from app.schemas.rag import RagRetrieveDebugResponse, RagRetrieveRequest, RagRetrieveResponse, RetrievedChunkResponse
 from app.services.rag import retrieve_context
 
 router = APIRouter(prefix="/rag", tags=["rag"])
@@ -73,5 +73,30 @@ async def retrieve_rag(
         content_types=request.content_types,
         top_k=request.top_k,
         min_similarity=request.min_similarity,
+        intent=request.intent,
     )
     return RagRetrieveResponse(chunks=[_chunk_response(item) for item in chunks])
+
+
+@router.post("/retrieve-debug", response_model=RagRetrieveDebugResponse)
+async def retrieve_rag_debug(
+    request: RagRetrieveRequest,
+    user_id: int = Depends(get_current_user_id),
+    db: AsyncSession = Depends(get_async_db),
+):
+    diagnostics: dict = {}
+    chunks = await retrieve_context(
+        db,
+        query=request.query,
+        user_id=user_id,
+        chapter_id=request.chapter_id,
+        lesson_id=request.lesson_id,
+        topic_id=request.topic_id,
+        source_types=request.source_types,
+        content_types=request.content_types,
+        top_k=request.top_k,
+        min_similarity=request.min_similarity,
+        intent=request.intent,
+        diagnostics_callback=diagnostics.update,
+    )
+    return RagRetrieveDebugResponse(chunks=[_chunk_response(item) for item in chunks], diagnostics=diagnostics)

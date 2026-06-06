@@ -1,73 +1,80 @@
-# React + TypeScript + Vite
+# EduMind Frontend Web
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Vite + React + TypeScript implementation of the EduMind Grade 9 Chemistry learning platform.
 
-Currently, two official plugins are available:
+## Routes
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- `/login` - email/password login.
+- `/register` - student registration.
+- `/onboarding/interests` - interests, teaching style, answer format.
+- `/dashboard` - personalized home, mission, recommendations, quick actions.
+- `/study-plan` - chapters, lessons, progress, weak topics.
+- `/flashcards` - decks, flip cards, known/unknown flow.
+- `/lab/equation-balancer` - equation input, balancing, AI explanation link.
+- `/ask-ai` - RAG chat with text/audio/image/video answer modes and source cards.
+- `/profile` - progress and preference settings.
 
-## React Compiler
+Protected routes require a backend JWT token in `localStorage`.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## API Modules
 
-## Expanding the ESLint configuration
+API code lives in `src/api/`:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- `authApi.ts` - `/auth/register`, `/auth/login`, `/auth/me`, `/auth/interests`, `/auth/onboarding`.
+- `userApi.ts` - `/users/me` preference updates.
+- `aiApi.ts` - uses the current backend RAG endpoint `/chat/ask`.
+- `studyPlanApi.ts` - `/chapters` and `/lessons`, with fallback plan data.
+- `flashcardsApi.ts` - `/flashcards`, with fallback decks.
+- `labApi.ts` - local equation balancing adapter until a backend lab endpoint exists.
+- `mockData.ts` - isolated mock/fallback data only.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Set the backend URL with:
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+VITE_API_URL=http://127.0.0.1:8000/api/v1
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Design Tokens
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Design tokens and visual system styles are in `src/index.css`. The uploaded reference file is
+`/Users/sereenkh/Desktop/edumind_design_system_complete.html`.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+The implementation follows `edumind_design_system_complete.html`:
+
+- Dark blue background: `#0A1628`
+- Secondary panels: `#0F1F38`, `#162444`, `#1E3050`
+- Primary accent: `#4E87F5`
+- Status colors: teal, gold, coral, purple
+- Compact rounded cards, progress bars, pills, mobile bottom navigation
+
+Reusable UI components live in `src/components/DesignSystem.tsx`.
+
+## Real Backend vs Mock Fallback
+
+The frontend prefers real backend APIs. If an endpoint is missing or unavailable, only these modules fall back:
+
+- `studyPlanApi.ts`
+- `flashcardsApi.ts`
+- `aiApi.ts`
+- `labApi.ts`
+- `authApi.interests()`
+
+React pages do not hardcode mock business logic. Replace a mock by updating the adapter module only.
+
+The student-facing preference values are `real_life | visual | exam | simple` and
+`text | audio | image | video`. The current backend stores older enum values, so
+`authApi.ts` and `userApi.ts` map those values at the API boundary. Ask AI still
+sends the selected answer format directly to `/chat/ask`.
+
+## Run
+
+```bash
+npm install
+npm run dev
+```
+
+Build check:
+
+```bash
+npm run build
 ```

@@ -30,6 +30,8 @@ class CandidateInfo:
     lexical_score: float
     hybrid_score: float
     snippet: str  # First 120 chars of content
+    matched_terms: list[str] = field(default_factory=list)
+    reasons: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -92,7 +94,13 @@ class RetrievalDiagnostics:
     def emit(self) -> None:
         """Emit the diagnostics as a structured JSON log line."""
         self.stop_timer()
-        payload = {
+        payload = self.as_payload()
+        logger.info("RAG_DIAG %s", json.dumps(payload, ensure_ascii=False))
+
+    def as_payload(self) -> dict:
+        """Return diagnostics as a JSON-serializable dictionary."""
+        self.stop_timer()
+        return {
             "event": "rag_retrieval",
             "original_query": self.original_query,
             "normalized_query": self.normalized_query,
@@ -107,4 +115,3 @@ class RetrievalDiagnostics:
             "retrieval_time_ms": self.retrieval_time_ms,
             "cache_hit": self.cache_hit,
         }
-        logger.info("RAG_DIAG %s", json.dumps(payload, ensure_ascii=False))

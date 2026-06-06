@@ -1,0 +1,1688 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EduMind AI API Contracts And Backend Gap Report</title>
+  <style>
+:root {
+  color-scheme: light;
+  --bg: #f7f9f8;
+  --panel: #ffffff;
+  --ink: #18221f;
+  --muted: #63716c;
+  --line: #d8e0dc;
+  --accent: #13735f;
+  --accent-strong: #0f5f50;
+  --code-bg: #111a20;
+  --code-ink: #e8f1ed;
+  --inline-code-bg: #eaf2ef;
+  --warn: #8a4b0f;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.62;
+}
+a { color: var(--accent-strong); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.page-shell {
+  display: grid;
+  grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+  min-height: 100vh;
+}
+aside {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: auto;
+  padding: 28px 24px;
+  border-right: 1px solid var(--line);
+  background: #eef5f2;
+}
+.brand {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+aside h2 {
+  margin: 0 0 20px;
+  font-size: 1.15rem;
+  line-height: 1.25;
+}
+.toc ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+.toc li { margin: 5px 0; }
+.toc ul ul {
+  padding-left: 14px;
+  margin-top: 4px;
+  border-left: 1px solid var(--line);
+}
+.toc a {
+  display: block;
+  padding: 4px 0;
+  color: #34433f;
+  font-size: 0.92rem;
+}
+main {
+  min-width: 0;
+  padding: 42px clamp(24px, 5vw, 72px) 80px;
+}
+.document {
+  max-width: 1040px;
+  margin: 0 auto;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: clamp(28px, 5vw, 64px);
+  box-shadow: 0 16px 45px rgba(20, 41, 34, 0.08);
+}
+h1, h2, h3, h4 {
+  line-height: 1.25;
+  color: #13231f;
+}
+h1 {
+  margin: 0 0 12px;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  letter-spacing: 0;
+}
+h2 {
+  margin-top: 48px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  font-size: 1.55rem;
+}
+h3 {
+  margin-top: 32px;
+  font-size: 1.18rem;
+}
+p, li { font-size: 1rem; }
+ul, ol { padding-left: 1.45rem; }
+li + li { margin-top: 4px; }
+code {
+  background: var(--inline-code-bg);
+  color: #0f4d41;
+  padding: 0.12rem 0.32rem;
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 0.92em;
+}
+pre {
+  overflow: auto;
+  background: var(--code-bg);
+  color: var(--code-ink);
+  border-radius: 8px;
+  padding: 18px;
+  border: 1px solid #24323a;
+}
+pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+  font-size: 0.9rem;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 22px 0;
+  font-size: 0.95rem;
+}
+th, td {
+  border: 1px solid var(--line);
+  padding: 10px 12px;
+  vertical-align: top;
+}
+th {
+  background: #eef5f2;
+  text-align: left;
+}
+hr { border: 0; border-top: 1px solid var(--line); margin: 34px 0; }
+.header-meta {
+  color: var(--muted);
+  margin-bottom: 28px;
+}
+.back-to-top {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  font-weight: 800;
+  box-shadow: 0 8px 22px rgba(19, 115, 95, 0.25);
+}
+.headerlink {
+  color: #9aacaa;
+  margin-left: 8px;
+  font-size: 0.8em;
+  visibility: hidden;
+}
+h1:hover .headerlink, h2:hover .headerlink, h3:hover .headerlink { visibility: visible; }
+@media (max-width: 980px) {
+  .page-shell { display: block; }
+  aside {
+    position: static;
+    height: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  main { padding: 24px 16px 64px; }
+  .document { padding: 24px 18px; }
+  .back-to-top { right: 14px; bottom: 14px; }
+}
+@media print {
+  body { background: white; }
+  .page-shell { display: block; }
+  aside, .back-to-top { display: none; }
+  main { padding: 0; }
+  .document { border: 0; box-shadow: none; max-width: none; }
+  pre { white-space: pre-wrap; }
+}
+</style>
+</head>
+<body id="top">
+  <div class="page-shell">
+    <aside>
+      <div class="brand">EduMind Backend</div>
+      <h2>EduMind AI API Contracts And Backend Gap Report</h2>
+      <nav class="toc" aria-label="Table of contents">
+        <div class="toc"><span class="toctitle">Contents</span><ul>
+<li><a href="#architecture-decisions">Architecture Decisions</a></li>
+<li><a href="#phase-0-gap-report">Phase 0 Gap Report</a><ul>
+<li><a href="#1-existing-ai-related-files">1. Existing AI-Related Files</a></li>
+<li><a href="#2-existing-api-routers">2. Existing API Routers</a></li>
+<li><a href="#3-routers-missing-from-appmainpy">3. Routers Missing From app/main.py</a></li>
+<li><a href="#4-existing-pydantic-schemas">4. Existing Pydantic Schemas</a></li>
+<li><a href="#5-missing-pydantic-schemas">5. Missing Pydantic Schemas</a></li>
+<li><a href="#6-existing-database-models">6. Existing Database Models</a></li>
+<li><a href="#7-missing-database-models">7. Missing Database Models</a></li>
+<li><a href="#8-existing-alembic-migrations">8. Existing Alembic Migrations</a></li>
+<li><a href="#9-missing-migrations">9. Missing Migrations</a></li>
+<li><a href="#10-existing-service-layer-functions">10. Existing Service-Layer Functions</a></li>
+<li><a href="#11-missing-service-layer-functions">11. Missing Service-Layer Functions</a></li>
+<li><a href="#12-existing-celery-workers">12. Existing Celery Workers</a></li>
+<li><a href="#13-missing-celery-workers">13. Missing Celery Workers</a></li>
+<li><a href="#14-existing-redis-integration">14. Existing Redis Integration</a></li>
+<li><a href="#15-missing-redis-integration">15. Missing Redis Integration</a></li>
+<li><a href="#16-existing-gemini-google-genai-integration">16. Existing Gemini / google-genai Integration</a></li>
+<li><a href="#17-legacy-google-generativeai-usage-to-remove">17. Legacy google-generativeai Usage To Remove</a></li>
+<li><a href="#18-qdrant-usage-to-avoid">18. Qdrant Usage To Avoid</a></li>
+<li><a href="#19-swaggeropenapi-readiness-gaps">19. Swagger/OpenAPI Readiness Gaps</a></li>
+<li><a href="#20-exact-implementation-order">20. Exact Implementation Order</a></li>
+</ul>
+</li>
+<li><a href="#current-extraction-cache-state">Current Extraction Cache State</a></li>
+<li><a href="#ai-api-execution-order">AI API Execution Order</a><ul>
+<li><a href="#api-order-1-admin-source-registration">API Order 1 - Admin Source Registration</a></li>
+<li><a href="#api-order-2-admin-ingestion-start">API Order 2 - Admin Ingestion Start</a></li>
+<li><a href="#api-order-3-gemini-pdf-upload">API Order 3 - Gemini PDF Upload</a></li>
+<li><a href="#api-order-4-gemini-direct-pdf-page-extraction">API Order 4 - Gemini Direct PDF Page Extraction</a></li>
+<li><a href="#api-order-5-gemini-rendered-image-fallback-extraction">API Order 5 - Gemini Rendered Image Fallback Extraction</a></li>
+<li><a href="#api-order-6-gemini-document-embeddings">API Order 6 - Gemini Document Embeddings</a></li>
+<li><a href="#api-order-7-gemini-query-embeddings">API Order 7 - Gemini Query Embeddings</a></li>
+<li><a href="#api-order-8-admin-ingestion-status">API Order 8 - Admin Ingestion Status</a></li>
+<li><a href="#api-order-9-admin-source-pages">API Order 9 - Admin Source Pages</a></li>
+<li><a href="#api-order-10-admin-test-page-extraction">API Order 10 - Admin Test Page Extraction</a></li>
+<li><a href="#api-order-11-admin-ingestion-stats">API Order 11 - Admin Ingestion Stats</a></li>
+<li><a href="#api-order-12-rag-retrieve">API Order 12 - RAG Retrieve</a></li>
+<li><a href="#api-order-13-chat-session-creation">API Order 13 - Chat Session Creation</a></li>
+<li><a href="#api-order-14-chat-ask">API Order 14 - Chat Ask</a></li>
+<li><a href="#api-order-15-gemini-ai-tutor-generation">API Order 15 - Gemini AI Tutor Generation</a></li>
+<li><a href="#api-order-16-chat-feedback">API Order 16 - Chat Feedback</a></li>
+<li><a href="#api-order-17-quiz-generation">API Order 17 - Quiz Generation</a></li>
+<li><a href="#api-order-18-gemini-quizquestion-generation">API Order 18 - Gemini Quiz/Question Generation</a></li>
+<li><a href="#api-order-19-quiz-submission">API Order 19 - Quiz Submission</a></li>
+<li><a href="#api-order-20-exam-practice">API Order 20 - Exam Practice</a></li>
+<li><a href="#api-order-21-homework-solve-text">API Order 21 - Homework Solve Text</a></li>
+<li><a href="#api-order-22-homework-solve-image">API Order 22 - Homework Solve Image</a></li>
+<li><a href="#api-order-23-gemini-homework-image-understanding">API Order 23 - Gemini Homework Image Understanding</a></li>
+<li><a href="#api-order-24-flashcard-generation">API Order 24 - Flashcard Generation</a></li>
+<li><a href="#api-order-25-admin-question-review">API Order 25 - Admin Question Review</a></li>
+<li><a href="#api-order-26-ai-health-config-check">API Order 26 - AI Health / Config Check</a></li>
+</ul>
+</li>
+<li><a href="#minimum-mobile-rag-route-order">Minimum Mobile RAG Route Order</a></li>
+<li><a href="#most-important-current-gaps">Most Important Current Gaps</a></li>
+</ul>
+</div>
+
+      </nav>
+    </aside>
+    <main>
+      <article class="document">
+        <h1 id="edumind-ai-api-contracts-and-backend-gap-report">EduMind AI API Contracts And Backend Gap Report<a class="headerlink" href="#edumind-ai-api-contracts-and-backend-gap-report" title="Permanent link">&para;</a></h1>
+<p>Date: 2026-06-05</p>
+<p>Scope: backend AI APIs for ingestion, Gemini document extraction, embeddings, pgvector RAG, chatbot, quizzes, homework, flashcards, and admin review. This document is based on the current backend code, not a desired-only design.</p>
+<h2 id="architecture-decisions">Architecture Decisions<a class="headerlink" href="#architecture-decisions" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Production vector store: PostgreSQL with pgvector, <code>VECTOR(768)</code>.</li>
+<li>Production OCR/document provider: Gemini through the <code>google-genai</code> SDK.</li>
+<li>Primary extraction path: upload the PDF once, then extract target pages directly from the uploaded PDF.</li>
+<li>Fallback extraction path: render the page image at 300 DPI only when direct PDF extraction fails or quality is poor.</li>
+<li>Production must not use Qdrant.</li>
+<li>Production must not use OCRArena. Existing OCRArena references are only benchmark/debug references.</li>
+<li>Production must not use legacy <code>google-generativeai</code>.</li>
+<li>Long-running ingestion should run through Celery, not FastAPI in-process background tasks.</li>
+<li>All public backend APIs should appear in Swagger under <code>/docs</code>, use Pydantic schemas, and call service-layer functions.</li>
+<li>Admin ingestion and review APIs must be protected.</li>
+<li>AI generated questions/answers must be marked as generated or review-required unless approved by an admin.</li>
+</ul>
+<h2 id="phase-0-gap-report">Phase 0 Gap Report<a class="headerlink" href="#phase-0-gap-report" title="Permanent link">&para;</a></h2>
+<h3 id="1-existing-ai-related-files">1. Existing AI-Related Files<a class="headerlink" href="#1-existing-ai-related-files" title="Permanent link">&para;</a></h3>
+<ul>
+<li>API routers: <code>backend/app/api/ingestion/routes.py</code>, <code>backend/app/api/rag/routes.py</code>, <code>backend/app/api/chat/routes.py</code>, <code>backend/app/api/quizzes.py</code>, <code>backend/app/api/exams.py</code>, <code>backend/app/api/homework.py</code>, <code>backend/app/api/flashcards.py</code>, <code>backend/app/api/health.py</code>.</li>
+<li>Schemas: <code>backend/app/schemas/ingestion.py</code>, <code>backend/app/schemas/rag.py</code>, <code>backend/app/schemas/chat.py</code>, <code>backend/app/schemas/quiz.py</code>, <code>backend/app/schemas/homework.py</code>, <code>backend/app/schemas/flashcards.py</code>, <code>backend/app/schemas/common.py</code>, <code>backend/app/schemas/extraction.py</code>.</li>
+<li>Services: <code>backend/app/services/ingestion_pipeline.py</code>, <code>backend/app/services/pdf_processor.py</code>, <code>backend/app/services/chunking.py</code>, <code>backend/app/services/embeddings.py</code>, <code>backend/app/services/rag.py</code>, <code>backend/app/services/chat_service.py</code>, <code>backend/app/services/ai_service.py</code>, <code>backend/app/services/homework_service.py</code>, <code>backend/app/services/quiz_service.py</code>, <code>backend/app/services/ai_quiz_generator.py</code>, <code>backend/app/services/ai_flashcard_generator.py</code>, <code>backend/app/services/gemini_client.py</code>.</li>
+<li>OCR services: <code>backend/app/services/ocr/base.py</code>, <code>backend/app/services/ocr/gemini_provider.py</code>, <code>backend/app/services/ocr/quality.py</code>.</li>
+<li>Workers: <code>backend/app/workers/celery_app.py</code>, <code>backend/app/workers/ingestion_tasks.py</code>.</li>
+<li>Models: <code>content_sources</code>, <code>rag_chunks</code>, <code>extracted_questions</code>, <code>ingestion_jobs</code>, <code>ingestion_pages</code>, <code>chat_sessions</code>, <code>chat_messages</code>, <code>homework</code>, <code>questions</code>, <code>quiz_attempts</code>, <code>question_attempts</code>, <code>flashcards</code>, <code>flashcard_progress</code>, plus user/profile/progress/curriculum models.</li>
+</ul>
+<h3 id="2-existing-api-routers">2. Existing API Routers<a class="headerlink" href="#2-existing-api-routers" title="Permanent link">&para;</a></h3>
+<p>Included by <code>backend/app/api/router.py</code> under <code>/api/v1</code>:</p>
+<ul>
+<li><code>auth</code>, <code>users</code>, <code>student_profile</code></li>
+<li><code>chapters</code>, <code>lessons</code>, <code>topics</code>, <code>elements</code>, <code>study_plans</code></li>
+<li><code>chat</code>, <code>rag</code>, <code>admin-ingestion</code></li>
+<li><code>quizzes</code>, <code>exams</code>, <code>homework</code>, <code>progress</code>, <code>flashcards</code>, <code>health</code></li>
+</ul>
+<h3 id="3-routers-missing-from-appmainpy">3. Routers Missing From <code>app/main.py</code><a class="headerlink" href="#3-routers-missing-from-appmainpy" title="Permanent link">&para;</a></h3>
+<p>No existing router file appears to be missing from <code>app/main.py</code>.</p>
+<p>Missing desired AI router/endpoint coverage:</p>
+<ul>
+<li>AI health/config readiness endpoint.</li>
+<li>Admin single-page extraction smoke test endpoint.</li>
+<li>AI flashcard generation endpoint.</li>
+</ul>
+<h3 id="4-existing-pydantic-schemas">4. Existing Pydantic Schemas<a class="headerlink" href="#4-existing-pydantic-schemas" title="Permanent link">&para;</a></h3>
+<p>Existing schemas cover most current routes:</p>
+<ul>
+<li>Auth/user/profile/curriculum: present.</li>
+<li>Ingestion: present for source registration, start, status, stats, pages, retry, test query, question review.</li>
+<li>RAG: present for basic retrieval.</li>
+<li>Chat: present for sessions, ask, message feedback, answer blocks, sources.</li>
+<li>Quiz/exam: present for generate, submit, history, recommendations.</li>
+<li>Homework: present for solve-text and solve-image.</li>
+<li>Flashcards: present for manual create/review.</li>
+<li>Common health/error: present.</li>
+</ul>
+<h3 id="5-missing-pydantic-schemas">5. Missing Pydantic Schemas<a class="headerlink" href="#5-missing-pydantic-schemas" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>AIHealthConfigResponse</code> and provider readiness schema.</li>
+<li><code>IngestionTestPageExtractionRequest</code> and <code>IngestionTestPageExtractionResponse</code>.</li>
+<li><code>FlashcardGenerateRequest</code> and <code>FlashcardGenerateResponse</code>.</li>
+<li>Upload-based homework image schema. Current <code>HomeworkSolveImageRequest</code> accepts <code>image_path</code>; mobile will usually need multipart upload or pre-signed upload metadata.</li>
+<li>Richer <code>RagRetrieveRequest</code> fields for mobile intent/routing, such as <code>intent</code>, <code>answer_scope</code>, <code>include_sources</code>, <code>include_snippets</code>, <code>filters</code>.</li>
+</ul>
+<h3 id="6-existing-database-models">6. Existing Database Models<a class="headerlink" href="#6-existing-database-models" title="Permanent link">&para;</a></h3>
+<p>Important implemented tables:</p>
+<ul>
+<li>Auth/profile: <code>users</code>, <code>student_profiles</code>, <code>interest_categories</code>, <code>user_interests</code>.</li>
+<li>Curriculum/progress: <code>chapters</code>, <code>lessons</code>, <code>topics</code>, <code>lesson_progress</code>, <code>user_progress</code>, <code>achievements</code>.</li>
+<li>RAG/ingestion: <code>content_sources</code>, <code>rag_chunks</code>, <code>extracted_questions</code>, <code>ingestion_jobs</code>, <code>ingestion_pages</code>, legacy <code>textbook_chunks</code>.</li>
+<li>Chat: <code>chat_sessions</code>, <code>chat_messages</code>.</li>
+<li>Quiz/exam: <code>questions</code>, <code>quiz_attempts</code>, <code>question_attempts</code>.</li>
+<li>Homework: <code>homework</code>.</li>
+<li>Flashcards: <code>flashcards</code>, <code>flashcard_progress</code>.</li>
+<li>Supporting: <code>study_plans</code>, <code>device_tokens</code>, <code>subscriptions</code>, <code>reels</code>.</li>
+</ul>
+<h3 id="7-missing-database-models">7. Missing Database Models<a class="headerlink" href="#7-missing-database-models" title="Permanent link">&para;</a></h3>
+<p>No core table from the current AI scope is completely absent, but these model fields are still missing or incomplete:</p>
+<ul>
+<li><code>rag_chunks</code> lacks explicit embedding model/version fields.</li>
+<li><code>rag_chunks</code> lacks approved/unapproved state for generated content.</li>
+<li><code>chat_messages</code> lacks persisted source citations/diagnostics payload.</li>
+<li><code>homework</code> has <code>source_chunks</code>, but current service does not fill it.</li>
+<li>Ingestion job status is persisted but API status currently reads in-memory <code>_TASKS</code>, so process restarts lose visible progress.</li>
+<li>No dedicated AI provider call audit table for quota, latency, model, and failure analysis.</li>
+</ul>
+<h3 id="8-existing-alembic-migrations">8. Existing Alembic Migrations<a class="headerlink" href="#8-existing-alembic-migrations" title="Permanent link">&para;</a></h3>
+<ul>
+<li>One migration exists: <code>backend/alembic/versions/0001_initial_schema.py</code>.</li>
+<li>It enables <code>vector</code> on PostgreSQL and calls <code>Base.metadata.create_all()</code>.</li>
+</ul>
+<h3 id="9-missing-migrations">9. Missing Migrations<a class="headerlink" href="#9-missing-migrations" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Production migration chain should use explicit Alembic operations instead of one metadata <code>create_all()</code> migration.</li>
+<li>If adding AI health tables, provider call audit, richer chat citations, generated flashcard status, or embedding metadata, new migrations are required.</li>
+</ul>
+<h3 id="10-existing-service-layer-functions">10. Existing Service-Layer Functions<a class="headerlink" href="#10-existing-service-layer-functions" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Gemini client/config: <code>get_gemini_client</code>, <code>document_generation_config</code>, <code>tutor_generation_config</code>, <code>embedding_config</code>.</li>
+<li>OCR/document extraction: <code>GeminiVisionProvider.upload_pdf</code>, <code>extract_page_from_pdf</code>, <code>extract_page</code>, <code>extract_pdf_page</code>, <code>extract_page_image_fallback</code>.</li>
+<li>PDF processing: <code>classify_pages</code>, <code>extract_selectable_text_page</code>, <code>render_page_to_image</code>.</li>
+<li>Ingestion: <code>run_full_ingestion</code>, <code>_extract_page</code>, chunk creation, embedding storage.</li>
+<li>Embeddings: <code>embed_text</code>, <code>embed_query</code>, <code>embed_batch</code>.</li>
+<li>RAG: <code>retrieve_context</code>, <code>format_context</code>.</li>
+<li>Chat: <code>create_session</code>, <code>get_user_sessions</code>, <code>get_owned_session</code>, <code>send_message</code>, <code>ask_question</code>, <code>update_message_feedback</code>, <code>delete_session</code>.</li>
+<li>Homework: <code>solve_text</code>, <code>solve_image</code>.</li>
+<li>Quiz: <code>generate_quiz</code>, <code>submit_quiz</code>, <code>list_attempts</code>, <code>recommendations</code>.</li>
+<li>AI generation helpers: <code>ai_quiz_generator.generate_questions_for_topic</code>, <code>ai_flashcard_generator.generate_flashcards_for_topic</code>.</li>
+</ul>
+<h3 id="11-missing-service-layer-functions">11. Missing Service-Layer Functions<a class="headerlink" href="#11-missing-service-layer-functions" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>ai_health_service.get_ai_config_status</code>.</li>
+<li><code>ingestion_service.start_celery_ingestion</code> and <code>ingestion_service.get_job_status</code> backed by DB/Celery, not <code>_TASKS</code>.</li>
+<li><code>ingestion_service.test_page_extraction</code> for one page without mutating source state.</li>
+<li><code>flashcard_service.generate_ai_flashcards</code> wrapping <code>ai_flashcard_generator</code>.</li>
+<li>Upload/image-storage service for homework photo submissions.</li>
+<li>RAG cache service using Redis for query result caching.</li>
+</ul>
+<h3 id="12-existing-celery-workers">12. Existing Celery Workers<a class="headerlink" href="#12-existing-celery-workers" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>backend/app/workers/celery_app.py</code> configures Celery with Redis.</li>
+<li><code>backend/app/workers/ingestion_tasks.py</code> defines <code>ingest_pdf_task</code>.</li>
+</ul>
+<h3 id="13-missing-celery-workers">13. Missing Celery Workers<a class="headerlink" href="#13-missing-celery-workers" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>POST /admin/ingestion/start</code> currently uses FastAPI <code>BackgroundTasks</code> and an in-memory <code>_TASKS</code> map. It should enqueue <code>ingest_pdf_task</code>.</li>
+<li>Missing Celery task for per-page retry.</li>
+<li>Missing Celery task for expensive generated flashcards/question generation if those are run async.</li>
+</ul>
+<h3 id="14-existing-redis-integration">14. Existing Redis Integration<a class="headerlink" href="#14-existing-redis-integration" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>backend/app/core/redis.py</code> provides a Redis client/pool.</li>
+<li>Docker Compose includes Redis for broker/cache.</li>
+</ul>
+<h3 id="15-missing-redis-integration">15. Missing Redis Integration<a class="headerlink" href="#15-missing-redis-integration" title="Permanent link">&para;</a></h3>
+<ul>
+<li>RAG retrieval results are not cached.</li>
+<li>Ingestion progress is not cached or recovered from Redis/Celery result backend in the API.</li>
+<li>Rate limiting middleware exists, but AI-specific quota/rate control is not clearly connected to Redis.</li>
+</ul>
+<h3 id="16-existing-gemini-google-genai-integration">16. Existing Gemini / <code>google-genai</code> Integration<a class="headerlink" href="#16-existing-gemini-google-genai-integration" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Backend app code uses <code>from google import genai</code> and <code>google.genai.types</code>.</li>
+<li>Structured JSON output is implemented for page extraction through <code>response_mime_type="application/json"</code> and <code>response_schema=PageExtractionResult</code>.</li>
+<li>PDF upload through Gemini Files API exists.</li>
+<li>Direct PDF page extraction exists.</li>
+<li>Rendered image fallback exists.</li>
+<li>Document/query embedding calls exist with <code>RETRIEVAL_DOCUMENT</code> and <code>RETRIEVAL_QUERY</code>.</li>
+</ul>
+<h3 id="17-legacy-google-generativeai-usage-to-remove">17. Legacy <code>google-generativeai</code> Usage To Remove<a class="headerlink" href="#17-legacy-google-generativeai-usage-to-remove" title="Permanent link">&para;</a></h3>
+<ul>
+<li>No active usage was found in <code>backend/app</code>, <code>backend/scripts</code>, or <code>backend/requirements.txt</code>.</li>
+<li>Old prompt/docs contain historical <code>google.generativeai</code> examples. They should not drive implementation.</li>
+<li><code>backend/tests/test_extraction_contract.py</code> guards against importing legacy <code>google.generativeai</code>.</li>
+</ul>
+<h3 id="18-qdrant-usage-to-avoid">18. Qdrant Usage To Avoid<a class="headerlink" href="#18-qdrant-usage-to-avoid" title="Permanent link">&para;</a></h3>
+<ul>
+<li>No production backend app usage found.</li>
+<li>Old docs/handoff files mention Qdrant and OCRArena. Those are historical and should not be used for production.</li>
+</ul>
+<h3 id="19-swaggeropenapi-readiness-gaps">19. Swagger/OpenAPI Readiness Gaps<a class="headerlink" href="#19-swaggeropenapi-readiness-gaps" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Most current routes appear in Swagger and use response models.</li>
+<li>Admin ingestion routes use sync DB sessions, not async DB access.</li>
+<li>Admin ingestion routes are protected by <code>require_admin</code>, but <code>require_admin</code> is permissive when neither <code>ADMIN_TOKEN</code> nor <code>ADMIN_EMAILS</code> is configured. Production admin endpoints should use <code>require_configured_admin</code>.</li>
+<li>Missing Swagger endpoint for AI provider health/config.</li>
+<li>Missing Swagger endpoint for single page extraction test.</li>
+<li>Missing Swagger endpoint for AI-generated flashcards.</li>
+<li><code>POST /homework/solve-image</code> is not mobile-ready because it accepts <code>image_path</code> instead of a file upload or uploaded asset reference.</li>
+</ul>
+<h3 id="20-exact-implementation-order">20. Exact Implementation Order<a class="headerlink" href="#20-exact-implementation-order" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Update settings defaults to target model names and add AI health/config response schemas.</li>
+<li>Add <code>GET /api/v1/health/ai-config</code> or <code>GET /api/v1/ai/health</code>.</li>
+<li>Move admin ingestion start/status to a service that dispatches Celery and reads durable DB/Celery status.</li>
+<li>Add <code>POST /api/v1/admin/ingestion/test-page-extraction</code>.</li>
+<li>Add per-page retry Celery task and wire <code>POST /api/v1/admin/ingestion/retry-page/{page_id}</code>.</li>
+<li>Harden admin dependencies with <code>require_configured_admin</code> for production AI admin routes.</li>
+<li>Add Redis-backed RAG cache.</li>
+<li>Add richer RAG request/response metadata for mobile.</li>
+<li>Persist chat citations/diagnostics in <code>chat_messages</code> or a related table.</li>
+<li>Add mobile-ready homework image upload flow.</li>
+<li>Wire AI flashcard generation route.</li>
+<li>Add tests for each route contract and Celery dispatch behavior.</li>
+</ol>
+<h2 id="current-extraction-cache-state">Current Extraction Cache State<a class="headerlink" href="#current-extraction-cache-state" title="Permanent link">&para;</a></h2>
+<p>Local cache path inspected: <code>data/textbooks/syria_grade_9_chemistry/pages</code>.</p>
+<ul>
+<li>Page JSON files: 96.</li>
+<li>Completed text-only pages: 26.</li>
+<li>Completed image-fallback pages: 14.</li>
+<li>Failed or empty pages: 56.</li>
+<li>Most failures are <code>NEEDS_VISION</code> or <code>MIXED_VISION</code> pages with empty content and Gemini quota/model/invalid-schema errors.</li>
+</ul>
+<p>Conclusion: the cache count is complete, but production ingestion is not complete. A source should not be marked <code>completed</code> until all required scanned/mixed pages have valid content and pass quality thresholds.</p>
+<h2 id="ai-api-execution-order">AI API Execution Order<a class="headerlink" href="#ai-api-execution-order" title="Permanent link">&para;</a></h2>
+<p>The APIs are listed in the order they should be used by the system.</p>
+<h3 id="api-order-1-admin-source-registration">API Order 1 - Admin Source Registration<a class="headerlink" href="#api-order-1-admin-source-registration" title="Permanent link">&para;</a></h3>
+<p>Type:
+- Internal FastAPI Swagger API</p>
+<p>Endpoint:
+- <code>POST /api/v1/admin/ingestion/sources</code></p>
+<p>Purpose:
+- Register a textbook, exam, answer key, or other source before ingestion.</p>
+<p>Called by:
+- Admin dashboard, Swagger, future mobile/admin app.</p>
+<p>Calls:
+- <code>register_source</code> route logic.</p>
+<p>Database tables:
+- <code>content_sources</code></p>
+<p>Request:</p>
+<pre><code class="language-json">{
+  &quot;source_type&quot;: &quot;textbook&quot;,
+  &quot;title&quot;: &quot;Grade 9 Chemistry&quot;,
+  &quot;grade&quot;: &quot;grade_9&quot;,
+  &quot;subject&quot;: &quot;chemistry&quot;,
+  &quot;year&quot;: 2026,
+  &quot;file_path&quot;: &quot;data/textbooks/syria_grade_9_chemistry/book.pdf&quot;,
+  &quot;original_filename&quot;: &quot;chemistry.pdf&quot;,
+  &quot;metadata_json&quot;: {}
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: 1,
+  &quot;source_type&quot;: &quot;textbook&quot;,
+  &quot;title&quot;: &quot;Grade 9 Chemistry&quot;,
+  &quot;grade&quot;: &quot;grade_9&quot;,
+  &quot;subject&quot;: &quot;chemistry&quot;,
+  &quot;year&quot;: 2026,
+  &quot;file_path&quot;: &quot;data/textbooks/syria_grade_9_chemistry/book.pdf&quot;,
+  &quot;original_filename&quot;: &quot;chemistry.pdf&quot;,
+  &quot;status&quot;: &quot;pending&quot;,
+  &quot;metadata_json&quot;: {}
+}
+</code></pre>
+<p>Error responses:
+- <code>401</code> invalid bearer token.
+- <code>403</code> admin privileges required.
+- <code>422</code> invalid payload.</p>
+<p>Service function called:
+- Missing dedicated service. Current business logic is inside route.</p>
+<p>Status:
+- Partial.</p>
+<p>Files:
+- Existing: <code>backend/app/api/ingestion/routes.py</code>, <code>backend/app/schemas/ingestion.py</code>, <code>backend/app/models/textbook.py</code>.
+- Modify later: move logic into <code>backend/app/services/ingestion_service.py</code>.</p>
+<h3 id="api-order-2-admin-ingestion-start">API Order 2 - Admin Ingestion Start<a class="headerlink" href="#api-order-2-admin-ingestion-start" title="Permanent link">&para;</a></h3>
+<p>Type:
+- Internal FastAPI Swagger API</p>
+<p>Endpoint:
+- <code>POST /api/v1/admin/ingestion/start</code></p>
+<p>Purpose:
+- Start full document ingestion: classify pages, extract text/OCR, chunk, embed, and store in pgvector.</p>
+<p>Called by:
+- Admin Swagger/dashboard after source registration.</p>
+<p>Calls:
+- Current: <code>_run_ingestion_task</code> via FastAPI <code>BackgroundTasks</code>.
+- Target: Celery <code>ingest_pdf_task.delay(...)</code>.</p>
+<p>Database tables:
+- <code>ingestion_jobs</code>, <code>ingestion_pages</code>, <code>content_sources</code>, <code>rag_chunks</code>, <code>extracted_questions</code></p>
+<p>Request:</p>
+<pre><code class="language-json">{
+  &quot;pdf_path&quot;: &quot;data/textbooks/syria_grade_9_chemistry/book.pdf&quot;,
+  &quot;title&quot;: &quot;Grade 9 Chemistry&quot;,
+  &quot;source_type&quot;: &quot;textbook&quot;,
+  &quot;grade&quot;: &quot;grade_9&quot;,
+  &quot;subject&quot;: &quot;chemistry&quot;,
+  &quot;year&quot;: 2026,
+  &quot;max_pages&quot;: null,
+  &quot;ocr_provider&quot;: &quot;gemini&quot;,
+  &quot;ingestion_mode&quot;: &quot;production&quot;,
+  &quot;ocr_required_for_vision&quot;: true,
+  &quot;allow_partial_ingestion&quot;: false,
+  &quot;chapter_id&quot;: null,
+  &quot;lesson_id&quot;: null,
+  &quot;topic_id&quot;: null,
+  &quot;clear_existing&quot;: false
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  &quot;task_id&quot;: &quot;job_uid&quot;,
+  &quot;status&quot;: &quot;queued&quot;
+}
+</code></pre>
+<p>Error responses:
+- <code>401</code> invalid bearer token.
+- <code>403</code> admin privileges required.
+- <code>404</code> PDF path not found.
+- <code>409</code> source already being ingested.
+- <code>422</code> invalid ingestion mode/provider.
+- <code>503</code> Gemini required but not configured in production mode.</p>
+<p>Service function called:
+- Current: <code>run_full_ingestion</code>.
+- Missing target wrapper: <code>ingestion_service.start_celery_ingestion</code>.</p>
+<p>Status:
+- Partial. The pipeline exists, but route uses in-process background tasks and sync DB access.</p>
+<p>Files:
+- Existing: <code>backend/app/api/ingestion/routes.py</code>, <code>backend/app/services/ingestion_pipeline.py</code>, <code>backend/app/workers/ingestion_tasks.py</code>.
+- Modify later: <code>backend/app/api/ingestion/routes.py</code>, <code>backend/app/services/ingestion_service.py</code>, <code>backend/app/workers/ingestion_tasks.py</code>.</p>
+<h3 id="api-order-3-gemini-pdf-upload">API Order 3 - Gemini PDF Upload<a class="headerlink" href="#api-order-3-gemini-pdf-upload" title="Permanent link">&para;</a></h3>
+<p>Type:
+- External Provider API</p>
+<p>Purpose:
+- Upload the full PDF once to Gemini Files API so every target page can be extracted directly from the uploaded document.</p>
+<p>Called by:
+- <code>run_full_ingestion</code> through <code>GeminiVisionProvider.upload_pdf</code>.</p>
+<p>Calls:
+- <code>client.files.upload(...)</code>
+- <code>client.files.get(...)</code> while waiting for ACTIVE state.</p>
+<p>Database tables:
+- None directly. Upload metadata is saved inside source/job/page payloads when ingestion succeeds.</p>
+<p>Request:</p>
+<pre><code class="language-json">{
+  &quot;pdf_path&quot;: &quot;data/textbooks/syria_grade_9_chemistry/book.pdf&quot;,
+  &quot;mime_type&quot;: &quot;application/pdf&quot;,
+  &quot;display_name&quot;: &quot;book.pdf&quot;
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  &quot;provider&quot;: &quot;gemini_document&quot;,
+  &quot;name&quot;: &quot;files/abc&quot;,
+  &quot;uri&quot;: &quot;https://generativelanguage.googleapis.com/...&quot;,
+  &quot;mime_type&quot;: &quot;application/pdf&quot;,
+  &quot;display_name&quot;: &quot;book.pdf&quot;
+}
+</code></pre>
+<p>Error responses:
+- Missing API key.
+- File not found.
+- Gemini file upload failed.
+- Gemini file did not become ACTIVE before timeout.</p>
+<p>Service function called:
+- <code>GeminiVisionProvider.upload_pdf</code>
+- Alias: <code>GeminiDocumentProvider.prepare_document</code></p>
+<p>Status:
+- Existing.</p>
+<p>Files:
+- Existing: <code>backend/app/services/ocr/gemini_provider.py</code>, <code>backend/app/services/ocr/base.py</code>, <code>backend/app/services/gemini_client.py</code>.</p>
+<h3 id="api-order-4-gemini-direct-pdf-page-extraction">API Order 4 - Gemini Direct PDF Page Extraction<a class="headerlink" href="#api-order-4-gemini-direct-pdf-page-extraction" title="Permanent link">&para;</a></h3>
+<p>Type:
+- External Provider API</p>
+<p>Purpose:
+- Extract one target page directly from the uploaded PDF with structured JSON output.</p>
+<p>Called by:
+- Ingestion pipeline for <code>NEEDS_VISION</code> and <code>MIXED_VISION</code> pages.</p>
+<p>Calls:
+- <code>client.models.generate_content(...)</code> with <code>response_mime_type="application/json"</code> and <code>response_schema=PageExtractionResult</code>.</p>
+<p>Database tables:
+- None directly. Result is cached as page JSON and later stored into <code>rag_chunks</code>, <code>extracted_questions</code>, and <code>ingestion_pages</code>.</p>
+<p>Request:</p>
+<pre><code class="language-json">{
+  &quot;uploaded_pdf&quot;: {
+    &quot;name&quot;: &quot;files/abc&quot;,
+    &quot;uri&quot;: &quot;gemini-file-uri&quot;,
+    &quot;mime_type&quot;: &quot;application/pdf&quot;
+  },
+  &quot;page_number&quot;: 11,
+  &quot;source_type&quot;: &quot;textbook&quot;,
+  &quot;neighboring_pages&quot;: [10, 12]
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  &quot;page_number&quot;: 11,
+  &quot;detected_language&quot;: &quot;ar&quot;,
+  &quot;raw_markdown&quot;: &quot;Arabic page content...&quot;,
+  &quot;sections&quot;: [],
+  &quot;questions&quot;: [],
+  &quot;diagrams&quot;: [],
+  &quot;tables&quot;: [],
+  &quot;equations&quot;: [],
+  &quot;warnings&quot;: [],
+  &quot;provider&quot;: &quot;gemini_document_pdf&quot;,
+  &quot;model_name&quot;: &quot;gemini-3.5-flash&quot;,
+  &quot;schema_valid&quot;: true,
+  &quot;char_count&quot;: 1200,
+  &quot;completeness_score&quot;: 0.9
+}
+</code></pre>
+<p>Error responses:
+- Missing Gemini key.
+- Direct PDF extraction disabled.
+- Invalid schema.
+- Empty sections/raw content.
+- Low <code>char_count</code>.
+- Low <code>completeness_score</code>.
+- Quota/rate limit.
+- Provider timeout.</p>
+<p>Service function called:
+- <code>GeminiVisionProvider.extract_page_from_pdf</code>
+- Alias: <code>GeminiDocumentProvider.extract_pdf_page</code></p>
+<p>Status:
+- Existing, but model config defaults do not match the target architecture.</p>
+<p>Files:
+- Existing: <code>backend/app/services/ocr/gemini_provider.py</code>, <code>backend/app/services/ocr/quality.py</code>, <code>backend/app/core/config.py</code>.
+- Modify later: <code>backend/app/core/config.py</code>.</p>
+<h3 id="api-order-5-gemini-rendered-image-fallback-extraction">API Order 5 - Gemini Rendered Image Fallback Extraction<a class="headerlink" href="#api-order-5-gemini-rendered-image-fallback-extraction" title="Permanent link">&para;</a></h3>
+<p>Type:
+- External Provider API</p>
+<p>Purpose:
+- Extract one page from a 300 DPI rendered page image only when direct PDF extraction fails or quality is poor.</p>
+<p>Called by:
+- Ingestion pipeline fallback.
+- Homework image solver.</p>
+<p>Calls:
+- <code>render_page_to_image(...)</code>
+- <code>client.models.generate_content(...)</code> with image bytes and structured JSON schema.</p>
+<p>Database tables:
+- None directly for provider call.
+- Ingestion result affects <code>ingestion_pages</code>, <code>rag_chunks</code>, <code>extracted_questions</code>.
+- Homework result affects <code>homework</code>.</p>
+<p>Request:</p>
+<pre><code class="language-json">{
+  &quot;image_path&quot;: &quot;data/textbooks/syria_grade_9_chemistry/pages/img/page_011.png&quot;,
+  &quot;page_number&quot;: 11,
+  &quot;source_type&quot;: &quot;textbook&quot;
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  &quot;page_number&quot;: 11,
+  &quot;raw_markdown&quot;: &quot;Arabic page content...&quot;,
+  &quot;sections&quot;: [],
+  &quot;questions&quot;: [],
+  &quot;diagrams&quot;: [],
+  &quot;tables&quot;: [],
+  &quot;equations&quot;: [],
+  &quot;warnings&quot;: [],
+  &quot;provider&quot;: &quot;gemini_document_image&quot;,
+  &quot;model_name&quot;: &quot;gemini-2.5-pro&quot;,
+  &quot;schema_valid&quot;: true,
+  &quot;char_count&quot;: 900,
+  &quot;completeness_score&quot;: 0.8
+}
+</code></pre>
+<p>Error responses:
+- Missing Gemini key.
+- Image path missing.
+- Image fallback disabled.
+- Invalid schema.
+- Empty/low-quality output.
+- Quota/rate limit.</p>
+<p>Service function called:
+- <code>GeminiVisionProvider.extract_page</code>
+- Alias: <code>GeminiDocumentProvider.extract_page_image_fallback</code></p>
+<p>Status:
+- Existing.</p>
+<p>Files:
+- Existing: <code>backend/app/services/pdf_processor.py</code>, <code>backend/app/services/ocr/gemini_provider.py</code>, <code>backend/app/services/homework_service.py</code>.</p>
+<h3 id="api-order-6-gemini-document-embeddings">API Order 6 - Gemini Document Embeddings<a class="headerlink" href="#api-order-6-gemini-document-embeddings" title="Permanent link">&para;</a></h3>
+<p>Type:
+- External Provider API</p>
+<p>Purpose:
+- Convert each final RAG chunk into a <code>VECTOR(768)</code> document embedding.</p>
+<p>Called by:
+- Ingestion pipeline after chunking.</p>
+<p>Calls:
+- <code>client.models.embed_content(...)</code> with <code>task_type="RETRIEVAL_DOCUMENT"</code>.</p>
+<p>Database tables:
+- <code>rag_chunks.embedding</code></p>
+<p>Request:</p>
+<pre><code class="language-json">{
+  &quot;model&quot;: &quot;text-embedding-004&quot;,
+  &quot;contents&quot;: [&quot;chunk text 1&quot;, &quot;chunk text 2&quot;],
+  &quot;task_type&quot;: &quot;RETRIEVAL_DOCUMENT&quot;,
+  &quot;output_dimensionality&quot;: 768
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  &quot;embeddings&quot;: [
+    [0.01, -0.02, 0.03]
+  ]
+}
+</code></pre>
+<p>Error responses:
+- Missing Gemini key.
+- Model unavailable for selected endpoint/project.
+- Empty vector response.
+- Quota/rate limit.</p>
+<p>Service function called:
+- <code>embed_batch</code>
+- <code>embed_text</code></p>
+<p>Status:
+- Partial. Calls exist, but current settings default is <code>gemini-embedding-001</code>, while target architecture says <code>text-embedding-004</code>. Code falls back to deterministic local embeddings on failure, which is useful for dev but not acceptable as a production success condition.</p>
+<p>Files:
+- Existing: <code>backend/app/services/embeddings.py</code>, <code>backend/app/services/gemini_client.py</code>, <code>backend/app/core/config.py</code>, <code>backend/app/models/textbook.py</code>.
+- Modify later: <code>backend/app/core/config.py</code>, ingestion completion rules.</p>
+<h3 id="api-order-7-gemini-query-embeddings">API Order 7 - Gemini Query Embeddings<a class="headerlink" href="#api-order-7-gemini-query-embeddings" title="Permanent link">&para;</a></h3>
+<p>Type:
+- External Provider API</p>
+<p>Purpose:
+- Convert a user query into a <code>VECTOR(768)</code> query embedding for pgvector search.</p>
+<p>Called by:
+- RAG retrieval service.
+- Chat service through RAG retrieval.
+- Admin ingestion test query.</p>
+<p>Calls:
+- <code>client.models.embed_content(...)</code> with <code>task_type="RETRIEVAL_QUERY"</code>.</p>
+<p>Database tables:
+- Reads <code>rag_chunks</code>.</p>
+<p>Request:</p>
+<pre><code class="language-json">{
+  &quot;model&quot;: &quot;text-embedding-004&quot;,
+  &quot;contents&quot;: &quot;ما هي الحموض؟&quot;,
+  &quot;task_type&quot;: &quot;RETRIEVAL_QUERY&quot;,
+  &quot;output_dimensionality&quot;: 768
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  &quot;embedding&quot;: [0.01, -0.02, 0.03]
+}
+</code></pre>
+<p>Error responses:
+- Missing Gemini key.
+- Model unavailable.
+- Empty vector response.
+- Quota/rate limit.</p>
+<p>Service function called:
+- <code>embed_query</code></p>
+<p>Status:
+- Partial for the same model/default/fallback reason as document embeddings.</p>
+<p>Files:
+- Existing: <code>backend/app/services/embeddings.py</code>, <code>backend/app/services/rag.py</code>.
+- Modify later: <code>backend/app/core/config.py</code>, <code>backend/app/services/rag.py</code>.</p>
+<h3 id="api-order-8-admin-ingestion-status">API Order 8 - Admin Ingestion Status<a class="headerlink" href="#api-order-8-admin-ingestion-status" title="Permanent link">&para;</a></h3>
+<p>Type:
+- Internal FastAPI Swagger API</p>
+<p>Endpoint:
+- <code>GET /api/v1/admin/ingestion/status/{task_id}</code></p>
+<p>Purpose:
+- Return job progress and page/chunk/question counts.</p>
+<p>Called by:
+- Swagger, admin dashboard, future mobile/admin app polling.</p>
+<p>Calls:
+- Current: in-memory <code>_TASKS</code>.
+- Target: DB <code>ingestion_jobs</code> plus Celery result backend.</p>
+<p>Database tables:
+- Current route does not read DB for status.
+- Target: <code>ingestion_jobs</code>, <code>ingestion_pages</code>.</p>
+<p>Request:</p>
+<pre><code class="language-json">{
+  &quot;task_id&quot;: &quot;job_uid&quot;
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  &quot;task_id&quot;: &quot;job_uid&quot;,
+  &quot;status&quot;: &quot;processing&quot;,
+  &quot;progress&quot;: 50,
+  &quot;source_id&quot;: 1,
+  &quot;pages_processed&quot;: 48,
+  &quot;pages_completed&quot;: 40,
+  &quot;pages_failed&quot;: 8,
+  &quot;failed_pages&quot;: [23, 24],
+  &quot;warnings&quot;: [],
+  &quot;errors&quot;: []
+}
+</code></pre>
+<p>Error responses:
+- <code>401</code>, <code>403</code>, <code>404</code>.</p>
+<p>Service function called:
+- Missing durable service.</p>
+<p>Status:
+- Partial.</p>
+<p>Files:
+- Existing: <code>backend/app/api/ingestion/routes.py</code>, <code>backend/app/schemas/ingestion.py</code>, <code>backend/app/models/ingestion.py</code>.
+- Modify later: <code>backend/app/services/ingestion_service.py</code>, <code>backend/app/workers/ingestion_tasks.py</code>.</p>
+<h3 id="api-order-9-admin-source-pages">API Order 9 - Admin Source Pages<a class="headerlink" href="#api-order-9-admin-source-pages" title="Permanent link">&para;</a></h3>
+<p>Type:
+- Internal FastAPI Swagger API</p>
+<p>Endpoint:
+- <code>GET /api/v1/admin/ingestion/pages/{source_id}</code></p>
+<p>Purpose:
+- List per-page extraction state, quality score, cache path, and errors.</p>
+<p>Called by:
+- Admin QA screen and Swagger.</p>
+<p>Calls:
+- Direct DB query.</p>
+<p>Database tables:
+- <code>ingestion_pages</code></p>
+<p>Request:</p>
+<pre><code class="language-json">{
+  &quot;source_id&quot;: 1
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">[
+  {
+    &quot;id&quot;: 10,
+    &quot;source_id&quot;: 1,
+    &quot;job_id&quot;: 1,
+    &quot;page_number&quot;: 11,
+    &quot;page_type&quot;: &quot;MIXED_VISION&quot;,
+    &quot;status&quot;: &quot;completed_with_vision&quot;,
+    &quot;extraction_methods&quot;: [&quot;pdf_text&quot;, &quot;gemini_pdf_file&quot;],
+    &quot;cache_path&quot;: &quot;data/textbooks/.../page_011.json&quot;,
+    &quot;char_count&quot;: 1200,
+    &quot;completeness_score&quot;: 0.9,
+    &quot;warnings_json&quot;: [],
+    &quot;errors_json&quot;: [],
+    &quot;content_preview&quot;: &quot;...&quot;
+  }
+]
+</code></pre>
+<p>Error responses:
+- <code>401</code>, <code>403</code>, <code>404</code>.</p>
+<p>Service function called:
+- Missing dedicated service.</p>
+<p>Status:
+- Partial. Route exists, but uses sync DB and depends on ingestion writing page rows.</p>
+<p>Files:
+- Existing: <code>backend/app/api/ingestion/routes.py</code>, <code>backend/app/schemas/ingestion.py</code>, <code>backend/app/models/ingestion.py</code>.</p>
+<h3 id="api-order-10-admin-test-page-extraction">API Order 10 - Admin Test Page Extraction<a class="headerlink" href="#api-order-10-admin-test-page-extraction" title="Permanent link">&para;</a></h3>
+<p>Type:
+- Internal FastAPI Swagger API</p>
+<p>Endpoint:
+- Proposed: <code>POST /api/v1/admin/ingestion/test-page-extraction</code></p>
+<p>Purpose:
+- Smoke test extraction for one page without marking the source completed and without rebuilding all chunks.</p>
+<p>Called by:
+- Admin Swagger before a full expensive ingestion run.</p>
+<p>Calls:
+- <code>classify_pages</code>
+- <code>upload_pdf</code> if needed
+- <code>extract_page_from_pdf</code>
+- image fallback on quality failure</p>
+<p>Database tables:
+- Optional read from <code>content_sources</code>.
+- Should not write <code>rag_chunks</code> unless explicitly requested.</p>
+<p>Request:</p>
+<pre><code class="language-json">{
+  &quot;pdf_path&quot;: &quot;data/textbooks/syria_grade_9_chemistry/book.pdf&quot;,
+  &quot;page_number&quot;: 11,
+  &quot;source_type&quot;: &quot;textbook&quot;,
+  &quot;ocr_provider&quot;: &quot;gemini&quot;,
+  &quot;force_image_fallback&quot;: false
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  &quot;page_number&quot;: 11,
+  &quot;page_type&quot;: &quot;MIXED_VISION&quot;,
+  &quot;status&quot;: &quot;completed_with_vision&quot;,
+  &quot;provider&quot;: &quot;gemini_document_pdf&quot;,
+  &quot;model_name&quot;: &quot;gemini-3.5-flash&quot;,
+  &quot;char_count&quot;: 1200,
+  &quot;completeness_score&quot;: 0.9,
+  &quot;sections&quot;: [],
+  &quot;questions&quot;: [],
+  &quot;tables&quot;: [],
+  &quot;diagrams&quot;: [],
+  &quot;equations&quot;: [],
+  &quot;warnings&quot;: [],
+  &quot;errors&quot;: []
+}
+</code></pre>
+<p>Error responses:
+- <code>401</code>, <code>403</code>, <code>404</code>, <code>422</code>, <code>503</code>.</p>
+<p>Service function called:
+- Missing: <code>ingestion_service.test_page_extraction</code>.</p>
+<p>Status:
+- Missing.</p>
+<p>Files:
+- Create/modify: <code>backend/app/schemas/ingestion.py</code>, <code>backend/app/services/ingestion_service.py</code>, <code>backend/app/api/ingestion/routes.py</code>, tests.</p>
+<h3 id="api-order-11-admin-ingestion-stats">API Order 11 - Admin Ingestion Stats<a class="headerlink" href="#api-order-11-admin-ingestion-stats" title="Permanent link">&para;</a></h3>
+<p>Type:
+- Internal FastAPI Swagger API</p>
+<p>Endpoint:
+- <code>GET /api/v1/admin/ingestion/stats</code></p>
+<p>Purpose:
+- Show total chunks, sources, questions, review count, chunk distribution, and pages processed.</p>
+<p>Called by:
+- Admin dashboard and Swagger.</p>
+<p>Calls:
+- Direct DB aggregate queries.</p>
+<p>Database tables:
+- <code>content_sources</code>, <code>rag_chunks</code>, <code>extracted_questions</code></p>
+<p>Request:</p>
+<pre><code class="language-json">{}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  &quot;total_chunks&quot;: 120,
+  &quot;total_sources&quot;: 1,
+  &quot;total_questions&quot;: 30,
+  &quot;reviewed_questions&quot;: 10,
+  &quot;unreviewed_questions&quot;: 20,
+  &quot;chunks_by_chapter&quot;: {&quot;none&quot;: 120},
+  &quot;chunks_by_source_type&quot;: {&quot;textbook&quot;: 120},
+  &quot;avg_chunk_length&quot;: 650.5,
+  &quot;pages_processed&quot;: 40
+}
+</code></pre>
+<p>Error responses:
+- <code>401</code>, <code>403</code>.</p>
+<p>Service function called:
+- Missing dedicated service.</p>
+<p>Status:
+- Partial.</p>
+<p>Files:
+- Existing: <code>backend/app/api/ingestion/routes.py</code>, <code>backend/app/schemas/ingestion.py</code>.</p>
+<h3 id="api-order-12-rag-retrieve">API Order 12 - RAG Retrieve<a class="headerlink" href="#api-order-12-rag-retrieve" title="Permanent link">&para;</a></h3>
+<p>Type:
+- Internal FastAPI Swagger API</p>
+<p>Endpoint:
+- <code>POST /api/v1/rag/retrieve</code></p>
+<p>Purpose:
+- Retrieve source-grounded chunks for a user query with page citations.</p>
+<p>Called by:
+- Mobile app for source preview.
+- Chat service internally.
+- Admin test query endpoint.</p>
+<p>Calls:
+- <code>retrieve_context</code>
+- <code>embed_query</code>
+- pgvector similarity search plus lexical reranking.</p>
+<p>Database tables:
+- <code>rag_chunks</code>, <code>content_sources</code></p>
+<p>Request:</p>
+<pre><code class="language-json">{
+  &quot;query&quot;: &quot;ما هي الحموض؟&quot;,
+  &quot;chapter_id&quot;: null,
+  &quot;lesson_id&quot;: null,
+  &quot;topic_id&quot;: null,
+  &quot;source_types&quot;: [&quot;textbook&quot;],
+  &quot;content_types&quot;: [&quot;text&quot;, &quot;table&quot;, &quot;diagram&quot;, &quot;exercise&quot;],
+  &quot;top_k&quot;: 6,
+  &quot;min_similarity&quot;: 0.0
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  &quot;chunks&quot;: [
+    {
+      &quot;id&quot;: 13,
+      &quot;source_id&quot;: 1,
+      &quot;content&quot;: &quot;الحموض: مواد تعطي...&quot;,
+      &quot;source&quot;: &quot;Grade 9 Chemistry&quot;,
+      &quot;source_type&quot;: &quot;textbook&quot;,
+      &quot;content_type&quot;: &quot;text&quot;,
+      &quot;page_number&quot;: 11,
+      &quot;chapter_id&quot;: null,
+      &quot;lesson_id&quot;: null,
+      &quot;topic_id&quot;: null,
+      &quot;metadata_json&quot;: {},
+      &quot;similarity_score&quot;: 0.82
+    }
+  ]
+}
+</code></pre>
+<p>Error responses:
+- <code>401</code> invalid bearer token.
+- <code>422</code> invalid query/filter values.
+- <code>503</code> database/vector search unavailable.</p>
+<p>Service function called:
+- <code>retrieve_context</code></p>
+<p>Status:
+- Existing, mobile contract should be expanded.</p>
+<p>Files:
+- Existing: <code>backend/app/api/rag/routes.py</code>, <code>backend/app/schemas/rag.py</code>, <code>backend/app/services/rag.py</code>, <code>backend/app/services/embeddings.py</code>.
+- Modify later: richer schema and Redis cache.</p>
+<h3 id="api-order-13-chat-session-creation">API Order 13 - Chat Session Creation<a class="headerlink" href="#api-order-13-chat-session-creation" title="Permanent link">&para;</a></h3>
+<p>Type:
+- Internal FastAPI Swagger API</p>
+<p>Endpoint:
+- <code>POST /api/v1/chat/sessions</code></p>
+<p>Purpose:
+- Create a persistent tutoring chat session.</p>
+<p>Called by:
+- Mobile app when opening a new chat.</p>
+<p>Calls:
+- <code>chat_service.create_session</code></p>
+<p>Database tables:
+- <code>chat_sessions</code></p>
+<p>Request:</p>
+<pre><code class="language-json">{
+  &quot;title&quot;: &quot;Acids lesson&quot;,
+  &quot;lesson_id&quot;: null,
+  &quot;style&quot;: &quot;simple&quot;
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: 1,
+  &quot;user_id&quot;: 1,
+  &quot;lesson_id&quot;: null,
+  &quot;title&quot;: &quot;Acids lesson&quot;,
+  &quot;style&quot;: &quot;simple&quot;,
+  &quot;created_at&quot;: &quot;2026-06-05T00:00:00Z&quot;,
+  &quot;updated_at&quot;: &quot;2026-06-05T00:00:00Z&quot;,
+  &quot;messages&quot;: []
+}
+</code></pre>
+<p>Error responses:
+- <code>401</code>, <code>422</code>.</p>
+<p>Service function called:
+- <code>create_session</code></p>
+<p>Status:
+- Existing.</p>
+<p>Files:
+- Existing: <code>backend/app/api/chat/routes.py</code>, <code>backend/app/schemas/chat.py</code>, <code>backend/app/services/chat_service.py</code>, <code>backend/app/models/chat.py</code>.</p>
+<h3 id="api-order-14-chat-ask">API Order 14 - Chat Ask<a class="headerlink" href="#api-order-14-chat-ask" title="Permanent link">&para;</a></h3>
+<p>Type:
+- Internal FastAPI Swagger API</p>
+<p>Endpoint:
+- <code>POST /api/v1/chat/ask</code></p>
+<p>Purpose:
+- Return a RAG-grounded Arabic tutor answer with page sources and confidence.</p>
+<p>Called by:
+- Mobile app main chat screen.</p>
+<p>Calls:
+- <code>chat_service.ask_question</code>
+- <code>retrieve_context</code>
+- <code>ai_service.get_ai_response</code> when Gemini is available and route requires generated answer.</p>
+<p>Database tables:
+- Reads <code>rag_chunks</code>, <code>content_sources</code>.
+- May write <code>chat_sessions</code>, <code>chat_messages</code> depending service path.</p>
+<p>Request:</p>
+<pre><code class="language-json">{
+  &quot;question&quot;: &quot;اشرح لي ما هي الحموض من الكتاب؟&quot;,
+  &quot;lesson_id&quot;: null,
+  &quot;topic_id&quot;: null,
+  &quot;source_types&quot;: [&quot;textbook&quot;],
+  &quot;preferred_answer_type&quot;: &quot;auto&quot;,
+  &quot;answer_scope&quot;: &quot;book_only&quot;
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  &quot;answer&quot;: &quot;الحموض هي مواد...&quot;,
+  &quot;answer_type&quot;: &quot;text&quot;,
+  &quot;route&quot;: &quot;textbook_rag&quot;,
+  &quot;grounding&quot;: &quot;book&quot;,
+  &quot;answer_scope&quot;: &quot;book_only&quot;,
+  &quot;blocks&quot;: [],
+  &quot;sources&quot;: [
+    {
+      &quot;chunk_id&quot;: 13,
+      &quot;source_id&quot;: 1,
+      &quot;source&quot;: &quot;Grade 9 Chemistry&quot;,
+      &quot;page_number&quot;: 11,
+      &quot;content_type&quot;: &quot;text&quot;,
+      &quot;similarity_score&quot;: 0.82
+    }
+  ],
+  &quot;source_blocks&quot;: [
+    {
+      &quot;book_id&quot;: &quot;grade_9_chemistry&quot;,
+      &quot;page&quot;: 11,
+      &quot;chunk_id&quot;: 13,
+      &quot;chunk_type&quot;: &quot;text&quot;,
+      &quot;score&quot;: 0.82
+    }
+  ],
+  &quot;page_numbers&quot;: [11, 13],
+  &quot;confidence&quot;: 0.82,
+  &quot;diagnostics&quot;: {},
+  &quot;suggested_next_action&quot;: &quot;اسأل عن مثال أو حل تمرين.&quot;
+}
+</code></pre>
+<p>Error responses:
+- <code>401</code>, <code>422</code>.
+- <code>503</code> AI unavailable if no local fallback is allowed.
+- Gemini <code>429</code> quota should return graceful local RAG answer if possible.</p>
+<p>Service function called:
+- <code>ask_question</code></p>
+<p>Status:
+- Existing, with known quality dependency on complete ingestion and real embeddings.</p>
+<p>Files:
+- Existing: <code>backend/app/api/chat/routes.py</code>, <code>backend/app/schemas/chat.py</code>, <code>backend/app/services/chat_service.py</code>, <code>backend/app/services/ai_service.py</code>.</p>
+<h3 id="api-order-15-gemini-ai-tutor-generation">API Order 15 - Gemini AI Tutor Generation<a class="headerlink" href="#api-order-15-gemini-ai-tutor-generation" title="Permanent link">&para;</a></h3>
+<p>Type:
+- External Provider API</p>
+<p>Purpose:
+- Generate the final Arabic explanation after retrieval and routing.</p>
+<p>Called by:
+- <code>chat_service.ask_question</code>
+- <code>homework_service.solve_text</code>
+- AI quiz/flashcard generators.</p>
+<p>Calls:
+- <code>client.models.generate_content(...)</code></p>
+<p>Database tables:
+- None directly.
+- Chat/homework services persist generated outputs.</p>
+<p>Request:</p>
+<pre><code class="language-json">{
+  &quot;model&quot;: &quot;gemini-3.5-flash&quot;,
+  &quot;system_prompt&quot;: &quot;You are EduMind...&quot;,
+  &quot;messages&quot;: [
+    {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;ما هي الحموض؟&quot;}
+  ]
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  &quot;text&quot;: &quot;الحموض هي...&quot;
+}
+</code></pre>
+<p>Error responses:
+- Missing Gemini key.
+- Quota/rate limit.
+- Timeout.
+- Empty response.</p>
+<p>Service function called:
+- <code>ai_service.get_ai_response</code></p>
+<p>Status:
+- Existing. It returns local/test text when Gemini is missing and handles quota errors.</p>
+<p>Files:
+- Existing: <code>backend/app/services/ai_service.py</code>, <code>backend/app/services/gemini_client.py</code>.</p>
+<h3 id="api-order-16-chat-feedback">API Order 16 - Chat Feedback<a class="headerlink" href="#api-order-16-chat-feedback" title="Permanent link">&para;</a></h3>
+<p>Type:
+- Internal FastAPI Swagger API</p>
+<p>Endpoint:
+- <code>POST /api/v1/chat/messages/{message_id}/feedback</code></p>
+<p>Purpose:
+- Store user feedback for a chat message.</p>
+<p>Called by:
+- Mobile app after an answer.</p>
+<p>Calls:
+- <code>chat_service.update_message_feedback</code></p>
+<p>Database tables:
+- <code>chat_messages</code></p>
+<p>Request:</p>
+<pre><code class="language-json">{
+  &quot;feedback&quot;: &quot;helpful&quot;
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: 10,
+  &quot;session_id&quot;: 1,
+  &quot;role&quot;: &quot;assistant&quot;,
+  &quot;content&quot;: &quot;الحموض هي...&quot;,
+  &quot;format&quot;: &quot;text&quot;,
+  &quot;feedback&quot;: &quot;helpful&quot;,
+  &quot;media_url&quot;: null,
+  &quot;latency_ms&quot;: 900,
+  &quot;created_at&quot;: &quot;2026-06-05T00:00:00Z&quot;
+}
+</code></pre>
+<p>Error responses:
+- <code>401</code>, <code>404</code>, <code>422</code>.</p>
+<p>Service function called:
+- <code>update_message_feedback</code></p>
+<p>Status:
+- Existing.</p>
+<p>Files:
+- Existing: <code>backend/app/api/chat/routes.py</code>, <code>backend/app/schemas/chat.py</code>, <code>backend/app/services/chat_service.py</code>.</p>
+<h3 id="api-order-17-quiz-generation">API Order 17 - Quiz Generation<a class="headerlink" href="#api-order-17-quiz-generation" title="Permanent link">&para;</a></h3>
+<p>Type:
+- Internal FastAPI Swagger API</p>
+<p>Endpoint:
+- <code>POST /api/v1/quizzes/generate</code></p>
+<p>Purpose:
+- Return quiz questions from reviewed/extracted question bank.</p>
+<p>Called by:
+- Mobile quiz/exam trainer.</p>
+<p>Calls:
+- <code>quiz_service.generate_quiz</code></p>
+<p>Database tables:
+- <code>extracted_questions</code></p>
+<p>Request:</p>
+<pre><code class="language-json">{
+  &quot;topic_id&quot;: 1,
+  &quot;source_type&quot;: &quot;textbook&quot;,
+  &quot;difficulty&quot;: 2,
+  &quot;limit&quot;: 5
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  &quot;questions&quot;: [
+    {
+      &quot;id&quot;: 1,
+      &quot;question_text&quot;: &quot;ما تعريف الحمض؟&quot;,
+      &quot;question_type&quot;: &quot;short_answer&quot;,
+      &quot;options&quot;: null,
+      &quot;page_number&quot;: 11,
+      &quot;source_id&quot;: 1,
+      &quot;difficulty&quot;: 2
+    }
+  ]
+}
+</code></pre>
+<p>Error responses:
+- <code>422</code>.
+- <code>404</code> no reviewed questions if strict mode is added.</p>
+<p>Service function called:
+- <code>generate_quiz</code></p>
+<p>Status:
+- Partial. Existing route reads extracted questions. AI generation helper exists but is not wired into this endpoint.</p>
+<p>Files:
+- Existing: <code>backend/app/api/quizzes.py</code>, <code>backend/app/schemas/quiz.py</code>, <code>backend/app/services/quiz_service.py</code>, <code>backend/app/services/ai_quiz_generator.py</code>.</p>
+<h3 id="api-order-18-gemini-quizquestion-generation">API Order 18 - Gemini Quiz/Question Generation<a class="headerlink" href="#api-order-18-gemini-quizquestion-generation" title="Permanent link">&para;</a></h3>
+<p>Type:
+- External Provider API</p>
+<p>Purpose:
+- Generate new questions from RAG context when the extracted/reviewed bank is insufficient.</p>
+<p>Called by:
+- Target quiz generation workflow.
+- Current helper <code>generate_questions_for_topic</code>, but not current route.</p>
+<p>Calls:
+- <code>ai_service.get_ai_response</code></p>
+<p>Database tables:
+- <code>extracted_questions</code></p>
+<p>Request:</p>
+<pre><code class="language-json">{
+  &quot;topic_id&quot;: 1,
+  &quot;num_questions&quot;: 5,
+  &quot;context&quot;: &quot;retrieved textbook context...&quot;
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  &quot;questions&quot;: [
+    {
+      &quot;question_text&quot;: &quot;ما تعريف الحمض؟&quot;,
+      &quot;options&quot;: [&quot;...&quot;],
+      &quot;correct_answer&quot;: &quot;...&quot;,
+      &quot;explanation&quot;: &quot;...&quot;,
+      &quot;difficulty&quot;: 1,
+      &quot;page_number&quot;: 11,
+      &quot;needs_review&quot;: true
+    }
+  ]
+}
+</code></pre>
+<p>Error responses:
+- Gemini unavailable/quota.
+- Invalid JSON.
+- Empty generated list.</p>
+<p>Service function called:
+- <code>ai_quiz_generator.generate_questions_for_topic</code></p>
+<p>Status:
+- Partial. The helper manually parses JSON text and is not exposed as a clear Swagger API.</p>
+<p>Files:
+- Existing: <code>backend/app/services/ai_quiz_generator.py</code>.
+- Modify later: <code>backend/app/api/quizzes.py</code>, <code>backend/app/schemas/quiz.py</code>.</p>
+<h3 id="api-order-19-quiz-submission">API Order 19 - Quiz Submission<a class="headerlink" href="#api-order-19-quiz-submission" title="Permanent link">&para;</a></h3>
+<p>Type:
+- Internal FastAPI Swagger API</p>
+<p>Endpoint:
+- <code>POST /api/v1/quizzes/submit</code></p>
+<p>Purpose:
+- Grade answers and record weak topics.</p>
+<p>Called by:
+- Mobile quiz UI.</p>
+<p>Calls:
+- <code>quiz_service.submit_quiz</code></p>
+<p>Database tables:
+- <code>extracted_questions</code>, <code>quiz_attempts</code></p>
+<p>Request:</p>
+<pre><code class="language-json">{
+  &quot;topic_id&quot;: 1,
+  &quot;answers&quot;: {
+    &quot;1&quot;: &quot;الحموض مواد تعطي H+&quot;
+  }
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  &quot;attempt_id&quot;: 1,
+  &quot;score&quot;: 1,
+  &quot;total&quot;: 1,
+  &quot;weak_topics&quot;: {}
+}
+</code></pre>
+<p>Error responses:
+- <code>401</code>, <code>422</code>.</p>
+<p>Service function called:
+- <code>submit_quiz</code></p>
+<p>Status:
+- Existing, but grading is exact-match MVP.</p>
+<p>Files:
+- Existing: <code>backend/app/api/quizzes.py</code>, <code>backend/app/schemas/quiz.py</code>, <code>backend/app/services/quiz_service.py</code>.</p>
+<h3 id="api-order-20-exam-practice">API Order 20 - Exam Practice<a class="headerlink" href="#api-order-20-exam-practice" title="Permanent link">&para;</a></h3>
+<p>Type:
+- Internal FastAPI Swagger API</p>
+<p>Endpoint:
+- <code>GET /api/v1/exams/practice</code></p>
+<p>Purpose:
+- Return exam-style practice questions.</p>
+<p>Called by:
+- Mobile exam trainer.</p>
+<p>Calls:
+- <code>quiz_service.generate_quiz(topic_id=None, source_type="exam", limit=10)</code></p>
+<p>Database tables:
+- <code>extracted_questions</code></p>
+<p>Request:</p>
+<pre><code class="language-json">{}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  &quot;questions&quot;: []
+}
+</code></pre>
+<p>Error responses:
+- <code>422</code>, <code>404</code> if strict no-questions behavior is added.</p>
+<p>Service function called:
+- <code>generate_quiz</code></p>
+<p>Status:
+- Partial. <code>source_type="exam"</code> is currently not fully filtered through <code>ContentSource</code>.</p>
+<p>Files:
+- Existing: <code>backend/app/api/exams.py</code>, <code>backend/app/services/quiz_service.py</code>.</p>
+<h3 id="api-order-21-homework-solve-text">API Order 21 - Homework Solve Text<a class="headerlink" href="#api-order-21-homework-solve-text" title="Permanent link">&para;</a></h3>
+<p>Type:
+- Internal FastAPI Swagger API</p>
+<p>Endpoint:
+- <code>POST /api/v1/homework/solve-text</code></p>
+<p>Purpose:
+- Solve a typed chemistry homework problem using RAG context and Gemini tutor generation.</p>
+<p>Called by:
+- Mobile homework text UI.</p>
+<p>Calls:
+- <code>homework_service.solve_text</code>
+- <code>retrieve_context</code>
+- <code>ai_service.get_ai_response</code></p>
+<p>Database tables:
+- <code>homework</code>, reads <code>rag_chunks</code></p>
+<p>Request:</p>
+<pre><code class="language-json">{
+  &quot;problem_text&quot;: &quot;احسب عدد مولات ...&quot;,
+  &quot;topic_id&quot;: null
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: 1,
+  &quot;user_id&quot;: 1,
+  &quot;topic_id&quot;: null,
+  &quot;image_url&quot;: null,
+  &quot;problem_text&quot;: &quot;احسب عدد مولات ...&quot;,
+  &quot;extracted_text&quot;: null,
+  &quot;solution&quot;: &quot;خطوات الحل...&quot;,
+  &quot;source_chunks&quot;: null,
+  &quot;confidence_score&quot;: 0.8,
+  &quot;created_at&quot;: &quot;2026-06-05T00:00:00Z&quot;,
+  &quot;updated_at&quot;: &quot;2026-06-05T00:00:00Z&quot;
+}
+</code></pre>
+<p>Error responses:
+- <code>401</code>, <code>422</code>.
+- <code>503</code> Gemini unavailable if no local fallback is allowed.</p>
+<p>Service function called:
+- <code>solve_text</code></p>
+<p>Status:
+- Existing, but <code>source_chunks</code> is not filled.</p>
+<p>Files:
+- Existing: <code>backend/app/api/homework.py</code>, <code>backend/app/schemas/homework.py</code>, <code>backend/app/services/homework_service.py</code>.</p>
+<h3 id="api-order-22-homework-solve-image">API Order 22 - Homework Solve Image<a class="headerlink" href="#api-order-22-homework-solve-image" title="Permanent link">&para;</a></h3>
+<p>Type:
+- Internal FastAPI Swagger API</p>
+<p>Endpoint:
+- <code>POST /api/v1/homework/solve-image</code></p>
+<p>Purpose:
+- Extract text from a homework photo/image, then solve it with the text homework solver.</p>
+<p>Called by:
+- Mobile homework photo UI.</p>
+<p>Calls:
+- <code>homework_service.solve_image</code>
+- <code>GeminiVisionProvider.extract_page</code>
+- <code>homework_service.solve_text</code></p>
+<p>Database tables:
+- <code>homework</code>, reads <code>rag_chunks</code></p>
+<p>Request:</p>
+<pre><code class="language-json">{
+  &quot;image_path&quot;: &quot;/absolute/or/server/path/homework.png&quot;,
+  &quot;topic_id&quot;: null
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: 1,
+  &quot;user_id&quot;: 1,
+  &quot;topic_id&quot;: null,
+  &quot;image_url&quot;: &quot;/absolute/or/server/path/homework.png&quot;,
+  &quot;problem_text&quot;: &quot;extracted problem text&quot;,
+  &quot;extracted_text&quot;: &quot;extracted problem text&quot;,
+  &quot;solution&quot;: &quot;خطوات الحل...&quot;,
+  &quot;source_chunks&quot;: null,
+  &quot;confidence_score&quot;: 0.8,
+  &quot;created_at&quot;: &quot;2026-06-05T00:00:00Z&quot;,
+  &quot;updated_at&quot;: &quot;2026-06-05T00:00:00Z&quot;
+}
+</code></pre>
+<p>Error responses:
+- <code>401</code>, <code>404</code> image not found, <code>422</code>, <code>503</code> Gemini not configured.</p>
+<p>Service function called:
+- <code>solve_image</code></p>
+<p>Status:
+- Partial. Current route is server-path based, not mobile upload-ready.</p>
+<p>Files:
+- Existing: <code>backend/app/api/homework.py</code>, <code>backend/app/schemas/homework.py</code>, <code>backend/app/services/homework_service.py</code>.
+- Modify later: add upload handling or asset API.</p>
+<h3 id="api-order-23-gemini-homework-image-understanding">API Order 23 - Gemini Homework Image Understanding<a class="headerlink" href="#api-order-23-gemini-homework-image-understanding" title="Permanent link">&para;</a></h3>
+<p>Type:
+- External Provider API</p>
+<p>Purpose:
+- Understand a homework/problem image and produce structured extracted text.</p>
+<p>Called by:
+- <code>homework_service.solve_image</code>.</p>
+<p>Calls:
+- <code>GeminiVisionProvider.extract_page</code>.</p>
+<p>Database tables:
+- None directly. Result is written to <code>homework.extracted_text</code>.</p>
+<p>Request:</p>
+<pre><code class="language-json">{
+  &quot;image_path&quot;: &quot;homework.png&quot;,
+  &quot;page_number&quot;: 1,
+  &quot;source_type&quot;: &quot;homework&quot;
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  &quot;page_number&quot;: 1,
+  &quot;sections&quot;: [
+    {
+      &quot;heading&quot;: null,
+      &quot;content&quot;: &quot;extracted problem&quot;,
+      &quot;content_type&quot;: &quot;exercise&quot;
+    }
+  ],
+  &quot;warnings&quot;: []
+}
+</code></pre>
+<p>Error responses:
+- Missing Gemini key.
+- Image not found.
+- Invalid/empty extraction.
+- Quota/rate limit.</p>
+<p>Service function called:
+- <code>GeminiVisionProvider.extract_page</code></p>
+<p>Status:
+- Existing as provider call, partial as mobile product flow.</p>
+<p>Files:
+- Existing: <code>backend/app/services/homework_service.py</code>, <code>backend/app/services/ocr/gemini_provider.py</code>.</p>
+<h3 id="api-order-24-flashcard-generation">API Order 24 - Flashcard Generation<a class="headerlink" href="#api-order-24-flashcard-generation" title="Permanent link">&para;</a></h3>
+<p>Type:
+- Internal FastAPI Swagger API</p>
+<p>Endpoint:
+- Existing manual creation: <code>POST /api/v1/flashcards</code>
+- Proposed AI generation: <code>POST /api/v1/flashcards/generate</code></p>
+<p>Purpose:
+- Generate study flashcards from textbook context.</p>
+<p>Called by:
+- Mobile revision UI.
+- Admin/teacher review tools.</p>
+<p>Calls:
+- Existing route calls <code>flashcard_service.create_flashcard</code>.
+- Proposed route should call <code>ai_flashcard_generator.generate_flashcards_for_topic</code>.</p>
+<p>Database tables:
+- <code>flashcards</code>, <code>flashcard_progress</code>, reads <code>rag_chunks</code></p>
+<p>Request:</p>
+<pre><code class="language-json">{
+  &quot;topic_id&quot;: 1,
+  &quot;limit&quot;: 5,
+  &quot;source_types&quot;: [&quot;textbook&quot;]
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  &quot;flashcards&quot;: [
+    {
+      &quot;id&quot;: 1,
+      &quot;topic_id&quot;: 1,
+      &quot;front_ar&quot;: &quot;ما تعريف الحمض؟&quot;,
+      &quot;back_ar&quot;: &quot;الحموض مواد تعطي H+...&quot;,
+      &quot;created_by&quot;: &quot;ai&quot;
+    }
+  ],
+  &quot;needs_review&quot;: true
+}
+</code></pre>
+<p>Error responses:
+- <code>401</code>, <code>403</code> for admin-only generation if protected.
+- <code>422</code>.
+- <code>503</code> Gemini unavailable.</p>
+<p>Service function called:
+- Existing: <code>flashcard_service.create_flashcard</code>
+- Proposed: <code>flashcard_service.generate_ai_flashcards</code></p>
+<p>Status:
+- Partial. Manual flashcard route exists. AI generator service exists but is not exposed in Swagger.</p>
+<p>Files:
+- Existing: <code>backend/app/api/flashcards.py</code>, <code>backend/app/schemas/flashcards.py</code>, <code>backend/app/services/flashcard_service.py</code>, <code>backend/app/services/ai_flashcard_generator.py</code>.
+- Modify later: add generation schemas and route.</p>
+<h3 id="api-order-25-admin-question-review">API Order 25 - Admin Question Review<a class="headerlink" href="#api-order-25-admin-question-review" title="Permanent link">&para;</a></h3>
+<p>Type:
+- Internal FastAPI Swagger API</p>
+<p>Endpoints:
+- <code>GET /api/v1/admin/ingestion/questions/unreviewed</code>
+- <code>POST /api/v1/admin/ingestion/questions/{question_id}/review</code></p>
+<p>Purpose:
+- Review and approve extracted or AI-generated questions before they are trusted.</p>
+<p>Called by:
+- Admin review dashboard and Swagger.</p>
+<p>Calls:
+- Direct DB query/update.</p>
+<p>Database tables:
+- <code>extracted_questions</code></p>
+<p>Request:</p>
+<pre><code class="language-json">{
+  &quot;question_text&quot;: &quot;ما تعريف الحمض؟&quot;,
+  &quot;question_type&quot;: &quot;short_answer&quot;,
+  &quot;options&quot;: null,
+  &quot;correct_answer&quot;: &quot;الحموض مواد تعطي H+ عند انحلالها في الماء.&quot;,
+  &quot;explanation&quot;: &quot;من تعريف الحموض في الكتاب.&quot;,
+  &quot;answer_source&quot;: &quot;manual&quot;,
+  &quot;difficulty&quot;: 1,
+  &quot;needs_review&quot;: false
+}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: 1,
+  &quot;source_id&quot;: 1,
+  &quot;chapter_id&quot;: null,
+  &quot;lesson_id&quot;: null,
+  &quot;topic_id&quot;: null,
+  &quot;page_number&quot;: 11,
+  &quot;question_text&quot;: &quot;ما تعريف الحمض؟&quot;,
+  &quot;question_type&quot;: &quot;short_answer&quot;,
+  &quot;options&quot;: null,
+  &quot;correct_answer&quot;: &quot;الحموض مواد تعطي H+ عند انحلالها في الماء.&quot;,
+  &quot;explanation&quot;: &quot;من تعريف الحموض في الكتاب.&quot;,
+  &quot;answer_source&quot;: &quot;manual&quot;,
+  &quot;difficulty&quot;: 1,
+  &quot;needs_review&quot;: false,
+  &quot;metadata_json&quot;: {}
+}
+</code></pre>
+<p>Error responses:
+- <code>401</code>, <code>403</code>, <code>404</code>, <code>422</code>.</p>
+<p>Service function called:
+- Missing dedicated service.</p>
+<p>Status:
+- Partial. Endpoints exist but route contains business logic and sync DB.</p>
+<p>Files:
+- Existing: <code>backend/app/api/ingestion/routes.py</code>, <code>backend/app/schemas/ingestion.py</code>, <code>backend/app/models/textbook.py</code>.</p>
+<h3 id="api-order-26-ai-health-config-check">API Order 26 - AI Health / Config Check<a class="headerlink" href="#api-order-26-ai-health-config-check" title="Permanent link">&para;</a></h3>
+<p>Type:
+- Internal FastAPI Swagger API</p>
+<p>Endpoint:
+- Proposed: <code>GET /api/v1/health/ai-config</code></p>
+<p>Purpose:
+- Show whether required AI services are configured and whether the current config can run production ingestion.</p>
+<p>Called by:
+- Swagger before ingestion.
+- Admin dashboard.
+- Mobile debug screen if needed.</p>
+<p>Calls:
+- Settings inspection.
+- Optional DB/Redis/Celery checks.</p>
+<p>Database tables:
+- Optional none.</p>
+<p>Request:</p>
+<pre><code class="language-json">{}
+</code></pre>
+<p>Response:</p>
+<pre><code class="language-json">{
+  &quot;gemini_configured&quot;: true,
+  &quot;document_model&quot;: &quot;gemini-3.5-flash&quot;,
+  &quot;document_fallback_model&quot;: &quot;gemini-2.5-pro&quot;,
+  &quot;embedding_model&quot;: &quot;text-embedding-004&quot;,
+  &quot;embedding_dim&quot;: 768,
+  &quot;pdf_direct_extraction_enabled&quot;: true,
+  &quot;pdf_image_fallback_enabled&quot;: true,
+  &quot;ingestion_mode&quot;: &quot;production&quot;,
+  &quot;vector_store&quot;: &quot;postgres_pgvector&quot;,
+  &quot;redis_configured&quot;: true,
+  &quot;celery_configured&quot;: true,
+  &quot;production_ready&quot;: true,
+  &quot;warnings&quot;: []
+}
+</code></pre>
+<p>Error responses:
+- <code>503</code> if required dependencies are down and strict readiness is requested.</p>
+<p>Service function called:
+- Missing: <code>ai_health_service.get_ai_config_status</code>.</p>
+<p>Status:
+- Missing.</p>
+<p>Files:
+- Create/modify: <code>backend/app/schemas/common.py</code> or <code>backend/app/schemas/ai_health.py</code>, <code>backend/app/services/ai_health_service.py</code>, <code>backend/app/api/health.py</code>.</p>
+<h2 id="minimum-mobile-rag-route-order">Minimum Mobile RAG Route Order<a class="headerlink" href="#minimum-mobile-rag-route-order" title="Permanent link">&para;</a></h2>
+<p>For a mobile app that only needs RAG chat first, use this order:</p>
+<ol>
+<li><code>POST /api/v1/auth/register</code> or <code>POST /api/v1/auth/login</code> to get a bearer token.</li>
+<li><code>GET /api/v1/health</code> to verify the backend is reachable.</li>
+<li><code>GET /api/v1/health/ai-config</code> once implemented, to verify RAG/AI readiness.</li>
+<li><code>POST /api/v1/rag/retrieve</code> to test whether the book returns relevant source chunks.</li>
+<li><code>POST /api/v1/chat/sessions</code> to create a conversation.</li>
+<li><code>POST /api/v1/chat/ask</code> to ask the textbook-grounded question.</li>
+<li><code>POST /api/v1/chat/messages/{message_id}/feedback</code> if the mobile app stores answer quality.</li>
+</ol>
+<p>The mobile app should not call Gemini directly. It should call the backend only. The backend owns provider keys, RAG retrieval, citations, safety checks, and fallback behavior.</p>
+<h2 id="most-important-current-gaps">Most Important Current Gaps<a class="headerlink" href="#most-important-current-gaps" title="Permanent link">&para;</a></h2>
+<ol>
+<li>The book is not fully production-ingested: 56 cached pages are failed/empty.</li>
+<li><code>POST /admin/ingestion/start</code> must use Celery instead of FastAPI in-memory background state.</li>
+<li>Current model defaults do not match the target config:
+   - Target <code>GEMINI_DOCUMENT_MODEL</code>: <code>gemini-3.5-flash</code>
+   - Target <code>GEMINI_DOCUMENT_FALLBACK_MODEL</code>: <code>gemini-2.5-pro</code>
+   - Target <code>GEMINI_EMBEDDING_MODEL</code>: <code>text-embedding-004</code></li>
+<li>There is no AI config/readiness endpoint in Swagger.</li>
+<li>There is no single-page extraction smoke test endpoint in Swagger.</li>
+<li>Homework image solving is not mobile-upload-ready.</li>
+<li>AI flashcard generation is not exposed as a Swagger API.</li>
+<li>Admin ingestion/review routes should use async DB and stricter admin protection.</li>
+<li>Redis exists but is not yet used for RAG cache or durable job progress.</li>
+<li>Chat citations/diagnostics are returned but not clearly persisted with assistant messages.</li>
+</ol>
+      </article>
+    </main>
+  </div>
+  <a class="back-to-top" href="#top" aria-label="Back to top">↑</a>
+</body>
+</html>

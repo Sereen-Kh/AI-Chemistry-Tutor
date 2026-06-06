@@ -12,6 +12,7 @@ class RagRetrieveRequest(BaseModel):
     content_types: list[str] | None = None
     top_k: int = 6
     min_similarity: float = 0.0
+    intent: str = "general"
 
 
 class RetrievedChunkResponse(BaseModel):
@@ -31,3 +32,8 @@ class RetrievedChunkResponse(BaseModel):
 
 class RagRetrieveResponse(BaseModel):
     chunks: list[RetrievedChunkResponse]
+
+
+class RagRetrieveDebugResponse(BaseModel):
+    chunks: list[RetrievedChunkResponse]
+    diagnostics: dict

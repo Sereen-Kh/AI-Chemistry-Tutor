@@ -9,6 +9,17 @@ import re
 DEFAULT_CHUNK_SIZE = 900
 DEFAULT_CHUNK_OVERLAP = 180
 
+_ARABIC_BULLET_RE = re.compile(r"^\s*(?:[-*•]|[\u0660-\u0669\d]+[.)-])\s*")
+_FORMULA_TOKEN_RE = re.compile(
+    r"\b(?:[A-Z][a-z]?(?:[0-9₀-₉]+)?|\([A-Za-z0-9₀-₉+\-⁺⁻]+\)[0-9₀-₉]*){1,8}[+\-⁺⁻]?\b|"
+    r"\b(?:H\+|H⁺|OH-|OH⁻)\b"
+)
+_SUBSCRIPT_DIGITS = str.maketrans("₀₁₂₃₄₅₆₇₈₉", "0123456789")
+_SUPERSCRIPT_CHARGES = str.maketrans({"⁺": "+", "⁻": "-"})
+_SUMMARY_HEADINGS = ("استنتج", "تعلمت", "نتيجه", "نتيجة")
+_DEFINITION_MARKERS = ("مواد", "هي", "تعطي", "تتفكك", "تتاين", "تتأين", "عباره عن", "فرع من")
+_NOISY_OCR_MARKERS = ("| --- |", "\u0007", "ﺗﻌﻠﻤﺖ", "اﻫﺪاف")
+
 
 @dataclass(frozen=True)
 class ChunkRecord:
@@ -64,6 +75,24 @@ def normalize_arabic(text: str) -> str:
     return re.sub(r"\s+", " ", normalized).strip()
 
 
+def normalize_formula(formula: str) -> str:
+    """Normalize chemistry formula glyphs used by OCR/Gemini outputs."""
+    return formula.translate(_SUBSCRIPT_DIGITS).translate(_SUPERSCRIPT_CHARGES).replace(" ", "")
+
+
+def extract_formula_terms(text: str) -> list[str]:
+    """Extract stable chemistry formula terms from Arabic/OCR text."""
+    formulas: set[str] = set()
+    for match in _FORMULA_TOKEN_RE.findall(text or ""):
+        normalized = normalize_formula(match)
+        if len(normalized) < 2:
+            continue
+        if normalized.lower() in {"ml", "mol", "aq", "g", "l", "s"}:
+            continue
+        formulas.add(normalized)
+    return sorted(formulas)
+
+
 def section_text(section: dict) -> str:
     """Format one structured section as retrievable text."""
     heading = section.get("heading")
@@ -109,6 +138,79 @@ def _append_unique_chunk(records: list[ChunkRecord], fingerprints: set[str], rec
         return
     fingerprints.add(fingerprint)
     records.append(record)
+
+
+def _section_kind(section: dict) -> str:
+    heading = normalize_arabic(str(section.get("heading") or "")).lower()
+    declared_type = str(section.get("content_type") or section.get("type") or "text").strip() or "text"
+    content = normalize_arabic(str(section.get("content") or "")).lower()
+
+    if declared_type in {"exercise", "question"}:
+        return "exercise"
+    if declared_type in {"table", "diagram", "equation", "definition", "result", "objective"}:
+        return declared_type
+    if "هدف" in heading or "اهداف" in heading:
+        return "objective"
+    if any(term in heading for term in _SUMMARY_HEADINGS):
+        return "learned_summary" if "تعلم" in heading else "result"
+    if ":" in section_text(section) and any(marker in content for marker in _DEFINITION_MARKERS):
+        return "definition"
+    return declared_type
+
+
+def _atomic_fact_lines(content: str) -> list[str]:
+    """Split short bullet/result lists into retrievable educational facts."""
+    cleaned_lines = [line.strip() for line in str(content or "").splitlines()]
+    facts: list[str] = []
+    current: list[str] = []
+    for line in cleaned_lines:
+        if not line:
+            continue
+        is_bullet = bool(_ARABIC_BULLET_RE.match(line))
+        stripped = _ARABIC_BULLET_RE.sub("", line).strip()
+        if is_bullet and current:
+            facts.append(" ".join(current).strip())
+            current = [stripped]
+        elif is_bullet:
+            current = [stripped]
+        elif current and len(" ".join(current)) < 220:
+            current.append(stripped)
+        elif current:
+            facts.append(" ".join(current).strip())
+            current = [stripped]
+        else:
+            current = [stripped]
+    if current:
+        facts.append(" ".join(current).strip())
+    return [fact for fact in facts if 24 <= len(fact) <= 420]
+
+
+def _chunk_content_type(base_type: str, content: str) -> str:
+    normalized = normalize_arabic(content)
+    if base_type in {"learned_summary", "result", "text"} and ":" in content:
+        if any(marker in normalized for marker in ("مواد", "هي", "احد فروع", "هو عدد", "تفاعلات")):
+            return "definition"
+    if base_type == "text" and any(marker in normalized for marker in ("اكتب", "احسب", "اختر", "اكمل")):
+        return "exercise"
+    return base_type
+
+
+def _with_content_metadata(metadata: dict, content: str) -> dict:
+    formulas = extract_formula_terms(content)
+    if not formulas:
+        return metadata
+    return {**metadata, "formulas": formulas}
+
+
+def _is_noisy_aggregate_section(section: dict, has_clean_sections: bool) -> bool:
+    if not has_clean_sections or section.get("heading"):
+        return False
+    content = str(section.get("content") or "")
+    if len(content) < 450:
+        return False
+    if any(marker in content for marker in _NOISY_OCR_MARKERS):
+        return True
+    return bool(re.search(r"\n\s*[A-Z]\s*\n\s*[0-9₀-₉]", content))
 
 
 def _question_text(question: dict) -> str:
@@ -171,23 +273,32 @@ def build_page_chunk_records(
         "completeness_score": page_payload.get("completeness_score"),
     }
 
-    for section_index, section in enumerate(page_payload.get("sections") or []):
+    sections = list(page_payload.get("sections") or [])
+    has_clean_sections = any(section.get("heading") and str(section.get("content") or "").strip() for section in sections)
+
+    for section_index, section in enumerate(sections):
+        if _is_noisy_aggregate_section(section, has_clean_sections):
+            continue
         content = section_text(section)
-        content_type = section.get("content_type") or "text"
-        for split_index, chunk in enumerate(split_text(content, chunk_size=chunk_size, chunk_overlap=chunk_overlap)):
+        content_type = _section_kind(section)
+        atomic_lines = _atomic_fact_lines(content) if content_type in {"learned_summary", "result", "definition"} else []
+        chunks = atomic_lines or split_text(content, chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+        for split_index, chunk in enumerate(chunks):
+            chunk_type = _chunk_content_type(content_type, chunk)
             _append_unique_chunk(
                 records,
                 fingerprints,
                 ChunkRecord(
                     content=chunk,
-                    content_type=content_type,
-                    metadata={
+                    content_type=chunk_type,
+                    metadata=_with_content_metadata({
                         **base_metadata,
                         "chunk_role": "section",
                         "section_index": section_index,
                         "section_heading": section.get("heading"),
                         "split_index": split_index,
-                    },
+                        "atomic_fact": bool(atomic_lines),
+                    }, chunk),
                 ),
             )
 
@@ -199,12 +310,12 @@ def build_page_chunk_records(
             ChunkRecord(
                 content=content,
                 content_type="table",
-                metadata={
+                metadata=_with_content_metadata({
                     **base_metadata,
                     "chunk_role": "table",
                     "table_index": table_index,
                     "table_title": table.get("title"),
-                },
+                }, content),
             ),
         )
 
@@ -216,12 +327,12 @@ def build_page_chunk_records(
             ChunkRecord(
                 content=content,
                 content_type="diagram",
-                metadata={
+                metadata=_with_content_metadata({
                     **base_metadata,
                     "chunk_role": "diagram",
                     "diagram_index": diagram_index,
                     "diagram_title": diagram.get("title"),
-                },
+                }, content),
             ),
         )
 
@@ -233,11 +344,11 @@ def build_page_chunk_records(
             ChunkRecord(
                 content=content,
                 content_type="equation",
-                metadata={
+                metadata=_with_content_metadata({
                     **base_metadata,
                     "chunk_role": "equation",
                     "equation_index": equation_index,
-                },
+                }, content),
             ),
         )
 
@@ -249,13 +360,13 @@ def build_page_chunk_records(
             ChunkRecord(
                 content=content,
                 content_type="exercise",
-                metadata={
+                metadata=_with_content_metadata({
                     **base_metadata,
                     "chunk_role": "question",
                     "question_index": question_index,
                     "question_type": question.get("question_type") or "unknown",
                     "answer_source": question.get("answer_source") or "unknown",
-                },
+                }, content),
             ),
         )
 
@@ -276,7 +387,10 @@ def build_page_chunk_records(
             ChunkRecord(
                 content=chunk,
                 content_type="full_page",
-                metadata={**base_metadata, "chunk_role": "full_page_fallback", "split_index": split_index},
+                metadata=_with_content_metadata(
+                    {**base_metadata, "chunk_role": "full_page_fallback", "split_index": split_index},
+                    chunk,
+                ),
             ),
         )
     return records

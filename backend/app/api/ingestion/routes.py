@@ -16,6 +16,8 @@ from app.schemas.ingestion import (
     ExtractedQuestionResponse,
     IngestionClearResponse,
     IngestionPageResponse,
+    IngestionRebuildCacheRequest,
+    IngestionRebuildCacheResponse,
     IngestionRetryPageResponse,
     IngestionStartRequest,
     IngestionStartResponse,
@@ -31,6 +33,7 @@ from app.schemas.ingestion import (
 )
 from app.services.ingestion_pipeline import run_full_ingestion
 from app.services.rag import retrieve_context
+from app.services.rag_rebuild import rebuild_rag_chunks_from_cached_pages
 
 router = APIRouter(prefix="/admin/ingestion", tags=["admin-ingestion"])
 
@@ -197,6 +200,29 @@ async def start_ingestion(
         request.clear_existing,
     )
     return IngestionStartResponse(task_id=task_id, status="queued")
+
+
+@router.post("/rebuild-from-cache", response_model=IngestionRebuildCacheResponse)
+async def rebuild_from_cache(
+    request: IngestionRebuildCacheRequest,
+    _admin=Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    result = await rebuild_rag_chunks_from_cached_pages(
+        db,
+        cache_dir=request.cache_dir,
+        title=request.title,
+        source_type=request.source_type,
+        grade=request.grade,
+        subject=request.subject,
+        year=request.year,
+        file_path=request.file_path,
+        chapter_id=request.chapter_id,
+        lesson_id=request.lesson_id,
+        topic_id=request.topic_id,
+        clear_existing=request.clear_existing,
+    )
+    return IngestionRebuildCacheResponse(**result.to_dict())
 
 
 @router.get("/sources", response_model=list[SourceResponse])

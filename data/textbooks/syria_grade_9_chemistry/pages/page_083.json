@@ -2,35 +2,190 @@
   "page_number": 83,
   "page_type": "NEEDS_VISION",
   "extraction_methods": [
-    "exception"
+    "gemini_pdf_file",
+    "gemini_image_300dpi"
   ],
-  "extraction_method": "exception",
-  "status": "failed",
+  "extraction_method": "gemini_pdf_file+gemini_image_300dpi",
+  "status": "completed_with_image_fallback",
   "text_layer_content": "",
-  "vision_content": {},
+  "vision_content": {
+    "page_number": 83,
+    "detected_language": "ar",
+    "raw_markdown": "# مراحل المشروع:\n\nأولاً - التخطيط:\n- القيام برحلة علميّة إلى (مصفاة حمص).\n- القيام برحلة علميّة خلال الشابكة.\n\nثانياً - التصميم:\n- هيكليّة النشاط والجدول الزمنيّ لإنجاز المشروع.\n\nثالثاً - الدعوة:\n- دعوة عدد من الطلاب، وتشكيل مجموعات موزّعة بشكل مناسب.\n\nرابعاً - التنفيذ:\n- إسناد مهمّة محدّدة لكلّ مجموعة بما يناسب أهداف المشروع.\n- تبادل المستلزمات بين المجموعات في أثناء تنفيذ المهام.\n- إعداد تقرير كامل.\n\nخامساً - التقييم:\n- مناقشة التقرير واستخلاص النتائج.",
+    "sections": [
+      {
+        "heading": "مراحل المشروع",
+        "content": "أولاً - التخطيط:\n- القيام برحلة علميّة إلى (مصفاة حمص).\n- القيام برحلة علميّة خلال الشابكة.\n\nثانياً - التصميم:\n- هيكليّة النشاط والجدول الزمنيّ لإنجاز المشروع.\n\nثالثاً - الدعوة:\n- دعوة عدد من الطلاب، وتشكيل مجموعات موزّعة بشكل مناسب.\n\nرابعاً - التنفيذ:\n- إسناد مهمّة محدّدة لكلّ مجموعة بما يناسب أهداف المشروع.\n- تبادل المستلزمات بين المجموعات في أثناء تنفيذ المهام.\n- إعداد تقرير كامل.\n\nخامساً - التقييم:\n- مناقشة التقرير واستخلاص النتائج.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [],
+    "diagrams": [],
+    "tables": [],
+    "equations": [],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 724.258338ms.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.5-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '0s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 458,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 83,
+      "schema_valid": true,
+      "raw_markdown_chars": 458,
+      "char_count": 458,
+      "section_count": 1,
+      "question_count": 0,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.7876,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 83,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"# مراحل المشروع:\\n\\nأولاً - التخطيط:\\n- القيام برحلة علميّة إلى (مصفاة حمص).\\n- القيام برحلة علميّة خلال الشابكة.\\n\\nثانياً - التصميم:\\n- هيكليّة النشاط والجدول الزمنيّ لإنجاز المشروع.\\n\\nثالثاً - الدعوة:\\n- دعوة عدد من الطلاب، وتشكيل مجموعات موزّعة بشكل مناسب.\\n\\nرابعاً - التنفيذ:\\n- إسناد مهمّة محدّدة لكلّ مجموعة بما يناسب أهداف المشروع.\\n- تبادل المستلزمات بين المجموعات في أثناء تنفيذ المهام.\\n- إعداد تقرير كامل.\\n\\nخامساً - التقييم:\\n- مناقشة التقرير واستخلاص النتائج.\",\n  \"sections\": [\n    {\n      \"heading\": \"مراحل المشروع\",\n      \"content\": \"أولاً - التخطيط:\\n- القيام برحلة علميّة إلى (مصفاة حمص).\\n- القيام برحلة علميّة خلال الشابكة.\\n\\nثانياً - التصميم:\\n- هيكليّة النشاط والجدول الزمنيّ لإنجاز المشروع.\\n\\nثالثاً - الدعوة:\\n- دعوة عدد من الطلاب، وتشكيل مجموعات موزّعة بشكل مناسب.\\n\\nرابعاً - التنفيذ:\\n- إسناد مهمّة محدّدة لكلّ مجموعة بما يناسب أهداف المشروع.\\n- تبادل المستلزمات بين المجموعات في أثناء تنفيذ المهام.\\n- إعداد تقرير كامل.\\n\\nخامساً - التقييم:\\n- مناقشة التقرير واستخلاص النتائج.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true,\n  \"char_count\": 458,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 83,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 458,\n    \"char_count\": 458,\n    \"section_count\": 1,\n    \"question_count\": 0,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 0,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.85,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  }\n}"
+  },
   "gemini_pdf_content": {},
-  "gemini_fallback_model_content": {},
-  "gemini_image_fallback_content": {},
-  "merged_content": "",
-  "raw_markdown": "",
-  "sections": [],
+  "gemini_fallback_model_content": {
+    "page_number": 83,
+    "detected_language": "ar",
+    "raw_markdown": "# مراحل المشروع:\n\nأولاً - التخطيط:\n- القيام برحلة علميّة إلى (مصفاة حمص).\n- القيام برحلة علميّة خلال الشابكة.\n\nثانياً - التصميم:\n- هيكليّة النشاط والجدول الزمنيّ لإنجاز المشروع.\n\nثالثاً - الدعوة:\n- دعوة عدد من الطلاب، وتشكيل مجموعات موزّعة بشكل مناسب.\n\nرابعاً - التنفيذ:\n- إسناد مهمّة محدّدة لكلّ مجموعة بما يناسب أهداف المشروع.\n- تبادل المستلزمات بين المجموعات في أثناء تنفيذ المهام.\n- إعداد تقرير كامل.\n\nخامساً - التقييم:\n- مناقشة التقرير واستخلاص النتائج.",
+    "sections": [
+      {
+        "heading": "مراحل المشروع",
+        "content": "أولاً - التخطيط:\n- القيام برحلة علميّة إلى (مصفاة حمص).\n- القيام برحلة علميّة خلال الشابكة.\n\nثانياً - التصميم:\n- هيكليّة النشاط والجدول الزمنيّ لإنجاز المشروع.\n\nثالثاً - الدعوة:\n- دعوة عدد من الطلاب، وتشكيل مجموعات موزّعة بشكل مناسب.\n\nرابعاً - التنفيذ:\n- إسناد مهمّة محدّدة لكلّ مجموعة بما يناسب أهداف المشروع.\n- تبادل المستلزمات بين المجموعات في أثناء تنفيذ المهام.\n- إعداد تقرير كامل.\n\nخامساً - التقييم:\n- مناقشة التقرير واستخلاص النتائج.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [],
+    "diagrams": [],
+    "tables": [],
+    "equations": [],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 724.258338ms.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.5-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '0s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 458,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 83,
+      "schema_valid": true,
+      "raw_markdown_chars": 458,
+      "char_count": 458,
+      "section_count": 1,
+      "question_count": 0,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.7876,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 83,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"# مراحل المشروع:\\n\\nأولاً - التخطيط:\\n- القيام برحلة علميّة إلى (مصفاة حمص).\\n- القيام برحلة علميّة خلال الشابكة.\\n\\nثانياً - التصميم:\\n- هيكليّة النشاط والجدول الزمنيّ لإنجاز المشروع.\\n\\nثالثاً - الدعوة:\\n- دعوة عدد من الطلاب، وتشكيل مجموعات موزّعة بشكل مناسب.\\n\\nرابعاً - التنفيذ:\\n- إسناد مهمّة محدّدة لكلّ مجموعة بما يناسب أهداف المشروع.\\n- تبادل المستلزمات بين المجموعات في أثناء تنفيذ المهام.\\n- إعداد تقرير كامل.\\n\\nخامساً - التقييم:\\n- مناقشة التقرير واستخلاص النتائج.\",\n  \"sections\": [\n    {\n      \"heading\": \"مراحل المشروع\",\n      \"content\": \"أولاً - التخطيط:\\n- القيام برحلة علميّة إلى (مصفاة حمص).\\n- القيام برحلة علميّة خلال الشابكة.\\n\\nثانياً - التصميم:\\n- هيكليّة النشاط والجدول الزمنيّ لإنجاز المشروع.\\n\\nثالثاً - الدعوة:\\n- دعوة عدد من الطلاب، وتشكيل مجموعات موزّعة بشكل مناسب.\\n\\nرابعاً - التنفيذ:\\n- إسناد مهمّة محدّدة لكلّ مجموعة بما يناسب أهداف المشروع.\\n- تبادل المستلزمات بين المجموعات في أثناء تنفيذ المهام.\\n- إعداد تقرير كامل.\\n\\nخامساً - التقييم:\\n- مناقشة التقرير واستخلاص النتائج.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true,\n  \"char_count\": 458,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 83,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 458,\n    \"char_count\": 458,\n    \"section_count\": 1,\n    \"question_count\": 0,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 0,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.85,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  }\n}"
+  },
+  "gemini_image_fallback_content": {
+    "page_number": 83,
+    "detected_language": "ar",
+    "raw_markdown": "# مراحل المشروع:\n\nأولاً - التخطيط:\n- القيام برحلة علميّة إلى (مصفاة حمص).\n- القيام برحلة علميّة خلال الشابكة.\n\nثانياً - التصميم:\n- هيكليّة النشاط والجدول الزمنيّ لإنجاز المشروع.\n\nثالثاً - الدعوة:\n- دعوة عدد من الطلاب، وتشكيل مجموعات موزّعة بشكل مناسب.\n\nرابعاً - التنفيذ:\n- إسناد مهمّة محدّدة لكلّ مجموعة بما يناسب أهداف المشروع.\n- تبادل المستلزمات بين المجموعات في أثناء تنفيذ المهام.\n- إعداد تقرير كامل.\n\nخامساً - التقييم:\n- مناقشة التقرير واستخلاص النتائج.",
+    "sections": [
+      {
+        "heading": "مراحل المشروع",
+        "content": "أولاً - التخطيط:\n- القيام برحلة علميّة إلى (مصفاة حمص).\n- القيام برحلة علميّة خلال الشابكة.\n\nثانياً - التصميم:\n- هيكليّة النشاط والجدول الزمنيّ لإنجاز المشروع.\n\nثالثاً - الدعوة:\n- دعوة عدد من الطلاب، وتشكيل مجموعات موزّعة بشكل مناسب.\n\nرابعاً - التنفيذ:\n- إسناد مهمّة محدّدة لكلّ مجموعة بما يناسب أهداف المشروع.\n- تبادل المستلزمات بين المجموعات في أثناء تنفيذ المهام.\n- إعداد تقرير كامل.\n\nخامساً - التقييم:\n- مناقشة التقرير واستخلاص النتائج.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [],
+    "diagrams": [],
+    "tables": [],
+    "equations": [],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 724.258338ms.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.5-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '0s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 458,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 83,
+      "schema_valid": true,
+      "raw_markdown_chars": 458,
+      "char_count": 458,
+      "section_count": 1,
+      "question_count": 0,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.7876,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 83,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"# مراحل المشروع:\\n\\nأولاً - التخطيط:\\n- القيام برحلة علميّة إلى (مصفاة حمص).\\n- القيام برحلة علميّة خلال الشابكة.\\n\\nثانياً - التصميم:\\n- هيكليّة النشاط والجدول الزمنيّ لإنجاز المشروع.\\n\\nثالثاً - الدعوة:\\n- دعوة عدد من الطلاب، وتشكيل مجموعات موزّعة بشكل مناسب.\\n\\nرابعاً - التنفيذ:\\n- إسناد مهمّة محدّدة لكلّ مجموعة بما يناسب أهداف المشروع.\\n- تبادل المستلزمات بين المجموعات في أثناء تنفيذ المهام.\\n- إعداد تقرير كامل.\\n\\nخامساً - التقييم:\\n- مناقشة التقرير واستخلاص النتائج.\",\n  \"sections\": [\n    {\n      \"heading\": \"مراحل المشروع\",\n      \"content\": \"أولاً - التخطيط:\\n- القيام برحلة علميّة إلى (مصفاة حمص).\\n- القيام برحلة علميّة خلال الشابكة.\\n\\nثانياً - التصميم:\\n- هيكليّة النشاط والجدول الزمنيّ لإنجاز المشروع.\\n\\nثالثاً - الدعوة:\\n- دعوة عدد من الطلاب، وتشكيل مجموعات موزّعة بشكل مناسب.\\n\\nرابعاً - التنفيذ:\\n- إسناد مهمّة محدّدة لكلّ مجموعة بما يناسب أهداف المشروع.\\n- تبادل المستلزمات بين المجموعات في أثناء تنفيذ المهام.\\n- إعداد تقرير كامل.\\n\\nخامساً - التقييم:\\n- مناقشة التقرير واستخلاص النتائج.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true,\n  \"char_count\": 458,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 83,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 458,\n    \"char_count\": 458,\n    \"section_count\": 1,\n    \"question_count\": 0,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 0,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.85,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  }\n}"
+  },
+  "merged_content": "مراحل المشروع\nأولاً - التخطيط:\n- القيام برحلة علميّة إلى (مصفاة حمص).\n- القيام برحلة علميّة خلال الشابكة.\n\nثانياً - التصميم:\n- هيكليّة النشاط والجدول الزمنيّ لإنجاز المشروع.\n\nثالثاً - الدعوة:\n- دعوة عدد من الطلاب، وتشكيل مجموعات موزّعة بشكل مناسب.\n\nرابعاً - التنفيذ:\n- إسناد مهمّة محدّدة لكلّ مجموعة بما يناسب أهداف المشروع.\n- تبادل المستلزمات بين المجموعات في أثناء تنفيذ المهام.\n- إعداد تقرير كامل.\n\nخامساً - التقييم:\n- مناقشة التقرير واستخلاص النتائج.",
+  "raw_markdown": "# مراحل المشروع:\n\nأولاً - التخطيط:\n- القيام برحلة علميّة إلى (مصفاة حمص).\n- القيام برحلة علميّة خلال الشابكة.\n\nثانياً - التصميم:\n- هيكليّة النشاط والجدول الزمنيّ لإنجاز المشروع.\n\nثالثاً - الدعوة:\n- دعوة عدد من الطلاب، وتشكيل مجموعات موزّعة بشكل مناسب.\n\nرابعاً - التنفيذ:\n- إسناد مهمّة محدّدة لكلّ مجموعة بما يناسب أهداف المشروع.\n- تبادل المستلزمات بين المجموعات في أثناء تنفيذ المهام.\n- إعداد تقرير كامل.\n\nخامساً - التقييم:\n- مناقشة التقرير واستخلاص النتائج.",
+  "sections": [
+    {
+      "heading": "مراحل المشروع",
+      "content": "أولاً - التخطيط:\n- القيام برحلة علميّة إلى (مصفاة حمص).\n- القيام برحلة علميّة خلال الشابكة.\n\nثانياً - التصميم:\n- هيكليّة النشاط والجدول الزمنيّ لإنجاز المشروع.\n\nثالثاً - الدعوة:\n- دعوة عدد من الطلاب، وتشكيل مجموعات موزّعة بشكل مناسب.\n\nرابعاً - التنفيذ:\n- إسناد مهمّة محدّدة لكلّ مجموعة بما يناسب أهداف المشروع.\n- تبادل المستلزمات بين المجموعات في أثناء تنفيذ المهام.\n- إعداد تقرير كامل.\n\nخامساً - التقييم:\n- مناقشة التقرير واستخلاص النتائج.",
+      "content_type": "text"
+    }
+  ],
   "questions": [],
   "diagrams": [],
   "tables": [],
   "equations": [],
-  "warnings": [],
-  "errors": [
-    "Gemini document extraction failed quality checks for page 83: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 25.203901934s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.5-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '25s'}]}}"
+  "warnings": [
+    "Gemini PDF extraction failed; using 300 DPI image fallback: Gemini document extraction failed for page 83 with model gemini-3.1-flash-lite: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'Request contains an invalid argument.', 'status': 'INVALID_ARGUMENT'}}",
+    "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 724.258338ms.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.5-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '0s'}]}}."
   ],
-  "char_count": 0,
-  "completeness_score": 0.0,
+  "errors": [],
+  "char_count": 454,
+  "completeness_score": 1.0,
   "detected_language": "ar",
-  "vision_provider": null,
-  "vision_source": null,
-  "neighboring_pages": [],
-  "uploaded_pdf": null,
-  "raw_text": null,
-  "quality_report": {},
+  "vision_provider": "gemini_document_image",
+  "vision_source": "gemini_rendered_image_300dpi",
+  "neighboring_pages": [
+    82,
+    84
+  ],
+  "uploaded_pdf": {
+    "provider": "gemini_document",
+    "name": "files/6zs99grhoqr2",
+    "uri": "https://generativelanguage.googleapis.com/v1beta/files/6zs99grhoqr2",
+    "mime_type": "application/pdf",
+    "display_name": "Chemistry.pdf"
+  },
+  "raw_text": "{\n  \"page_number\": 83,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"# مراحل المشروع:\\n\\nأولاً - التخطيط:\\n- القيام برحلة علميّة إلى (مصفاة حمص).\\n- القيام برحلة علميّة خلال الشابكة.\\n\\nثانياً - التصميم:\\n- هيكليّة النشاط والجدول الزمنيّ لإنجاز المشروع.\\n\\nثالثاً - الدعوة:\\n- دعوة عدد من الطلاب، وتشكيل مجموعات موزّعة بشكل مناسب.\\n\\nرابعاً - التنفيذ:\\n- إسناد مهمّة محدّدة لكلّ مجموعة بما يناسب أهداف المشروع.\\n- تبادل المستلزمات بين المجموعات في أثناء تنفيذ المهام.\\n- إعداد تقرير كامل.\\n\\nخامساً - التقييم:\\n- مناقشة التقرير واستخلاص النتائج.\",\n  \"sections\": [\n    {\n      \"heading\": \"مراحل المشروع\",\n      \"content\": \"أولاً - التخطيط:\\n- القيام برحلة علميّة إلى (مصفاة حمص).\\n- القيام برحلة علميّة خلال الشابكة.\\n\\nثانياً - التصميم:\\n- هيكليّة النشاط والجدول الزمنيّ لإنجاز المشروع.\\n\\nثالثاً - الدعوة:\\n- دعوة عدد من الطلاب، وتشكيل مجموعات موزّعة بشكل مناسب.\\n\\nرابعاً - التنفيذ:\\n- إسناد مهمّة محدّدة لكلّ مجموعة بما يناسب أهداف المشروع.\\n- تبادل المستلزمات بين المجموعات في أثناء تنفيذ المهام.\\n- إعداد تقرير كامل.\\n\\nخامساً - التقييم:\\n- مناقشة التقرير واستخلاص النتائج.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true,\n  \"char_count\": 458,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 83,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 458,\n    \"char_count\": 458,\n    \"section_count\": 1,\n    \"question_count\": 0,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 0,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.85,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  }\n}",
+  "quality_report": {
+    "page_number": 83,
+    "schema_valid": true,
+    "raw_markdown_chars": 458,
+    "char_count": 458,
+    "section_count": 1,
+    "question_count": 0,
+    "table_count": 0,
+    "equation_count": 0,
+    "diagram_count": 0,
+    "warning_count": 0,
+    "arabic_char_ratio": 0.7876,
+    "completeness_score": 1.0,
+    "issues": [],
+    "should_fallback": false
+  },
   "classification": "NEEDS_VISION",
   "source_id": 1
 }

@@ -2,35 +2,405 @@
   "page_number": 47,
   "page_type": "MIXED_VISION",
   "extraction_methods": [
-    "exception"
+    "pymupdf",
+    "pdfplumber",
+    "gemini_pdf_file",
+    "gemini_image_300dpi"
   ],
-  "extraction_method": "exception",
-  "status": "failed",
-  "text_layer_content": "",
-  "vision_content": {},
+  "extraction_method": "pymupdf+pdfplumber+gemini_pdf_file+gemini_image_300dpi",
+  "status": "completed_with_image_fallback",
+  "text_layer_content": "أضيف محلول ملح كلوريد الصّ وديوم إلى محلول ملح نترات الفضّة، ماذا أالحظ؟3\nAgNO3\nNaCl\n.أرشّح المحلول العَكِ ر، ماذا أالحظ؟ ثمّ أستنتج4\n+\n-\n+\n+\n-\n-\n(Ag\nNO\n)\n(Na\nC\n)\nAgCl\n(Na\nNO\n)\nl\n(aq)\n(s)\n(aq)\n$\n+\n+\n+\n+\n+\n3\n3\naq\naq\naq\naq\nأكتب معادلة التّفاعل الحاصل، وأسمّي النّواتج؟5\n• \n يتشكّل راسب أبيض من ملح كلوريد الفضّة، يتمّ فصله بعمليّة التّرشيح، ونالحظ تشكّل محلول\nملح نترات الصّ وديوم الذّوّابة في البيشر الثّالث.\n:أﺳﺘﻨﺘﺞ\n:نتيجة\nتختلف قابليّة ذوبان األمالح في الماء من ملح إلى آخر، لذا تُصنّف األمالح إلى:\n• \nأمالح ذوّابة:\n \nCH COO\n3\n- ، وأمالح الخلّ ت الحاوية-\nNO3  أمالح النّترات الحاوية\n \n)AgCl ،CuCl ، PbCl2 ،HgCl( وأمالح الكلوريد ماعدا\n \n)BaSO4 ،CaSO4 ، PbSO4( وأمالح الكبريتات ماعدا\n• \nأمالح قليلة الذّوبان:\n \n)2-\nCO3 ( أمالح الكربونات الحاوية\n \n)3-\nPO4 ( وأمالح الفوسفات\n \n، فهي ذوّابة.+\nNH4   أوK+  أوNa+ ماعدا األمالح الحاوية\n153\n\n|  |  |  |  |\n| --- | --- | --- | --- |\n|  |  |  |  |\n|  |  |  |  |\n\n|  |  |\n| --- | --- |\n| ِ |  |\n|  | أ 4 |",
+  "vision_content": {
+    "page_number": 47,
+    "detected_language": "ar",
+    "raw_markdown": "3 أضيف محلول كلوريد الصوديوم إلى محلول ملح نترات الفضة، ماذا ألاحظ؟\n\n[صورة توضح إضافة محلول NaCl إلى محلول AgNO3، ثم ترشيح الراسب الأبيض الناتج]\n\n4 أرشّح المحلول العكر، ماذا ألاحظ؟ ثم أستنتج.\n(Ag⁺ + NO₃⁻(aq)) + (Na⁺ + Cl⁻(aq)) → AgCl(s) + (Na⁺ + NO₃⁻(aq))\n\n5 أكتب معادلة التفاعل الحاصل، وأسمّي النواتج؟\n\nأستنتج:\nيتشكّل راسب أبيض من ملح كلوريد الفضة، يتم فصله بعملية الترشيح، ونلاحظ تشكّل محلول ملح نترات الصوديوم الذوّابة في البيشر الثالث.\n\nنتيجة:\nتختلف قابليّة ذوبان الأملاح في الماء من ملح إلى آخر، لذا تُصنّف الأملاح إلى:\n- أملاح ذوّابة:\nأملاح النترات الحاوية NO₃⁻، وأملاح الخلات الحاوية CH₃COO⁻\nوأملاح الكلوريد ماعدا (AgCl ،CuCl ،PbCl₂ ،HgCl)\nوأملاح الكبريتات ماعدا (BaSO₄ ،CaSO₄ ،PbSO₄)\n- أملاح قليلة الذوبان:\nأملاح الكربونات الحاوية (CO₃²⁻)\nوأملاح الفوسفات (PO₄³⁻)\nماعدا الأملاح الحاوية Na⁺ أو K⁺ أو NH₄⁺، فهي ذوّابة.",
+    "sections": [
+      {
+        "heading": null,
+        "content": "3 أضيف محلول كلوريد الصوديوم إلى محلول ملح نترات الفضة، ماذا ألاحظ؟",
+        "content_type": "text"
+      },
+      {
+        "heading": null,
+        "content": "4 أرشّح المحلول العكر، ماذا ألاحظ؟ ثم أستنتج.\n(Ag⁺ + NO₃⁻(aq)) + (Na⁺ + Cl⁻(aq)) → AgCl(s) + (Na⁺ + NO₃⁻(aq))\n\n5 أكتب معادلة التفاعل الحاصل، وأسمّي النواتج؟",
+        "content_type": "mixed"
+      },
+      {
+        "heading": "أستنتج:",
+        "content": "يتشكّل راسب أبيض من ملح كلوريد الفضة، يتم فصله بعملية الترشيح، ونلاحظ تشكّل محلول ملح نترات الصوديوم الذوّابة في البيشر الثالث.",
+        "content_type": "text"
+      },
+      {
+        "heading": "نتيجة:",
+        "content": "تختلف قابليّة ذوبان الأملاح في الماء من ملح إلى آخر، لذا تُصنّف الأملاح إلى:\n- أملاح ذوّابة:\nأملاح النترات الحاوية NO₃⁻، وأملاح الخلات الحاوية CH₃COO⁻\nوأملاح الكلوريد ماعدا (AgCl ،CuCl ،PbCl₂ ،HgCl)\nوأملاح الكبريتات ماعدا (BaSO₄ ،CaSO₄ ،PbSO₄)\n- أملاح قليلة الذوبان:\nأملاح الكربونات الحاوية (CO₃²⁻)\nوأملاح الفوسفات (PO₄³⁻)\nماعدا الأملاح الحاوية Na⁺ أو K⁺ أو NH₄⁺، فهي ذوّابة.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "3 أضيف محلول كلوريد الصوديوم إلى محلول ملح نترات الفضة، ماذا ألاحظ؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "4 أرشّح المحلول العكر، ماذا ألاحظ؟ ثم أستنتج.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "5 أكتب معادلة التفاعل الحاصل، وأسمّي النواتج؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "سلسلة من ثلاث صور توضح تجربة كيميائية: الأولى تظهر بيشرين يحتويان على AgNO3 و NaCl، الثانية تظهر إضافة NaCl إلى AgNO3، والثالثة تظهر عملية ترشيح للمحلول الناتج لفصل الراسب الأبيض.",
+        "labels": [],
+        "related_text": null
+      }
+    ],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "(Ag⁺ + NO₃⁻(aq)) + (Na⁺ + Cl⁻(aq)) → AgCl(s) + (Na⁺ + NO₃⁻(aq))",
+        "description": "معادلة تفاعل نترات الفضة مع كلوريد الصوديوم"
+      }
+    ],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 49.595161758s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '49s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 823,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 47,
+      "schema_valid": true,
+      "raw_markdown_chars": 823,
+      "char_count": 823,
+      "section_count": 4,
+      "question_count": 3,
+      "table_count": 0,
+      "equation_count": 1,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.7574,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 47,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"3 أضيف محلول كلوريد الصوديوم إلى محلول ملح نترات الفضة، ماذا ألاحظ؟\\n\\n[صورة توضح إضافة محلول NaCl إلى محلول AgNO3، ثم ترشيح الراسب الأبيض الناتج]\\n\\n4 أرشّح المحلول العكر، ماذا ألاحظ؟ ثم أستنتج.\\n(Ag⁺ + NO₃⁻(aq)) + (Na⁺ + Cl⁻(aq)) → AgCl(s) + (Na⁺ + NO₃⁻(aq))\\n\\n5 أكتب معادلة التفاعل الحاصل، وأسمّي النواتج؟\\n\\nأستنتج:\\nيتشكّل راسب أبيض من ملح كلوريد الفضة، يتم فصله بعملية الترشيح، ونلاحظ تشكّل محلول ملح نترات الصوديوم الذوّابة في البيشر الثالث.\\n\\nنتيجة:\\nتختلف قابليّة ذوبان الأملاح في الماء من ملح إلى آخر، لذا تُصنّف الأملاح إلى:\\n- أملاح ذوّابة:\\nأملاح النترات الحاوية NO₃⁻، وأملاح الخلات الحاوية CH₃COO⁻\\nوأملاح الكلوريد ماعدا (AgCl ،CuCl ،PbCl₂ ،HgCl)\\nوأملاح الكبريتات ماعدا (BaSO₄ ،CaSO₄ ،PbSO₄)\\n- أملاح قليلة الذوبان:\\nأملاح الكربونات الحاوية (CO₃²⁻)\\nوأملاح الفوسفات (PO₄³⁻)\\nماعدا الأملاح الحاوية Na⁺ أو K⁺ أو NH₄⁺، فهي ذوّابة.\",\n  \"sections\": [\n    {\n      \"content\": \"3 أضيف محلول كلوريد الصوديوم إلى محلول ملح نترات الفضة، ماذا ألاحظ؟\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"content\": \"4 أرشّح المحلول العكر، ماذا ألاحظ؟ ثم أستنتج.\\n(Ag⁺ + NO₃⁻(aq)) + (Na⁺ + Cl⁻(aq)) → AgCl(s) + (Na⁺ + NO₃⁻(aq))\\n\\n5 أكتب معادلة التفاعل الحاصل، وأسمّي النواتج؟\",\n      \"content_type\": \"mixed\"\n    },\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"يتشكّل راسب أبيض من ملح كلوريد الفضة، يتم فصله بعملية الترشيح، ونلاحظ تشكّل محلول ملح نترات الصوديوم الذوّابة في البيشر الثالث.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"نتيجة:\",\n      \"content\": \"تختلف قابليّة ذوبان الأملاح في الماء من ملح إلى آخر، لذا تُصنّف الأملاح إلى:\\n- أملاح ذوّابة:\\nأملاح النترات الحاوية NO₃⁻، وأملاح الخلات الحاوية CH₃COO⁻\\nوأملاح الكلوريد ماعدا (AgCl ،CuCl ،PbCl₂ ،HgCl)\\nوأملاح الكبريتات ماعدا (BaSO₄ ،CaSO₄ ،PbSO₄)\\n- أملاح قليلة الذوبان:\\nأملاح الكربونات الحاوية (CO₃²⁻)\\nوأملاح الفوسفات (PO₄³⁻)\\nماعدا الأملاح الحاوية Na⁺ أو K⁺ أو NH₄⁺، فهي ذوّابة.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"3 أضيف محلول كلوريد الصوديوم إلى محلول ملح نترات الفضة، ماذا ألاحظ؟\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"4 أرشّح المحلول العكر، ماذا ألاحظ؟ ثم أستنتج.\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"5 أكتب معادلة التفاعل الحاصل، وأسمّي النواتج؟\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"description\": \"سلسلة من ثلاث صور توضح تجربة كيميائية: الأولى تظهر بيشرين يحتويان على AgNO3 و NaCl، الثانية تظهر إضافة NaCl إلى AgNO3، والثالثة تظهر عملية ترشيح للمحلول الناتج لفصل الراسب الأبيض.\"\n    }\n  ],\n  \"equations\": [\n    {\n      \"equation\": \"(Ag⁺ + NO₃⁻(aq)) + (Na⁺ + Cl⁻(aq)) → AgCl(s) + (Na⁺ + NO₃⁻(aq))\",\n      \"description\": \"معادلة تفاعل نترات الفضة مع كلوريد الصوديوم\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}"
+  },
   "gemini_pdf_content": {},
-  "gemini_fallback_model_content": {},
-  "gemini_image_fallback_content": {},
-  "merged_content": "",
-  "raw_markdown": "",
-  "sections": [],
-  "questions": [],
-  "diagrams": [],
-  "tables": [],
-  "equations": [],
-  "warnings": [],
-  "errors": [
-    "Gemini document extraction failed quality checks for page 47: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 5.169586725s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '5s'}]}}"
+  "gemini_fallback_model_content": {
+    "page_number": 47,
+    "detected_language": "ar",
+    "raw_markdown": "3 أضيف محلول كلوريد الصوديوم إلى محلول ملح نترات الفضة، ماذا ألاحظ؟\n\n[صورة توضح إضافة محلول NaCl إلى محلول AgNO3، ثم ترشيح الراسب الأبيض الناتج]\n\n4 أرشّح المحلول العكر، ماذا ألاحظ؟ ثم أستنتج.\n(Ag⁺ + NO₃⁻(aq)) + (Na⁺ + Cl⁻(aq)) → AgCl(s) + (Na⁺ + NO₃⁻(aq))\n\n5 أكتب معادلة التفاعل الحاصل، وأسمّي النواتج؟\n\nأستنتج:\nيتشكّل راسب أبيض من ملح كلوريد الفضة، يتم فصله بعملية الترشيح، ونلاحظ تشكّل محلول ملح نترات الصوديوم الذوّابة في البيشر الثالث.\n\nنتيجة:\nتختلف قابليّة ذوبان الأملاح في الماء من ملح إلى آخر، لذا تُصنّف الأملاح إلى:\n- أملاح ذوّابة:\nأملاح النترات الحاوية NO₃⁻، وأملاح الخلات الحاوية CH₃COO⁻\nوأملاح الكلوريد ماعدا (AgCl ،CuCl ،PbCl₂ ،HgCl)\nوأملاح الكبريتات ماعدا (BaSO₄ ،CaSO₄ ،PbSO₄)\n- أملاح قليلة الذوبان:\nأملاح الكربونات الحاوية (CO₃²⁻)\nوأملاح الفوسفات (PO₄³⁻)\nماعدا الأملاح الحاوية Na⁺ أو K⁺ أو NH₄⁺، فهي ذوّابة.",
+    "sections": [
+      {
+        "heading": null,
+        "content": "3 أضيف محلول كلوريد الصوديوم إلى محلول ملح نترات الفضة، ماذا ألاحظ؟",
+        "content_type": "text"
+      },
+      {
+        "heading": null,
+        "content": "4 أرشّح المحلول العكر، ماذا ألاحظ؟ ثم أستنتج.\n(Ag⁺ + NO₃⁻(aq)) + (Na⁺ + Cl⁻(aq)) → AgCl(s) + (Na⁺ + NO₃⁻(aq))\n\n5 أكتب معادلة التفاعل الحاصل، وأسمّي النواتج؟",
+        "content_type": "mixed"
+      },
+      {
+        "heading": "أستنتج:",
+        "content": "يتشكّل راسب أبيض من ملح كلوريد الفضة، يتم فصله بعملية الترشيح، ونلاحظ تشكّل محلول ملح نترات الصوديوم الذوّابة في البيشر الثالث.",
+        "content_type": "text"
+      },
+      {
+        "heading": "نتيجة:",
+        "content": "تختلف قابليّة ذوبان الأملاح في الماء من ملح إلى آخر، لذا تُصنّف الأملاح إلى:\n- أملاح ذوّابة:\nأملاح النترات الحاوية NO₃⁻، وأملاح الخلات الحاوية CH₃COO⁻\nوأملاح الكلوريد ماعدا (AgCl ،CuCl ،PbCl₂ ،HgCl)\nوأملاح الكبريتات ماعدا (BaSO₄ ،CaSO₄ ،PbSO₄)\n- أملاح قليلة الذوبان:\nأملاح الكربونات الحاوية (CO₃²⁻)\nوأملاح الفوسفات (PO₄³⁻)\nماعدا الأملاح الحاوية Na⁺ أو K⁺ أو NH₄⁺، فهي ذوّابة.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "3 أضيف محلول كلوريد الصوديوم إلى محلول ملح نترات الفضة، ماذا ألاحظ؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "4 أرشّح المحلول العكر، ماذا ألاحظ؟ ثم أستنتج.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "5 أكتب معادلة التفاعل الحاصل، وأسمّي النواتج؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "سلسلة من ثلاث صور توضح تجربة كيميائية: الأولى تظهر بيشرين يحتويان على AgNO3 و NaCl، الثانية تظهر إضافة NaCl إلى AgNO3، والثالثة تظهر عملية ترشيح للمحلول الناتج لفصل الراسب الأبيض.",
+        "labels": [],
+        "related_text": null
+      }
+    ],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "(Ag⁺ + NO₃⁻(aq)) + (Na⁺ + Cl⁻(aq)) → AgCl(s) + (Na⁺ + NO₃⁻(aq))",
+        "description": "معادلة تفاعل نترات الفضة مع كلوريد الصوديوم"
+      }
+    ],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 49.595161758s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '49s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 823,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 47,
+      "schema_valid": true,
+      "raw_markdown_chars": 823,
+      "char_count": 823,
+      "section_count": 4,
+      "question_count": 3,
+      "table_count": 0,
+      "equation_count": 1,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.7574,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 47,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"3 أضيف محلول كلوريد الصوديوم إلى محلول ملح نترات الفضة، ماذا ألاحظ؟\\n\\n[صورة توضح إضافة محلول NaCl إلى محلول AgNO3، ثم ترشيح الراسب الأبيض الناتج]\\n\\n4 أرشّح المحلول العكر، ماذا ألاحظ؟ ثم أستنتج.\\n(Ag⁺ + NO₃⁻(aq)) + (Na⁺ + Cl⁻(aq)) → AgCl(s) + (Na⁺ + NO₃⁻(aq))\\n\\n5 أكتب معادلة التفاعل الحاصل، وأسمّي النواتج؟\\n\\nأستنتج:\\nيتشكّل راسب أبيض من ملح كلوريد الفضة، يتم فصله بعملية الترشيح، ونلاحظ تشكّل محلول ملح نترات الصوديوم الذوّابة في البيشر الثالث.\\n\\nنتيجة:\\nتختلف قابليّة ذوبان الأملاح في الماء من ملح إلى آخر، لذا تُصنّف الأملاح إلى:\\n- أملاح ذوّابة:\\nأملاح النترات الحاوية NO₃⁻، وأملاح الخلات الحاوية CH₃COO⁻\\nوأملاح الكلوريد ماعدا (AgCl ،CuCl ،PbCl₂ ،HgCl)\\nوأملاح الكبريتات ماعدا (BaSO₄ ،CaSO₄ ،PbSO₄)\\n- أملاح قليلة الذوبان:\\nأملاح الكربونات الحاوية (CO₃²⁻)\\nوأملاح الفوسفات (PO₄³⁻)\\nماعدا الأملاح الحاوية Na⁺ أو K⁺ أو NH₄⁺، فهي ذوّابة.\",\n  \"sections\": [\n    {\n      \"content\": \"3 أضيف محلول كلوريد الصوديوم إلى محلول ملح نترات الفضة، ماذا ألاحظ؟\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"content\": \"4 أرشّح المحلول العكر، ماذا ألاحظ؟ ثم أستنتج.\\n(Ag⁺ + NO₃⁻(aq)) + (Na⁺ + Cl⁻(aq)) → AgCl(s) + (Na⁺ + NO₃⁻(aq))\\n\\n5 أكتب معادلة التفاعل الحاصل، وأسمّي النواتج؟\",\n      \"content_type\": \"mixed\"\n    },\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"يتشكّل راسب أبيض من ملح كلوريد الفضة، يتم فصله بعملية الترشيح، ونلاحظ تشكّل محلول ملح نترات الصوديوم الذوّابة في البيشر الثالث.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"نتيجة:\",\n      \"content\": \"تختلف قابليّة ذوبان الأملاح في الماء من ملح إلى آخر، لذا تُصنّف الأملاح إلى:\\n- أملاح ذوّابة:\\nأملاح النترات الحاوية NO₃⁻، وأملاح الخلات الحاوية CH₃COO⁻\\nوأملاح الكلوريد ماعدا (AgCl ،CuCl ،PbCl₂ ،HgCl)\\nوأملاح الكبريتات ماعدا (BaSO₄ ،CaSO₄ ،PbSO₄)\\n- أملاح قليلة الذوبان:\\nأملاح الكربونات الحاوية (CO₃²⁻)\\nوأملاح الفوسفات (PO₄³⁻)\\nماعدا الأملاح الحاوية Na⁺ أو K⁺ أو NH₄⁺، فهي ذوّابة.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"3 أضيف محلول كلوريد الصوديوم إلى محلول ملح نترات الفضة، ماذا ألاحظ؟\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"4 أرشّح المحلول العكر، ماذا ألاحظ؟ ثم أستنتج.\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"5 أكتب معادلة التفاعل الحاصل، وأسمّي النواتج؟\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"description\": \"سلسلة من ثلاث صور توضح تجربة كيميائية: الأولى تظهر بيشرين يحتويان على AgNO3 و NaCl، الثانية تظهر إضافة NaCl إلى AgNO3، والثالثة تظهر عملية ترشيح للمحلول الناتج لفصل الراسب الأبيض.\"\n    }\n  ],\n  \"equations\": [\n    {\n      \"equation\": \"(Ag⁺ + NO₃⁻(aq)) + (Na⁺ + Cl⁻(aq)) → AgCl(s) + (Na⁺ + NO₃⁻(aq))\",\n      \"description\": \"معادلة تفاعل نترات الفضة مع كلوريد الصوديوم\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}"
+  },
+  "gemini_image_fallback_content": {
+    "page_number": 47,
+    "detected_language": "ar",
+    "raw_markdown": "3 أضيف محلول كلوريد الصوديوم إلى محلول ملح نترات الفضة، ماذا ألاحظ؟\n\n[صورة توضح إضافة محلول NaCl إلى محلول AgNO3، ثم ترشيح الراسب الأبيض الناتج]\n\n4 أرشّح المحلول العكر، ماذا ألاحظ؟ ثم أستنتج.\n(Ag⁺ + NO₃⁻(aq)) + (Na⁺ + Cl⁻(aq)) → AgCl(s) + (Na⁺ + NO₃⁻(aq))\n\n5 أكتب معادلة التفاعل الحاصل، وأسمّي النواتج؟\n\nأستنتج:\nيتشكّل راسب أبيض من ملح كلوريد الفضة، يتم فصله بعملية الترشيح، ونلاحظ تشكّل محلول ملح نترات الصوديوم الذوّابة في البيشر الثالث.\n\nنتيجة:\nتختلف قابليّة ذوبان الأملاح في الماء من ملح إلى آخر، لذا تُصنّف الأملاح إلى:\n- أملاح ذوّابة:\nأملاح النترات الحاوية NO₃⁻، وأملاح الخلات الحاوية CH₃COO⁻\nوأملاح الكلوريد ماعدا (AgCl ،CuCl ،PbCl₂ ،HgCl)\nوأملاح الكبريتات ماعدا (BaSO₄ ،CaSO₄ ،PbSO₄)\n- أملاح قليلة الذوبان:\nأملاح الكربونات الحاوية (CO₃²⁻)\nوأملاح الفوسفات (PO₄³⁻)\nماعدا الأملاح الحاوية Na⁺ أو K⁺ أو NH₄⁺، فهي ذوّابة.",
+    "sections": [
+      {
+        "heading": null,
+        "content": "3 أضيف محلول كلوريد الصوديوم إلى محلول ملح نترات الفضة، ماذا ألاحظ؟",
+        "content_type": "text"
+      },
+      {
+        "heading": null,
+        "content": "4 أرشّح المحلول العكر، ماذا ألاحظ؟ ثم أستنتج.\n(Ag⁺ + NO₃⁻(aq)) + (Na⁺ + Cl⁻(aq)) → AgCl(s) + (Na⁺ + NO₃⁻(aq))\n\n5 أكتب معادلة التفاعل الحاصل، وأسمّي النواتج؟",
+        "content_type": "mixed"
+      },
+      {
+        "heading": "أستنتج:",
+        "content": "يتشكّل راسب أبيض من ملح كلوريد الفضة، يتم فصله بعملية الترشيح، ونلاحظ تشكّل محلول ملح نترات الصوديوم الذوّابة في البيشر الثالث.",
+        "content_type": "text"
+      },
+      {
+        "heading": "نتيجة:",
+        "content": "تختلف قابليّة ذوبان الأملاح في الماء من ملح إلى آخر، لذا تُصنّف الأملاح إلى:\n- أملاح ذوّابة:\nأملاح النترات الحاوية NO₃⁻، وأملاح الخلات الحاوية CH₃COO⁻\nوأملاح الكلوريد ماعدا (AgCl ،CuCl ،PbCl₂ ،HgCl)\nوأملاح الكبريتات ماعدا (BaSO₄ ،CaSO₄ ،PbSO₄)\n- أملاح قليلة الذوبان:\nأملاح الكربونات الحاوية (CO₃²⁻)\nوأملاح الفوسفات (PO₄³⁻)\nماعدا الأملاح الحاوية Na⁺ أو K⁺ أو NH₄⁺، فهي ذوّابة.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "3 أضيف محلول كلوريد الصوديوم إلى محلول ملح نترات الفضة، ماذا ألاحظ؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "4 أرشّح المحلول العكر، ماذا ألاحظ؟ ثم أستنتج.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "5 أكتب معادلة التفاعل الحاصل، وأسمّي النواتج؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "سلسلة من ثلاث صور توضح تجربة كيميائية: الأولى تظهر بيشرين يحتويان على AgNO3 و NaCl، الثانية تظهر إضافة NaCl إلى AgNO3، والثالثة تظهر عملية ترشيح للمحلول الناتج لفصل الراسب الأبيض.",
+        "labels": [],
+        "related_text": null
+      }
+    ],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "(Ag⁺ + NO₃⁻(aq)) + (Na⁺ + Cl⁻(aq)) → AgCl(s) + (Na⁺ + NO₃⁻(aq))",
+        "description": "معادلة تفاعل نترات الفضة مع كلوريد الصوديوم"
+      }
+    ],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 49.595161758s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '49s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 823,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 47,
+      "schema_valid": true,
+      "raw_markdown_chars": 823,
+      "char_count": 823,
+      "section_count": 4,
+      "question_count": 3,
+      "table_count": 0,
+      "equation_count": 1,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.7574,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 47,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"3 أضيف محلول كلوريد الصوديوم إلى محلول ملح نترات الفضة، ماذا ألاحظ؟\\n\\n[صورة توضح إضافة محلول NaCl إلى محلول AgNO3، ثم ترشيح الراسب الأبيض الناتج]\\n\\n4 أرشّح المحلول العكر، ماذا ألاحظ؟ ثم أستنتج.\\n(Ag⁺ + NO₃⁻(aq)) + (Na⁺ + Cl⁻(aq)) → AgCl(s) + (Na⁺ + NO₃⁻(aq))\\n\\n5 أكتب معادلة التفاعل الحاصل، وأسمّي النواتج؟\\n\\nأستنتج:\\nيتشكّل راسب أبيض من ملح كلوريد الفضة، يتم فصله بعملية الترشيح، ونلاحظ تشكّل محلول ملح نترات الصوديوم الذوّابة في البيشر الثالث.\\n\\nنتيجة:\\nتختلف قابليّة ذوبان الأملاح في الماء من ملح إلى آخر، لذا تُصنّف الأملاح إلى:\\n- أملاح ذوّابة:\\nأملاح النترات الحاوية NO₃⁻، وأملاح الخلات الحاوية CH₃COO⁻\\nوأملاح الكلوريد ماعدا (AgCl ،CuCl ،PbCl₂ ،HgCl)\\nوأملاح الكبريتات ماعدا (BaSO₄ ،CaSO₄ ،PbSO₄)\\n- أملاح قليلة الذوبان:\\nأملاح الكربونات الحاوية (CO₃²⁻)\\nوأملاح الفوسفات (PO₄³⁻)\\nماعدا الأملاح الحاوية Na⁺ أو K⁺ أو NH₄⁺، فهي ذوّابة.\",\n  \"sections\": [\n    {\n      \"content\": \"3 أضيف محلول كلوريد الصوديوم إلى محلول ملح نترات الفضة، ماذا ألاحظ؟\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"content\": \"4 أرشّح المحلول العكر، ماذا ألاحظ؟ ثم أستنتج.\\n(Ag⁺ + NO₃⁻(aq)) + (Na⁺ + Cl⁻(aq)) → AgCl(s) + (Na⁺ + NO₃⁻(aq))\\n\\n5 أكتب معادلة التفاعل الحاصل، وأسمّي النواتج؟\",\n      \"content_type\": \"mixed\"\n    },\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"يتشكّل راسب أبيض من ملح كلوريد الفضة، يتم فصله بعملية الترشيح، ونلاحظ تشكّل محلول ملح نترات الصوديوم الذوّابة في البيشر الثالث.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"نتيجة:\",\n      \"content\": \"تختلف قابليّة ذوبان الأملاح في الماء من ملح إلى آخر، لذا تُصنّف الأملاح إلى:\\n- أملاح ذوّابة:\\nأملاح النترات الحاوية NO₃⁻، وأملاح الخلات الحاوية CH₃COO⁻\\nوأملاح الكلوريد ماعدا (AgCl ،CuCl ،PbCl₂ ،HgCl)\\nوأملاح الكبريتات ماعدا (BaSO₄ ،CaSO₄ ،PbSO₄)\\n- أملاح قليلة الذوبان:\\nأملاح الكربونات الحاوية (CO₃²⁻)\\nوأملاح الفوسفات (PO₄³⁻)\\nماعدا الأملاح الحاوية Na⁺ أو K⁺ أو NH₄⁺، فهي ذوّابة.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"3 أضيف محلول كلوريد الصوديوم إلى محلول ملح نترات الفضة، ماذا ألاحظ؟\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"4 أرشّح المحلول العكر، ماذا ألاحظ؟ ثم أستنتج.\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"5 أكتب معادلة التفاعل الحاصل، وأسمّي النواتج؟\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"description\": \"سلسلة من ثلاث صور توضح تجربة كيميائية: الأولى تظهر بيشرين يحتويان على AgNO3 و NaCl، الثانية تظهر إضافة NaCl إلى AgNO3، والثالثة تظهر عملية ترشيح للمحلول الناتج لفصل الراسب الأبيض.\"\n    }\n  ],\n  \"equations\": [\n    {\n      \"equation\": \"(Ag⁺ + NO₃⁻(aq)) + (Na⁺ + Cl⁻(aq)) → AgCl(s) + (Na⁺ + NO₃⁻(aq))\",\n      \"description\": \"معادلة تفاعل نترات الفضة مع كلوريد الصوديوم\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}"
+  },
+  "merged_content": "أضيف محلول ملح كلوريد الصّ وديوم إلى محلول ملح نترات الفضّة، ماذا أالحظ؟3\nAgNO3\nNaCl\n.أرشّح المحلول العَكِ ر، ماذا أالحظ؟ ثمّ أستنتج4\n+\n-\n+\n+\n-\n-\n(Ag\nNO\n)\n(Na\nC\n)\nAgCl\n(Na\nNO\n)\nl\n(aq)\n(s)\n(aq)\n$\n+\n+\n+\n+\n+\n3\n3\naq\naq\naq\naq\nأكتب معادلة التّفاعل الحاصل، وأسمّي النّواتج؟5\n• \n يتشكّل راسب أبيض من ملح كلوريد الفضّة، يتمّ فصله بعمليّة التّرشيح، ونالحظ تشكّل محلول\nملح نترات الصّ وديوم الذّوّابة في البيشر الثّالث.\n:أﺳﺘﻨﺘﺞ\n:نتيجة\nتختلف قابليّة ذوبان األمالح في الماء من ملح إلى آخر، لذا تُصنّف األمالح إلى:\n• \nأمالح ذوّابة:\n \nCH COO\n3\n- ، وأمالح الخلّ ت الحاوية-\nNO3  أمالح النّترات الحاوية\n \n)AgCl ،CuCl ، PbCl2 ،HgCl( وأمالح الكلوريد ماعدا\n \n)BaSO4 ،CaSO4 ، PbSO4( وأمالح الكبريتات ماعدا\n• \nأمالح قليلة الذّوبان:\n \n)2-\nCO3 ( أمالح الكربونات الحاوية\n \n)3-\nPO4 ( وأمالح الفوسفات\n \n، فهي ذوّابة.+\nNH4   أوK+  أوNa+ ماعدا األمالح الحاوية\n153\n\n|  |  |  |  |\n| --- | --- | --- | --- |\n|  |  |  |  |\n|  |  |  |  |\n\n|  |  |\n| --- | --- |\n| ِ |  |\n|  | أ 4 |\n\n3 أضيف محلول كلوريد الصوديوم إلى محلول ملح نترات الفضة، ماذا ألاحظ؟\n\n4 أرشّح المحلول العكر، ماذا ألاحظ؟ ثم أستنتج.\n(Ag⁺ + NO₃⁻(aq)) + (Na⁺ + Cl⁻(aq)) → AgCl(s) + (Na⁺ + NO₃⁻(aq))\n\n5 أكتب معادلة التفاعل الحاصل، وأسمّي النواتج؟\n\nأستنتج:\nيتشكّل راسب أبيض من ملح كلوريد الفضة، يتم فصله بعملية الترشيح، ونلاحظ تشكّل محلول ملح نترات الصوديوم الذوّابة في البيشر الثالث.\n\nنتيجة:\nتختلف قابليّة ذوبان الأملاح في الماء من ملح إلى آخر، لذا تُصنّف الأملاح إلى:\n- أملاح ذوّابة:\nأملاح النترات الحاوية NO₃⁻، وأملاح الخلات الحاوية CH₃COO⁻\nوأملاح الكلوريد ماعدا (AgCl ،CuCl ،PbCl₂ ،HgCl)\nوأملاح الكبريتات ماعدا (BaSO₄ ،CaSO₄ ،PbSO₄)\n- أملاح قليلة الذوبان:\nأملاح الكربونات الحاوية (CO₃²⁻)\nوأملاح الفوسفات (PO₄³⁻)\nماعدا الأملاح الحاوية Na⁺ أو K⁺ أو NH₄⁺، فهي ذوّابة.",
+  "raw_markdown": "3 أضيف محلول كلوريد الصوديوم إلى محلول ملح نترات الفضة، ماذا ألاحظ؟\n\n[صورة توضح إضافة محلول NaCl إلى محلول AgNO3، ثم ترشيح الراسب الأبيض الناتج]\n\n4 أرشّح المحلول العكر، ماذا ألاحظ؟ ثم أستنتج.\n(Ag⁺ + NO₃⁻(aq)) + (Na⁺ + Cl⁻(aq)) → AgCl(s) + (Na⁺ + NO₃⁻(aq))\n\n5 أكتب معادلة التفاعل الحاصل، وأسمّي النواتج؟\n\nأستنتج:\nيتشكّل راسب أبيض من ملح كلوريد الفضة، يتم فصله بعملية الترشيح، ونلاحظ تشكّل محلول ملح نترات الصوديوم الذوّابة في البيشر الثالث.\n\nنتيجة:\nتختلف قابليّة ذوبان الأملاح في الماء من ملح إلى آخر، لذا تُصنّف الأملاح إلى:\n- أملاح ذوّابة:\nأملاح النترات الحاوية NO₃⁻، وأملاح الخلات الحاوية CH₃COO⁻\nوأملاح الكلوريد ماعدا (AgCl ،CuCl ،PbCl₂ ،HgCl)\nوأملاح الكبريتات ماعدا (BaSO₄ ،CaSO₄ ،PbSO₄)\n- أملاح قليلة الذوبان:\nأملاح الكربونات الحاوية (CO₃²⁻)\nوأملاح الفوسفات (PO₄³⁻)\nماعدا الأملاح الحاوية Na⁺ أو K⁺ أو NH₄⁺، فهي ذوّابة.",
+  "sections": [
+    {
+      "heading": null,
+      "content": "أضيف محلول ملح كلوريد الصّ وديوم إلى محلول ملح نترات الفضّة، ماذا أالحظ؟3\nAgNO3\nNaCl\n.أرشّح المحلول العَكِ ر، ماذا أالحظ؟ ثمّ أستنتج4\n+\n-\n+\n+\n-\n-\n(Ag\nNO\n)\n(Na\nC\n)\nAgCl\n(Na\nNO\n)\nl\n(aq)\n(s)\n(aq)\n$\n+\n+\n+\n+\n+\n3\n3\naq\naq\naq\naq\nأكتب معادلة التّفاعل الحاصل، وأسمّي النّواتج؟5\n• \n يتشكّل راسب أبيض من ملح كلوريد الفضّة، يتمّ فصله بعمليّة التّرشيح، ونالحظ تشكّل محلول\nملح نترات الصّ وديوم الذّوّابة في البيشر الثّالث.\n:أﺳﺘﻨﺘﺞ\n:نتيجة\nتختلف قابليّة ذوبان األمالح في الماء من ملح إلى آخر، لذا تُصنّف األمالح إلى:\n• \nأمالح ذوّابة:\n \nCH COO\n3\n- ، وأمالح الخلّ ت الحاوية-\nNO3  أمالح النّترات الحاوية\n \n)AgCl ،CuCl ، PbCl2 ،HgCl( وأمالح الكلوريد ماعدا\n \n)BaSO4 ،CaSO4 ، PbSO4( وأمالح الكبريتات ماعدا\n• \nأمالح قليلة الذّوبان:\n \n)2-\nCO3 ( أمالح الكربونات الحاوية\n \n)3-\nPO4 ( وأمالح الفوسفات\n \n، فهي ذوّابة.+\nNH4   أوK+  أوNa+ ماعدا األمالح الحاوية\n153\n\n|  |  |  |  |\n| --- | --- | --- | --- |\n|  |  |  |  |\n|  |  |  |  |\n\n|  |  |\n| --- | --- |\n| ِ |  |\n|  | أ 4 |",
+      "content_type": "text"
+    },
+    {
+      "heading": null,
+      "content": "3 أضيف محلول كلوريد الصوديوم إلى محلول ملح نترات الفضة، ماذا ألاحظ؟",
+      "content_type": "text"
+    },
+    {
+      "heading": null,
+      "content": "4 أرشّح المحلول العكر، ماذا ألاحظ؟ ثم أستنتج.\n(Ag⁺ + NO₃⁻(aq)) + (Na⁺ + Cl⁻(aq)) → AgCl(s) + (Na⁺ + NO₃⁻(aq))\n\n5 أكتب معادلة التفاعل الحاصل، وأسمّي النواتج؟",
+      "content_type": "mixed"
+    },
+    {
+      "heading": "أستنتج:",
+      "content": "يتشكّل راسب أبيض من ملح كلوريد الفضة، يتم فصله بعملية الترشيح، ونلاحظ تشكّل محلول ملح نترات الصوديوم الذوّابة في البيشر الثالث.",
+      "content_type": "text"
+    },
+    {
+      "heading": "نتيجة:",
+      "content": "تختلف قابليّة ذوبان الأملاح في الماء من ملح إلى آخر، لذا تُصنّف الأملاح إلى:\n- أملاح ذوّابة:\nأملاح النترات الحاوية NO₃⁻، وأملاح الخلات الحاوية CH₃COO⁻\nوأملاح الكلوريد ماعدا (AgCl ،CuCl ،PbCl₂ ،HgCl)\nوأملاح الكبريتات ماعدا (BaSO₄ ،CaSO₄ ،PbSO₄)\n- أملاح قليلة الذوبان:\nأملاح الكربونات الحاوية (CO₃²⁻)\nوأملاح الفوسفات (PO₄³⁻)\nماعدا الأملاح الحاوية Na⁺ أو K⁺ أو NH₄⁺، فهي ذوّابة.",
+      "content_type": "text"
+    }
   ],
-  "char_count": 0,
-  "completeness_score": 0.0,
+  "questions": [
+    {
+      "question_text": "3 أضيف محلول كلوريد الصوديوم إلى محلول ملح نترات الفضة، ماذا ألاحظ؟",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "4 أرشّح المحلول العكر، ماذا ألاحظ؟ ثم أستنتج.",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "5 أكتب معادلة التفاعل الحاصل، وأسمّي النواتج؟",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    }
+  ],
+  "diagrams": [
+    {
+      "title": null,
+      "description": "سلسلة من ثلاث صور توضح تجربة كيميائية: الأولى تظهر بيشرين يحتويان على AgNO3 و NaCl، الثانية تظهر إضافة NaCl إلى AgNO3، والثالثة تظهر عملية ترشيح للمحلول الناتج لفصل الراسب الأبيض.",
+      "labels": [],
+      "related_text": null
+    }
+  ],
+  "tables": [],
+  "equations": [
+    {
+      "equation": "(Ag⁺ + NO₃⁻(aq)) + (Na⁺ + Cl⁻(aq)) → AgCl(s) + (Na⁺ + NO₃⁻(aq))",
+      "description": "معادلة تفاعل نترات الفضة مع كلوريد الصوديوم"
+    }
+  ],
+  "warnings": [
+    "Gemini PDF extraction failed; using 300 DPI image fallback: Gemini document extraction failed for page 47 with model gemini-3.1-flash-lite: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'Request contains an invalid argument.', 'status': 'INVALID_ARGUMENT'}}",
+    "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 49.595161758s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '49s'}]}}."
+  ],
+  "errors": [],
+  "char_count": 1692,
+  "completeness_score": 1.0,
   "detected_language": "ar",
-  "vision_provider": null,
-  "vision_source": null,
-  "neighboring_pages": [],
-  "uploaded_pdf": null,
-  "raw_text": null,
-  "quality_report": {},
+  "vision_provider": "gemini_document_image",
+  "vision_source": "gemini_rendered_image_300dpi",
+  "neighboring_pages": [
+    46,
+    48
+  ],
+  "uploaded_pdf": {
+    "provider": "gemini_document",
+    "name": "files/6zs99grhoqr2",
+    "uri": "https://generativelanguage.googleapis.com/v1beta/files/6zs99grhoqr2",
+    "mime_type": "application/pdf",
+    "display_name": "Chemistry.pdf"
+  },
+  "raw_text": "{\n  \"page_number\": 47,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"3 أضيف محلول كلوريد الصوديوم إلى محلول ملح نترات الفضة، ماذا ألاحظ؟\\n\\n[صورة توضح إضافة محلول NaCl إلى محلول AgNO3، ثم ترشيح الراسب الأبيض الناتج]\\n\\n4 أرشّح المحلول العكر، ماذا ألاحظ؟ ثم أستنتج.\\n(Ag⁺ + NO₃⁻(aq)) + (Na⁺ + Cl⁻(aq)) → AgCl(s) + (Na⁺ + NO₃⁻(aq))\\n\\n5 أكتب معادلة التفاعل الحاصل، وأسمّي النواتج؟\\n\\nأستنتج:\\nيتشكّل راسب أبيض من ملح كلوريد الفضة، يتم فصله بعملية الترشيح، ونلاحظ تشكّل محلول ملح نترات الصوديوم الذوّابة في البيشر الثالث.\\n\\nنتيجة:\\nتختلف قابليّة ذوبان الأملاح في الماء من ملح إلى آخر، لذا تُصنّف الأملاح إلى:\\n- أملاح ذوّابة:\\nأملاح النترات الحاوية NO₃⁻، وأملاح الخلات الحاوية CH₃COO⁻\\nوأملاح الكلوريد ماعدا (AgCl ،CuCl ،PbCl₂ ،HgCl)\\nوأملاح الكبريتات ماعدا (BaSO₄ ،CaSO₄ ،PbSO₄)\\n- أملاح قليلة الذوبان:\\nأملاح الكربونات الحاوية (CO₃²⁻)\\nوأملاح الفوسفات (PO₄³⁻)\\nماعدا الأملاح الحاوية Na⁺ أو K⁺ أو NH₄⁺، فهي ذوّابة.\",\n  \"sections\": [\n    {\n      \"content\": \"3 أضيف محلول كلوريد الصوديوم إلى محلول ملح نترات الفضة، ماذا ألاحظ؟\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"content\": \"4 أرشّح المحلول العكر، ماذا ألاحظ؟ ثم أستنتج.\\n(Ag⁺ + NO₃⁻(aq)) + (Na⁺ + Cl⁻(aq)) → AgCl(s) + (Na⁺ + NO₃⁻(aq))\\n\\n5 أكتب معادلة التفاعل الحاصل، وأسمّي النواتج؟\",\n      \"content_type\": \"mixed\"\n    },\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"يتشكّل راسب أبيض من ملح كلوريد الفضة، يتم فصله بعملية الترشيح، ونلاحظ تشكّل محلول ملح نترات الصوديوم الذوّابة في البيشر الثالث.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"نتيجة:\",\n      \"content\": \"تختلف قابليّة ذوبان الأملاح في الماء من ملح إلى آخر، لذا تُصنّف الأملاح إلى:\\n- أملاح ذوّابة:\\nأملاح النترات الحاوية NO₃⁻، وأملاح الخلات الحاوية CH₃COO⁻\\nوأملاح الكلوريد ماعدا (AgCl ،CuCl ،PbCl₂ ،HgCl)\\nوأملاح الكبريتات ماعدا (BaSO₄ ،CaSO₄ ،PbSO₄)\\n- أملاح قليلة الذوبان:\\nأملاح الكربونات الحاوية (CO₃²⁻)\\nوأملاح الفوسفات (PO₄³⁻)\\nماعدا الأملاح الحاوية Na⁺ أو K⁺ أو NH₄⁺، فهي ذوّابة.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"3 أضيف محلول كلوريد الصوديوم إلى محلول ملح نترات الفضة، ماذا ألاحظ؟\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"4 أرشّح المحلول العكر، ماذا ألاحظ؟ ثم أستنتج.\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"5 أكتب معادلة التفاعل الحاصل، وأسمّي النواتج؟\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"description\": \"سلسلة من ثلاث صور توضح تجربة كيميائية: الأولى تظهر بيشرين يحتويان على AgNO3 و NaCl، الثانية تظهر إضافة NaCl إلى AgNO3، والثالثة تظهر عملية ترشيح للمحلول الناتج لفصل الراسب الأبيض.\"\n    }\n  ],\n  \"equations\": [\n    {\n      \"equation\": \"(Ag⁺ + NO₃⁻(aq)) + (Na⁺ + Cl⁻(aq)) → AgCl(s) + (Na⁺ + NO₃⁻(aq))\",\n      \"description\": \"معادلة تفاعل نترات الفضة مع كلوريد الصوديوم\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}",
+  "quality_report": {
+    "page_number": 47,
+    "schema_valid": true,
+    "raw_markdown_chars": 823,
+    "char_count": 823,
+    "section_count": 4,
+    "question_count": 3,
+    "table_count": 0,
+    "equation_count": 1,
+    "diagram_count": 1,
+    "warning_count": 0,
+    "arabic_char_ratio": 0.7574,
+    "completeness_score": 1.0,
+    "issues": [],
+    "should_fallback": false
+  },
   "classification": "MIXED_VISION",
   "source_id": 1
 }

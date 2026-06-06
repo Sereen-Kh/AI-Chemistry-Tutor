@@ -1,0 +1,132 @@
+.molecule-bg-container {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  background: radial-gradient(circle at 10% 20%, rgba(13, 242, 163, 0.04), transparent 40%),
+              radial-gradient(circle at 85% 70%, rgba(170, 102, 255, 0.05), transparent 45%),
+              #0d0f12; /* Graphite charcoal backdrop */
+}
+
+.molecule-bg-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.mol-group {
+  transform-origin: center;
+}
+
+/* Animations for drifting/hovering molecule structures */
+.mol-tr {
+  animation: float-tr 16s ease-in-out infinite alternate;
+}
+
+.mol-bl {
+  animation: float-bl 22s ease-in-out infinite alternate;
+}
+
+.mol-mr {
+  animation: float-mr 18s ease-in-out infinite alternate;
+}
+
+@keyframes float-tr {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate(-15px, 20px) rotate(8deg);
+  }
+}
+
+@keyframes float-bl {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate(25px, -15px) rotate(-12deg);
+  }
+}
+
+@keyframes float-mr {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate(-20px, -20px) rotate(15deg);
+  }
+}
+
+/* Chemical Atoms styling */
+.mol-atom {
+  fill: #16191f;
+  stroke-width: 2;
+  transition: filter 0.3s;
+}
+
+.atom-green {
+  stroke: #0df2a3;
+  filter: drop-shadow(0 0 4px rgba(13, 242, 163, 0.3));
+}
+
+.atom-violet {
+  stroke: #aa66ff;
+  filter: drop-shadow(0 0 4px rgba(170, 102, 255, 0.3));
+}
+
+.atom-coral {
+  stroke: #ff4a60;
+  filter: drop-shadow(0 0 4px rgba(255, 74, 96, 0.3));
+}
+
+/* Chemical Bonds styling */
+.mol-bond {
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.bond-green {
+  stroke: rgba(13, 242, 163, 0.25);
+}
+
+.bond-violet {
+  stroke: rgba(170, 102, 255, 0.25);
+}
+
+.bond-coral {
+  stroke: rgba(255, 74, 96, 0.25);
+}
+
+.bond-double {
+  stroke: rgba(170, 102, 255, 0.3);
+  stroke-width: 3;
+  stroke-dasharray: 4 2;
+}
+
+/* Text labels inside atoms */
+.mol-label {
+  fill: #e2e8f0;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 11px;
+  font-weight: bold;
+  text-anchor: middle;
+}
+
+.mol-label-sm {
+  fill: #94a3b8;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 8px;
+  font-weight: bold;
+  text-anchor: middle;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .mol-tr, .mol-bl, .mol-mr {
+    animation: none !important;
+  }
+}

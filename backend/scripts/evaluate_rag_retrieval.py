@@ -22,11 +22,16 @@ from app.services.chunking import normalize_arabic, normalize_formula  # noqa: E
 from app.services.rag import retrieve_context  # noqa: E402
 
 DEFAULT_EVAL_FILE = PROJECT_DIR / "data" / "textbooks" / "syria_grade_9_chemistry" / "benchmarks" / "rag_eval_queries.json"
+_ARABIC_DIACRITICS_RE = re.compile(r"[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED]")
 
 
 def _norm(text: str) -> str:
-    lowered = normalize_arabic(str(text).lower())
+    lowered = _ARABIC_DIACRITICS_RE.sub("", normalize_arabic(str(text).lower()))
     lowered = normalize_formula(lowered)
+    lowered = lowered.replace("اال", "ال")
+    lowered = lowered.replace("السيتون", "الاسيتون")
+    lowered = lowered.replace("طالء", "طلاء")
+    lowered = lowered.replace("الظافر", "الاظافر")
     return re.sub(r"\s+", " ", lowered).strip()
 
 

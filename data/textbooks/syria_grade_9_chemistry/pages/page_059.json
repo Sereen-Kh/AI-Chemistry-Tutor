@@ -2,35 +2,361 @@
   "page_number": 59,
   "page_type": "MIXED_VISION",
   "extraction_methods": [
-    "exception"
+    "pymupdf",
+    "pdfplumber",
+    "gemini_pdf_file",
+    "gemini_image_300dpi"
   ],
-  "extraction_method": "exception",
-  "status": "failed",
-  "text_layer_content": "",
-  "vision_content": {},
+  "extraction_method": "pymupdf+pdfplumber+gemini_pdf_file+gemini_image_300dpi",
+  "status": "completed_with_image_fallback",
+  "text_layer_content": ":أدوات التّجربة\nعلبة الكرات واألعواد.\nخطوات التّجربة:\nأشكّل نموذجاً لجزيء غاز اإليتان:1\n:أشكّل نموذجاً لجزيء غاز اإلتيلن2\n:أشكّل نموذجاً لجزيء غاز اإلستيلين3\n.أقارن بين النَّماذج السَّابقة من حيثُ عدد الرَّوابط المشتركة بين ذرَّتي الكربون4\n.أرسم الرَّوابط المشتركة بين ذرَّات الكربون الممثّلة للنَّماذج السَّابقة بخطوط صغيرة5\n:أﺟﺮب وأﺳﺘﻨﺘﺞ\n165\n\n| قأ 4 |\n| --- |\n|  |\n| 5\nأ |",
+  "vision_content": {
+    "page_number": 59,
+    "detected_language": "ar",
+    "raw_markdown": "### أجرب وأستنتج:\n\n**أدوات التجربة:**\nعلبة الكرات والأعواد.\n\n**خطوات التجربة:**\n1. أشكل نموذجاً لجزيء غاز الإيتان:\n   (صورة توضح تركيب جزيء الإيتان)\n   H-C-C-H (مع روابط أحادية)\n\n2. أشكل نموذجاً لجزيء غاز الإيتيلين:\n   (صورة توضح تركيب جزيء الإيتيلين)\n   H-C=C-H\n\n3. أشكل نموذجاً لجزيء غاز الإستيلين:\n   (صورة توضح تركيب جزيء الإستيلين)\n   H-C≡C-H\n\n4. أقارن بين النماذج السابقة من حيث عدد الروابط المشتركة بين ذرتي الكربون.\n5. أرسم الروابط المشتركة بين ذرات الكربون الممثلة للنماذج السابقة بخطوط صغيرة.",
+    "sections": [
+      {
+        "heading": "أجرب وأستنتج:",
+        "content": "أدوات التجربة: علبة الكرات والأعواد.\n\nخطوات التجربة:\n1. أشكل نموذجاً لجزيء غاز الإيتان:\n2. أشكل نموذجاً لجزيء غاز الإيتيلين:\n3. أشكل نموذجاً لجزيء غاز الإستيلين:\n4. أقارن بين النماذج السابقة من حيث عدد الروابط المشتركة بين ذرتي الكربون.\n5. أرسم الروابط المشتركة بين ذرات الكربون الممثلة للنماذج السابقة بخطوط صغيرة.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "أقارن بين النماذج السابقة من حيث عدد الروابط المشتركة بين ذرتي الكربون.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أرسم الروابط المشتركة بين ذرات الكربون الممثلة للنماذج السابقة بخطوط صغيرة.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [
+      {
+        "title": "نماذج الجزيئات",
+        "description": "ثلاثة نماذج كيميائية باستخدام الكرات والأعواد تمثل جزيئات الإيتان (رابطة أحادية)، الإيتيلين (رابطة ثنائية)، والإستيلين (رابطة ثلاثية).",
+        "labels": [
+          "إيتان",
+          "إيتيلين",
+          "إستيلين"
+        ],
+        "related_text": null
+      }
+    ],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "H-C-C-H",
+        "description": "تركيب جزيء الإيتان برابطة أحادية"
+      },
+      {
+        "equation": "H-C=C-H",
+        "description": "تركيب جزيء الإيتيلين برابطة ثنائية"
+      },
+      {
+        "equation": "H-C≡C-H",
+        "description": "تركيب جزيء الإستيلين برابطة ثلاثية"
+      }
+    ],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:[Errno 54] Connection reset by peer."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 502,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 59,
+      "schema_valid": true,
+      "raw_markdown_chars": 502,
+      "char_count": 502,
+      "section_count": 1,
+      "question_count": 2,
+      "table_count": 0,
+      "equation_count": 3,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.8188,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 59,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### أجرب وأستنتج:\\n\\n**أدوات التجربة:**\\nعلبة الكرات والأعواد.\\n\\n**خطوات التجربة:**\\n1. أشكل نموذجاً لجزيء غاز الإيتان:\\n   (صورة توضح تركيب جزيء الإيتان)\\n   H-C-C-H (مع روابط أحادية)\\n\\n2. أشكل نموذجاً لجزيء غاز الإيتيلين:\\n   (صورة توضح تركيب جزيء الإيتيلين)\\n   H-C=C-H\\n\\n3. أشكل نموذجاً لجزيء غاز الإستيلين:\\n   (صورة توضح تركيب جزيء الإستيلين)\\n   H-C≡C-H\\n\\n4. أقارن بين النماذج السابقة من حيث عدد الروابط المشتركة بين ذرتي الكربون.\\n5. أرسم الروابط المشتركة بين ذرات الكربون الممثلة للنماذج السابقة بخطوط صغيرة.\",\n  \"sections\": [\n    {\n      \"heading\": \"أجرب وأستنتج:\",\n      \"content\": \"أدوات التجربة: علبة الكرات والأعواد.\\n\\nخطوات التجربة:\\n1. أشكل نموذجاً لجزيء غاز الإيتان:\\n2. أشكل نموذجاً لجزيء غاز الإيتيلين:\\n3. أشكل نموذجاً لجزيء غاز الإستيلين:\\n4. أقارن بين النماذج السابقة من حيث عدد الروابط المشتركة بين ذرتي الكربون.\\n5. أرسم الروابط المشتركة بين ذرات الكربون الممثلة للنماذج السابقة بخطوط صغيرة.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"أقارن بين النماذج السابقة من حيث عدد الروابط المشتركة بين ذرتي الكربون.\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أرسم الروابط المشتركة بين ذرات الكربون الممثلة للنماذج السابقة بخطوط صغيرة.\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": \"نماذج الجزيئات\",\n      \"description\": \"ثلاثة نماذج كيميائية باستخدام الكرات والأعواد تمثل جزيئات الإيتان (رابطة أحادية)، الإيتيلين (رابطة ثنائية)، والإستيلين (رابطة ثلاثية).\",\n      \"labels\": [\n        \"إيتان\",\n        \"إيتيلين\",\n        \"إستيلين\"\n      ]\n    }\n  ],\n  \"equations\": [\n    {\n      \"equation\": \"H-C-C-H\",\n      \"description\": \"تركيب جزيء الإيتان برابطة أحادية\"\n    },\n    {\n      \"equation\": \"H-C=C-H\",\n      \"description\": \"تركيب جزيء الإيتيلين برابطة ثنائية\"\n    },\n    {\n      \"equation\": \"H-C≡C-H\",\n      \"description\": \"تركيب جزيء الإستيلين برابطة ثلاثية\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}"
+  },
   "gemini_pdf_content": {},
-  "gemini_fallback_model_content": {},
-  "gemini_image_fallback_content": {},
-  "merged_content": "",
-  "raw_markdown": "",
-  "sections": [],
-  "questions": [],
-  "diagrams": [],
-  "tables": [],
-  "equations": [],
-  "warnings": [],
-  "errors": [
-    "Gemini document extraction failed quality checks for page 59: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 12.418337752s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '12s'}]}}"
+  "gemini_fallback_model_content": {
+    "page_number": 59,
+    "detected_language": "ar",
+    "raw_markdown": "### أجرب وأستنتج:\n\n**أدوات التجربة:**\nعلبة الكرات والأعواد.\n\n**خطوات التجربة:**\n1. أشكل نموذجاً لجزيء غاز الإيتان:\n   (صورة توضح تركيب جزيء الإيتان)\n   H-C-C-H (مع روابط أحادية)\n\n2. أشكل نموذجاً لجزيء غاز الإيتيلين:\n   (صورة توضح تركيب جزيء الإيتيلين)\n   H-C=C-H\n\n3. أشكل نموذجاً لجزيء غاز الإستيلين:\n   (صورة توضح تركيب جزيء الإستيلين)\n   H-C≡C-H\n\n4. أقارن بين النماذج السابقة من حيث عدد الروابط المشتركة بين ذرتي الكربون.\n5. أرسم الروابط المشتركة بين ذرات الكربون الممثلة للنماذج السابقة بخطوط صغيرة.",
+    "sections": [
+      {
+        "heading": "أجرب وأستنتج:",
+        "content": "أدوات التجربة: علبة الكرات والأعواد.\n\nخطوات التجربة:\n1. أشكل نموذجاً لجزيء غاز الإيتان:\n2. أشكل نموذجاً لجزيء غاز الإيتيلين:\n3. أشكل نموذجاً لجزيء غاز الإستيلين:\n4. أقارن بين النماذج السابقة من حيث عدد الروابط المشتركة بين ذرتي الكربون.\n5. أرسم الروابط المشتركة بين ذرات الكربون الممثلة للنماذج السابقة بخطوط صغيرة.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "أقارن بين النماذج السابقة من حيث عدد الروابط المشتركة بين ذرتي الكربون.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أرسم الروابط المشتركة بين ذرات الكربون الممثلة للنماذج السابقة بخطوط صغيرة.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [
+      {
+        "title": "نماذج الجزيئات",
+        "description": "ثلاثة نماذج كيميائية باستخدام الكرات والأعواد تمثل جزيئات الإيتان (رابطة أحادية)، الإيتيلين (رابطة ثنائية)، والإستيلين (رابطة ثلاثية).",
+        "labels": [
+          "إيتان",
+          "إيتيلين",
+          "إستيلين"
+        ],
+        "related_text": null
+      }
+    ],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "H-C-C-H",
+        "description": "تركيب جزيء الإيتان برابطة أحادية"
+      },
+      {
+        "equation": "H-C=C-H",
+        "description": "تركيب جزيء الإيتيلين برابطة ثنائية"
+      },
+      {
+        "equation": "H-C≡C-H",
+        "description": "تركيب جزيء الإستيلين برابطة ثلاثية"
+      }
+    ],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:[Errno 54] Connection reset by peer."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 502,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 59,
+      "schema_valid": true,
+      "raw_markdown_chars": 502,
+      "char_count": 502,
+      "section_count": 1,
+      "question_count": 2,
+      "table_count": 0,
+      "equation_count": 3,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.8188,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 59,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### أجرب وأستنتج:\\n\\n**أدوات التجربة:**\\nعلبة الكرات والأعواد.\\n\\n**خطوات التجربة:**\\n1. أشكل نموذجاً لجزيء غاز الإيتان:\\n   (صورة توضح تركيب جزيء الإيتان)\\n   H-C-C-H (مع روابط أحادية)\\n\\n2. أشكل نموذجاً لجزيء غاز الإيتيلين:\\n   (صورة توضح تركيب جزيء الإيتيلين)\\n   H-C=C-H\\n\\n3. أشكل نموذجاً لجزيء غاز الإستيلين:\\n   (صورة توضح تركيب جزيء الإستيلين)\\n   H-C≡C-H\\n\\n4. أقارن بين النماذج السابقة من حيث عدد الروابط المشتركة بين ذرتي الكربون.\\n5. أرسم الروابط المشتركة بين ذرات الكربون الممثلة للنماذج السابقة بخطوط صغيرة.\",\n  \"sections\": [\n    {\n      \"heading\": \"أجرب وأستنتج:\",\n      \"content\": \"أدوات التجربة: علبة الكرات والأعواد.\\n\\nخطوات التجربة:\\n1. أشكل نموذجاً لجزيء غاز الإيتان:\\n2. أشكل نموذجاً لجزيء غاز الإيتيلين:\\n3. أشكل نموذجاً لجزيء غاز الإستيلين:\\n4. أقارن بين النماذج السابقة من حيث عدد الروابط المشتركة بين ذرتي الكربون.\\n5. أرسم الروابط المشتركة بين ذرات الكربون الممثلة للنماذج السابقة بخطوط صغيرة.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"أقارن بين النماذج السابقة من حيث عدد الروابط المشتركة بين ذرتي الكربون.\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أرسم الروابط المشتركة بين ذرات الكربون الممثلة للنماذج السابقة بخطوط صغيرة.\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": \"نماذج الجزيئات\",\n      \"description\": \"ثلاثة نماذج كيميائية باستخدام الكرات والأعواد تمثل جزيئات الإيتان (رابطة أحادية)، الإيتيلين (رابطة ثنائية)، والإستيلين (رابطة ثلاثية).\",\n      \"labels\": [\n        \"إيتان\",\n        \"إيتيلين\",\n        \"إستيلين\"\n      ]\n    }\n  ],\n  \"equations\": [\n    {\n      \"equation\": \"H-C-C-H\",\n      \"description\": \"تركيب جزيء الإيتان برابطة أحادية\"\n    },\n    {\n      \"equation\": \"H-C=C-H\",\n      \"description\": \"تركيب جزيء الإيتيلين برابطة ثنائية\"\n    },\n    {\n      \"equation\": \"H-C≡C-H\",\n      \"description\": \"تركيب جزيء الإستيلين برابطة ثلاثية\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}"
+  },
+  "gemini_image_fallback_content": {
+    "page_number": 59,
+    "detected_language": "ar",
+    "raw_markdown": "### أجرب وأستنتج:\n\n**أدوات التجربة:**\nعلبة الكرات والأعواد.\n\n**خطوات التجربة:**\n1. أشكل نموذجاً لجزيء غاز الإيتان:\n   (صورة توضح تركيب جزيء الإيتان)\n   H-C-C-H (مع روابط أحادية)\n\n2. أشكل نموذجاً لجزيء غاز الإيتيلين:\n   (صورة توضح تركيب جزيء الإيتيلين)\n   H-C=C-H\n\n3. أشكل نموذجاً لجزيء غاز الإستيلين:\n   (صورة توضح تركيب جزيء الإستيلين)\n   H-C≡C-H\n\n4. أقارن بين النماذج السابقة من حيث عدد الروابط المشتركة بين ذرتي الكربون.\n5. أرسم الروابط المشتركة بين ذرات الكربون الممثلة للنماذج السابقة بخطوط صغيرة.",
+    "sections": [
+      {
+        "heading": "أجرب وأستنتج:",
+        "content": "أدوات التجربة: علبة الكرات والأعواد.\n\nخطوات التجربة:\n1. أشكل نموذجاً لجزيء غاز الإيتان:\n2. أشكل نموذجاً لجزيء غاز الإيتيلين:\n3. أشكل نموذجاً لجزيء غاز الإستيلين:\n4. أقارن بين النماذج السابقة من حيث عدد الروابط المشتركة بين ذرتي الكربون.\n5. أرسم الروابط المشتركة بين ذرات الكربون الممثلة للنماذج السابقة بخطوط صغيرة.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "أقارن بين النماذج السابقة من حيث عدد الروابط المشتركة بين ذرتي الكربون.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أرسم الروابط المشتركة بين ذرات الكربون الممثلة للنماذج السابقة بخطوط صغيرة.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [
+      {
+        "title": "نماذج الجزيئات",
+        "description": "ثلاثة نماذج كيميائية باستخدام الكرات والأعواد تمثل جزيئات الإيتان (رابطة أحادية)، الإيتيلين (رابطة ثنائية)، والإستيلين (رابطة ثلاثية).",
+        "labels": [
+          "إيتان",
+          "إيتيلين",
+          "إستيلين"
+        ],
+        "related_text": null
+      }
+    ],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "H-C-C-H",
+        "description": "تركيب جزيء الإيتان برابطة أحادية"
+      },
+      {
+        "equation": "H-C=C-H",
+        "description": "تركيب جزيء الإيتيلين برابطة ثنائية"
+      },
+      {
+        "equation": "H-C≡C-H",
+        "description": "تركيب جزيء الإستيلين برابطة ثلاثية"
+      }
+    ],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:[Errno 54] Connection reset by peer."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 502,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 59,
+      "schema_valid": true,
+      "raw_markdown_chars": 502,
+      "char_count": 502,
+      "section_count": 1,
+      "question_count": 2,
+      "table_count": 0,
+      "equation_count": 3,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.8188,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 59,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### أجرب وأستنتج:\\n\\n**أدوات التجربة:**\\nعلبة الكرات والأعواد.\\n\\n**خطوات التجربة:**\\n1. أشكل نموذجاً لجزيء غاز الإيتان:\\n   (صورة توضح تركيب جزيء الإيتان)\\n   H-C-C-H (مع روابط أحادية)\\n\\n2. أشكل نموذجاً لجزيء غاز الإيتيلين:\\n   (صورة توضح تركيب جزيء الإيتيلين)\\n   H-C=C-H\\n\\n3. أشكل نموذجاً لجزيء غاز الإستيلين:\\n   (صورة توضح تركيب جزيء الإستيلين)\\n   H-C≡C-H\\n\\n4. أقارن بين النماذج السابقة من حيث عدد الروابط المشتركة بين ذرتي الكربون.\\n5. أرسم الروابط المشتركة بين ذرات الكربون الممثلة للنماذج السابقة بخطوط صغيرة.\",\n  \"sections\": [\n    {\n      \"heading\": \"أجرب وأستنتج:\",\n      \"content\": \"أدوات التجربة: علبة الكرات والأعواد.\\n\\nخطوات التجربة:\\n1. أشكل نموذجاً لجزيء غاز الإيتان:\\n2. أشكل نموذجاً لجزيء غاز الإيتيلين:\\n3. أشكل نموذجاً لجزيء غاز الإستيلين:\\n4. أقارن بين النماذج السابقة من حيث عدد الروابط المشتركة بين ذرتي الكربون.\\n5. أرسم الروابط المشتركة بين ذرات الكربون الممثلة للنماذج السابقة بخطوط صغيرة.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"أقارن بين النماذج السابقة من حيث عدد الروابط المشتركة بين ذرتي الكربون.\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أرسم الروابط المشتركة بين ذرات الكربون الممثلة للنماذج السابقة بخطوط صغيرة.\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": \"نماذج الجزيئات\",\n      \"description\": \"ثلاثة نماذج كيميائية باستخدام الكرات والأعواد تمثل جزيئات الإيتان (رابطة أحادية)، الإيتيلين (رابطة ثنائية)، والإستيلين (رابطة ثلاثية).\",\n      \"labels\": [\n        \"إيتان\",\n        \"إيتيلين\",\n        \"إستيلين\"\n      ]\n    }\n  ],\n  \"equations\": [\n    {\n      \"equation\": \"H-C-C-H\",\n      \"description\": \"تركيب جزيء الإيتان برابطة أحادية\"\n    },\n    {\n      \"equation\": \"H-C=C-H\",\n      \"description\": \"تركيب جزيء الإيتيلين برابطة ثنائية\"\n    },\n    {\n      \"equation\": \"H-C≡C-H\",\n      \"description\": \"تركيب جزيء الإستيلين برابطة ثلاثية\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}"
+  },
+  "merged_content": ":أدوات التّجربة\nعلبة الكرات واألعواد.\nخطوات التّجربة:\nأشكّل نموذجاً لجزيء غاز اإليتان:1\n:أشكّل نموذجاً لجزيء غاز اإلتيلن2\n:أشكّل نموذجاً لجزيء غاز اإلستيلين3\n.أقارن بين النَّماذج السَّابقة من حيثُ عدد الرَّوابط المشتركة بين ذرَّتي الكربون4\n.أرسم الرَّوابط المشتركة بين ذرَّات الكربون الممثّلة للنَّماذج السَّابقة بخطوط صغيرة5\n:أﺟﺮب وأﺳﺘﻨﺘﺞ\n165\n\n| قأ 4 |\n| --- |\n|  |\n| 5\nأ |\n\nأجرب وأستنتج:\nأدوات التجربة: علبة الكرات والأعواد.\n\nخطوات التجربة:\n1. أشكل نموذجاً لجزيء غاز الإيتان:\n2. أشكل نموذجاً لجزيء غاز الإيتيلين:\n3. أشكل نموذجاً لجزيء غاز الإستيلين:\n4. أقارن بين النماذج السابقة من حيث عدد الروابط المشتركة بين ذرتي الكربون.\n5. أرسم الروابط المشتركة بين ذرات الكربون الممثلة للنماذج السابقة بخطوط صغيرة.",
+  "raw_markdown": "### أجرب وأستنتج:\n\n**أدوات التجربة:**\nعلبة الكرات والأعواد.\n\n**خطوات التجربة:**\n1. أشكل نموذجاً لجزيء غاز الإيتان:\n   (صورة توضح تركيب جزيء الإيتان)\n   H-C-C-H (مع روابط أحادية)\n\n2. أشكل نموذجاً لجزيء غاز الإيتيلين:\n   (صورة توضح تركيب جزيء الإيتيلين)\n   H-C=C-H\n\n3. أشكل نموذجاً لجزيء غاز الإستيلين:\n   (صورة توضح تركيب جزيء الإستيلين)\n   H-C≡C-H\n\n4. أقارن بين النماذج السابقة من حيث عدد الروابط المشتركة بين ذرتي الكربون.\n5. أرسم الروابط المشتركة بين ذرات الكربون الممثلة للنماذج السابقة بخطوط صغيرة.",
+  "sections": [
+    {
+      "heading": null,
+      "content": ":أدوات التّجربة\nعلبة الكرات واألعواد.\nخطوات التّجربة:\nأشكّل نموذجاً لجزيء غاز اإليتان:1\n:أشكّل نموذجاً لجزيء غاز اإلتيلن2\n:أشكّل نموذجاً لجزيء غاز اإلستيلين3\n.أقارن بين النَّماذج السَّابقة من حيثُ عدد الرَّوابط المشتركة بين ذرَّتي الكربون4\n.أرسم الرَّوابط المشتركة بين ذرَّات الكربون الممثّلة للنَّماذج السَّابقة بخطوط صغيرة5\n:أﺟﺮب وأﺳﺘﻨﺘﺞ\n165\n\n| قأ 4 |\n| --- |\n|  |\n| 5\nأ |",
+      "content_type": "text"
+    },
+    {
+      "heading": "أجرب وأستنتج:",
+      "content": "أدوات التجربة: علبة الكرات والأعواد.\n\nخطوات التجربة:\n1. أشكل نموذجاً لجزيء غاز الإيتان:\n2. أشكل نموذجاً لجزيء غاز الإيتيلين:\n3. أشكل نموذجاً لجزيء غاز الإستيلين:\n4. أقارن بين النماذج السابقة من حيث عدد الروابط المشتركة بين ذرتي الكربون.\n5. أرسم الروابط المشتركة بين ذرات الكربون الممثلة للنماذج السابقة بخطوط صغيرة.",
+      "content_type": "text"
+    }
   ],
-  "char_count": 0,
-  "completeness_score": 0.0,
+  "questions": [
+    {
+      "question_text": "أقارن بين النماذج السابقة من حيث عدد الروابط المشتركة بين ذرتي الكربون.",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "أرسم الروابط المشتركة بين ذرات الكربون الممثلة للنماذج السابقة بخطوط صغيرة.",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    }
+  ],
+  "diagrams": [
+    {
+      "title": "نماذج الجزيئات",
+      "description": "ثلاثة نماذج كيميائية باستخدام الكرات والأعواد تمثل جزيئات الإيتان (رابطة أحادية)، الإيتيلين (رابطة ثنائية)، والإستيلين (رابطة ثلاثية).",
+      "labels": [
+        "إيتان",
+        "إيتيلين",
+        "إستيلين"
+      ],
+      "related_text": null
+    }
+  ],
+  "tables": [],
+  "equations": [
+    {
+      "equation": "H-C-C-H",
+      "description": "تركيب جزيء الإيتان برابطة أحادية"
+    },
+    {
+      "equation": "H-C=C-H",
+      "description": "تركيب جزيء الإيتيلين برابطة ثنائية"
+    },
+    {
+      "equation": "H-C≡C-H",
+      "description": "تركيب جزيء الإستيلين برابطة ثلاثية"
+    }
+  ],
+  "warnings": [
+    "Gemini PDF extraction failed; using 300 DPI image fallback: Gemini document extraction failed for page 59 with model gemini-3.1-flash-lite: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'Request contains an invalid argument.', 'status': 'INVALID_ARGUMENT'}}",
+    "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:[Errno 54] Connection reset by peer."
+  ],
+  "errors": [],
+  "char_count": 705,
+  "completeness_score": 1.0,
   "detected_language": "ar",
-  "vision_provider": null,
-  "vision_source": null,
-  "neighboring_pages": [],
-  "uploaded_pdf": null,
-  "raw_text": null,
-  "quality_report": {},
+  "vision_provider": "gemini_document_image",
+  "vision_source": "gemini_rendered_image_300dpi",
+  "neighboring_pages": [
+    58,
+    60
+  ],
+  "uploaded_pdf": {
+    "provider": "gemini_document",
+    "name": "files/6zs99grhoqr2",
+    "uri": "https://generativelanguage.googleapis.com/v1beta/files/6zs99grhoqr2",
+    "mime_type": "application/pdf",
+    "display_name": "Chemistry.pdf"
+  },
+  "raw_text": "{\n  \"page_number\": 59,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### أجرب وأستنتج:\\n\\n**أدوات التجربة:**\\nعلبة الكرات والأعواد.\\n\\n**خطوات التجربة:**\\n1. أشكل نموذجاً لجزيء غاز الإيتان:\\n   (صورة توضح تركيب جزيء الإيتان)\\n   H-C-C-H (مع روابط أحادية)\\n\\n2. أشكل نموذجاً لجزيء غاز الإيتيلين:\\n   (صورة توضح تركيب جزيء الإيتيلين)\\n   H-C=C-H\\n\\n3. أشكل نموذجاً لجزيء غاز الإستيلين:\\n   (صورة توضح تركيب جزيء الإستيلين)\\n   H-C≡C-H\\n\\n4. أقارن بين النماذج السابقة من حيث عدد الروابط المشتركة بين ذرتي الكربون.\\n5. أرسم الروابط المشتركة بين ذرات الكربون الممثلة للنماذج السابقة بخطوط صغيرة.\",\n  \"sections\": [\n    {\n      \"heading\": \"أجرب وأستنتج:\",\n      \"content\": \"أدوات التجربة: علبة الكرات والأعواد.\\n\\nخطوات التجربة:\\n1. أشكل نموذجاً لجزيء غاز الإيتان:\\n2. أشكل نموذجاً لجزيء غاز الإيتيلين:\\n3. أشكل نموذجاً لجزيء غاز الإستيلين:\\n4. أقارن بين النماذج السابقة من حيث عدد الروابط المشتركة بين ذرتي الكربون.\\n5. أرسم الروابط المشتركة بين ذرات الكربون الممثلة للنماذج السابقة بخطوط صغيرة.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"أقارن بين النماذج السابقة من حيث عدد الروابط المشتركة بين ذرتي الكربون.\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أرسم الروابط المشتركة بين ذرات الكربون الممثلة للنماذج السابقة بخطوط صغيرة.\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": \"نماذج الجزيئات\",\n      \"description\": \"ثلاثة نماذج كيميائية باستخدام الكرات والأعواد تمثل جزيئات الإيتان (رابطة أحادية)، الإيتيلين (رابطة ثنائية)، والإستيلين (رابطة ثلاثية).\",\n      \"labels\": [\n        \"إيتان\",\n        \"إيتيلين\",\n        \"إستيلين\"\n      ]\n    }\n  ],\n  \"equations\": [\n    {\n      \"equation\": \"H-C-C-H\",\n      \"description\": \"تركيب جزيء الإيتان برابطة أحادية\"\n    },\n    {\n      \"equation\": \"H-C=C-H\",\n      \"description\": \"تركيب جزيء الإيتيلين برابطة ثنائية\"\n    },\n    {\n      \"equation\": \"H-C≡C-H\",\n      \"description\": \"تركيب جزيء الإستيلين برابطة ثلاثية\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}",
+  "quality_report": {
+    "page_number": 59,
+    "schema_valid": true,
+    "raw_markdown_chars": 502,
+    "char_count": 502,
+    "section_count": 1,
+    "question_count": 2,
+    "table_count": 0,
+    "equation_count": 3,
+    "diagram_count": 1,
+    "warning_count": 0,
+    "arabic_char_ratio": 0.8188,
+    "completeness_score": 1.0,
+    "issues": [],
+    "should_fallback": false
+  },
   "classification": "MIXED_VISION",
   "source_id": 1
 }

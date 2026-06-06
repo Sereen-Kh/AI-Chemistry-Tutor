@@ -44,7 +44,7 @@ class SectionAwareChunkingTests(TestCase):
         records = build_page_chunk_records(payload)
         content_types = [record.content_type for record in records]
 
-        self.assertIn("text", content_types)
+        self.assertIn("definition", content_types)
         self.assertIn("table", content_types)
         self.assertIn("equation", content_types)
         self.assertIn("diagram", content_types)

@@ -10,6 +10,8 @@ import {
   toErrorMessage,
   userApi,
 } from './api';
+import { ChemistryFlask } from './components/ChemistryFlask';
+import { MoleculeBackground } from './components/MoleculeBackground';
 import {
   AnswerFormatSelector,
   AppShell,
@@ -48,22 +50,22 @@ interface AuthState {
 }
 
 const styleLabels: Array<{ value: TeachingStyle; label: string }> = [
-  { value: 'real_life', label: 'Real-life' },
-  { value: 'visual', label: 'Visual' },
-  { value: 'exam', label: 'Exam' },
-  { value: 'simple', label: 'Simple' },
+  { value: 'real_life', label: 'من الحياة' },
+  { value: 'visual', label: 'بصري' },
+  { value: 'exam', label: 'امتحاني' },
+  { value: 'simple', label: 'مبسط' },
 ];
 
 const preferenceLabel = (value: string): string =>
   ({
-    real_life: 'Real-life examples',
-    visual: 'Visual learning',
-    exam: 'Exam practice',
-    simple: 'Simple explanation',
-    text: 'Text',
-    audio: 'Audio',
-    image: 'Image',
-    video: 'Video',
+    real_life: 'أمثلة من الحياة',
+    visual: 'شرح بصري',
+    exam: 'تدريب امتحاني',
+    simple: 'شرح مبسط',
+    text: 'نص',
+    audio: 'صوت',
+    image: 'صورة',
+    video: 'Reel',
   })[value] ?? value;
 
 const ProtectedRoute = ({ user, booting }: { user: UserProfile | null; booting: boolean }) => {
@@ -92,7 +94,7 @@ const LoginPage = ({ onLogin }: { onLogin: () => Promise<void> }) => {
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!email.includes('@') || password.length < 6) {
-      setError('Enter a valid email and a password with at least 6 characters.');
+      setError('أدخل بريداً إلكترونياً صحيحاً وكلمة مرور من 6 أحرف على الأقل.');
       return;
     }
     setLoading(true);
@@ -102,26 +104,26 @@ const LoginPage = ({ onLogin }: { onLogin: () => Promise<void> }) => {
       await onLogin();
       navigate('/dashboard', { replace: true });
     } catch (err) {
-      setError(toErrorMessage(err, 'Login failed. Check your email and password.'));
+      setError(toErrorMessage(err, 'تعذر تسجيل الدخول. تحقق من البريد وكلمة المرور.'));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <AuthLayout title="Welcome back" subtitle="Log in to continue your chemistry mission.">
+    <AuthLayout title="مرحباً بعودتك" subtitle="سجل الدخول لمتابعة رحلة الكيمياء.">
       <form className="auth-form" onSubmit={submit}>
         {error && <ErrorBanner message={error} />}
         <label>
-          Email
+          البريد الإلكتروني
           <input value={email} onChange={(event) => setEmail(event.target.value)} type="email" autoComplete="email" required />
         </label>
         <label>
-          Password
+          كلمة المرور
           <input value={password} onChange={(event) => setPassword(event.target.value)} type="password" autoComplete="current-password" required minLength={6} />
         </label>
-        <Button type="submit" disabled={loading}>{loading ? 'Connecting...' : 'Login'}</Button>
-        <p className="auth-switch">New to EduMind? <Link to="/register">Create an account</Link></p>
+        <Button type="submit" disabled={loading}>{loading ? 'جار الاتصال...' : 'دخول'}</Button>
+        <p className="auth-switch">جديد في EduMind؟ <Link to="/register">أنشئ حساباً</Link></p>
       </form>
     </AuthLayout>
   );
@@ -146,11 +148,11 @@ const RegisterPage = ({ onRegistered }: { onRegistered: () => Promise<void> }) =
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (form.password !== form.confirmPassword) {
-      setError('Passwords do not match.');
+      setError('كلمتا المرور غير متطابقتين.');
       return;
     }
     if (form.password.length < 6) {
-      setError('Password must be at least 6 characters.');
+      setError('كلمة المرور يجب أن تكون 6 أحرف على الأقل.');
       return;
     }
     setLoading(true);
@@ -161,57 +163,57 @@ const RegisterPage = ({ onRegistered }: { onRegistered: () => Promise<void> }) =
       await onRegistered();
       navigate('/onboarding/interests', { replace: true });
     } catch (err) {
-      setError(toErrorMessage(err, 'Registration failed.'));
+      setError(toErrorMessage(err, 'تعذر إنشاء الحساب.'));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <AuthLayout title="Create your tutor profile" subtitle="Set up a Grade 9 chemistry learning space.">
+    <AuthLayout title="أنشئ ملفك التعليمي" subtitle="جهز مساحة تعلم الكيمياء للصف التاسع.">
       <form className="auth-form" onSubmit={submit}>
         {error && <ErrorBanner message={error} />}
         <div className="form-grid">
           <label>
-            First name
+            الاسم الأول
             <input value={form.firstName} onChange={(event) => update('firstName', event.target.value)} required />
           </label>
           <label>
-            Last name
+            الاسم الأخير
             <input value={form.lastName} onChange={(event) => update('lastName', event.target.value)} />
           </label>
         </div>
         <label>
-          Email
+          البريد الإلكتروني
           <input value={form.email} onChange={(event) => update('email', event.target.value)} type="email" required />
         </label>
         <div className="form-grid">
           <label>
-            Password
+            كلمة المرور
             <input value={form.password} onChange={(event) => update('password', event.target.value)} type="password" required minLength={6} />
           </label>
           <label>
-            Confirm password
+            تأكيد كلمة المرور
             <input value={form.confirmPassword} onChange={(event) => update('confirmPassword', event.target.value)} type="password" required minLength={6} />
           </label>
         </div>
         <div className="form-grid">
           <label>
-            Grade
+            الصف
             <select value={form.grade} onChange={(event) => update('grade', event.target.value)}>
-              <option value="grade_9">Grade 9</option>
-              <option value="grade_8">Grade 8</option>
+              <option value="grade_9">الصف التاسع</option>
+              <option value="grade_8">الصف الثامن</option>
             </select>
           </label>
           <label>
-            Subject
+            المادة
             <select value={form.subject} onChange={(event) => update('subject', event.target.value)}>
-              <option value="chemistry">Chemistry</option>
+              <option value="chemistry">الكيمياء</option>
             </select>
           </label>
         </div>
-        <Button type="submit" disabled={loading}>{loading ? 'Creating...' : 'Register'}</Button>
-        <p className="auth-switch">Already registered? <Link to="/login">Log in</Link></p>
+        <Button type="submit" disabled={loading}>{loading ? 'جار الإنشاء...' : 'تسجيل'}</Button>
+        <p className="auth-switch">لديك حساب؟ <Link to="/login">سجل الدخول</Link></p>
       </form>
     </AuthLayout>
   );
@@ -253,7 +255,7 @@ const OnboardingPage = ({
       const ids = interests.filter((interest) => selected.includes(interest.key)).map((interest) => interest.id);
       await authApi.completeOnboarding(next, ids);
     } catch (err) {
-      setError(toErrorMessage(err, 'Saved locally. Backend onboarding endpoint was not reachable.'));
+      setError(toErrorMessage(err, 'تم الحفظ محلياً. تعذر الوصول إلى نقطة إعداد التفضيلات في الخلفية.'));
     } finally {
       onSave(next);
       setLoading(false);
@@ -265,9 +267,9 @@ const OnboardingPage = ({
     <main className="onboarding-page">
       <Card className="onboarding-card">
         <PageHeader
-          eyebrow="Personalization"
-          title="Choose how EduMind should teach you"
-          subtitle="These preferences shape examples, answer format, and revision suggestions."
+          eyebrow="التخصيص"
+          title="اختر كيف تريد أن يشرح EduMind"
+          subtitle="هذه التفضيلات تضبط الأمثلة وصيغة الإجابة واقتراحات المراجعة."
         />
         {error && <ErrorBanner message={error} />}
         <div className="interest-grid">
@@ -285,22 +287,22 @@ const OnboardingPage = ({
         </div>
         <div className="preference-row">
           <label>
-            Teaching style
+            طريقة الشرح
             <select value={style} onChange={(event) => setStyle(event.target.value as TeachingStyle)}>
               {styleLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
             </select>
           </label>
           <label>
-            Preferred answer format
+            صيغة الإجابة المفضلة
             <select value={format} onChange={(event) => setFormat(event.target.value as AnswerFormat)}>
-              <option value="text">Text</option>
-              <option value="audio">Audio</option>
-              <option value="image">Image</option>
-              <option value="video">Video</option>
+              <option value="text">نص</option>
+              <option value="audio">صوت</option>
+              <option value="image">صورة</option>
+              <option value="video">Reel</option>
             </select>
           </label>
         </div>
-        <Button onClick={save} disabled={loading}>{loading ? 'Saving...' : 'Continue to dashboard'}</Button>
+        <Button onClick={save} disabled={loading}>{loading ? 'جار الحفظ...' : 'المتابعة إلى الرئيسية'}</Button>
       </Card>
     </main>
   );
@@ -308,51 +310,51 @@ const OnboardingPage = ({
 
 const DashboardPage = ({ user, preferences }: { user: UserProfile; preferences: UserPreferences }) => {
   const quickActions = [
-    { to: '/ask-ai', label: 'Ask AI', tone: 'blue' },
-    { to: '/study-plan', label: 'Quiz', tone: 'gold' },
-    { to: '/ask-ai', label: 'Reels', tone: 'purple' },
-    { to: '/flashcards', label: 'Flashcards', tone: 'teal' },
-    { to: '/lab/equation-balancer', label: 'Balancer', tone: 'coral' },
+    { to: '/ask-ai', label: 'اسأل', tone: 'blue' },
+    { to: '/study-plan', label: 'اختبار', tone: 'gold' },
+    { to: '/ask-ai', label: 'Reel', tone: 'purple' },
+    { to: '/flashcards', label: 'بطاقات', tone: 'teal' },
+    { to: '/lab/equation-balancer', label: 'موازنة', tone: 'coral' },
   ];
 
   return (
     <div className="dashboard-grid">
       <section className="hero-card">
-        <p className="eyebrow">Good afternoon</p>
-        <h1>{user.first_name || user.name || 'Chemist'}</h1>
+        <p className="eyebrow">مختبر اليوم</p>
+        <h1>{user.first_name || user.name || 'كيميائي'}</h1>
         <div className="badge-row">
-          <StatusPill tone="gold">{user.streak_days || 5} day streak</StatusPill>
+          <StatusPill tone="gold">{user.streak_days || 5} أيام متتالية</StatusPill>
           <StatusPill tone="blue">{user.xp || 1240} XP</StatusPill>
-          <StatusPill tone="teal">Level {user.level || 4}</StatusPill>
+          <StatusPill tone="teal">المستوى {user.level || 4}</StatusPill>
         </div>
       </section>
 
       <StudyMissionCard
-        title="Explain acids using textbook sources"
-        meta={`18 min · based on your ${preferenceLabel(preferences.teachingStyle)} style`}
+        title="اشرح الحموض من مصادر الكتاب"
+        meta={`18 دقيقة · حسب أسلوب ${preferenceLabel(preferences.teachingStyle)}`}
         to="/ask-ai"
       />
 
       <div className="stats-row">
-        <Card><strong>62%</strong><span>Study plan</span></Card>
-        <Card><strong>14</strong><span>Cards due</span></Card>
-        <Card><strong>9 days</strong><span>Exam countdown</span></Card>
+        <Card><strong>62%</strong><span>خطة الدراسة</span></Card>
+        <Card><strong>14</strong><span>بطاقة للمراجعة</span></Card>
+        <Card><strong>9 أيام</strong><span>حتى الاختبار</span></Card>
       </div>
 
       <Card className="wide-card">
         <div className="section-title">
-          <h2>AI recommendations</h2>
-          <Link to="/study-plan">View plan</Link>
+          <h2>توصيات الذكاء</h2>
+          <Link to="/study-plan">عرض الخطة</Link>
         </div>
         <div className="recommendation-grid">
-          <RecommendationCard tone="coral" label="Weak topic" title="Review weak acids" description="Ask for a simple comparison table." />
-          <RecommendationCard tone="teal" label="Practice" title="Balance 3 equations" description="Use the lab before your quiz." />
-          <RecommendationCard tone="purple" label="Revision" title="Flip acid/base cards" description="Short spaced repetition session." />
+          <RecommendationCard tone="coral" label="نقطة ضعف" title="راجع الحموض الضعيفة" description="اطلب جدول مقارنة بسيطاً." />
+          <RecommendationCard tone="teal" label="تدريب" title="وازن 3 معادلات" description="استخدم المختبر قبل الاختبار." />
+          <RecommendationCard tone="purple" label="مراجعة" title="اقلب بطاقات الحموض والأسس" description="جلسة تكرار قصيرة." />
         </div>
       </Card>
 
       <Card className="wide-card">
-        <div className="section-title"><h2>Quick actions</h2></div>
+        <div className="section-title"><h2>إجراءات سريعة</h2></div>
         <div className="quick-grid">
           {quickActions.map((action) => (
             <Link key={action.label} to={action.to} className={`quick-action tone-${action.tone}`}>
@@ -380,12 +382,12 @@ const StudyPlanPage = () => {
   return (
     <div className="page-stack">
       <PageHeader
-        eyebrow="Study plan"
-        title="Grade 9 Chemistry roadmap"
-        subtitle={`Current lesson: ${plan.currentLesson.title}`}
+        eyebrow="خطة الدراسة"
+        title="خارطة كيمياء الصف التاسع"
+        subtitle={`الدرس الحالي: ${plan.currentLesson.title}`}
       />
       <Card>
-        <div className="section-title"><h2>Weak topics</h2></div>
+        <div className="section-title"><h2>موضوعات تحتاج مراجعة</h2></div>
         <div className="badge-row">
           {plan.weakTopics.map((topic) => <StatusPill key={topic} tone="coral">{topic}</StatusPill>)}
         </div>
@@ -432,7 +434,7 @@ const FlashcardsPage = () => {
 
   return (
     <div className="flashcard-layout">
-      <PageHeader eyebrow="Revision" title="Flashcards" subtitle="Flip, recall, then mark your confidence." />
+      <PageHeader eyebrow="مراجعة" title="البطاقات التعليمية" subtitle="اقلب البطاقة، تذكر الإجابة، ثم قيّم ثقتك." />
       <div className="deck-tabs">
         {decks.map((item, index) => (
           <button key={item.id} type="button" className={index === deckIndex ? 'active' : ''} onClick={() => { setDeckIndex(index); setCardIndex(0); setFlipped(false); }}>
@@ -443,11 +445,11 @@ const FlashcardsPage = () => {
       <Card className="flashcard-stage">
         <Flashcard card={card} flipped={flipped} onFlip={() => setFlipped((value) => !value)} />
         <div className="flashcard-actions">
-          <Button variant="secondary" onClick={() => mark(false)}>Unknown</Button>
-          <Button onClick={() => mark(true)}>I know it</Button>
+          <Button variant="secondary" onClick={() => mark(false)}>لا أعرفها</Button>
+          <Button onClick={() => mark(true)}>أعرفها</Button>
         </div>
         <ProgressBar value={Math.round(((cardIndex + 1) / deck.cards.length) * 100)} tone="teal" />
-        <p>{known} known this session · {deck.mastered}/{deck.count} mastered before today</p>
+        <p>{known} إجابات معروفة في هذه الجلسة · {deck.mastered}/{deck.count} متقنة قبل اليوم</p>
       </Card>
     </div>
   );
@@ -465,28 +467,46 @@ const EquationBalancerPage = () => {
     setLoading(false);
   };
 
+  const flaskColor = loading
+    ? 'violet'
+    : result
+      ? (result.explanation.some((step) => step.toLowerCase().includes('balanced') || step.toLowerCase().includes('count') || step.toLowerCase().includes('neutralization')) ? 'green' : 'coral')
+      : 'green';
+  const flaskLevel = loading ? 45 : result ? 75 : 60;
+  const flaskBubbling = loading || !!result;
+
   return (
     <div className="page-stack">
-      <PageHeader eyebrow="The Lab" title="Equation balancer" subtitle="Practice balancing Grade 9 chemistry equations." />
-      <Card className="lab-tool">
-        <label>
-          Equation
-          <input value={input} onChange={(event) => setInput(event.target.value)} dir="ltr" aria-label="Equation input" />
-        </label>
-        <div className="button-row">
-          <Button onClick={balance} disabled={loading}>{loading ? 'Balancing...' : 'Balance'}</Button>
-          <Link className="ed-btn ed-btn-secondary" to={`/ask-ai?question=${encodeURIComponent(`Explain how to balance ${input}`)}`}>Explain with AI</Link>
-        </div>
-        {result && (
-          <div className="equation-result">
-            <p>Balanced equation</p>
-            <strong dir="ltr">{result.balanced}</strong>
-            <ol>
-              {result.explanation.map((step) => <li key={step}>{step}</li>)}
-            </ol>
+      <PageHeader eyebrow="المختبر" title="موازن المعادلات" subtitle="تدرب على موازنة معادلات كيمياء الصف التاسع." />
+      <div className="lab-split-container">
+        <Card className="lab-tool">
+          <label>
+            المعادلة
+            <input value={input} onChange={(event) => setInput(event.target.value)} dir="ltr" aria-label="Equation input" />
+          </label>
+          <div className="button-row">
+            <Button onClick={balance} disabled={loading}>{loading ? 'جار الموازنة...' : 'وازن'}</Button>
+            <Link className="ed-btn ed-btn-secondary" to={`/ask-ai?question=${encodeURIComponent(`اشرح كيف نوازن المعادلة ${input}`)}`}>اشرح بالذكاء</Link>
           </div>
-        )}
-      </Card>
+          {result && (
+            <div className="equation-result">
+              <p>المعادلة الموزونة</p>
+              <strong dir="ltr">{result.balanced}</strong>
+              <ol>
+                {result.explanation.map((step) => <li key={step}>{step}</li>)}
+              </ol>
+            </div>
+          )}
+        </Card>
+        
+        <Card className="reaction-chamber-card">
+          <h3>حجرة التفاعل</h3>
+          <ChemistryFlask color={flaskColor} level={flaskLevel} bubbling={flaskBubbling} size={150} />
+          <p>
+            {loading ? 'التفاعل قيد المعالجة...' : result ? 'اكتمل التفاعل' : 'بانتظار صيغة كيميائية'}
+          </p>
+        </Card>
+      </div>
     </div>
   );
 };
@@ -510,7 +530,7 @@ const AskAiPage = ({ preferences, setPreferences }: { preferences: UserPreferenc
     {
       id: 'welcome',
       role: 'assistant',
-      content: 'Ask me from the Grade 9 chemistry book. I will show sources when RAG finds them.',
+      content: 'اسألني من كتاب الكيمياء للصف التاسع. سأعرض المصادر والصفحات عندما يجدها نظام RAG.',
     },
   ]);
   const [loading, setLoading] = useState(false);
@@ -556,7 +576,7 @@ const AskAiPage = ({ preferences, setPreferences }: { preferences: UserPreferenc
         },
       ]);
     } catch (err) {
-      setError(toErrorMessage(err, 'AI request failed.'));
+      setError(toErrorMessage(err, 'تعذر إرسال السؤال إلى خدمة الذكاء.'));
     } finally {
       setLoading(false);
     }
@@ -571,11 +591,11 @@ const AskAiPage = ({ preferences, setPreferences }: { preferences: UserPreferenc
 
   return (
     <div className="ask-layout">
-      <PageHeader eyebrow="Ask AI" title="RAG Chemistry Tutor" subtitle="Grounded answers with page citations from the chemistry book." />
+      <PageHeader eyebrow="اسأل الذكاء" title="معلّم الكيمياء RAG" subtitle="إجابات موثقة بصفحات من كتاب الكيمياء." />
       <Card className="chat-panel">
         <div className="chat-toolbar">
           <label>
-            Teaching style
+            طريقة الشرح
             <select value={style} onChange={(event) => setStyle(event.target.value as TeachingStyle)}>
               {styleLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
             </select>
@@ -592,16 +612,16 @@ const AskAiPage = ({ preferences, setPreferences }: { preferences: UserPreferenc
         <div className="chat-actions">
           <Button
             variant="secondary"
-            onClick={() => ask('Explain this differently with a simpler example.', 'rephrase_previous')}
+            onClick={() => ask('اشرح هذا بطريقة أبسط مع مثال واضح.', 'rephrase_previous')}
             disabled={loading}
           >
-            Try differently
+            أعد الشرح
           </Button>
-          <Button variant="ghost" onClick={() => setError('Marked as understood for this local session.')}>I understand</Button>
+          <Button variant="ghost" onClick={() => setError('تم تسجيل أنك فهمت هذه الإجابة في الجلسة الحالية.')}>فهمت</Button>
         </div>
         <form className="ask-input-row" onSubmit={(event) => { event.preventDefault(); void ask(); }}>
-          <input value={question} onChange={(event) => setQuestion(event.target.value)} placeholder="Ask from the chemistry book..." aria-label="AI question" />
-          <Button type="submit" disabled={loading || !question.trim()}>{loading ? '...' : 'Send'}</Button>
+          <input value={question} onChange={(event) => setQuestion(event.target.value)} placeholder="اسأل من كتاب الكيمياء..." aria-label="سؤال للذكاء الاصطناعي" />
+          <Button type="submit" disabled={loading || !question.trim()}>{loading ? '...' : 'إرسال'}</Button>
         </form>
       </Card>
     </div>
@@ -625,9 +645,9 @@ const ProfilePage = ({
     savePreferences(next);
     try {
       await userApi.updatePreferences(next);
-      setStatus('Preferences saved.');
+      setStatus('تم حفظ التفضيلات.');
     } catch {
-      setStatus('Preferences saved locally. Backend preferences endpoint was unavailable.');
+      setStatus('تم حفظ التفضيلات محلياً. تعذر الوصول إلى الخلفية.');
     }
   };
 
@@ -636,43 +656,43 @@ const ProfilePage = ({
       <Card className="profile-card">
         <div className="avatar">{(user.first_name || user.name || 'E').slice(0, 1)}</div>
         <h1>{user.first_name || user.name}</h1>
-        <p>Grade 9 Chemistry · Level {user.level || 4}</p>
+        <p>كيمياء الصف التاسع · المستوى {user.level || 4}</p>
         <ProgressBar value={65} tone="blue" />
       </Card>
       <Card>
-        <div className="section-title"><h2>Preferences</h2></div>
+        <div className="section-title"><h2>التفضيلات</h2></div>
         {status && <StatusPill tone="teal">{status}</StatusPill>}
         <div className="settings-list">
           <label>
-            Teaching style
+            طريقة الشرح
             <select value={preferences.teachingStyle} onChange={(event) => void updatePreference('teachingStyle', event.target.value)}>
               {styleLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
             </select>
           </label>
           <label>
-            Preferred answer
+            صيغة الإجابة
             <select value={preferences.answerFormat} onChange={(event) => void updatePreference('answerFormat', event.target.value)}>
-              <option value="text">Text</option>
-              <option value="audio">Audio</option>
-              <option value="image">Image</option>
-              <option value="video">Video</option>
+              <option value="text">نص</option>
+              <option value="audio">صوت</option>
+              <option value="image">صورة</option>
+              <option value="video">Reel</option>
             </select>
           </label>
           <label>
-            Language
+            اللغة
             <select value={preferences.language} onChange={(event) => void updatePreference('language', event.target.value)}>
-              <option value="ar">Arabic</option>
+              <option value="ar">العربية</option>
               <option value="en">English</option>
             </select>
           </label>
         </div>
       </Card>
       <Card className="wide-card">
-        <div className="section-title"><h2>Progress</h2></div>
+        <div className="section-title"><h2>التقدم</h2></div>
         <div className="stats-row inline">
-          <Card><strong>{user.streak_days || 5}</strong><span>Streak</span></Card>
-          <Card><strong>{user.xp || 1240}</strong><span>XP</span></Card>
-          <Card><strong>8</strong><span>Badges</span></Card>
+          <article className="stat-tile"><strong>{user.streak_days || 5}</strong><span>استمرارية</span></article>
+          <article className="stat-tile"><strong>{user.xp || 1240}</strong><span>XP</span></article>
+          <article className="stat-tile"><strong>8</strong><span>شارات</span></article>
         </div>
       </Card>
     </div>
@@ -732,33 +752,36 @@ function App() {
     setAuth((current) => ({ ...current, user: null }));
   };
 
-  const userName = auth.user?.first_name || auth.user?.name || 'Student';
+  const userName = auth.user?.first_name || auth.user?.name || 'طالب';
 
   return (
-    <Routes>
-      <Route path="/login" element={<GuestOnly user={auth.user}><LoginPage onLogin={refreshUser} /></GuestOnly>} />
-      <Route path="/register" element={<GuestOnly user={auth.user}><RegisterPage onRegistered={refreshUser} /></GuestOnly>} />
-      <Route
-        path="/onboarding/interests"
-        element={
-          auth.user ? (
-            <OnboardingPage preferences={auth.preferences} onSave={updatePreferences} />
-          ) : (
-            <Navigate to="/login" replace />
-          )
-        }
-      />
-      <Route element={auth.user ? <AppShell userName={userName} onLogout={logout} /> : <ProtectedRoute user={auth.user} booting={auth.booting} />}>
-        <Route path="/dashboard" element={auth.user && <DashboardPage user={auth.user} preferences={auth.preferences} />} />
-        <Route path="/study-plan" element={<StudyPlanPage />} />
-        <Route path="/flashcards" element={<FlashcardsPage />} />
-        <Route path="/lab/equation-balancer" element={<EquationBalancerPage />} />
-        <Route path="/ask-ai" element={<AskAiPage preferences={auth.preferences} setPreferences={updatePreferences} />} />
-        <Route path="/profile" element={auth.user && <ProfilePage user={auth.user} preferences={auth.preferences} setPreferences={updatePreferences} />} />
-      </Route>
-      <Route path="/" element={<Navigate to={auth.user ? '/dashboard' : '/login'} replace />} />
-      <Route path="*" element={<Navigate to={auth.user ? '/dashboard' : '/login'} replace />} />
-    </Routes>
+    <div dir="rtl" lang="ar">
+      <MoleculeBackground />
+      <Routes>
+        <Route path="/login" element={<GuestOnly user={auth.user}><LoginPage onLogin={refreshUser} /></GuestOnly>} />
+        <Route path="/register" element={<GuestOnly user={auth.user}><RegisterPage onRegistered={refreshUser} /></GuestOnly>} />
+        <Route
+          path="/onboarding/interests"
+          element={
+            auth.user ? (
+              <OnboardingPage preferences={auth.preferences} onSave={updatePreferences} />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+        <Route element={auth.user ? <AppShell userName={userName} onLogout={logout} /> : <ProtectedRoute user={auth.user} booting={auth.booting} />}>
+          <Route path="/dashboard" element={auth.user && <DashboardPage user={auth.user} preferences={auth.preferences} />} />
+          <Route path="/study-plan" element={<StudyPlanPage />} />
+          <Route path="/flashcards" element={<FlashcardsPage />} />
+          <Route path="/lab/equation-balancer" element={<EquationBalancerPage />} />
+          <Route path="/ask-ai" element={<AskAiPage preferences={auth.preferences} setPreferences={updatePreferences} />} />
+          <Route path="/profile" element={auth.user && <ProfilePage user={auth.user} preferences={auth.preferences} setPreferences={updatePreferences} />} />
+        </Route>
+        <Route path="/" element={<Navigate to={auth.user ? '/dashboard' : '/login'} replace />} />
+        <Route path="*" element={<Navigate to={auth.user ? '/dashboard' : '/login'} replace />} />
+      </Routes>
+    </div>
   );
 }
 

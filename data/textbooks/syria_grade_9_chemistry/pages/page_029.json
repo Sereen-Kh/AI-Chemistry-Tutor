@@ -2,35 +2,426 @@
   "page_number": 29,
   "page_type": "NEEDS_VISION",
   "extraction_methods": [
-    "exception"
+    "gemini_pdf_file",
+    "gemini_image_300dpi"
   ],
-  "extraction_method": "exception",
-  "status": "failed",
+  "extraction_method": "gemini_pdf_file+gemini_image_300dpi",
+  "status": "completed_with_image_fallback",
   "text_layer_content": "",
-  "vision_content": {},
+  "vision_content": {
+    "page_number": 29,
+    "detected_language": "ar",
+    "raw_markdown": "### نشاط:\nتحضّر المشروبات الغازيّة من انحلال غاز ثنائي أكسيد الكربون في الماء مشكّلاً حمض الكربون الذي يُكسبها طعماً مميّزاً، اكتب معادلة التّفاعل الحاصل، محدّداً نوعه.\n\n### ٢. تفاعلات التّفكك:\n\n#### أجرّب وأستنتج:\n**أدوات التّجربة:**\nوعاء فولتا - ماء مقطّر - محلول حمضي - منبع تيّار مستمر - أنبوبا اختبار.\n\n**خطوات التّجربة:**\n1. أضع الماء المقطّر في وعاء فولتا ثمّ أُنكّس أنبوبي اختبار مملوءين بالماء.\n2. أضيف قطرات من محلول الحمض إلى الوعاء.\n3. أغلق الدّارة، ماذا ألاحظ؟\n4. أكشف عن الغازين في كلّ من الأنبوبين بتقريب عود ثقاب مشتعل، ماذا ألاحظ؟\n5. أكتب معادلة التّفاعل الحاصل.\n6. ما عدد المواد المتفاعلة؟\n\n**رسم توضيحي:**\nيظهر الرسم جهاز تحليل الماء كهربائياً (وعاء فولتا) يحتوي على قطبين (موجب وسالب) متصلين ببطارية، مع أنبوبي اختبار مقلوبين فوق القطبين لجمع غاز الهيدروجين (H₂) وغاز الأكسجين (O₂).",
+    "sections": [
+      {
+        "heading": "نشاط",
+        "content": "تحضّر المشروبات الغازيّة من انحلال غاز ثنائي أكسيد الكربون في الماء مشكّلاً حمض الكربون الذي يُكسبها طعماً مميّزاً، اكتب معادلة التّفاعل الحاصل، محدّداً نوعه.",
+        "content_type": "text"
+      },
+      {
+        "heading": "٢. تفاعلات التّفكك",
+        "content": "أجرّب وأستنتج:\nأدوات التّجربة:\nوعاء فولتا - ماء مقطّر - محلول حمضي - منبع تيّار مستمر - أنبوبا اختبار.\nخطوات التّجربة:\n1. أضع الماء المقطّر في وعاء فولتا ثمّ أُنكّس أنبوبي اختبار مملوءين بالماء.\n2. أضيف قطرات من محلول الحمض إلى الوعاء.\n3. أغلق الدّارة، ماذا ألاحظ؟\n4. أكشف عن الغازين في كلّ من الأنبوبين بتقريب عود ثقاب مشتعل، ماذا ألاحظ؟\n5. أكتب معادلة التّفاعل الحاصل.\n6. ما عدد المواد المتفاعلة؟",
+        "content_type": "exercise"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "تحضّر المشروبات الغازيّة من انحلال غاز ثنائي أكسيد الكربون في الماء مشكّلاً حمض الكربون الذي يُكسبها طعماً مميّزاً، اكتب معادلة التّفاعل الحاصل، محدّداً نوعه.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أغلق الدّارة، ماذا ألاحظ؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أكشف عن الغازين في كلّ من الأنبوبين بتقريب عود ثقاب مشتعل، ماذا ألاحظ؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أكتب معادلة التّفاعل الحاصل.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "ما عدد المواد المتفاعلة؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [
+      {
+        "title": "جهاز تحليل الماء كهربائياً",
+        "description": "رسم توضيحي لجهاز تحليل الماء كهربائياً (وعاء فولتا) يتكون من وعاء به ماء، قطبين (موجب وسالب) متصلين ببطارية، وأنبوبي اختبار مقلوبين فوق القطبين لجمع الغازات الناتجة.",
+        "labels": [
+          "غاز الهيدروجين H₂",
+          "غاز الأكسجين O₂",
+          "القطب الموجب",
+          "القطب السالب",
+          "بطارية"
+        ],
+        "related_text": "أجرّب وأستنتج: خطوات التّجربة"
+      }
+    ],
+    "tables": [],
+    "equations": [],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 11.316714327s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '11s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 802,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 29,
+      "schema_valid": true,
+      "raw_markdown_chars": 802,
+      "char_count": 802,
+      "section_count": 2,
+      "question_count": 5,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.8513,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 29,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### نشاط:\\nتحضّر المشروبات الغازيّة من انحلال غاز ثنائي أكسيد الكربون في الماء مشكّلاً حمض الكربون الذي يُكسبها طعماً مميّزاً، اكتب معادلة التّفاعل الحاصل، محدّداً نوعه.\\n\\n### ٢. تفاعلات التّفكك:\\n\\n#### أجرّب وأستنتج:\\n**أدوات التّجربة:**\\nوعاء فولتا - ماء مقطّر - محلول حمضي - منبع تيّار مستمر - أنبوبا اختبار.\\n\\n**خطوات التّجربة:**\\n1. أضع الماء المقطّر في وعاء فولتا ثمّ أُنكّس أنبوبي اختبار مملوءين بالماء.\\n2. أضيف قطرات من محلول الحمض إلى الوعاء.\\n3. أغلق الدّارة، ماذا ألاحظ؟\\n4. أكشف عن الغازين في كلّ من الأنبوبين بتقريب عود ثقاب مشتعل، ماذا ألاحظ؟\\n5. أكتب معادلة التّفاعل الحاصل.\\n6. ما عدد المواد المتفاعلة؟\\n\\n**رسم توضيحي:**\\nيظهر الرسم جهاز تحليل الماء كهربائياً (وعاء فولتا) يحتوي على قطبين (موجب وسالب) متصلين ببطارية، مع أنبوبي اختبار مقلوبين فوق القطبين لجمع غاز الهيدروجين (H₂) وغاز الأكسجين (O₂).\",\n  \"sections\": [\n    {\n      \"heading\": \"نشاط\",\n      \"content\": \"تحضّر المشروبات الغازيّة من انحلال غاز ثنائي أكسيد الكربون في الماء مشكّلاً حمض الكربون الذي يُكسبها طعماً مميّزاً، اكتب معادلة التّفاعل الحاصل، محدّداً نوعه.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"٢. تفاعلات التّفكك\",\n      \"content\": \"أجرّب وأستنتج:\\nأدوات التّجربة:\\nوعاء فولتا - ماء مقطّر - محلول حمضي - منبع تيّار مستمر - أنبوبا اختبار.\\nخطوات التّجربة:\\n1. أضع الماء المقطّر في وعاء فولتا ثمّ أُنكّس أنبوبي اختبار مملوءين بالماء.\\n2. أضيف قطرات من محلول الحمض إلى الوعاء.\\n3. أغلق الدّارة، ماذا ألاحظ؟\\n4. أكشف عن الغازين في كلّ من الأنبوبين بتقريب عود ثقاب مشتعل، ماذا ألاحظ؟\\n5. أكتب معادلة التّفاعل الحاصل.\\n6. ما عدد المواد المتفاعلة؟\",\n      \"content_type\": \"exercise\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"تحضّر المشروبات الغازيّة من انحلال غاز ثنائي أكسيد الكربون في الماء مشكّلاً حمض الكربون الذي يُكسبها طعماً مميّزاً، اكتب معادلة التّفاعل الحاصل، محدّداً نوعه.\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أغلق الدّارة، ماذا ألاحظ؟\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أكشف عن الغازين في كلّ من الأنبوبين بتقريب عود ثقاب مشتعل، ماذا ألاحظ؟\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أكتب معادلة التّفاعل الحاصل.\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"ما عدد المواد المتفاعلة؟\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": \"جهاز تحليل الماء كهربائياً\",\n      \"description\": \"رسم توضيحي لجهاز تحليل الماء كهربائياً (وعاء فولتا) يتكون من وعاء به ماء، قطبين (موجب وسالب) متصلين ببطارية، وأنبوبي اختبار مقلوبين فوق القطبين لجمع الغازات الناتجة.\",\n      \"labels\": [\n        \"غاز الهيدروجين H₂\",\n        \"غاز الأكسجين O₂\",\n        \"القطب الموجب\",\n        \"القطب السالب\",\n        \"بطارية\"\n      ],\n      \"related_text\": \"أجرّب وأستنتج: خطوات التّجربة\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}"
+  },
   "gemini_pdf_content": {},
-  "gemini_fallback_model_content": {},
-  "gemini_image_fallback_content": {},
-  "merged_content": "",
-  "raw_markdown": "",
-  "sections": [],
-  "questions": [],
-  "diagrams": [],
+  "gemini_fallback_model_content": {
+    "page_number": 29,
+    "detected_language": "ar",
+    "raw_markdown": "### نشاط:\nتحضّر المشروبات الغازيّة من انحلال غاز ثنائي أكسيد الكربون في الماء مشكّلاً حمض الكربون الذي يُكسبها طعماً مميّزاً، اكتب معادلة التّفاعل الحاصل، محدّداً نوعه.\n\n### ٢. تفاعلات التّفكك:\n\n#### أجرّب وأستنتج:\n**أدوات التّجربة:**\nوعاء فولتا - ماء مقطّر - محلول حمضي - منبع تيّار مستمر - أنبوبا اختبار.\n\n**خطوات التّجربة:**\n1. أضع الماء المقطّر في وعاء فولتا ثمّ أُنكّس أنبوبي اختبار مملوءين بالماء.\n2. أضيف قطرات من محلول الحمض إلى الوعاء.\n3. أغلق الدّارة، ماذا ألاحظ؟\n4. أكشف عن الغازين في كلّ من الأنبوبين بتقريب عود ثقاب مشتعل، ماذا ألاحظ؟\n5. أكتب معادلة التّفاعل الحاصل.\n6. ما عدد المواد المتفاعلة؟\n\n**رسم توضيحي:**\nيظهر الرسم جهاز تحليل الماء كهربائياً (وعاء فولتا) يحتوي على قطبين (موجب وسالب) متصلين ببطارية، مع أنبوبي اختبار مقلوبين فوق القطبين لجمع غاز الهيدروجين (H₂) وغاز الأكسجين (O₂).",
+    "sections": [
+      {
+        "heading": "نشاط",
+        "content": "تحضّر المشروبات الغازيّة من انحلال غاز ثنائي أكسيد الكربون في الماء مشكّلاً حمض الكربون الذي يُكسبها طعماً مميّزاً، اكتب معادلة التّفاعل الحاصل، محدّداً نوعه.",
+        "content_type": "text"
+      },
+      {
+        "heading": "٢. تفاعلات التّفكك",
+        "content": "أجرّب وأستنتج:\nأدوات التّجربة:\nوعاء فولتا - ماء مقطّر - محلول حمضي - منبع تيّار مستمر - أنبوبا اختبار.\nخطوات التّجربة:\n1. أضع الماء المقطّر في وعاء فولتا ثمّ أُنكّس أنبوبي اختبار مملوءين بالماء.\n2. أضيف قطرات من محلول الحمض إلى الوعاء.\n3. أغلق الدّارة، ماذا ألاحظ؟\n4. أكشف عن الغازين في كلّ من الأنبوبين بتقريب عود ثقاب مشتعل، ماذا ألاحظ؟\n5. أكتب معادلة التّفاعل الحاصل.\n6. ما عدد المواد المتفاعلة؟",
+        "content_type": "exercise"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "تحضّر المشروبات الغازيّة من انحلال غاز ثنائي أكسيد الكربون في الماء مشكّلاً حمض الكربون الذي يُكسبها طعماً مميّزاً، اكتب معادلة التّفاعل الحاصل، محدّداً نوعه.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أغلق الدّارة، ماذا ألاحظ؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أكشف عن الغازين في كلّ من الأنبوبين بتقريب عود ثقاب مشتعل، ماذا ألاحظ؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أكتب معادلة التّفاعل الحاصل.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "ما عدد المواد المتفاعلة؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [
+      {
+        "title": "جهاز تحليل الماء كهربائياً",
+        "description": "رسم توضيحي لجهاز تحليل الماء كهربائياً (وعاء فولتا) يتكون من وعاء به ماء، قطبين (موجب وسالب) متصلين ببطارية، وأنبوبي اختبار مقلوبين فوق القطبين لجمع الغازات الناتجة.",
+        "labels": [
+          "غاز الهيدروجين H₂",
+          "غاز الأكسجين O₂",
+          "القطب الموجب",
+          "القطب السالب",
+          "بطارية"
+        ],
+        "related_text": "أجرّب وأستنتج: خطوات التّجربة"
+      }
+    ],
+    "tables": [],
+    "equations": [],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 11.316714327s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '11s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 802,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 29,
+      "schema_valid": true,
+      "raw_markdown_chars": 802,
+      "char_count": 802,
+      "section_count": 2,
+      "question_count": 5,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.8513,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 29,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### نشاط:\\nتحضّر المشروبات الغازيّة من انحلال غاز ثنائي أكسيد الكربون في الماء مشكّلاً حمض الكربون الذي يُكسبها طعماً مميّزاً، اكتب معادلة التّفاعل الحاصل، محدّداً نوعه.\\n\\n### ٢. تفاعلات التّفكك:\\n\\n#### أجرّب وأستنتج:\\n**أدوات التّجربة:**\\nوعاء فولتا - ماء مقطّر - محلول حمضي - منبع تيّار مستمر - أنبوبا اختبار.\\n\\n**خطوات التّجربة:**\\n1. أضع الماء المقطّر في وعاء فولتا ثمّ أُنكّس أنبوبي اختبار مملوءين بالماء.\\n2. أضيف قطرات من محلول الحمض إلى الوعاء.\\n3. أغلق الدّارة، ماذا ألاحظ؟\\n4. أكشف عن الغازين في كلّ من الأنبوبين بتقريب عود ثقاب مشتعل، ماذا ألاحظ؟\\n5. أكتب معادلة التّفاعل الحاصل.\\n6. ما عدد المواد المتفاعلة؟\\n\\n**رسم توضيحي:**\\nيظهر الرسم جهاز تحليل الماء كهربائياً (وعاء فولتا) يحتوي على قطبين (موجب وسالب) متصلين ببطارية، مع أنبوبي اختبار مقلوبين فوق القطبين لجمع غاز الهيدروجين (H₂) وغاز الأكسجين (O₂).\",\n  \"sections\": [\n    {\n      \"heading\": \"نشاط\",\n      \"content\": \"تحضّر المشروبات الغازيّة من انحلال غاز ثنائي أكسيد الكربون في الماء مشكّلاً حمض الكربون الذي يُكسبها طعماً مميّزاً، اكتب معادلة التّفاعل الحاصل، محدّداً نوعه.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"٢. تفاعلات التّفكك\",\n      \"content\": \"أجرّب وأستنتج:\\nأدوات التّجربة:\\nوعاء فولتا - ماء مقطّر - محلول حمضي - منبع تيّار مستمر - أنبوبا اختبار.\\nخطوات التّجربة:\\n1. أضع الماء المقطّر في وعاء فولتا ثمّ أُنكّس أنبوبي اختبار مملوءين بالماء.\\n2. أضيف قطرات من محلول الحمض إلى الوعاء.\\n3. أغلق الدّارة، ماذا ألاحظ؟\\n4. أكشف عن الغازين في كلّ من الأنبوبين بتقريب عود ثقاب مشتعل، ماذا ألاحظ؟\\n5. أكتب معادلة التّفاعل الحاصل.\\n6. ما عدد المواد المتفاعلة؟\",\n      \"content_type\": \"exercise\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"تحضّر المشروبات الغازيّة من انحلال غاز ثنائي أكسيد الكربون في الماء مشكّلاً حمض الكربون الذي يُكسبها طعماً مميّزاً، اكتب معادلة التّفاعل الحاصل، محدّداً نوعه.\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أغلق الدّارة، ماذا ألاحظ؟\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أكشف عن الغازين في كلّ من الأنبوبين بتقريب عود ثقاب مشتعل، ماذا ألاحظ؟\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أكتب معادلة التّفاعل الحاصل.\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"ما عدد المواد المتفاعلة؟\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": \"جهاز تحليل الماء كهربائياً\",\n      \"description\": \"رسم توضيحي لجهاز تحليل الماء كهربائياً (وعاء فولتا) يتكون من وعاء به ماء، قطبين (موجب وسالب) متصلين ببطارية، وأنبوبي اختبار مقلوبين فوق القطبين لجمع الغازات الناتجة.\",\n      \"labels\": [\n        \"غاز الهيدروجين H₂\",\n        \"غاز الأكسجين O₂\",\n        \"القطب الموجب\",\n        \"القطب السالب\",\n        \"بطارية\"\n      ],\n      \"related_text\": \"أجرّب وأستنتج: خطوات التّجربة\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}"
+  },
+  "gemini_image_fallback_content": {
+    "page_number": 29,
+    "detected_language": "ar",
+    "raw_markdown": "### نشاط:\nتحضّر المشروبات الغازيّة من انحلال غاز ثنائي أكسيد الكربون في الماء مشكّلاً حمض الكربون الذي يُكسبها طعماً مميّزاً، اكتب معادلة التّفاعل الحاصل، محدّداً نوعه.\n\n### ٢. تفاعلات التّفكك:\n\n#### أجرّب وأستنتج:\n**أدوات التّجربة:**\nوعاء فولتا - ماء مقطّر - محلول حمضي - منبع تيّار مستمر - أنبوبا اختبار.\n\n**خطوات التّجربة:**\n1. أضع الماء المقطّر في وعاء فولتا ثمّ أُنكّس أنبوبي اختبار مملوءين بالماء.\n2. أضيف قطرات من محلول الحمض إلى الوعاء.\n3. أغلق الدّارة، ماذا ألاحظ؟\n4. أكشف عن الغازين في كلّ من الأنبوبين بتقريب عود ثقاب مشتعل، ماذا ألاحظ؟\n5. أكتب معادلة التّفاعل الحاصل.\n6. ما عدد المواد المتفاعلة؟\n\n**رسم توضيحي:**\nيظهر الرسم جهاز تحليل الماء كهربائياً (وعاء فولتا) يحتوي على قطبين (موجب وسالب) متصلين ببطارية، مع أنبوبي اختبار مقلوبين فوق القطبين لجمع غاز الهيدروجين (H₂) وغاز الأكسجين (O₂).",
+    "sections": [
+      {
+        "heading": "نشاط",
+        "content": "تحضّر المشروبات الغازيّة من انحلال غاز ثنائي أكسيد الكربون في الماء مشكّلاً حمض الكربون الذي يُكسبها طعماً مميّزاً، اكتب معادلة التّفاعل الحاصل، محدّداً نوعه.",
+        "content_type": "text"
+      },
+      {
+        "heading": "٢. تفاعلات التّفكك",
+        "content": "أجرّب وأستنتج:\nأدوات التّجربة:\nوعاء فولتا - ماء مقطّر - محلول حمضي - منبع تيّار مستمر - أنبوبا اختبار.\nخطوات التّجربة:\n1. أضع الماء المقطّر في وعاء فولتا ثمّ أُنكّس أنبوبي اختبار مملوءين بالماء.\n2. أضيف قطرات من محلول الحمض إلى الوعاء.\n3. أغلق الدّارة، ماذا ألاحظ؟\n4. أكشف عن الغازين في كلّ من الأنبوبين بتقريب عود ثقاب مشتعل، ماذا ألاحظ؟\n5. أكتب معادلة التّفاعل الحاصل.\n6. ما عدد المواد المتفاعلة؟",
+        "content_type": "exercise"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "تحضّر المشروبات الغازيّة من انحلال غاز ثنائي أكسيد الكربون في الماء مشكّلاً حمض الكربون الذي يُكسبها طعماً مميّزاً، اكتب معادلة التّفاعل الحاصل، محدّداً نوعه.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أغلق الدّارة، ماذا ألاحظ؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أكشف عن الغازين في كلّ من الأنبوبين بتقريب عود ثقاب مشتعل، ماذا ألاحظ؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أكتب معادلة التّفاعل الحاصل.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "ما عدد المواد المتفاعلة؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [
+      {
+        "title": "جهاز تحليل الماء كهربائياً",
+        "description": "رسم توضيحي لجهاز تحليل الماء كهربائياً (وعاء فولتا) يتكون من وعاء به ماء، قطبين (موجب وسالب) متصلين ببطارية، وأنبوبي اختبار مقلوبين فوق القطبين لجمع الغازات الناتجة.",
+        "labels": [
+          "غاز الهيدروجين H₂",
+          "غاز الأكسجين O₂",
+          "القطب الموجب",
+          "القطب السالب",
+          "بطارية"
+        ],
+        "related_text": "أجرّب وأستنتج: خطوات التّجربة"
+      }
+    ],
+    "tables": [],
+    "equations": [],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 11.316714327s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '11s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 802,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 29,
+      "schema_valid": true,
+      "raw_markdown_chars": 802,
+      "char_count": 802,
+      "section_count": 2,
+      "question_count": 5,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.8513,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 29,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### نشاط:\\nتحضّر المشروبات الغازيّة من انحلال غاز ثنائي أكسيد الكربون في الماء مشكّلاً حمض الكربون الذي يُكسبها طعماً مميّزاً، اكتب معادلة التّفاعل الحاصل، محدّداً نوعه.\\n\\n### ٢. تفاعلات التّفكك:\\n\\n#### أجرّب وأستنتج:\\n**أدوات التّجربة:**\\nوعاء فولتا - ماء مقطّر - محلول حمضي - منبع تيّار مستمر - أنبوبا اختبار.\\n\\n**خطوات التّجربة:**\\n1. أضع الماء المقطّر في وعاء فولتا ثمّ أُنكّس أنبوبي اختبار مملوءين بالماء.\\n2. أضيف قطرات من محلول الحمض إلى الوعاء.\\n3. أغلق الدّارة، ماذا ألاحظ؟\\n4. أكشف عن الغازين في كلّ من الأنبوبين بتقريب عود ثقاب مشتعل، ماذا ألاحظ؟\\n5. أكتب معادلة التّفاعل الحاصل.\\n6. ما عدد المواد المتفاعلة؟\\n\\n**رسم توضيحي:**\\nيظهر الرسم جهاز تحليل الماء كهربائياً (وعاء فولتا) يحتوي على قطبين (موجب وسالب) متصلين ببطارية، مع أنبوبي اختبار مقلوبين فوق القطبين لجمع غاز الهيدروجين (H₂) وغاز الأكسجين (O₂).\",\n  \"sections\": [\n    {\n      \"heading\": \"نشاط\",\n      \"content\": \"تحضّر المشروبات الغازيّة من انحلال غاز ثنائي أكسيد الكربون في الماء مشكّلاً حمض الكربون الذي يُكسبها طعماً مميّزاً، اكتب معادلة التّفاعل الحاصل، محدّداً نوعه.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"٢. تفاعلات التّفكك\",\n      \"content\": \"أجرّب وأستنتج:\\nأدوات التّجربة:\\nوعاء فولتا - ماء مقطّر - محلول حمضي - منبع تيّار مستمر - أنبوبا اختبار.\\nخطوات التّجربة:\\n1. أضع الماء المقطّر في وعاء فولتا ثمّ أُنكّس أنبوبي اختبار مملوءين بالماء.\\n2. أضيف قطرات من محلول الحمض إلى الوعاء.\\n3. أغلق الدّارة، ماذا ألاحظ؟\\n4. أكشف عن الغازين في كلّ من الأنبوبين بتقريب عود ثقاب مشتعل، ماذا ألاحظ؟\\n5. أكتب معادلة التّفاعل الحاصل.\\n6. ما عدد المواد المتفاعلة؟\",\n      \"content_type\": \"exercise\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"تحضّر المشروبات الغازيّة من انحلال غاز ثنائي أكسيد الكربون في الماء مشكّلاً حمض الكربون الذي يُكسبها طعماً مميّزاً، اكتب معادلة التّفاعل الحاصل، محدّداً نوعه.\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أغلق الدّارة، ماذا ألاحظ؟\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أكشف عن الغازين في كلّ من الأنبوبين بتقريب عود ثقاب مشتعل، ماذا ألاحظ؟\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أكتب معادلة التّفاعل الحاصل.\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"ما عدد المواد المتفاعلة؟\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": \"جهاز تحليل الماء كهربائياً\",\n      \"description\": \"رسم توضيحي لجهاز تحليل الماء كهربائياً (وعاء فولتا) يتكون من وعاء به ماء، قطبين (موجب وسالب) متصلين ببطارية، وأنبوبي اختبار مقلوبين فوق القطبين لجمع الغازات الناتجة.\",\n      \"labels\": [\n        \"غاز الهيدروجين H₂\",\n        \"غاز الأكسجين O₂\",\n        \"القطب الموجب\",\n        \"القطب السالب\",\n        \"بطارية\"\n      ],\n      \"related_text\": \"أجرّب وأستنتج: خطوات التّجربة\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}"
+  },
+  "merged_content": "نشاط\nتحضّر المشروبات الغازيّة من انحلال غاز ثنائي أكسيد الكربون في الماء مشكّلاً حمض الكربون الذي يُكسبها طعماً مميّزاً، اكتب معادلة التّفاعل الحاصل، محدّداً نوعه.\n\n٢. تفاعلات التّفكك\nأجرّب وأستنتج:\nأدوات التّجربة:\nوعاء فولتا - ماء مقطّر - محلول حمضي - منبع تيّار مستمر - أنبوبا اختبار.\nخطوات التّجربة:\n1. أضع الماء المقطّر في وعاء فولتا ثمّ أُنكّس أنبوبي اختبار مملوءين بالماء.\n2. أضيف قطرات من محلول الحمض إلى الوعاء.\n3. أغلق الدّارة، ماذا ألاحظ؟\n4. أكشف عن الغازين في كلّ من الأنبوبين بتقريب عود ثقاب مشتعل، ماذا ألاحظ؟\n5. أكتب معادلة التّفاعل الحاصل.\n6. ما عدد المواد المتفاعلة؟",
+  "raw_markdown": "### نشاط:\nتحضّر المشروبات الغازيّة من انحلال غاز ثنائي أكسيد الكربون في الماء مشكّلاً حمض الكربون الذي يُكسبها طعماً مميّزاً، اكتب معادلة التّفاعل الحاصل، محدّداً نوعه.\n\n### ٢. تفاعلات التّفكك:\n\n#### أجرّب وأستنتج:\n**أدوات التّجربة:**\nوعاء فولتا - ماء مقطّر - محلول حمضي - منبع تيّار مستمر - أنبوبا اختبار.\n\n**خطوات التّجربة:**\n1. أضع الماء المقطّر في وعاء فولتا ثمّ أُنكّس أنبوبي اختبار مملوءين بالماء.\n2. أضيف قطرات من محلول الحمض إلى الوعاء.\n3. أغلق الدّارة، ماذا ألاحظ؟\n4. أكشف عن الغازين في كلّ من الأنبوبين بتقريب عود ثقاب مشتعل، ماذا ألاحظ؟\n5. أكتب معادلة التّفاعل الحاصل.\n6. ما عدد المواد المتفاعلة؟\n\n**رسم توضيحي:**\nيظهر الرسم جهاز تحليل الماء كهربائياً (وعاء فولتا) يحتوي على قطبين (موجب وسالب) متصلين ببطارية، مع أنبوبي اختبار مقلوبين فوق القطبين لجمع غاز الهيدروجين (H₂) وغاز الأكسجين (O₂).",
+  "sections": [
+    {
+      "heading": "نشاط",
+      "content": "تحضّر المشروبات الغازيّة من انحلال غاز ثنائي أكسيد الكربون في الماء مشكّلاً حمض الكربون الذي يُكسبها طعماً مميّزاً، اكتب معادلة التّفاعل الحاصل، محدّداً نوعه.",
+      "content_type": "text"
+    },
+    {
+      "heading": "٢. تفاعلات التّفكك",
+      "content": "أجرّب وأستنتج:\nأدوات التّجربة:\nوعاء فولتا - ماء مقطّر - محلول حمضي - منبع تيّار مستمر - أنبوبا اختبار.\nخطوات التّجربة:\n1. أضع الماء المقطّر في وعاء فولتا ثمّ أُنكّس أنبوبي اختبار مملوءين بالماء.\n2. أضيف قطرات من محلول الحمض إلى الوعاء.\n3. أغلق الدّارة، ماذا ألاحظ؟\n4. أكشف عن الغازين في كلّ من الأنبوبين بتقريب عود ثقاب مشتعل، ماذا ألاحظ؟\n5. أكتب معادلة التّفاعل الحاصل.\n6. ما عدد المواد المتفاعلة؟",
+      "content_type": "exercise"
+    }
+  ],
+  "questions": [
+    {
+      "question_text": "تحضّر المشروبات الغازيّة من انحلال غاز ثنائي أكسيد الكربون في الماء مشكّلاً حمض الكربون الذي يُكسبها طعماً مميّزاً، اكتب معادلة التّفاعل الحاصل، محدّداً نوعه.",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "أغلق الدّارة، ماذا ألاحظ؟",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "أكشف عن الغازين في كلّ من الأنبوبين بتقريب عود ثقاب مشتعل، ماذا ألاحظ؟",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "أكتب معادلة التّفاعل الحاصل.",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "ما عدد المواد المتفاعلة؟",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    }
+  ],
+  "diagrams": [
+    {
+      "title": "جهاز تحليل الماء كهربائياً",
+      "description": "رسم توضيحي لجهاز تحليل الماء كهربائياً (وعاء فولتا) يتكون من وعاء به ماء، قطبين (موجب وسالب) متصلين ببطارية، وأنبوبي اختبار مقلوبين فوق القطبين لجمع الغازات الناتجة.",
+      "labels": [
+        "غاز الهيدروجين H₂",
+        "غاز الأكسجين O₂",
+        "القطب الموجب",
+        "القطب السالب",
+        "بطارية"
+      ],
+      "related_text": "أجرّب وأستنتج: خطوات التّجربة"
+    }
+  ],
   "tables": [],
   "equations": [],
-  "warnings": [],
-  "errors": [
-    "Gemini document extraction failed quality checks for page 29: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 53.344159054s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '53s'}]}}"
+  "warnings": [
+    "Gemini PDF extraction failed; using 300 DPI image fallback: Gemini document extraction failed for page 29 with model gemini-3.1-flash-lite: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'Request contains an invalid argument.', 'status': 'INVALID_ARGUMENT'}}",
+    "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 11.316714327s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '11s'}]}}."
   ],
-  "char_count": 0,
-  "completeness_score": 0.0,
+  "errors": [],
+  "char_count": 582,
+  "completeness_score": 1.0,
   "detected_language": "ar",
-  "vision_provider": null,
-  "vision_source": null,
-  "neighboring_pages": [],
-  "uploaded_pdf": null,
-  "raw_text": null,
-  "quality_report": {},
+  "vision_provider": "gemini_document_image",
+  "vision_source": "gemini_rendered_image_300dpi",
+  "neighboring_pages": [
+    28,
+    30
+  ],
+  "uploaded_pdf": {
+    "provider": "gemini_document",
+    "name": "files/6zs99grhoqr2",
+    "uri": "https://generativelanguage.googleapis.com/v1beta/files/6zs99grhoqr2",
+    "mime_type": "application/pdf",
+    "display_name": "Chemistry.pdf"
+  },
+  "raw_text": "{\n  \"page_number\": 29,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### نشاط:\\nتحضّر المشروبات الغازيّة من انحلال غاز ثنائي أكسيد الكربون في الماء مشكّلاً حمض الكربون الذي يُكسبها طعماً مميّزاً، اكتب معادلة التّفاعل الحاصل، محدّداً نوعه.\\n\\n### ٢. تفاعلات التّفكك:\\n\\n#### أجرّب وأستنتج:\\n**أدوات التّجربة:**\\nوعاء فولتا - ماء مقطّر - محلول حمضي - منبع تيّار مستمر - أنبوبا اختبار.\\n\\n**خطوات التّجربة:**\\n1. أضع الماء المقطّر في وعاء فولتا ثمّ أُنكّس أنبوبي اختبار مملوءين بالماء.\\n2. أضيف قطرات من محلول الحمض إلى الوعاء.\\n3. أغلق الدّارة، ماذا ألاحظ؟\\n4. أكشف عن الغازين في كلّ من الأنبوبين بتقريب عود ثقاب مشتعل، ماذا ألاحظ؟\\n5. أكتب معادلة التّفاعل الحاصل.\\n6. ما عدد المواد المتفاعلة؟\\n\\n**رسم توضيحي:**\\nيظهر الرسم جهاز تحليل الماء كهربائياً (وعاء فولتا) يحتوي على قطبين (موجب وسالب) متصلين ببطارية، مع أنبوبي اختبار مقلوبين فوق القطبين لجمع غاز الهيدروجين (H₂) وغاز الأكسجين (O₂).\",\n  \"sections\": [\n    {\n      \"heading\": \"نشاط\",\n      \"content\": \"تحضّر المشروبات الغازيّة من انحلال غاز ثنائي أكسيد الكربون في الماء مشكّلاً حمض الكربون الذي يُكسبها طعماً مميّزاً، اكتب معادلة التّفاعل الحاصل، محدّداً نوعه.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"٢. تفاعلات التّفكك\",\n      \"content\": \"أجرّب وأستنتج:\\nأدوات التّجربة:\\nوعاء فولتا - ماء مقطّر - محلول حمضي - منبع تيّار مستمر - أنبوبا اختبار.\\nخطوات التّجربة:\\n1. أضع الماء المقطّر في وعاء فولتا ثمّ أُنكّس أنبوبي اختبار مملوءين بالماء.\\n2. أضيف قطرات من محلول الحمض إلى الوعاء.\\n3. أغلق الدّارة، ماذا ألاحظ؟\\n4. أكشف عن الغازين في كلّ من الأنبوبين بتقريب عود ثقاب مشتعل، ماذا ألاحظ؟\\n5. أكتب معادلة التّفاعل الحاصل.\\n6. ما عدد المواد المتفاعلة؟\",\n      \"content_type\": \"exercise\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"تحضّر المشروبات الغازيّة من انحلال غاز ثنائي أكسيد الكربون في الماء مشكّلاً حمض الكربون الذي يُكسبها طعماً مميّزاً، اكتب معادلة التّفاعل الحاصل، محدّداً نوعه.\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أغلق الدّارة، ماذا ألاحظ؟\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أكشف عن الغازين في كلّ من الأنبوبين بتقريب عود ثقاب مشتعل، ماذا ألاحظ؟\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أكتب معادلة التّفاعل الحاصل.\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"ما عدد المواد المتفاعلة؟\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": \"جهاز تحليل الماء كهربائياً\",\n      \"description\": \"رسم توضيحي لجهاز تحليل الماء كهربائياً (وعاء فولتا) يتكون من وعاء به ماء، قطبين (موجب وسالب) متصلين ببطارية، وأنبوبي اختبار مقلوبين فوق القطبين لجمع الغازات الناتجة.\",\n      \"labels\": [\n        \"غاز الهيدروجين H₂\",\n        \"غاز الأكسجين O₂\",\n        \"القطب الموجب\",\n        \"القطب السالب\",\n        \"بطارية\"\n      ],\n      \"related_text\": \"أجرّب وأستنتج: خطوات التّجربة\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}",
+  "quality_report": {
+    "page_number": 29,
+    "schema_valid": true,
+    "raw_markdown_chars": 802,
+    "char_count": 802,
+    "section_count": 2,
+    "question_count": 5,
+    "table_count": 0,
+    "equation_count": 0,
+    "diagram_count": 1,
+    "warning_count": 0,
+    "arabic_char_ratio": 0.8513,
+    "completeness_score": 1.0,
+    "issues": [],
+    "should_fallback": false
+  },
   "classification": "NEEDS_VISION",
   "source_id": 1
 }

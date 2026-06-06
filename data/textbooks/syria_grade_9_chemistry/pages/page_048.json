@@ -2,35 +2,381 @@
   "page_number": 48,
   "page_type": "MIXED_VISION",
   "extraction_methods": [
-    "exception"
+    "pymupdf",
+    "pdfplumber",
+    "gemini_pdf_file",
+    "gemini_image_300dpi"
   ],
-  "extraction_method": "exception",
-  "status": "failed",
-  "text_layer_content": "",
-  "vision_content": {},
+  "extraction_method": "pymupdf+pdfplumber+gemini_pdf_file+gemini_image_300dpi",
+  "status": "completed_with_image_fallback",
+  "text_layer_content": ":ﺗﻔﻜﻴﺮ ﻧﺎﻗﺪ\n كيف يمكنك التّمييز بين ملح نترات الفضّة وملح كربونات الصّ وديوم، وذلك باستخدام محلول\nممدّد لحمض كلور الماء مع كتابة المعادالت الكيميائيّة اللّ زمة؟\nالناقليّة الكهربائيّة لألمالح:\n:أدوات التجربة\nوعاءان للتّحليل الكهربائيّ يحوي \nاألوّل ملح كلوريد الصّ وديوم \nالصّ لب، ويحوي الثّاني محلوالً مائيّاً \nلملح كلوريد الصّ وديوم.\nخطوات التّجربة:\nأغلق كلّ ً من الدّارتين، ماذا 1\nأالحظ؟\nﻣﺤﻠﻮﻝ ﻣﺎﺋﻲ ﻟﻤﻠﺢ ﻛﻠﻮﺭﻳﺪ ﺍﻟﺼﻮﺩﻳﻮﻡ\nﻣﻠﺢ ﻛﻠﻮﺭﻳﺪ ﺍﻟﺼﻮﺩﻳﻮﻡ ﺍﻟﺼﻠﺐ\n:أﺟﺮب وأﺳﺘﻨﺘﺞ\n• \n ِالمحلول المائيّ لملح كلوريد الصّ وديوم ينقل التّيار الكهربائيّ، بسبب األيونات الحرّة الحركة\nلكلّ من أيونات الصّ وديوم الموجبة وأيونات الكلور السّالبة.\n• \nملح كلوريد الصّ وديوم الصّ لب ال ينقل التّيّار الكهربائيّ، ألنّ أيوناته مقيّدَةٌ في الشّبكة البلوريّة.\n:أﺳﺘﻨﺘﺞ\n154\n\n|  |  | ﻡﻮﻳﺩﻮﺼﻟﺍ ﺪﻳﺭﻮﻠﻛ ﺢﻠﻤﻟ ﻲﺋﺎﻣ ﻝﻮﻠﺤﻣ |  |\n| --- | --- | --- | --- |\n|  |  |  |  |\n|  |  |  |  |\n|  |  |  |  |",
+  "vision_content": {
+    "page_number": 48,
+    "detected_language": "ar",
+    "raw_markdown": "### تفكير ناقد:\nكيف يمكنك التمييز بين ملح نترات الفضة وملح كربونات الصوديوم، وذلك باستخدام محلول ممدد لحمض كلور الماء مع كتابة المعادلات الكيميائية اللازمة؟\n\n### الناقلية الكهربائية للأملاح:\n\n### أجرب وأستنتج:\n**أدوات التجربة:**\nوعاءان للتحليل الكهربائي يحوي الأول ملح كلوريد الصوديوم الصلب، ويحوي الثاني محلولاً مائياً لملح كلوريد الصوديوم.\n\n**خطوات التجربة:**\n1. أغلق كلاً من الدارتين، ماذا ألاحظ؟\n\n**[رسم توضيحي 1]**\nرسم يوضح دارة كهربائية تحتوي على وعاء به محلول مائي لكلوريد الصوديوم، مع قطبين ومصباح مضيء، وتظهر أيونات الصوديوم والكلور متباعدة في المحلول.\n\n**[رسم توضيحي 2]**\nرسم يوضح دارة كهربائية تحتوي على وعاء به ملح كلوريد الصوديوم الصلب، مع قطبين ومصباح غير مضيء، وتظهر أيونات الصوديوم والكلور متراصة في شبكة بلورية.\n\n### أستنتج:\n* المحلول المائي لملح كلوريد الصوديوم ينقل التيار الكهربائي، بسبب الأيونات الحرة الحركة لكل من أيونات الصوديوم وأيونات الكلور السالبة.\n* ملح كلوريد الصوديوم الصلب لا ينقل التيار الكهربائي، لأن أيوناته مقيدة في الشبكة البلورية.",
+    "sections": [
+      {
+        "heading": "تفكير ناقد",
+        "content": "كيف يمكنك التمييز بين ملح نترات الفضة وملح كربونات الصوديوم، وذلك باستخدام محلول ممدد لحمض كلور الماء مع كتابة المعادلات الكيميائية اللازمة؟",
+        "content_type": "text"
+      },
+      {
+        "heading": "الناقلية الكهربائية للأملاح",
+        "content": "أجرب وأستنتج:\nأدوات التجربة:\nوعاءان للتحليل الكهربائي يحوي الأول ملح كلوريد الصوديوم الصلب، ويحوي الثاني محلولاً مائياً لملح كلوريد الصوديوم.\nخطوات التجربة:\n1. أغلق كلاً من الدارتين، ماذا ألاحظ؟",
+        "content_type": "text"
+      },
+      {
+        "heading": "أستنتج",
+        "content": "المحلول المائي لملح كلوريد الصوديوم ينقل التيار الكهربائي، بسبب الأيونات الحرة الحركة لكل من أيونات الصوديوم وأيونات الكلور السالبة.\nملح كلوريد الصوديوم الصلب لا ينقل التيار الكهربائي، لأن أيوناته مقيدة في الشبكة البلورية.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "كيف يمكنك التمييز بين ملح نترات الفضة وملح كربونات الصوديوم، وذلك باستخدام محلول ممدد لحمض كلور الماء مع كتابة المعادلات الكيميائية اللازمة؟",
+        "question_type": "essay",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أغلق كلاً من الدارتين، ماذا ألاحظ؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "رسم توضيحي لدارة كهربائية مع وعاء يحتوي على محلول مائي لكلوريد الصوديوم، يظهر المصباح مضيئاً مع أيونات حرة الحركة.",
+        "labels": [
+          "محلول مائي لكلوريد الصوديوم",
+          "مصباح مضيء"
+        ],
+        "related_text": null
+      },
+      {
+        "title": null,
+        "description": "رسم توضيحي لدارة كهربائية مع وعاء يحتوي على ملح كلوريد الصوديوم الصلب، يظهر المصباح غير مضيء مع أيونات مقيدة في شبكة بلورية.",
+        "labels": [
+          "ملح كلوريد الصوديوم الصلب",
+          "مصباح غير مضيء"
+        ],
+        "related_text": null
+      }
+    ],
+    "tables": [],
+    "equations": [],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 35.989191909s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '35s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 1150,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 48,
+      "schema_valid": true,
+      "raw_markdown_chars": 968,
+      "char_count": 1150,
+      "section_count": 3,
+      "question_count": 2,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 2,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.8511,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 48,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### تفكير ناقد:\\nكيف يمكنك التمييز بين ملح نترات الفضة وملح كربونات الصوديوم، وذلك باستخدام محلول ممدد لحمض كلور الماء مع كتابة المعادلات الكيميائية اللازمة؟\\n\\n### الناقلية الكهربائية للأملاح:\\n\\n### أجرب وأستنتج:\\n**أدوات التجربة:**\\nوعاءان للتحليل الكهربائي يحوي الأول ملح كلوريد الصوديوم الصلب، ويحوي الثاني محلولاً مائياً لملح كلوريد الصوديوم.\\n\\n**خطوات التجربة:**\\n1. أغلق كلاً من الدارتين، ماذا ألاحظ؟\\n\\n**[رسم توضيحي 1]**\\nرسم يوضح دارة كهربائية تحتوي على وعاء به محلول مائي لكلوريد الصوديوم، مع قطبين ومصباح مضيء، وتظهر أيونات الصوديوم والكلور متباعدة في المحلول.\\n\\n**[رسم توضيحي 2]**\\nرسم يوضح دارة كهربائية تحتوي على وعاء به ملح كلوريد الصوديوم الصلب، مع قطبين ومصباح غير مضيء، وتظهر أيونات الصوديوم والكلور متراصة في شبكة بلورية.\\n\\n### أستنتج:\\n* المحلول المائي لملح كلوريد الصوديوم ينقل التيار الكهربائي، بسبب الأيونات الحرة الحركة لكل من أيونات الصوديوم وأيونات الكلور السالبة.\\n* ملح كلوريد الصوديوم الصلب لا ينقل التيار الكهربائي، لأن أيوناته مقيدة في الشبكة البلورية.\",\n  \"sections\": [\n    {\n      \"heading\": \"تفكير ناقد\",\n      \"content\": \"كيف يمكنك التمييز بين ملح نترات الفضة وملح كربونات الصوديوم، وذلك باستخدام محلول ممدد لحمض كلور الماء مع كتابة المعادلات الكيميائية اللازمة؟\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الناقلية الكهربائية للأملاح\",\n      \"content\": \"أجرب وأستنتج:\\nأدوات التجربة:\\nوعاءان للتحليل الكهربائي يحوي الأول ملح كلوريد الصوديوم الصلب، ويحوي الثاني محلولاً مائياً لملح كلوريد الصوديوم.\\nخطوات التجربة:\\n1. أغلق كلاً من الدارتين، ماذا ألاحظ؟\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أستنتج\",\n      \"content\": \"المحلول المائي لملح كلوريد الصوديوم ينقل التيار الكهربائي، بسبب الأيونات الحرة الحركة لكل من أيونات الصوديوم وأيونات الكلور السالبة.\\nملح كلوريد الصوديوم الصلب لا ينقل التيار الكهربائي، لأن أيوناته مقيدة في الشبكة البلورية.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"كيف يمكنك التمييز بين ملح نترات الفضة وملح كربونات الصوديوم، وذلك باستخدام محلول ممدد لحمض كلور الماء مع كتابة المعادلات الكيميائية اللازمة؟\",\n      \"question_type\": \"essay\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أغلق كلاً من الدارتين، ماذا ألاحظ؟\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"description\": \"رسم توضيحي لدارة كهربائية مع وعاء يحتوي على محلول مائي لكلوريد الصوديوم، يظهر المصباح مضيئاً مع أيونات حرة الحركة.\",\n      \"labels\": [\n        \"محلول مائي لكلوريد الصوديوم\",\n        \"مصباح مضيء\"\n      ]\n    },\n    {\n      \"description\": \"رسم توضيحي لدارة كهربائية مع وعاء يحتوي على ملح كلوريد الصوديوم الصلب، يظهر المصباح غير مضيء مع أيونات مقيدة في شبكة بلورية.\",\n      \"labels\": [\n        \"ملح كلوريد الصوديوم الصلب\",\n        \"مصباح غير مضيء\"\n      ]\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true,\n  \"char_count\": 1150,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 48,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 1150,\n    \"char_count\": 1150,\n    \"section_count\": 3,\n    \"question_count\": 2,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 2,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.85,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  }\n}"
+  },
   "gemini_pdf_content": {},
-  "gemini_fallback_model_content": {},
-  "gemini_image_fallback_content": {},
-  "merged_content": "",
-  "raw_markdown": "",
-  "sections": [],
-  "questions": [],
-  "diagrams": [],
+  "gemini_fallback_model_content": {
+    "page_number": 48,
+    "detected_language": "ar",
+    "raw_markdown": "### تفكير ناقد:\nكيف يمكنك التمييز بين ملح نترات الفضة وملح كربونات الصوديوم، وذلك باستخدام محلول ممدد لحمض كلور الماء مع كتابة المعادلات الكيميائية اللازمة؟\n\n### الناقلية الكهربائية للأملاح:\n\n### أجرب وأستنتج:\n**أدوات التجربة:**\nوعاءان للتحليل الكهربائي يحوي الأول ملح كلوريد الصوديوم الصلب، ويحوي الثاني محلولاً مائياً لملح كلوريد الصوديوم.\n\n**خطوات التجربة:**\n1. أغلق كلاً من الدارتين، ماذا ألاحظ؟\n\n**[رسم توضيحي 1]**\nرسم يوضح دارة كهربائية تحتوي على وعاء به محلول مائي لكلوريد الصوديوم، مع قطبين ومصباح مضيء، وتظهر أيونات الصوديوم والكلور متباعدة في المحلول.\n\n**[رسم توضيحي 2]**\nرسم يوضح دارة كهربائية تحتوي على وعاء به ملح كلوريد الصوديوم الصلب، مع قطبين ومصباح غير مضيء، وتظهر أيونات الصوديوم والكلور متراصة في شبكة بلورية.\n\n### أستنتج:\n* المحلول المائي لملح كلوريد الصوديوم ينقل التيار الكهربائي، بسبب الأيونات الحرة الحركة لكل من أيونات الصوديوم وأيونات الكلور السالبة.\n* ملح كلوريد الصوديوم الصلب لا ينقل التيار الكهربائي، لأن أيوناته مقيدة في الشبكة البلورية.",
+    "sections": [
+      {
+        "heading": "تفكير ناقد",
+        "content": "كيف يمكنك التمييز بين ملح نترات الفضة وملح كربونات الصوديوم، وذلك باستخدام محلول ممدد لحمض كلور الماء مع كتابة المعادلات الكيميائية اللازمة؟",
+        "content_type": "text"
+      },
+      {
+        "heading": "الناقلية الكهربائية للأملاح",
+        "content": "أجرب وأستنتج:\nأدوات التجربة:\nوعاءان للتحليل الكهربائي يحوي الأول ملح كلوريد الصوديوم الصلب، ويحوي الثاني محلولاً مائياً لملح كلوريد الصوديوم.\nخطوات التجربة:\n1. أغلق كلاً من الدارتين، ماذا ألاحظ؟",
+        "content_type": "text"
+      },
+      {
+        "heading": "أستنتج",
+        "content": "المحلول المائي لملح كلوريد الصوديوم ينقل التيار الكهربائي، بسبب الأيونات الحرة الحركة لكل من أيونات الصوديوم وأيونات الكلور السالبة.\nملح كلوريد الصوديوم الصلب لا ينقل التيار الكهربائي، لأن أيوناته مقيدة في الشبكة البلورية.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "كيف يمكنك التمييز بين ملح نترات الفضة وملح كربونات الصوديوم، وذلك باستخدام محلول ممدد لحمض كلور الماء مع كتابة المعادلات الكيميائية اللازمة؟",
+        "question_type": "essay",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أغلق كلاً من الدارتين، ماذا ألاحظ؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "رسم توضيحي لدارة كهربائية مع وعاء يحتوي على محلول مائي لكلوريد الصوديوم، يظهر المصباح مضيئاً مع أيونات حرة الحركة.",
+        "labels": [
+          "محلول مائي لكلوريد الصوديوم",
+          "مصباح مضيء"
+        ],
+        "related_text": null
+      },
+      {
+        "title": null,
+        "description": "رسم توضيحي لدارة كهربائية مع وعاء يحتوي على ملح كلوريد الصوديوم الصلب، يظهر المصباح غير مضيء مع أيونات مقيدة في شبكة بلورية.",
+        "labels": [
+          "ملح كلوريد الصوديوم الصلب",
+          "مصباح غير مضيء"
+        ],
+        "related_text": null
+      }
+    ],
+    "tables": [],
+    "equations": [],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 35.989191909s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '35s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 1150,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 48,
+      "schema_valid": true,
+      "raw_markdown_chars": 968,
+      "char_count": 1150,
+      "section_count": 3,
+      "question_count": 2,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 2,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.8511,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 48,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### تفكير ناقد:\\nكيف يمكنك التمييز بين ملح نترات الفضة وملح كربونات الصوديوم، وذلك باستخدام محلول ممدد لحمض كلور الماء مع كتابة المعادلات الكيميائية اللازمة؟\\n\\n### الناقلية الكهربائية للأملاح:\\n\\n### أجرب وأستنتج:\\n**أدوات التجربة:**\\nوعاءان للتحليل الكهربائي يحوي الأول ملح كلوريد الصوديوم الصلب، ويحوي الثاني محلولاً مائياً لملح كلوريد الصوديوم.\\n\\n**خطوات التجربة:**\\n1. أغلق كلاً من الدارتين، ماذا ألاحظ؟\\n\\n**[رسم توضيحي 1]**\\nرسم يوضح دارة كهربائية تحتوي على وعاء به محلول مائي لكلوريد الصوديوم، مع قطبين ومصباح مضيء، وتظهر أيونات الصوديوم والكلور متباعدة في المحلول.\\n\\n**[رسم توضيحي 2]**\\nرسم يوضح دارة كهربائية تحتوي على وعاء به ملح كلوريد الصوديوم الصلب، مع قطبين ومصباح غير مضيء، وتظهر أيونات الصوديوم والكلور متراصة في شبكة بلورية.\\n\\n### أستنتج:\\n* المحلول المائي لملح كلوريد الصوديوم ينقل التيار الكهربائي، بسبب الأيونات الحرة الحركة لكل من أيونات الصوديوم وأيونات الكلور السالبة.\\n* ملح كلوريد الصوديوم الصلب لا ينقل التيار الكهربائي، لأن أيوناته مقيدة في الشبكة البلورية.\",\n  \"sections\": [\n    {\n      \"heading\": \"تفكير ناقد\",\n      \"content\": \"كيف يمكنك التمييز بين ملح نترات الفضة وملح كربونات الصوديوم، وذلك باستخدام محلول ممدد لحمض كلور الماء مع كتابة المعادلات الكيميائية اللازمة؟\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الناقلية الكهربائية للأملاح\",\n      \"content\": \"أجرب وأستنتج:\\nأدوات التجربة:\\nوعاءان للتحليل الكهربائي يحوي الأول ملح كلوريد الصوديوم الصلب، ويحوي الثاني محلولاً مائياً لملح كلوريد الصوديوم.\\nخطوات التجربة:\\n1. أغلق كلاً من الدارتين، ماذا ألاحظ؟\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أستنتج\",\n      \"content\": \"المحلول المائي لملح كلوريد الصوديوم ينقل التيار الكهربائي، بسبب الأيونات الحرة الحركة لكل من أيونات الصوديوم وأيونات الكلور السالبة.\\nملح كلوريد الصوديوم الصلب لا ينقل التيار الكهربائي، لأن أيوناته مقيدة في الشبكة البلورية.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"كيف يمكنك التمييز بين ملح نترات الفضة وملح كربونات الصوديوم، وذلك باستخدام محلول ممدد لحمض كلور الماء مع كتابة المعادلات الكيميائية اللازمة؟\",\n      \"question_type\": \"essay\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أغلق كلاً من الدارتين، ماذا ألاحظ؟\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"description\": \"رسم توضيحي لدارة كهربائية مع وعاء يحتوي على محلول مائي لكلوريد الصوديوم، يظهر المصباح مضيئاً مع أيونات حرة الحركة.\",\n      \"labels\": [\n        \"محلول مائي لكلوريد الصوديوم\",\n        \"مصباح مضيء\"\n      ]\n    },\n    {\n      \"description\": \"رسم توضيحي لدارة كهربائية مع وعاء يحتوي على ملح كلوريد الصوديوم الصلب، يظهر المصباح غير مضيء مع أيونات مقيدة في شبكة بلورية.\",\n      \"labels\": [\n        \"ملح كلوريد الصوديوم الصلب\",\n        \"مصباح غير مضيء\"\n      ]\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true,\n  \"char_count\": 1150,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 48,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 1150,\n    \"char_count\": 1150,\n    \"section_count\": 3,\n    \"question_count\": 2,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 2,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.85,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  }\n}"
+  },
+  "gemini_image_fallback_content": {
+    "page_number": 48,
+    "detected_language": "ar",
+    "raw_markdown": "### تفكير ناقد:\nكيف يمكنك التمييز بين ملح نترات الفضة وملح كربونات الصوديوم، وذلك باستخدام محلول ممدد لحمض كلور الماء مع كتابة المعادلات الكيميائية اللازمة؟\n\n### الناقلية الكهربائية للأملاح:\n\n### أجرب وأستنتج:\n**أدوات التجربة:**\nوعاءان للتحليل الكهربائي يحوي الأول ملح كلوريد الصوديوم الصلب، ويحوي الثاني محلولاً مائياً لملح كلوريد الصوديوم.\n\n**خطوات التجربة:**\n1. أغلق كلاً من الدارتين، ماذا ألاحظ؟\n\n**[رسم توضيحي 1]**\nرسم يوضح دارة كهربائية تحتوي على وعاء به محلول مائي لكلوريد الصوديوم، مع قطبين ومصباح مضيء، وتظهر أيونات الصوديوم والكلور متباعدة في المحلول.\n\n**[رسم توضيحي 2]**\nرسم يوضح دارة كهربائية تحتوي على وعاء به ملح كلوريد الصوديوم الصلب، مع قطبين ومصباح غير مضيء، وتظهر أيونات الصوديوم والكلور متراصة في شبكة بلورية.\n\n### أستنتج:\n* المحلول المائي لملح كلوريد الصوديوم ينقل التيار الكهربائي، بسبب الأيونات الحرة الحركة لكل من أيونات الصوديوم وأيونات الكلور السالبة.\n* ملح كلوريد الصوديوم الصلب لا ينقل التيار الكهربائي، لأن أيوناته مقيدة في الشبكة البلورية.",
+    "sections": [
+      {
+        "heading": "تفكير ناقد",
+        "content": "كيف يمكنك التمييز بين ملح نترات الفضة وملح كربونات الصوديوم، وذلك باستخدام محلول ممدد لحمض كلور الماء مع كتابة المعادلات الكيميائية اللازمة؟",
+        "content_type": "text"
+      },
+      {
+        "heading": "الناقلية الكهربائية للأملاح",
+        "content": "أجرب وأستنتج:\nأدوات التجربة:\nوعاءان للتحليل الكهربائي يحوي الأول ملح كلوريد الصوديوم الصلب، ويحوي الثاني محلولاً مائياً لملح كلوريد الصوديوم.\nخطوات التجربة:\n1. أغلق كلاً من الدارتين، ماذا ألاحظ؟",
+        "content_type": "text"
+      },
+      {
+        "heading": "أستنتج",
+        "content": "المحلول المائي لملح كلوريد الصوديوم ينقل التيار الكهربائي، بسبب الأيونات الحرة الحركة لكل من أيونات الصوديوم وأيونات الكلور السالبة.\nملح كلوريد الصوديوم الصلب لا ينقل التيار الكهربائي، لأن أيوناته مقيدة في الشبكة البلورية.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "كيف يمكنك التمييز بين ملح نترات الفضة وملح كربونات الصوديوم، وذلك باستخدام محلول ممدد لحمض كلور الماء مع كتابة المعادلات الكيميائية اللازمة؟",
+        "question_type": "essay",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أغلق كلاً من الدارتين، ماذا ألاحظ؟",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "رسم توضيحي لدارة كهربائية مع وعاء يحتوي على محلول مائي لكلوريد الصوديوم، يظهر المصباح مضيئاً مع أيونات حرة الحركة.",
+        "labels": [
+          "محلول مائي لكلوريد الصوديوم",
+          "مصباح مضيء"
+        ],
+        "related_text": null
+      },
+      {
+        "title": null,
+        "description": "رسم توضيحي لدارة كهربائية مع وعاء يحتوي على ملح كلوريد الصوديوم الصلب، يظهر المصباح غير مضيء مع أيونات مقيدة في شبكة بلورية.",
+        "labels": [
+          "ملح كلوريد الصوديوم الصلب",
+          "مصباح غير مضيء"
+        ],
+        "related_text": null
+      }
+    ],
+    "tables": [],
+    "equations": [],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 35.989191909s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '35s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 1150,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 48,
+      "schema_valid": true,
+      "raw_markdown_chars": 968,
+      "char_count": 1150,
+      "section_count": 3,
+      "question_count": 2,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 2,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.8511,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 48,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### تفكير ناقد:\\nكيف يمكنك التمييز بين ملح نترات الفضة وملح كربونات الصوديوم، وذلك باستخدام محلول ممدد لحمض كلور الماء مع كتابة المعادلات الكيميائية اللازمة؟\\n\\n### الناقلية الكهربائية للأملاح:\\n\\n### أجرب وأستنتج:\\n**أدوات التجربة:**\\nوعاءان للتحليل الكهربائي يحوي الأول ملح كلوريد الصوديوم الصلب، ويحوي الثاني محلولاً مائياً لملح كلوريد الصوديوم.\\n\\n**خطوات التجربة:**\\n1. أغلق كلاً من الدارتين، ماذا ألاحظ؟\\n\\n**[رسم توضيحي 1]**\\nرسم يوضح دارة كهربائية تحتوي على وعاء به محلول مائي لكلوريد الصوديوم، مع قطبين ومصباح مضيء، وتظهر أيونات الصوديوم والكلور متباعدة في المحلول.\\n\\n**[رسم توضيحي 2]**\\nرسم يوضح دارة كهربائية تحتوي على وعاء به ملح كلوريد الصوديوم الصلب، مع قطبين ومصباح غير مضيء، وتظهر أيونات الصوديوم والكلور متراصة في شبكة بلورية.\\n\\n### أستنتج:\\n* المحلول المائي لملح كلوريد الصوديوم ينقل التيار الكهربائي، بسبب الأيونات الحرة الحركة لكل من أيونات الصوديوم وأيونات الكلور السالبة.\\n* ملح كلوريد الصوديوم الصلب لا ينقل التيار الكهربائي، لأن أيوناته مقيدة في الشبكة البلورية.\",\n  \"sections\": [\n    {\n      \"heading\": \"تفكير ناقد\",\n      \"content\": \"كيف يمكنك التمييز بين ملح نترات الفضة وملح كربونات الصوديوم، وذلك باستخدام محلول ممدد لحمض كلور الماء مع كتابة المعادلات الكيميائية اللازمة؟\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الناقلية الكهربائية للأملاح\",\n      \"content\": \"أجرب وأستنتج:\\nأدوات التجربة:\\nوعاءان للتحليل الكهربائي يحوي الأول ملح كلوريد الصوديوم الصلب، ويحوي الثاني محلولاً مائياً لملح كلوريد الصوديوم.\\nخطوات التجربة:\\n1. أغلق كلاً من الدارتين، ماذا ألاحظ؟\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أستنتج\",\n      \"content\": \"المحلول المائي لملح كلوريد الصوديوم ينقل التيار الكهربائي، بسبب الأيونات الحرة الحركة لكل من أيونات الصوديوم وأيونات الكلور السالبة.\\nملح كلوريد الصوديوم الصلب لا ينقل التيار الكهربائي، لأن أيوناته مقيدة في الشبكة البلورية.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"كيف يمكنك التمييز بين ملح نترات الفضة وملح كربونات الصوديوم، وذلك باستخدام محلول ممدد لحمض كلور الماء مع كتابة المعادلات الكيميائية اللازمة؟\",\n      \"question_type\": \"essay\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أغلق كلاً من الدارتين، ماذا ألاحظ؟\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"description\": \"رسم توضيحي لدارة كهربائية مع وعاء يحتوي على محلول مائي لكلوريد الصوديوم، يظهر المصباح مضيئاً مع أيونات حرة الحركة.\",\n      \"labels\": [\n        \"محلول مائي لكلوريد الصوديوم\",\n        \"مصباح مضيء\"\n      ]\n    },\n    {\n      \"description\": \"رسم توضيحي لدارة كهربائية مع وعاء يحتوي على ملح كلوريد الصوديوم الصلب، يظهر المصباح غير مضيء مع أيونات مقيدة في شبكة بلورية.\",\n      \"labels\": [\n        \"ملح كلوريد الصوديوم الصلب\",\n        \"مصباح غير مضيء\"\n      ]\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true,\n  \"char_count\": 1150,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 48,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 1150,\n    \"char_count\": 1150,\n    \"section_count\": 3,\n    \"question_count\": 2,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 2,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.85,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  }\n}"
+  },
+  "merged_content": ":ﺗﻔﻜﻴﺮ ﻧﺎﻗﺪ\n كيف يمكنك التّمييز بين ملح نترات الفضّة وملح كربونات الصّ وديوم، وذلك باستخدام محلول\nممدّد لحمض كلور الماء مع كتابة المعادالت الكيميائيّة اللّ زمة؟\nالناقليّة الكهربائيّة لألمالح:\n:أدوات التجربة\nوعاءان للتّحليل الكهربائيّ يحوي \nاألوّل ملح كلوريد الصّ وديوم \nالصّ لب، ويحوي الثّاني محلوالً مائيّاً \nلملح كلوريد الصّ وديوم.\nخطوات التّجربة:\nأغلق كلّ ً من الدّارتين، ماذا 1\nأالحظ؟\nﻣﺤﻠﻮﻝ ﻣﺎﺋﻲ ﻟﻤﻠﺢ ﻛﻠﻮﺭﻳﺪ ﺍﻟﺼﻮﺩﻳﻮﻡ\nﻣﻠﺢ ﻛﻠﻮﺭﻳﺪ ﺍﻟﺼﻮﺩﻳﻮﻡ ﺍﻟﺼﻠﺐ\n:أﺟﺮب وأﺳﺘﻨﺘﺞ\n• \n ِالمحلول المائيّ لملح كلوريد الصّ وديوم ينقل التّيار الكهربائيّ، بسبب األيونات الحرّة الحركة\nلكلّ من أيونات الصّ وديوم الموجبة وأيونات الكلور السّالبة.\n• \nملح كلوريد الصّ وديوم الصّ لب ال ينقل التّيّار الكهربائيّ، ألنّ أيوناته مقيّدَةٌ في الشّبكة البلوريّة.\n:أﺳﺘﻨﺘﺞ\n154\n\n|  |  | ﻡﻮﻳﺩﻮﺼﻟﺍ ﺪﻳﺭﻮﻠﻛ ﺢﻠﻤﻟ ﻲﺋﺎﻣ ﻝﻮﻠﺤﻣ |  |\n| --- | --- | --- | --- |\n|  |  |  |  |\n|  |  |  |  |\n|  |  |  |  |\n\nتفكير ناقد\nكيف يمكنك التمييز بين ملح نترات الفضة وملح كربونات الصوديوم، وذلك باستخدام محلول ممدد لحمض كلور الماء مع كتابة المعادلات الكيميائية اللازمة؟\n\nالناقلية الكهربائية للأملاح\nأجرب وأستنتج:\nأدوات التجربة:\nوعاءان للتحليل الكهربائي يحوي الأول ملح كلوريد الصوديوم الصلب، ويحوي الثاني محلولاً مائياً لملح كلوريد الصوديوم.\nخطوات التجربة:\n1. أغلق كلاً من الدارتين، ماذا ألاحظ؟\n\nأستنتج\nالمحلول المائي لملح كلوريد الصوديوم ينقل التيار الكهربائي، بسبب الأيونات الحرة الحركة لكل من أيونات الصوديوم وأيونات الكلور السالبة.\nملح كلوريد الصوديوم الصلب لا ينقل التيار الكهربائي، لأن أيوناته مقيدة في الشبكة البلورية.",
+  "raw_markdown": "### تفكير ناقد:\nكيف يمكنك التمييز بين ملح نترات الفضة وملح كربونات الصوديوم، وذلك باستخدام محلول ممدد لحمض كلور الماء مع كتابة المعادلات الكيميائية اللازمة؟\n\n### الناقلية الكهربائية للأملاح:\n\n### أجرب وأستنتج:\n**أدوات التجربة:**\nوعاءان للتحليل الكهربائي يحوي الأول ملح كلوريد الصوديوم الصلب، ويحوي الثاني محلولاً مائياً لملح كلوريد الصوديوم.\n\n**خطوات التجربة:**\n1. أغلق كلاً من الدارتين، ماذا ألاحظ؟\n\n**[رسم توضيحي 1]**\nرسم يوضح دارة كهربائية تحتوي على وعاء به محلول مائي لكلوريد الصوديوم، مع قطبين ومصباح مضيء، وتظهر أيونات الصوديوم والكلور متباعدة في المحلول.\n\n**[رسم توضيحي 2]**\nرسم يوضح دارة كهربائية تحتوي على وعاء به ملح كلوريد الصوديوم الصلب، مع قطبين ومصباح غير مضيء، وتظهر أيونات الصوديوم والكلور متراصة في شبكة بلورية.\n\n### أستنتج:\n* المحلول المائي لملح كلوريد الصوديوم ينقل التيار الكهربائي، بسبب الأيونات الحرة الحركة لكل من أيونات الصوديوم وأيونات الكلور السالبة.\n* ملح كلوريد الصوديوم الصلب لا ينقل التيار الكهربائي، لأن أيوناته مقيدة في الشبكة البلورية.",
+  "sections": [
+    {
+      "heading": null,
+      "content": ":ﺗﻔﻜﻴﺮ ﻧﺎﻗﺪ\n كيف يمكنك التّمييز بين ملح نترات الفضّة وملح كربونات الصّ وديوم، وذلك باستخدام محلول\nممدّد لحمض كلور الماء مع كتابة المعادالت الكيميائيّة اللّ زمة؟\nالناقليّة الكهربائيّة لألمالح:\n:أدوات التجربة\nوعاءان للتّحليل الكهربائيّ يحوي \nاألوّل ملح كلوريد الصّ وديوم \nالصّ لب، ويحوي الثّاني محلوالً مائيّاً \nلملح كلوريد الصّ وديوم.\nخطوات التّجربة:\nأغلق كلّ ً من الدّارتين، ماذا 1\nأالحظ؟\nﻣﺤﻠﻮﻝ ﻣﺎﺋﻲ ﻟﻤﻠﺢ ﻛﻠﻮﺭﻳﺪ ﺍﻟﺼﻮﺩﻳﻮﻡ\nﻣﻠﺢ ﻛﻠﻮﺭﻳﺪ ﺍﻟﺼﻮﺩﻳﻮﻡ ﺍﻟﺼﻠﺐ\n:أﺟﺮب وأﺳﺘﻨﺘﺞ\n• \n ِالمحلول المائيّ لملح كلوريد الصّ وديوم ينقل التّيار الكهربائيّ، بسبب األيونات الحرّة الحركة\nلكلّ من أيونات الصّ وديوم الموجبة وأيونات الكلور السّالبة.\n• \nملح كلوريد الصّ وديوم الصّ لب ال ينقل التّيّار الكهربائيّ، ألنّ أيوناته مقيّدَةٌ في الشّبكة البلوريّة.\n:أﺳﺘﻨﺘﺞ\n154\n\n|  |  | ﻡﻮﻳﺩﻮﺼﻟﺍ ﺪﻳﺭﻮﻠﻛ ﺢﻠﻤﻟ ﻲﺋﺎﻣ ﻝﻮﻠﺤﻣ |  |\n| --- | --- | --- | --- |\n|  |  |  |  |\n|  |  |  |  |\n|  |  |  |  |",
+      "content_type": "text"
+    },
+    {
+      "heading": "تفكير ناقد",
+      "content": "كيف يمكنك التمييز بين ملح نترات الفضة وملح كربونات الصوديوم، وذلك باستخدام محلول ممدد لحمض كلور الماء مع كتابة المعادلات الكيميائية اللازمة؟",
+      "content_type": "text"
+    },
+    {
+      "heading": "الناقلية الكهربائية للأملاح",
+      "content": "أجرب وأستنتج:\nأدوات التجربة:\nوعاءان للتحليل الكهربائي يحوي الأول ملح كلوريد الصوديوم الصلب، ويحوي الثاني محلولاً مائياً لملح كلوريد الصوديوم.\nخطوات التجربة:\n1. أغلق كلاً من الدارتين، ماذا ألاحظ؟",
+      "content_type": "text"
+    },
+    {
+      "heading": "أستنتج",
+      "content": "المحلول المائي لملح كلوريد الصوديوم ينقل التيار الكهربائي، بسبب الأيونات الحرة الحركة لكل من أيونات الصوديوم وأيونات الكلور السالبة.\nملح كلوريد الصوديوم الصلب لا ينقل التيار الكهربائي، لأن أيوناته مقيدة في الشبكة البلورية.",
+      "content_type": "text"
+    }
+  ],
+  "questions": [
+    {
+      "question_text": "كيف يمكنك التمييز بين ملح نترات الفضة وملح كربونات الصوديوم، وذلك باستخدام محلول ممدد لحمض كلور الماء مع كتابة المعادلات الكيميائية اللازمة؟",
+      "question_type": "essay",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "أغلق كلاً من الدارتين، ماذا ألاحظ؟",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    }
+  ],
+  "diagrams": [
+    {
+      "title": null,
+      "description": "رسم توضيحي لدارة كهربائية مع وعاء يحتوي على محلول مائي لكلوريد الصوديوم، يظهر المصباح مضيئاً مع أيونات حرة الحركة.",
+      "labels": [
+        "محلول مائي لكلوريد الصوديوم",
+        "مصباح مضيء"
+      ],
+      "related_text": null
+    },
+    {
+      "title": null,
+      "description": "رسم توضيحي لدارة كهربائية مع وعاء يحتوي على ملح كلوريد الصوديوم الصلب، يظهر المصباح غير مضيء مع أيونات مقيدة في شبكة بلورية.",
+      "labels": [
+        "ملح كلوريد الصوديوم الصلب",
+        "مصباح غير مضيء"
+      ],
+      "related_text": null
+    }
+  ],
   "tables": [],
   "equations": [],
-  "warnings": [],
-  "errors": [
-    "Gemini document extraction failed quality checks for page 48: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 38.02183064s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.5-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '38s'}]}}"
+  "warnings": [
+    "Gemini PDF extraction failed; using 300 DPI image fallback: Gemini document extraction failed for page 48 with model gemini-3.1-flash-lite: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'Request contains an invalid argument.', 'status': 'INVALID_ARGUMENT'}}",
+    "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 35.989191909s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '35s'}]}}."
   ],
-  "char_count": 0,
-  "completeness_score": 0.0,
+  "errors": [],
+  "char_count": 1456,
+  "completeness_score": 1.0,
   "detected_language": "ar",
-  "vision_provider": null,
-  "vision_source": null,
-  "neighboring_pages": [],
-  "uploaded_pdf": null,
-  "raw_text": null,
-  "quality_report": {},
+  "vision_provider": "gemini_document_image",
+  "vision_source": "gemini_rendered_image_300dpi",
+  "neighboring_pages": [
+    47,
+    49
+  ],
+  "uploaded_pdf": {
+    "provider": "gemini_document",
+    "name": "files/6zs99grhoqr2",
+    "uri": "https://generativelanguage.googleapis.com/v1beta/files/6zs99grhoqr2",
+    "mime_type": "application/pdf",
+    "display_name": "Chemistry.pdf"
+  },
+  "raw_text": "{\n  \"page_number\": 48,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### تفكير ناقد:\\nكيف يمكنك التمييز بين ملح نترات الفضة وملح كربونات الصوديوم، وذلك باستخدام محلول ممدد لحمض كلور الماء مع كتابة المعادلات الكيميائية اللازمة؟\\n\\n### الناقلية الكهربائية للأملاح:\\n\\n### أجرب وأستنتج:\\n**أدوات التجربة:**\\nوعاءان للتحليل الكهربائي يحوي الأول ملح كلوريد الصوديوم الصلب، ويحوي الثاني محلولاً مائياً لملح كلوريد الصوديوم.\\n\\n**خطوات التجربة:**\\n1. أغلق كلاً من الدارتين، ماذا ألاحظ؟\\n\\n**[رسم توضيحي 1]**\\nرسم يوضح دارة كهربائية تحتوي على وعاء به محلول مائي لكلوريد الصوديوم، مع قطبين ومصباح مضيء، وتظهر أيونات الصوديوم والكلور متباعدة في المحلول.\\n\\n**[رسم توضيحي 2]**\\nرسم يوضح دارة كهربائية تحتوي على وعاء به ملح كلوريد الصوديوم الصلب، مع قطبين ومصباح غير مضيء، وتظهر أيونات الصوديوم والكلور متراصة في شبكة بلورية.\\n\\n### أستنتج:\\n* المحلول المائي لملح كلوريد الصوديوم ينقل التيار الكهربائي، بسبب الأيونات الحرة الحركة لكل من أيونات الصوديوم وأيونات الكلور السالبة.\\n* ملح كلوريد الصوديوم الصلب لا ينقل التيار الكهربائي، لأن أيوناته مقيدة في الشبكة البلورية.\",\n  \"sections\": [\n    {\n      \"heading\": \"تفكير ناقد\",\n      \"content\": \"كيف يمكنك التمييز بين ملح نترات الفضة وملح كربونات الصوديوم، وذلك باستخدام محلول ممدد لحمض كلور الماء مع كتابة المعادلات الكيميائية اللازمة؟\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الناقلية الكهربائية للأملاح\",\n      \"content\": \"أجرب وأستنتج:\\nأدوات التجربة:\\nوعاءان للتحليل الكهربائي يحوي الأول ملح كلوريد الصوديوم الصلب، ويحوي الثاني محلولاً مائياً لملح كلوريد الصوديوم.\\nخطوات التجربة:\\n1. أغلق كلاً من الدارتين، ماذا ألاحظ؟\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أستنتج\",\n      \"content\": \"المحلول المائي لملح كلوريد الصوديوم ينقل التيار الكهربائي، بسبب الأيونات الحرة الحركة لكل من أيونات الصوديوم وأيونات الكلور السالبة.\\nملح كلوريد الصوديوم الصلب لا ينقل التيار الكهربائي، لأن أيوناته مقيدة في الشبكة البلورية.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"كيف يمكنك التمييز بين ملح نترات الفضة وملح كربونات الصوديوم، وذلك باستخدام محلول ممدد لحمض كلور الماء مع كتابة المعادلات الكيميائية اللازمة؟\",\n      \"question_type\": \"essay\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أغلق كلاً من الدارتين، ماذا ألاحظ؟\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"description\": \"رسم توضيحي لدارة كهربائية مع وعاء يحتوي على محلول مائي لكلوريد الصوديوم، يظهر المصباح مضيئاً مع أيونات حرة الحركة.\",\n      \"labels\": [\n        \"محلول مائي لكلوريد الصوديوم\",\n        \"مصباح مضيء\"\n      ]\n    },\n    {\n      \"description\": \"رسم توضيحي لدارة كهربائية مع وعاء يحتوي على ملح كلوريد الصوديوم الصلب، يظهر المصباح غير مضيء مع أيونات مقيدة في شبكة بلورية.\",\n      \"labels\": [\n        \"ملح كلوريد الصوديوم الصلب\",\n        \"مصباح غير مضيء\"\n      ]\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true,\n  \"char_count\": 1150,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 48,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 1150,\n    \"char_count\": 1150,\n    \"section_count\": 3,\n    \"question_count\": 2,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 2,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.85,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  }\n}",
+  "quality_report": {
+    "page_number": 48,
+    "schema_valid": true,
+    "raw_markdown_chars": 968,
+    "char_count": 1150,
+    "section_count": 3,
+    "question_count": 2,
+    "table_count": 0,
+    "equation_count": 0,
+    "diagram_count": 2,
+    "warning_count": 0,
+    "arabic_char_ratio": 0.8511,
+    "completeness_score": 1.0,
+    "issues": [],
+    "should_fallback": false
+  },
   "classification": "MIXED_VISION",
   "source_id": 1
 }

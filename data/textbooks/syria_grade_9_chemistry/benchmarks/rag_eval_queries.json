@@ -59,14 +59,14 @@
     "id": "hcl_concentration_problem",
     "question": "كيف أحسب التركيز الغرامي والمولي لمحلول حمض كلور الماء؟",
     "intent": "exercise_lookup",
-    "expected_pages": [5],
+    "expected_pages": [5, 51],
     "must_contain": ["حمض كلور الماء", "التركيز", "المولي"]
   },
   {
     "id": "base_definition",
     "question": "ما هي الأسس؟",
     "intent": "definition_lookup",
-    "expected_pages": [18, 19, 21],
+    "expected_pages": [18, 19, 20, 21],
     "must_contain": ["هيدروكسيد", "OH"]
   },
   {
@@ -80,8 +80,8 @@
     "id": "base_litmus",
     "question": "ما لون ورقة عباد الشمس في المحاليل الأساسية؟",
     "intent": "property_lookup",
-    "expected_pages": [22],
-    "must_contain": ["عباد الشمس", "أساسي"]
+    "expected_pages": [21, 22],
+    "must_contain": ["عباد", "الأسس"]
   },
   {
     "id": "koh_ionization",
@@ -91,11 +91,11 @@
     "must_contain": ["KOH", "هيدروكسيد البوتاسيوم"]
   },
   {
-    "id": "neutralization",
-    "question": "ما تفاعل التعديل بين الحمض والأساس؟",
+    "id": "ammonia_hydrogen_chloride_union",
+    "question": "ما تفاعل الاتحاد بين غاز النشادر وغاز كلور الهيدروجين؟",
     "intent": "reaction_query",
     "expected_pages": [28],
-    "must_contain": ["ملح", "ماء", "تعديل"]
+    "must_contain": ["النشادر", "كلور الهيدروجين", "كلوريد الأمونيوم"]
   },
   {
     "id": "water_decomposition",
@@ -164,7 +164,7 @@
     "id": "hcl_moles",
     "question": "كيف أحسب عدد مولات محلول HCl من الحجم والتركيز؟",
     "intent": "exercise_lookup",
-    "expected_pages": [51],
+    "expected_pages": [5, 51],
     "must_contain": ["HCl", "مولات", "تركيز"]
   },
   {

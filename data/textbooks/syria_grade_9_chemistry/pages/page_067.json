@@ -2,35 +2,257 @@
   "page_number": 67,
   "page_type": "MIXED_VISION",
   "extraction_methods": [
-    "exception"
+    "pymupdf",
+    "pdfplumber",
+    "gemini_pdf_file",
+    "gemini_image_300dpi"
   ],
-  "extraction_method": "exception",
-  "status": "failed",
-  "text_layer_content": "",
-  "vision_content": {},
+  "extraction_method": "pymupdf+pdfplumber+gemini_pdf_file+gemini_image_300dpi",
+  "status": "completed_with_image_fallback",
+  "text_layer_content": "• \nالصّ يغة نصف المنشورة\nصيغته المنشورة\nصيغته المجملة\nالمركّب\nCH4\n \nCH4الميتان\n• \nالصّ يغة نصف المنشورة\nصيغته المنشورة\nصيغته المجملة\nالمركّب\nCH\nCH3\n3 -\nC H\n2\n6اإليتان\n• \nالصّ يغة نصف المنشورة\nصيغته المنشورة\nصيغته المجملة\nالمركّب\nCH\nCH\nCH\n3\n3\n2\n-\n-\nC H\n3\n8البروبان\n:أﺳﺘﻨﺘﺞ\n:نتيجة\n• \n كربون مشتركة أحاديَّة.- األلكانات: مركبّات هدروكربونيَّة مشبعة جميع الرَّوابط كربون\n• \n عدد ذرّات الكربون n  حيثC H\nn\n2n\n2\n+  :الصّ يغة العامّة لسالسل األلكانات المفتوحة هي\n.(n\n1,2,3,.....)\n=\n• \n تنتهي جميع أسماء مركّبات األلكانات باللّ حقة (آن) وذلك وفق االتّحاد الدّولي للكيمياء البحتة\n.IUPAC والتّطبيقيّة173\n\n| ةروشنملا فصن ةغيصّ لا | ةروشنملا هتغيص | ةلمجملا هتغيص | ّ\nبكرملا |\n| --- | --- | --- | --- |\n| CH\n4 |  | CH\n4 | ناتيملا |\n\n| ةروشنملا فصن ةغيصّ لا | ةروشنملا هتغيص | ةلمجملا هتغيص | ّ\nبكرملا |\n| --- | --- | --- | --- |\n| CH -CH\n3 3 |  | C H\n2 6 | ناتيلإا |\n\n| ةروشنملا فصن ةغيصّ لا | ةروشنملا هتغيص | ةلمجملا هتغيص | ّ\nبكرملا |\n| --- | --- | --- | --- |\n| CH -CH -CH\n3 2 3 |  | C H\n3 8 | نابوربلا |",
+  "vision_content": {
+    "page_number": 67,
+    "detected_language": "ar",
+    "raw_markdown": "### أستنتج:\n\n| المركب | صيغته المجملة | صيغته المنشورة | الصيغة نصف المنشورة |\n| :--- | :--- | :--- | :--- |\n| الميثان | CH₄ | (صورة جزيء الميثان) | CH₄ |\n| الإيتان | C₂H₆ | (صورة جزيء الإيتان) | CH₃ - CH₃ |\n| البروبان | C₃H₈ | (صورة جزيء البروبان) | CH₃ - CH₂ - CH₃ |\n\n### نتيجة:\n- الألكانات: مركبات هيدروكربونية مشبعة جميع الروابط كربون - كربون مشتركة أحادية.\n- الصيغة العامة لسلاسل الألكانات المفتوحة هي: CₙH₂ₙ₊₂ حيث n عدد ذرات الكربون (n = 1, 2, 3, .....).\n- تنتهي جميع أسماء مركبات الألكانات باللاحقة (آن) وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.",
+    "sections": [
+      {
+        "heading": "أستنتج:",
+        "content": "جدول يوضح الصيغ الكيميائية للميثان والإيتان والبروبان.",
+        "content_type": "table"
+      },
+      {
+        "heading": "نتيجة:",
+        "content": "الألكانات: مركبات هيدروكربونية مشبعة جميع الروابط كربون - كربون مشتركة أحادية. الصيغة العامة لسلاسل الألكانات المفتوحة هي: CₙH₂ₙ₊₂ حيث n عدد ذرات الكربون (n = 1, 2, 3, .....). تنتهي جميع أسماء مركبات الألكانات باللاحقة (آن) وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [],
+    "diagrams": [],
+    "tables": [
+      {
+        "title": "جدول مقارنة صيغ الألكانات",
+        "markdown": "| المركب | صيغته المجملة | صيغته المنشورة | الصيغة نصف المنشورة |\n| :--- | :--- | :--- | :--- |\n| الميثان | CH₄ | (صورة جزيء الميثان) | CH₄ |\n| الإيتان | C₂H₆ | (صورة جزيء الإيتان) | CH₃ - CH₃ |\n| البروبان | C₃H₈ | (صورة جزيء البروبان) | CH₃ - CH₂ - CH₃ |"
+      }
+    ],
+    "equations": [
+      {
+        "equation": "CₙH₂ₙ₊₂",
+        "description": "الصيغة العامة لسلاسل الألكانات المفتوحة"
+      }
+    ],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 2.281662468s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.5-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '2s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 568,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 67,
+      "schema_valid": true,
+      "raw_markdown_chars": 568,
+      "char_count": 568,
+      "section_count": 2,
+      "question_count": 0,
+      "table_count": 1,
+      "equation_count": 1,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.8194,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 67,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### أستنتج:\\n\\n| المركب | صيغته المجملة | صيغته المنشورة | الصيغة نصف المنشورة |\\n| :--- | :--- | :--- | :--- |\\n| الميثان | CH₄ | (صورة جزيء الميثان) | CH₄ |\\n| الإيتان | C₂H₆ | (صورة جزيء الإيتان) | CH₃ - CH₃ |\\n| البروبان | C₃H₈ | (صورة جزيء البروبان) | CH₃ - CH₂ - CH₃ |\\n\\n### نتيجة:\\n- الألكانات: مركبات هيدروكربونية مشبعة جميع الروابط كربون - كربون مشتركة أحادية.\\n- الصيغة العامة لسلاسل الألكانات المفتوحة هي: CₙH₂ₙ₊₂ حيث n عدد ذرات الكربون (n = 1, 2, 3, .....).\\n- تنتهي جميع أسماء مركبات الألكانات باللاحقة (آن) وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\",\n  \"sections\": [\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"جدول يوضح الصيغ الكيميائية للميثان والإيتان والبروبان.\",\n      \"content_type\": \"table\"\n    },\n    {\n      \"heading\": \"نتيجة:\",\n      \"content\": \"الألكانات: مركبات هيدروكربونية مشبعة جميع الروابط كربون - كربون مشتركة أحادية. الصيغة العامة لسلاسل الألكانات المفتوحة هي: CₙH₂ₙ₊₂ حيث n عدد ذرات الكربون (n = 1, 2, 3, .....). تنتهي جميع أسماء مركبات الألكانات باللاحقة (آن) وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"tables\": [\n    {\n      \"title\": \"جدول مقارنة صيغ الألكانات\",\n      \"markdown\": \"| المركب | صيغته المجملة | صيغته المنشورة | الصيغة نصف المنشورة |\\n| :--- | :--- | :--- | :--- |\\n| الميثان | CH₄ | (صورة جزيء الميثان) | CH₄ |\\n| الإيتان | C₂H₆ | (صورة جزيء الإيتان) | CH₃ - CH₃ |\\n| البروبان | C₃H₈ | (صورة جزيء البروبان) | CH₃ - CH₂ - CH₃ |\"\n    }\n  ],\n  \"equations\": [\n    {\n      \"equation\": \"CₙH₂ₙ₊₂\",\n      \"description\": \"الصيغة العامة لسلاسل الألكانات المفتوحة\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}"
+  },
   "gemini_pdf_content": {},
-  "gemini_fallback_model_content": {},
-  "gemini_image_fallback_content": {},
-  "merged_content": "",
-  "raw_markdown": "",
-  "sections": [],
+  "gemini_fallback_model_content": {
+    "page_number": 67,
+    "detected_language": "ar",
+    "raw_markdown": "### أستنتج:\n\n| المركب | صيغته المجملة | صيغته المنشورة | الصيغة نصف المنشورة |\n| :--- | :--- | :--- | :--- |\n| الميثان | CH₄ | (صورة جزيء الميثان) | CH₄ |\n| الإيتان | C₂H₆ | (صورة جزيء الإيتان) | CH₃ - CH₃ |\n| البروبان | C₃H₈ | (صورة جزيء البروبان) | CH₃ - CH₂ - CH₃ |\n\n### نتيجة:\n- الألكانات: مركبات هيدروكربونية مشبعة جميع الروابط كربون - كربون مشتركة أحادية.\n- الصيغة العامة لسلاسل الألكانات المفتوحة هي: CₙH₂ₙ₊₂ حيث n عدد ذرات الكربون (n = 1, 2, 3, .....).\n- تنتهي جميع أسماء مركبات الألكانات باللاحقة (آن) وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.",
+    "sections": [
+      {
+        "heading": "أستنتج:",
+        "content": "جدول يوضح الصيغ الكيميائية للميثان والإيتان والبروبان.",
+        "content_type": "table"
+      },
+      {
+        "heading": "نتيجة:",
+        "content": "الألكانات: مركبات هيدروكربونية مشبعة جميع الروابط كربون - كربون مشتركة أحادية. الصيغة العامة لسلاسل الألكانات المفتوحة هي: CₙH₂ₙ₊₂ حيث n عدد ذرات الكربون (n = 1, 2, 3, .....). تنتهي جميع أسماء مركبات الألكانات باللاحقة (آن) وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [],
+    "diagrams": [],
+    "tables": [
+      {
+        "title": "جدول مقارنة صيغ الألكانات",
+        "markdown": "| المركب | صيغته المجملة | صيغته المنشورة | الصيغة نصف المنشورة |\n| :--- | :--- | :--- | :--- |\n| الميثان | CH₄ | (صورة جزيء الميثان) | CH₄ |\n| الإيتان | C₂H₆ | (صورة جزيء الإيتان) | CH₃ - CH₃ |\n| البروبان | C₃H₈ | (صورة جزيء البروبان) | CH₃ - CH₂ - CH₃ |"
+      }
+    ],
+    "equations": [
+      {
+        "equation": "CₙH₂ₙ₊₂",
+        "description": "الصيغة العامة لسلاسل الألكانات المفتوحة"
+      }
+    ],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 2.281662468s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.5-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '2s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 568,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 67,
+      "schema_valid": true,
+      "raw_markdown_chars": 568,
+      "char_count": 568,
+      "section_count": 2,
+      "question_count": 0,
+      "table_count": 1,
+      "equation_count": 1,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.8194,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 67,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### أستنتج:\\n\\n| المركب | صيغته المجملة | صيغته المنشورة | الصيغة نصف المنشورة |\\n| :--- | :--- | :--- | :--- |\\n| الميثان | CH₄ | (صورة جزيء الميثان) | CH₄ |\\n| الإيتان | C₂H₆ | (صورة جزيء الإيتان) | CH₃ - CH₃ |\\n| البروبان | C₃H₈ | (صورة جزيء البروبان) | CH₃ - CH₂ - CH₃ |\\n\\n### نتيجة:\\n- الألكانات: مركبات هيدروكربونية مشبعة جميع الروابط كربون - كربون مشتركة أحادية.\\n- الصيغة العامة لسلاسل الألكانات المفتوحة هي: CₙH₂ₙ₊₂ حيث n عدد ذرات الكربون (n = 1, 2, 3, .....).\\n- تنتهي جميع أسماء مركبات الألكانات باللاحقة (آن) وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\",\n  \"sections\": [\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"جدول يوضح الصيغ الكيميائية للميثان والإيتان والبروبان.\",\n      \"content_type\": \"table\"\n    },\n    {\n      \"heading\": \"نتيجة:\",\n      \"content\": \"الألكانات: مركبات هيدروكربونية مشبعة جميع الروابط كربون - كربون مشتركة أحادية. الصيغة العامة لسلاسل الألكانات المفتوحة هي: CₙH₂ₙ₊₂ حيث n عدد ذرات الكربون (n = 1, 2, 3, .....). تنتهي جميع أسماء مركبات الألكانات باللاحقة (آن) وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"tables\": [\n    {\n      \"title\": \"جدول مقارنة صيغ الألكانات\",\n      \"markdown\": \"| المركب | صيغته المجملة | صيغته المنشورة | الصيغة نصف المنشورة |\\n| :--- | :--- | :--- | :--- |\\n| الميثان | CH₄ | (صورة جزيء الميثان) | CH₄ |\\n| الإيتان | C₂H₆ | (صورة جزيء الإيتان) | CH₃ - CH₃ |\\n| البروبان | C₃H₈ | (صورة جزيء البروبان) | CH₃ - CH₂ - CH₃ |\"\n    }\n  ],\n  \"equations\": [\n    {\n      \"equation\": \"CₙH₂ₙ₊₂\",\n      \"description\": \"الصيغة العامة لسلاسل الألكانات المفتوحة\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}"
+  },
+  "gemini_image_fallback_content": {
+    "page_number": 67,
+    "detected_language": "ar",
+    "raw_markdown": "### أستنتج:\n\n| المركب | صيغته المجملة | صيغته المنشورة | الصيغة نصف المنشورة |\n| :--- | :--- | :--- | :--- |\n| الميثان | CH₄ | (صورة جزيء الميثان) | CH₄ |\n| الإيتان | C₂H₆ | (صورة جزيء الإيتان) | CH₃ - CH₃ |\n| البروبان | C₃H₈ | (صورة جزيء البروبان) | CH₃ - CH₂ - CH₃ |\n\n### نتيجة:\n- الألكانات: مركبات هيدروكربونية مشبعة جميع الروابط كربون - كربون مشتركة أحادية.\n- الصيغة العامة لسلاسل الألكانات المفتوحة هي: CₙH₂ₙ₊₂ حيث n عدد ذرات الكربون (n = 1, 2, 3, .....).\n- تنتهي جميع أسماء مركبات الألكانات باللاحقة (آن) وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.",
+    "sections": [
+      {
+        "heading": "أستنتج:",
+        "content": "جدول يوضح الصيغ الكيميائية للميثان والإيتان والبروبان.",
+        "content_type": "table"
+      },
+      {
+        "heading": "نتيجة:",
+        "content": "الألكانات: مركبات هيدروكربونية مشبعة جميع الروابط كربون - كربون مشتركة أحادية. الصيغة العامة لسلاسل الألكانات المفتوحة هي: CₙH₂ₙ₊₂ حيث n عدد ذرات الكربون (n = 1, 2, 3, .....). تنتهي جميع أسماء مركبات الألكانات باللاحقة (آن) وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [],
+    "diagrams": [],
+    "tables": [
+      {
+        "title": "جدول مقارنة صيغ الألكانات",
+        "markdown": "| المركب | صيغته المجملة | صيغته المنشورة | الصيغة نصف المنشورة |\n| :--- | :--- | :--- | :--- |\n| الميثان | CH₄ | (صورة جزيء الميثان) | CH₄ |\n| الإيتان | C₂H₆ | (صورة جزيء الإيتان) | CH₃ - CH₃ |\n| البروبان | C₃H₈ | (صورة جزيء البروبان) | CH₃ - CH₂ - CH₃ |"
+      }
+    ],
+    "equations": [
+      {
+        "equation": "CₙH₂ₙ₊₂",
+        "description": "الصيغة العامة لسلاسل الألكانات المفتوحة"
+      }
+    ],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 2.281662468s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.5-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '2s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 568,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 67,
+      "schema_valid": true,
+      "raw_markdown_chars": 568,
+      "char_count": 568,
+      "section_count": 2,
+      "question_count": 0,
+      "table_count": 1,
+      "equation_count": 1,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.8194,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 67,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### أستنتج:\\n\\n| المركب | صيغته المجملة | صيغته المنشورة | الصيغة نصف المنشورة |\\n| :--- | :--- | :--- | :--- |\\n| الميثان | CH₄ | (صورة جزيء الميثان) | CH₄ |\\n| الإيتان | C₂H₆ | (صورة جزيء الإيتان) | CH₃ - CH₃ |\\n| البروبان | C₃H₈ | (صورة جزيء البروبان) | CH₃ - CH₂ - CH₃ |\\n\\n### نتيجة:\\n- الألكانات: مركبات هيدروكربونية مشبعة جميع الروابط كربون - كربون مشتركة أحادية.\\n- الصيغة العامة لسلاسل الألكانات المفتوحة هي: CₙH₂ₙ₊₂ حيث n عدد ذرات الكربون (n = 1, 2, 3, .....).\\n- تنتهي جميع أسماء مركبات الألكانات باللاحقة (آن) وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\",\n  \"sections\": [\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"جدول يوضح الصيغ الكيميائية للميثان والإيتان والبروبان.\",\n      \"content_type\": \"table\"\n    },\n    {\n      \"heading\": \"نتيجة:\",\n      \"content\": \"الألكانات: مركبات هيدروكربونية مشبعة جميع الروابط كربون - كربون مشتركة أحادية. الصيغة العامة لسلاسل الألكانات المفتوحة هي: CₙH₂ₙ₊₂ حيث n عدد ذرات الكربون (n = 1, 2, 3, .....). تنتهي جميع أسماء مركبات الألكانات باللاحقة (آن) وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"tables\": [\n    {\n      \"title\": \"جدول مقارنة صيغ الألكانات\",\n      \"markdown\": \"| المركب | صيغته المجملة | صيغته المنشورة | الصيغة نصف المنشورة |\\n| :--- | :--- | :--- | :--- |\\n| الميثان | CH₄ | (صورة جزيء الميثان) | CH₄ |\\n| الإيتان | C₂H₆ | (صورة جزيء الإيتان) | CH₃ - CH₃ |\\n| البروبان | C₃H₈ | (صورة جزيء البروبان) | CH₃ - CH₂ - CH₃ |\"\n    }\n  ],\n  \"equations\": [\n    {\n      \"equation\": \"CₙH₂ₙ₊₂\",\n      \"description\": \"الصيغة العامة لسلاسل الألكانات المفتوحة\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}"
+  },
+  "merged_content": "• \nالصّ يغة نصف المنشورة\nصيغته المنشورة\nصيغته المجملة\nالمركّب\nCH4\n \nCH4الميتان\n• \nالصّ يغة نصف المنشورة\nصيغته المنشورة\nصيغته المجملة\nالمركّب\nCH\nCH3\n3 -\nC H\n2\n6اإليتان\n• \nالصّ يغة نصف المنشورة\nصيغته المنشورة\nصيغته المجملة\nالمركّب\nCH\nCH\nCH\n3\n3\n2\n-\n-\nC H\n3\n8البروبان\n:أﺳﺘﻨﺘﺞ\n:نتيجة\n• \n كربون مشتركة أحاديَّة.- األلكانات: مركبّات هدروكربونيَّة مشبعة جميع الرَّوابط كربون\n• \n عدد ذرّات الكربون n  حيثC H\nn\n2n\n2\n+  :الصّ يغة العامّة لسالسل األلكانات المفتوحة هي\n.(n\n1,2,3,.....)\n=\n• \n تنتهي جميع أسماء مركّبات األلكانات باللّ حقة (آن) وذلك وفق االتّحاد الدّولي للكيمياء البحتة\n.IUPAC والتّطبيقيّة173\n\n| ةروشنملا فصن ةغيصّ لا | ةروشنملا هتغيص | ةلمجملا هتغيص | ّ\nبكرملا |\n| --- | --- | --- | --- |\n| CH\n4 |  | CH\n4 | ناتيملا |\n\n| ةروشنملا فصن ةغيصّ لا | ةروشنملا هتغيص | ةلمجملا هتغيص | ّ\nبكرملا |\n| --- | --- | --- | --- |\n| CH -CH\n3 3 |  | C H\n2 6 | ناتيلإا |\n\n| ةروشنملا فصن ةغيصّ لا | ةروشنملا هتغيص | ةلمجملا هتغيص | ّ\nبكرملا |\n| --- | --- | --- | --- |\n| CH -CH -CH\n3 2 3 |  | C H\n3 8 | نابوربلا |\n\nأستنتج:\nجدول يوضح الصيغ الكيميائية للميثان والإيتان والبروبان.\n\nنتيجة:\nالألكانات: مركبات هيدروكربونية مشبعة جميع الروابط كربون - كربون مشتركة أحادية. الصيغة العامة لسلاسل الألكانات المفتوحة هي: CₙH₂ₙ₊₂ حيث n عدد ذرات الكربون (n = 1, 2, 3, .....). تنتهي جميع أسماء مركبات الألكانات باللاحقة (آن) وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.",
+  "raw_markdown": "### أستنتج:\n\n| المركب | صيغته المجملة | صيغته المنشورة | الصيغة نصف المنشورة |\n| :--- | :--- | :--- | :--- |\n| الميثان | CH₄ | (صورة جزيء الميثان) | CH₄ |\n| الإيتان | C₂H₆ | (صورة جزيء الإيتان) | CH₃ - CH₃ |\n| البروبان | C₃H₈ | (صورة جزيء البروبان) | CH₃ - CH₂ - CH₃ |\n\n### نتيجة:\n- الألكانات: مركبات هيدروكربونية مشبعة جميع الروابط كربون - كربون مشتركة أحادية.\n- الصيغة العامة لسلاسل الألكانات المفتوحة هي: CₙH₂ₙ₊₂ حيث n عدد ذرات الكربون (n = 1, 2, 3, .....).\n- تنتهي جميع أسماء مركبات الألكانات باللاحقة (آن) وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.",
+  "sections": [
+    {
+      "heading": null,
+      "content": "• \nالصّ يغة نصف المنشورة\nصيغته المنشورة\nصيغته المجملة\nالمركّب\nCH4\n \nCH4الميتان\n• \nالصّ يغة نصف المنشورة\nصيغته المنشورة\nصيغته المجملة\nالمركّب\nCH\nCH3\n3 -\nC H\n2\n6اإليتان\n• \nالصّ يغة نصف المنشورة\nصيغته المنشورة\nصيغته المجملة\nالمركّب\nCH\nCH\nCH\n3\n3\n2\n-\n-\nC H\n3\n8البروبان\n:أﺳﺘﻨﺘﺞ\n:نتيجة\n• \n كربون مشتركة أحاديَّة.- األلكانات: مركبّات هدروكربونيَّة مشبعة جميع الرَّوابط كربون\n• \n عدد ذرّات الكربون n  حيثC H\nn\n2n\n2\n+  :الصّ يغة العامّة لسالسل األلكانات المفتوحة هي\n.(n\n1,2,3,.....)\n=\n• \n تنتهي جميع أسماء مركّبات األلكانات باللّ حقة (آن) وذلك وفق االتّحاد الدّولي للكيمياء البحتة\n.IUPAC والتّطبيقيّة173\n\n| ةروشنملا فصن ةغيصّ لا | ةروشنملا هتغيص | ةلمجملا هتغيص | ّ\nبكرملا |\n| --- | --- | --- | --- |\n| CH\n4 |  | CH\n4 | ناتيملا |\n\n| ةروشنملا فصن ةغيصّ لا | ةروشنملا هتغيص | ةلمجملا هتغيص | ّ\nبكرملا |\n| --- | --- | --- | --- |\n| CH -CH\n3 3 |  | C H\n2 6 | ناتيلإا |\n\n| ةروشنملا فصن ةغيصّ لا | ةروشنملا هتغيص | ةلمجملا هتغيص | ّ\nبكرملا |\n| --- | --- | --- | --- |\n| CH -CH -CH\n3 2 3 |  | C H\n3 8 | نابوربلا |",
+      "content_type": "text"
+    },
+    {
+      "heading": "أستنتج:",
+      "content": "جدول يوضح الصيغ الكيميائية للميثان والإيتان والبروبان.",
+      "content_type": "table"
+    },
+    {
+      "heading": "نتيجة:",
+      "content": "الألكانات: مركبات هيدروكربونية مشبعة جميع الروابط كربون - كربون مشتركة أحادية. الصيغة العامة لسلاسل الألكانات المفتوحة هي: CₙH₂ₙ₊₂ حيث n عدد ذرات الكربون (n = 1, 2, 3, .....). تنتهي جميع أسماء مركبات الألكانات باللاحقة (آن) وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.",
+      "content_type": "text"
+    }
+  ],
   "questions": [],
   "diagrams": [],
-  "tables": [],
-  "equations": [],
-  "warnings": [],
-  "errors": [
-    "Gemini document extraction failed quality checks for page 67: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 18.778984371s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '18s'}]}}"
+  "tables": [
+    {
+      "title": "جدول مقارنة صيغ الألكانات",
+      "markdown": "| المركب | صيغته المجملة | صيغته المنشورة | الصيغة نصف المنشورة |\n| :--- | :--- | :--- | :--- |\n| الميثان | CH₄ | (صورة جزيء الميثان) | CH₄ |\n| الإيتان | C₂H₆ | (صورة جزيء الإيتان) | CH₃ - CH₃ |\n| البروبان | C₃H₈ | (صورة جزيء البروبان) | CH₃ - CH₂ - CH₃ |"
+    }
   ],
-  "char_count": 0,
-  "completeness_score": 0.0,
+  "equations": [
+    {
+      "equation": "CₙH₂ₙ₊₂",
+      "description": "الصيغة العامة لسلاسل الألكانات المفتوحة"
+    }
+  ],
+  "warnings": [
+    "Gemini PDF extraction failed; using 300 DPI image fallback: Gemini document extraction failed for page 67 with model gemini-3.1-flash-lite: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'Request contains an invalid argument.', 'status': 'INVALID_ARGUMENT'}}",
+    "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 2.281662468s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.5-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '2s'}]}}."
+  ],
+  "errors": [],
+  "char_count": 1350,
+  "completeness_score": 1.0,
   "detected_language": "ar",
-  "vision_provider": null,
-  "vision_source": null,
-  "neighboring_pages": [],
-  "uploaded_pdf": null,
-  "raw_text": null,
-  "quality_report": {},
+  "vision_provider": "gemini_document_image",
+  "vision_source": "gemini_rendered_image_300dpi",
+  "neighboring_pages": [
+    66,
+    68
+  ],
+  "uploaded_pdf": {
+    "provider": "gemini_document",
+    "name": "files/6zs99grhoqr2",
+    "uri": "https://generativelanguage.googleapis.com/v1beta/files/6zs99grhoqr2",
+    "mime_type": "application/pdf",
+    "display_name": "Chemistry.pdf"
+  },
+  "raw_text": "{\n  \"page_number\": 67,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### أستنتج:\\n\\n| المركب | صيغته المجملة | صيغته المنشورة | الصيغة نصف المنشورة |\\n| :--- | :--- | :--- | :--- |\\n| الميثان | CH₄ | (صورة جزيء الميثان) | CH₄ |\\n| الإيتان | C₂H₆ | (صورة جزيء الإيتان) | CH₃ - CH₃ |\\n| البروبان | C₃H₈ | (صورة جزيء البروبان) | CH₃ - CH₂ - CH₃ |\\n\\n### نتيجة:\\n- الألكانات: مركبات هيدروكربونية مشبعة جميع الروابط كربون - كربون مشتركة أحادية.\\n- الصيغة العامة لسلاسل الألكانات المفتوحة هي: CₙH₂ₙ₊₂ حيث n عدد ذرات الكربون (n = 1, 2, 3, .....).\\n- تنتهي جميع أسماء مركبات الألكانات باللاحقة (آن) وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\",\n  \"sections\": [\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"جدول يوضح الصيغ الكيميائية للميثان والإيتان والبروبان.\",\n      \"content_type\": \"table\"\n    },\n    {\n      \"heading\": \"نتيجة:\",\n      \"content\": \"الألكانات: مركبات هيدروكربونية مشبعة جميع الروابط كربون - كربون مشتركة أحادية. الصيغة العامة لسلاسل الألكانات المفتوحة هي: CₙH₂ₙ₊₂ حيث n عدد ذرات الكربون (n = 1, 2, 3, .....). تنتهي جميع أسماء مركبات الألكانات باللاحقة (آن) وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"tables\": [\n    {\n      \"title\": \"جدول مقارنة صيغ الألكانات\",\n      \"markdown\": \"| المركب | صيغته المجملة | صيغته المنشورة | الصيغة نصف المنشورة |\\n| :--- | :--- | :--- | :--- |\\n| الميثان | CH₄ | (صورة جزيء الميثان) | CH₄ |\\n| الإيتان | C₂H₆ | (صورة جزيء الإيتان) | CH₃ - CH₃ |\\n| البروبان | C₃H₈ | (صورة جزيء البروبان) | CH₃ - CH₂ - CH₃ |\"\n    }\n  ],\n  \"equations\": [\n    {\n      \"equation\": \"CₙH₂ₙ₊₂\",\n      \"description\": \"الصيغة العامة لسلاسل الألكانات المفتوحة\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}",
+  "quality_report": {
+    "page_number": 67,
+    "schema_valid": true,
+    "raw_markdown_chars": 568,
+    "char_count": 568,
+    "section_count": 2,
+    "question_count": 0,
+    "table_count": 1,
+    "equation_count": 1,
+    "diagram_count": 0,
+    "warning_count": 0,
+    "arabic_char_ratio": 0.8194,
+    "completeness_score": 1.0,
+    "issues": [],
+    "should_fallback": false
+  },
   "classification": "MIXED_VISION",
   "source_id": 1
 }

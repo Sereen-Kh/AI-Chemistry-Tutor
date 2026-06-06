@@ -2,35 +2,506 @@
   "page_number": 70,
   "page_type": "NEEDS_VISION",
   "extraction_methods": [
-    "exception"
+    "gemini_pdf_file",
+    "gemini_image_300dpi"
   ],
-  "extraction_method": "exception",
-  "status": "failed",
+  "extraction_method": "gemini_pdf_file+gemini_image_300dpi",
+  "status": "completed_with_image_fallback",
   "text_layer_content": "",
-  "vision_content": {},
+  "vision_content": {
+    "page_number": 70,
+    "detected_language": "ar",
+    "raw_markdown": "### أختبر نفسي:\n\n#### السؤال الأول:\nاختر الإجابة الصحيحة لكل مما يأتي:\n1. صيغة الميتان هي:\na. C₂H₆\nb. CH₄\nc. C₃H₈\nd. CH₃\n\n2. الصيغة العامة للألكانات هي:\na. CₙH₂ₙ\nb. CₙH₂ₙ₊₁\nc. CₙH₂ₙ₊₂\nd. CₙH₂ₙ₋₂\n\n#### السؤال الثاني:\nضع إشارة (✓) أمام العبارة الصحيحة، وإشارة (X) أمام العبارة المغلوط فيها ثم صححها:\n1. تعتبر الألكانات مركبات هيدروكربونية غير مشبعة.\n2. يحتوي الإيتان على رابطة ثنائية بين ذرتي الكربون.\n3. يستخدم البوتان كوقود في المنازل.\n\n#### السؤال الثالث:\nأكمل الجدول الآتي:\n\n| المركب | الصيغة المجملة |\n| :--- | :--- |\n| الميتان | .................... |\n| .................... | C₂H₆ |\n| البروبان | .................... |\n| الهكسان | .................... |\n\n#### السؤال الرابع:\nسم المركبات الآتية:\nCH₃ - CH₂ - CH₃ , CH₃ - CH₃",
+    "sections": [
+      {
+        "heading": "أختبر نفسي:",
+        "content": "السؤال الأول:\nاختر الإجابة الصحيحة لكل مما يأتي:\n1. صيغة الميتان هي:\na. C₂H₆\nb. CH₄\nc. C₃H₈\nd. CH₃\n\n2. الصيغة العامة للألكانات هي:\na. CₙH₂ₙ\nb. CₙH₂ₙ₊₁\nc. CₙH₂ₙ₊₂\nd. CₙH₂ₙ₋₂",
+        "content_type": "exercise"
+      },
+      {
+        "heading": "السؤال الثاني:",
+        "content": "ضع إشارة (✓) أمام العبارة الصحيحة، وإشارة (X) أمام العبارة المغلوط فيها ثم صححها:\n1. تعتبر الألكانات مركبات هيدروكربونية غير مشبعة.\n2. يحتوي الإيتان على رابطة ثنائية بين ذرتي الكربون.\n3. يستخدم البوتان كوقود في المنازل.",
+        "content_type": "exercise"
+      },
+      {
+        "heading": "السؤال الثالث:",
+        "content": "أكمل الجدول الآتي:",
+        "content_type": "exercise"
+      },
+      {
+        "heading": "السؤال الرابع:",
+        "content": "سم المركبات الآتية:\nCH₃ - CH₂ - CH₃ , CH₃ - CH₃",
+        "content_type": "exercise"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "1. صيغة الميتان هي:",
+        "question_type": "multiple_choice",
+        "options": [
+          "C₂H₆",
+          "CH₄",
+          "C₃H₈",
+          "CH₃"
+        ],
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "2. الصيغة العامة للألكانات هي:",
+        "question_type": "multiple_choice",
+        "options": [
+          "CₙH₂ₙ",
+          "CₙH₂ₙ₊₁",
+          "CₙH₂ₙ₊₂",
+          "CₙH₂ₙ₋₂"
+        ],
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "1. تعتبر الألكانات مركبات هيدروكربونية غير مشبعة.",
+        "question_type": "true_false",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "2. يحتوي الإيتان على رابطة ثنائية بين ذرتي الكربون.",
+        "question_type": "true_false",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "3. يستخدم البوتان كوقود في المنازل.",
+        "question_type": "true_false",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "سم المركبات الآتية: CH₃ - CH₂ - CH₃ , CH₃ - CH₃",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [],
+    "tables": [
+      {
+        "title": "أكمل الجدول الآتي",
+        "markdown": "| المركب | الصيغة المجملة |\n| :--- | :--- |\n| الميتان | .................... |\n| .................... | C₂H₆ |\n| البروبان | .................... |\n| الهكسان | .................... |"
+      }
+    ],
+    "equations": [],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 53.406240924s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '53s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 727,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 70,
+      "schema_valid": true,
+      "raw_markdown_chars": 727,
+      "char_count": 727,
+      "section_count": 4,
+      "question_count": 6,
+      "table_count": 1,
+      "equation_count": 0,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.669,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 70,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### أختبر نفسي:\\n\\n#### السؤال الأول:\\nاختر الإجابة الصحيحة لكل مما يأتي:\\n1. صيغة الميتان هي:\\na. C₂H₆\\nb. CH₄\\nc. C₃H₈\\nd. CH₃\\n\\n2. الصيغة العامة للألكانات هي:\\na. CₙH₂ₙ\\nb. CₙH₂ₙ₊₁\\nc. CₙH₂ₙ₊₂\\nd. CₙH₂ₙ₋₂\\n\\n#### السؤال الثاني:\\nضع إشارة (✓) أمام العبارة الصحيحة، وإشارة (X) أمام العبارة المغلوط فيها ثم صححها:\\n1. تعتبر الألكانات مركبات هيدروكربونية غير مشبعة.\\n2. يحتوي الإيتان على رابطة ثنائية بين ذرتي الكربون.\\n3. يستخدم البوتان كوقود في المنازل.\\n\\n#### السؤال الثالث:\\nأكمل الجدول الآتي:\\n\\n| المركب | الصيغة المجملة |\\n| :--- | :--- |\\n| الميتان | .................... |\\n| .................... | C₂H₆ |\\n| البروبان | .................... |\\n| الهكسان | .................... |\\n\\n#### السؤال الرابع:\\nسم المركبات الآتية:\\nCH₃ - CH₂ - CH₃ , CH₃ - CH₃\",\n  \"sections\": [\n    {\n      \"heading\": \"أختبر نفسي:\",\n      \"content\": \"السؤال الأول:\\nاختر الإجابة الصحيحة لكل مما يأتي:\\n1. صيغة الميتان هي:\\na. C₂H₆\\nb. CH₄\\nc. C₃H₈\\nd. CH₃\\n\\n2. الصيغة العامة للألكانات هي:\\na. CₙH₂ₙ\\nb. CₙH₂ₙ₊₁\\nc. CₙH₂ₙ₊₂\\nd. CₙH₂ₙ₋₂\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"السؤال الثاني:\",\n      \"content\": \"ضع إشارة (✓) أمام العبارة الصحيحة، وإشارة (X) أمام العبارة المغلوط فيها ثم صححها:\\n1. تعتبر الألكانات مركبات هيدروكربونية غير مشبعة.\\n2. يحتوي الإيتان على رابطة ثنائية بين ذرتي الكربون.\\n3. يستخدم البوتان كوقود في المنازل.\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"السؤال الثالث:\",\n      \"content\": \"أكمل الجدول الآتي:\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"السؤال الرابع:\",\n      \"content\": \"سم المركبات الآتية:\\nCH₃ - CH₂ - CH₃ , CH₃ - CH₃\",\n      \"content_type\": \"exercise\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"1. صيغة الميتان هي:\",\n      \"question_type\": \"multiple_choice\",\n      \"options\": [\n        \"C₂H₆\",\n        \"CH₄\",\n        \"C₃H₈\",\n        \"CH₃\"\n      ],\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"2. الصيغة العامة للألكانات هي:\",\n      \"question_type\": \"multiple_choice\",\n      \"options\": [\n        \"CₙH₂ₙ\",\n        \"CₙH₂ₙ₊₁\",\n        \"CₙH₂ₙ₊₂\",\n        \"CₙH₂ₙ₋₂\"\n      ],\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"1. تعتبر الألكانات مركبات هيدروكربونية غير مشبعة.\",\n      \"question_type\": \"true_false\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"2. يحتوي الإيتان على رابطة ثنائية بين ذرتي الكربون.\",\n      \"question_type\": \"true_false\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"3. يستخدم البوتان كوقود في المنازل.\",\n      \"question_type\": \"true_false\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"سم المركبات الآتية: CH₃ - CH₂ - CH₃ , CH₃ - CH₃\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"tables\": [\n    {\n      \"title\": \"أكمل الجدول الآتي\",\n      \"markdown\": \"| المركب | الصيغة المجملة |\\n| :--- | :--- |\\n| الميتان | .................... |\\n| .................... | C₂H₆ |\\n| البروبان | .................... |\\n| الهكسان | .................... |\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}"
+  },
   "gemini_pdf_content": {},
-  "gemini_fallback_model_content": {},
-  "gemini_image_fallback_content": {},
-  "merged_content": "",
-  "raw_markdown": "",
-  "sections": [],
-  "questions": [],
-  "diagrams": [],
-  "tables": [],
-  "equations": [],
-  "warnings": [],
-  "errors": [
-    "Gemini document extraction failed quality checks for page 70: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 53.815311918s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '53s'}]}}"
+  "gemini_fallback_model_content": {
+    "page_number": 70,
+    "detected_language": "ar",
+    "raw_markdown": "### أختبر نفسي:\n\n#### السؤال الأول:\nاختر الإجابة الصحيحة لكل مما يأتي:\n1. صيغة الميتان هي:\na. C₂H₆\nb. CH₄\nc. C₃H₈\nd. CH₃\n\n2. الصيغة العامة للألكانات هي:\na. CₙH₂ₙ\nb. CₙH₂ₙ₊₁\nc. CₙH₂ₙ₊₂\nd. CₙH₂ₙ₋₂\n\n#### السؤال الثاني:\nضع إشارة (✓) أمام العبارة الصحيحة، وإشارة (X) أمام العبارة المغلوط فيها ثم صححها:\n1. تعتبر الألكانات مركبات هيدروكربونية غير مشبعة.\n2. يحتوي الإيتان على رابطة ثنائية بين ذرتي الكربون.\n3. يستخدم البوتان كوقود في المنازل.\n\n#### السؤال الثالث:\nأكمل الجدول الآتي:\n\n| المركب | الصيغة المجملة |\n| :--- | :--- |\n| الميتان | .................... |\n| .................... | C₂H₆ |\n| البروبان | .................... |\n| الهكسان | .................... |\n\n#### السؤال الرابع:\nسم المركبات الآتية:\nCH₃ - CH₂ - CH₃ , CH₃ - CH₃",
+    "sections": [
+      {
+        "heading": "أختبر نفسي:",
+        "content": "السؤال الأول:\nاختر الإجابة الصحيحة لكل مما يأتي:\n1. صيغة الميتان هي:\na. C₂H₆\nb. CH₄\nc. C₃H₈\nd. CH₃\n\n2. الصيغة العامة للألكانات هي:\na. CₙH₂ₙ\nb. CₙH₂ₙ₊₁\nc. CₙH₂ₙ₊₂\nd. CₙH₂ₙ₋₂",
+        "content_type": "exercise"
+      },
+      {
+        "heading": "السؤال الثاني:",
+        "content": "ضع إشارة (✓) أمام العبارة الصحيحة، وإشارة (X) أمام العبارة المغلوط فيها ثم صححها:\n1. تعتبر الألكانات مركبات هيدروكربونية غير مشبعة.\n2. يحتوي الإيتان على رابطة ثنائية بين ذرتي الكربون.\n3. يستخدم البوتان كوقود في المنازل.",
+        "content_type": "exercise"
+      },
+      {
+        "heading": "السؤال الثالث:",
+        "content": "أكمل الجدول الآتي:",
+        "content_type": "exercise"
+      },
+      {
+        "heading": "السؤال الرابع:",
+        "content": "سم المركبات الآتية:\nCH₃ - CH₂ - CH₃ , CH₃ - CH₃",
+        "content_type": "exercise"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "1. صيغة الميتان هي:",
+        "question_type": "multiple_choice",
+        "options": [
+          "C₂H₆",
+          "CH₄",
+          "C₃H₈",
+          "CH₃"
+        ],
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "2. الصيغة العامة للألكانات هي:",
+        "question_type": "multiple_choice",
+        "options": [
+          "CₙH₂ₙ",
+          "CₙH₂ₙ₊₁",
+          "CₙH₂ₙ₊₂",
+          "CₙH₂ₙ₋₂"
+        ],
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "1. تعتبر الألكانات مركبات هيدروكربونية غير مشبعة.",
+        "question_type": "true_false",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "2. يحتوي الإيتان على رابطة ثنائية بين ذرتي الكربون.",
+        "question_type": "true_false",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "3. يستخدم البوتان كوقود في المنازل.",
+        "question_type": "true_false",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "سم المركبات الآتية: CH₃ - CH₂ - CH₃ , CH₃ - CH₃",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [],
+    "tables": [
+      {
+        "title": "أكمل الجدول الآتي",
+        "markdown": "| المركب | الصيغة المجملة |\n| :--- | :--- |\n| الميتان | .................... |\n| .................... | C₂H₆ |\n| البروبان | .................... |\n| الهكسان | .................... |"
+      }
+    ],
+    "equations": [],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 53.406240924s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '53s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 727,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 70,
+      "schema_valid": true,
+      "raw_markdown_chars": 727,
+      "char_count": 727,
+      "section_count": 4,
+      "question_count": 6,
+      "table_count": 1,
+      "equation_count": 0,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.669,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 70,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### أختبر نفسي:\\n\\n#### السؤال الأول:\\nاختر الإجابة الصحيحة لكل مما يأتي:\\n1. صيغة الميتان هي:\\na. C₂H₆\\nb. CH₄\\nc. C₃H₈\\nd. CH₃\\n\\n2. الصيغة العامة للألكانات هي:\\na. CₙH₂ₙ\\nb. CₙH₂ₙ₊₁\\nc. CₙH₂ₙ₊₂\\nd. CₙH₂ₙ₋₂\\n\\n#### السؤال الثاني:\\nضع إشارة (✓) أمام العبارة الصحيحة، وإشارة (X) أمام العبارة المغلوط فيها ثم صححها:\\n1. تعتبر الألكانات مركبات هيدروكربونية غير مشبعة.\\n2. يحتوي الإيتان على رابطة ثنائية بين ذرتي الكربون.\\n3. يستخدم البوتان كوقود في المنازل.\\n\\n#### السؤال الثالث:\\nأكمل الجدول الآتي:\\n\\n| المركب | الصيغة المجملة |\\n| :--- | :--- |\\n| الميتان | .................... |\\n| .................... | C₂H₆ |\\n| البروبان | .................... |\\n| الهكسان | .................... |\\n\\n#### السؤال الرابع:\\nسم المركبات الآتية:\\nCH₃ - CH₂ - CH₃ , CH₃ - CH₃\",\n  \"sections\": [\n    {\n      \"heading\": \"أختبر نفسي:\",\n      \"content\": \"السؤال الأول:\\nاختر الإجابة الصحيحة لكل مما يأتي:\\n1. صيغة الميتان هي:\\na. C₂H₆\\nb. CH₄\\nc. C₃H₈\\nd. CH₃\\n\\n2. الصيغة العامة للألكانات هي:\\na. CₙH₂ₙ\\nb. CₙH₂ₙ₊₁\\nc. CₙH₂ₙ₊₂\\nd. CₙH₂ₙ₋₂\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"السؤال الثاني:\",\n      \"content\": \"ضع إشارة (✓) أمام العبارة الصحيحة، وإشارة (X) أمام العبارة المغلوط فيها ثم صححها:\\n1. تعتبر الألكانات مركبات هيدروكربونية غير مشبعة.\\n2. يحتوي الإيتان على رابطة ثنائية بين ذرتي الكربون.\\n3. يستخدم البوتان كوقود في المنازل.\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"السؤال الثالث:\",\n      \"content\": \"أكمل الجدول الآتي:\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"السؤال الرابع:\",\n      \"content\": \"سم المركبات الآتية:\\nCH₃ - CH₂ - CH₃ , CH₃ - CH₃\",\n      \"content_type\": \"exercise\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"1. صيغة الميتان هي:\",\n      \"question_type\": \"multiple_choice\",\n      \"options\": [\n        \"C₂H₆\",\n        \"CH₄\",\n        \"C₃H₈\",\n        \"CH₃\"\n      ],\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"2. الصيغة العامة للألكانات هي:\",\n      \"question_type\": \"multiple_choice\",\n      \"options\": [\n        \"CₙH₂ₙ\",\n        \"CₙH₂ₙ₊₁\",\n        \"CₙH₂ₙ₊₂\",\n        \"CₙH₂ₙ₋₂\"\n      ],\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"1. تعتبر الألكانات مركبات هيدروكربونية غير مشبعة.\",\n      \"question_type\": \"true_false\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"2. يحتوي الإيتان على رابطة ثنائية بين ذرتي الكربون.\",\n      \"question_type\": \"true_false\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"3. يستخدم البوتان كوقود في المنازل.\",\n      \"question_type\": \"true_false\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"سم المركبات الآتية: CH₃ - CH₂ - CH₃ , CH₃ - CH₃\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"tables\": [\n    {\n      \"title\": \"أكمل الجدول الآتي\",\n      \"markdown\": \"| المركب | الصيغة المجملة |\\n| :--- | :--- |\\n| الميتان | .................... |\\n| .................... | C₂H₆ |\\n| البروبان | .................... |\\n| الهكسان | .................... |\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}"
+  },
+  "gemini_image_fallback_content": {
+    "page_number": 70,
+    "detected_language": "ar",
+    "raw_markdown": "### أختبر نفسي:\n\n#### السؤال الأول:\nاختر الإجابة الصحيحة لكل مما يأتي:\n1. صيغة الميتان هي:\na. C₂H₆\nb. CH₄\nc. C₃H₈\nd. CH₃\n\n2. الصيغة العامة للألكانات هي:\na. CₙH₂ₙ\nb. CₙH₂ₙ₊₁\nc. CₙH₂ₙ₊₂\nd. CₙH₂ₙ₋₂\n\n#### السؤال الثاني:\nضع إشارة (✓) أمام العبارة الصحيحة، وإشارة (X) أمام العبارة المغلوط فيها ثم صححها:\n1. تعتبر الألكانات مركبات هيدروكربونية غير مشبعة.\n2. يحتوي الإيتان على رابطة ثنائية بين ذرتي الكربون.\n3. يستخدم البوتان كوقود في المنازل.\n\n#### السؤال الثالث:\nأكمل الجدول الآتي:\n\n| المركب | الصيغة المجملة |\n| :--- | :--- |\n| الميتان | .................... |\n| .................... | C₂H₆ |\n| البروبان | .................... |\n| الهكسان | .................... |\n\n#### السؤال الرابع:\nسم المركبات الآتية:\nCH₃ - CH₂ - CH₃ , CH₃ - CH₃",
+    "sections": [
+      {
+        "heading": "أختبر نفسي:",
+        "content": "السؤال الأول:\nاختر الإجابة الصحيحة لكل مما يأتي:\n1. صيغة الميتان هي:\na. C₂H₆\nb. CH₄\nc. C₃H₈\nd. CH₃\n\n2. الصيغة العامة للألكانات هي:\na. CₙH₂ₙ\nb. CₙH₂ₙ₊₁\nc. CₙH₂ₙ₊₂\nd. CₙH₂ₙ₋₂",
+        "content_type": "exercise"
+      },
+      {
+        "heading": "السؤال الثاني:",
+        "content": "ضع إشارة (✓) أمام العبارة الصحيحة، وإشارة (X) أمام العبارة المغلوط فيها ثم صححها:\n1. تعتبر الألكانات مركبات هيدروكربونية غير مشبعة.\n2. يحتوي الإيتان على رابطة ثنائية بين ذرتي الكربون.\n3. يستخدم البوتان كوقود في المنازل.",
+        "content_type": "exercise"
+      },
+      {
+        "heading": "السؤال الثالث:",
+        "content": "أكمل الجدول الآتي:",
+        "content_type": "exercise"
+      },
+      {
+        "heading": "السؤال الرابع:",
+        "content": "سم المركبات الآتية:\nCH₃ - CH₂ - CH₃ , CH₃ - CH₃",
+        "content_type": "exercise"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "1. صيغة الميتان هي:",
+        "question_type": "multiple_choice",
+        "options": [
+          "C₂H₆",
+          "CH₄",
+          "C₃H₈",
+          "CH₃"
+        ],
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "2. الصيغة العامة للألكانات هي:",
+        "question_type": "multiple_choice",
+        "options": [
+          "CₙH₂ₙ",
+          "CₙH₂ₙ₊₁",
+          "CₙH₂ₙ₊₂",
+          "CₙH₂ₙ₋₂"
+        ],
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "1. تعتبر الألكانات مركبات هيدروكربونية غير مشبعة.",
+        "question_type": "true_false",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "2. يحتوي الإيتان على رابطة ثنائية بين ذرتي الكربون.",
+        "question_type": "true_false",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "3. يستخدم البوتان كوقود في المنازل.",
+        "question_type": "true_false",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "سم المركبات الآتية: CH₃ - CH₂ - CH₃ , CH₃ - CH₃",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [],
+    "tables": [
+      {
+        "title": "أكمل الجدول الآتي",
+        "markdown": "| المركب | الصيغة المجملة |\n| :--- | :--- |\n| الميتان | .................... |\n| .................... | C₂H₆ |\n| البروبان | .................... |\n| الهكسان | .................... |"
+      }
+    ],
+    "equations": [],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 53.406240924s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '53s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 727,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 70,
+      "schema_valid": true,
+      "raw_markdown_chars": 727,
+      "char_count": 727,
+      "section_count": 4,
+      "question_count": 6,
+      "table_count": 1,
+      "equation_count": 0,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.669,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 70,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### أختبر نفسي:\\n\\n#### السؤال الأول:\\nاختر الإجابة الصحيحة لكل مما يأتي:\\n1. صيغة الميتان هي:\\na. C₂H₆\\nb. CH₄\\nc. C₃H₈\\nd. CH₃\\n\\n2. الصيغة العامة للألكانات هي:\\na. CₙH₂ₙ\\nb. CₙH₂ₙ₊₁\\nc. CₙH₂ₙ₊₂\\nd. CₙH₂ₙ₋₂\\n\\n#### السؤال الثاني:\\nضع إشارة (✓) أمام العبارة الصحيحة، وإشارة (X) أمام العبارة المغلوط فيها ثم صححها:\\n1. تعتبر الألكانات مركبات هيدروكربونية غير مشبعة.\\n2. يحتوي الإيتان على رابطة ثنائية بين ذرتي الكربون.\\n3. يستخدم البوتان كوقود في المنازل.\\n\\n#### السؤال الثالث:\\nأكمل الجدول الآتي:\\n\\n| المركب | الصيغة المجملة |\\n| :--- | :--- |\\n| الميتان | .................... |\\n| .................... | C₂H₆ |\\n| البروبان | .................... |\\n| الهكسان | .................... |\\n\\n#### السؤال الرابع:\\nسم المركبات الآتية:\\nCH₃ - CH₂ - CH₃ , CH₃ - CH₃\",\n  \"sections\": [\n    {\n      \"heading\": \"أختبر نفسي:\",\n      \"content\": \"السؤال الأول:\\nاختر الإجابة الصحيحة لكل مما يأتي:\\n1. صيغة الميتان هي:\\na. C₂H₆\\nb. CH₄\\nc. C₃H₈\\nd. CH₃\\n\\n2. الصيغة العامة للألكانات هي:\\na. CₙH₂ₙ\\nb. CₙH₂ₙ₊₁\\nc. CₙH₂ₙ₊₂\\nd. CₙH₂ₙ₋₂\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"السؤال الثاني:\",\n      \"content\": \"ضع إشارة (✓) أمام العبارة الصحيحة، وإشارة (X) أمام العبارة المغلوط فيها ثم صححها:\\n1. تعتبر الألكانات مركبات هيدروكربونية غير مشبعة.\\n2. يحتوي الإيتان على رابطة ثنائية بين ذرتي الكربون.\\n3. يستخدم البوتان كوقود في المنازل.\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"السؤال الثالث:\",\n      \"content\": \"أكمل الجدول الآتي:\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"السؤال الرابع:\",\n      \"content\": \"سم المركبات الآتية:\\nCH₃ - CH₂ - CH₃ , CH₃ - CH₃\",\n      \"content_type\": \"exercise\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"1. صيغة الميتان هي:\",\n      \"question_type\": \"multiple_choice\",\n      \"options\": [\n        \"C₂H₆\",\n        \"CH₄\",\n        \"C₃H₈\",\n        \"CH₃\"\n      ],\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"2. الصيغة العامة للألكانات هي:\",\n      \"question_type\": \"multiple_choice\",\n      \"options\": [\n        \"CₙH₂ₙ\",\n        \"CₙH₂ₙ₊₁\",\n        \"CₙH₂ₙ₊₂\",\n        \"CₙH₂ₙ₋₂\"\n      ],\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"1. تعتبر الألكانات مركبات هيدروكربونية غير مشبعة.\",\n      \"question_type\": \"true_false\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"2. يحتوي الإيتان على رابطة ثنائية بين ذرتي الكربون.\",\n      \"question_type\": \"true_false\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"3. يستخدم البوتان كوقود في المنازل.\",\n      \"question_type\": \"true_false\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"سم المركبات الآتية: CH₃ - CH₂ - CH₃ , CH₃ - CH₃\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"tables\": [\n    {\n      \"title\": \"أكمل الجدول الآتي\",\n      \"markdown\": \"| المركب | الصيغة المجملة |\\n| :--- | :--- |\\n| الميتان | .................... |\\n| .................... | C₂H₆ |\\n| البروبان | .................... |\\n| الهكسان | .................... |\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}"
+  },
+  "merged_content": "أختبر نفسي:\nالسؤال الأول:\nاختر الإجابة الصحيحة لكل مما يأتي:\n1. صيغة الميتان هي:\na. C₂H₆\nb. CH₄\nc. C₃H₈\nd. CH₃\n\n2. الصيغة العامة للألكانات هي:\na. CₙH₂ₙ\nb. CₙH₂ₙ₊₁\nc. CₙH₂ₙ₊₂\nd. CₙH₂ₙ₋₂\n\nالسؤال الثاني:\nضع إشارة (✓) أمام العبارة الصحيحة، وإشارة (X) أمام العبارة المغلوط فيها ثم صححها:\n1. تعتبر الألكانات مركبات هيدروكربونية غير مشبعة.\n2. يحتوي الإيتان على رابطة ثنائية بين ذرتي الكربون.\n3. يستخدم البوتان كوقود في المنازل.\n\nالسؤال الثالث:\nأكمل الجدول الآتي:\n\nالسؤال الرابع:\nسم المركبات الآتية:\nCH₃ - CH₂ - CH₃ , CH₃ - CH₃",
+  "raw_markdown": "### أختبر نفسي:\n\n#### السؤال الأول:\nاختر الإجابة الصحيحة لكل مما يأتي:\n1. صيغة الميتان هي:\na. C₂H₆\nb. CH₄\nc. C₃H₈\nd. CH₃\n\n2. الصيغة العامة للألكانات هي:\na. CₙH₂ₙ\nb. CₙH₂ₙ₊₁\nc. CₙH₂ₙ₊₂\nd. CₙH₂ₙ₋₂\n\n#### السؤال الثاني:\nضع إشارة (✓) أمام العبارة الصحيحة، وإشارة (X) أمام العبارة المغلوط فيها ثم صححها:\n1. تعتبر الألكانات مركبات هيدروكربونية غير مشبعة.\n2. يحتوي الإيتان على رابطة ثنائية بين ذرتي الكربون.\n3. يستخدم البوتان كوقود في المنازل.\n\n#### السؤال الثالث:\nأكمل الجدول الآتي:\n\n| المركب | الصيغة المجملة |\n| :--- | :--- |\n| الميتان | .................... |\n| .................... | C₂H₆ |\n| البروبان | .................... |\n| الهكسان | .................... |\n\n#### السؤال الرابع:\nسم المركبات الآتية:\nCH₃ - CH₂ - CH₃ , CH₃ - CH₃",
+  "sections": [
+    {
+      "heading": "أختبر نفسي:",
+      "content": "السؤال الأول:\nاختر الإجابة الصحيحة لكل مما يأتي:\n1. صيغة الميتان هي:\na. C₂H₆\nb. CH₄\nc. C₃H₈\nd. CH₃\n\n2. الصيغة العامة للألكانات هي:\na. CₙH₂ₙ\nb. CₙH₂ₙ₊₁\nc. CₙH₂ₙ₊₂\nd. CₙH₂ₙ₋₂",
+      "content_type": "exercise"
+    },
+    {
+      "heading": "السؤال الثاني:",
+      "content": "ضع إشارة (✓) أمام العبارة الصحيحة، وإشارة (X) أمام العبارة المغلوط فيها ثم صححها:\n1. تعتبر الألكانات مركبات هيدروكربونية غير مشبعة.\n2. يحتوي الإيتان على رابطة ثنائية بين ذرتي الكربون.\n3. يستخدم البوتان كوقود في المنازل.",
+      "content_type": "exercise"
+    },
+    {
+      "heading": "السؤال الثالث:",
+      "content": "أكمل الجدول الآتي:",
+      "content_type": "exercise"
+    },
+    {
+      "heading": "السؤال الرابع:",
+      "content": "سم المركبات الآتية:\nCH₃ - CH₂ - CH₃ , CH₃ - CH₃",
+      "content_type": "exercise"
+    }
   ],
-  "char_count": 0,
-  "completeness_score": 0.0,
+  "questions": [
+    {
+      "question_text": "1. صيغة الميتان هي:",
+      "question_type": "multiple_choice",
+      "options": [
+        "C₂H₆",
+        "CH₄",
+        "C₃H₈",
+        "CH₃"
+      ],
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "2. الصيغة العامة للألكانات هي:",
+      "question_type": "multiple_choice",
+      "options": [
+        "CₙH₂ₙ",
+        "CₙH₂ₙ₊₁",
+        "CₙH₂ₙ₊₂",
+        "CₙH₂ₙ₋₂"
+      ],
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "1. تعتبر الألكانات مركبات هيدروكربونية غير مشبعة.",
+      "question_type": "true_false",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "2. يحتوي الإيتان على رابطة ثنائية بين ذرتي الكربون.",
+      "question_type": "true_false",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "3. يستخدم البوتان كوقود في المنازل.",
+      "question_type": "true_false",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "سم المركبات الآتية: CH₃ - CH₂ - CH₃ , CH₃ - CH₃",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    }
+  ],
+  "diagrams": [],
+  "tables": [
+    {
+      "title": "أكمل الجدول الآتي",
+      "markdown": "| المركب | الصيغة المجملة |\n| :--- | :--- |\n| الميتان | .................... |\n| .................... | C₂H₆ |\n| البروبان | .................... |\n| الهكسان | .................... |"
+    }
+  ],
+  "equations": [],
+  "warnings": [
+    "Gemini PDF extraction failed; using 300 DPI image fallback: Gemini document extraction failed for page 70 with model gemini-3.1-flash-lite: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'Request contains an invalid argument.', 'status': 'INVALID_ARGUMENT'}}",
+    "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 53.406240924s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '53s'}]}}."
+  ],
+  "errors": [],
+  "char_count": 519,
+  "completeness_score": 1.0,
   "detected_language": "ar",
-  "vision_provider": null,
-  "vision_source": null,
-  "neighboring_pages": [],
-  "uploaded_pdf": null,
-  "raw_text": null,
-  "quality_report": {},
+  "vision_provider": "gemini_document_image",
+  "vision_source": "gemini_rendered_image_300dpi",
+  "neighboring_pages": [
+    69,
+    71
+  ],
+  "uploaded_pdf": {
+    "provider": "gemini_document",
+    "name": "files/6zs99grhoqr2",
+    "uri": "https://generativelanguage.googleapis.com/v1beta/files/6zs99grhoqr2",
+    "mime_type": "application/pdf",
+    "display_name": "Chemistry.pdf"
+  },
+  "raw_text": "{\n  \"page_number\": 70,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### أختبر نفسي:\\n\\n#### السؤال الأول:\\nاختر الإجابة الصحيحة لكل مما يأتي:\\n1. صيغة الميتان هي:\\na. C₂H₆\\nb. CH₄\\nc. C₃H₈\\nd. CH₃\\n\\n2. الصيغة العامة للألكانات هي:\\na. CₙH₂ₙ\\nb. CₙH₂ₙ₊₁\\nc. CₙH₂ₙ₊₂\\nd. CₙH₂ₙ₋₂\\n\\n#### السؤال الثاني:\\nضع إشارة (✓) أمام العبارة الصحيحة، وإشارة (X) أمام العبارة المغلوط فيها ثم صححها:\\n1. تعتبر الألكانات مركبات هيدروكربونية غير مشبعة.\\n2. يحتوي الإيتان على رابطة ثنائية بين ذرتي الكربون.\\n3. يستخدم البوتان كوقود في المنازل.\\n\\n#### السؤال الثالث:\\nأكمل الجدول الآتي:\\n\\n| المركب | الصيغة المجملة |\\n| :--- | :--- |\\n| الميتان | .................... |\\n| .................... | C₂H₆ |\\n| البروبان | .................... |\\n| الهكسان | .................... |\\n\\n#### السؤال الرابع:\\nسم المركبات الآتية:\\nCH₃ - CH₂ - CH₃ , CH₃ - CH₃\",\n  \"sections\": [\n    {\n      \"heading\": \"أختبر نفسي:\",\n      \"content\": \"السؤال الأول:\\nاختر الإجابة الصحيحة لكل مما يأتي:\\n1. صيغة الميتان هي:\\na. C₂H₆\\nb. CH₄\\nc. C₃H₈\\nd. CH₃\\n\\n2. الصيغة العامة للألكانات هي:\\na. CₙH₂ₙ\\nb. CₙH₂ₙ₊₁\\nc. CₙH₂ₙ₊₂\\nd. CₙH₂ₙ₋₂\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"السؤال الثاني:\",\n      \"content\": \"ضع إشارة (✓) أمام العبارة الصحيحة، وإشارة (X) أمام العبارة المغلوط فيها ثم صححها:\\n1. تعتبر الألكانات مركبات هيدروكربونية غير مشبعة.\\n2. يحتوي الإيتان على رابطة ثنائية بين ذرتي الكربون.\\n3. يستخدم البوتان كوقود في المنازل.\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"السؤال الثالث:\",\n      \"content\": \"أكمل الجدول الآتي:\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"السؤال الرابع:\",\n      \"content\": \"سم المركبات الآتية:\\nCH₃ - CH₂ - CH₃ , CH₃ - CH₃\",\n      \"content_type\": \"exercise\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"1. صيغة الميتان هي:\",\n      \"question_type\": \"multiple_choice\",\n      \"options\": [\n        \"C₂H₆\",\n        \"CH₄\",\n        \"C₃H₈\",\n        \"CH₃\"\n      ],\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"2. الصيغة العامة للألكانات هي:\",\n      \"question_type\": \"multiple_choice\",\n      \"options\": [\n        \"CₙH₂ₙ\",\n        \"CₙH₂ₙ₊₁\",\n        \"CₙH₂ₙ₊₂\",\n        \"CₙH₂ₙ₋₂\"\n      ],\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"1. تعتبر الألكانات مركبات هيدروكربونية غير مشبعة.\",\n      \"question_type\": \"true_false\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"2. يحتوي الإيتان على رابطة ثنائية بين ذرتي الكربون.\",\n      \"question_type\": \"true_false\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"3. يستخدم البوتان كوقود في المنازل.\",\n      \"question_type\": \"true_false\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"سم المركبات الآتية: CH₃ - CH₂ - CH₃ , CH₃ - CH₃\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"tables\": [\n    {\n      \"title\": \"أكمل الجدول الآتي\",\n      \"markdown\": \"| المركب | الصيغة المجملة |\\n| :--- | :--- |\\n| الميتان | .................... |\\n| .................... | C₂H₆ |\\n| البروبان | .................... |\\n| الهكسان | .................... |\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}",
+  "quality_report": {
+    "page_number": 70,
+    "schema_valid": true,
+    "raw_markdown_chars": 727,
+    "char_count": 727,
+    "section_count": 4,
+    "question_count": 6,
+    "table_count": 1,
+    "equation_count": 0,
+    "diagram_count": 0,
+    "warning_count": 0,
+    "arabic_char_ratio": 0.669,
+    "completeness_score": 1.0,
+    "issues": [],
+    "should_fallback": false
+  },
   "classification": "NEEDS_VISION",
   "source_id": 1
 }

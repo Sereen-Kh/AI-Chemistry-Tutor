@@ -2,35 +2,517 @@
   "page_number": 52,
   "page_type": "MIXED_VISION",
   "extraction_methods": [
-    "exception"
+    "pymupdf",
+    "pdfplumber",
+    "gemini_pdf_file",
+    "gemini_image_300dpi"
   ],
-  "extraction_method": "exception",
-  "status": "failed",
-  "text_layer_content": "",
-  "vision_content": {},
+  "extraction_method": "pymupdf+pdfplumber+gemini_pdf_file+gemini_image_300dpi",
+  "status": "completed_with_image_fallback",
+  "text_layer_content": ":السّ ؤال الثَّالث\nاكتب المعادلة األيونيَّة ثمّ استنتج منها المعادلة المختصرة لكلٍّ ممّا يأتي:\nHCl\nNaOH\nNaCl\nH O\n2Al\n6HCl\n2AlCl\n3H\nCuO\n2HCl\nCuCl\nH O\nNaCl\nAgNO\nNaNO\nAgCl\nFe\nCuSO\nFeSO\nCu\n(aq)\n(aq)\n(aq)\n2\n(l)\n(s)\n(aq)\n3(aq)\n(s)\n(aq)\n2(aq)\n2\n(l)\n(aq)\n3(aq)\n3(aq)\n(s)\n(s)\n4(aq)\n4(aq)\n(s)\n$\n$\n$\n$\n$\n+\n+\n+\n+\n+\n+\n+\n+\n+\n+\n2(g)\n:السّ ؤال الرابع\nصنّف المركَّبات اآلتية وفق الجدول:\nKl\nHCl\n, NaOH\n, NaCl\n,\n, Na O\n, NH OH\n, Ba(NO )\n, NO\nCaO\n, CH COOH\n, SO\n(aq)\n(aq)\n(aq)\n(aq)\n2\n(s)\n4\n(aq)\n3 2(aq)\n2(g)\n(s)\n3\n(aq)\n2(g)\nملح\nاساس\nحمض\nأكسيد ال معدن\nأكسيد معدن\nضعيف\nقوي\nضعيف\nقوي\n:السّ ؤال الخامس\nأكمل الجدول اآلتي:\nعدد الوظائف\nنوع الوظيفة\nالصيغة األيونيّة\nالصيغة الجزيئيّة\nCH COOH\n3\nNH OH\n4\nH SO\n2\n4\nCa(OH)2\n:السّ ؤال السادس\nحل المسائل اآلتية:\nالمسألة األولى:\n. والمطلوب حساب:0.2 mol.L 1\n-  محلول لحمض الكبريت تركيزه\n158\n\n| حلم | ساسا |  | ضمح |  | ندعم لا ديسكأ | ندعم ديسكأ |\n| --- | --- | --- | --- | --- | --- | --- |\n|  | فيعض | يوق | فيعض | يوق |  |  |\n|  |  |  |  |  |  |  |\n\n| فئاظولا ددع | ةفيظولا عون | ةيّنويلأا ةغيصلا | ةيّئيزجلا ةغيصلا |\n| --- | --- | --- | --- |\n|  |  |  | CH COOH\n3 |\n|  |  |  | NH OH\n4 |\n|  |  |  | H SO\n2 4 |\n|  |  |  | Ca(OH)\n2 |",
+  "vision_content": {
+    "page_number": 52,
+    "detected_language": "ar",
+    "raw_markdown": "السؤال الثالث:\nاكتب المعادلة الأيونية ثم استنتج منها المعادلة المختصرة لكل مما يأتي:\nHCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l)\n2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g)\nCuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\nNaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s)\nFe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)\n\nالسؤال الرابع:\nصنف المركبات الآتية وفق الجدول:\nHCl(aq), NaOH(aq), NaCl(aq), Kl(aq), Na2O(s), NH4OH(aq), Ba(NO3)2(aq), NO2(g), CaO(s), CH3COOH(aq), SO2(g)\n\n| أكسيد معدن | أكسيد لا معدن | حمض قوي | حمض ضعيف | أساس قوي | أساس ضعيف | ملح |\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n| | | | | | | |\n\nالسؤال الخامس:\nأكمل الجدول الآتي:\n\n| الصيغة الجزيئية | الصيغة الأيونية | نوع الوظيفة | عدد الوظائف |\n| :--- | :--- | :--- | :--- |\n| CH3COOH | | | |\n| NH4OH | | | |\n| H2SO4 | | | |\n| Ca(OH)2 | | | |\n\nالسؤال السادس:\nحل المسائل الآتية:\nالمسألة الأولى:\nمحلول لحمض الكبريت تركيزه 0.2 mol.L⁻¹. والمطلوب حساب:",
+    "sections": [
+      {
+        "heading": "السؤال الثالث",
+        "content": "اكتب المعادلة الأيونية ثم استنتج منها المعادلة المختصرة لكل مما يأتي:\nHCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l)\n2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g)\nCuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\nNaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s)\nFe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)",
+        "content_type": "exercise"
+      },
+      {
+        "heading": "السؤال الرابع",
+        "content": "صنف المركبات الآتية وفق الجدول:\nHCl(aq), NaOH(aq), NaCl(aq), Kl(aq), Na2O(s), NH4OH(aq), Ba(NO3)2(aq), NO2(g), CaO(s), CH3COOH(aq), SO2(g)",
+        "content_type": "exercise"
+      },
+      {
+        "heading": null,
+        "content": "| أكسيد معدن | أكسيد لا معدن | حمض قوي | حمض ضعيف | أساس قوي | أساس ضعيف | ملح |\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n| | | | | | | |",
+        "content_type": "table"
+      },
+      {
+        "heading": "السؤال الخامس",
+        "content": "أكمل الجدول الآتي:",
+        "content_type": "exercise"
+      },
+      {
+        "heading": null,
+        "content": "| الصيغة الجزيئية | الصيغة الأيونية | نوع الوظيفة | عدد الوظائف |\n| :--- | :--- | :--- | :--- |\n| CH3COOH | | | |\n| NH4OH | | | |\n| H2SO4 | | | |\n| Ca(OH)2 | | | |",
+        "content_type": "table"
+      },
+      {
+        "heading": "السؤال السادس",
+        "content": "حل المسائل الآتية:\nالمسألة الأولى:\nمحلول لحمض الكبريت تركيزه 0.2 mol.L⁻¹. والمطلوب حساب:",
+        "content_type": "exercise"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "اكتب المعادلة الأيونية ثم استنتج منها المعادلة المختصرة لكل مما يأتي: HCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l), 2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g), CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l), NaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s), Fe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "صنف المركبات الآتية وفق الجدول: HCl(aq), NaOH(aq), NaCl(aq), Kl(aq), Na2O(s), NH4OH(aq), Ba(NO3)2(aq), NO2(g), CaO(s), CH3COOH(aq), SO2(g)",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أكمل الجدول الآتي: الصيغة الجزيئية (CH3COOH, NH4OH, H2SO4, Ca(OH)2)",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [],
+    "tables": [
+      {
+        "title": null,
+        "markdown": "| أكسيد معدن | أكسيد لا معدن | حمض قوي | حمض ضعيف | أساس قوي | أساس ضعيف | ملح |\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n| | | | | | | |"
+      },
+      {
+        "title": null,
+        "markdown": "| الصيغة الجزيئية | الصيغة الأيونية | نوع الوظيفة | عدد الوظائف |\n| :--- | :--- | :--- | :--- |\n| CH3COOH | | | |\n| NH4OH | | | |\n| H2SO4 | | | |\n| Ca(OH)2 | | | |"
+      }
+    ],
+    "equations": [
+      {
+        "equation": "HCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l)",
+        "description": null
+      },
+      {
+        "equation": "2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g)",
+        "description": null
+      },
+      {
+        "equation": "CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)",
+        "description": null
+      },
+      {
+        "equation": "NaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s)",
+        "description": null
+      },
+      {
+        "equation": "Fe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)",
+        "description": null
+      }
+    ],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 47.617815054s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '47s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 1250,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 52,
+      "schema_valid": true,
+      "raw_markdown_chars": 892,
+      "char_count": 1250,
+      "section_count": 6,
+      "question_count": 3,
+      "table_count": 2,
+      "equation_count": 5,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.4456,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 52,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"السؤال الثالث:\\nاكتب المعادلة الأيونية ثم استنتج منها المعادلة المختصرة لكل مما يأتي:\\nHCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l)\\n2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g)\\nCuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\\nNaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s)\\nFe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)\\n\\nالسؤال الرابع:\\nصنف المركبات الآتية وفق الجدول:\\nHCl(aq), NaOH(aq), NaCl(aq), Kl(aq), Na2O(s), NH4OH(aq), Ba(NO3)2(aq), NO2(g), CaO(s), CH3COOH(aq), SO2(g)\\n\\n| أكسيد معدن | أكسيد لا معدن | حمض قوي | حمض ضعيف | أساس قوي | أساس ضعيف | ملح |\\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\\n| | | | | | | |\\n\\nالسؤال الخامس:\\nأكمل الجدول الآتي:\\n\\n| الصيغة الجزيئية | الصيغة الأيونية | نوع الوظيفة | عدد الوظائف |\\n| :--- | :--- | :--- | :--- |\\n| CH3COOH | | | |\\n| NH4OH | | | |\\n| H2SO4 | | | |\\n| Ca(OH)2 | | | |\\n\\nالسؤال السادس:\\nحل المسائل الآتية:\\nالمسألة الأولى:\\nمحلول لحمض الكبريت تركيزه 0.2 mol.L⁻¹. والمطلوب حساب:\",\n  \"sections\": [\n    {\n      \"heading\": \"السؤال الثالث\",\n      \"content\": \"اكتب المعادلة الأيونية ثم استنتج منها المعادلة المختصرة لكل مما يأتي:\\nHCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l)\\n2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g)\\nCuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\\nNaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s)\\nFe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"السؤال الرابع\",\n      \"content\": \"صنف المركبات الآتية وفق الجدول:\\nHCl(aq), NaOH(aq), NaCl(aq), Kl(aq), Na2O(s), NH4OH(aq), Ba(NO3)2(aq), NO2(g), CaO(s), CH3COOH(aq), SO2(g)\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"content\": \"| أكسيد معدن | أكسيد لا معدن | حمض قوي | حمض ضعيف | أساس قوي | أساس ضعيف | ملح |\\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\\n| | | | | | | |\",\n      \"content_type\": \"table\"\n    },\n    {\n      \"heading\": \"السؤال الخامس\",\n      \"content\": \"أكمل الجدول الآتي:\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"content\": \"| الصيغة الجزيئية | الصيغة الأيونية | نوع الوظيفة | عدد الوظائف |\\n| :--- | :--- | :--- | :--- |\\n| CH3COOH | | | |\\n| NH4OH | | | |\\n| H2SO4 | | | |\\n| Ca(OH)2 | | | |\",\n      \"content_type\": \"table\"\n    },\n    {\n      \"heading\": \"السؤال السادس\",\n      \"content\": \"حل المسائل الآتية:\\nالمسألة الأولى:\\nمحلول لحمض الكبريت تركيزه 0.2 mol.L⁻¹. والمطلوب حساب:\",\n      \"content_type\": \"exercise\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"اكتب المعادلة الأيونية ثم استنتج منها المعادلة المختصرة لكل مما يأتي: HCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l), 2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g), CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l), NaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s), Fe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"صنف المركبات الآتية وفق الجدول: HCl(aq), NaOH(aq), NaCl(aq), Kl(aq), Na2O(s), NH4OH(aq), Ba(NO3)2(aq), NO2(g), CaO(s), CH3COOH(aq), SO2(g)\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أكمل الجدول الآتي: الصيغة الجزيئية (CH3COOH, NH4OH, H2SO4, Ca(OH)2)\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"tables\": [\n    {\n      \"markdown\": \"| أكسيد معدن | أكسيد لا معدن | حمض قوي | حمض ضعيف | أساس قوي | أساس ضعيف | ملح |\\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\\n| | | | | | | |\"\n    },\n    {\n      \"markdown\": \"| الصيغة الجزيئية | الصيغة الأيونية | نوع الوظيفة | عدد الوظائف |\\n| :--- | :--- | :--- | :--- |\\n| CH3COOH | | | |\\n| NH4OH | | | |\\n| H2SO4 | | | |\\n| Ca(OH)2 | | | |\"\n    }\n  ],\n  \"equations\": [\n    {\n      \"equation\": \"HCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l)\"\n    },\n    {\n      \"equation\": \"2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g)\"\n    },\n    {\n      \"equation\": \"CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\"\n    },\n    {\n      \"equation\": \"NaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s)\"\n    },\n    {\n      \"equation\": \"Fe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true,\n  \"char_count\": 1250,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 52,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 1250,\n    \"char_count\": 1250,\n    \"section_count\": 6,\n    \"question_count\": 3,\n    \"table_count\": 2,\n    \"equation_count\": 5,\n    \"diagram_count\": 0,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.65,\n    \"completeness_score\": 1.0,\n    \"should_fallback\": false\n  }\n}"
+  },
   "gemini_pdf_content": {},
-  "gemini_fallback_model_content": {},
-  "gemini_image_fallback_content": {},
-  "merged_content": "",
-  "raw_markdown": "",
-  "sections": [],
-  "questions": [],
-  "diagrams": [],
-  "tables": [],
-  "equations": [],
-  "warnings": [],
-  "errors": [
-    "Gemini document extraction failed quality checks for page 52: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 44.151480952s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '44s'}]}}"
+  "gemini_fallback_model_content": {
+    "page_number": 52,
+    "detected_language": "ar",
+    "raw_markdown": "السؤال الثالث:\nاكتب المعادلة الأيونية ثم استنتج منها المعادلة المختصرة لكل مما يأتي:\nHCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l)\n2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g)\nCuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\nNaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s)\nFe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)\n\nالسؤال الرابع:\nصنف المركبات الآتية وفق الجدول:\nHCl(aq), NaOH(aq), NaCl(aq), Kl(aq), Na2O(s), NH4OH(aq), Ba(NO3)2(aq), NO2(g), CaO(s), CH3COOH(aq), SO2(g)\n\n| أكسيد معدن | أكسيد لا معدن | حمض قوي | حمض ضعيف | أساس قوي | أساس ضعيف | ملح |\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n| | | | | | | |\n\nالسؤال الخامس:\nأكمل الجدول الآتي:\n\n| الصيغة الجزيئية | الصيغة الأيونية | نوع الوظيفة | عدد الوظائف |\n| :--- | :--- | :--- | :--- |\n| CH3COOH | | | |\n| NH4OH | | | |\n| H2SO4 | | | |\n| Ca(OH)2 | | | |\n\nالسؤال السادس:\nحل المسائل الآتية:\nالمسألة الأولى:\nمحلول لحمض الكبريت تركيزه 0.2 mol.L⁻¹. والمطلوب حساب:",
+    "sections": [
+      {
+        "heading": "السؤال الثالث",
+        "content": "اكتب المعادلة الأيونية ثم استنتج منها المعادلة المختصرة لكل مما يأتي:\nHCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l)\n2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g)\nCuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\nNaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s)\nFe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)",
+        "content_type": "exercise"
+      },
+      {
+        "heading": "السؤال الرابع",
+        "content": "صنف المركبات الآتية وفق الجدول:\nHCl(aq), NaOH(aq), NaCl(aq), Kl(aq), Na2O(s), NH4OH(aq), Ba(NO3)2(aq), NO2(g), CaO(s), CH3COOH(aq), SO2(g)",
+        "content_type": "exercise"
+      },
+      {
+        "heading": null,
+        "content": "| أكسيد معدن | أكسيد لا معدن | حمض قوي | حمض ضعيف | أساس قوي | أساس ضعيف | ملح |\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n| | | | | | | |",
+        "content_type": "table"
+      },
+      {
+        "heading": "السؤال الخامس",
+        "content": "أكمل الجدول الآتي:",
+        "content_type": "exercise"
+      },
+      {
+        "heading": null,
+        "content": "| الصيغة الجزيئية | الصيغة الأيونية | نوع الوظيفة | عدد الوظائف |\n| :--- | :--- | :--- | :--- |\n| CH3COOH | | | |\n| NH4OH | | | |\n| H2SO4 | | | |\n| Ca(OH)2 | | | |",
+        "content_type": "table"
+      },
+      {
+        "heading": "السؤال السادس",
+        "content": "حل المسائل الآتية:\nالمسألة الأولى:\nمحلول لحمض الكبريت تركيزه 0.2 mol.L⁻¹. والمطلوب حساب:",
+        "content_type": "exercise"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "اكتب المعادلة الأيونية ثم استنتج منها المعادلة المختصرة لكل مما يأتي: HCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l), 2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g), CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l), NaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s), Fe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "صنف المركبات الآتية وفق الجدول: HCl(aq), NaOH(aq), NaCl(aq), Kl(aq), Na2O(s), NH4OH(aq), Ba(NO3)2(aq), NO2(g), CaO(s), CH3COOH(aq), SO2(g)",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أكمل الجدول الآتي: الصيغة الجزيئية (CH3COOH, NH4OH, H2SO4, Ca(OH)2)",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [],
+    "tables": [
+      {
+        "title": null,
+        "markdown": "| أكسيد معدن | أكسيد لا معدن | حمض قوي | حمض ضعيف | أساس قوي | أساس ضعيف | ملح |\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n| | | | | | | |"
+      },
+      {
+        "title": null,
+        "markdown": "| الصيغة الجزيئية | الصيغة الأيونية | نوع الوظيفة | عدد الوظائف |\n| :--- | :--- | :--- | :--- |\n| CH3COOH | | | |\n| NH4OH | | | |\n| H2SO4 | | | |\n| Ca(OH)2 | | | |"
+      }
+    ],
+    "equations": [
+      {
+        "equation": "HCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l)",
+        "description": null
+      },
+      {
+        "equation": "2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g)",
+        "description": null
+      },
+      {
+        "equation": "CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)",
+        "description": null
+      },
+      {
+        "equation": "NaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s)",
+        "description": null
+      },
+      {
+        "equation": "Fe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)",
+        "description": null
+      }
+    ],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 47.617815054s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '47s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 1250,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 52,
+      "schema_valid": true,
+      "raw_markdown_chars": 892,
+      "char_count": 1250,
+      "section_count": 6,
+      "question_count": 3,
+      "table_count": 2,
+      "equation_count": 5,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.4456,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 52,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"السؤال الثالث:\\nاكتب المعادلة الأيونية ثم استنتج منها المعادلة المختصرة لكل مما يأتي:\\nHCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l)\\n2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g)\\nCuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\\nNaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s)\\nFe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)\\n\\nالسؤال الرابع:\\nصنف المركبات الآتية وفق الجدول:\\nHCl(aq), NaOH(aq), NaCl(aq), Kl(aq), Na2O(s), NH4OH(aq), Ba(NO3)2(aq), NO2(g), CaO(s), CH3COOH(aq), SO2(g)\\n\\n| أكسيد معدن | أكسيد لا معدن | حمض قوي | حمض ضعيف | أساس قوي | أساس ضعيف | ملح |\\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\\n| | | | | | | |\\n\\nالسؤال الخامس:\\nأكمل الجدول الآتي:\\n\\n| الصيغة الجزيئية | الصيغة الأيونية | نوع الوظيفة | عدد الوظائف |\\n| :--- | :--- | :--- | :--- |\\n| CH3COOH | | | |\\n| NH4OH | | | |\\n| H2SO4 | | | |\\n| Ca(OH)2 | | | |\\n\\nالسؤال السادس:\\nحل المسائل الآتية:\\nالمسألة الأولى:\\nمحلول لحمض الكبريت تركيزه 0.2 mol.L⁻¹. والمطلوب حساب:\",\n  \"sections\": [\n    {\n      \"heading\": \"السؤال الثالث\",\n      \"content\": \"اكتب المعادلة الأيونية ثم استنتج منها المعادلة المختصرة لكل مما يأتي:\\nHCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l)\\n2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g)\\nCuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\\nNaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s)\\nFe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"السؤال الرابع\",\n      \"content\": \"صنف المركبات الآتية وفق الجدول:\\nHCl(aq), NaOH(aq), NaCl(aq), Kl(aq), Na2O(s), NH4OH(aq), Ba(NO3)2(aq), NO2(g), CaO(s), CH3COOH(aq), SO2(g)\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"content\": \"| أكسيد معدن | أكسيد لا معدن | حمض قوي | حمض ضعيف | أساس قوي | أساس ضعيف | ملح |\\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\\n| | | | | | | |\",\n      \"content_type\": \"table\"\n    },\n    {\n      \"heading\": \"السؤال الخامس\",\n      \"content\": \"أكمل الجدول الآتي:\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"content\": \"| الصيغة الجزيئية | الصيغة الأيونية | نوع الوظيفة | عدد الوظائف |\\n| :--- | :--- | :--- | :--- |\\n| CH3COOH | | | |\\n| NH4OH | | | |\\n| H2SO4 | | | |\\n| Ca(OH)2 | | | |\",\n      \"content_type\": \"table\"\n    },\n    {\n      \"heading\": \"السؤال السادس\",\n      \"content\": \"حل المسائل الآتية:\\nالمسألة الأولى:\\nمحلول لحمض الكبريت تركيزه 0.2 mol.L⁻¹. والمطلوب حساب:\",\n      \"content_type\": \"exercise\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"اكتب المعادلة الأيونية ثم استنتج منها المعادلة المختصرة لكل مما يأتي: HCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l), 2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g), CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l), NaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s), Fe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"صنف المركبات الآتية وفق الجدول: HCl(aq), NaOH(aq), NaCl(aq), Kl(aq), Na2O(s), NH4OH(aq), Ba(NO3)2(aq), NO2(g), CaO(s), CH3COOH(aq), SO2(g)\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أكمل الجدول الآتي: الصيغة الجزيئية (CH3COOH, NH4OH, H2SO4, Ca(OH)2)\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"tables\": [\n    {\n      \"markdown\": \"| أكسيد معدن | أكسيد لا معدن | حمض قوي | حمض ضعيف | أساس قوي | أساس ضعيف | ملح |\\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\\n| | | | | | | |\"\n    },\n    {\n      \"markdown\": \"| الصيغة الجزيئية | الصيغة الأيونية | نوع الوظيفة | عدد الوظائف |\\n| :--- | :--- | :--- | :--- |\\n| CH3COOH | | | |\\n| NH4OH | | | |\\n| H2SO4 | | | |\\n| Ca(OH)2 | | | |\"\n    }\n  ],\n  \"equations\": [\n    {\n      \"equation\": \"HCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l)\"\n    },\n    {\n      \"equation\": \"2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g)\"\n    },\n    {\n      \"equation\": \"CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\"\n    },\n    {\n      \"equation\": \"NaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s)\"\n    },\n    {\n      \"equation\": \"Fe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true,\n  \"char_count\": 1250,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 52,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 1250,\n    \"char_count\": 1250,\n    \"section_count\": 6,\n    \"question_count\": 3,\n    \"table_count\": 2,\n    \"equation_count\": 5,\n    \"diagram_count\": 0,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.65,\n    \"completeness_score\": 1.0,\n    \"should_fallback\": false\n  }\n}"
+  },
+  "gemini_image_fallback_content": {
+    "page_number": 52,
+    "detected_language": "ar",
+    "raw_markdown": "السؤال الثالث:\nاكتب المعادلة الأيونية ثم استنتج منها المعادلة المختصرة لكل مما يأتي:\nHCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l)\n2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g)\nCuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\nNaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s)\nFe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)\n\nالسؤال الرابع:\nصنف المركبات الآتية وفق الجدول:\nHCl(aq), NaOH(aq), NaCl(aq), Kl(aq), Na2O(s), NH4OH(aq), Ba(NO3)2(aq), NO2(g), CaO(s), CH3COOH(aq), SO2(g)\n\n| أكسيد معدن | أكسيد لا معدن | حمض قوي | حمض ضعيف | أساس قوي | أساس ضعيف | ملح |\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n| | | | | | | |\n\nالسؤال الخامس:\nأكمل الجدول الآتي:\n\n| الصيغة الجزيئية | الصيغة الأيونية | نوع الوظيفة | عدد الوظائف |\n| :--- | :--- | :--- | :--- |\n| CH3COOH | | | |\n| NH4OH | | | |\n| H2SO4 | | | |\n| Ca(OH)2 | | | |\n\nالسؤال السادس:\nحل المسائل الآتية:\nالمسألة الأولى:\nمحلول لحمض الكبريت تركيزه 0.2 mol.L⁻¹. والمطلوب حساب:",
+    "sections": [
+      {
+        "heading": "السؤال الثالث",
+        "content": "اكتب المعادلة الأيونية ثم استنتج منها المعادلة المختصرة لكل مما يأتي:\nHCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l)\n2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g)\nCuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\nNaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s)\nFe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)",
+        "content_type": "exercise"
+      },
+      {
+        "heading": "السؤال الرابع",
+        "content": "صنف المركبات الآتية وفق الجدول:\nHCl(aq), NaOH(aq), NaCl(aq), Kl(aq), Na2O(s), NH4OH(aq), Ba(NO3)2(aq), NO2(g), CaO(s), CH3COOH(aq), SO2(g)",
+        "content_type": "exercise"
+      },
+      {
+        "heading": null,
+        "content": "| أكسيد معدن | أكسيد لا معدن | حمض قوي | حمض ضعيف | أساس قوي | أساس ضعيف | ملح |\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n| | | | | | | |",
+        "content_type": "table"
+      },
+      {
+        "heading": "السؤال الخامس",
+        "content": "أكمل الجدول الآتي:",
+        "content_type": "exercise"
+      },
+      {
+        "heading": null,
+        "content": "| الصيغة الجزيئية | الصيغة الأيونية | نوع الوظيفة | عدد الوظائف |\n| :--- | :--- | :--- | :--- |\n| CH3COOH | | | |\n| NH4OH | | | |\n| H2SO4 | | | |\n| Ca(OH)2 | | | |",
+        "content_type": "table"
+      },
+      {
+        "heading": "السؤال السادس",
+        "content": "حل المسائل الآتية:\nالمسألة الأولى:\nمحلول لحمض الكبريت تركيزه 0.2 mol.L⁻¹. والمطلوب حساب:",
+        "content_type": "exercise"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "اكتب المعادلة الأيونية ثم استنتج منها المعادلة المختصرة لكل مما يأتي: HCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l), 2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g), CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l), NaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s), Fe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "صنف المركبات الآتية وفق الجدول: HCl(aq), NaOH(aq), NaCl(aq), Kl(aq), Na2O(s), NH4OH(aq), Ba(NO3)2(aq), NO2(g), CaO(s), CH3COOH(aq), SO2(g)",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "أكمل الجدول الآتي: الصيغة الجزيئية (CH3COOH, NH4OH, H2SO4, Ca(OH)2)",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [],
+    "tables": [
+      {
+        "title": null,
+        "markdown": "| أكسيد معدن | أكسيد لا معدن | حمض قوي | حمض ضعيف | أساس قوي | أساس ضعيف | ملح |\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n| | | | | | | |"
+      },
+      {
+        "title": null,
+        "markdown": "| الصيغة الجزيئية | الصيغة الأيونية | نوع الوظيفة | عدد الوظائف |\n| :--- | :--- | :--- | :--- |\n| CH3COOH | | | |\n| NH4OH | | | |\n| H2SO4 | | | |\n| Ca(OH)2 | | | |"
+      }
+    ],
+    "equations": [
+      {
+        "equation": "HCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l)",
+        "description": null
+      },
+      {
+        "equation": "2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g)",
+        "description": null
+      },
+      {
+        "equation": "CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)",
+        "description": null
+      },
+      {
+        "equation": "NaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s)",
+        "description": null
+      },
+      {
+        "equation": "Fe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)",
+        "description": null
+      }
+    ],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 47.617815054s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '47s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 1250,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 52,
+      "schema_valid": true,
+      "raw_markdown_chars": 892,
+      "char_count": 1250,
+      "section_count": 6,
+      "question_count": 3,
+      "table_count": 2,
+      "equation_count": 5,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.4456,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 52,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"السؤال الثالث:\\nاكتب المعادلة الأيونية ثم استنتج منها المعادلة المختصرة لكل مما يأتي:\\nHCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l)\\n2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g)\\nCuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\\nNaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s)\\nFe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)\\n\\nالسؤال الرابع:\\nصنف المركبات الآتية وفق الجدول:\\nHCl(aq), NaOH(aq), NaCl(aq), Kl(aq), Na2O(s), NH4OH(aq), Ba(NO3)2(aq), NO2(g), CaO(s), CH3COOH(aq), SO2(g)\\n\\n| أكسيد معدن | أكسيد لا معدن | حمض قوي | حمض ضعيف | أساس قوي | أساس ضعيف | ملح |\\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\\n| | | | | | | |\\n\\nالسؤال الخامس:\\nأكمل الجدول الآتي:\\n\\n| الصيغة الجزيئية | الصيغة الأيونية | نوع الوظيفة | عدد الوظائف |\\n| :--- | :--- | :--- | :--- |\\n| CH3COOH | | | |\\n| NH4OH | | | |\\n| H2SO4 | | | |\\n| Ca(OH)2 | | | |\\n\\nالسؤال السادس:\\nحل المسائل الآتية:\\nالمسألة الأولى:\\nمحلول لحمض الكبريت تركيزه 0.2 mol.L⁻¹. والمطلوب حساب:\",\n  \"sections\": [\n    {\n      \"heading\": \"السؤال الثالث\",\n      \"content\": \"اكتب المعادلة الأيونية ثم استنتج منها المعادلة المختصرة لكل مما يأتي:\\nHCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l)\\n2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g)\\nCuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\\nNaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s)\\nFe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"السؤال الرابع\",\n      \"content\": \"صنف المركبات الآتية وفق الجدول:\\nHCl(aq), NaOH(aq), NaCl(aq), Kl(aq), Na2O(s), NH4OH(aq), Ba(NO3)2(aq), NO2(g), CaO(s), CH3COOH(aq), SO2(g)\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"content\": \"| أكسيد معدن | أكسيد لا معدن | حمض قوي | حمض ضعيف | أساس قوي | أساس ضعيف | ملح |\\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\\n| | | | | | | |\",\n      \"content_type\": \"table\"\n    },\n    {\n      \"heading\": \"السؤال الخامس\",\n      \"content\": \"أكمل الجدول الآتي:\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"content\": \"| الصيغة الجزيئية | الصيغة الأيونية | نوع الوظيفة | عدد الوظائف |\\n| :--- | :--- | :--- | :--- |\\n| CH3COOH | | | |\\n| NH4OH | | | |\\n| H2SO4 | | | |\\n| Ca(OH)2 | | | |\",\n      \"content_type\": \"table\"\n    },\n    {\n      \"heading\": \"السؤال السادس\",\n      \"content\": \"حل المسائل الآتية:\\nالمسألة الأولى:\\nمحلول لحمض الكبريت تركيزه 0.2 mol.L⁻¹. والمطلوب حساب:\",\n      \"content_type\": \"exercise\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"اكتب المعادلة الأيونية ثم استنتج منها المعادلة المختصرة لكل مما يأتي: HCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l), 2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g), CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l), NaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s), Fe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"صنف المركبات الآتية وفق الجدول: HCl(aq), NaOH(aq), NaCl(aq), Kl(aq), Na2O(s), NH4OH(aq), Ba(NO3)2(aq), NO2(g), CaO(s), CH3COOH(aq), SO2(g)\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أكمل الجدول الآتي: الصيغة الجزيئية (CH3COOH, NH4OH, H2SO4, Ca(OH)2)\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"tables\": [\n    {\n      \"markdown\": \"| أكسيد معدن | أكسيد لا معدن | حمض قوي | حمض ضعيف | أساس قوي | أساس ضعيف | ملح |\\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\\n| | | | | | | |\"\n    },\n    {\n      \"markdown\": \"| الصيغة الجزيئية | الصيغة الأيونية | نوع الوظيفة | عدد الوظائف |\\n| :--- | :--- | :--- | :--- |\\n| CH3COOH | | | |\\n| NH4OH | | | |\\n| H2SO4 | | | |\\n| Ca(OH)2 | | | |\"\n    }\n  ],\n  \"equations\": [\n    {\n      \"equation\": \"HCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l)\"\n    },\n    {\n      \"equation\": \"2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g)\"\n    },\n    {\n      \"equation\": \"CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\"\n    },\n    {\n      \"equation\": \"NaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s)\"\n    },\n    {\n      \"equation\": \"Fe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true,\n  \"char_count\": 1250,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 52,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 1250,\n    \"char_count\": 1250,\n    \"section_count\": 6,\n    \"question_count\": 3,\n    \"table_count\": 2,\n    \"equation_count\": 5,\n    \"diagram_count\": 0,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.65,\n    \"completeness_score\": 1.0,\n    \"should_fallback\": false\n  }\n}"
+  },
+  "merged_content": ":السّ ؤال الثَّالث\nاكتب المعادلة األيونيَّة ثمّ استنتج منها المعادلة المختصرة لكلٍّ ممّا يأتي:\nHCl\nNaOH\nNaCl\nH O\n2Al\n6HCl\n2AlCl\n3H\nCuO\n2HCl\nCuCl\nH O\nNaCl\nAgNO\nNaNO\nAgCl\nFe\nCuSO\nFeSO\nCu\n(aq)\n(aq)\n(aq)\n2\n(l)\n(s)\n(aq)\n3(aq)\n(s)\n(aq)\n2(aq)\n2\n(l)\n(aq)\n3(aq)\n3(aq)\n(s)\n(s)\n4(aq)\n4(aq)\n(s)\n$\n$\n$\n$\n$\n+\n+\n+\n+\n+\n+\n+\n+\n+\n+\n2(g)\n:السّ ؤال الرابع\nصنّف المركَّبات اآلتية وفق الجدول:\nKl\nHCl\n, NaOH\n, NaCl\n,\n, Na O\n, NH OH\n, Ba(NO )\n, NO\nCaO\n, CH COOH\n, SO\n(aq)\n(aq)\n(aq)\n(aq)\n2\n(s)\n4\n(aq)\n3 2(aq)\n2(g)\n(s)\n3\n(aq)\n2(g)\nملح\nاساس\nحمض\nأكسيد ال معدن\nأكسيد معدن\nضعيف\nقوي\nضعيف\nقوي\n:السّ ؤال الخامس\nأكمل الجدول اآلتي:\nعدد الوظائف\nنوع الوظيفة\nالصيغة األيونيّة\nالصيغة الجزيئيّة\nCH COOH\n3\nNH OH\n4\nH SO\n2\n4\nCa(OH)2\n:السّ ؤال السادس\nحل المسائل اآلتية:\nالمسألة األولى:\n. والمطلوب حساب:0.2 mol.L 1\n-  محلول لحمض الكبريت تركيزه\n158\n\n| حلم | ساسا |  | ضمح |  | ندعم لا ديسكأ | ندعم ديسكأ |\n| --- | --- | --- | --- | --- | --- | --- |\n|  | فيعض | يوق | فيعض | يوق |  |  |\n|  |  |  |  |  |  |  |\n\n| فئاظولا ددع | ةفيظولا عون | ةيّنويلأا ةغيصلا | ةيّئيزجلا ةغيصلا |\n| --- | --- | --- | --- |\n|  |  |  | CH COOH\n3 |\n|  |  |  | NH OH\n4 |\n|  |  |  | H SO\n2 4 |\n|  |  |  | Ca(OH)\n2 |\n\nالسؤال الثالث\nاكتب المعادلة الأيونية ثم استنتج منها المعادلة المختصرة لكل مما يأتي:\nHCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l)\n2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g)\nCuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\nNaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s)\nFe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)\n\nالسؤال الرابع\nصنف المركبات الآتية وفق الجدول:\nHCl(aq), NaOH(aq), NaCl(aq), Kl(aq), Na2O(s), NH4OH(aq), Ba(NO3)2(aq), NO2(g), CaO(s), CH3COOH(aq), SO2(g)\n\n| أكسيد معدن | أكسيد لا معدن | حمض قوي | حمض ضعيف | أساس قوي | أساس ضعيف | ملح |\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n| | | | | | | |\n\nالسؤال الخامس\nأكمل الجدول الآتي:\n\n| الصيغة الجزيئية | الصيغة الأيونية | نوع الوظيفة | عدد الوظائف |\n| :--- | :--- | :--- | :--- |\n| CH3COOH | | | |\n| NH4OH | | | |\n| H2SO4 | | | |\n| Ca(OH)2 | | | |\n\nالسؤال السادس\nحل المسائل الآتية:\nالمسألة الأولى:\nمحلول لحمض الكبريت تركيزه 0.2 mol.L⁻¹. والمطلوب حساب:",
+  "raw_markdown": "السؤال الثالث:\nاكتب المعادلة الأيونية ثم استنتج منها المعادلة المختصرة لكل مما يأتي:\nHCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l)\n2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g)\nCuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\nNaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s)\nFe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)\n\nالسؤال الرابع:\nصنف المركبات الآتية وفق الجدول:\nHCl(aq), NaOH(aq), NaCl(aq), Kl(aq), Na2O(s), NH4OH(aq), Ba(NO3)2(aq), NO2(g), CaO(s), CH3COOH(aq), SO2(g)\n\n| أكسيد معدن | أكسيد لا معدن | حمض قوي | حمض ضعيف | أساس قوي | أساس ضعيف | ملح |\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n| | | | | | | |\n\nالسؤال الخامس:\nأكمل الجدول الآتي:\n\n| الصيغة الجزيئية | الصيغة الأيونية | نوع الوظيفة | عدد الوظائف |\n| :--- | :--- | :--- | :--- |\n| CH3COOH | | | |\n| NH4OH | | | |\n| H2SO4 | | | |\n| Ca(OH)2 | | | |\n\nالسؤال السادس:\nحل المسائل الآتية:\nالمسألة الأولى:\nمحلول لحمض الكبريت تركيزه 0.2 mol.L⁻¹. والمطلوب حساب:",
+  "sections": [
+    {
+      "heading": null,
+      "content": ":السّ ؤال الثَّالث\nاكتب المعادلة األيونيَّة ثمّ استنتج منها المعادلة المختصرة لكلٍّ ممّا يأتي:\nHCl\nNaOH\nNaCl\nH O\n2Al\n6HCl\n2AlCl\n3H\nCuO\n2HCl\nCuCl\nH O\nNaCl\nAgNO\nNaNO\nAgCl\nFe\nCuSO\nFeSO\nCu\n(aq)\n(aq)\n(aq)\n2\n(l)\n(s)\n(aq)\n3(aq)\n(s)\n(aq)\n2(aq)\n2\n(l)\n(aq)\n3(aq)\n3(aq)\n(s)\n(s)\n4(aq)\n4(aq)\n(s)\n$\n$\n$\n$\n$\n+\n+\n+\n+\n+\n+\n+\n+\n+\n+\n2(g)\n:السّ ؤال الرابع\nصنّف المركَّبات اآلتية وفق الجدول:\nKl\nHCl\n, NaOH\n, NaCl\n,\n, Na O\n, NH OH\n, Ba(NO )\n, NO\nCaO\n, CH COOH\n, SO\n(aq)\n(aq)\n(aq)\n(aq)\n2\n(s)\n4\n(aq)\n3 2(aq)\n2(g)\n(s)\n3\n(aq)\n2(g)\nملح\nاساس\nحمض\nأكسيد ال معدن\nأكسيد معدن\nضعيف\nقوي\nضعيف\nقوي\n:السّ ؤال الخامس\nأكمل الجدول اآلتي:\nعدد الوظائف\nنوع الوظيفة\nالصيغة األيونيّة\nالصيغة الجزيئيّة\nCH COOH\n3\nNH OH\n4\nH SO\n2\n4\nCa(OH)2\n:السّ ؤال السادس\nحل المسائل اآلتية:\nالمسألة األولى:\n. والمطلوب حساب:0.2 mol.L 1\n-  محلول لحمض الكبريت تركيزه\n158\n\n| حلم | ساسا |  | ضمح |  | ندعم لا ديسكأ | ندعم ديسكأ |\n| --- | --- | --- | --- | --- | --- | --- |\n|  | فيعض | يوق | فيعض | يوق |  |  |\n|  |  |  |  |  |  |  |\n\n| فئاظولا ددع | ةفيظولا عون | ةيّنويلأا ةغيصلا | ةيّئيزجلا ةغيصلا |\n| --- | --- | --- | --- |\n|  |  |  | CH COOH\n3 |\n|  |  |  | NH OH\n4 |\n|  |  |  | H SO\n2 4 |\n|  |  |  | Ca(OH)\n2 |",
+      "content_type": "text"
+    },
+    {
+      "heading": "السؤال الثالث",
+      "content": "اكتب المعادلة الأيونية ثم استنتج منها المعادلة المختصرة لكل مما يأتي:\nHCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l)\n2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g)\nCuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\nNaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s)\nFe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)",
+      "content_type": "exercise"
+    },
+    {
+      "heading": "السؤال الرابع",
+      "content": "صنف المركبات الآتية وفق الجدول:\nHCl(aq), NaOH(aq), NaCl(aq), Kl(aq), Na2O(s), NH4OH(aq), Ba(NO3)2(aq), NO2(g), CaO(s), CH3COOH(aq), SO2(g)",
+      "content_type": "exercise"
+    },
+    {
+      "heading": null,
+      "content": "| أكسيد معدن | أكسيد لا معدن | حمض قوي | حمض ضعيف | أساس قوي | أساس ضعيف | ملح |\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n| | | | | | | |",
+      "content_type": "table"
+    },
+    {
+      "heading": "السؤال الخامس",
+      "content": "أكمل الجدول الآتي:",
+      "content_type": "exercise"
+    },
+    {
+      "heading": null,
+      "content": "| الصيغة الجزيئية | الصيغة الأيونية | نوع الوظيفة | عدد الوظائف |\n| :--- | :--- | :--- | :--- |\n| CH3COOH | | | |\n| NH4OH | | | |\n| H2SO4 | | | |\n| Ca(OH)2 | | | |",
+      "content_type": "table"
+    },
+    {
+      "heading": "السؤال السادس",
+      "content": "حل المسائل الآتية:\nالمسألة الأولى:\nمحلول لحمض الكبريت تركيزه 0.2 mol.L⁻¹. والمطلوب حساب:",
+      "content_type": "exercise"
+    }
   ],
-  "char_count": 0,
-  "completeness_score": 0.0,
+  "questions": [
+    {
+      "question_text": "اكتب المعادلة الأيونية ثم استنتج منها المعادلة المختصرة لكل مما يأتي: HCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l), 2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g), CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l), NaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s), Fe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "صنف المركبات الآتية وفق الجدول: HCl(aq), NaOH(aq), NaCl(aq), Kl(aq), Na2O(s), NH4OH(aq), Ba(NO3)2(aq), NO2(g), CaO(s), CH3COOH(aq), SO2(g)",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "أكمل الجدول الآتي: الصيغة الجزيئية (CH3COOH, NH4OH, H2SO4, Ca(OH)2)",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    }
+  ],
+  "diagrams": [],
+  "tables": [
+    {
+      "title": null,
+      "markdown": "| أكسيد معدن | أكسيد لا معدن | حمض قوي | حمض ضعيف | أساس قوي | أساس ضعيف | ملح |\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n| | | | | | | |"
+    },
+    {
+      "title": null,
+      "markdown": "| الصيغة الجزيئية | الصيغة الأيونية | نوع الوظيفة | عدد الوظائف |\n| :--- | :--- | :--- | :--- |\n| CH3COOH | | | |\n| NH4OH | | | |\n| H2SO4 | | | |\n| Ca(OH)2 | | | |"
+    }
+  ],
+  "equations": [
+    {
+      "equation": "HCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l)",
+      "description": null
+    },
+    {
+      "equation": "2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g)",
+      "description": null
+    },
+    {
+      "equation": "CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)",
+      "description": null
+    },
+    {
+      "equation": "NaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s)",
+      "description": null
+    },
+    {
+      "equation": "Fe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)",
+      "description": null
+    }
+  ],
+  "warnings": [
+    "Gemini PDF extraction failed; using 300 DPI image fallback: Gemini document extraction failed for page 52 with model gemini-3.1-flash-lite: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'Request contains an invalid argument.', 'status': 'INVALID_ARGUMENT'}}",
+    "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 47.617815054s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '47s'}]}}."
+  ],
+  "errors": [],
+  "char_count": 2035,
+  "completeness_score": 1.0,
   "detected_language": "ar",
-  "vision_provider": null,
-  "vision_source": null,
-  "neighboring_pages": [],
-  "uploaded_pdf": null,
-  "raw_text": null,
-  "quality_report": {},
+  "vision_provider": "gemini_document_image",
+  "vision_source": "gemini_rendered_image_300dpi",
+  "neighboring_pages": [
+    51,
+    53
+  ],
+  "uploaded_pdf": {
+    "provider": "gemini_document",
+    "name": "files/6zs99grhoqr2",
+    "uri": "https://generativelanguage.googleapis.com/v1beta/files/6zs99grhoqr2",
+    "mime_type": "application/pdf",
+    "display_name": "Chemistry.pdf"
+  },
+  "raw_text": "{\n  \"page_number\": 52,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"السؤال الثالث:\\nاكتب المعادلة الأيونية ثم استنتج منها المعادلة المختصرة لكل مما يأتي:\\nHCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l)\\n2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g)\\nCuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\\nNaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s)\\nFe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)\\n\\nالسؤال الرابع:\\nصنف المركبات الآتية وفق الجدول:\\nHCl(aq), NaOH(aq), NaCl(aq), Kl(aq), Na2O(s), NH4OH(aq), Ba(NO3)2(aq), NO2(g), CaO(s), CH3COOH(aq), SO2(g)\\n\\n| أكسيد معدن | أكسيد لا معدن | حمض قوي | حمض ضعيف | أساس قوي | أساس ضعيف | ملح |\\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\\n| | | | | | | |\\n\\nالسؤال الخامس:\\nأكمل الجدول الآتي:\\n\\n| الصيغة الجزيئية | الصيغة الأيونية | نوع الوظيفة | عدد الوظائف |\\n| :--- | :--- | :--- | :--- |\\n| CH3COOH | | | |\\n| NH4OH | | | |\\n| H2SO4 | | | |\\n| Ca(OH)2 | | | |\\n\\nالسؤال السادس:\\nحل المسائل الآتية:\\nالمسألة الأولى:\\nمحلول لحمض الكبريت تركيزه 0.2 mol.L⁻¹. والمطلوب حساب:\",\n  \"sections\": [\n    {\n      \"heading\": \"السؤال الثالث\",\n      \"content\": \"اكتب المعادلة الأيونية ثم استنتج منها المعادلة المختصرة لكل مما يأتي:\\nHCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l)\\n2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g)\\nCuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\\nNaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s)\\nFe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"السؤال الرابع\",\n      \"content\": \"صنف المركبات الآتية وفق الجدول:\\nHCl(aq), NaOH(aq), NaCl(aq), Kl(aq), Na2O(s), NH4OH(aq), Ba(NO3)2(aq), NO2(g), CaO(s), CH3COOH(aq), SO2(g)\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"content\": \"| أكسيد معدن | أكسيد لا معدن | حمض قوي | حمض ضعيف | أساس قوي | أساس ضعيف | ملح |\\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\\n| | | | | | | |\",\n      \"content_type\": \"table\"\n    },\n    {\n      \"heading\": \"السؤال الخامس\",\n      \"content\": \"أكمل الجدول الآتي:\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"content\": \"| الصيغة الجزيئية | الصيغة الأيونية | نوع الوظيفة | عدد الوظائف |\\n| :--- | :--- | :--- | :--- |\\n| CH3COOH | | | |\\n| NH4OH | | | |\\n| H2SO4 | | | |\\n| Ca(OH)2 | | | |\",\n      \"content_type\": \"table\"\n    },\n    {\n      \"heading\": \"السؤال السادس\",\n      \"content\": \"حل المسائل الآتية:\\nالمسألة الأولى:\\nمحلول لحمض الكبريت تركيزه 0.2 mol.L⁻¹. والمطلوب حساب:\",\n      \"content_type\": \"exercise\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"اكتب المعادلة الأيونية ثم استنتج منها المعادلة المختصرة لكل مما يأتي: HCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l), 2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g), CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l), NaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s), Fe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"صنف المركبات الآتية وفق الجدول: HCl(aq), NaOH(aq), NaCl(aq), Kl(aq), Na2O(s), NH4OH(aq), Ba(NO3)2(aq), NO2(g), CaO(s), CH3COOH(aq), SO2(g)\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"أكمل الجدول الآتي: الصيغة الجزيئية (CH3COOH, NH4OH, H2SO4, Ca(OH)2)\",\n      \"question_type\": \"short_answer\",\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"tables\": [\n    {\n      \"markdown\": \"| أكسيد معدن | أكسيد لا معدن | حمض قوي | حمض ضعيف | أساس قوي | أساس ضعيف | ملح |\\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\\n| | | | | | | |\"\n    },\n    {\n      \"markdown\": \"| الصيغة الجزيئية | الصيغة الأيونية | نوع الوظيفة | عدد الوظائف |\\n| :--- | :--- | :--- | :--- |\\n| CH3COOH | | | |\\n| NH4OH | | | |\\n| H2SO4 | | | |\\n| Ca(OH)2 | | | |\"\n    }\n  ],\n  \"equations\": [\n    {\n      \"equation\": \"HCl(aq) + NaOH(aq) → NaCl(aq) + H2O(l)\"\n    },\n    {\n      \"equation\": \"2Al(s) + 6HCl(aq) → 2AlCl3(aq) + 3H2(g)\"\n    },\n    {\n      \"equation\": \"CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\"\n    },\n    {\n      \"equation\": \"NaCl(aq) + AgNO3(aq) → NaNO3(aq) + AgCl(s)\"\n    },\n    {\n      \"equation\": \"Fe(s) + CuSO4(aq) → FeSO4(aq) + Cu(s)\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true,\n  \"char_count\": 1250,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 52,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 1250,\n    \"char_count\": 1250,\n    \"section_count\": 6,\n    \"question_count\": 3,\n    \"table_count\": 2,\n    \"equation_count\": 5,\n    \"diagram_count\": 0,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.65,\n    \"completeness_score\": 1.0,\n    \"should_fallback\": false\n  }\n}",
+  "quality_report": {
+    "page_number": 52,
+    "schema_valid": true,
+    "raw_markdown_chars": 892,
+    "char_count": 1250,
+    "section_count": 6,
+    "question_count": 3,
+    "table_count": 2,
+    "equation_count": 5,
+    "diagram_count": 0,
+    "warning_count": 0,
+    "arabic_char_ratio": 0.4456,
+    "completeness_score": 1.0,
+    "issues": [],
+    "should_fallback": false
+  },
   "classification": "MIXED_VISION",
   "source_id": 1
 }

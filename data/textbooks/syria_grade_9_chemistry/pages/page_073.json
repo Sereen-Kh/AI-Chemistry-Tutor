@@ -2,35 +2,277 @@
   "page_number": 73,
   "page_type": "MIXED_VISION",
   "extraction_methods": [
-    "exception"
+    "pymupdf",
+    "pdfplumber",
+    "gemini_pdf_file",
+    "gemini_image_300dpi"
   ],
-  "extraction_method": "exception",
-  "status": "failed",
-  "text_layer_content": "",
-  "vision_content": {},
+  "extraction_method": "pymupdf+pdfplumber+gemini_pdf_file+gemini_image_300dpi",
+  "status": "completed_with_image_fallback",
+  "text_layer_content": "• \nصيغته المنشورة\nصيغته المجملة الصّ يغة نصف المنشورة\nالمركّب\nH C\nCH\n2\n2\n=\nC H4\n2اإليتن\n \n(اإليتلين)\n• \nصيغته المنشورة\nصيغته المجملة الصّ يغة نصف المنشورة\nالمركّب\nH C\nCH\nCH\n3\n2\n-\n=\nC H6\n3البروبن\n \n(البروبلن)\n:أﺳﺘﻨﺘﺞ\n:نتيجة\n• \nاأللكِ نات: مركبّات هدروكربونيّة غير مشبعة تحوي رابطة واحدة مشتركة ثنائية على األقلّ بين \nذرّتين من ذرّات الكربون فيه.\n• \n عدد ذرّات الكربون n  حيثC H\nn\n2n الصّ يغة العامّة لسالسل األلكِ نات المفتوحة\n.(n\n2,3,4,5,........)\n=\n• \n تستبدل بالالحقة (آن) في أسماء األلكانات الالحقة (ـِن) في اسماء األلكنات، وذلك وفق االتّحاد\n.IUPAC الدّوليّ للكيمياء البحتة والتّطبيقيّة\nأهمّيّة اإليتلن:\n• \nاإليتلن يساعد في عمليّة النّضج السّريع للفاكهة \nخاصة في األماكن المغلقة.\n179\n\n| ةروشنملا هتغيص | ةروشنملا فصن ةغيصّ لا | ةلمجملا هتغيص | ّ\nبكرملا |\n| --- | --- | --- | --- |\n|  | H C = CH\n2 2 | C H\n2 4 | ن تيلإا\n)نيلتيلإا( |\n\n| ةروشنملا هتغيص | ةروشنملا فصن ةغيصّ لا | ةلمجملا هتغيص | ّ\nبكرملا |\n| --- | --- | --- | --- |\n|  | H C-CH = CH\n3 2 | C H\n3 6 | ن بوربلا\n)نلبوربلا( |",
+  "vision_content": {
+    "page_number": 73,
+    "detected_language": "ar",
+    "raw_markdown": "أستنتج:\n\n| المركب | صيغته المجملة | الصيغة نصف المنشورة | صيغته المنشورة |\n| :--- | :--- | :--- | :--- |\n| الإيتن (الإيتلين) | C₂H₄ | H₂C = CH₂ | ![صورة جزيء الإيتن](https://example.com/ethene.png) |\n| البروبن (البروبلين) | C₃H₆ | H₃C - CH = CH₂ | ![صورة جزيء البروبن](https://example.com/propene.png) |\n\nنتيجة:\n- الألكنات: مركبات هيدروكربونية غير مشبعة تحوي رابطة مشتركة ثنائية على الأقل بين ذرتين من ذرات الكربون فيه.\n- الصيغة العامة لسلاسل الألكنات المفتوحة CnH₂n حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, ........).\n- تستبدل باللاحقة (آن) في أسماء الألكانات اللاحقة (ين) في اسماء الألكنات، وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\n\nأهمية الإيتلن:\n- الإيتلن يساعد في عملية النضج السريع للفاكهة خاصة في الأماكن المغلقة.",
+    "sections": [
+      {
+        "heading": "أستنتج",
+        "content": "جدول يوضح الصيغ الكيميائية للإيتن والبروبن.",
+        "content_type": "table"
+      },
+      {
+        "heading": "نتيجة",
+        "content": "الألكنات: مركبات هيدروكربونية غير مشبعة تحوي رابطة مشتركة ثنائية على الأقل بين ذرتين من ذرات الكربون فيه.\nالصيغة العامة لسلاسل الألكنات المفتوحة CnH₂n حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, ........).\nتستبدل باللاحقة (آن) في أسماء الألكانات اللاحقة (ين) في اسماء الألكنات، وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.",
+        "content_type": "text"
+      },
+      {
+        "heading": "أهمية الإيتلن",
+        "content": "الإيتلن يساعد في عملية النضج السريع للفاكهة خاصة في الأماكن المغلقة.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [],
+    "diagrams": [],
+    "tables": [
+      {
+        "title": "جدول مقارنة الإيتن والبروبن",
+        "markdown": "| المركب | صيغته المجملة | الصيغة نصف المنشورة | صيغته المنشورة |\n| :--- | :--- | :--- | :--- |\n| الإيتن (الإيتلين) | C₂H₄ | H₂C = CH₂ | صورة جزيء الإيتن |\n| البروبن (البروبلين) | C₃H₆ | H₃C - CH = CH₂ | صورة جزيء البروبن |"
+      }
+    ],
+    "equations": [
+      {
+        "equation": "CnH₂n",
+        "description": "الصيغة العامة لسلاسل الألكنات المفتوحة"
+      }
+    ],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 3.044401768s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '3s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 736,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 73,
+      "schema_valid": true,
+      "raw_markdown_chars": 736,
+      "char_count": 736,
+      "section_count": 3,
+      "question_count": 0,
+      "table_count": 1,
+      "equation_count": 1,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.8061,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 73,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"أستنتج:\\n\\n| المركب | صيغته المجملة | الصيغة نصف المنشورة | صيغته المنشورة |\\n| :--- | :--- | :--- | :--- |\\n| الإيتن (الإيتلين) | C₂H₄ | H₂C = CH₂ | ![صورة جزيء الإيتن](https://example.com/ethene.png) |\\n| البروبن (البروبلين) | C₃H₆ | H₃C - CH = CH₂ | ![صورة جزيء البروبن](https://example.com/propene.png) |\\n\\nنتيجة:\\n- الألكنات: مركبات هيدروكربونية غير مشبعة تحوي رابطة مشتركة ثنائية على الأقل بين ذرتين من ذرات الكربون فيه.\\n- الصيغة العامة لسلاسل الألكنات المفتوحة CnH₂n حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, ........).\\n- تستبدل باللاحقة (آن) في أسماء الألكانات اللاحقة (ين) في اسماء الألكنات، وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\\n\\nأهمية الإيتلن:\\n- الإيتلن يساعد في عملية النضج السريع للفاكهة خاصة في الأماكن المغلقة.\",\n  \"sections\": [\n    {\n      \"heading\": \"أستنتج\",\n      \"content\": \"جدول يوضح الصيغ الكيميائية للإيتن والبروبن.\",\n      \"content_type\": \"table\"\n    },\n    {\n      \"heading\": \"نتيجة\",\n      \"content\": \"الألكنات: مركبات هيدروكربونية غير مشبعة تحوي رابطة مشتركة ثنائية على الأقل بين ذرتين من ذرات الكربون فيه.\\nالصيغة العامة لسلاسل الألكنات المفتوحة CnH₂n حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, ........).\\nتستبدل باللاحقة (آن) في أسماء الألكانات اللاحقة (ين) في اسماء الألكنات، وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أهمية الإيتلن\",\n      \"content\": \"الإيتلن يساعد في عملية النضج السريع للفاكهة خاصة في الأماكن المغلقة.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"tables\": [\n    {\n      \"title\": \"جدول مقارنة الإيتن والبروبن\",\n      \"markdown\": \"| المركب | صيغته المجملة | الصيغة نصف المنشورة | صيغته المنشورة |\\n| :--- | :--- | :--- | :--- |\\n| الإيتن (الإيتلين) | C₂H₄ | H₂C = CH₂ | صورة جزيء الإيتن |\\n| البروبن (البروبلين) | C₃H₆ | H₃C - CH = CH₂ | صورة جزيء البروبن |\"\n    }\n  ],\n  \"equations\": [\n    {\n      \"equation\": \"CnH₂n\",\n      \"description\": \"الصيغة العامة لسلاسل الألكنات المفتوحة\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}"
+  },
   "gemini_pdf_content": {},
-  "gemini_fallback_model_content": {},
-  "gemini_image_fallback_content": {},
-  "merged_content": "",
-  "raw_markdown": "",
-  "sections": [],
+  "gemini_fallback_model_content": {
+    "page_number": 73,
+    "detected_language": "ar",
+    "raw_markdown": "أستنتج:\n\n| المركب | صيغته المجملة | الصيغة نصف المنشورة | صيغته المنشورة |\n| :--- | :--- | :--- | :--- |\n| الإيتن (الإيتلين) | C₂H₄ | H₂C = CH₂ | ![صورة جزيء الإيتن](https://example.com/ethene.png) |\n| البروبن (البروبلين) | C₃H₆ | H₃C - CH = CH₂ | ![صورة جزيء البروبن](https://example.com/propene.png) |\n\nنتيجة:\n- الألكنات: مركبات هيدروكربونية غير مشبعة تحوي رابطة مشتركة ثنائية على الأقل بين ذرتين من ذرات الكربون فيه.\n- الصيغة العامة لسلاسل الألكنات المفتوحة CnH₂n حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, ........).\n- تستبدل باللاحقة (آن) في أسماء الألكانات اللاحقة (ين) في اسماء الألكنات، وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\n\nأهمية الإيتلن:\n- الإيتلن يساعد في عملية النضج السريع للفاكهة خاصة في الأماكن المغلقة.",
+    "sections": [
+      {
+        "heading": "أستنتج",
+        "content": "جدول يوضح الصيغ الكيميائية للإيتن والبروبن.",
+        "content_type": "table"
+      },
+      {
+        "heading": "نتيجة",
+        "content": "الألكنات: مركبات هيدروكربونية غير مشبعة تحوي رابطة مشتركة ثنائية على الأقل بين ذرتين من ذرات الكربون فيه.\nالصيغة العامة لسلاسل الألكنات المفتوحة CnH₂n حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, ........).\nتستبدل باللاحقة (آن) في أسماء الألكانات اللاحقة (ين) في اسماء الألكنات، وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.",
+        "content_type": "text"
+      },
+      {
+        "heading": "أهمية الإيتلن",
+        "content": "الإيتلن يساعد في عملية النضج السريع للفاكهة خاصة في الأماكن المغلقة.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [],
+    "diagrams": [],
+    "tables": [
+      {
+        "title": "جدول مقارنة الإيتن والبروبن",
+        "markdown": "| المركب | صيغته المجملة | الصيغة نصف المنشورة | صيغته المنشورة |\n| :--- | :--- | :--- | :--- |\n| الإيتن (الإيتلين) | C₂H₄ | H₂C = CH₂ | صورة جزيء الإيتن |\n| البروبن (البروبلين) | C₃H₆ | H₃C - CH = CH₂ | صورة جزيء البروبن |"
+      }
+    ],
+    "equations": [
+      {
+        "equation": "CnH₂n",
+        "description": "الصيغة العامة لسلاسل الألكنات المفتوحة"
+      }
+    ],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 3.044401768s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '3s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 736,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 73,
+      "schema_valid": true,
+      "raw_markdown_chars": 736,
+      "char_count": 736,
+      "section_count": 3,
+      "question_count": 0,
+      "table_count": 1,
+      "equation_count": 1,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.8061,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 73,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"أستنتج:\\n\\n| المركب | صيغته المجملة | الصيغة نصف المنشورة | صيغته المنشورة |\\n| :--- | :--- | :--- | :--- |\\n| الإيتن (الإيتلين) | C₂H₄ | H₂C = CH₂ | ![صورة جزيء الإيتن](https://example.com/ethene.png) |\\n| البروبن (البروبلين) | C₃H₆ | H₃C - CH = CH₂ | ![صورة جزيء البروبن](https://example.com/propene.png) |\\n\\nنتيجة:\\n- الألكنات: مركبات هيدروكربونية غير مشبعة تحوي رابطة مشتركة ثنائية على الأقل بين ذرتين من ذرات الكربون فيه.\\n- الصيغة العامة لسلاسل الألكنات المفتوحة CnH₂n حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, ........).\\n- تستبدل باللاحقة (آن) في أسماء الألكانات اللاحقة (ين) في اسماء الألكنات، وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\\n\\nأهمية الإيتلن:\\n- الإيتلن يساعد في عملية النضج السريع للفاكهة خاصة في الأماكن المغلقة.\",\n  \"sections\": [\n    {\n      \"heading\": \"أستنتج\",\n      \"content\": \"جدول يوضح الصيغ الكيميائية للإيتن والبروبن.\",\n      \"content_type\": \"table\"\n    },\n    {\n      \"heading\": \"نتيجة\",\n      \"content\": \"الألكنات: مركبات هيدروكربونية غير مشبعة تحوي رابطة مشتركة ثنائية على الأقل بين ذرتين من ذرات الكربون فيه.\\nالصيغة العامة لسلاسل الألكنات المفتوحة CnH₂n حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, ........).\\nتستبدل باللاحقة (آن) في أسماء الألكانات اللاحقة (ين) في اسماء الألكنات، وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أهمية الإيتلن\",\n      \"content\": \"الإيتلن يساعد في عملية النضج السريع للفاكهة خاصة في الأماكن المغلقة.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"tables\": [\n    {\n      \"title\": \"جدول مقارنة الإيتن والبروبن\",\n      \"markdown\": \"| المركب | صيغته المجملة | الصيغة نصف المنشورة | صيغته المنشورة |\\n| :--- | :--- | :--- | :--- |\\n| الإيتن (الإيتلين) | C₂H₄ | H₂C = CH₂ | صورة جزيء الإيتن |\\n| البروبن (البروبلين) | C₃H₆ | H₃C - CH = CH₂ | صورة جزيء البروبن |\"\n    }\n  ],\n  \"equations\": [\n    {\n      \"equation\": \"CnH₂n\",\n      \"description\": \"الصيغة العامة لسلاسل الألكنات المفتوحة\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}"
+  },
+  "gemini_image_fallback_content": {
+    "page_number": 73,
+    "detected_language": "ar",
+    "raw_markdown": "أستنتج:\n\n| المركب | صيغته المجملة | الصيغة نصف المنشورة | صيغته المنشورة |\n| :--- | :--- | :--- | :--- |\n| الإيتن (الإيتلين) | C₂H₄ | H₂C = CH₂ | ![صورة جزيء الإيتن](https://example.com/ethene.png) |\n| البروبن (البروبلين) | C₃H₆ | H₃C - CH = CH₂ | ![صورة جزيء البروبن](https://example.com/propene.png) |\n\nنتيجة:\n- الألكنات: مركبات هيدروكربونية غير مشبعة تحوي رابطة مشتركة ثنائية على الأقل بين ذرتين من ذرات الكربون فيه.\n- الصيغة العامة لسلاسل الألكنات المفتوحة CnH₂n حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, ........).\n- تستبدل باللاحقة (آن) في أسماء الألكانات اللاحقة (ين) في اسماء الألكنات، وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\n\nأهمية الإيتلن:\n- الإيتلن يساعد في عملية النضج السريع للفاكهة خاصة في الأماكن المغلقة.",
+    "sections": [
+      {
+        "heading": "أستنتج",
+        "content": "جدول يوضح الصيغ الكيميائية للإيتن والبروبن.",
+        "content_type": "table"
+      },
+      {
+        "heading": "نتيجة",
+        "content": "الألكنات: مركبات هيدروكربونية غير مشبعة تحوي رابطة مشتركة ثنائية على الأقل بين ذرتين من ذرات الكربون فيه.\nالصيغة العامة لسلاسل الألكنات المفتوحة CnH₂n حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, ........).\nتستبدل باللاحقة (آن) في أسماء الألكانات اللاحقة (ين) في اسماء الألكنات، وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.",
+        "content_type": "text"
+      },
+      {
+        "heading": "أهمية الإيتلن",
+        "content": "الإيتلن يساعد في عملية النضج السريع للفاكهة خاصة في الأماكن المغلقة.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [],
+    "diagrams": [],
+    "tables": [
+      {
+        "title": "جدول مقارنة الإيتن والبروبن",
+        "markdown": "| المركب | صيغته المجملة | الصيغة نصف المنشورة | صيغته المنشورة |\n| :--- | :--- | :--- | :--- |\n| الإيتن (الإيتلين) | C₂H₄ | H₂C = CH₂ | صورة جزيء الإيتن |\n| البروبن (البروبلين) | C₃H₆ | H₃C - CH = CH₂ | صورة جزيء البروبن |"
+      }
+    ],
+    "equations": [
+      {
+        "equation": "CnH₂n",
+        "description": "الصيغة العامة لسلاسل الألكنات المفتوحة"
+      }
+    ],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 3.044401768s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '3s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 736,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 73,
+      "schema_valid": true,
+      "raw_markdown_chars": 736,
+      "char_count": 736,
+      "section_count": 3,
+      "question_count": 0,
+      "table_count": 1,
+      "equation_count": 1,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.8061,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 73,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"أستنتج:\\n\\n| المركب | صيغته المجملة | الصيغة نصف المنشورة | صيغته المنشورة |\\n| :--- | :--- | :--- | :--- |\\n| الإيتن (الإيتلين) | C₂H₄ | H₂C = CH₂ | ![صورة جزيء الإيتن](https://example.com/ethene.png) |\\n| البروبن (البروبلين) | C₃H₆ | H₃C - CH = CH₂ | ![صورة جزيء البروبن](https://example.com/propene.png) |\\n\\nنتيجة:\\n- الألكنات: مركبات هيدروكربونية غير مشبعة تحوي رابطة مشتركة ثنائية على الأقل بين ذرتين من ذرات الكربون فيه.\\n- الصيغة العامة لسلاسل الألكنات المفتوحة CnH₂n حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, ........).\\n- تستبدل باللاحقة (آن) في أسماء الألكانات اللاحقة (ين) في اسماء الألكنات، وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\\n\\nأهمية الإيتلن:\\n- الإيتلن يساعد في عملية النضج السريع للفاكهة خاصة في الأماكن المغلقة.\",\n  \"sections\": [\n    {\n      \"heading\": \"أستنتج\",\n      \"content\": \"جدول يوضح الصيغ الكيميائية للإيتن والبروبن.\",\n      \"content_type\": \"table\"\n    },\n    {\n      \"heading\": \"نتيجة\",\n      \"content\": \"الألكنات: مركبات هيدروكربونية غير مشبعة تحوي رابطة مشتركة ثنائية على الأقل بين ذرتين من ذرات الكربون فيه.\\nالصيغة العامة لسلاسل الألكنات المفتوحة CnH₂n حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, ........).\\nتستبدل باللاحقة (آن) في أسماء الألكانات اللاحقة (ين) في اسماء الألكنات، وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أهمية الإيتلن\",\n      \"content\": \"الإيتلن يساعد في عملية النضج السريع للفاكهة خاصة في الأماكن المغلقة.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"tables\": [\n    {\n      \"title\": \"جدول مقارنة الإيتن والبروبن\",\n      \"markdown\": \"| المركب | صيغته المجملة | الصيغة نصف المنشورة | صيغته المنشورة |\\n| :--- | :--- | :--- | :--- |\\n| الإيتن (الإيتلين) | C₂H₄ | H₂C = CH₂ | صورة جزيء الإيتن |\\n| البروبن (البروبلين) | C₃H₆ | H₃C - CH = CH₂ | صورة جزيء البروبن |\"\n    }\n  ],\n  \"equations\": [\n    {\n      \"equation\": \"CnH₂n\",\n      \"description\": \"الصيغة العامة لسلاسل الألكنات المفتوحة\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}"
+  },
+  "merged_content": "• \nصيغته المنشورة\nصيغته المجملة الصّ يغة نصف المنشورة\nالمركّب\nH C\nCH\n2\n2\n=\nC H4\n2اإليتن\n \n(اإليتلين)\n• \nصيغته المنشورة\nصيغته المجملة الصّ يغة نصف المنشورة\nالمركّب\nH C\nCH\nCH\n3\n2\n-\n=\nC H6\n3البروبن\n \n(البروبلن)\n:أﺳﺘﻨﺘﺞ\n:نتيجة\n• \nاأللكِ نات: مركبّات هدروكربونيّة غير مشبعة تحوي رابطة واحدة مشتركة ثنائية على األقلّ بين \nذرّتين من ذرّات الكربون فيه.\n• \n عدد ذرّات الكربون n  حيثC H\nn\n2n الصّ يغة العامّة لسالسل األلكِ نات المفتوحة\n.(n\n2,3,4,5,........)\n=\n• \n تستبدل بالالحقة (آن) في أسماء األلكانات الالحقة (ـِن) في اسماء األلكنات، وذلك وفق االتّحاد\n.IUPAC الدّوليّ للكيمياء البحتة والتّطبيقيّة\nأهمّيّة اإليتلن:\n• \nاإليتلن يساعد في عمليّة النّضج السّريع للفاكهة \nخاصة في األماكن المغلقة.\n179\n\n| ةروشنملا هتغيص | ةروشنملا فصن ةغيصّ لا | ةلمجملا هتغيص | ّ\nبكرملا |\n| --- | --- | --- | --- |\n|  | H C = CH\n2 2 | C H\n2 4 | ن تيلإا\n)نيلتيلإا( |\n\n| ةروشنملا هتغيص | ةروشنملا فصن ةغيصّ لا | ةلمجملا هتغيص | ّ\nبكرملا |\n| --- | --- | --- | --- |\n|  | H C-CH = CH\n3 2 | C H\n3 6 | ن بوربلا\n)نلبوربلا( |\n\nأستنتج\nجدول يوضح الصيغ الكيميائية للإيتن والبروبن.\n\nنتيجة\nالألكنات: مركبات هيدروكربونية غير مشبعة تحوي رابطة مشتركة ثنائية على الأقل بين ذرتين من ذرات الكربون فيه.\nالصيغة العامة لسلاسل الألكنات المفتوحة CnH₂n حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, ........).\nتستبدل باللاحقة (آن) في أسماء الألكانات اللاحقة (ين) في اسماء الألكنات، وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\n\nأهمية الإيتلن\nالإيتلن يساعد في عملية النضج السريع للفاكهة خاصة في الأماكن المغلقة.",
+  "raw_markdown": "أستنتج:\n\n| المركب | صيغته المجملة | الصيغة نصف المنشورة | صيغته المنشورة |\n| :--- | :--- | :--- | :--- |\n| الإيتن (الإيتلين) | C₂H₄ | H₂C = CH₂ | ![صورة جزيء الإيتن](https://example.com/ethene.png) |\n| البروبن (البروبلين) | C₃H₆ | H₃C - CH = CH₂ | ![صورة جزيء البروبن](https://example.com/propene.png) |\n\nنتيجة:\n- الألكنات: مركبات هيدروكربونية غير مشبعة تحوي رابطة مشتركة ثنائية على الأقل بين ذرتين من ذرات الكربون فيه.\n- الصيغة العامة لسلاسل الألكنات المفتوحة CnH₂n حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, ........).\n- تستبدل باللاحقة (آن) في أسماء الألكانات اللاحقة (ين) في اسماء الألكنات، وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\n\nأهمية الإيتلن:\n- الإيتلن يساعد في عملية النضج السريع للفاكهة خاصة في الأماكن المغلقة.",
+  "sections": [
+    {
+      "heading": null,
+      "content": "• \nصيغته المنشورة\nصيغته المجملة الصّ يغة نصف المنشورة\nالمركّب\nH C\nCH\n2\n2\n=\nC H4\n2اإليتن\n \n(اإليتلين)\n• \nصيغته المنشورة\nصيغته المجملة الصّ يغة نصف المنشورة\nالمركّب\nH C\nCH\nCH\n3\n2\n-\n=\nC H6\n3البروبن\n \n(البروبلن)\n:أﺳﺘﻨﺘﺞ\n:نتيجة\n• \nاأللكِ نات: مركبّات هدروكربونيّة غير مشبعة تحوي رابطة واحدة مشتركة ثنائية على األقلّ بين \nذرّتين من ذرّات الكربون فيه.\n• \n عدد ذرّات الكربون n  حيثC H\nn\n2n الصّ يغة العامّة لسالسل األلكِ نات المفتوحة\n.(n\n2,3,4,5,........)\n=\n• \n تستبدل بالالحقة (آن) في أسماء األلكانات الالحقة (ـِن) في اسماء األلكنات، وذلك وفق االتّحاد\n.IUPAC الدّوليّ للكيمياء البحتة والتّطبيقيّة\nأهمّيّة اإليتلن:\n• \nاإليتلن يساعد في عمليّة النّضج السّريع للفاكهة \nخاصة في األماكن المغلقة.\n179\n\n| ةروشنملا هتغيص | ةروشنملا فصن ةغيصّ لا | ةلمجملا هتغيص | ّ\nبكرملا |\n| --- | --- | --- | --- |\n|  | H C = CH\n2 2 | C H\n2 4 | ن تيلإا\n)نيلتيلإا( |\n\n| ةروشنملا هتغيص | ةروشنملا فصن ةغيصّ لا | ةلمجملا هتغيص | ّ\nبكرملا |\n| --- | --- | --- | --- |\n|  | H C-CH = CH\n3 2 | C H\n3 6 | ن بوربلا\n)نلبوربلا( |",
+      "content_type": "text"
+    },
+    {
+      "heading": "أستنتج",
+      "content": "جدول يوضح الصيغ الكيميائية للإيتن والبروبن.",
+      "content_type": "table"
+    },
+    {
+      "heading": "نتيجة",
+      "content": "الألكنات: مركبات هيدروكربونية غير مشبعة تحوي رابطة مشتركة ثنائية على الأقل بين ذرتين من ذرات الكربون فيه.\nالصيغة العامة لسلاسل الألكنات المفتوحة CnH₂n حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, ........).\nتستبدل باللاحقة (آن) في أسماء الألكانات اللاحقة (ين) في اسماء الألكنات، وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.",
+      "content_type": "text"
+    },
+    {
+      "heading": "أهمية الإيتلن",
+      "content": "الإيتلن يساعد في عملية النضج السريع للفاكهة خاصة في الأماكن المغلقة.",
+      "content_type": "text"
+    }
+  ],
   "questions": [],
   "diagrams": [],
-  "tables": [],
-  "equations": [],
-  "warnings": [],
-  "errors": [
-    "Gemini document extraction failed quality checks for page 73: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 52.865223778s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.5-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '52s'}]}}"
+  "tables": [
+    {
+      "title": "جدول مقارنة الإيتن والبروبن",
+      "markdown": "| المركب | صيغته المجملة | الصيغة نصف المنشورة | صيغته المنشورة |\n| :--- | :--- | :--- | :--- |\n| الإيتن (الإيتلين) | C₂H₄ | H₂C = CH₂ | صورة جزيء الإيتن |\n| البروبن (البروبلين) | C₃H₆ | H₃C - CH = CH₂ | صورة جزيء البروبن |"
+    }
   ],
-  "char_count": 0,
-  "completeness_score": 0.0,
+  "equations": [
+    {
+      "equation": "CnH₂n",
+      "description": "الصيغة العامة لسلاسل الألكنات المفتوحة"
+    }
+  ],
+  "warnings": [
+    "Gemini PDF extraction failed; using 300 DPI image fallback: Gemini document extraction failed for page 73 with model gemini-3.1-flash-lite: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'Request contains an invalid argument.', 'status': 'INVALID_ARGUMENT'}}",
+    "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 3.044401768s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '3s'}]}}."
+  ],
+  "errors": [],
+  "char_count": 1461,
+  "completeness_score": 1.0,
   "detected_language": "ar",
-  "vision_provider": null,
-  "vision_source": null,
-  "neighboring_pages": [],
-  "uploaded_pdf": null,
-  "raw_text": null,
-  "quality_report": {},
+  "vision_provider": "gemini_document_image",
+  "vision_source": "gemini_rendered_image_300dpi",
+  "neighboring_pages": [
+    72,
+    74
+  ],
+  "uploaded_pdf": {
+    "provider": "gemini_document",
+    "name": "files/6zs99grhoqr2",
+    "uri": "https://generativelanguage.googleapis.com/v1beta/files/6zs99grhoqr2",
+    "mime_type": "application/pdf",
+    "display_name": "Chemistry.pdf"
+  },
+  "raw_text": "{\n  \"page_number\": 73,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"أستنتج:\\n\\n| المركب | صيغته المجملة | الصيغة نصف المنشورة | صيغته المنشورة |\\n| :--- | :--- | :--- | :--- |\\n| الإيتن (الإيتلين) | C₂H₄ | H₂C = CH₂ | ![صورة جزيء الإيتن](https://example.com/ethene.png) |\\n| البروبن (البروبلين) | C₃H₆ | H₃C - CH = CH₂ | ![صورة جزيء البروبن](https://example.com/propene.png) |\\n\\nنتيجة:\\n- الألكنات: مركبات هيدروكربونية غير مشبعة تحوي رابطة مشتركة ثنائية على الأقل بين ذرتين من ذرات الكربون فيه.\\n- الصيغة العامة لسلاسل الألكنات المفتوحة CnH₂n حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, ........).\\n- تستبدل باللاحقة (آن) في أسماء الألكانات اللاحقة (ين) في اسماء الألكنات، وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\\n\\nأهمية الإيتلن:\\n- الإيتلن يساعد في عملية النضج السريع للفاكهة خاصة في الأماكن المغلقة.\",\n  \"sections\": [\n    {\n      \"heading\": \"أستنتج\",\n      \"content\": \"جدول يوضح الصيغ الكيميائية للإيتن والبروبن.\",\n      \"content_type\": \"table\"\n    },\n    {\n      \"heading\": \"نتيجة\",\n      \"content\": \"الألكنات: مركبات هيدروكربونية غير مشبعة تحوي رابطة مشتركة ثنائية على الأقل بين ذرتين من ذرات الكربون فيه.\\nالصيغة العامة لسلاسل الألكنات المفتوحة CnH₂n حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, ........).\\nتستبدل باللاحقة (آن) في أسماء الألكانات اللاحقة (ين) في اسماء الألكنات، وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أهمية الإيتلن\",\n      \"content\": \"الإيتلن يساعد في عملية النضج السريع للفاكهة خاصة في الأماكن المغلقة.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"tables\": [\n    {\n      \"title\": \"جدول مقارنة الإيتن والبروبن\",\n      \"markdown\": \"| المركب | صيغته المجملة | الصيغة نصف المنشورة | صيغته المنشورة |\\n| :--- | :--- | :--- | :--- |\\n| الإيتن (الإيتلين) | C₂H₄ | H₂C = CH₂ | صورة جزيء الإيتن |\\n| البروبن (البروبلين) | C₃H₆ | H₃C - CH = CH₂ | صورة جزيء البروبن |\"\n    }\n  ],\n  \"equations\": [\n    {\n      \"equation\": \"CnH₂n\",\n      \"description\": \"الصيغة العامة لسلاسل الألكنات المفتوحة\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}",
+  "quality_report": {
+    "page_number": 73,
+    "schema_valid": true,
+    "raw_markdown_chars": 736,
+    "char_count": 736,
+    "section_count": 3,
+    "question_count": 0,
+    "table_count": 1,
+    "equation_count": 1,
+    "diagram_count": 0,
+    "warning_count": 0,
+    "arabic_char_ratio": 0.8061,
+    "completeness_score": 1.0,
+    "issues": [],
+    "should_fallback": false
+  },
   "classification": "MIXED_VISION",
   "source_id": 1
 }

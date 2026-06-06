@@ -2,35 +2,317 @@
   "page_number": 66,
   "page_type": "MIXED_VISION",
   "extraction_methods": [
-    "exception"
+    "pymupdf",
+    "pdfplumber",
+    "gemini_pdf_file",
+    "gemini_image_300dpi"
   ],
-  "extraction_method": "exception",
-  "status": "failed",
-  "text_layer_content": "",
-  "vision_content": {},
+  "extraction_method": "pymupdf+pdfplumber+gemini_pdf_file+gemini_image_300dpi",
+  "status": "completed_with_image_fallback",
+  "text_layer_content": ":ا\u001aﻫﺪاف\n-  \n.يستنتج صيغ بعض األلكانات\n  -\nيتعرّف أسماء بعض األلكانات.\n  -\nيتعرّف الصّ يغة العامّة لأللكانات.\n  -\nيكتب الصّ يغة المنشورة ونصف المنشورة لبعض األلكانات.\n  -\nيثمّن التّطبيقات الصّ ناعيّة الحياتيّة لأللكانات.\n:اﻟﻜﻠﻤﺎت اﻟﻤﻔﺘﺎﺣﻴﺔ\n - الكان - جذر الكيل - الصيغة العامة - الصيغة المجملة - الصيغة المنشورة\nالصيغة نصف المنشورة\nاأللكانات:\n:أدوات التجربة\nعلبة النّماذج الذّرّيّة (علبة الكرات واألعواد).\nخطوات التّجربة:\n\u0007آخذ كرة تمثّل ذرّة كربون وأربع كرات تمثّل 1\n الهدروجين، وأشكّل منها جزيئاً، ثمّ أكتب الصّ يغة\nالمجملة لهذا الجزيء، ثمّ الصّ يغة المنشورة له.\nأكرّر الخطوات من أجل ذرّتي كربون وستّ ذرّات هدروجين.2\n.أكرر الخطوات من أجل ثالث ذرّات كربون وثماني ذرّات هدروجين3\n:أﺟﺮب وأﺳﺘﻨﺘﺞ\n المركَّبات الهدروكربونيَّة المشبعة\n األلكانات (البرافينات)1\n172\n\n| َّ\nةعبشملا ةينوبركوردهلا تابكرملا\nَّ\n)تانيفاربلا( تاناكللأا |  |  |\n| --- | --- | --- |\n|  |  |  |\n\n| أ 2 |\n| --- |\n| أ 3 |",
+  "vision_content": {
+    "page_number": 66,
+    "detected_language": "ar",
+    "raw_markdown": "# 1 المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\n\n## الأهداف:\n- يستنتج صيغ بعض الألكانات.\n- يتعرّف أسماء بعض الألكانات.\n- يتعرّف الصيغة العامّة للألكانات.\n- يكتب الصيغة المنشورة ونصف المنشورة لبعض الألكانات.\n- يثمّن التطبيقات الصناعيّة الحياتيّة للألكانات.\n\n## الكلمات المفتاحية:\nالكان - جذر الكيل - الصيغة العامة - الصيغة المجملة - الصيغة المنشورة - الصيغة نصف المنشورة\n\n## الألكانات:\n\n### أجرب وأستنتج:\n\n**أدوات التجربة:**\nعلبة النماذج الذرّية (علبة الكرات والأعواد).\n\n**خطوات التجربة:**\n1. آخذ كرة تمثّل ذرّة كربون وأربع كرات تمثّل الهيدروجين، وأشكّل منها جزيئاً، ثمّ أكتب الصيغة المجملة لهذا الجزيء، ثمّ الصيغة المنشورة له.\n2. أكرّر الخطوات من أجل ذرّتي كربون وستّ ذرّات هدروجين.\n3. أكرّر الخطوات من أجل ثلاث ذرّات كربون وثماني ذرّات هدروجين.",
+    "sections": [
+      {
+        "heading": "1 المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)",
+        "content": "1 المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)",
+        "content_type": "text"
+      },
+      {
+        "heading": "الأهداف:",
+        "content": "- يستنتج صيغ بعض الألكانات.\n- يتعرّف أسماء بعض الألكانات.\n- يتعرّف الصيغة العامّة للألكانات.\n- يكتب الصيغة المنشورة ونصف المنشورة لبعض الألكانات.\n- يثمّن التطبيقات الصناعيّة الحياتيّة للألكانات.",
+        "content_type": "text"
+      },
+      {
+        "heading": "الكلمات المفتاحية:",
+        "content": "الكان - جذر الكيل - الصيغة العامة - الصيغة المجملة - الصيغة المنشورة - الصيغة نصف المنشورة",
+        "content_type": "text"
+      },
+      {
+        "heading": "الألكانات:",
+        "content": "الألكانات:",
+        "content_type": "text"
+      },
+      {
+        "heading": "أجرب وأستنتج:",
+        "content": "أدوات التجربة:\nعلبة النماذج الذرّية (علبة الكرات والأعواد).\n\nخطوات التجربة:\n1. آخذ كرة تمثّل ذرّة كربون وأربع كرات تمثّل الهيدروجين، وأشكّل منها جزيئاً، ثمّ أكتب الصيغة المجملة لهذا الجزيء، ثمّ الصيغة المنشورة له.\n2. أكرّر الخطوات من أجل ذرّتي كربون وستّ ذرّات هدروجين.\n3. أكرّر الخطوات من أجل ثلاث ذرّات كربون وثماني ذرّات هدروجين.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [],
+    "diagrams": [
+      {
+        "title": "علبة النماذج الذرّية",
+        "description": "صورة فوتوغرافية لعلبة بلاستيكية مقسمة إلى خانات تحتوي على كرات ملونة (برتقالي، سماوي، أسود، أصفر، أبيض، أحمر) وأعواد بلاستيكية صغيرة تستخدم لتمثيل الذرات والروابط الكيميائية في النماذج الجزيئية.",
+        "labels": [
+          "كرات ملونة",
+          "أعواد بلاستيكية"
+        ],
+        "related_text": "علبة النماذج الذرّية (علبة الكرات والأعواد)."
+      }
+    ],
+    "tables": [],
+    "equations": [],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 30.466366836s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '30s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 756,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 66,
+      "schema_valid": true,
+      "raw_markdown_chars": 756,
+      "char_count": 756,
+      "section_count": 5,
+      "question_count": 0,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.8998,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 66,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"# 1 المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\\n\\n## الأهداف:\\n- يستنتج صيغ بعض الألكانات.\\n- يتعرّف أسماء بعض الألكانات.\\n- يتعرّف الصيغة العامّة للألكانات.\\n- يكتب الصيغة المنشورة ونصف المنشورة لبعض الألكانات.\\n- يثمّن التطبيقات الصناعيّة الحياتيّة للألكانات.\\n\\n## الكلمات المفتاحية:\\nالكان - جذر الكيل - الصيغة العامة - الصيغة المجملة - الصيغة المنشورة - الصيغة نصف المنشورة\\n\\n## الألكانات:\\n\\n### أجرب وأستنتج:\\n\\n**أدوات التجربة:**\\nعلبة النماذج الذرّية (علبة الكرات والأعواد).\\n\\n**خطوات التجربة:**\\n1. آخذ كرة تمثّل ذرّة كربون وأربع كرات تمثّل الهيدروجين، وأشكّل منها جزيئاً، ثمّ أكتب الصيغة المجملة لهذا الجزيء، ثمّ الصيغة المنشورة له.\\n2. أكرّر الخطوات من أجل ذرّتي كربون وستّ ذرّات هدروجين.\\n3. أكرّر الخطوات من أجل ثلاث ذرّات كربون وثماني ذرّات هدروجين.\",\n  \"sections\": [\n    {\n      \"heading\": \"1 المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\",\n      \"content\": \"1 المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الأهداف:\",\n      \"content\": \"- يستنتج صيغ بعض الألكانات.\\n- يتعرّف أسماء بعض الألكانات.\\n- يتعرّف الصيغة العامّة للألكانات.\\n- يكتب الصيغة المنشورة ونصف المنشورة لبعض الألكانات.\\n- يثمّن التطبيقات الصناعيّة الحياتيّة للألكانات.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الكلمات المفتاحية:\",\n      \"content\": \"الكان - جذر الكيل - الصيغة العامة - الصيغة المجملة - الصيغة المنشورة - الصيغة نصف المنشورة\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الألكانات:\",\n      \"content\": \"الألكانات:\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أجرب وأستنتج:\",\n      \"content\": \"أدوات التجربة:\\nعلبة النماذج الذرّية (علبة الكرات والأعواد).\\n\\nخطوات التجربة:\\n1. آخذ كرة تمثّل ذرّة كربون وأربع كرات تمثّل الهيدروجين، وأشكّل منها جزيئاً، ثمّ أكتب الصيغة المجملة لهذا الجزيء، ثمّ الصيغة المنشورة له.\\n2. أكرّر الخطوات من أجل ذرّتي كربون وستّ ذرّات هدروجين.\\n3. أكرّر الخطوات من أجل ثلاث ذرّات كربون وثماني ذرّات هدروجين.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": \"علبة النماذج الذرّية\",\n      \"description\": \"صورة فوتوغرافية لعلبة بلاستيكية مقسمة إلى خانات تحتوي على كرات ملونة (برتقالي، سماوي، أسود، أصفر، أبيض، أحمر) وأعواد بلاستيكية صغيرة تستخدم لتمثيل الذرات والروابط الكيميائية في النماذج الجزيئية.\",\n      \"labels\": [\n        \"كرات ملونة\",\n        \"أعواد بلاستيكية\"\n      ],\n      \"related_text\": \"علبة النماذج الذرّية (علبة الكرات والأعواد).\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}"
+  },
   "gemini_pdf_content": {},
-  "gemini_fallback_model_content": {},
-  "gemini_image_fallback_content": {},
-  "merged_content": "",
-  "raw_markdown": "",
-  "sections": [],
+  "gemini_fallback_model_content": {
+    "page_number": 66,
+    "detected_language": "ar",
+    "raw_markdown": "# 1 المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\n\n## الأهداف:\n- يستنتج صيغ بعض الألكانات.\n- يتعرّف أسماء بعض الألكانات.\n- يتعرّف الصيغة العامّة للألكانات.\n- يكتب الصيغة المنشورة ونصف المنشورة لبعض الألكانات.\n- يثمّن التطبيقات الصناعيّة الحياتيّة للألكانات.\n\n## الكلمات المفتاحية:\nالكان - جذر الكيل - الصيغة العامة - الصيغة المجملة - الصيغة المنشورة - الصيغة نصف المنشورة\n\n## الألكانات:\n\n### أجرب وأستنتج:\n\n**أدوات التجربة:**\nعلبة النماذج الذرّية (علبة الكرات والأعواد).\n\n**خطوات التجربة:**\n1. آخذ كرة تمثّل ذرّة كربون وأربع كرات تمثّل الهيدروجين، وأشكّل منها جزيئاً، ثمّ أكتب الصيغة المجملة لهذا الجزيء، ثمّ الصيغة المنشورة له.\n2. أكرّر الخطوات من أجل ذرّتي كربون وستّ ذرّات هدروجين.\n3. أكرّر الخطوات من أجل ثلاث ذرّات كربون وثماني ذرّات هدروجين.",
+    "sections": [
+      {
+        "heading": "1 المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)",
+        "content": "1 المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)",
+        "content_type": "text"
+      },
+      {
+        "heading": "الأهداف:",
+        "content": "- يستنتج صيغ بعض الألكانات.\n- يتعرّف أسماء بعض الألكانات.\n- يتعرّف الصيغة العامّة للألكانات.\n- يكتب الصيغة المنشورة ونصف المنشورة لبعض الألكانات.\n- يثمّن التطبيقات الصناعيّة الحياتيّة للألكانات.",
+        "content_type": "text"
+      },
+      {
+        "heading": "الكلمات المفتاحية:",
+        "content": "الكان - جذر الكيل - الصيغة العامة - الصيغة المجملة - الصيغة المنشورة - الصيغة نصف المنشورة",
+        "content_type": "text"
+      },
+      {
+        "heading": "الألكانات:",
+        "content": "الألكانات:",
+        "content_type": "text"
+      },
+      {
+        "heading": "أجرب وأستنتج:",
+        "content": "أدوات التجربة:\nعلبة النماذج الذرّية (علبة الكرات والأعواد).\n\nخطوات التجربة:\n1. آخذ كرة تمثّل ذرّة كربون وأربع كرات تمثّل الهيدروجين، وأشكّل منها جزيئاً، ثمّ أكتب الصيغة المجملة لهذا الجزيء، ثمّ الصيغة المنشورة له.\n2. أكرّر الخطوات من أجل ذرّتي كربون وستّ ذرّات هدروجين.\n3. أكرّر الخطوات من أجل ثلاث ذرّات كربون وثماني ذرّات هدروجين.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [],
+    "diagrams": [
+      {
+        "title": "علبة النماذج الذرّية",
+        "description": "صورة فوتوغرافية لعلبة بلاستيكية مقسمة إلى خانات تحتوي على كرات ملونة (برتقالي، سماوي، أسود، أصفر، أبيض، أحمر) وأعواد بلاستيكية صغيرة تستخدم لتمثيل الذرات والروابط الكيميائية في النماذج الجزيئية.",
+        "labels": [
+          "كرات ملونة",
+          "أعواد بلاستيكية"
+        ],
+        "related_text": "علبة النماذج الذرّية (علبة الكرات والأعواد)."
+      }
+    ],
+    "tables": [],
+    "equations": [],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 30.466366836s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '30s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 756,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 66,
+      "schema_valid": true,
+      "raw_markdown_chars": 756,
+      "char_count": 756,
+      "section_count": 5,
+      "question_count": 0,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.8998,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 66,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"# 1 المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\\n\\n## الأهداف:\\n- يستنتج صيغ بعض الألكانات.\\n- يتعرّف أسماء بعض الألكانات.\\n- يتعرّف الصيغة العامّة للألكانات.\\n- يكتب الصيغة المنشورة ونصف المنشورة لبعض الألكانات.\\n- يثمّن التطبيقات الصناعيّة الحياتيّة للألكانات.\\n\\n## الكلمات المفتاحية:\\nالكان - جذر الكيل - الصيغة العامة - الصيغة المجملة - الصيغة المنشورة - الصيغة نصف المنشورة\\n\\n## الألكانات:\\n\\n### أجرب وأستنتج:\\n\\n**أدوات التجربة:**\\nعلبة النماذج الذرّية (علبة الكرات والأعواد).\\n\\n**خطوات التجربة:**\\n1. آخذ كرة تمثّل ذرّة كربون وأربع كرات تمثّل الهيدروجين، وأشكّل منها جزيئاً، ثمّ أكتب الصيغة المجملة لهذا الجزيء، ثمّ الصيغة المنشورة له.\\n2. أكرّر الخطوات من أجل ذرّتي كربون وستّ ذرّات هدروجين.\\n3. أكرّر الخطوات من أجل ثلاث ذرّات كربون وثماني ذرّات هدروجين.\",\n  \"sections\": [\n    {\n      \"heading\": \"1 المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\",\n      \"content\": \"1 المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الأهداف:\",\n      \"content\": \"- يستنتج صيغ بعض الألكانات.\\n- يتعرّف أسماء بعض الألكانات.\\n- يتعرّف الصيغة العامّة للألكانات.\\n- يكتب الصيغة المنشورة ونصف المنشورة لبعض الألكانات.\\n- يثمّن التطبيقات الصناعيّة الحياتيّة للألكانات.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الكلمات المفتاحية:\",\n      \"content\": \"الكان - جذر الكيل - الصيغة العامة - الصيغة المجملة - الصيغة المنشورة - الصيغة نصف المنشورة\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الألكانات:\",\n      \"content\": \"الألكانات:\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أجرب وأستنتج:\",\n      \"content\": \"أدوات التجربة:\\nعلبة النماذج الذرّية (علبة الكرات والأعواد).\\n\\nخطوات التجربة:\\n1. آخذ كرة تمثّل ذرّة كربون وأربع كرات تمثّل الهيدروجين، وأشكّل منها جزيئاً، ثمّ أكتب الصيغة المجملة لهذا الجزيء، ثمّ الصيغة المنشورة له.\\n2. أكرّر الخطوات من أجل ذرّتي كربون وستّ ذرّات هدروجين.\\n3. أكرّر الخطوات من أجل ثلاث ذرّات كربون وثماني ذرّات هدروجين.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": \"علبة النماذج الذرّية\",\n      \"description\": \"صورة فوتوغرافية لعلبة بلاستيكية مقسمة إلى خانات تحتوي على كرات ملونة (برتقالي، سماوي، أسود، أصفر، أبيض، أحمر) وأعواد بلاستيكية صغيرة تستخدم لتمثيل الذرات والروابط الكيميائية في النماذج الجزيئية.\",\n      \"labels\": [\n        \"كرات ملونة\",\n        \"أعواد بلاستيكية\"\n      ],\n      \"related_text\": \"علبة النماذج الذرّية (علبة الكرات والأعواد).\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}"
+  },
+  "gemini_image_fallback_content": {
+    "page_number": 66,
+    "detected_language": "ar",
+    "raw_markdown": "# 1 المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\n\n## الأهداف:\n- يستنتج صيغ بعض الألكانات.\n- يتعرّف أسماء بعض الألكانات.\n- يتعرّف الصيغة العامّة للألكانات.\n- يكتب الصيغة المنشورة ونصف المنشورة لبعض الألكانات.\n- يثمّن التطبيقات الصناعيّة الحياتيّة للألكانات.\n\n## الكلمات المفتاحية:\nالكان - جذر الكيل - الصيغة العامة - الصيغة المجملة - الصيغة المنشورة - الصيغة نصف المنشورة\n\n## الألكانات:\n\n### أجرب وأستنتج:\n\n**أدوات التجربة:**\nعلبة النماذج الذرّية (علبة الكرات والأعواد).\n\n**خطوات التجربة:**\n1. آخذ كرة تمثّل ذرّة كربون وأربع كرات تمثّل الهيدروجين، وأشكّل منها جزيئاً، ثمّ أكتب الصيغة المجملة لهذا الجزيء، ثمّ الصيغة المنشورة له.\n2. أكرّر الخطوات من أجل ذرّتي كربون وستّ ذرّات هدروجين.\n3. أكرّر الخطوات من أجل ثلاث ذرّات كربون وثماني ذرّات هدروجين.",
+    "sections": [
+      {
+        "heading": "1 المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)",
+        "content": "1 المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)",
+        "content_type": "text"
+      },
+      {
+        "heading": "الأهداف:",
+        "content": "- يستنتج صيغ بعض الألكانات.\n- يتعرّف أسماء بعض الألكانات.\n- يتعرّف الصيغة العامّة للألكانات.\n- يكتب الصيغة المنشورة ونصف المنشورة لبعض الألكانات.\n- يثمّن التطبيقات الصناعيّة الحياتيّة للألكانات.",
+        "content_type": "text"
+      },
+      {
+        "heading": "الكلمات المفتاحية:",
+        "content": "الكان - جذر الكيل - الصيغة العامة - الصيغة المجملة - الصيغة المنشورة - الصيغة نصف المنشورة",
+        "content_type": "text"
+      },
+      {
+        "heading": "الألكانات:",
+        "content": "الألكانات:",
+        "content_type": "text"
+      },
+      {
+        "heading": "أجرب وأستنتج:",
+        "content": "أدوات التجربة:\nعلبة النماذج الذرّية (علبة الكرات والأعواد).\n\nخطوات التجربة:\n1. آخذ كرة تمثّل ذرّة كربون وأربع كرات تمثّل الهيدروجين، وأشكّل منها جزيئاً، ثمّ أكتب الصيغة المجملة لهذا الجزيء، ثمّ الصيغة المنشورة له.\n2. أكرّر الخطوات من أجل ذرّتي كربون وستّ ذرّات هدروجين.\n3. أكرّر الخطوات من أجل ثلاث ذرّات كربون وثماني ذرّات هدروجين.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [],
+    "diagrams": [
+      {
+        "title": "علبة النماذج الذرّية",
+        "description": "صورة فوتوغرافية لعلبة بلاستيكية مقسمة إلى خانات تحتوي على كرات ملونة (برتقالي، سماوي، أسود، أصفر، أبيض، أحمر) وأعواد بلاستيكية صغيرة تستخدم لتمثيل الذرات والروابط الكيميائية في النماذج الجزيئية.",
+        "labels": [
+          "كرات ملونة",
+          "أعواد بلاستيكية"
+        ],
+        "related_text": "علبة النماذج الذرّية (علبة الكرات والأعواد)."
+      }
+    ],
+    "tables": [],
+    "equations": [],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 30.466366836s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '30s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 756,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 66,
+      "schema_valid": true,
+      "raw_markdown_chars": 756,
+      "char_count": 756,
+      "section_count": 5,
+      "question_count": 0,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.8998,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 66,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"# 1 المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\\n\\n## الأهداف:\\n- يستنتج صيغ بعض الألكانات.\\n- يتعرّف أسماء بعض الألكانات.\\n- يتعرّف الصيغة العامّة للألكانات.\\n- يكتب الصيغة المنشورة ونصف المنشورة لبعض الألكانات.\\n- يثمّن التطبيقات الصناعيّة الحياتيّة للألكانات.\\n\\n## الكلمات المفتاحية:\\nالكان - جذر الكيل - الصيغة العامة - الصيغة المجملة - الصيغة المنشورة - الصيغة نصف المنشورة\\n\\n## الألكانات:\\n\\n### أجرب وأستنتج:\\n\\n**أدوات التجربة:**\\nعلبة النماذج الذرّية (علبة الكرات والأعواد).\\n\\n**خطوات التجربة:**\\n1. آخذ كرة تمثّل ذرّة كربون وأربع كرات تمثّل الهيدروجين، وأشكّل منها جزيئاً، ثمّ أكتب الصيغة المجملة لهذا الجزيء، ثمّ الصيغة المنشورة له.\\n2. أكرّر الخطوات من أجل ذرّتي كربون وستّ ذرّات هدروجين.\\n3. أكرّر الخطوات من أجل ثلاث ذرّات كربون وثماني ذرّات هدروجين.\",\n  \"sections\": [\n    {\n      \"heading\": \"1 المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\",\n      \"content\": \"1 المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الأهداف:\",\n      \"content\": \"- يستنتج صيغ بعض الألكانات.\\n- يتعرّف أسماء بعض الألكانات.\\n- يتعرّف الصيغة العامّة للألكانات.\\n- يكتب الصيغة المنشورة ونصف المنشورة لبعض الألكانات.\\n- يثمّن التطبيقات الصناعيّة الحياتيّة للألكانات.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الكلمات المفتاحية:\",\n      \"content\": \"الكان - جذر الكيل - الصيغة العامة - الصيغة المجملة - الصيغة المنشورة - الصيغة نصف المنشورة\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الألكانات:\",\n      \"content\": \"الألكانات:\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أجرب وأستنتج:\",\n      \"content\": \"أدوات التجربة:\\nعلبة النماذج الذرّية (علبة الكرات والأعواد).\\n\\nخطوات التجربة:\\n1. آخذ كرة تمثّل ذرّة كربون وأربع كرات تمثّل الهيدروجين، وأشكّل منها جزيئاً، ثمّ أكتب الصيغة المجملة لهذا الجزيء، ثمّ الصيغة المنشورة له.\\n2. أكرّر الخطوات من أجل ذرّتي كربون وستّ ذرّات هدروجين.\\n3. أكرّر الخطوات من أجل ثلاث ذرّات كربون وثماني ذرّات هدروجين.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": \"علبة النماذج الذرّية\",\n      \"description\": \"صورة فوتوغرافية لعلبة بلاستيكية مقسمة إلى خانات تحتوي على كرات ملونة (برتقالي، سماوي، أسود، أصفر، أبيض، أحمر) وأعواد بلاستيكية صغيرة تستخدم لتمثيل الذرات والروابط الكيميائية في النماذج الجزيئية.\",\n      \"labels\": [\n        \"كرات ملونة\",\n        \"أعواد بلاستيكية\"\n      ],\n      \"related_text\": \"علبة النماذج الذرّية (علبة الكرات والأعواد).\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}"
+  },
+  "merged_content": ":ا\u001aﻫﺪاف\n-  \n.يستنتج صيغ بعض األلكانات\n  -\nيتعرّف أسماء بعض األلكانات.\n  -\nيتعرّف الصّ يغة العامّة لأللكانات.\n  -\nيكتب الصّ يغة المنشورة ونصف المنشورة لبعض األلكانات.\n  -\nيثمّن التّطبيقات الصّ ناعيّة الحياتيّة لأللكانات.\n:اﻟﻜﻠﻤﺎت اﻟﻤﻔﺘﺎﺣﻴﺔ\n - الكان - جذر الكيل - الصيغة العامة - الصيغة المجملة - الصيغة المنشورة\nالصيغة نصف المنشورة\nاأللكانات:\n:أدوات التجربة\nعلبة النّماذج الذّرّيّة (علبة الكرات واألعواد).\nخطوات التّجربة:\n\u0007آخذ كرة تمثّل ذرّة كربون وأربع كرات تمثّل 1\n الهدروجين، وأشكّل منها جزيئاً، ثمّ أكتب الصّ يغة\nالمجملة لهذا الجزيء، ثمّ الصّ يغة المنشورة له.\nأكرّر الخطوات من أجل ذرّتي كربون وستّ ذرّات هدروجين.2\n.أكرر الخطوات من أجل ثالث ذرّات كربون وثماني ذرّات هدروجين3\n:أﺟﺮب وأﺳﺘﻨﺘﺞ\n المركَّبات الهدروكربونيَّة المشبعة\n األلكانات (البرافينات)1\n172\n\n| َّ\nةعبشملا ةينوبركوردهلا تابكرملا\nَّ\n)تانيفاربلا( تاناكللأا |  |  |\n| --- | --- | --- |\n|  |  |  |\n\n| أ 2 |\n| --- |\n| أ 3 |\n\n1 المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\n1 المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\n\nالأهداف:\n- يستنتج صيغ بعض الألكانات.\n- يتعرّف أسماء بعض الألكانات.\n- يتعرّف الصيغة العامّة للألكانات.\n- يكتب الصيغة المنشورة ونصف المنشورة لبعض الألكانات.\n- يثمّن التطبيقات الصناعيّة الحياتيّة للألكانات.\n\nالكلمات المفتاحية:\nالكان - جذر الكيل - الصيغة العامة - الصيغة المجملة - الصيغة المنشورة - الصيغة نصف المنشورة\n\nالألكانات:\nالألكانات:\n\nأجرب وأستنتج:\nأدوات التجربة:\nعلبة النماذج الذرّية (علبة الكرات والأعواد).\n\nخطوات التجربة:\n1. آخذ كرة تمثّل ذرّة كربون وأربع كرات تمثّل الهيدروجين، وأشكّل منها جزيئاً، ثمّ أكتب الصيغة المجملة لهذا الجزيء، ثمّ الصيغة المنشورة له.\n2. أكرّر الخطوات من أجل ذرّتي كربون وستّ ذرّات هدروجين.\n3. أكرّر الخطوات من أجل ثلاث ذرّات كربون وثماني ذرّات هدروجين.",
+  "raw_markdown": "# 1 المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\n\n## الأهداف:\n- يستنتج صيغ بعض الألكانات.\n- يتعرّف أسماء بعض الألكانات.\n- يتعرّف الصيغة العامّة للألكانات.\n- يكتب الصيغة المنشورة ونصف المنشورة لبعض الألكانات.\n- يثمّن التطبيقات الصناعيّة الحياتيّة للألكانات.\n\n## الكلمات المفتاحية:\nالكان - جذر الكيل - الصيغة العامة - الصيغة المجملة - الصيغة المنشورة - الصيغة نصف المنشورة\n\n## الألكانات:\n\n### أجرب وأستنتج:\n\n**أدوات التجربة:**\nعلبة النماذج الذرّية (علبة الكرات والأعواد).\n\n**خطوات التجربة:**\n1. آخذ كرة تمثّل ذرّة كربون وأربع كرات تمثّل الهيدروجين، وأشكّل منها جزيئاً، ثمّ أكتب الصيغة المجملة لهذا الجزيء، ثمّ الصيغة المنشورة له.\n2. أكرّر الخطوات من أجل ذرّتي كربون وستّ ذرّات هدروجين.\n3. أكرّر الخطوات من أجل ثلاث ذرّات كربون وثماني ذرّات هدروجين.",
+  "sections": [
+    {
+      "heading": null,
+      "content": ":ا\u001aﻫﺪاف\n-  \n.يستنتج صيغ بعض األلكانات\n  -\nيتعرّف أسماء بعض األلكانات.\n  -\nيتعرّف الصّ يغة العامّة لأللكانات.\n  -\nيكتب الصّ يغة المنشورة ونصف المنشورة لبعض األلكانات.\n  -\nيثمّن التّطبيقات الصّ ناعيّة الحياتيّة لأللكانات.\n:اﻟﻜﻠﻤﺎت اﻟﻤﻔﺘﺎﺣﻴﺔ\n - الكان - جذر الكيل - الصيغة العامة - الصيغة المجملة - الصيغة المنشورة\nالصيغة نصف المنشورة\nاأللكانات:\n:أدوات التجربة\nعلبة النّماذج الذّرّيّة (علبة الكرات واألعواد).\nخطوات التّجربة:\n\u0007آخذ كرة تمثّل ذرّة كربون وأربع كرات تمثّل 1\n الهدروجين، وأشكّل منها جزيئاً، ثمّ أكتب الصّ يغة\nالمجملة لهذا الجزيء، ثمّ الصّ يغة المنشورة له.\nأكرّر الخطوات من أجل ذرّتي كربون وستّ ذرّات هدروجين.2\n.أكرر الخطوات من أجل ثالث ذرّات كربون وثماني ذرّات هدروجين3\n:أﺟﺮب وأﺳﺘﻨﺘﺞ\n المركَّبات الهدروكربونيَّة المشبعة\n األلكانات (البرافينات)1\n172\n\n| َّ\nةعبشملا ةينوبركوردهلا تابكرملا\nَّ\n)تانيفاربلا( تاناكللأا |  |  |\n| --- | --- | --- |\n|  |  |  |\n\n| أ 2 |\n| --- |\n| أ 3 |",
+      "content_type": "text"
+    },
+    {
+      "heading": "1 المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)",
+      "content": "1 المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)",
+      "content_type": "text"
+    },
+    {
+      "heading": "الأهداف:",
+      "content": "- يستنتج صيغ بعض الألكانات.\n- يتعرّف أسماء بعض الألكانات.\n- يتعرّف الصيغة العامّة للألكانات.\n- يكتب الصيغة المنشورة ونصف المنشورة لبعض الألكانات.\n- يثمّن التطبيقات الصناعيّة الحياتيّة للألكانات.",
+      "content_type": "text"
+    },
+    {
+      "heading": "الكلمات المفتاحية:",
+      "content": "الكان - جذر الكيل - الصيغة العامة - الصيغة المجملة - الصيغة المنشورة - الصيغة نصف المنشورة",
+      "content_type": "text"
+    },
+    {
+      "heading": "الألكانات:",
+      "content": "الألكانات:",
+      "content_type": "text"
+    },
+    {
+      "heading": "أجرب وأستنتج:",
+      "content": "أدوات التجربة:\nعلبة النماذج الذرّية (علبة الكرات والأعواد).\n\nخطوات التجربة:\n1. آخذ كرة تمثّل ذرّة كربون وأربع كرات تمثّل الهيدروجين، وأشكّل منها جزيئاً، ثمّ أكتب الصيغة المجملة لهذا الجزيء، ثمّ الصيغة المنشورة له.\n2. أكرّر الخطوات من أجل ذرّتي كربون وستّ ذرّات هدروجين.\n3. أكرّر الخطوات من أجل ثلاث ذرّات كربون وثماني ذرّات هدروجين.",
+      "content_type": "text"
+    }
+  ],
   "questions": [],
-  "diagrams": [],
+  "diagrams": [
+    {
+      "title": "علبة النماذج الذرّية",
+      "description": "صورة فوتوغرافية لعلبة بلاستيكية مقسمة إلى خانات تحتوي على كرات ملونة (برتقالي، سماوي، أسود، أصفر، أبيض، أحمر) وأعواد بلاستيكية صغيرة تستخدم لتمثيل الذرات والروابط الكيميائية في النماذج الجزيئية.",
+      "labels": [
+        "كرات ملونة",
+        "أعواد بلاستيكية"
+      ],
+      "related_text": "علبة النماذج الذرّية (علبة الكرات والأعواد)."
+    }
+  ],
   "tables": [],
   "equations": [],
-  "warnings": [],
-  "errors": [
-    "Gemini document extraction failed quality checks for page 66: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 43.13521554s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '43s'}]}}"
+  "warnings": [
+    "Gemini PDF extraction failed; using 300 DPI image fallback: Gemini document extraction failed for page 66 with model gemini-3.1-flash-lite: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'Request contains an invalid argument.', 'status': 'INVALID_ARGUMENT'}}",
+    "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 30.466366836s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '30s'}]}}."
   ],
-  "char_count": 0,
-  "completeness_score": 0.0,
+  "errors": [],
+  "char_count": 1684,
+  "completeness_score": 1.0,
   "detected_language": "ar",
-  "vision_provider": null,
-  "vision_source": null,
-  "neighboring_pages": [],
-  "uploaded_pdf": null,
-  "raw_text": null,
-  "quality_report": {},
+  "vision_provider": "gemini_document_image",
+  "vision_source": "gemini_rendered_image_300dpi",
+  "neighboring_pages": [
+    65,
+    67
+  ],
+  "uploaded_pdf": {
+    "provider": "gemini_document",
+    "name": "files/6zs99grhoqr2",
+    "uri": "https://generativelanguage.googleapis.com/v1beta/files/6zs99grhoqr2",
+    "mime_type": "application/pdf",
+    "display_name": "Chemistry.pdf"
+  },
+  "raw_text": "{\n  \"page_number\": 66,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"# 1 المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\\n\\n## الأهداف:\\n- يستنتج صيغ بعض الألكانات.\\n- يتعرّف أسماء بعض الألكانات.\\n- يتعرّف الصيغة العامّة للألكانات.\\n- يكتب الصيغة المنشورة ونصف المنشورة لبعض الألكانات.\\n- يثمّن التطبيقات الصناعيّة الحياتيّة للألكانات.\\n\\n## الكلمات المفتاحية:\\nالكان - جذر الكيل - الصيغة العامة - الصيغة المجملة - الصيغة المنشورة - الصيغة نصف المنشورة\\n\\n## الألكانات:\\n\\n### أجرب وأستنتج:\\n\\n**أدوات التجربة:**\\nعلبة النماذج الذرّية (علبة الكرات والأعواد).\\n\\n**خطوات التجربة:**\\n1. آخذ كرة تمثّل ذرّة كربون وأربع كرات تمثّل الهيدروجين، وأشكّل منها جزيئاً، ثمّ أكتب الصيغة المجملة لهذا الجزيء، ثمّ الصيغة المنشورة له.\\n2. أكرّر الخطوات من أجل ذرّتي كربون وستّ ذرّات هدروجين.\\n3. أكرّر الخطوات من أجل ثلاث ذرّات كربون وثماني ذرّات هدروجين.\",\n  \"sections\": [\n    {\n      \"heading\": \"1 المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\",\n      \"content\": \"1 المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الأهداف:\",\n      \"content\": \"- يستنتج صيغ بعض الألكانات.\\n- يتعرّف أسماء بعض الألكانات.\\n- يتعرّف الصيغة العامّة للألكانات.\\n- يكتب الصيغة المنشورة ونصف المنشورة لبعض الألكانات.\\n- يثمّن التطبيقات الصناعيّة الحياتيّة للألكانات.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الكلمات المفتاحية:\",\n      \"content\": \"الكان - جذر الكيل - الصيغة العامة - الصيغة المجملة - الصيغة المنشورة - الصيغة نصف المنشورة\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"الألكانات:\",\n      \"content\": \"الألكانات:\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"أجرب وأستنتج:\",\n      \"content\": \"أدوات التجربة:\\nعلبة النماذج الذرّية (علبة الكرات والأعواد).\\n\\nخطوات التجربة:\\n1. آخذ كرة تمثّل ذرّة كربون وأربع كرات تمثّل الهيدروجين، وأشكّل منها جزيئاً، ثمّ أكتب الصيغة المجملة لهذا الجزيء، ثمّ الصيغة المنشورة له.\\n2. أكرّر الخطوات من أجل ذرّتي كربون وستّ ذرّات هدروجين.\\n3. أكرّر الخطوات من أجل ثلاث ذرّات كربون وثماني ذرّات هدروجين.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"title\": \"علبة النماذج الذرّية\",\n      \"description\": \"صورة فوتوغرافية لعلبة بلاستيكية مقسمة إلى خانات تحتوي على كرات ملونة (برتقالي، سماوي، أسود، أصفر، أبيض، أحمر) وأعواد بلاستيكية صغيرة تستخدم لتمثيل الذرات والروابط الكيميائية في النماذج الجزيئية.\",\n      \"labels\": [\n        \"كرات ملونة\",\n        \"أعواد بلاستيكية\"\n      ],\n      \"related_text\": \"علبة النماذج الذرّية (علبة الكرات والأعواد).\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}",
+  "quality_report": {
+    "page_number": 66,
+    "schema_valid": true,
+    "raw_markdown_chars": 756,
+    "char_count": 756,
+    "section_count": 5,
+    "question_count": 0,
+    "table_count": 0,
+    "equation_count": 0,
+    "diagram_count": 1,
+    "warning_count": 0,
+    "arabic_char_ratio": 0.8998,
+    "completeness_score": 1.0,
+    "issues": [],
+    "should_fallback": false
+  },
   "classification": "MIXED_VISION",
   "source_id": 1
 }

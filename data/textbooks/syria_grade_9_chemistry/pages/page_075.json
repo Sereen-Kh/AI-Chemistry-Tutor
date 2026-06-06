@@ -2,35 +2,270 @@
   "page_number": 75,
   "page_type": "NEEDS_VISION",
   "extraction_methods": [
-    "exception"
+    "gemini_pdf_file",
+    "gemini_image_300dpi"
   ],
-  "extraction_method": "exception",
-  "status": "failed",
+  "extraction_method": "gemini_pdf_file+gemini_image_300dpi",
+  "status": "completed_with_image_fallback",
   "text_layer_content": "",
-  "vision_content": {},
+  "vision_content": {
+    "page_number": 75,
+    "detected_language": "ar",
+    "raw_markdown": "### جدول المركب\n| المركب | صيغته المجملة | صيغته نصف المنشورة | الصيغة المنشورة |\n| :--- | :--- | :--- | :--- |\n| البروبين | C3H4 | H3C - C ≡ CH | H-C(H)(H)-C≡C-H |\n\n### نتيجة:\n- الألكينات: مركبات هيدروكربونية غير مشبعة تحتوي على رابطة واحدة ثلاثية مشتركة على الأقل بين ذرتين من ذرات الكربون فيه.\n- الصيغة العامة لسلاسل الألكينات المفتوحة هي: CnH2n-2 حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, .....).\n- نستبدل باللاحقة في أسماء الألكانات اللاحقة (ين) في أسماء الألكينات وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\n\n### غاز الإستيلين:\nيحترق غاز الإستيلين بأكسجين الهواء احتراقاً تاماً ناشراً كمية كبيرة من الحرارة، وهي كافية لصهر معظم المعادن الصناعية (حديد، نحاس، .....).\n\n2C2H2 + 5O2 → 4CO2 + 2H2O + حرارة\nينتشر 1255 kJ عند احتراق مول واحد من الإستيلين.",
+    "sections": [
+      {
+        "heading": null,
+        "content": "| المركب | صيغته المجملة | صيغته نصف المنشورة | الصيغة المنشورة |\n| :--- | :--- | :--- | :--- |\n| البروبين | C3H4 | H3C - C ≡ CH | H-C(H)(H)-C≡C-H |",
+        "content_type": "table"
+      },
+      {
+        "heading": "نتيجة:",
+        "content": "الألكينات: مركبات هيدروكربونية غير مشبعة تحتوي على رابطة واحدة ثلاثية مشتركة على الأقل بين ذرتين من ذرات الكربون فيه.\nالصيغة العامة لسلاسل الألكينات المفتوحة هي: CnH2n-2 حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, .....).\nنستبدل باللاحقة في أسماء الألكانات اللاحقة (ين) في أسماء الألكينات وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.",
+        "content_type": "text"
+      },
+      {
+        "heading": "غاز الإستيلين:",
+        "content": "يحترق غاز الإستيلين بأكسجين الهواء احتراقاً تاماً ناشراً كمية كبيرة من الحرارة، وهي كافية لصهر معظم المعادن الصناعية (حديد، نحاس، .....).",
+        "content_type": "text"
+      }
+    ],
+    "questions": [],
+    "diagrams": [],
+    "tables": [
+      {
+        "title": null,
+        "markdown": "| المركب | صيغته المجملة | صيغته نصف المنشورة | الصيغة المنشورة |\n| :--- | :--- | :--- | :--- |\n| البروبين | C3H4 | H3C - C ≡ CH | H-C(H)(H)-C≡C-H |"
+      }
+    ],
+    "equations": [
+      {
+        "equation": "2C2H2 + 5O2 → 4CO2 + 2H2O + حرارة",
+        "description": "معادلة احتراق غاز الإستيلين"
+      }
+    ],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 12.871130947s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '12s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 766,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 75,
+      "schema_valid": true,
+      "raw_markdown_chars": 766,
+      "char_count": 766,
+      "section_count": 3,
+      "question_count": 0,
+      "table_count": 1,
+      "equation_count": 1,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.8285,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 75,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### جدول المركب\\n| المركب | صيغته المجملة | صيغته نصف المنشورة | الصيغة المنشورة |\\n| :--- | :--- | :--- | :--- |\\n| البروبين | C3H4 | H3C - C ≡ CH | H-C(H)(H)-C≡C-H |\\n\\n### نتيجة:\\n- الألكينات: مركبات هيدروكربونية غير مشبعة تحتوي على رابطة واحدة ثلاثية مشتركة على الأقل بين ذرتين من ذرات الكربون فيه.\\n- الصيغة العامة لسلاسل الألكينات المفتوحة هي: CnH2n-2 حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, .....).\\n- نستبدل باللاحقة في أسماء الألكانات اللاحقة (ين) في أسماء الألكينات وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\\n\\n### غاز الإستيلين:\\nيحترق غاز الإستيلين بأكسجين الهواء احتراقاً تاماً ناشراً كمية كبيرة من الحرارة، وهي كافية لصهر معظم المعادن الصناعية (حديد، نحاس، .....).\\n\\n2C2H2 + 5O2 → 4CO2 + 2H2O + حرارة\\nينتشر 1255 kJ عند احتراق مول واحد من الإستيلين.\",\n  \"sections\": [\n    {\n      \"heading\": null,\n      \"content\": \"| المركب | صيغته المجملة | صيغته نصف المنشورة | الصيغة المنشورة |\\n| :--- | :--- | :--- | :--- |\\n| البروبين | C3H4 | H3C - C ≡ CH | H-C(H)(H)-C≡C-H |\",\n      \"content_type\": \"table\"\n    },\n    {\n      \"heading\": \"نتيجة:\",\n      \"content\": \"الألكينات: مركبات هيدروكربونية غير مشبعة تحتوي على رابطة واحدة ثلاثية مشتركة على الأقل بين ذرتين من ذرات الكربون فيه.\\nالصيغة العامة لسلاسل الألكينات المفتوحة هي: CnH2n-2 حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, .....).\\nنستبدل باللاحقة في أسماء الألكانات اللاحقة (ين) في أسماء الألكينات وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"غاز الإستيلين:\",\n      \"content\": \"يحترق غاز الإستيلين بأكسجين الهواء احتراقاً تاماً ناشراً كمية كبيرة من الحرارة، وهي كافية لصهر معظم المعادن الصناعية (حديد، نحاس، .....).\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"tables\": [\n    {\n      \"title\": null,\n      \"markdown\": \"| المركب | صيغته المجملة | صيغته نصف المنشورة | الصيغة المنشورة |\\n| :--- | :--- | :--- | :--- |\\n| البروبين | C3H4 | H3C - C ≡ CH | H-C(H)(H)-C≡C-H |\"\n    }\n  ],\n  \"equations\": [\n    {\n      \"equation\": \"2C2H2 + 5O2 → 4CO2 + 2H2O + حرارة\",\n      \"description\": \"معادلة احتراق غاز الإستيلين\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}"
+  },
   "gemini_pdf_content": {},
-  "gemini_fallback_model_content": {},
-  "gemini_image_fallback_content": {},
-  "merged_content": "",
-  "raw_markdown": "",
-  "sections": [],
+  "gemini_fallback_model_content": {
+    "page_number": 75,
+    "detected_language": "ar",
+    "raw_markdown": "### جدول المركب\n| المركب | صيغته المجملة | صيغته نصف المنشورة | الصيغة المنشورة |\n| :--- | :--- | :--- | :--- |\n| البروبين | C3H4 | H3C - C ≡ CH | H-C(H)(H)-C≡C-H |\n\n### نتيجة:\n- الألكينات: مركبات هيدروكربونية غير مشبعة تحتوي على رابطة واحدة ثلاثية مشتركة على الأقل بين ذرتين من ذرات الكربون فيه.\n- الصيغة العامة لسلاسل الألكينات المفتوحة هي: CnH2n-2 حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, .....).\n- نستبدل باللاحقة في أسماء الألكانات اللاحقة (ين) في أسماء الألكينات وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\n\n### غاز الإستيلين:\nيحترق غاز الإستيلين بأكسجين الهواء احتراقاً تاماً ناشراً كمية كبيرة من الحرارة، وهي كافية لصهر معظم المعادن الصناعية (حديد، نحاس، .....).\n\n2C2H2 + 5O2 → 4CO2 + 2H2O + حرارة\nينتشر 1255 kJ عند احتراق مول واحد من الإستيلين.",
+    "sections": [
+      {
+        "heading": null,
+        "content": "| المركب | صيغته المجملة | صيغته نصف المنشورة | الصيغة المنشورة |\n| :--- | :--- | :--- | :--- |\n| البروبين | C3H4 | H3C - C ≡ CH | H-C(H)(H)-C≡C-H |",
+        "content_type": "table"
+      },
+      {
+        "heading": "نتيجة:",
+        "content": "الألكينات: مركبات هيدروكربونية غير مشبعة تحتوي على رابطة واحدة ثلاثية مشتركة على الأقل بين ذرتين من ذرات الكربون فيه.\nالصيغة العامة لسلاسل الألكينات المفتوحة هي: CnH2n-2 حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, .....).\nنستبدل باللاحقة في أسماء الألكانات اللاحقة (ين) في أسماء الألكينات وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.",
+        "content_type": "text"
+      },
+      {
+        "heading": "غاز الإستيلين:",
+        "content": "يحترق غاز الإستيلين بأكسجين الهواء احتراقاً تاماً ناشراً كمية كبيرة من الحرارة، وهي كافية لصهر معظم المعادن الصناعية (حديد، نحاس، .....).",
+        "content_type": "text"
+      }
+    ],
+    "questions": [],
+    "diagrams": [],
+    "tables": [
+      {
+        "title": null,
+        "markdown": "| المركب | صيغته المجملة | صيغته نصف المنشورة | الصيغة المنشورة |\n| :--- | :--- | :--- | :--- |\n| البروبين | C3H4 | H3C - C ≡ CH | H-C(H)(H)-C≡C-H |"
+      }
+    ],
+    "equations": [
+      {
+        "equation": "2C2H2 + 5O2 → 4CO2 + 2H2O + حرارة",
+        "description": "معادلة احتراق غاز الإستيلين"
+      }
+    ],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 12.871130947s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '12s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 766,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 75,
+      "schema_valid": true,
+      "raw_markdown_chars": 766,
+      "char_count": 766,
+      "section_count": 3,
+      "question_count": 0,
+      "table_count": 1,
+      "equation_count": 1,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.8285,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 75,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### جدول المركب\\n| المركب | صيغته المجملة | صيغته نصف المنشورة | الصيغة المنشورة |\\n| :--- | :--- | :--- | :--- |\\n| البروبين | C3H4 | H3C - C ≡ CH | H-C(H)(H)-C≡C-H |\\n\\n### نتيجة:\\n- الألكينات: مركبات هيدروكربونية غير مشبعة تحتوي على رابطة واحدة ثلاثية مشتركة على الأقل بين ذرتين من ذرات الكربون فيه.\\n- الصيغة العامة لسلاسل الألكينات المفتوحة هي: CnH2n-2 حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, .....).\\n- نستبدل باللاحقة في أسماء الألكانات اللاحقة (ين) في أسماء الألكينات وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\\n\\n### غاز الإستيلين:\\nيحترق غاز الإستيلين بأكسجين الهواء احتراقاً تاماً ناشراً كمية كبيرة من الحرارة، وهي كافية لصهر معظم المعادن الصناعية (حديد، نحاس، .....).\\n\\n2C2H2 + 5O2 → 4CO2 + 2H2O + حرارة\\nينتشر 1255 kJ عند احتراق مول واحد من الإستيلين.\",\n  \"sections\": [\n    {\n      \"heading\": null,\n      \"content\": \"| المركب | صيغته المجملة | صيغته نصف المنشورة | الصيغة المنشورة |\\n| :--- | :--- | :--- | :--- |\\n| البروبين | C3H4 | H3C - C ≡ CH | H-C(H)(H)-C≡C-H |\",\n      \"content_type\": \"table\"\n    },\n    {\n      \"heading\": \"نتيجة:\",\n      \"content\": \"الألكينات: مركبات هيدروكربونية غير مشبعة تحتوي على رابطة واحدة ثلاثية مشتركة على الأقل بين ذرتين من ذرات الكربون فيه.\\nالصيغة العامة لسلاسل الألكينات المفتوحة هي: CnH2n-2 حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, .....).\\nنستبدل باللاحقة في أسماء الألكانات اللاحقة (ين) في أسماء الألكينات وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"غاز الإستيلين:\",\n      \"content\": \"يحترق غاز الإستيلين بأكسجين الهواء احتراقاً تاماً ناشراً كمية كبيرة من الحرارة، وهي كافية لصهر معظم المعادن الصناعية (حديد، نحاس، .....).\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"tables\": [\n    {\n      \"title\": null,\n      \"markdown\": \"| المركب | صيغته المجملة | صيغته نصف المنشورة | الصيغة المنشورة |\\n| :--- | :--- | :--- | :--- |\\n| البروبين | C3H4 | H3C - C ≡ CH | H-C(H)(H)-C≡C-H |\"\n    }\n  ],\n  \"equations\": [\n    {\n      \"equation\": \"2C2H2 + 5O2 → 4CO2 + 2H2O + حرارة\",\n      \"description\": \"معادلة احتراق غاز الإستيلين\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}"
+  },
+  "gemini_image_fallback_content": {
+    "page_number": 75,
+    "detected_language": "ar",
+    "raw_markdown": "### جدول المركب\n| المركب | صيغته المجملة | صيغته نصف المنشورة | الصيغة المنشورة |\n| :--- | :--- | :--- | :--- |\n| البروبين | C3H4 | H3C - C ≡ CH | H-C(H)(H)-C≡C-H |\n\n### نتيجة:\n- الألكينات: مركبات هيدروكربونية غير مشبعة تحتوي على رابطة واحدة ثلاثية مشتركة على الأقل بين ذرتين من ذرات الكربون فيه.\n- الصيغة العامة لسلاسل الألكينات المفتوحة هي: CnH2n-2 حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, .....).\n- نستبدل باللاحقة في أسماء الألكانات اللاحقة (ين) في أسماء الألكينات وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\n\n### غاز الإستيلين:\nيحترق غاز الإستيلين بأكسجين الهواء احتراقاً تاماً ناشراً كمية كبيرة من الحرارة، وهي كافية لصهر معظم المعادن الصناعية (حديد، نحاس، .....).\n\n2C2H2 + 5O2 → 4CO2 + 2H2O + حرارة\nينتشر 1255 kJ عند احتراق مول واحد من الإستيلين.",
+    "sections": [
+      {
+        "heading": null,
+        "content": "| المركب | صيغته المجملة | صيغته نصف المنشورة | الصيغة المنشورة |\n| :--- | :--- | :--- | :--- |\n| البروبين | C3H4 | H3C - C ≡ CH | H-C(H)(H)-C≡C-H |",
+        "content_type": "table"
+      },
+      {
+        "heading": "نتيجة:",
+        "content": "الألكينات: مركبات هيدروكربونية غير مشبعة تحتوي على رابطة واحدة ثلاثية مشتركة على الأقل بين ذرتين من ذرات الكربون فيه.\nالصيغة العامة لسلاسل الألكينات المفتوحة هي: CnH2n-2 حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, .....).\nنستبدل باللاحقة في أسماء الألكانات اللاحقة (ين) في أسماء الألكينات وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.",
+        "content_type": "text"
+      },
+      {
+        "heading": "غاز الإستيلين:",
+        "content": "يحترق غاز الإستيلين بأكسجين الهواء احتراقاً تاماً ناشراً كمية كبيرة من الحرارة، وهي كافية لصهر معظم المعادن الصناعية (حديد، نحاس، .....).",
+        "content_type": "text"
+      }
+    ],
+    "questions": [],
+    "diagrams": [],
+    "tables": [
+      {
+        "title": null,
+        "markdown": "| المركب | صيغته المجملة | صيغته نصف المنشورة | الصيغة المنشورة |\n| :--- | :--- | :--- | :--- |\n| البروبين | C3H4 | H3C - C ≡ CH | H-C(H)(H)-C≡C-H |"
+      }
+    ],
+    "equations": [
+      {
+        "equation": "2C2H2 + 5O2 → 4CO2 + 2H2O + حرارة",
+        "description": "معادلة احتراق غاز الإستيلين"
+      }
+    ],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 12.871130947s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '12s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 766,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 75,
+      "schema_valid": true,
+      "raw_markdown_chars": 766,
+      "char_count": 766,
+      "section_count": 3,
+      "question_count": 0,
+      "table_count": 1,
+      "equation_count": 1,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.8285,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 75,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### جدول المركب\\n| المركب | صيغته المجملة | صيغته نصف المنشورة | الصيغة المنشورة |\\n| :--- | :--- | :--- | :--- |\\n| البروبين | C3H4 | H3C - C ≡ CH | H-C(H)(H)-C≡C-H |\\n\\n### نتيجة:\\n- الألكينات: مركبات هيدروكربونية غير مشبعة تحتوي على رابطة واحدة ثلاثية مشتركة على الأقل بين ذرتين من ذرات الكربون فيه.\\n- الصيغة العامة لسلاسل الألكينات المفتوحة هي: CnH2n-2 حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, .....).\\n- نستبدل باللاحقة في أسماء الألكانات اللاحقة (ين) في أسماء الألكينات وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\\n\\n### غاز الإستيلين:\\nيحترق غاز الإستيلين بأكسجين الهواء احتراقاً تاماً ناشراً كمية كبيرة من الحرارة، وهي كافية لصهر معظم المعادن الصناعية (حديد، نحاس، .....).\\n\\n2C2H2 + 5O2 → 4CO2 + 2H2O + حرارة\\nينتشر 1255 kJ عند احتراق مول واحد من الإستيلين.\",\n  \"sections\": [\n    {\n      \"heading\": null,\n      \"content\": \"| المركب | صيغته المجملة | صيغته نصف المنشورة | الصيغة المنشورة |\\n| :--- | :--- | :--- | :--- |\\n| البروبين | C3H4 | H3C - C ≡ CH | H-C(H)(H)-C≡C-H |\",\n      \"content_type\": \"table\"\n    },\n    {\n      \"heading\": \"نتيجة:\",\n      \"content\": \"الألكينات: مركبات هيدروكربونية غير مشبعة تحتوي على رابطة واحدة ثلاثية مشتركة على الأقل بين ذرتين من ذرات الكربون فيه.\\nالصيغة العامة لسلاسل الألكينات المفتوحة هي: CnH2n-2 حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, .....).\\nنستبدل باللاحقة في أسماء الألكانات اللاحقة (ين) في أسماء الألكينات وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"غاز الإستيلين:\",\n      \"content\": \"يحترق غاز الإستيلين بأكسجين الهواء احتراقاً تاماً ناشراً كمية كبيرة من الحرارة، وهي كافية لصهر معظم المعادن الصناعية (حديد، نحاس، .....).\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"tables\": [\n    {\n      \"title\": null,\n      \"markdown\": \"| المركب | صيغته المجملة | صيغته نصف المنشورة | الصيغة المنشورة |\\n| :--- | :--- | :--- | :--- |\\n| البروبين | C3H4 | H3C - C ≡ CH | H-C(H)(H)-C≡C-H |\"\n    }\n  ],\n  \"equations\": [\n    {\n      \"equation\": \"2C2H2 + 5O2 → 4CO2 + 2H2O + حرارة\",\n      \"description\": \"معادلة احتراق غاز الإستيلين\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}"
+  },
+  "merged_content": "| المركب | صيغته المجملة | صيغته نصف المنشورة | الصيغة المنشورة |\n| :--- | :--- | :--- | :--- |\n| البروبين | C3H4 | H3C - C ≡ CH | H-C(H)(H)-C≡C-H |\n\nنتيجة:\nالألكينات: مركبات هيدروكربونية غير مشبعة تحتوي على رابطة واحدة ثلاثية مشتركة على الأقل بين ذرتين من ذرات الكربون فيه.\nالصيغة العامة لسلاسل الألكينات المفتوحة هي: CnH2n-2 حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, .....).\nنستبدل باللاحقة في أسماء الألكانات اللاحقة (ين) في أسماء الألكينات وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\n\nغاز الإستيلين:\nيحترق غاز الإستيلين بأكسجين الهواء احتراقاً تاماً ناشراً كمية كبيرة من الحرارة، وهي كافية لصهر معظم المعادن الصناعية (حديد، نحاس، .....).",
+  "raw_markdown": "### جدول المركب\n| المركب | صيغته المجملة | صيغته نصف المنشورة | الصيغة المنشورة |\n| :--- | :--- | :--- | :--- |\n| البروبين | C3H4 | H3C - C ≡ CH | H-C(H)(H)-C≡C-H |\n\n### نتيجة:\n- الألكينات: مركبات هيدروكربونية غير مشبعة تحتوي على رابطة واحدة ثلاثية مشتركة على الأقل بين ذرتين من ذرات الكربون فيه.\n- الصيغة العامة لسلاسل الألكينات المفتوحة هي: CnH2n-2 حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, .....).\n- نستبدل باللاحقة في أسماء الألكانات اللاحقة (ين) في أسماء الألكينات وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\n\n### غاز الإستيلين:\nيحترق غاز الإستيلين بأكسجين الهواء احتراقاً تاماً ناشراً كمية كبيرة من الحرارة، وهي كافية لصهر معظم المعادن الصناعية (حديد، نحاس، .....).\n\n2C2H2 + 5O2 → 4CO2 + 2H2O + حرارة\nينتشر 1255 kJ عند احتراق مول واحد من الإستيلين.",
+  "sections": [
+    {
+      "heading": null,
+      "content": "| المركب | صيغته المجملة | صيغته نصف المنشورة | الصيغة المنشورة |\n| :--- | :--- | :--- | :--- |\n| البروبين | C3H4 | H3C - C ≡ CH | H-C(H)(H)-C≡C-H |",
+      "content_type": "table"
+    },
+    {
+      "heading": "نتيجة:",
+      "content": "الألكينات: مركبات هيدروكربونية غير مشبعة تحتوي على رابطة واحدة ثلاثية مشتركة على الأقل بين ذرتين من ذرات الكربون فيه.\nالصيغة العامة لسلاسل الألكينات المفتوحة هي: CnH2n-2 حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, .....).\nنستبدل باللاحقة في أسماء الألكانات اللاحقة (ين) في أسماء الألكينات وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.",
+      "content_type": "text"
+    },
+    {
+      "heading": "غاز الإستيلين:",
+      "content": "يحترق غاز الإستيلين بأكسجين الهواء احتراقاً تاماً ناشراً كمية كبيرة من الحرارة، وهي كافية لصهر معظم المعادن الصناعية (حديد، نحاس، .....).",
+      "content_type": "text"
+    }
+  ],
   "questions": [],
   "diagrams": [],
-  "tables": [],
-  "equations": [],
-  "warnings": [],
-  "errors": [
-    "Gemini document extraction failed quality checks for page 75: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 13.84514092s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '13s'}]}}"
+  "tables": [
+    {
+      "title": null,
+      "markdown": "| المركب | صيغته المجملة | صيغته نصف المنشورة | الصيغة المنشورة |\n| :--- | :--- | :--- | :--- |\n| البروبين | C3H4 | H3C - C ≡ CH | H-C(H)(H)-C≡C-H |"
+    }
   ],
-  "char_count": 0,
-  "completeness_score": 0.0,
+  "equations": [
+    {
+      "equation": "2C2H2 + 5O2 → 4CO2 + 2H2O + حرارة",
+      "description": "معادلة احتراق غاز الإستيلين"
+    }
+  ],
+  "warnings": [
+    "Gemini PDF extraction failed; using 300 DPI image fallback: Gemini document extraction failed for page 75 with model gemini-3.1-flash-lite: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'Request contains an invalid argument.', 'status': 'INVALID_ARGUMENT'}}",
+    "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 12.871130947s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '12s'}]}}."
+  ],
+  "errors": [],
+  "char_count": 653,
+  "completeness_score": 1.0,
   "detected_language": "ar",
-  "vision_provider": null,
-  "vision_source": null,
-  "neighboring_pages": [],
-  "uploaded_pdf": null,
-  "raw_text": null,
-  "quality_report": {},
+  "vision_provider": "gemini_document_image",
+  "vision_source": "gemini_rendered_image_300dpi",
+  "neighboring_pages": [
+    74,
+    76
+  ],
+  "uploaded_pdf": {
+    "provider": "gemini_document",
+    "name": "files/6zs99grhoqr2",
+    "uri": "https://generativelanguage.googleapis.com/v1beta/files/6zs99grhoqr2",
+    "mime_type": "application/pdf",
+    "display_name": "Chemistry.pdf"
+  },
+  "raw_text": "{\n  \"page_number\": 75,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### جدول المركب\\n| المركب | صيغته المجملة | صيغته نصف المنشورة | الصيغة المنشورة |\\n| :--- | :--- | :--- | :--- |\\n| البروبين | C3H4 | H3C - C ≡ CH | H-C(H)(H)-C≡C-H |\\n\\n### نتيجة:\\n- الألكينات: مركبات هيدروكربونية غير مشبعة تحتوي على رابطة واحدة ثلاثية مشتركة على الأقل بين ذرتين من ذرات الكربون فيه.\\n- الصيغة العامة لسلاسل الألكينات المفتوحة هي: CnH2n-2 حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, .....).\\n- نستبدل باللاحقة في أسماء الألكانات اللاحقة (ين) في أسماء الألكينات وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\\n\\n### غاز الإستيلين:\\nيحترق غاز الإستيلين بأكسجين الهواء احتراقاً تاماً ناشراً كمية كبيرة من الحرارة، وهي كافية لصهر معظم المعادن الصناعية (حديد، نحاس، .....).\\n\\n2C2H2 + 5O2 → 4CO2 + 2H2O + حرارة\\nينتشر 1255 kJ عند احتراق مول واحد من الإستيلين.\",\n  \"sections\": [\n    {\n      \"heading\": null,\n      \"content\": \"| المركب | صيغته المجملة | صيغته نصف المنشورة | الصيغة المنشورة |\\n| :--- | :--- | :--- | :--- |\\n| البروبين | C3H4 | H3C - C ≡ CH | H-C(H)(H)-C≡C-H |\",\n      \"content_type\": \"table\"\n    },\n    {\n      \"heading\": \"نتيجة:\",\n      \"content\": \"الألكينات: مركبات هيدروكربونية غير مشبعة تحتوي على رابطة واحدة ثلاثية مشتركة على الأقل بين ذرتين من ذرات الكربون فيه.\\nالصيغة العامة لسلاسل الألكينات المفتوحة هي: CnH2n-2 حيث n عدد ذرات الكربون (n = 2, 3, 4, 5, .....).\\nنستبدل باللاحقة في أسماء الألكانات اللاحقة (ين) في أسماء الألكينات وذلك وفق الاتحاد الدولي للكيمياء البحتة والتطبيقية IUPAC.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"غاز الإستيلين:\",\n      \"content\": \"يحترق غاز الإستيلين بأكسجين الهواء احتراقاً تاماً ناشراً كمية كبيرة من الحرارة، وهي كافية لصهر معظم المعادن الصناعية (حديد، نحاس، .....).\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"tables\": [\n    {\n      \"title\": null,\n      \"markdown\": \"| المركب | صيغته المجملة | صيغته نصف المنشورة | الصيغة المنشورة |\\n| :--- | :--- | :--- | :--- |\\n| البروبين | C3H4 | H3C - C ≡ CH | H-C(H)(H)-C≡C-H |\"\n    }\n  ],\n  \"equations\": [\n    {\n      \"equation\": \"2C2H2 + 5O2 → 4CO2 + 2H2O + حرارة\",\n      \"description\": \"معادلة احتراق غاز الإستيلين\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}",
+  "quality_report": {
+    "page_number": 75,
+    "schema_valid": true,
+    "raw_markdown_chars": 766,
+    "char_count": 766,
+    "section_count": 3,
+    "question_count": 0,
+    "table_count": 1,
+    "equation_count": 1,
+    "diagram_count": 0,
+    "warning_count": 0,
+    "arabic_char_ratio": 0.8285,
+    "completeness_score": 1.0,
+    "issues": [],
+    "should_fallback": false
+  },
   "classification": "NEEDS_VISION",
   "source_id": 1
 }

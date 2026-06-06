@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 _CACHE: dict[str, tuple[float, list["RetrievedChunk"]]] = {}
 _CACHE_TTL_SECONDS = 3600
-_CACHE_VERSION = "v7"
+_CACHE_VERSION = "v12"
 # Allow local dry-run sources for retrieval/debugging without marking ingestion complete.
 _RETRIEVABLE_SOURCE_STATUSES = [
     "completed",
@@ -59,6 +59,7 @@ _QUERY_STOPWORDS = {
     "ساعدني", "اعطني", "اعطيني",
     # Question particles & pronouns
     "ما", "ماذا", "من", "في", "عن", "على", "الى", "الي",
+    "هل", "كيف", "لماذا", "متى", "كم", "عند", "يحدث",
     "هو", "هي", "هذا", "هذه", "ذلك", "تلك",
     "لي", "لنا", "انا", "اريد", "بدي",
     # Book/subject references (noise for retrieval)
@@ -77,6 +78,8 @@ _TERM_EXPANSIONS = {
     "تاين": {"تاين", "التاين", "يتاين", "تتاين", "كليا", "جزئيا", "ايونات"},
     "تركيز": {"تركيز", "التركيز", "مولاري", "مولي", "غرامي", "تمديد", "المحاليل"},
     "محلول": {"محلول", "المحلول", "محاليل", "المحاليل", "مذاب", "مذيب", "مائي"},
+    "اسيتون": {"اسيتون", "الاسيتون", "المذيب العضوي", "مذيب عضوي", "طلاء الاظافر"},
+    "طلاء": {"طلاء", "طلاء الاظافر", "اسيتون", "المذيب العضوي", "مذيب عضوي"},
     "كالسيوم": {
         "كالسيوم", "الكالسيوم", "اكسيد الكالسيوم", "أكسيد الكالسيوم",
         "هيدروكسيد الكالسيوم", "cao", "ca(oh)2", "ca(oh)₂",
@@ -142,7 +145,7 @@ _TERM_EXPANSIONS = {
     "نحاس": {
         "نحاس", "النحاس", "cu", "كبريتات النحاس", "اكسيد النحاس",
         "سلسله النشاط", "النشاط الكيميائي", "ازاحه", "احلال",
-        "لا يحدث", "اقل نشاطا", "حمض الكبريت",
+        "لا يحدث", "اقل نشاطا",
     },
     "حديد": {
         "حديد", "الحديد", "fe", "كبريتات الحديد", "كلوريد الحديد",
@@ -153,9 +156,9 @@ _TERM_EXPANSIONS = {
         "حمض الكبريت", "حمض كلور الماء", "غاز الهدروجين", "هيدروجين",
     },
     "كبريت": {
-        "كبريت", "الكبريت", "حمض الكبريت", "h2so4", "كبريتات",
-        "حمض الكبريت الممدد", "الممدد", "الممدده",
+        "كبريت", "الكبريت", "h2so4", "كبريتات",
     },
+    "كبريتات": {"كبريتات", "كبريتات النحاس", "كبريتات الحديد", "كبريتات الزنك"},
     "ممدد": {
         "ممدد", "الممدد", "ممدده", "الممدده", "حمض الكبريت",
         "حمض كلور الماء", "غاز الهدروجين",
@@ -327,7 +330,12 @@ def _normalize_lexical_text(text: str) -> str:
     """Normalize Arabic text enough for lexical matching over noisy OCR chunks."""
     lowered = text.lower().replace("ـ", "")
     without_diacritics = _ARABIC_DIACRITICS_RE.sub("", lowered)
-    return without_diacritics.translate(_ARABIC_NORMALIZATION)
+    normalized = without_diacritics.translate(_ARABIC_NORMALIZATION)
+    normalized = normalized.replace("اال", "ال")
+    normalized = normalized.replace("السيتون", "الاسيتون")
+    normalized = normalized.replace("طالء", "طلاء")
+    normalized = normalized.replace("الظافر", "الاظافر")
+    return normalized
 
 
 def _tokens(text: str) -> list[str]:
@@ -450,23 +458,29 @@ def _hybrid_score(
 
     normalized = _normalize_lexical_text(content)
     query_norm = _normalize_lexical_text(query)
+    base_query = any(term in query_norm for term in ("اسس", "اساس", "قاعده", "قواعد", "اساسي", "اساسيه"))
+    acid_query = any(term in query_norm for term in ("حموض", "احماض", "حمض", "حمضي", "حمضيه"))
+    base_markers = ("هيدروكسيد", "oh-", "oh⁻", "oh", "الاسس", "اساس", "اساسيه", "قلوي")
+    acid_markers = ("حموض", "حمض", "حمضيه", "هيدروجين", "هدروجين", "h+", "h⁺")
 
     # Content-type boost for definition-oriented intents
     if intent == "definition_lookup":
         if content_type in _DEFINITION_CONTENT_TYPES:
             score += 0.18
-        if content_type in _OBJECTIVE_CONTENT_TYPES or any(marker in normalized for marker in _DEFINITION_PENALTY_MARKERS):
+        if content_type in _OBJECTIVE_CONTENT_TYPES:
             score -= 0.32
+        elif any(marker in normalized for marker in _DEFINITION_PENALTY_MARKERS):
+            score -= 0.08
         if "مواد تعطي" in normalized:
             score += 0.16
         if "عند انحلالها في الماء" in normalized or "انحلالها في الماء" in normalized:
             score += 0.14
-        if any(term in query_norm for term in ("اسس", "اساس", "قاعده", "قواعد")):
+        if base_query:
             if "ايونات الهدروكسيد" in normalized or "ايون الهدروكسيد" in normalized or "oh-" in normalized:
                 score += 0.28
             if "المحاليل الاساسيه" in normalized:
                 score += 0.10
-        if any(term in query_norm for term in ("حموض", "احماض", "حمض")):
+        if acid_query:
             if "ايونات الهدروجين" in normalized or "ايون الهدروجين" in normalized or "h+" in normalized:
                 score += 0.24
     elif intent in {"equation_lookup", "reaction_query"}:
@@ -496,6 +510,23 @@ def _hybrid_score(
         score += 0.28
     if "تفكك الماء" in query_norm and ("وعاء فولتا" in normalized or "h2o" in normalized):
         score += 0.20
+
+    if base_query:
+        if not any(marker in normalized for marker in base_markers):
+            score -= 0.42
+        if any(marker in normalized for marker in acid_markers) and not any(marker in normalized for marker in base_markers):
+            score -= 0.30
+        if "عباد الشمس" in query_norm and ("حمضيه" in normalized or "الاحمر" in normalized):
+            score -= 0.45
+    if acid_query and not base_query:
+        if any(marker in normalized for marker in base_markers) and not any(marker in normalized for marker in acid_markers):
+            score -= 0.30
+    if "اشعاعي" in query_norm and "اشعاعي" not in normalized and "مشعه" not in normalized:
+        score -= 0.50
+    if "اسيتون" in query_norm and "اسيتون" not in normalized:
+        score -= 0.50
+    if "طلاء الاظافر" in query_norm and "طلاء الاظافر" not in normalized:
+        score -= 0.25
 
     return round(min(max(score, 0.0), 1.0), 4)
 
@@ -574,8 +605,10 @@ async def retrieve_context(
         except Exception:
             pass
 
-    # Use the rewritten query for embeddings and lexical scoring (more recall for Arabic synonyms).
+    # Use the rewritten query for embeddings, but the cleaned user query for
+    # lexical reranking so expansion terms do not overpower exact entities.
     retrieval_query = rewritten or cleaned
+    scoring_query = cleaned or query
     query_embedding = await embed_query(retrieval_query)
 
     stmt = (
@@ -623,9 +656,9 @@ async def retrieve_context(
         vector_score = _cosine_similarity(query_embedding, chunk.embedding or [])
         # Use both original content and normalized content for lexical matching
         lexical_content = f"{chunk.normalized_content or ''}\n{chunk.content}"
-        lex_score = lexical_relevance_score(retrieval_query, lexical_content)
+        lex_score = lexical_relevance_score(scoring_query, lexical_content)
         score = _hybrid_score(
-            retrieval_query, lexical_content, vector_score,
+            scoring_query, lexical_content, vector_score,
             intent=intent, content_type=chunk.content_type,
         )
 
@@ -639,9 +672,9 @@ async def retrieve_context(
             lexical_score=round(lex_score, 4),
             hybrid_score=round(score, 4),
             snippet=chunk.content[:120].replace("\n", " "),
-            matched_terms=_matched_query_terms(retrieval_query, lexical_content),
+            matched_terms=_matched_query_terms(scoring_query, lexical_content),
             reasons=_candidate_reasons(
-                retrieval_query,
+                scoring_query,
                 lexical_content,
                 intent=intent,
                 content_type=chunk.content_type,
@@ -668,9 +701,9 @@ async def retrieve_context(
             lexical_score=0.0,
             hybrid_score=s.similarity_score,
             snippet=s.content[:120].replace("\n", " "),
-            matched_terms=_matched_query_terms(retrieval_query, s.content),
+            matched_terms=_matched_query_terms(scoring_query, s.content),
             reasons=_candidate_reasons(
-                retrieval_query,
+                scoring_query,
                 s.content,
                 intent=intent,
                 content_type=s.content_type,

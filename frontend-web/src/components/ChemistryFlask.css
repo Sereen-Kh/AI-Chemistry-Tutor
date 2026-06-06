@@ -1,0 +1,104 @@
+.chemistry-flask-container {
+  position: relative;
+  display: inline-block;
+  filter: drop-shadow(0 0 12px var(--flask-glow, rgba(0, 240, 155, 0.2)));
+  transition: filter 0.5s ease-in-out;
+}
+
+.flask-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.flask-liquid-wave {
+  animation: wave-slide 3s linear infinite;
+  transform-origin: center;
+}
+
+/* Repeating wave path scrolls horizontally for liquid effect */
+@keyframes wave-slide {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50px);
+  }
+}
+
+.flask-glass-outline {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 0;
+  transition: stroke 0.3s;
+}
+
+.flask-bubble-area {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  pointer-events: none;
+}
+
+.flask-bubble {
+  position: absolute;
+  bottom: 10px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  opacity: 0;
+  animation: bubble-rise 2.8s infinite ease-in;
+}
+
+.flask-bubble.color-green {
+  background: var(--teal, #0df2a3);
+  box-shadow: 0 0 4px var(--teal, #0df2a3);
+}
+
+.flask-bubble.color-violet {
+  background: var(--pur, #aa66ff);
+  box-shadow: 0 0 4px var(--pur, #aa66ff);
+}
+
+.flask-bubble.color-coral {
+  background: var(--coral, #ff4a60);
+  box-shadow: 0 0 4px var(--coral, #ff4a60);
+}
+
+@keyframes bubble-rise {
+  0% {
+    bottom: 12px;
+    transform: translateX(0) scale(0.6);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateX(6px) scale(1.1);
+  }
+  75% {
+    transform: translateX(-4px) scale(0.9);
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    bottom: 85px;
+    transform: translateX(2px) scale(0.5);
+    opacity: 0;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .flask-liquid-wave {
+    animation: none;
+  }
+  .flask-bubble {
+    animation: none;
+    opacity: 0.3;
+    bottom: 40px;
+  }
+}

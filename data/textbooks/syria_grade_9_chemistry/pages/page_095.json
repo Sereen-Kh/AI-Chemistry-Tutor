@@ -2,35 +2,210 @@
   "page_number": 95,
   "page_type": "NEEDS_VISION",
   "extraction_methods": [
-    "exception"
+    "gemini_pdf_file",
+    "gemini_image_300dpi"
   ],
-  "extraction_method": "exception",
-  "status": "failed",
+  "extraction_method": "gemini_pdf_file+gemini_image_300dpi",
+  "status": "completed_with_image_fallback",
   "text_layer_content": "",
-  "vision_content": {},
+  "vision_content": {
+    "page_number": 95,
+    "detected_language": "ar",
+    "raw_markdown": "| English | Arabic |\n| :--- | :--- |\n| Renewable Energy | الطّاقات المتجدّدة |\n| Non-Renewable Energy | الطّاقات غير المتجدّدة |\n| Oscillatory Motion | الحركة الاهتزازيّة |\n| Amplitude of Vibration | سعة الاهتزاز |\n| Wave Period | الدّور |\n| Wave Frequency | التّواتر |\n| Wave | الموجة . |\n| Transverse Wave | الموجة العرضيّة |\n| Longitudinal Wave | الموجة الطّوليّة |\n| Wavelength | طول الموجة |\n| Mechanical Wave | الموجة الميكانيكيّة |\n| Electromagnetic Wave | الموجة الكهرطيسيّة |\n| Wave Speed | سرعة انتشار الموجة |\n| Solution | المحلول |\n| Solvent | المادّة المذيبة |\n| Solute | المادّة المذابة |\n| Mass Concentration | التّركيز الغرامي |\n| Molar Concentration | التّركيز المولي |\n| Strong Acid | حمض قويّ |\n| Weak Acid | حمض ضعيف |\n| Strong Base | أساس قويّ |\n| Weak Base | أساس ضعيف |\n| Combination Reactions | تفاعلات الاتّحاد . |",
+    "sections": [
+      {
+        "heading": null,
+        "content": "| English | Arabic |\n| :--- | :--- |\n| Renewable Energy | الطّاقات المتجدّدة |\n| Non-Renewable Energy | الطّاقات غير المتجدّدة |\n| Oscillatory Motion | الحركة الاهتزازيّة |\n| Amplitude of Vibration | سعة الاهتزاز |\n| Wave Period | الدّور |\n| Wave Frequency | التّواتر |\n| Wave | الموجة . |\n| Transverse Wave | الموجة العرضيّة |\n| Longitudinal Wave | الموجة الطّوليّة |\n| Wavelength | طول الموجة |\n| Mechanical Wave | الموجة الميكانيكيّة |\n| Electromagnetic Wave | الموجة الكهرطيسيّة |\n| Wave Speed | سرعة انتشار الموجة |\n| Solution | المحلول |\n| Solvent | المادّة المذيبة |\n| Solute | المادّة المذابة |\n| Mass Concentration | التّركيز الغرامي |\n| Molar Concentration | التّركيز المولي |\n| Strong Acid | حمض قويّ |\n| Weak Acid | حمض ضعيف |\n| Strong Base | أساس قويّ |\n| Weak Base | أساس ضعيف |\n| Combination Reactions | تفاعلات الاتّحاد . |",
+        "content_type": "table"
+      }
+    ],
+    "questions": [],
+    "diagrams": [],
+    "tables": [
+      {
+        "title": null,
+        "markdown": "| English | Arabic |\n| :--- | :--- |\n| Renewable Energy | الطّاقات المتجدّدة |\n| Non-Renewable Energy | الطّاقات غير المتجدّدة |\n| Oscillatory Motion | الحركة الاهتزازيّة |\n| Amplitude of Vibration | سعة الاهتزاز |\n| Wave Period | الدّور |\n| Wave Frequency | التّواتر |\n| Wave | الموجة . |\n| Transverse Wave | الموجة العرضيّة |\n| Longitudinal Wave | الموجة الطّوليّة |\n| Wavelength | طول الموجة |\n| Mechanical Wave | الموجة الميكانيكيّة |\n| Electromagnetic Wave | الموجة الكهرطيسيّة |\n| Wave Speed | سرعة انتشار الموجة |\n| Solution | المحلول |\n| Solvent | المادّة المذيبة |\n| Solute | المادّة المذابة |\n| Mass Concentration | التّركيز الغرامي |\n| Molar Concentration | التّركيز المولي |\n| Strong Acid | حمض قويّ |\n| Weak Acid | حمض ضعيف |\n| Strong Base | أساس قويّ |\n| Weak Base | أساس ضعيف |\n| Combination Reactions | تفاعلات الاتّحاد . |"
+      }
+    ],
+    "equations": [],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 8.101922209s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '8s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 839,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 95,
+      "schema_valid": true,
+      "raw_markdown_chars": 839,
+      "char_count": 839,
+      "section_count": 1,
+      "question_count": 0,
+      "table_count": 1,
+      "equation_count": 0,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.4409,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 95,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"| English | Arabic |\\n| :--- | :--- |\\n| Renewable Energy | الطّاقات المتجدّدة |\\n| Non-Renewable Energy | الطّاقات غير المتجدّدة |\\n| Oscillatory Motion | الحركة الاهتزازيّة |\\n| Amplitude of Vibration | سعة الاهتزاز |\\n| Wave Period | الدّور |\\n| Wave Frequency | التّواتر |\\n| Wave | الموجة . |\\n| Transverse Wave | الموجة العرضيّة |\\n| Longitudinal Wave | الموجة الطّوليّة |\\n| Wavelength | طول الموجة |\\n| Mechanical Wave | الموجة الميكانيكيّة |\\n| Electromagnetic Wave | الموجة الكهرطيسيّة |\\n| Wave Speed | سرعة انتشار الموجة |\\n| Solution | المحلول |\\n| Solvent | المادّة المذيبة |\\n| Solute | المادّة المذابة |\\n| Mass Concentration | التّركيز الغرامي |\\n| Molar Concentration | التّركيز المولي |\\n| Strong Acid | حمض قويّ |\\n| Weak Acid | حمض ضعيف |\\n| Strong Base | أساس قويّ |\\n| Weak Base | أساس ضعيف |\\n| Combination Reactions | تفاعلات الاتّحاد . |\",\n  \"sections\": [\n    {\n      \"content\": \"| English | Arabic |\\n| :--- | :--- |\\n| Renewable Energy | الطّاقات المتجدّدة |\\n| Non-Renewable Energy | الطّاقات غير المتجدّدة |\\n| Oscillatory Motion | الحركة الاهتزازيّة |\\n| Amplitude of Vibration | سعة الاهتزاز |\\n| Wave Period | الدّور |\\n| Wave Frequency | التّواتر |\\n| Wave | الموجة . |\\n| Transverse Wave | الموجة العرضيّة |\\n| Longitudinal Wave | الموجة الطّوليّة |\\n| Wavelength | طول الموجة |\\n| Mechanical Wave | الموجة الميكانيكيّة |\\n| Electromagnetic Wave | الموجة الكهرطيسيّة |\\n| Wave Speed | سرعة انتشار الموجة |\\n| Solution | المحلول |\\n| Solvent | المادّة المذيبة |\\n| Solute | المادّة المذابة |\\n| Mass Concentration | التّركيز الغرامي |\\n| Molar Concentration | التّركيز المولي |\\n| Strong Acid | حمض قويّ |\\n| Weak Acid | حمض ضعيف |\\n| Strong Base | أساس قويّ |\\n| Weak Base | أساس ضعيف |\\n| Combination Reactions | تفاعلات الاتّحاد . |\",\n      \"content_type\": \"table\"\n    }\n  ],\n  \"tables\": [\n    {\n      \"markdown\": \"| English | Arabic |\\n| :--- | :--- |\\n| Renewable Energy | الطّاقات المتجدّدة |\\n| Non-Renewable Energy | الطّاقات غير المتجدّدة |\\n| Oscillatory Motion | الحركة الاهتزازيّة |\\n| Amplitude of Vibration | سعة الاهتزاز |\\n| Wave Period | الدّور |\\n| Wave Frequency | التّواتر |\\n| Wave | الموجة . |\\n| Transverse Wave | الموجة العرضيّة |\\n| Longitudinal Wave | الموجة الطّوليّة |\\n| Wavelength | طول الموجة |\\n| Mechanical Wave | الموجة الميكانيكيّة |\\n| Electromagnetic Wave | الموجة الكهرطيسيّة |\\n| Wave Speed | سرعة انتشار الموجة |\\n| Solution | المحلول |\\n| Solvent | المادّة المذيبة |\\n| Solute | المادّة المذابة |\\n| Mass Concentration | التّركيز الغرامي |\\n| Molar Concentration | التّركيز المولي |\\n| Strong Acid | حمض قويّ |\\n| Weak Acid | حمض ضعيف |\\n| Strong Base | أساس قويّ |\\n| Weak Base | أساس ضعيف |\\n| Combination Reactions | تفاعلات الاتّحاد . |\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}"
+  },
   "gemini_pdf_content": {},
-  "gemini_fallback_model_content": {},
-  "gemini_image_fallback_content": {},
-  "merged_content": "",
-  "raw_markdown": "",
-  "sections": [],
+  "gemini_fallback_model_content": {
+    "page_number": 95,
+    "detected_language": "ar",
+    "raw_markdown": "| English | Arabic |\n| :--- | :--- |\n| Renewable Energy | الطّاقات المتجدّدة |\n| Non-Renewable Energy | الطّاقات غير المتجدّدة |\n| Oscillatory Motion | الحركة الاهتزازيّة |\n| Amplitude of Vibration | سعة الاهتزاز |\n| Wave Period | الدّور |\n| Wave Frequency | التّواتر |\n| Wave | الموجة . |\n| Transverse Wave | الموجة العرضيّة |\n| Longitudinal Wave | الموجة الطّوليّة |\n| Wavelength | طول الموجة |\n| Mechanical Wave | الموجة الميكانيكيّة |\n| Electromagnetic Wave | الموجة الكهرطيسيّة |\n| Wave Speed | سرعة انتشار الموجة |\n| Solution | المحلول |\n| Solvent | المادّة المذيبة |\n| Solute | المادّة المذابة |\n| Mass Concentration | التّركيز الغرامي |\n| Molar Concentration | التّركيز المولي |\n| Strong Acid | حمض قويّ |\n| Weak Acid | حمض ضعيف |\n| Strong Base | أساس قويّ |\n| Weak Base | أساس ضعيف |\n| Combination Reactions | تفاعلات الاتّحاد . |",
+    "sections": [
+      {
+        "heading": null,
+        "content": "| English | Arabic |\n| :--- | :--- |\n| Renewable Energy | الطّاقات المتجدّدة |\n| Non-Renewable Energy | الطّاقات غير المتجدّدة |\n| Oscillatory Motion | الحركة الاهتزازيّة |\n| Amplitude of Vibration | سعة الاهتزاز |\n| Wave Period | الدّور |\n| Wave Frequency | التّواتر |\n| Wave | الموجة . |\n| Transverse Wave | الموجة العرضيّة |\n| Longitudinal Wave | الموجة الطّوليّة |\n| Wavelength | طول الموجة |\n| Mechanical Wave | الموجة الميكانيكيّة |\n| Electromagnetic Wave | الموجة الكهرطيسيّة |\n| Wave Speed | سرعة انتشار الموجة |\n| Solution | المحلول |\n| Solvent | المادّة المذيبة |\n| Solute | المادّة المذابة |\n| Mass Concentration | التّركيز الغرامي |\n| Molar Concentration | التّركيز المولي |\n| Strong Acid | حمض قويّ |\n| Weak Acid | حمض ضعيف |\n| Strong Base | أساس قويّ |\n| Weak Base | أساس ضعيف |\n| Combination Reactions | تفاعلات الاتّحاد . |",
+        "content_type": "table"
+      }
+    ],
+    "questions": [],
+    "diagrams": [],
+    "tables": [
+      {
+        "title": null,
+        "markdown": "| English | Arabic |\n| :--- | :--- |\n| Renewable Energy | الطّاقات المتجدّدة |\n| Non-Renewable Energy | الطّاقات غير المتجدّدة |\n| Oscillatory Motion | الحركة الاهتزازيّة |\n| Amplitude of Vibration | سعة الاهتزاز |\n| Wave Period | الدّور |\n| Wave Frequency | التّواتر |\n| Wave | الموجة . |\n| Transverse Wave | الموجة العرضيّة |\n| Longitudinal Wave | الموجة الطّوليّة |\n| Wavelength | طول الموجة |\n| Mechanical Wave | الموجة الميكانيكيّة |\n| Electromagnetic Wave | الموجة الكهرطيسيّة |\n| Wave Speed | سرعة انتشار الموجة |\n| Solution | المحلول |\n| Solvent | المادّة المذيبة |\n| Solute | المادّة المذابة |\n| Mass Concentration | التّركيز الغرامي |\n| Molar Concentration | التّركيز المولي |\n| Strong Acid | حمض قويّ |\n| Weak Acid | حمض ضعيف |\n| Strong Base | أساس قويّ |\n| Weak Base | أساس ضعيف |\n| Combination Reactions | تفاعلات الاتّحاد . |"
+      }
+    ],
+    "equations": [],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 8.101922209s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '8s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 839,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 95,
+      "schema_valid": true,
+      "raw_markdown_chars": 839,
+      "char_count": 839,
+      "section_count": 1,
+      "question_count": 0,
+      "table_count": 1,
+      "equation_count": 0,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.4409,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 95,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"| English | Arabic |\\n| :--- | :--- |\\n| Renewable Energy | الطّاقات المتجدّدة |\\n| Non-Renewable Energy | الطّاقات غير المتجدّدة |\\n| Oscillatory Motion | الحركة الاهتزازيّة |\\n| Amplitude of Vibration | سعة الاهتزاز |\\n| Wave Period | الدّور |\\n| Wave Frequency | التّواتر |\\n| Wave | الموجة . |\\n| Transverse Wave | الموجة العرضيّة |\\n| Longitudinal Wave | الموجة الطّوليّة |\\n| Wavelength | طول الموجة |\\n| Mechanical Wave | الموجة الميكانيكيّة |\\n| Electromagnetic Wave | الموجة الكهرطيسيّة |\\n| Wave Speed | سرعة انتشار الموجة |\\n| Solution | المحلول |\\n| Solvent | المادّة المذيبة |\\n| Solute | المادّة المذابة |\\n| Mass Concentration | التّركيز الغرامي |\\n| Molar Concentration | التّركيز المولي |\\n| Strong Acid | حمض قويّ |\\n| Weak Acid | حمض ضعيف |\\n| Strong Base | أساس قويّ |\\n| Weak Base | أساس ضعيف |\\n| Combination Reactions | تفاعلات الاتّحاد . |\",\n  \"sections\": [\n    {\n      \"content\": \"| English | Arabic |\\n| :--- | :--- |\\n| Renewable Energy | الطّاقات المتجدّدة |\\n| Non-Renewable Energy | الطّاقات غير المتجدّدة |\\n| Oscillatory Motion | الحركة الاهتزازيّة |\\n| Amplitude of Vibration | سعة الاهتزاز |\\n| Wave Period | الدّور |\\n| Wave Frequency | التّواتر |\\n| Wave | الموجة . |\\n| Transverse Wave | الموجة العرضيّة |\\n| Longitudinal Wave | الموجة الطّوليّة |\\n| Wavelength | طول الموجة |\\n| Mechanical Wave | الموجة الميكانيكيّة |\\n| Electromagnetic Wave | الموجة الكهرطيسيّة |\\n| Wave Speed | سرعة انتشار الموجة |\\n| Solution | المحلول |\\n| Solvent | المادّة المذيبة |\\n| Solute | المادّة المذابة |\\n| Mass Concentration | التّركيز الغرامي |\\n| Molar Concentration | التّركيز المولي |\\n| Strong Acid | حمض قويّ |\\n| Weak Acid | حمض ضعيف |\\n| Strong Base | أساس قويّ |\\n| Weak Base | أساس ضعيف |\\n| Combination Reactions | تفاعلات الاتّحاد . |\",\n      \"content_type\": \"table\"\n    }\n  ],\n  \"tables\": [\n    {\n      \"markdown\": \"| English | Arabic |\\n| :--- | :--- |\\n| Renewable Energy | الطّاقات المتجدّدة |\\n| Non-Renewable Energy | الطّاقات غير المتجدّدة |\\n| Oscillatory Motion | الحركة الاهتزازيّة |\\n| Amplitude of Vibration | سعة الاهتزاز |\\n| Wave Period | الدّور |\\n| Wave Frequency | التّواتر |\\n| Wave | الموجة . |\\n| Transverse Wave | الموجة العرضيّة |\\n| Longitudinal Wave | الموجة الطّوليّة |\\n| Wavelength | طول الموجة |\\n| Mechanical Wave | الموجة الميكانيكيّة |\\n| Electromagnetic Wave | الموجة الكهرطيسيّة |\\n| Wave Speed | سرعة انتشار الموجة |\\n| Solution | المحلول |\\n| Solvent | المادّة المذيبة |\\n| Solute | المادّة المذابة |\\n| Mass Concentration | التّركيز الغرامي |\\n| Molar Concentration | التّركيز المولي |\\n| Strong Acid | حمض قويّ |\\n| Weak Acid | حمض ضعيف |\\n| Strong Base | أساس قويّ |\\n| Weak Base | أساس ضعيف |\\n| Combination Reactions | تفاعلات الاتّحاد . |\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}"
+  },
+  "gemini_image_fallback_content": {
+    "page_number": 95,
+    "detected_language": "ar",
+    "raw_markdown": "| English | Arabic |\n| :--- | :--- |\n| Renewable Energy | الطّاقات المتجدّدة |\n| Non-Renewable Energy | الطّاقات غير المتجدّدة |\n| Oscillatory Motion | الحركة الاهتزازيّة |\n| Amplitude of Vibration | سعة الاهتزاز |\n| Wave Period | الدّور |\n| Wave Frequency | التّواتر |\n| Wave | الموجة . |\n| Transverse Wave | الموجة العرضيّة |\n| Longitudinal Wave | الموجة الطّوليّة |\n| Wavelength | طول الموجة |\n| Mechanical Wave | الموجة الميكانيكيّة |\n| Electromagnetic Wave | الموجة الكهرطيسيّة |\n| Wave Speed | سرعة انتشار الموجة |\n| Solution | المحلول |\n| Solvent | المادّة المذيبة |\n| Solute | المادّة المذابة |\n| Mass Concentration | التّركيز الغرامي |\n| Molar Concentration | التّركيز المولي |\n| Strong Acid | حمض قويّ |\n| Weak Acid | حمض ضعيف |\n| Strong Base | أساس قويّ |\n| Weak Base | أساس ضعيف |\n| Combination Reactions | تفاعلات الاتّحاد . |",
+    "sections": [
+      {
+        "heading": null,
+        "content": "| English | Arabic |\n| :--- | :--- |\n| Renewable Energy | الطّاقات المتجدّدة |\n| Non-Renewable Energy | الطّاقات غير المتجدّدة |\n| Oscillatory Motion | الحركة الاهتزازيّة |\n| Amplitude of Vibration | سعة الاهتزاز |\n| Wave Period | الدّور |\n| Wave Frequency | التّواتر |\n| Wave | الموجة . |\n| Transverse Wave | الموجة العرضيّة |\n| Longitudinal Wave | الموجة الطّوليّة |\n| Wavelength | طول الموجة |\n| Mechanical Wave | الموجة الميكانيكيّة |\n| Electromagnetic Wave | الموجة الكهرطيسيّة |\n| Wave Speed | سرعة انتشار الموجة |\n| Solution | المحلول |\n| Solvent | المادّة المذيبة |\n| Solute | المادّة المذابة |\n| Mass Concentration | التّركيز الغرامي |\n| Molar Concentration | التّركيز المولي |\n| Strong Acid | حمض قويّ |\n| Weak Acid | حمض ضعيف |\n| Strong Base | أساس قويّ |\n| Weak Base | أساس ضعيف |\n| Combination Reactions | تفاعلات الاتّحاد . |",
+        "content_type": "table"
+      }
+    ],
+    "questions": [],
+    "diagrams": [],
+    "tables": [
+      {
+        "title": null,
+        "markdown": "| English | Arabic |\n| :--- | :--- |\n| Renewable Energy | الطّاقات المتجدّدة |\n| Non-Renewable Energy | الطّاقات غير المتجدّدة |\n| Oscillatory Motion | الحركة الاهتزازيّة |\n| Amplitude of Vibration | سعة الاهتزاز |\n| Wave Period | الدّور |\n| Wave Frequency | التّواتر |\n| Wave | الموجة . |\n| Transverse Wave | الموجة العرضيّة |\n| Longitudinal Wave | الموجة الطّوليّة |\n| Wavelength | طول الموجة |\n| Mechanical Wave | الموجة الميكانيكيّة |\n| Electromagnetic Wave | الموجة الكهرطيسيّة |\n| Wave Speed | سرعة انتشار الموجة |\n| Solution | المحلول |\n| Solvent | المادّة المذيبة |\n| Solute | المادّة المذابة |\n| Mass Concentration | التّركيز الغرامي |\n| Molar Concentration | التّركيز المولي |\n| Strong Acid | حمض قويّ |\n| Weak Acid | حمض ضعيف |\n| Strong Base | أساس قويّ |\n| Weak Base | أساس ضعيف |\n| Combination Reactions | تفاعلات الاتّحاد . |"
+      }
+    ],
+    "equations": [],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 8.101922209s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '8s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 839,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 95,
+      "schema_valid": true,
+      "raw_markdown_chars": 839,
+      "char_count": 839,
+      "section_count": 1,
+      "question_count": 0,
+      "table_count": 1,
+      "equation_count": 0,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.4409,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 95,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"| English | Arabic |\\n| :--- | :--- |\\n| Renewable Energy | الطّاقات المتجدّدة |\\n| Non-Renewable Energy | الطّاقات غير المتجدّدة |\\n| Oscillatory Motion | الحركة الاهتزازيّة |\\n| Amplitude of Vibration | سعة الاهتزاز |\\n| Wave Period | الدّور |\\n| Wave Frequency | التّواتر |\\n| Wave | الموجة . |\\n| Transverse Wave | الموجة العرضيّة |\\n| Longitudinal Wave | الموجة الطّوليّة |\\n| Wavelength | طول الموجة |\\n| Mechanical Wave | الموجة الميكانيكيّة |\\n| Electromagnetic Wave | الموجة الكهرطيسيّة |\\n| Wave Speed | سرعة انتشار الموجة |\\n| Solution | المحلول |\\n| Solvent | المادّة المذيبة |\\n| Solute | المادّة المذابة |\\n| Mass Concentration | التّركيز الغرامي |\\n| Molar Concentration | التّركيز المولي |\\n| Strong Acid | حمض قويّ |\\n| Weak Acid | حمض ضعيف |\\n| Strong Base | أساس قويّ |\\n| Weak Base | أساس ضعيف |\\n| Combination Reactions | تفاعلات الاتّحاد . |\",\n  \"sections\": [\n    {\n      \"content\": \"| English | Arabic |\\n| :--- | :--- |\\n| Renewable Energy | الطّاقات المتجدّدة |\\n| Non-Renewable Energy | الطّاقات غير المتجدّدة |\\n| Oscillatory Motion | الحركة الاهتزازيّة |\\n| Amplitude of Vibration | سعة الاهتزاز |\\n| Wave Period | الدّور |\\n| Wave Frequency | التّواتر |\\n| Wave | الموجة . |\\n| Transverse Wave | الموجة العرضيّة |\\n| Longitudinal Wave | الموجة الطّوليّة |\\n| Wavelength | طول الموجة |\\n| Mechanical Wave | الموجة الميكانيكيّة |\\n| Electromagnetic Wave | الموجة الكهرطيسيّة |\\n| Wave Speed | سرعة انتشار الموجة |\\n| Solution | المحلول |\\n| Solvent | المادّة المذيبة |\\n| Solute | المادّة المذابة |\\n| Mass Concentration | التّركيز الغرامي |\\n| Molar Concentration | التّركيز المولي |\\n| Strong Acid | حمض قويّ |\\n| Weak Acid | حمض ضعيف |\\n| Strong Base | أساس قويّ |\\n| Weak Base | أساس ضعيف |\\n| Combination Reactions | تفاعلات الاتّحاد . |\",\n      \"content_type\": \"table\"\n    }\n  ],\n  \"tables\": [\n    {\n      \"markdown\": \"| English | Arabic |\\n| :--- | :--- |\\n| Renewable Energy | الطّاقات المتجدّدة |\\n| Non-Renewable Energy | الطّاقات غير المتجدّدة |\\n| Oscillatory Motion | الحركة الاهتزازيّة |\\n| Amplitude of Vibration | سعة الاهتزاز |\\n| Wave Period | الدّور |\\n| Wave Frequency | التّواتر |\\n| Wave | الموجة . |\\n| Transverse Wave | الموجة العرضيّة |\\n| Longitudinal Wave | الموجة الطّوليّة |\\n| Wavelength | طول الموجة |\\n| Mechanical Wave | الموجة الميكانيكيّة |\\n| Electromagnetic Wave | الموجة الكهرطيسيّة |\\n| Wave Speed | سرعة انتشار الموجة |\\n| Solution | المحلول |\\n| Solvent | المادّة المذيبة |\\n| Solute | المادّة المذابة |\\n| Mass Concentration | التّركيز الغرامي |\\n| Molar Concentration | التّركيز المولي |\\n| Strong Acid | حمض قويّ |\\n| Weak Acid | حمض ضعيف |\\n| Strong Base | أساس قويّ |\\n| Weak Base | أساس ضعيف |\\n| Combination Reactions | تفاعلات الاتّحاد . |\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}"
+  },
+  "merged_content": "| English | Arabic |\n| :--- | :--- |\n| Renewable Energy | الطّاقات المتجدّدة |\n| Non-Renewable Energy | الطّاقات غير المتجدّدة |\n| Oscillatory Motion | الحركة الاهتزازيّة |\n| Amplitude of Vibration | سعة الاهتزاز |\n| Wave Period | الدّور |\n| Wave Frequency | التّواتر |\n| Wave | الموجة . |\n| Transverse Wave | الموجة العرضيّة |\n| Longitudinal Wave | الموجة الطّوليّة |\n| Wavelength | طول الموجة |\n| Mechanical Wave | الموجة الميكانيكيّة |\n| Electromagnetic Wave | الموجة الكهرطيسيّة |\n| Wave Speed | سرعة انتشار الموجة |\n| Solution | المحلول |\n| Solvent | المادّة المذيبة |\n| Solute | المادّة المذابة |\n| Mass Concentration | التّركيز الغرامي |\n| Molar Concentration | التّركيز المولي |\n| Strong Acid | حمض قويّ |\n| Weak Acid | حمض ضعيف |\n| Strong Base | أساس قويّ |\n| Weak Base | أساس ضعيف |\n| Combination Reactions | تفاعلات الاتّحاد . |",
+  "raw_markdown": "| English | Arabic |\n| :--- | :--- |\n| Renewable Energy | الطّاقات المتجدّدة |\n| Non-Renewable Energy | الطّاقات غير المتجدّدة |\n| Oscillatory Motion | الحركة الاهتزازيّة |\n| Amplitude of Vibration | سعة الاهتزاز |\n| Wave Period | الدّور |\n| Wave Frequency | التّواتر |\n| Wave | الموجة . |\n| Transverse Wave | الموجة العرضيّة |\n| Longitudinal Wave | الموجة الطّوليّة |\n| Wavelength | طول الموجة |\n| Mechanical Wave | الموجة الميكانيكيّة |\n| Electromagnetic Wave | الموجة الكهرطيسيّة |\n| Wave Speed | سرعة انتشار الموجة |\n| Solution | المحلول |\n| Solvent | المادّة المذيبة |\n| Solute | المادّة المذابة |\n| Mass Concentration | التّركيز الغرامي |\n| Molar Concentration | التّركيز المولي |\n| Strong Acid | حمض قويّ |\n| Weak Acid | حمض ضعيف |\n| Strong Base | أساس قويّ |\n| Weak Base | أساس ضعيف |\n| Combination Reactions | تفاعلات الاتّحاد . |",
+  "sections": [
+    {
+      "heading": null,
+      "content": "| English | Arabic |\n| :--- | :--- |\n| Renewable Energy | الطّاقات المتجدّدة |\n| Non-Renewable Energy | الطّاقات غير المتجدّدة |\n| Oscillatory Motion | الحركة الاهتزازيّة |\n| Amplitude of Vibration | سعة الاهتزاز |\n| Wave Period | الدّور |\n| Wave Frequency | التّواتر |\n| Wave | الموجة . |\n| Transverse Wave | الموجة العرضيّة |\n| Longitudinal Wave | الموجة الطّوليّة |\n| Wavelength | طول الموجة |\n| Mechanical Wave | الموجة الميكانيكيّة |\n| Electromagnetic Wave | الموجة الكهرطيسيّة |\n| Wave Speed | سرعة انتشار الموجة |\n| Solution | المحلول |\n| Solvent | المادّة المذيبة |\n| Solute | المادّة المذابة |\n| Mass Concentration | التّركيز الغرامي |\n| Molar Concentration | التّركيز المولي |\n| Strong Acid | حمض قويّ |\n| Weak Acid | حمض ضعيف |\n| Strong Base | أساس قويّ |\n| Weak Base | أساس ضعيف |\n| Combination Reactions | تفاعلات الاتّحاد . |",
+      "content_type": "table"
+    }
+  ],
   "questions": [],
   "diagrams": [],
-  "tables": [],
-  "equations": [],
-  "warnings": [],
-  "errors": [
-    "Gemini document extraction failed quality checks for page 95: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 576.116002ms.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.5-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '0s'}]}}"
+  "tables": [
+    {
+      "title": null,
+      "markdown": "| English | Arabic |\n| :--- | :--- |\n| Renewable Energy | الطّاقات المتجدّدة |\n| Non-Renewable Energy | الطّاقات غير المتجدّدة |\n| Oscillatory Motion | الحركة الاهتزازيّة |\n| Amplitude of Vibration | سعة الاهتزاز |\n| Wave Period | الدّور |\n| Wave Frequency | التّواتر |\n| Wave | الموجة . |\n| Transverse Wave | الموجة العرضيّة |\n| Longitudinal Wave | الموجة الطّوليّة |\n| Wavelength | طول الموجة |\n| Mechanical Wave | الموجة الميكانيكيّة |\n| Electromagnetic Wave | الموجة الكهرطيسيّة |\n| Wave Speed | سرعة انتشار الموجة |\n| Solution | المحلول |\n| Solvent | المادّة المذيبة |\n| Solute | المادّة المذابة |\n| Mass Concentration | التّركيز الغرامي |\n| Molar Concentration | التّركيز المولي |\n| Strong Acid | حمض قويّ |\n| Weak Acid | حمض ضعيف |\n| Strong Base | أساس قويّ |\n| Weak Base | أساس ضعيف |\n| Combination Reactions | تفاعلات الاتّحاد . |"
+    }
   ],
-  "char_count": 0,
-  "completeness_score": 0.0,
+  "equations": [],
+  "warnings": [
+    "Gemini PDF extraction failed; using 300 DPI image fallback: Gemini document extraction failed for page 95 with model gemini-3.1-flash-lite: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'Request contains an invalid argument.', 'status': 'INVALID_ARGUMENT'}}",
+    "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 8.101922209s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '8s'}]}}."
+  ],
+  "errors": [],
+  "char_count": 839,
+  "completeness_score": 1.0,
   "detected_language": "ar",
-  "vision_provider": null,
-  "vision_source": null,
-  "neighboring_pages": [],
-  "uploaded_pdf": null,
-  "raw_text": null,
-  "quality_report": {},
+  "vision_provider": "gemini_document_image",
+  "vision_source": "gemini_rendered_image_300dpi",
+  "neighboring_pages": [
+    94,
+    96
+  ],
+  "uploaded_pdf": {
+    "provider": "gemini_document",
+    "name": "files/6zs99grhoqr2",
+    "uri": "https://generativelanguage.googleapis.com/v1beta/files/6zs99grhoqr2",
+    "mime_type": "application/pdf",
+    "display_name": "Chemistry.pdf"
+  },
+  "raw_text": "{\n  \"page_number\": 95,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"| English | Arabic |\\n| :--- | :--- |\\n| Renewable Energy | الطّاقات المتجدّدة |\\n| Non-Renewable Energy | الطّاقات غير المتجدّدة |\\n| Oscillatory Motion | الحركة الاهتزازيّة |\\n| Amplitude of Vibration | سعة الاهتزاز |\\n| Wave Period | الدّور |\\n| Wave Frequency | التّواتر |\\n| Wave | الموجة . |\\n| Transverse Wave | الموجة العرضيّة |\\n| Longitudinal Wave | الموجة الطّوليّة |\\n| Wavelength | طول الموجة |\\n| Mechanical Wave | الموجة الميكانيكيّة |\\n| Electromagnetic Wave | الموجة الكهرطيسيّة |\\n| Wave Speed | سرعة انتشار الموجة |\\n| Solution | المحلول |\\n| Solvent | المادّة المذيبة |\\n| Solute | المادّة المذابة |\\n| Mass Concentration | التّركيز الغرامي |\\n| Molar Concentration | التّركيز المولي |\\n| Strong Acid | حمض قويّ |\\n| Weak Acid | حمض ضعيف |\\n| Strong Base | أساس قويّ |\\n| Weak Base | أساس ضعيف |\\n| Combination Reactions | تفاعلات الاتّحاد . |\",\n  \"sections\": [\n    {\n      \"content\": \"| English | Arabic |\\n| :--- | :--- |\\n| Renewable Energy | الطّاقات المتجدّدة |\\n| Non-Renewable Energy | الطّاقات غير المتجدّدة |\\n| Oscillatory Motion | الحركة الاهتزازيّة |\\n| Amplitude of Vibration | سعة الاهتزاز |\\n| Wave Period | الدّور |\\n| Wave Frequency | التّواتر |\\n| Wave | الموجة . |\\n| Transverse Wave | الموجة العرضيّة |\\n| Longitudinal Wave | الموجة الطّوليّة |\\n| Wavelength | طول الموجة |\\n| Mechanical Wave | الموجة الميكانيكيّة |\\n| Electromagnetic Wave | الموجة الكهرطيسيّة |\\n| Wave Speed | سرعة انتشار الموجة |\\n| Solution | المحلول |\\n| Solvent | المادّة المذيبة |\\n| Solute | المادّة المذابة |\\n| Mass Concentration | التّركيز الغرامي |\\n| Molar Concentration | التّركيز المولي |\\n| Strong Acid | حمض قويّ |\\n| Weak Acid | حمض ضعيف |\\n| Strong Base | أساس قويّ |\\n| Weak Base | أساس ضعيف |\\n| Combination Reactions | تفاعلات الاتّحاد . |\",\n      \"content_type\": \"table\"\n    }\n  ],\n  \"tables\": [\n    {\n      \"markdown\": \"| English | Arabic |\\n| :--- | :--- |\\n| Renewable Energy | الطّاقات المتجدّدة |\\n| Non-Renewable Energy | الطّاقات غير المتجدّدة |\\n| Oscillatory Motion | الحركة الاهتزازيّة |\\n| Amplitude of Vibration | سعة الاهتزاز |\\n| Wave Period | الدّور |\\n| Wave Frequency | التّواتر |\\n| Wave | الموجة . |\\n| Transverse Wave | الموجة العرضيّة |\\n| Longitudinal Wave | الموجة الطّوليّة |\\n| Wavelength | طول الموجة |\\n| Mechanical Wave | الموجة الميكانيكيّة |\\n| Electromagnetic Wave | الموجة الكهرطيسيّة |\\n| Wave Speed | سرعة انتشار الموجة |\\n| Solution | المحلول |\\n| Solvent | المادّة المذيبة |\\n| Solute | المادّة المذابة |\\n| Mass Concentration | التّركيز الغرامي |\\n| Molar Concentration | التّركيز المولي |\\n| Strong Acid | حمض قويّ |\\n| Weak Acid | حمض ضعيف |\\n| Strong Base | أساس قويّ |\\n| Weak Base | أساس ضعيف |\\n| Combination Reactions | تفاعلات الاتّحاد . |\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}",
+  "quality_report": {
+    "page_number": 95,
+    "schema_valid": true,
+    "raw_markdown_chars": 839,
+    "char_count": 839,
+    "section_count": 1,
+    "question_count": 0,
+    "table_count": 1,
+    "equation_count": 0,
+    "diagram_count": 0,
+    "warning_count": 0,
+    "arabic_char_ratio": 0.4409,
+    "completeness_score": 1.0,
+    "issues": [],
+    "should_fallback": false
+  },
   "classification": "NEEDS_VISION",
   "source_id": 1
 }

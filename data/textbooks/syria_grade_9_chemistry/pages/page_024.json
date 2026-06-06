@@ -2,35 +2,570 @@
   "page_number": 24,
   "page_type": "NEEDS_VISION",
   "extraction_methods": [
-    "exception"
+    "gemini_pdf_file",
+    "gemini_image_300dpi"
   ],
-  "extraction_method": "exception",
-  "status": "failed",
+  "extraction_method": "gemini_pdf_file+gemini_image_300dpi",
+  "status": "completed_with_image_fallback",
   "text_layer_content": "",
-  "vision_content": {},
+  "vision_content": {
+    "page_number": 24,
+    "detected_language": "ar",
+    "raw_markdown": "### أختبر نفسي:\n\n#### السؤال الأول:\nاختر الإجابة الصحيحة في كل مما يأتي:\n1. عدد الوظائف الأساسية في هيدروكسيد الباريوم:\na. 1\nb. 4\nc. 2\nd. 3\n\n2. أحد الأسس الآتية يُستخدم في معالجة حموضة المعدة:\na. NaOH\nb. Mg(OH)₂\nc. KOH\nd. NH₄OH\n\n3. محلول الأساس الأكثر ناقلية للتيار الكهربائي من بين المحاليل المتساوية في التراكيز الآتية هو:\na. هيدروكسيد الألمنيوم\nb. هيدروكسيد الصوديوم\nc. هيدروكسيد الأمونيوم\nd. هيدروكسيد الحديد III\n\n4. الصيغة الأيونية لهيدروكسيد الأمونيوم:\na. NH₄ + OH⁻\nb. 4NH⁺ + OH⁻\nc. NH₄O⁻ + H⁺\nd. NH₄⁺ + OH⁻\n\n#### السؤال الثاني:\nضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها.\n1. يُستخدم هيدروكسيد الصوديوم في صناعة الصابون.\n2. تلوّن المحاليل الأساسية ورقة عبّاد الشّمس باللّون الأحمر.\n3. يُستعمل هيدروكسيد الكالسيوم في معالجة حموضة التّربة.\n\n#### السؤال الثالث:\nقارن بين محلولين متساويين في التّركيز والحجم من هيدروكسيد الصوديوم، وهيدروكسيد الأمونيوم من حيث:\n1. عدد أيونات OH⁻.\n2. النّاقلية الكهربائية.",
+    "sections": [
+      {
+        "heading": "أختبر نفسي",
+        "content": "السؤال الأول: اختر الإجابة الصحيحة في كل مما يأتي:\n1. عدد الوظائف الأساسية في هيدروكسيد الباريوم: a. 1, b. 4, c. 2, d. 3\n2. أحد الأسس الآتية يُستخدم في معالجة حموضة المعدة: a. NaOH, b. Mg(OH)₂, c. KOH, d. NH₄OH\n3. محلول الأساس الأكثر ناقلية للتيار الكهربائي من بين المحاليل المتساوية في التراكيز الآتية هو: a. هيدروكسيد الألمنيوم, b. هيدروكسيد الصوديوم, c. هيدروكسيد الأمونيوم, d. هيدروكسيد الحديد III\n4. الصيغة الأيونية لهيدروكسيد الأمونيوم: a. NH₄ + OH⁻, b. 4NH⁺ + OH⁻, c. NH₄O⁻ + H⁺, d. NH₄⁺ + OH⁻",
+        "content_type": "exercise"
+      },
+      {
+        "heading": "السؤال الثاني",
+        "content": "ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها.\n1. يُستخدم هيدروكسيد الصوديوم في صناعة الصابون.\n2. تلوّن المحاليل الأساسية ورقة عبّاد الشّمس باللّون الأحمر.\n3. يُستعمل هيدروكسيد الكالسيوم في معالجة حموضة التّربة.",
+        "content_type": "exercise"
+      },
+      {
+        "heading": "السؤال الثالث",
+        "content": "قارن بين محلولين متساويين في التّركيز والحجم من هيدروكسيد الصوديوم، وهيدروكسيد الأمونيوم من حيث:\n1. عدد أيونات OH⁻.\n2. النّاقلية الكهربائية.",
+        "content_type": "exercise"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "1. عدد الوظائف الأساسية في هيدروكسيد الباريوم:",
+        "question_type": "multiple_choice",
+        "options": [
+          "1",
+          "4",
+          "2",
+          "3"
+        ],
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "2. أحد الأسس الآتية يُستخدم في معالجة حموضة المعدة:",
+        "question_type": "multiple_choice",
+        "options": [
+          "NaOH",
+          "Mg(OH)₂",
+          "KOH",
+          "NH₄OH"
+        ],
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "3. محلول الأساس الأكثر ناقلية للتيار الكهربائي من بين المحاليل المتساوية في التراكيز الآتية هو:",
+        "question_type": "multiple_choice",
+        "options": [
+          "هيدروكسيد الألمنيوم",
+          "هيدروكسيد الصوديوم",
+          "هيدروكسيد الأمونيوم",
+          "هيدروكسيد الحديد III"
+        ],
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "4. الصيغة الأيونية لهيدروكسيد الأمونيوم:",
+        "question_type": "multiple_choice",
+        "options": [
+          "NH₄ + OH⁻",
+          "4NH⁺ + OH⁻",
+          "NH₄O⁻ + H⁺",
+          "NH₄⁺ + OH⁻"
+        ],
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها. 1. يُستخدم هيدروكسيد الصوديوم في صناعة الصابون.",
+        "question_type": "true_false",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها. 2. تلوّن المحاليل الأساسية ورقة عبّاد الشّمس باللّون الأحمر.",
+        "question_type": "true_false",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها. 3. يُستعمل هيدروكسيد الكالسيوم في معالجة حموضة التّربة.",
+        "question_type": "true_false",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "قارن بين محلولين متساويين في التّركيز والحجم من هيدروكسيد الصوديوم، وهيدروكسيد الأمونيوم من حيث: 1. عدد أيونات OH⁻. 2. النّاقلية الكهربائية.",
+        "question_type": "essay",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [],
+    "tables": [],
+    "equations": [],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 51.289531634s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '51s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 944,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 24,
+      "schema_valid": true,
+      "raw_markdown_chars": 944,
+      "char_count": 944,
+      "section_count": 3,
+      "question_count": 8,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.7774,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 24,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### أختبر نفسي:\\n\\n#### السؤال الأول:\\nاختر الإجابة الصحيحة في كل مما يأتي:\\n1. عدد الوظائف الأساسية في هيدروكسيد الباريوم:\\na. 1\\nb. 4\\nc. 2\\nd. 3\\n\\n2. أحد الأسس الآتية يُستخدم في معالجة حموضة المعدة:\\na. NaOH\\nb. Mg(OH)₂\\nc. KOH\\nd. NH₄OH\\n\\n3. محلول الأساس الأكثر ناقلية للتيار الكهربائي من بين المحاليل المتساوية في التراكيز الآتية هو:\\na. هيدروكسيد الألمنيوم\\nb. هيدروكسيد الصوديوم\\nc. هيدروكسيد الأمونيوم\\nd. هيدروكسيد الحديد III\\n\\n4. الصيغة الأيونية لهيدروكسيد الأمونيوم:\\na. NH₄ + OH⁻\\nb. 4NH⁺ + OH⁻\\nc. NH₄O⁻ + H⁺\\nd. NH₄⁺ + OH⁻\\n\\n#### السؤال الثاني:\\nضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها.\\n1. يُستخدم هيدروكسيد الصوديوم في صناعة الصابون.\\n2. تلوّن المحاليل الأساسية ورقة عبّاد الشّمس باللّون الأحمر.\\n3. يُستعمل هيدروكسيد الكالسيوم في معالجة حموضة التّربة.\\n\\n#### السؤال الثالث:\\nقارن بين محلولين متساويين في التّركيز والحجم من هيدروكسيد الصوديوم، وهيدروكسيد الأمونيوم من حيث:\\n1. عدد أيونات OH⁻.\\n2. النّاقلية الكهربائية.\",\n  \"sections\": [\n    {\n      \"heading\": \"أختبر نفسي\",\n      \"content\": \"السؤال الأول: اختر الإجابة الصحيحة في كل مما يأتي:\\n1. عدد الوظائف الأساسية في هيدروكسيد الباريوم: a. 1, b. 4, c. 2, d. 3\\n2. أحد الأسس الآتية يُستخدم في معالجة حموضة المعدة: a. NaOH, b. Mg(OH)₂, c. KOH, d. NH₄OH\\n3. محلول الأساس الأكثر ناقلية للتيار الكهربائي من بين المحاليل المتساوية في التراكيز الآتية هو: a. هيدروكسيد الألمنيوم, b. هيدروكسيد الصوديوم, c. هيدروكسيد الأمونيوم, d. هيدروكسيد الحديد III\\n4. الصيغة الأيونية لهيدروكسيد الأمونيوم: a. NH₄ + OH⁻, b. 4NH⁺ + OH⁻, c. NH₄O⁻ + H⁺, d. NH₄⁺ + OH⁻\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"السؤال الثاني\",\n      \"content\": \"ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها.\\n1. يُستخدم هيدروكسيد الصوديوم في صناعة الصابون.\\n2. تلوّن المحاليل الأساسية ورقة عبّاد الشّمس باللّون الأحمر.\\n3. يُستعمل هيدروكسيد الكالسيوم في معالجة حموضة التّربة.\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"السؤال الثالث\",\n      \"content\": \"قارن بين محلولين متساويين في التّركيز والحجم من هيدروكسيد الصوديوم، وهيدروكسيد الأمونيوم من حيث:\\n1. عدد أيونات OH⁻.\\n2. النّاقلية الكهربائية.\",\n      \"content_type\": \"exercise\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"1. عدد الوظائف الأساسية في هيدروكسيد الباريوم:\",\n      \"question_type\": \"multiple_choice\",\n      \"options\": [\"1\", \"4\", \"2\", \"3\"],\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"2. أحد الأسس الآتية يُستخدم في معالجة حموضة المعدة:\",\n      \"question_type\": \"multiple_choice\",\n      \"options\": [\"NaOH\", \"Mg(OH)₂\", \"KOH\", \"NH₄OH\"],\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"3. محلول الأساس الأكثر ناقلية للتيار الكهربائي من بين المحاليل المتساوية في التراكيز الآتية هو:\",\n      \"question_type\": \"multiple_choice\",\n      \"options\": [\"هيدروكسيد الألمنيوم\", \"هيدروكسيد الصوديوم\", \"هيدروكسيد الأمونيوم\", \"هيدروكسيد الحديد III\"],\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"4. الصيغة الأيونية لهيدروكسيد الأمونيوم:\",\n      \"question_type\": \"multiple_choice\",\n      \"options\": [\"NH₄ + OH⁻\", \"4NH⁺ + OH⁻\", \"NH₄O⁻ + H⁺\", \"NH₄⁺ + OH⁻\"],\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها. 1. يُستخدم هيدروكسيد الصوديوم في صناعة الصابون.\",\n      \"question_type\": \"true_false\",\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها. 2. تلوّن المحاليل الأساسية ورقة عبّاد الشّمس باللّون الأحمر.\",\n      \"question_type\": \"true_false\",\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها. 3. يُستعمل هيدروكسيد الكالسيوم في معالجة حموضة التّربة.\",\n      \"question_type\": \"true_false\",\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"قارن بين محلولين متساويين في التّركيز والحجم من هيدروكسيد الصوديوم، وهيدروكسيد الأمونيوم من حيث: 1. عدد أيونات OH⁻. 2. النّاقلية الكهربائية.\",\n      \"question_type\": \"essay\",\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}"
+  },
   "gemini_pdf_content": {},
-  "gemini_fallback_model_content": {},
-  "gemini_image_fallback_content": {},
-  "merged_content": "",
-  "raw_markdown": "",
-  "sections": [],
-  "questions": [],
+  "gemini_fallback_model_content": {
+    "page_number": 24,
+    "detected_language": "ar",
+    "raw_markdown": "### أختبر نفسي:\n\n#### السؤال الأول:\nاختر الإجابة الصحيحة في كل مما يأتي:\n1. عدد الوظائف الأساسية في هيدروكسيد الباريوم:\na. 1\nb. 4\nc. 2\nd. 3\n\n2. أحد الأسس الآتية يُستخدم في معالجة حموضة المعدة:\na. NaOH\nb. Mg(OH)₂\nc. KOH\nd. NH₄OH\n\n3. محلول الأساس الأكثر ناقلية للتيار الكهربائي من بين المحاليل المتساوية في التراكيز الآتية هو:\na. هيدروكسيد الألمنيوم\nb. هيدروكسيد الصوديوم\nc. هيدروكسيد الأمونيوم\nd. هيدروكسيد الحديد III\n\n4. الصيغة الأيونية لهيدروكسيد الأمونيوم:\na. NH₄ + OH⁻\nb. 4NH⁺ + OH⁻\nc. NH₄O⁻ + H⁺\nd. NH₄⁺ + OH⁻\n\n#### السؤال الثاني:\nضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها.\n1. يُستخدم هيدروكسيد الصوديوم في صناعة الصابون.\n2. تلوّن المحاليل الأساسية ورقة عبّاد الشّمس باللّون الأحمر.\n3. يُستعمل هيدروكسيد الكالسيوم في معالجة حموضة التّربة.\n\n#### السؤال الثالث:\nقارن بين محلولين متساويين في التّركيز والحجم من هيدروكسيد الصوديوم، وهيدروكسيد الأمونيوم من حيث:\n1. عدد أيونات OH⁻.\n2. النّاقلية الكهربائية.",
+    "sections": [
+      {
+        "heading": "أختبر نفسي",
+        "content": "السؤال الأول: اختر الإجابة الصحيحة في كل مما يأتي:\n1. عدد الوظائف الأساسية في هيدروكسيد الباريوم: a. 1, b. 4, c. 2, d. 3\n2. أحد الأسس الآتية يُستخدم في معالجة حموضة المعدة: a. NaOH, b. Mg(OH)₂, c. KOH, d. NH₄OH\n3. محلول الأساس الأكثر ناقلية للتيار الكهربائي من بين المحاليل المتساوية في التراكيز الآتية هو: a. هيدروكسيد الألمنيوم, b. هيدروكسيد الصوديوم, c. هيدروكسيد الأمونيوم, d. هيدروكسيد الحديد III\n4. الصيغة الأيونية لهيدروكسيد الأمونيوم: a. NH₄ + OH⁻, b. 4NH⁺ + OH⁻, c. NH₄O⁻ + H⁺, d. NH₄⁺ + OH⁻",
+        "content_type": "exercise"
+      },
+      {
+        "heading": "السؤال الثاني",
+        "content": "ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها.\n1. يُستخدم هيدروكسيد الصوديوم في صناعة الصابون.\n2. تلوّن المحاليل الأساسية ورقة عبّاد الشّمس باللّون الأحمر.\n3. يُستعمل هيدروكسيد الكالسيوم في معالجة حموضة التّربة.",
+        "content_type": "exercise"
+      },
+      {
+        "heading": "السؤال الثالث",
+        "content": "قارن بين محلولين متساويين في التّركيز والحجم من هيدروكسيد الصوديوم، وهيدروكسيد الأمونيوم من حيث:\n1. عدد أيونات OH⁻.\n2. النّاقلية الكهربائية.",
+        "content_type": "exercise"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "1. عدد الوظائف الأساسية في هيدروكسيد الباريوم:",
+        "question_type": "multiple_choice",
+        "options": [
+          "1",
+          "4",
+          "2",
+          "3"
+        ],
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "2. أحد الأسس الآتية يُستخدم في معالجة حموضة المعدة:",
+        "question_type": "multiple_choice",
+        "options": [
+          "NaOH",
+          "Mg(OH)₂",
+          "KOH",
+          "NH₄OH"
+        ],
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "3. محلول الأساس الأكثر ناقلية للتيار الكهربائي من بين المحاليل المتساوية في التراكيز الآتية هو:",
+        "question_type": "multiple_choice",
+        "options": [
+          "هيدروكسيد الألمنيوم",
+          "هيدروكسيد الصوديوم",
+          "هيدروكسيد الأمونيوم",
+          "هيدروكسيد الحديد III"
+        ],
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "4. الصيغة الأيونية لهيدروكسيد الأمونيوم:",
+        "question_type": "multiple_choice",
+        "options": [
+          "NH₄ + OH⁻",
+          "4NH⁺ + OH⁻",
+          "NH₄O⁻ + H⁺",
+          "NH₄⁺ + OH⁻"
+        ],
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها. 1. يُستخدم هيدروكسيد الصوديوم في صناعة الصابون.",
+        "question_type": "true_false",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها. 2. تلوّن المحاليل الأساسية ورقة عبّاد الشّمس باللّون الأحمر.",
+        "question_type": "true_false",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها. 3. يُستعمل هيدروكسيد الكالسيوم في معالجة حموضة التّربة.",
+        "question_type": "true_false",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "قارن بين محلولين متساويين في التّركيز والحجم من هيدروكسيد الصوديوم، وهيدروكسيد الأمونيوم من حيث: 1. عدد أيونات OH⁻. 2. النّاقلية الكهربائية.",
+        "question_type": "essay",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [],
+    "tables": [],
+    "equations": [],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 51.289531634s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '51s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 944,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 24,
+      "schema_valid": true,
+      "raw_markdown_chars": 944,
+      "char_count": 944,
+      "section_count": 3,
+      "question_count": 8,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.7774,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 24,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### أختبر نفسي:\\n\\n#### السؤال الأول:\\nاختر الإجابة الصحيحة في كل مما يأتي:\\n1. عدد الوظائف الأساسية في هيدروكسيد الباريوم:\\na. 1\\nb. 4\\nc. 2\\nd. 3\\n\\n2. أحد الأسس الآتية يُستخدم في معالجة حموضة المعدة:\\na. NaOH\\nb. Mg(OH)₂\\nc. KOH\\nd. NH₄OH\\n\\n3. محلول الأساس الأكثر ناقلية للتيار الكهربائي من بين المحاليل المتساوية في التراكيز الآتية هو:\\na. هيدروكسيد الألمنيوم\\nb. هيدروكسيد الصوديوم\\nc. هيدروكسيد الأمونيوم\\nd. هيدروكسيد الحديد III\\n\\n4. الصيغة الأيونية لهيدروكسيد الأمونيوم:\\na. NH₄ + OH⁻\\nb. 4NH⁺ + OH⁻\\nc. NH₄O⁻ + H⁺\\nd. NH₄⁺ + OH⁻\\n\\n#### السؤال الثاني:\\nضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها.\\n1. يُستخدم هيدروكسيد الصوديوم في صناعة الصابون.\\n2. تلوّن المحاليل الأساسية ورقة عبّاد الشّمس باللّون الأحمر.\\n3. يُستعمل هيدروكسيد الكالسيوم في معالجة حموضة التّربة.\\n\\n#### السؤال الثالث:\\nقارن بين محلولين متساويين في التّركيز والحجم من هيدروكسيد الصوديوم، وهيدروكسيد الأمونيوم من حيث:\\n1. عدد أيونات OH⁻.\\n2. النّاقلية الكهربائية.\",\n  \"sections\": [\n    {\n      \"heading\": \"أختبر نفسي\",\n      \"content\": \"السؤال الأول: اختر الإجابة الصحيحة في كل مما يأتي:\\n1. عدد الوظائف الأساسية في هيدروكسيد الباريوم: a. 1, b. 4, c. 2, d. 3\\n2. أحد الأسس الآتية يُستخدم في معالجة حموضة المعدة: a. NaOH, b. Mg(OH)₂, c. KOH, d. NH₄OH\\n3. محلول الأساس الأكثر ناقلية للتيار الكهربائي من بين المحاليل المتساوية في التراكيز الآتية هو: a. هيدروكسيد الألمنيوم, b. هيدروكسيد الصوديوم, c. هيدروكسيد الأمونيوم, d. هيدروكسيد الحديد III\\n4. الصيغة الأيونية لهيدروكسيد الأمونيوم: a. NH₄ + OH⁻, b. 4NH⁺ + OH⁻, c. NH₄O⁻ + H⁺, d. NH₄⁺ + OH⁻\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"السؤال الثاني\",\n      \"content\": \"ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها.\\n1. يُستخدم هيدروكسيد الصوديوم في صناعة الصابون.\\n2. تلوّن المحاليل الأساسية ورقة عبّاد الشّمس باللّون الأحمر.\\n3. يُستعمل هيدروكسيد الكالسيوم في معالجة حموضة التّربة.\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"السؤال الثالث\",\n      \"content\": \"قارن بين محلولين متساويين في التّركيز والحجم من هيدروكسيد الصوديوم، وهيدروكسيد الأمونيوم من حيث:\\n1. عدد أيونات OH⁻.\\n2. النّاقلية الكهربائية.\",\n      \"content_type\": \"exercise\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"1. عدد الوظائف الأساسية في هيدروكسيد الباريوم:\",\n      \"question_type\": \"multiple_choice\",\n      \"options\": [\"1\", \"4\", \"2\", \"3\"],\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"2. أحد الأسس الآتية يُستخدم في معالجة حموضة المعدة:\",\n      \"question_type\": \"multiple_choice\",\n      \"options\": [\"NaOH\", \"Mg(OH)₂\", \"KOH\", \"NH₄OH\"],\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"3. محلول الأساس الأكثر ناقلية للتيار الكهربائي من بين المحاليل المتساوية في التراكيز الآتية هو:\",\n      \"question_type\": \"multiple_choice\",\n      \"options\": [\"هيدروكسيد الألمنيوم\", \"هيدروكسيد الصوديوم\", \"هيدروكسيد الأمونيوم\", \"هيدروكسيد الحديد III\"],\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"4. الصيغة الأيونية لهيدروكسيد الأمونيوم:\",\n      \"question_type\": \"multiple_choice\",\n      \"options\": [\"NH₄ + OH⁻\", \"4NH⁺ + OH⁻\", \"NH₄O⁻ + H⁺\", \"NH₄⁺ + OH⁻\"],\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها. 1. يُستخدم هيدروكسيد الصوديوم في صناعة الصابون.\",\n      \"question_type\": \"true_false\",\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها. 2. تلوّن المحاليل الأساسية ورقة عبّاد الشّمس باللّون الأحمر.\",\n      \"question_type\": \"true_false\",\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها. 3. يُستعمل هيدروكسيد الكالسيوم في معالجة حموضة التّربة.\",\n      \"question_type\": \"true_false\",\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"قارن بين محلولين متساويين في التّركيز والحجم من هيدروكسيد الصوديوم، وهيدروكسيد الأمونيوم من حيث: 1. عدد أيونات OH⁻. 2. النّاقلية الكهربائية.\",\n      \"question_type\": \"essay\",\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}"
+  },
+  "gemini_image_fallback_content": {
+    "page_number": 24,
+    "detected_language": "ar",
+    "raw_markdown": "### أختبر نفسي:\n\n#### السؤال الأول:\nاختر الإجابة الصحيحة في كل مما يأتي:\n1. عدد الوظائف الأساسية في هيدروكسيد الباريوم:\na. 1\nb. 4\nc. 2\nd. 3\n\n2. أحد الأسس الآتية يُستخدم في معالجة حموضة المعدة:\na. NaOH\nb. Mg(OH)₂\nc. KOH\nd. NH₄OH\n\n3. محلول الأساس الأكثر ناقلية للتيار الكهربائي من بين المحاليل المتساوية في التراكيز الآتية هو:\na. هيدروكسيد الألمنيوم\nb. هيدروكسيد الصوديوم\nc. هيدروكسيد الأمونيوم\nd. هيدروكسيد الحديد III\n\n4. الصيغة الأيونية لهيدروكسيد الأمونيوم:\na. NH₄ + OH⁻\nb. 4NH⁺ + OH⁻\nc. NH₄O⁻ + H⁺\nd. NH₄⁺ + OH⁻\n\n#### السؤال الثاني:\nضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها.\n1. يُستخدم هيدروكسيد الصوديوم في صناعة الصابون.\n2. تلوّن المحاليل الأساسية ورقة عبّاد الشّمس باللّون الأحمر.\n3. يُستعمل هيدروكسيد الكالسيوم في معالجة حموضة التّربة.\n\n#### السؤال الثالث:\nقارن بين محلولين متساويين في التّركيز والحجم من هيدروكسيد الصوديوم، وهيدروكسيد الأمونيوم من حيث:\n1. عدد أيونات OH⁻.\n2. النّاقلية الكهربائية.",
+    "sections": [
+      {
+        "heading": "أختبر نفسي",
+        "content": "السؤال الأول: اختر الإجابة الصحيحة في كل مما يأتي:\n1. عدد الوظائف الأساسية في هيدروكسيد الباريوم: a. 1, b. 4, c. 2, d. 3\n2. أحد الأسس الآتية يُستخدم في معالجة حموضة المعدة: a. NaOH, b. Mg(OH)₂, c. KOH, d. NH₄OH\n3. محلول الأساس الأكثر ناقلية للتيار الكهربائي من بين المحاليل المتساوية في التراكيز الآتية هو: a. هيدروكسيد الألمنيوم, b. هيدروكسيد الصوديوم, c. هيدروكسيد الأمونيوم, d. هيدروكسيد الحديد III\n4. الصيغة الأيونية لهيدروكسيد الأمونيوم: a. NH₄ + OH⁻, b. 4NH⁺ + OH⁻, c. NH₄O⁻ + H⁺, d. NH₄⁺ + OH⁻",
+        "content_type": "exercise"
+      },
+      {
+        "heading": "السؤال الثاني",
+        "content": "ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها.\n1. يُستخدم هيدروكسيد الصوديوم في صناعة الصابون.\n2. تلوّن المحاليل الأساسية ورقة عبّاد الشّمس باللّون الأحمر.\n3. يُستعمل هيدروكسيد الكالسيوم في معالجة حموضة التّربة.",
+        "content_type": "exercise"
+      },
+      {
+        "heading": "السؤال الثالث",
+        "content": "قارن بين محلولين متساويين في التّركيز والحجم من هيدروكسيد الصوديوم، وهيدروكسيد الأمونيوم من حيث:\n1. عدد أيونات OH⁻.\n2. النّاقلية الكهربائية.",
+        "content_type": "exercise"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "1. عدد الوظائف الأساسية في هيدروكسيد الباريوم:",
+        "question_type": "multiple_choice",
+        "options": [
+          "1",
+          "4",
+          "2",
+          "3"
+        ],
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "2. أحد الأسس الآتية يُستخدم في معالجة حموضة المعدة:",
+        "question_type": "multiple_choice",
+        "options": [
+          "NaOH",
+          "Mg(OH)₂",
+          "KOH",
+          "NH₄OH"
+        ],
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "3. محلول الأساس الأكثر ناقلية للتيار الكهربائي من بين المحاليل المتساوية في التراكيز الآتية هو:",
+        "question_type": "multiple_choice",
+        "options": [
+          "هيدروكسيد الألمنيوم",
+          "هيدروكسيد الصوديوم",
+          "هيدروكسيد الأمونيوم",
+          "هيدروكسيد الحديد III"
+        ],
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "4. الصيغة الأيونية لهيدروكسيد الأمونيوم:",
+        "question_type": "multiple_choice",
+        "options": [
+          "NH₄ + OH⁻",
+          "4NH⁺ + OH⁻",
+          "NH₄O⁻ + H⁺",
+          "NH₄⁺ + OH⁻"
+        ],
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها. 1. يُستخدم هيدروكسيد الصوديوم في صناعة الصابون.",
+        "question_type": "true_false",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها. 2. تلوّن المحاليل الأساسية ورقة عبّاد الشّمس باللّون الأحمر.",
+        "question_type": "true_false",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها. 3. يُستعمل هيدروكسيد الكالسيوم في معالجة حموضة التّربة.",
+        "question_type": "true_false",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "قارن بين محلولين متساويين في التّركيز والحجم من هيدروكسيد الصوديوم، وهيدروكسيد الأمونيوم من حيث: 1. عدد أيونات OH⁻. 2. النّاقلية الكهربائية.",
+        "question_type": "essay",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [],
+    "tables": [],
+    "equations": [],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 51.289531634s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '51s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 944,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 24,
+      "schema_valid": true,
+      "raw_markdown_chars": 944,
+      "char_count": 944,
+      "section_count": 3,
+      "question_count": 8,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.7774,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 24,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### أختبر نفسي:\\n\\n#### السؤال الأول:\\nاختر الإجابة الصحيحة في كل مما يأتي:\\n1. عدد الوظائف الأساسية في هيدروكسيد الباريوم:\\na. 1\\nb. 4\\nc. 2\\nd. 3\\n\\n2. أحد الأسس الآتية يُستخدم في معالجة حموضة المعدة:\\na. NaOH\\nb. Mg(OH)₂\\nc. KOH\\nd. NH₄OH\\n\\n3. محلول الأساس الأكثر ناقلية للتيار الكهربائي من بين المحاليل المتساوية في التراكيز الآتية هو:\\na. هيدروكسيد الألمنيوم\\nb. هيدروكسيد الصوديوم\\nc. هيدروكسيد الأمونيوم\\nd. هيدروكسيد الحديد III\\n\\n4. الصيغة الأيونية لهيدروكسيد الأمونيوم:\\na. NH₄ + OH⁻\\nb. 4NH⁺ + OH⁻\\nc. NH₄O⁻ + H⁺\\nd. NH₄⁺ + OH⁻\\n\\n#### السؤال الثاني:\\nضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها.\\n1. يُستخدم هيدروكسيد الصوديوم في صناعة الصابون.\\n2. تلوّن المحاليل الأساسية ورقة عبّاد الشّمس باللّون الأحمر.\\n3. يُستعمل هيدروكسيد الكالسيوم في معالجة حموضة التّربة.\\n\\n#### السؤال الثالث:\\nقارن بين محلولين متساويين في التّركيز والحجم من هيدروكسيد الصوديوم، وهيدروكسيد الأمونيوم من حيث:\\n1. عدد أيونات OH⁻.\\n2. النّاقلية الكهربائية.\",\n  \"sections\": [\n    {\n      \"heading\": \"أختبر نفسي\",\n      \"content\": \"السؤال الأول: اختر الإجابة الصحيحة في كل مما يأتي:\\n1. عدد الوظائف الأساسية في هيدروكسيد الباريوم: a. 1, b. 4, c. 2, d. 3\\n2. أحد الأسس الآتية يُستخدم في معالجة حموضة المعدة: a. NaOH, b. Mg(OH)₂, c. KOH, d. NH₄OH\\n3. محلول الأساس الأكثر ناقلية للتيار الكهربائي من بين المحاليل المتساوية في التراكيز الآتية هو: a. هيدروكسيد الألمنيوم, b. هيدروكسيد الصوديوم, c. هيدروكسيد الأمونيوم, d. هيدروكسيد الحديد III\\n4. الصيغة الأيونية لهيدروكسيد الأمونيوم: a. NH₄ + OH⁻, b. 4NH⁺ + OH⁻, c. NH₄O⁻ + H⁺, d. NH₄⁺ + OH⁻\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"السؤال الثاني\",\n      \"content\": \"ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها.\\n1. يُستخدم هيدروكسيد الصوديوم في صناعة الصابون.\\n2. تلوّن المحاليل الأساسية ورقة عبّاد الشّمس باللّون الأحمر.\\n3. يُستعمل هيدروكسيد الكالسيوم في معالجة حموضة التّربة.\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"السؤال الثالث\",\n      \"content\": \"قارن بين محلولين متساويين في التّركيز والحجم من هيدروكسيد الصوديوم، وهيدروكسيد الأمونيوم من حيث:\\n1. عدد أيونات OH⁻.\\n2. النّاقلية الكهربائية.\",\n      \"content_type\": \"exercise\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"1. عدد الوظائف الأساسية في هيدروكسيد الباريوم:\",\n      \"question_type\": \"multiple_choice\",\n      \"options\": [\"1\", \"4\", \"2\", \"3\"],\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"2. أحد الأسس الآتية يُستخدم في معالجة حموضة المعدة:\",\n      \"question_type\": \"multiple_choice\",\n      \"options\": [\"NaOH\", \"Mg(OH)₂\", \"KOH\", \"NH₄OH\"],\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"3. محلول الأساس الأكثر ناقلية للتيار الكهربائي من بين المحاليل المتساوية في التراكيز الآتية هو:\",\n      \"question_type\": \"multiple_choice\",\n      \"options\": [\"هيدروكسيد الألمنيوم\", \"هيدروكسيد الصوديوم\", \"هيدروكسيد الأمونيوم\", \"هيدروكسيد الحديد III\"],\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"4. الصيغة الأيونية لهيدروكسيد الأمونيوم:\",\n      \"question_type\": \"multiple_choice\",\n      \"options\": [\"NH₄ + OH⁻\", \"4NH⁺ + OH⁻\", \"NH₄O⁻ + H⁺\", \"NH₄⁺ + OH⁻\"],\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها. 1. يُستخدم هيدروكسيد الصوديوم في صناعة الصابون.\",\n      \"question_type\": \"true_false\",\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها. 2. تلوّن المحاليل الأساسية ورقة عبّاد الشّمس باللّون الأحمر.\",\n      \"question_type\": \"true_false\",\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها. 3. يُستعمل هيدروكسيد الكالسيوم في معالجة حموضة التّربة.\",\n      \"question_type\": \"true_false\",\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"قارن بين محلولين متساويين في التّركيز والحجم من هيدروكسيد الصوديوم، وهيدروكسيد الأمونيوم من حيث: 1. عدد أيونات OH⁻. 2. النّاقلية الكهربائية.\",\n      \"question_type\": \"essay\",\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}"
+  },
+  "merged_content": "أختبر نفسي\nالسؤال الأول: اختر الإجابة الصحيحة في كل مما يأتي:\n1. عدد الوظائف الأساسية في هيدروكسيد الباريوم: a. 1, b. 4, c. 2, d. 3\n2. أحد الأسس الآتية يُستخدم في معالجة حموضة المعدة: a. NaOH, b. Mg(OH)₂, c. KOH, d. NH₄OH\n3. محلول الأساس الأكثر ناقلية للتيار الكهربائي من بين المحاليل المتساوية في التراكيز الآتية هو: a. هيدروكسيد الألمنيوم, b. هيدروكسيد الصوديوم, c. هيدروكسيد الأمونيوم, d. هيدروكسيد الحديد III\n4. الصيغة الأيونية لهيدروكسيد الأمونيوم: a. NH₄ + OH⁻, b. 4NH⁺ + OH⁻, c. NH₄O⁻ + H⁺, d. NH₄⁺ + OH⁻\n\nالسؤال الثاني\nضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها.\n1. يُستخدم هيدروكسيد الصوديوم في صناعة الصابون.\n2. تلوّن المحاليل الأساسية ورقة عبّاد الشّمس باللّون الأحمر.\n3. يُستعمل هيدروكسيد الكالسيوم في معالجة حموضة التّربة.\n\nالسؤال الثالث\nقارن بين محلولين متساويين في التّركيز والحجم من هيدروكسيد الصوديوم، وهيدروكسيد الأمونيوم من حيث:\n1. عدد أيونات OH⁻.\n2. النّاقلية الكهربائية.",
+  "raw_markdown": "### أختبر نفسي:\n\n#### السؤال الأول:\nاختر الإجابة الصحيحة في كل مما يأتي:\n1. عدد الوظائف الأساسية في هيدروكسيد الباريوم:\na. 1\nb. 4\nc. 2\nd. 3\n\n2. أحد الأسس الآتية يُستخدم في معالجة حموضة المعدة:\na. NaOH\nb. Mg(OH)₂\nc. KOH\nd. NH₄OH\n\n3. محلول الأساس الأكثر ناقلية للتيار الكهربائي من بين المحاليل المتساوية في التراكيز الآتية هو:\na. هيدروكسيد الألمنيوم\nb. هيدروكسيد الصوديوم\nc. هيدروكسيد الأمونيوم\nd. هيدروكسيد الحديد III\n\n4. الصيغة الأيونية لهيدروكسيد الأمونيوم:\na. NH₄ + OH⁻\nb. 4NH⁺ + OH⁻\nc. NH₄O⁻ + H⁺\nd. NH₄⁺ + OH⁻\n\n#### السؤال الثاني:\nضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها.\n1. يُستخدم هيدروكسيد الصوديوم في صناعة الصابون.\n2. تلوّن المحاليل الأساسية ورقة عبّاد الشّمس باللّون الأحمر.\n3. يُستعمل هيدروكسيد الكالسيوم في معالجة حموضة التّربة.\n\n#### السؤال الثالث:\nقارن بين محلولين متساويين في التّركيز والحجم من هيدروكسيد الصوديوم، وهيدروكسيد الأمونيوم من حيث:\n1. عدد أيونات OH⁻.\n2. النّاقلية الكهربائية.",
+  "sections": [
+    {
+      "heading": "أختبر نفسي",
+      "content": "السؤال الأول: اختر الإجابة الصحيحة في كل مما يأتي:\n1. عدد الوظائف الأساسية في هيدروكسيد الباريوم: a. 1, b. 4, c. 2, d. 3\n2. أحد الأسس الآتية يُستخدم في معالجة حموضة المعدة: a. NaOH, b. Mg(OH)₂, c. KOH, d. NH₄OH\n3. محلول الأساس الأكثر ناقلية للتيار الكهربائي من بين المحاليل المتساوية في التراكيز الآتية هو: a. هيدروكسيد الألمنيوم, b. هيدروكسيد الصوديوم, c. هيدروكسيد الأمونيوم, d. هيدروكسيد الحديد III\n4. الصيغة الأيونية لهيدروكسيد الأمونيوم: a. NH₄ + OH⁻, b. 4NH⁺ + OH⁻, c. NH₄O⁻ + H⁺, d. NH₄⁺ + OH⁻",
+      "content_type": "exercise"
+    },
+    {
+      "heading": "السؤال الثاني",
+      "content": "ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها.\n1. يُستخدم هيدروكسيد الصوديوم في صناعة الصابون.\n2. تلوّن المحاليل الأساسية ورقة عبّاد الشّمس باللّون الأحمر.\n3. يُستعمل هيدروكسيد الكالسيوم في معالجة حموضة التّربة.",
+      "content_type": "exercise"
+    },
+    {
+      "heading": "السؤال الثالث",
+      "content": "قارن بين محلولين متساويين في التّركيز والحجم من هيدروكسيد الصوديوم، وهيدروكسيد الأمونيوم من حيث:\n1. عدد أيونات OH⁻.\n2. النّاقلية الكهربائية.",
+      "content_type": "exercise"
+    }
+  ],
+  "questions": [
+    {
+      "question_text": "1. عدد الوظائف الأساسية في هيدروكسيد الباريوم:",
+      "question_type": "multiple_choice",
+      "options": [
+        "1",
+        "4",
+        "2",
+        "3"
+      ],
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "2. أحد الأسس الآتية يُستخدم في معالجة حموضة المعدة:",
+      "question_type": "multiple_choice",
+      "options": [
+        "NaOH",
+        "Mg(OH)₂",
+        "KOH",
+        "NH₄OH"
+      ],
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "3. محلول الأساس الأكثر ناقلية للتيار الكهربائي من بين المحاليل المتساوية في التراكيز الآتية هو:",
+      "question_type": "multiple_choice",
+      "options": [
+        "هيدروكسيد الألمنيوم",
+        "هيدروكسيد الصوديوم",
+        "هيدروكسيد الأمونيوم",
+        "هيدروكسيد الحديد III"
+      ],
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "4. الصيغة الأيونية لهيدروكسيد الأمونيوم:",
+      "question_type": "multiple_choice",
+      "options": [
+        "NH₄ + OH⁻",
+        "4NH⁺ + OH⁻",
+        "NH₄O⁻ + H⁺",
+        "NH₄⁺ + OH⁻"
+      ],
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها. 1. يُستخدم هيدروكسيد الصوديوم في صناعة الصابون.",
+      "question_type": "true_false",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها. 2. تلوّن المحاليل الأساسية ورقة عبّاد الشّمس باللّون الأحمر.",
+      "question_type": "true_false",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها. 3. يُستعمل هيدروكسيد الكالسيوم في معالجة حموضة التّربة.",
+      "question_type": "true_false",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "قارن بين محلولين متساويين في التّركيز والحجم من هيدروكسيد الصوديوم، وهيدروكسيد الأمونيوم من حيث: 1. عدد أيونات OH⁻. 2. النّاقلية الكهربائية.",
+      "question_type": "essay",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    }
+  ],
   "diagrams": [],
   "tables": [],
   "equations": [],
-  "warnings": [],
-  "errors": [
-    "Gemini document extraction failed quality checks for page 24: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 26.448535707s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.5-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '26s'}]}}"
+  "warnings": [
+    "Gemini PDF extraction failed; using 300 DPI image fallback: Gemini document extraction failed for page 24 with model gemini-3.1-flash-lite: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'Request contains an invalid argument.', 'status': 'INVALID_ARGUMENT'}}",
+    "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 51.289531634s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '51s'}]}}."
   ],
-  "char_count": 0,
-  "completeness_score": 0.0,
+  "errors": [],
+  "char_count": 930,
+  "completeness_score": 1.0,
   "detected_language": "ar",
-  "vision_provider": null,
-  "vision_source": null,
-  "neighboring_pages": [],
-  "uploaded_pdf": null,
-  "raw_text": null,
-  "quality_report": {},
+  "vision_provider": "gemini_document_image",
+  "vision_source": "gemini_rendered_image_300dpi",
+  "neighboring_pages": [
+    23,
+    25
+  ],
+  "uploaded_pdf": {
+    "provider": "gemini_document",
+    "name": "files/z7ityp0k6phf",
+    "uri": "https://generativelanguage.googleapis.com/v1beta/files/z7ityp0k6phf",
+    "mime_type": "application/pdf",
+    "display_name": "Chemistry.pdf"
+  },
+  "raw_text": "{\n  \"page_number\": 24,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### أختبر نفسي:\\n\\n#### السؤال الأول:\\nاختر الإجابة الصحيحة في كل مما يأتي:\\n1. عدد الوظائف الأساسية في هيدروكسيد الباريوم:\\na. 1\\nb. 4\\nc. 2\\nd. 3\\n\\n2. أحد الأسس الآتية يُستخدم في معالجة حموضة المعدة:\\na. NaOH\\nb. Mg(OH)₂\\nc. KOH\\nd. NH₄OH\\n\\n3. محلول الأساس الأكثر ناقلية للتيار الكهربائي من بين المحاليل المتساوية في التراكيز الآتية هو:\\na. هيدروكسيد الألمنيوم\\nb. هيدروكسيد الصوديوم\\nc. هيدروكسيد الأمونيوم\\nd. هيدروكسيد الحديد III\\n\\n4. الصيغة الأيونية لهيدروكسيد الأمونيوم:\\na. NH₄ + OH⁻\\nb. 4NH⁺ + OH⁻\\nc. NH₄O⁻ + H⁺\\nd. NH₄⁺ + OH⁻\\n\\n#### السؤال الثاني:\\nضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها.\\n1. يُستخدم هيدروكسيد الصوديوم في صناعة الصابون.\\n2. تلوّن المحاليل الأساسية ورقة عبّاد الشّمس باللّون الأحمر.\\n3. يُستعمل هيدروكسيد الكالسيوم في معالجة حموضة التّربة.\\n\\n#### السؤال الثالث:\\nقارن بين محلولين متساويين في التّركيز والحجم من هيدروكسيد الصوديوم، وهيدروكسيد الأمونيوم من حيث:\\n1. عدد أيونات OH⁻.\\n2. النّاقلية الكهربائية.\",\n  \"sections\": [\n    {\n      \"heading\": \"أختبر نفسي\",\n      \"content\": \"السؤال الأول: اختر الإجابة الصحيحة في كل مما يأتي:\\n1. عدد الوظائف الأساسية في هيدروكسيد الباريوم: a. 1, b. 4, c. 2, d. 3\\n2. أحد الأسس الآتية يُستخدم في معالجة حموضة المعدة: a. NaOH, b. Mg(OH)₂, c. KOH, d. NH₄OH\\n3. محلول الأساس الأكثر ناقلية للتيار الكهربائي من بين المحاليل المتساوية في التراكيز الآتية هو: a. هيدروكسيد الألمنيوم, b. هيدروكسيد الصوديوم, c. هيدروكسيد الأمونيوم, d. هيدروكسيد الحديد III\\n4. الصيغة الأيونية لهيدروكسيد الأمونيوم: a. NH₄ + OH⁻, b. 4NH⁺ + OH⁻, c. NH₄O⁻ + H⁺, d. NH₄⁺ + OH⁻\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"السؤال الثاني\",\n      \"content\": \"ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها.\\n1. يُستخدم هيدروكسيد الصوديوم في صناعة الصابون.\\n2. تلوّن المحاليل الأساسية ورقة عبّاد الشّمس باللّون الأحمر.\\n3. يُستعمل هيدروكسيد الكالسيوم في معالجة حموضة التّربة.\",\n      \"content_type\": \"exercise\"\n    },\n    {\n      \"heading\": \"السؤال الثالث\",\n      \"content\": \"قارن بين محلولين متساويين في التّركيز والحجم من هيدروكسيد الصوديوم، وهيدروكسيد الأمونيوم من حيث:\\n1. عدد أيونات OH⁻.\\n2. النّاقلية الكهربائية.\",\n      \"content_type\": \"exercise\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"1. عدد الوظائف الأساسية في هيدروكسيد الباريوم:\",\n      \"question_type\": \"multiple_choice\",\n      \"options\": [\"1\", \"4\", \"2\", \"3\"],\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"2. أحد الأسس الآتية يُستخدم في معالجة حموضة المعدة:\",\n      \"question_type\": \"multiple_choice\",\n      \"options\": [\"NaOH\", \"Mg(OH)₂\", \"KOH\", \"NH₄OH\"],\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"3. محلول الأساس الأكثر ناقلية للتيار الكهربائي من بين المحاليل المتساوية في التراكيز الآتية هو:\",\n      \"question_type\": \"multiple_choice\",\n      \"options\": [\"هيدروكسيد الألمنيوم\", \"هيدروكسيد الصوديوم\", \"هيدروكسيد الأمونيوم\", \"هيدروكسيد الحديد III\"],\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"4. الصيغة الأيونية لهيدروكسيد الأمونيوم:\",\n      \"question_type\": \"multiple_choice\",\n      \"options\": [\"NH₄ + OH⁻\", \"4NH⁺ + OH⁻\", \"NH₄O⁻ + H⁺\", \"NH₄⁺ + OH⁻\"],\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها. 1. يُستخدم هيدروكسيد الصوديوم في صناعة الصابون.\",\n      \"question_type\": \"true_false\",\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها. 2. تلوّن المحاليل الأساسية ورقة عبّاد الشّمس باللّون الأحمر.\",\n      \"question_type\": \"true_false\",\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"ضع كلمة (صح) أمام العبارة الصحيحة وكلمة (غلط) أمام العبارة المغلوط فيها، ثم صححها. 3. يُستعمل هيدروكسيد الكالسيوم في معالجة حموضة التّربة.\",\n      \"question_type\": \"true_false\",\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"قارن بين محلولين متساويين في التّركيز والحجم من هيدروكسيد الصوديوم، وهيدروكسيد الأمونيوم من حيث: 1. عدد أيونات OH⁻. 2. النّاقلية الكهربائية.\",\n      \"question_type\": \"essay\",\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true\n}",
+  "quality_report": {
+    "page_number": 24,
+    "schema_valid": true,
+    "raw_markdown_chars": 944,
+    "char_count": 944,
+    "section_count": 3,
+    "question_count": 8,
+    "table_count": 0,
+    "equation_count": 0,
+    "diagram_count": 0,
+    "warning_count": 0,
+    "arabic_char_ratio": 0.7774,
+    "completeness_score": 1.0,
+    "issues": [],
+    "should_fallback": false
+  },
   "classification": "NEEDS_VISION",
   "source_id": 1
 }

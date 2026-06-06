@@ -2,35 +2,446 @@
   "page_number": 42,
   "page_type": "NEEDS_VISION",
   "extraction_methods": [
-    "exception"
+    "gemini_pdf_file",
+    "gemini_image_300dpi"
   ],
-  "extraction_method": "exception",
-  "status": "failed",
+  "extraction_method": "gemini_pdf_file+gemini_image_300dpi",
+  "status": "completed_with_image_fallback",
   "text_layer_content": "",
-  "vision_content": {},
+  "vision_content": {
+    "page_number": 42,
+    "detected_language": "ar",
+    "raw_markdown": "### أستنتج:\n- يُلوّن محلول ملح كلوريد الصوديوم عبّاد الشّمس (أو ورقة عبّاد الشّمس) باللّون البنفسجي.\n- المعادلة المعبّرة عن التّفاعل:\nNaOH(aq) + HCl(aq) → NaCl(aq) + H2O(l)\n\n**نتيجة:**\nيتشكّل الملح من تفاعل تعديل أساس مع حمض.\n\n### التّفاعل الثّاني:\n2Na(s) + Cl2(g) → 2NaCl(s)\nينتج ملح كلوريد الصوديوم من اتّحاد معدن .................... مع غاز ....................\n\n**نتيجة:**\nيتشكّل الملح من اتّحاد معدن مع لا معدن.\n\n### التّفاعل الثّالث:\nZn(s) + 2HCl(aq) → ZnCl2(aq) + H2(g)\nينتج ملح كلوريد الزنك من تفاعل محلول .................... الممدّد مع معدن .................... الأكثر نشاطاً كيميائياً من الهيدروجين في سلسلة النّشاط الكيميائي.\n\n**نتيجة:**\nيتشكّل الملح من تفاعل معدن مع حمض.\n\n### التّفاعل الرّابع:\nCuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)",
+    "sections": [
+      {
+        "heading": "أستنتج:",
+        "content": "يُلوّن محلول ملح كلوريد الصوديوم عبّاد الشّمس (أو ورقة عبّاد الشّمس) باللّون البنفسجي.\nالمعادلة المعبّرة عن التّفاعل:\nNaOH(aq) + HCl(aq) → NaCl(aq) + H2O(l)",
+        "content_type": "mixed"
+      },
+      {
+        "heading": "نتيجة:",
+        "content": "يتشكّل الملح من تفاعل تعديل أساس مع حمض.",
+        "content_type": "text"
+      },
+      {
+        "heading": "التّفاعل الثّاني:",
+        "content": "2Na(s) + Cl2(g) → 2NaCl(s)\nينتج ملح كلوريد الصوديوم من اتّحاد معدن .................... مع غاز ....................",
+        "content_type": "mixed"
+      },
+      {
+        "heading": "نتيجة:",
+        "content": "يتشكّل الملح من اتّحاد معدن مع لا معدن.",
+        "content_type": "text"
+      },
+      {
+        "heading": "التّفاعل الثّالث:",
+        "content": "Zn(s) + 2HCl(aq) → ZnCl2(aq) + H2(g)\nينتج ملح كلوريد الزنك من تفاعل محلول .................... الممدّد مع معدن .................... الأكثر نشاطاً كيميائياً من الهيدروجين في سلسلة النّشاط الكيميائي.",
+        "content_type": "mixed"
+      },
+      {
+        "heading": "نتيجة:",
+        "content": "يتشكّل الملح من تفاعل معدن مع حمض.",
+        "content_type": "text"
+      },
+      {
+        "heading": "التّفاعل الرّابع:",
+        "content": "CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)",
+        "content_type": "equation"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "ينتج ملح كلوريد الصوديوم من اتّحاد معدن .................... مع غاز ....................",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "ينتج ملح كلوريد الزنك من تفاعل محلول .................... الممدّد مع معدن .................... الأكثر نشاطاً كيميائياً من الهيدروجين في سلسلة النّشاط الكيميائي.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "NaOH(aq) + HCl(aq) → NaCl(aq) + H2O(l)",
+        "description": "المعادلة المعبّرة عن التّفاعل"
+      },
+      {
+        "equation": "2Na(s) + Cl2(g) → 2NaCl(s)",
+        "description": "التفاعل الثاني"
+      },
+      {
+        "equation": "Zn(s) + 2HCl(aq) → ZnCl2(aq) + H2(g)",
+        "description": "التفاعل الثالث"
+      },
+      {
+        "equation": "CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)",
+        "description": "التفاعل الرابع"
+      }
+    ],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 9.553924957s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '9s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 1050,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 42,
+      "schema_valid": true,
+      "raw_markdown_chars": 746,
+      "char_count": 1050,
+      "section_count": 7,
+      "question_count": 2,
+      "table_count": 0,
+      "equation_count": 4,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.5994,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 42,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### أستنتج:\\n- يُلوّن محلول ملح كلوريد الصوديوم عبّاد الشّمس (أو ورقة عبّاد الشّمس) باللّون البنفسجي.\\n- المعادلة المعبّرة عن التّفاعل:\\nNaOH(aq) + HCl(aq) → NaCl(aq) + H2O(l)\\n\\n**نتيجة:**\\nيتشكّل الملح من تفاعل تعديل أساس مع حمض.\\n\\n### التّفاعل الثّاني:\\n2Na(s) + Cl2(g) → 2NaCl(s)\\nينتج ملح كلوريد الصوديوم من اتّحاد معدن .................... مع غاز ....................\\n\\n**نتيجة:**\\nيتشكّل الملح من اتّحاد معدن مع لا معدن.\\n\\n### التّفاعل الثّالث:\\nZn(s) + 2HCl(aq) → ZnCl2(aq) + H2(g)\\nينتج ملح كلوريد الزنك من تفاعل محلول .................... الممدّد مع معدن .................... الأكثر نشاطاً كيميائياً من الهيدروجين في سلسلة النّشاط الكيميائي.\\n\\n**نتيجة:**\\nيتشكّل الملح من تفاعل معدن مع حمض.\\n\\n### التّفاعل الرّابع:\\nCuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\",\n  \"sections\": [\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"يُلوّن محلول ملح كلوريد الصوديوم عبّاد الشّمس (أو ورقة عبّاد الشّمس) باللّون البنفسجي.\\nالمعادلة المعبّرة عن التّفاعل:\\nNaOH(aq) + HCl(aq) → NaCl(aq) + H2O(l)\",\n      \"content_type\": \"mixed\"\n    },\n    {\n      \"heading\": \"نتيجة:\",\n      \"content\": \"يتشكّل الملح من تفاعل تعديل أساس مع حمض.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"التّفاعل الثّاني:\",\n      \"content\": \"2Na(s) + Cl2(g) → 2NaCl(s)\\nينتج ملح كلوريد الصوديوم من اتّحاد معدن .................... مع غاز ....................\",\n      \"content_type\": \"mixed\"\n    },\n    {\n      \"heading\": \"نتيجة:\",\n      \"content\": \"يتشكّل الملح من اتّحاد معدن مع لا معدن.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"التّفاعل الثّالث:\",\n      \"content\": \"Zn(s) + 2HCl(aq) → ZnCl2(aq) + H2(g)\\nينتج ملح كلوريد الزنك من تفاعل محلول .................... الممدّد مع معدن .................... الأكثر نشاطاً كيميائياً من الهيدروجين في سلسلة النّشاط الكيميائي.\",\n      \"content_type\": \"mixed\"\n    },\n    {\n      \"heading\": \"نتيجة:\",\n      \"content\": \"يتشكّل الملح من تفاعل معدن مع حمض.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"التّفاعل الرّابع:\",\n      \"content\": \"CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\",\n      \"content_type\": \"equation\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"ينتج ملح كلوريد الصوديوم من اتّحاد معدن .................... مع غاز ....................\",\n      \"question_type\": \"short_answer\",\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"ينتج ملح كلوريد الزنك من تفاعل محلول .................... الممدّد مع معدن .................... الأكثر نشاطاً كيميائياً من الهيدروجين في سلسلة النّشاط الكيميائي.\",\n      \"question_type\": \"short_answer\",\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"equations\": [\n    {\n      \"equation\": \"NaOH(aq) + HCl(aq) → NaCl(aq) + H2O(l)\",\n      \"description\": \"المعادلة المعبّرة عن التّفاعل\"\n    },\n    {\n      \"equation\": \"2Na(s) + Cl2(g) → 2NaCl(s)\",\n      \"description\": \"التفاعل الثاني\"\n    },\n    {\n      \"equation\": \"Zn(s) + 2HCl(aq) → ZnCl2(aq) + H2(g)\",\n      \"description\": \"التفاعل الثالث\"\n    },\n    {\n      \"equation\": \"CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\",\n      \"description\": \"التفاعل الرابع\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true,\n  \"char_count\": 1050,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 42,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 1050,\n    \"char_count\": 1050,\n    \"section_count\": 7,\n    \"question_count\": 2,\n    \"table_count\": 0,\n    \"equation_count\": 4,\n    \"diagram_count\": 0,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.65,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  }\n}"
+  },
   "gemini_pdf_content": {},
-  "gemini_fallback_model_content": {},
-  "gemini_image_fallback_content": {},
-  "merged_content": "",
-  "raw_markdown": "",
-  "sections": [],
-  "questions": [],
+  "gemini_fallback_model_content": {
+    "page_number": 42,
+    "detected_language": "ar",
+    "raw_markdown": "### أستنتج:\n- يُلوّن محلول ملح كلوريد الصوديوم عبّاد الشّمس (أو ورقة عبّاد الشّمس) باللّون البنفسجي.\n- المعادلة المعبّرة عن التّفاعل:\nNaOH(aq) + HCl(aq) → NaCl(aq) + H2O(l)\n\n**نتيجة:**\nيتشكّل الملح من تفاعل تعديل أساس مع حمض.\n\n### التّفاعل الثّاني:\n2Na(s) + Cl2(g) → 2NaCl(s)\nينتج ملح كلوريد الصوديوم من اتّحاد معدن .................... مع غاز ....................\n\n**نتيجة:**\nيتشكّل الملح من اتّحاد معدن مع لا معدن.\n\n### التّفاعل الثّالث:\nZn(s) + 2HCl(aq) → ZnCl2(aq) + H2(g)\nينتج ملح كلوريد الزنك من تفاعل محلول .................... الممدّد مع معدن .................... الأكثر نشاطاً كيميائياً من الهيدروجين في سلسلة النّشاط الكيميائي.\n\n**نتيجة:**\nيتشكّل الملح من تفاعل معدن مع حمض.\n\n### التّفاعل الرّابع:\nCuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)",
+    "sections": [
+      {
+        "heading": "أستنتج:",
+        "content": "يُلوّن محلول ملح كلوريد الصوديوم عبّاد الشّمس (أو ورقة عبّاد الشّمس) باللّون البنفسجي.\nالمعادلة المعبّرة عن التّفاعل:\nNaOH(aq) + HCl(aq) → NaCl(aq) + H2O(l)",
+        "content_type": "mixed"
+      },
+      {
+        "heading": "نتيجة:",
+        "content": "يتشكّل الملح من تفاعل تعديل أساس مع حمض.",
+        "content_type": "text"
+      },
+      {
+        "heading": "التّفاعل الثّاني:",
+        "content": "2Na(s) + Cl2(g) → 2NaCl(s)\nينتج ملح كلوريد الصوديوم من اتّحاد معدن .................... مع غاز ....................",
+        "content_type": "mixed"
+      },
+      {
+        "heading": "نتيجة:",
+        "content": "يتشكّل الملح من اتّحاد معدن مع لا معدن.",
+        "content_type": "text"
+      },
+      {
+        "heading": "التّفاعل الثّالث:",
+        "content": "Zn(s) + 2HCl(aq) → ZnCl2(aq) + H2(g)\nينتج ملح كلوريد الزنك من تفاعل محلول .................... الممدّد مع معدن .................... الأكثر نشاطاً كيميائياً من الهيدروجين في سلسلة النّشاط الكيميائي.",
+        "content_type": "mixed"
+      },
+      {
+        "heading": "نتيجة:",
+        "content": "يتشكّل الملح من تفاعل معدن مع حمض.",
+        "content_type": "text"
+      },
+      {
+        "heading": "التّفاعل الرّابع:",
+        "content": "CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)",
+        "content_type": "equation"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "ينتج ملح كلوريد الصوديوم من اتّحاد معدن .................... مع غاز ....................",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "ينتج ملح كلوريد الزنك من تفاعل محلول .................... الممدّد مع معدن .................... الأكثر نشاطاً كيميائياً من الهيدروجين في سلسلة النّشاط الكيميائي.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "NaOH(aq) + HCl(aq) → NaCl(aq) + H2O(l)",
+        "description": "المعادلة المعبّرة عن التّفاعل"
+      },
+      {
+        "equation": "2Na(s) + Cl2(g) → 2NaCl(s)",
+        "description": "التفاعل الثاني"
+      },
+      {
+        "equation": "Zn(s) + 2HCl(aq) → ZnCl2(aq) + H2(g)",
+        "description": "التفاعل الثالث"
+      },
+      {
+        "equation": "CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)",
+        "description": "التفاعل الرابع"
+      }
+    ],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 9.553924957s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '9s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 1050,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 42,
+      "schema_valid": true,
+      "raw_markdown_chars": 746,
+      "char_count": 1050,
+      "section_count": 7,
+      "question_count": 2,
+      "table_count": 0,
+      "equation_count": 4,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.5994,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 42,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### أستنتج:\\n- يُلوّن محلول ملح كلوريد الصوديوم عبّاد الشّمس (أو ورقة عبّاد الشّمس) باللّون البنفسجي.\\n- المعادلة المعبّرة عن التّفاعل:\\nNaOH(aq) + HCl(aq) → NaCl(aq) + H2O(l)\\n\\n**نتيجة:**\\nيتشكّل الملح من تفاعل تعديل أساس مع حمض.\\n\\n### التّفاعل الثّاني:\\n2Na(s) + Cl2(g) → 2NaCl(s)\\nينتج ملح كلوريد الصوديوم من اتّحاد معدن .................... مع غاز ....................\\n\\n**نتيجة:**\\nيتشكّل الملح من اتّحاد معدن مع لا معدن.\\n\\n### التّفاعل الثّالث:\\nZn(s) + 2HCl(aq) → ZnCl2(aq) + H2(g)\\nينتج ملح كلوريد الزنك من تفاعل محلول .................... الممدّد مع معدن .................... الأكثر نشاطاً كيميائياً من الهيدروجين في سلسلة النّشاط الكيميائي.\\n\\n**نتيجة:**\\nيتشكّل الملح من تفاعل معدن مع حمض.\\n\\n### التّفاعل الرّابع:\\nCuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\",\n  \"sections\": [\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"يُلوّن محلول ملح كلوريد الصوديوم عبّاد الشّمس (أو ورقة عبّاد الشّمس) باللّون البنفسجي.\\nالمعادلة المعبّرة عن التّفاعل:\\nNaOH(aq) + HCl(aq) → NaCl(aq) + H2O(l)\",\n      \"content_type\": \"mixed\"\n    },\n    {\n      \"heading\": \"نتيجة:\",\n      \"content\": \"يتشكّل الملح من تفاعل تعديل أساس مع حمض.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"التّفاعل الثّاني:\",\n      \"content\": \"2Na(s) + Cl2(g) → 2NaCl(s)\\nينتج ملح كلوريد الصوديوم من اتّحاد معدن .................... مع غاز ....................\",\n      \"content_type\": \"mixed\"\n    },\n    {\n      \"heading\": \"نتيجة:\",\n      \"content\": \"يتشكّل الملح من اتّحاد معدن مع لا معدن.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"التّفاعل الثّالث:\",\n      \"content\": \"Zn(s) + 2HCl(aq) → ZnCl2(aq) + H2(g)\\nينتج ملح كلوريد الزنك من تفاعل محلول .................... الممدّد مع معدن .................... الأكثر نشاطاً كيميائياً من الهيدروجين في سلسلة النّشاط الكيميائي.\",\n      \"content_type\": \"mixed\"\n    },\n    {\n      \"heading\": \"نتيجة:\",\n      \"content\": \"يتشكّل الملح من تفاعل معدن مع حمض.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"التّفاعل الرّابع:\",\n      \"content\": \"CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\",\n      \"content_type\": \"equation\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"ينتج ملح كلوريد الصوديوم من اتّحاد معدن .................... مع غاز ....................\",\n      \"question_type\": \"short_answer\",\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"ينتج ملح كلوريد الزنك من تفاعل محلول .................... الممدّد مع معدن .................... الأكثر نشاطاً كيميائياً من الهيدروجين في سلسلة النّشاط الكيميائي.\",\n      \"question_type\": \"short_answer\",\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"equations\": [\n    {\n      \"equation\": \"NaOH(aq) + HCl(aq) → NaCl(aq) + H2O(l)\",\n      \"description\": \"المعادلة المعبّرة عن التّفاعل\"\n    },\n    {\n      \"equation\": \"2Na(s) + Cl2(g) → 2NaCl(s)\",\n      \"description\": \"التفاعل الثاني\"\n    },\n    {\n      \"equation\": \"Zn(s) + 2HCl(aq) → ZnCl2(aq) + H2(g)\",\n      \"description\": \"التفاعل الثالث\"\n    },\n    {\n      \"equation\": \"CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\",\n      \"description\": \"التفاعل الرابع\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true,\n  \"char_count\": 1050,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 42,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 1050,\n    \"char_count\": 1050,\n    \"section_count\": 7,\n    \"question_count\": 2,\n    \"table_count\": 0,\n    \"equation_count\": 4,\n    \"diagram_count\": 0,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.65,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  }\n}"
+  },
+  "gemini_image_fallback_content": {
+    "page_number": 42,
+    "detected_language": "ar",
+    "raw_markdown": "### أستنتج:\n- يُلوّن محلول ملح كلوريد الصوديوم عبّاد الشّمس (أو ورقة عبّاد الشّمس) باللّون البنفسجي.\n- المعادلة المعبّرة عن التّفاعل:\nNaOH(aq) + HCl(aq) → NaCl(aq) + H2O(l)\n\n**نتيجة:**\nيتشكّل الملح من تفاعل تعديل أساس مع حمض.\n\n### التّفاعل الثّاني:\n2Na(s) + Cl2(g) → 2NaCl(s)\nينتج ملح كلوريد الصوديوم من اتّحاد معدن .................... مع غاز ....................\n\n**نتيجة:**\nيتشكّل الملح من اتّحاد معدن مع لا معدن.\n\n### التّفاعل الثّالث:\nZn(s) + 2HCl(aq) → ZnCl2(aq) + H2(g)\nينتج ملح كلوريد الزنك من تفاعل محلول .................... الممدّد مع معدن .................... الأكثر نشاطاً كيميائياً من الهيدروجين في سلسلة النّشاط الكيميائي.\n\n**نتيجة:**\nيتشكّل الملح من تفاعل معدن مع حمض.\n\n### التّفاعل الرّابع:\nCuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)",
+    "sections": [
+      {
+        "heading": "أستنتج:",
+        "content": "يُلوّن محلول ملح كلوريد الصوديوم عبّاد الشّمس (أو ورقة عبّاد الشّمس) باللّون البنفسجي.\nالمعادلة المعبّرة عن التّفاعل:\nNaOH(aq) + HCl(aq) → NaCl(aq) + H2O(l)",
+        "content_type": "mixed"
+      },
+      {
+        "heading": "نتيجة:",
+        "content": "يتشكّل الملح من تفاعل تعديل أساس مع حمض.",
+        "content_type": "text"
+      },
+      {
+        "heading": "التّفاعل الثّاني:",
+        "content": "2Na(s) + Cl2(g) → 2NaCl(s)\nينتج ملح كلوريد الصوديوم من اتّحاد معدن .................... مع غاز ....................",
+        "content_type": "mixed"
+      },
+      {
+        "heading": "نتيجة:",
+        "content": "يتشكّل الملح من اتّحاد معدن مع لا معدن.",
+        "content_type": "text"
+      },
+      {
+        "heading": "التّفاعل الثّالث:",
+        "content": "Zn(s) + 2HCl(aq) → ZnCl2(aq) + H2(g)\nينتج ملح كلوريد الزنك من تفاعل محلول .................... الممدّد مع معدن .................... الأكثر نشاطاً كيميائياً من الهيدروجين في سلسلة النّشاط الكيميائي.",
+        "content_type": "mixed"
+      },
+      {
+        "heading": "نتيجة:",
+        "content": "يتشكّل الملح من تفاعل معدن مع حمض.",
+        "content_type": "text"
+      },
+      {
+        "heading": "التّفاعل الرّابع:",
+        "content": "CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)",
+        "content_type": "equation"
+      }
+    ],
+    "questions": [
+      {
+        "question_text": "ينتج ملح كلوريد الصوديوم من اتّحاد معدن .................... مع غاز ....................",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      },
+      {
+        "question_text": "ينتج ملح كلوريد الزنك من تفاعل محلول .................... الممدّد مع معدن .................... الأكثر نشاطاً كيميائياً من الهيدروجين في سلسلة النّشاط الكيميائي.",
+        "question_type": "short_answer",
+        "options": null,
+        "correct_answer": null,
+        "explanation": null,
+        "answer_source": "unknown"
+      }
+    ],
+    "diagrams": [],
+    "tables": [],
+    "equations": [
+      {
+        "equation": "NaOH(aq) + HCl(aq) → NaCl(aq) + H2O(l)",
+        "description": "المعادلة المعبّرة عن التّفاعل"
+      },
+      {
+        "equation": "2Na(s) + Cl2(g) → 2NaCl(s)",
+        "description": "التفاعل الثاني"
+      },
+      {
+        "equation": "Zn(s) + 2HCl(aq) → ZnCl2(aq) + H2(g)",
+        "description": "التفاعل الثالث"
+      },
+      {
+        "equation": "CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)",
+        "description": "التفاعل الرابع"
+      }
+    ],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 9.553924957s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '9s'}]}}."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 1050,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 42,
+      "schema_valid": true,
+      "raw_markdown_chars": 746,
+      "char_count": 1050,
+      "section_count": 7,
+      "question_count": 2,
+      "table_count": 0,
+      "equation_count": 4,
+      "diagram_count": 0,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.5994,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 42,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### أستنتج:\\n- يُلوّن محلول ملح كلوريد الصوديوم عبّاد الشّمس (أو ورقة عبّاد الشّمس) باللّون البنفسجي.\\n- المعادلة المعبّرة عن التّفاعل:\\nNaOH(aq) + HCl(aq) → NaCl(aq) + H2O(l)\\n\\n**نتيجة:**\\nيتشكّل الملح من تفاعل تعديل أساس مع حمض.\\n\\n### التّفاعل الثّاني:\\n2Na(s) + Cl2(g) → 2NaCl(s)\\nينتج ملح كلوريد الصوديوم من اتّحاد معدن .................... مع غاز ....................\\n\\n**نتيجة:**\\nيتشكّل الملح من اتّحاد معدن مع لا معدن.\\n\\n### التّفاعل الثّالث:\\nZn(s) + 2HCl(aq) → ZnCl2(aq) + H2(g)\\nينتج ملح كلوريد الزنك من تفاعل محلول .................... الممدّد مع معدن .................... الأكثر نشاطاً كيميائياً من الهيدروجين في سلسلة النّشاط الكيميائي.\\n\\n**نتيجة:**\\nيتشكّل الملح من تفاعل معدن مع حمض.\\n\\n### التّفاعل الرّابع:\\nCuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\",\n  \"sections\": [\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"يُلوّن محلول ملح كلوريد الصوديوم عبّاد الشّمس (أو ورقة عبّاد الشّمس) باللّون البنفسجي.\\nالمعادلة المعبّرة عن التّفاعل:\\nNaOH(aq) + HCl(aq) → NaCl(aq) + H2O(l)\",\n      \"content_type\": \"mixed\"\n    },\n    {\n      \"heading\": \"نتيجة:\",\n      \"content\": \"يتشكّل الملح من تفاعل تعديل أساس مع حمض.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"التّفاعل الثّاني:\",\n      \"content\": \"2Na(s) + Cl2(g) → 2NaCl(s)\\nينتج ملح كلوريد الصوديوم من اتّحاد معدن .................... مع غاز ....................\",\n      \"content_type\": \"mixed\"\n    },\n    {\n      \"heading\": \"نتيجة:\",\n      \"content\": \"يتشكّل الملح من اتّحاد معدن مع لا معدن.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"التّفاعل الثّالث:\",\n      \"content\": \"Zn(s) + 2HCl(aq) → ZnCl2(aq) + H2(g)\\nينتج ملح كلوريد الزنك من تفاعل محلول .................... الممدّد مع معدن .................... الأكثر نشاطاً كيميائياً من الهيدروجين في سلسلة النّشاط الكيميائي.\",\n      \"content_type\": \"mixed\"\n    },\n    {\n      \"heading\": \"نتيجة:\",\n      \"content\": \"يتشكّل الملح من تفاعل معدن مع حمض.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"التّفاعل الرّابع:\",\n      \"content\": \"CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\",\n      \"content_type\": \"equation\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"ينتج ملح كلوريد الصوديوم من اتّحاد معدن .................... مع غاز ....................\",\n      \"question_type\": \"short_answer\",\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"ينتج ملح كلوريد الزنك من تفاعل محلول .................... الممدّد مع معدن .................... الأكثر نشاطاً كيميائياً من الهيدروجين في سلسلة النّشاط الكيميائي.\",\n      \"question_type\": \"short_answer\",\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"equations\": [\n    {\n      \"equation\": \"NaOH(aq) + HCl(aq) → NaCl(aq) + H2O(l)\",\n      \"description\": \"المعادلة المعبّرة عن التّفاعل\"\n    },\n    {\n      \"equation\": \"2Na(s) + Cl2(g) → 2NaCl(s)\",\n      \"description\": \"التفاعل الثاني\"\n    },\n    {\n      \"equation\": \"Zn(s) + 2HCl(aq) → ZnCl2(aq) + H2(g)\",\n      \"description\": \"التفاعل الثالث\"\n    },\n    {\n      \"equation\": \"CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\",\n      \"description\": \"التفاعل الرابع\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true,\n  \"char_count\": 1050,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 42,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 1050,\n    \"char_count\": 1050,\n    \"section_count\": 7,\n    \"question_count\": 2,\n    \"table_count\": 0,\n    \"equation_count\": 4,\n    \"diagram_count\": 0,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.65,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  }\n}"
+  },
+  "merged_content": "أستنتج:\nيُلوّن محلول ملح كلوريد الصوديوم عبّاد الشّمس (أو ورقة عبّاد الشّمس) باللّون البنفسجي.\nالمعادلة المعبّرة عن التّفاعل:\nNaOH(aq) + HCl(aq) → NaCl(aq) + H2O(l)\n\nنتيجة:\nيتشكّل الملح من تفاعل تعديل أساس مع حمض.\n\nالتّفاعل الثّاني:\n2Na(s) + Cl2(g) → 2NaCl(s)\nينتج ملح كلوريد الصوديوم من اتّحاد معدن .................... مع غاز ....................\n\nنتيجة:\nيتشكّل الملح من اتّحاد معدن مع لا معدن.\n\nالتّفاعل الثّالث:\nZn(s) + 2HCl(aq) → ZnCl2(aq) + H2(g)\nينتج ملح كلوريد الزنك من تفاعل محلول .................... الممدّد مع معدن .................... الأكثر نشاطاً كيميائياً من الهيدروجين في سلسلة النّشاط الكيميائي.\n\nنتيجة:\nيتشكّل الملح من تفاعل معدن مع حمض.\n\nالتّفاعل الرّابع:\nCuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)",
+  "raw_markdown": "### أستنتج:\n- يُلوّن محلول ملح كلوريد الصوديوم عبّاد الشّمس (أو ورقة عبّاد الشّمس) باللّون البنفسجي.\n- المعادلة المعبّرة عن التّفاعل:\nNaOH(aq) + HCl(aq) → NaCl(aq) + H2O(l)\n\n**نتيجة:**\nيتشكّل الملح من تفاعل تعديل أساس مع حمض.\n\n### التّفاعل الثّاني:\n2Na(s) + Cl2(g) → 2NaCl(s)\nينتج ملح كلوريد الصوديوم من اتّحاد معدن .................... مع غاز ....................\n\n**نتيجة:**\nيتشكّل الملح من اتّحاد معدن مع لا معدن.\n\n### التّفاعل الثّالث:\nZn(s) + 2HCl(aq) → ZnCl2(aq) + H2(g)\nينتج ملح كلوريد الزنك من تفاعل محلول .................... الممدّد مع معدن .................... الأكثر نشاطاً كيميائياً من الهيدروجين في سلسلة النّشاط الكيميائي.\n\n**نتيجة:**\nيتشكّل الملح من تفاعل معدن مع حمض.\n\n### التّفاعل الرّابع:\nCuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)",
+  "sections": [
+    {
+      "heading": "أستنتج:",
+      "content": "يُلوّن محلول ملح كلوريد الصوديوم عبّاد الشّمس (أو ورقة عبّاد الشّمس) باللّون البنفسجي.\nالمعادلة المعبّرة عن التّفاعل:\nNaOH(aq) + HCl(aq) → NaCl(aq) + H2O(l)",
+      "content_type": "mixed"
+    },
+    {
+      "heading": "نتيجة:",
+      "content": "يتشكّل الملح من تفاعل تعديل أساس مع حمض.",
+      "content_type": "text"
+    },
+    {
+      "heading": "التّفاعل الثّاني:",
+      "content": "2Na(s) + Cl2(g) → 2NaCl(s)\nينتج ملح كلوريد الصوديوم من اتّحاد معدن .................... مع غاز ....................",
+      "content_type": "mixed"
+    },
+    {
+      "heading": "نتيجة:",
+      "content": "يتشكّل الملح من اتّحاد معدن مع لا معدن.",
+      "content_type": "text"
+    },
+    {
+      "heading": "التّفاعل الثّالث:",
+      "content": "Zn(s) + 2HCl(aq) → ZnCl2(aq) + H2(g)\nينتج ملح كلوريد الزنك من تفاعل محلول .................... الممدّد مع معدن .................... الأكثر نشاطاً كيميائياً من الهيدروجين في سلسلة النّشاط الكيميائي.",
+      "content_type": "mixed"
+    },
+    {
+      "heading": "نتيجة:",
+      "content": "يتشكّل الملح من تفاعل معدن مع حمض.",
+      "content_type": "text"
+    },
+    {
+      "heading": "التّفاعل الرّابع:",
+      "content": "CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)",
+      "content_type": "equation"
+    }
+  ],
+  "questions": [
+    {
+      "question_text": "ينتج ملح كلوريد الصوديوم من اتّحاد معدن .................... مع غاز ....................",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    },
+    {
+      "question_text": "ينتج ملح كلوريد الزنك من تفاعل محلول .................... الممدّد مع معدن .................... الأكثر نشاطاً كيميائياً من الهيدروجين في سلسلة النّشاط الكيميائي.",
+      "question_type": "short_answer",
+      "options": null,
+      "correct_answer": null,
+      "explanation": null,
+      "answer_source": "unknown"
+    }
+  ],
   "diagrams": [],
   "tables": [],
-  "equations": [],
-  "warnings": [],
-  "errors": [
-    "Gemini document extraction failed quality checks for page 42: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 22.394335555s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.5-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '22s'}]}}"
+  "equations": [
+    {
+      "equation": "NaOH(aq) + HCl(aq) → NaCl(aq) + H2O(l)",
+      "description": "المعادلة المعبّرة عن التّفاعل"
+    },
+    {
+      "equation": "2Na(s) + Cl2(g) → 2NaCl(s)",
+      "description": "التفاعل الثاني"
+    },
+    {
+      "equation": "Zn(s) + 2HCl(aq) → ZnCl2(aq) + H2(g)",
+      "description": "التفاعل الثالث"
+    },
+    {
+      "equation": "CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)",
+      "description": "التفاعل الرابع"
+    }
   ],
-  "char_count": 0,
-  "completeness_score": 0.0,
+  "warnings": [
+    "Gemini PDF extraction failed; using 300 DPI image fallback: Gemini document extraction failed for page 42 with model gemini-3.1-flash-lite: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'Request contains an invalid argument.', 'status': 'INVALID_ARGUMENT'}}",
+    "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 9.553924957s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '9s'}]}}."
+  ],
+  "errors": [],
+  "char_count": 714,
+  "completeness_score": 1.0,
   "detected_language": "ar",
-  "vision_provider": null,
-  "vision_source": null,
-  "neighboring_pages": [],
-  "uploaded_pdf": null,
-  "raw_text": null,
-  "quality_report": {},
+  "vision_provider": "gemini_document_image",
+  "vision_source": "gemini_rendered_image_300dpi",
+  "neighboring_pages": [
+    41,
+    43
+  ],
+  "uploaded_pdf": {
+    "provider": "gemini_document",
+    "name": "files/z7ityp0k6phf",
+    "uri": "https://generativelanguage.googleapis.com/v1beta/files/z7ityp0k6phf",
+    "mime_type": "application/pdf",
+    "display_name": "Chemistry.pdf"
+  },
+  "raw_text": "{\n  \"page_number\": 42,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"### أستنتج:\\n- يُلوّن محلول ملح كلوريد الصوديوم عبّاد الشّمس (أو ورقة عبّاد الشّمس) باللّون البنفسجي.\\n- المعادلة المعبّرة عن التّفاعل:\\nNaOH(aq) + HCl(aq) → NaCl(aq) + H2O(l)\\n\\n**نتيجة:**\\nيتشكّل الملح من تفاعل تعديل أساس مع حمض.\\n\\n### التّفاعل الثّاني:\\n2Na(s) + Cl2(g) → 2NaCl(s)\\nينتج ملح كلوريد الصوديوم من اتّحاد معدن .................... مع غاز ....................\\n\\n**نتيجة:**\\nيتشكّل الملح من اتّحاد معدن مع لا معدن.\\n\\n### التّفاعل الثّالث:\\nZn(s) + 2HCl(aq) → ZnCl2(aq) + H2(g)\\nينتج ملح كلوريد الزنك من تفاعل محلول .................... الممدّد مع معدن .................... الأكثر نشاطاً كيميائياً من الهيدروجين في سلسلة النّشاط الكيميائي.\\n\\n**نتيجة:**\\nيتشكّل الملح من تفاعل معدن مع حمض.\\n\\n### التّفاعل الرّابع:\\nCuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\",\n  \"sections\": [\n    {\n      \"heading\": \"أستنتج:\",\n      \"content\": \"يُلوّن محلول ملح كلوريد الصوديوم عبّاد الشّمس (أو ورقة عبّاد الشّمس) باللّون البنفسجي.\\nالمعادلة المعبّرة عن التّفاعل:\\nNaOH(aq) + HCl(aq) → NaCl(aq) + H2O(l)\",\n      \"content_type\": \"mixed\"\n    },\n    {\n      \"heading\": \"نتيجة:\",\n      \"content\": \"يتشكّل الملح من تفاعل تعديل أساس مع حمض.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"التّفاعل الثّاني:\",\n      \"content\": \"2Na(s) + Cl2(g) → 2NaCl(s)\\nينتج ملح كلوريد الصوديوم من اتّحاد معدن .................... مع غاز ....................\",\n      \"content_type\": \"mixed\"\n    },\n    {\n      \"heading\": \"نتيجة:\",\n      \"content\": \"يتشكّل الملح من اتّحاد معدن مع لا معدن.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"التّفاعل الثّالث:\",\n      \"content\": \"Zn(s) + 2HCl(aq) → ZnCl2(aq) + H2(g)\\nينتج ملح كلوريد الزنك من تفاعل محلول .................... الممدّد مع معدن .................... الأكثر نشاطاً كيميائياً من الهيدروجين في سلسلة النّشاط الكيميائي.\",\n      \"content_type\": \"mixed\"\n    },\n    {\n      \"heading\": \"نتيجة:\",\n      \"content\": \"يتشكّل الملح من تفاعل معدن مع حمض.\",\n      \"content_type\": \"text\"\n    },\n    {\n      \"heading\": \"التّفاعل الرّابع:\",\n      \"content\": \"CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\",\n      \"content_type\": \"equation\"\n    }\n  ],\n  \"questions\": [\n    {\n      \"question_text\": \"ينتج ملح كلوريد الصوديوم من اتّحاد معدن .................... مع غاز ....................\",\n      \"question_type\": \"short_answer\",\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    },\n    {\n      \"question_text\": \"ينتج ملح كلوريد الزنك من تفاعل محلول .................... الممدّد مع معدن .................... الأكثر نشاطاً كيميائياً من الهيدروجين في سلسلة النّشاط الكيميائي.\",\n      \"question_type\": \"short_answer\",\n      \"correct_answer\": null,\n      \"answer_source\": \"unknown\"\n    }\n  ],\n  \"equations\": [\n    {\n      \"equation\": \"NaOH(aq) + HCl(aq) → NaCl(aq) + H2O(l)\",\n      \"description\": \"المعادلة المعبّرة عن التّفاعل\"\n    },\n    {\n      \"equation\": \"2Na(s) + Cl2(g) → 2NaCl(s)\",\n      \"description\": \"التفاعل الثاني\"\n    },\n    {\n      \"equation\": \"Zn(s) + 2HCl(aq) → ZnCl2(aq) + H2(g)\",\n      \"description\": \"التفاعل الثالث\"\n    },\n    {\n      \"equation\": \"CuO(s) + 2HCl(aq) → CuCl2(aq) + H2O(l)\",\n      \"description\": \"التفاعل الرابع\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true,\n  \"char_count\": 1050,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 42,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 1050,\n    \"char_count\": 1050,\n    \"section_count\": 7,\n    \"question_count\": 2,\n    \"table_count\": 0,\n    \"equation_count\": 4,\n    \"diagram_count\": 0,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.65,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  }\n}",
+  "quality_report": {
+    "page_number": 42,
+    "schema_valid": true,
+    "raw_markdown_chars": 746,
+    "char_count": 1050,
+    "section_count": 7,
+    "question_count": 2,
+    "table_count": 0,
+    "equation_count": 4,
+    "diagram_count": 0,
+    "warning_count": 0,
+    "arabic_char_ratio": 0.5994,
+    "completeness_score": 1.0,
+    "issues": [],
+    "should_fallback": false
+  },
   "classification": "NEEDS_VISION",
   "source_id": 1
 }

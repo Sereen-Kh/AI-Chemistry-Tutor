@@ -1,0 +1,44 @@
+{
+  "page_number": 40,
+  "page_type": "MIXED_VISION",
+  "extraction_methods": [
+    "pymupdf",
+    "pdfplumber",
+    "text_layer_only"
+  ],
+  "extraction_method": "pymupdf+pdfplumber+text_layer_only",
+  "status": "completed_text_only",
+  "text_layer_content": "40\n \n \n2\n2\n1\n2\n1\n1 1\n0 5J\n2\n50\n0 5\n49 5J\n49 5\nh =\n4 95m\n1 10\nk\np\nk\np\nE\nm\n.\nE\nE\nE\n.\n.\nE\n.\n.\nmg\n\n=\n=\n\n=\n=\n−\n=\n−\n=\n=\n=\n\n \n4\n-طاقة حركية وتساوي50J\n \n5\n-\n1 10 5\n50J\nW\nmgh\n=\n= \n=\n \n  المسألة الت:اسعة \n  قارن بين الط اقة الحركي ة لسي ارتين كتلة األولى10 طن، وتتحر ك بسرعة\n1\n36km h\n−\n\n  ، و كتلة الث انية2 طن وتتحر ك بسرعة\n1\n72km h\n−\n\n.\n \n \n1\n2\n1\n2\n1\n1\n2\n2\n1\n1\n1\n2\n2\n2\n2\n2\n36 1000\n10ms\n3600\n1\n1\n1000\n(10)\n50000J\n2\n2\n72 1000\n20ms\n3600\n1\n1\n2000\n(20)\n40000J\n2\n2\nk\nk\nk\nk\nE\nm\nE\nm\nE\nE\n\n\n\n\n−\n−\n\n=\n=\n=\n=\n\n\n=\n\n=\n=\n=\n=\n\n\n=\n\n\n|  |  |  |\n| --- | --- | --- |\n|  | 1\nE = m2\nk 2\n1\n= 112 =0.5J\n2\nE = E −E =50−0.5= 49.5J\np k\nE 49.5\nh = p = = 4.95m\nmg 110\n50Jيواستو ةيكرح ةقاط-4\nW =mgh =1105=50J -5\n:ةعسا تلا ةلأسملا\nةعرسب كر حتتو ،نط10 ىلولأا ةلتك نيترا يسل ة يكرحلا ةقا طلا نيب نراق\n.72kmh−1ةعرسب كر حتتو نط2 ةينا ثلا ةلتك و ،36kmh−1\n361000\n = =10ms−1\n1 3600\n1 1\nE = m 2 = 1000(10)2 =50000J\nk 1 2 1 1 2\n721000\n = = 20ms−1\n2 3600\n1 1\nE = m 2 = 2000(20)2 = 40000J\nk 2 2 2 2 2\nE  E\nk k\n1 2\n40 |  |\n|  |  |  |",
+  "vision_content": {},
+  "gemini_pdf_content": {},
+  "gemini_fallback_model_content": {},
+  "gemini_image_fallback_content": {},
+  "merged_content": "40\n \n \n2\n2\n1\n2\n1\n1 1\n0 5J\n2\n50\n0 5\n49 5J\n49 5\nh =\n4 95m\n1 10\nk\np\nk\np\nE\nm\n.\nE\nE\nE\n.\n.\nE\n.\n.\nmg\n\n=\n=\n\n=\n=\n−\n=\n−\n=\n=\n=\n\n \n4\n-طاقة حركية وتساوي50J\n \n5\n-\n1 10 5\n50J\nW\nmgh\n=\n= \n=\n \n  المسألة الت:اسعة \n  قارن بين الط اقة الحركي ة لسي ارتين كتلة األولى10 طن، وتتحر ك بسرعة\n1\n36km h\n−\n\n  ، و كتلة الث انية2 طن وتتحر ك بسرعة\n1\n72km h\n−\n\n.\n \n \n1\n2\n1\n2\n1\n1\n2\n2\n1\n1\n1\n2\n2\n2\n2\n2\n36 1000\n10ms\n3600\n1\n1\n1000\n(10)\n50000J\n2\n2\n72 1000\n20ms\n3600\n1\n1\n2000\n(20)\n40000J\n2\n2\nk\nk\nk\nk\nE\nm\nE\nm\nE\nE\n\n\n\n\n−\n−\n\n=\n=\n=\n=\n\n\n=\n\n=\n=\n=\n=\n\n\n=\n\n\n|  |  |  |\n| --- | --- | --- |\n|  | 1\nE = m2\nk 2\n1\n= 112 =0.5J\n2\nE = E −E =50−0.5= 49.5J\np k\nE 49.5\nh = p = = 4.95m\nmg 110\n50Jيواستو ةيكرح ةقاط-4\nW =mgh =1105=50J -5\n:ةعسا تلا ةلأسملا\nةعرسب كر حتتو ،نط10 ىلولأا ةلتك نيترا يسل ة يكرحلا ةقا طلا نيب نراق\n.72kmh−1ةعرسب كر حتتو نط2 ةينا ثلا ةلتك و ،36kmh−1\n361000\n = =10ms−1\n1 3600\n1 1\nE = m 2 = 1000(10)2 =50000J\nk 1 2 1 1 2\n721000\n = = 20ms−1\n2 3600\n1 1\nE = m 2 = 2000(20)2 = 40000J\nk 2 2 2 2 2\nE  E\nk k\n1 2\n40 |  |\n|  |  |  |",
+  "raw_markdown": "40\n \n \n2\n2\n1\n2\n1\n1 1\n0 5J\n2\n50\n0 5\n49 5J\n49 5\nh =\n4 95m\n1 10\nk\np\nk\np\nE\nm\n.\nE\nE\nE\n.\n.\nE\n.\n.\nmg\n\n=\n=\n\n=\n=\n−\n=\n−\n=\n=\n=\n\n \n4\n-طاقة حركية وتساوي50J\n \n5\n-\n1 10 5\n50J\nW\nmgh\n=\n= \n=\n \n  المسألة الت:اسعة \n  قارن بين الط اقة الحركي ة لسي ارتين كتلة األولى10 طن، وتتحر ك بسرعة\n1\n36km h\n−\n\n  ، و كتلة الث انية2 طن وتتحر ك بسرعة\n1\n72km h\n−\n\n.\n \n \n1\n2\n1\n2\n1\n1\n2\n2\n1\n1\n1\n2\n2\n2\n2\n2\n36 1000\n10ms\n3600\n1\n1\n1000\n(10)\n50000J\n2\n2\n72 1000\n20ms\n3600\n1\n1\n2000\n(20)\n40000J\n2\n2\nk\nk\nk\nk\nE\nm\nE\nm\nE\nE\n\n\n\n\n−\n−\n\n=\n=\n=\n=\n\n\n=\n\n=\n=\n=\n=\n\n\n=\n\n\n|  |  |  |\n| --- | --- | --- |\n|  | 1\nE = m2\nk 2\n1\n= 112 =0.5J\n2\nE = E −E =50−0.5= 49.5J\np k\nE 49.5\nh = p = = 4.95m\nmg 110\n50Jيواستو ةيكرح ةقاط-4\nW =mgh =1105=50J -5\n:ةعسا تلا ةلأسملا\nةعرسب كر حتتو ،نط10 ىلولأا ةلتك نيترا يسل ة يكرحلا ةقا طلا نيب نراق\n.72kmh−1ةعرسب كر حتتو نط2 ةينا ثلا ةلتك و ،36kmh−1\n361000\n = =10ms−1\n1 3600\n1 1\nE = m 2 = 1000(10)2 =50000J\nk 1 2 1 1 2\n721000\n = = 20ms−1\n2 3600\n1 1\nE = m 2 = 2000(20)2 = 40000J\nk 2 2 2 2 2\nE  E\nk k\n1 2\n40 |  |\n|  |  |  |",
+  "sections": [
+    {
+      "heading": null,
+      "content": "40\n \n \n2\n2\n1\n2\n1\n1 1\n0 5J\n2\n50\n0 5\n49 5J\n49 5\nh =\n4 95m\n1 10\nk\np\nk\np\nE\nm\n.\nE\nE\nE\n.\n.\nE\n.\n.\nmg\n\n=\n=\n\n=\n=\n−\n=\n−\n=\n=\n=\n\n \n4\n-طاقة حركية وتساوي50J\n \n5\n-\n1 10 5\n50J\nW\nmgh\n=\n= \n=\n \n  المسألة الت:اسعة \n  قارن بين الط اقة الحركي ة لسي ارتين كتلة األولى10 طن، وتتحر ك بسرعة\n1\n36km h\n−\n\n  ، و كتلة الث انية2 طن وتتحر ك بسرعة\n1\n72km h\n−\n\n.\n \n \n1\n2\n1\n2\n1\n1\n2\n2\n1\n1\n1\n2\n2\n2\n2\n2\n36 1000\n10ms\n3600\n1\n1\n1000\n(10)\n50000J\n2\n2\n72 1000\n20ms\n3600\n1\n1\n2000\n(20)\n40000J\n2\n2\nk\nk\nk\nk\nE\nm\nE\nm\nE\nE\n\n\n\n\n−\n−\n\n=\n=\n=\n=\n\n\n=\n\n=\n=\n=\n=\n\n\n=\n\n\n|  |  |  |\n| --- | --- | --- |\n|  | 1\nE = m2\nk 2\n1\n= 112 =0.5J\n2\nE = E −E =50−0.5= 49.5J\np k\nE 49.5\nh = p = = 4.95m\nmg 110\n50Jيواستو ةيكرح ةقاط-4\nW =mgh =1105=50J -5\n:ةعسا تلا ةلأسملا\nةعرسب كر حتتو ،نط10 ىلولأا ةلتك نيترا يسل ة يكرحلا ةقا طلا نيب نراق\n.72kmh−1ةعرسب كر حتتو نط2 ةينا ثلا ةلتك و ،36kmh−1\n361000\n = =10ms−1\n1 3600\n1 1\nE = m 2 = 1000(10)2 =50000J\nk 1 2 1 1 2\n721000\n = = 20ms−1\n2 3600\n1 1\nE = m 2 = 2000(20)2 = 40000J\nk 2 2 2 2 2\nE  E\nk k\n1 2\n40 |  |\n|  |  |  |",
+      "content_type": "text"
+    }
+  ],
+  "questions": [],
+  "diagrams": [],
+  "tables": [],
+  "equations": [],
+  "warnings": [
+    "Gemini document extraction is not configured. Used selectable text layer only."
+  ],
+  "errors": [],
+  "char_count": 1019,
+  "completeness_score": 0.75,
+  "detected_language": "ar",
+  "vision_provider": null,
+  "vision_source": null,
+  "neighboring_pages": [],
+  "uploaded_pdf": null,
+  "raw_text": null,
+  "quality_report": {},
+  "classification": "MIXED_VISION",
+  "source_id": 2
+}

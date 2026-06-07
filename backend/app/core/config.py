@@ -3,6 +3,7 @@ from typing import List
 
 from pydantic import field_validator
 from pydantic_settings import BaseSettings
+from sqlalchemy.engine import make_url
 
 
 BACKEND_DIR = Path(__file__).resolve().parents[2]
@@ -20,9 +21,10 @@ class Settings(BaseSettings):
     google_api_key: str = ""
     model_name: str = "gemini-3.5-flash"
     ai_request_timeout_seconds: int = 12
-    gemini_document_model: str = "gemini-3-flash-preview"
-    gemini_document_fallback_model: str = "gemini-3.1-flash-lite"
+    gemini_document_model: str = "gemini-3.5-flash"
+    gemini_document_fallback_model: str = "gemini-2.5-pro,gemini-2.5-flash-lite"
     gemini_embedding_model: str = "gemini-embedding-001"
+    gemini_reranker_model: str = "gemini-2.0-flash"
     embedding_provider: str = "auto"
     local_embedding_model: str = "intfloat/multilingual-e5-base"
     gemini_min_page_chars: int = 40
@@ -64,6 +66,24 @@ class Settings(BaseSettings):
         if self.database_url.startswith("postgres://"):
             return self.database_url.replace("postgres://", "postgresql+asyncpg://", 1)
         return self.database_url
+
+    @staticmethod
+    def _resolve_sqlite_url(url: str) -> str:
+        parsed = make_url(url)
+        if not parsed.get_backend_name().startswith("sqlite"):
+            return url
+        database = parsed.database
+        if not database or database == ":memory:" or Path(database).is_absolute():
+            return url
+        return str(parsed.set(database=str((BACKEND_DIR / database).resolve())))
+
+    @property
+    def resolved_database_url(self) -> str:
+        return self._resolve_sqlite_url(self.database_url)
+
+    @property
+    def resolved_effective_async_database_url(self) -> str:
+        return self._resolve_sqlite_url(self.effective_async_database_url)
 
     @field_validator("debug", mode="before")
     @classmethod

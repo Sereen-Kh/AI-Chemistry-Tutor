@@ -1,0 +1,44 @@
+{
+  "page_number": 71,
+  "page_type": "MIXED_VISION",
+  "extraction_methods": [
+    "pymupdf",
+    "pdfplumber",
+    "text_layer_only"
+  ],
+  "extraction_method": "pymupdf+pdfplumber+text_layer_only",
+  "status": "completed_text_only",
+  "text_layer_content": "71\n \n \n•\n \n  .اكتب المعادلة الكيميائي ة المعب رة عن هذا الت فاعل \n•\n \n احسب كتلة الملح.الن اتج \n \n(Na : 23 , O:16 , H :1 , Cu :64 , S:32 , Cl:35.5 )\n \n \n \nالحل :\n \n1\n- \n \n1\n1\n1\n1\n1\n1 6\n16g L\n0 1\n16\n0 4 mol L\n40\n−\n−\n−\n−\n−\n=\n=\n=\n\n=\n=\n=\n\ngL\ngL\nmolL\nm\n.\nC\nV\n.\nC\nC\n.\nM\n \n2\n- \n \n4\n2\n4\n2\n2NaOH\nCuSO\nNa SO\nCu(OH)\n80g\n98g\n0.8g\nm\n98\n0.8\nm\n0.98g\n80\n+\n→\n+\n\n=\n=\n \n3\n- \n \n2\nNaOH\nHCl\nNaCl\nH O\n40g\n58.5g\n0.8g\nm\n58.5\n0.8\nm\n1.71g\n40\n+\n→\n+\n\n=\n=\n \n \n \nالوحدة الخامسة : الكيمياء العضوية \nمدخل إلى الكيمياء العضوية \n الصفحة170\n : \n: أختبر نفسي \n أوالً : اختر اإلجابة: الص حيحة لكل  مم ا يأتي\n\n|  |  |  |\n| --- | --- | --- |\n|  | .لعاف تلا اذه نع ةر بعملا ة يئايميكلا ةلداعملا بتكا •\n.جتا نلا حلملا ةلتك بسحا •\n(Na:23 , O:16 , H:1 , Cu:64 , S:32 , Cl:35.5 )\n: لحلا\n-1\nm 1.6\nC = = =16gL−1\ngL−1 V 0.1\nC 16\nC = gL−1 = =0.4 molL−1\nmolL−1 M 40\n-2\n2NaOH + CuSO → Na SO + Cu(OH)\n4 2 4 2\n80g 98g\n0.8g m\n980.8\nm = =0.98g\n80\n-3\nNaOH+ HCl → NaCl + H O\n2\n40g 58.5g\n0.8g m\n58.50.8\nm = =1.71g\n40\nةيوضعلا ءايميكلا : ةسماخلا ةدحولا\nةيوضعلا ءايميكلا ىلإ لخدم\n: 170 ةحفصلا\n: يسفن ربتخأ\n: يتأي ام م ل كل ةحيحص لا ةباجلإا رتخا : ًلاوأ\n71 |  |\n|  |  |  |",
+  "vision_content": {},
+  "gemini_pdf_content": {},
+  "gemini_fallback_model_content": {},
+  "gemini_image_fallback_content": {},
+  "merged_content": "71\n \n \n•\n \n  .اكتب المعادلة الكيميائي ة المعب رة عن هذا الت فاعل \n•\n \n احسب كتلة الملح.الن اتج \n \n(Na : 23 , O:16 , H :1 , Cu :64 , S:32 , Cl:35.5 )\n \n \n \nالحل :\n \n1\n- \n \n1\n1\n1\n1\n1\n1 6\n16g L\n0 1\n16\n0 4 mol L\n40\n−\n−\n−\n−\n−\n=\n=\n=\n\n=\n=\n=\n\ngL\ngL\nmolL\nm\n.\nC\nV\n.\nC\nC\n.\nM\n \n2\n- \n \n4\n2\n4\n2\n2NaOH\nCuSO\nNa SO\nCu(OH)\n80g\n98g\n0.8g\nm\n98\n0.8\nm\n0.98g\n80\n+\n→\n+\n\n=\n=\n \n3\n- \n \n2\nNaOH\nHCl\nNaCl\nH O\n40g\n58.5g\n0.8g\nm\n58.5\n0.8\nm\n1.71g\n40\n+\n→\n+\n\n=\n=\n \n \n \nالوحدة الخامسة : الكيمياء العضوية \nمدخل إلى الكيمياء العضوية \n الصفحة170\n : \n: أختبر نفسي \n أوالً : اختر اإلجابة: الص حيحة لكل  مم ا يأتي\n\n|  |  |  |\n| --- | --- | --- |\n|  | .لعاف تلا اذه نع ةر بعملا ة يئايميكلا ةلداعملا بتكا •\n.جتا نلا حلملا ةلتك بسحا •\n(Na:23 , O:16 , H:1 , Cu:64 , S:32 , Cl:35.5 )\n: لحلا\n-1\nm 1.6\nC = = =16gL−1\ngL−1 V 0.1\nC 16\nC = gL−1 = =0.4 molL−1\nmolL−1 M 40\n-2\n2NaOH + CuSO → Na SO + Cu(OH)\n4 2 4 2\n80g 98g\n0.8g m\n980.8\nm = =0.98g\n80\n-3\nNaOH+ HCl → NaCl + H O\n2\n40g 58.5g\n0.8g m\n58.50.8\nm = =1.71g\n40\nةيوضعلا ءايميكلا : ةسماخلا ةدحولا\nةيوضعلا ءايميكلا ىلإ لخدم\n: 170 ةحفصلا\n: يسفن ربتخأ\n: يتأي ام م ل كل ةحيحص لا ةباجلإا رتخا : ًلاوأ\n71 |  |\n|  |  |  |",
+  "raw_markdown": "71\n \n \n•\n \n  .اكتب المعادلة الكيميائي ة المعب رة عن هذا الت فاعل \n•\n \n احسب كتلة الملح.الن اتج \n \n(Na : 23 , O:16 , H :1 , Cu :64 , S:32 , Cl:35.5 )\n \n \n \nالحل :\n \n1\n- \n \n1\n1\n1\n1\n1\n1 6\n16g L\n0 1\n16\n0 4 mol L\n40\n−\n−\n−\n−\n−\n=\n=\n=\n\n=\n=\n=\n\ngL\ngL\nmolL\nm\n.\nC\nV\n.\nC\nC\n.\nM\n \n2\n- \n \n4\n2\n4\n2\n2NaOH\nCuSO\nNa SO\nCu(OH)\n80g\n98g\n0.8g\nm\n98\n0.8\nm\n0.98g\n80\n+\n→\n+\n\n=\n=\n \n3\n- \n \n2\nNaOH\nHCl\nNaCl\nH O\n40g\n58.5g\n0.8g\nm\n58.5\n0.8\nm\n1.71g\n40\n+\n→\n+\n\n=\n=\n \n \n \nالوحدة الخامسة : الكيمياء العضوية \nمدخل إلى الكيمياء العضوية \n الصفحة170\n : \n: أختبر نفسي \n أوالً : اختر اإلجابة: الص حيحة لكل  مم ا يأتي\n\n|  |  |  |\n| --- | --- | --- |\n|  | .لعاف تلا اذه نع ةر بعملا ة يئايميكلا ةلداعملا بتكا •\n.جتا نلا حلملا ةلتك بسحا •\n(Na:23 , O:16 , H:1 , Cu:64 , S:32 , Cl:35.5 )\n: لحلا\n-1\nm 1.6\nC = = =16gL−1\ngL−1 V 0.1\nC 16\nC = gL−1 = =0.4 molL−1\nmolL−1 M 40\n-2\n2NaOH + CuSO → Na SO + Cu(OH)\n4 2 4 2\n80g 98g\n0.8g m\n980.8\nm = =0.98g\n80\n-3\nNaOH+ HCl → NaCl + H O\n2\n40g 58.5g\n0.8g m\n58.50.8\nm = =1.71g\n40\nةيوضعلا ءايميكلا : ةسماخلا ةدحولا\nةيوضعلا ءايميكلا ىلإ لخدم\n: 170 ةحفصلا\n: يسفن ربتخأ\n: يتأي ام م ل كل ةحيحص لا ةباجلإا رتخا : ًلاوأ\n71 |  |\n|  |  |  |",
+  "sections": [
+    {
+      "heading": null,
+      "content": "71\n \n \n•\n \n  .اكتب المعادلة الكيميائي ة المعب رة عن هذا الت فاعل \n•\n \n احسب كتلة الملح.الن اتج \n \n(Na : 23 , O:16 , H :1 , Cu :64 , S:32 , Cl:35.5 )\n \n \n \nالحل :\n \n1\n- \n \n1\n1\n1\n1\n1\n1 6\n16g L\n0 1\n16\n0 4 mol L\n40\n−\n−\n−\n−\n−\n=\n=\n=\n\n=\n=\n=\n\ngL\ngL\nmolL\nm\n.\nC\nV\n.\nC\nC\n.\nM\n \n2\n- \n \n4\n2\n4\n2\n2NaOH\nCuSO\nNa SO\nCu(OH)\n80g\n98g\n0.8g\nm\n98\n0.8\nm\n0.98g\n80\n+\n→\n+\n\n=\n=\n \n3\n- \n \n2\nNaOH\nHCl\nNaCl\nH O\n40g\n58.5g\n0.8g\nm\n58.5\n0.8\nm\n1.71g\n40\n+\n→\n+\n\n=\n=\n \n \n \nالوحدة الخامسة : الكيمياء العضوية \nمدخل إلى الكيمياء العضوية \n الصفحة170\n : \n: أختبر نفسي \n أوالً : اختر اإلجابة: الص حيحة لكل  مم ا يأتي\n\n|  |  |  |\n| --- | --- | --- |\n|  | .لعاف تلا اذه نع ةر بعملا ة يئايميكلا ةلداعملا بتكا •\n.جتا نلا حلملا ةلتك بسحا •\n(Na:23 , O:16 , H:1 , Cu:64 , S:32 , Cl:35.5 )\n: لحلا\n-1\nm 1.6\nC = = =16gL−1\ngL−1 V 0.1\nC 16\nC = gL−1 = =0.4 molL−1\nmolL−1 M 40\n-2\n2NaOH + CuSO → Na SO + Cu(OH)\n4 2 4 2\n80g 98g\n0.8g m\n980.8\nm = =0.98g\n80\n-3\nNaOH+ HCl → NaCl + H O\n2\n40g 58.5g\n0.8g m\n58.50.8\nm = =1.71g\n40\nةيوضعلا ءايميكلا : ةسماخلا ةدحولا\nةيوضعلا ءايميكلا ىلإ لخدم\n: 170 ةحفصلا\n: يسفن ربتخأ\n: يتأي ام م ل كل ةحيحص لا ةباجلإا رتخا : ًلاوأ\n71 |  |\n|  |  |  |",
+      "content_type": "text"
+    }
+  ],
+  "questions": [],
+  "diagrams": [],
+  "tables": [],
+  "equations": [],
+  "warnings": [
+    "Gemini document extraction is not configured. Used selectable text layer only."
+  ],
+  "errors": [],
+  "char_count": 1118,
+  "completeness_score": 0.75,
+  "detected_language": "ar",
+  "vision_provider": null,
+  "vision_source": null,
+  "neighboring_pages": [],
+  "uploaded_pdf": null,
+  "raw_text": null,
+  "quality_report": {},
+  "classification": "MIXED_VISION",
+  "source_id": 2
+}

@@ -10,7 +10,7 @@ import re
 from dataclasses import dataclass
 from collections.abc import Callable
 
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 _CACHE: dict[str, tuple[float, list["RetrievedChunk"]]] = {}
 _CACHE_TTL_SECONDS = 3600
-_CACHE_VERSION = "v12"
+_CACHE_VERSION = "v13"
 # Allow local dry-run sources for retrieval/debugging without marking ingestion complete.
 _RETRIEVABLE_SOURCE_STATUSES = [
     "completed",
@@ -33,6 +33,7 @@ _RETRIEVABLE_SOURCE_STATUSES = [
     "completed_text_only",
     "completed_with_image_fallback",
 ]
+_POSTGRES_LEXICAL_TERM_LIMIT = 10
 
 _ARABIC_DIACRITICS_RE = re.compile(r"[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED]")
 _TOKEN_RE = re.compile(r"[a-z0-9]+|[\u0621-\u064A]+", re.IGNORECASE)
@@ -324,6 +325,20 @@ def _cosine_similarity(left: list[float], right: list[float]) -> float:
     if not left_norm or not right_norm:
         return 0.0
     return dot / (left_norm * right_norm)
+
+
+def _embedding_values(embedding) -> list[float]:
+    """Return pgvector/JSON embeddings as a plain list for Python scoring."""
+    if embedding is None:
+        return []
+    if isinstance(embedding, list):
+        return embedding
+    if isinstance(embedding, tuple):
+        return list(embedding)
+    if hasattr(embedding, "tolist"):
+        values = embedding.tolist()
+        return values if isinstance(values, list) else list(values)
+    return list(embedding)
 
 
 def _normalize_lexical_text(text: str) -> str:
@@ -642,9 +657,26 @@ async def retrieve_context(
         # pgvector SQL path (cosine distance)
         # Pull extra candidates, then rerank with lexical matches to handle Arabic OCR text.
         candidate_limit = max(top_k * 12, 48)
-        stmt = stmt.order_by(RagChunk.embedding.cosine_distance(query_embedding)).limit(candidate_limit)
-        result = await db.execute(stmt)
-        chunks_list = list(result.scalars().all())
+        vector_stmt = stmt.order_by(RagChunk.embedding.cosine_distance(query_embedding)).limit(candidate_limit)
+        result = await db.execute(vector_stmt)
+        chunks_by_id = {chunk.id: chunk for chunk in result.scalars().all()}
+
+        lexical_terms = sorted(
+            {term for term in terms if len(term) > 1},
+            key=lambda value: (not bool(re.search(r"[a-z0-9]", value)), -len(value), value),
+        )[:_POSTGRES_LEXICAL_TERM_LIMIT]
+        lexical_filters = []
+        for term in lexical_terms:
+            pattern = f"%{term}%"
+            lexical_filters.append(RagChunk.content.ilike(pattern))
+            lexical_filters.append(RagChunk.normalized_content.ilike(pattern))
+        if lexical_filters:
+            lexical_stmt = stmt.where(or_(*lexical_filters)).limit(candidate_limit)
+            result = await db.execute(lexical_stmt)
+            for chunk in result.scalars().all():
+                chunks_by_id.setdefault(chunk.id, chunk)
+
+        chunks_list = list(chunks_by_id.values())
     else:
         # SQLite Python fallback path — load all and score in Python
         result = await db.execute(stmt)
@@ -653,7 +685,7 @@ async def retrieve_context(
     diag.total_candidates_scanned = len(chunks_list)
 
     for chunk in chunks_list:
-        vector_score = _cosine_similarity(query_embedding, chunk.embedding or [])
+        vector_score = _cosine_similarity(query_embedding, _embedding_values(chunk.embedding))
         # Use both original content and normalized content for lexical matching
         lexical_content = f"{chunk.normalized_content or ''}\n{chunk.content}"
         lex_score = lexical_relevance_score(scoring_query, lexical_content)

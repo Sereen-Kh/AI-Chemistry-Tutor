@@ -558,7 +558,6 @@ const AskAiPage = ({ preferences, setPreferences }: { preferences: UserPreferenc
         interests: preferences.interests,
         language: preferences.language,
         answer_scope: 'auto',
-        source_types: ['textbook'],
         action,
         previous_question: previousAssistant?.question || previousUser?.content,
         previous_answer: previousAssistant?.response?.answer,

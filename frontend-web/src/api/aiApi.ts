@@ -79,7 +79,7 @@ export const aiApi = {
         conversation_id: request.conversation_id,
         parent_message_id: request.parent_message_id,
         question: request.question,
-        source_types: request.source_types ?? ['textbook'],
+        source_types: request.source_types,
         preferred_answer_type: request.answer_format,
         answer_scope: request.answer_scope ?? 'auto',
         teaching_style: request.teaching_style,

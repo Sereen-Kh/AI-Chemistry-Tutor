@@ -1,0 +1,821 @@
+
+<h2 class="sr-only">EduMind semantic RAG architecture: dual-source retrieval across chemistry book and solution book with query rewriting, HyDE, multi-query, and cross-encoder reranking</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-size:13px;color:var(--color-text-primary)}
+.tabs{display:flex;gap:2px;flex-wrap:wrap;border-bottom:.5px solid var(--color-border-tertiary);margin-bottom:18px}
+.tb{padding:7px 12px;font-size:11px;cursor:pointer;border:.5px solid transparent;border-radius:6px 6px 0 0;color:var(--color-text-secondary);background:none;margin-bottom:-.5px;font-family:inherit}
+.tb:hover{color:var(--color-text-primary);background:var(--color-background-secondary)}
+.tb.on{color:var(--color-text-primary);background:var(--color-background-primary);border-color:var(--color-border-tertiary);border-bottom-color:var(--color-background-primary);font-weight:500}
+.pn{display:none}.pn.on{display:block}
+.sec{font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.6px;margin:16px 0 8px}
+.card{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:12px 14px;margin-bottom:8px}
+.card-t{font-size:13px;font-weight:500;margin-bottom:4px}
+.card-b{font-size:12px;color:var(--color-text-secondary);line-height:1.65}
+.bx{display:inline-block;font-size:10px;font-weight:500;padding:2px 7px;border-radius:4px;margin:2px 2px 2px 0}
+.b-teal{background:#E1F5EE;color:#0F6E56}
+.b-blue{background:#E6F1FB;color:#185FA5}
+.b-pur{background:#EEEDFE;color:#534AB7}
+.b-gold{background:#FAEEDA;color:#854F0B}
+.b-coral{background:#FAECE7;color:#993C1D}
+.b-gray{background:var(--color-background-secondary);color:var(--color-text-secondary)}
+
+.step{display:flex;gap:10px;padding:10px 0;border-bottom:.5px solid var(--color-border-tertiary);align-items:flex-start}
+.step:last-child{border-bottom:none}
+.step-num{width:26px;height:26px;border-radius:50%;font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-b{flex:1}
+.step-t{font-size:13px;font-weight:500;margin-bottom:3px}
+.step-d{font-size:11px;color:var(--color-text-secondary);line-height:1.6}
+.step-code{font-family:var(--font-mono);font-size:11px;color:var(--color-text-secondary);background:var(--color-background-secondary);border-radius:6px;padding:7px 10px;margin-top:6px;line-height:1.6;border:.5px solid var(--color-border-tertiary)}
+
+.vs-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.vs-col{border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+.vs-hd{padding:10px 13px;font-size:12px;font-weight:500;border-bottom:.5px solid var(--color-border-tertiary)}
+.vs-row{padding:8px 13px;border-bottom:.5px solid var(--color-border-tertiary);font-size:11px;display:flex;gap:8px;align-items:flex-start}
+.vs-row:last-child{border-bottom:none}
+.vs-lbl{color:var(--color-text-tertiary);min-width:58px;font-size:10px;font-weight:500;padding-top:2px}
+.vs-val{color:var(--color-text-primary);line-height:1.5}
+
+.code{font-family:var(--font-mono);font-size:11px;line-height:1.75;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:11px 13px;border:.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);white-space:pre-wrap;word-break:break-all;margin-bottom:10px;position:relative}
+.code .kw{color:var(--color-text-info)}.code .str{color:var(--color-text-success)}.code .cm{color:var(--color-text-tertiary)}.code .fn{color:var(--color-text-warning)}
+.copy-btn{position:absolute;top:8px;right:8px;font-size:10px;padding:3px 8px;border-radius:5px;border:.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-secondary);cursor:pointer;font-family:inherit}
+
+.prompt-wrap{background:var(--color-background-secondary);border:.5px solid var(--color-border-secondary);border-radius:var(--border-radius-lg);padding:14px 16px;margin-bottom:10px;position:relative}
+.pm-head{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;margin-bottom:9px;display:flex;align-items:center;gap:7px}
+.pm-body{font-size:12px;color:var(--color-text-primary);line-height:1.75}
+</style>
+
+<div style="margin-bottom:14px">
+  <div style="font-size:17px;font-weight:500;margin-bottom:3px">Semantic RAG — dual-source architecture</div>
+  <div style="font-size:12px;color:var(--color-text-secondary)">Chemistry book + solution book · query rewriting · HyDE · multi-query · cross-encoder reranking</div>
+</div>
+
+<div class="tabs">
+  <button class="tb on" onclick="tab(this,'arch')">Architecture</button>
+  <button class="tb" onclick="tab(this,'semantic')">Semantic search</button>
+  <button class="tb" onclick="tab(this,'dual')">Dual source</button>
+  <button class="tb" onclick="tab(this,'code')">Implementation</button>
+  <button class="tb" onclick="tab(this,'prompt')">Codex prompt</button>
+</div>
+
+<!-- ARCHITECTURE -->
+<div class="pn on" id="pn-arch">
+
+<svg width="100%" viewBox="0 0 680 620" role="img">
+  <title>EduMind semantic RAG pipeline</title>
+  <desc>Full flow from student question through query expansion, dual-source vector search, reranking, and grounded answer generation</desc>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <!-- Row 1: Student question -->
+  <g class="node c-purple" onclick="sendPrompt('How does query rewriting improve RAG search quality?')">
+    <rect x="230" y="20" width="220" height="52" rx="8" stroke-width="0.5"/>
+    <text class="th" x="340" y="41" text-anchor="middle" dominant-baseline="central">Student question (Arabic)</text>
+    <text class="ts" x="340" y="60" text-anchor="middle" dominant-baseline="central">ما هو الجدول الدوري؟</text>
+  </g>
+  <line x1="340" y1="72" x2="340" y2="108" class="arr" marker-end="url(#arr)" stroke="var(--color-border-secondary)"/>
+
+  <!-- Row 2: Query expansion box -->
+  <g class="node c-blue" onclick="sendPrompt('Explain query expansion and HyDE for Arabic chemistry RAG')">
+    <rect x="130" y="108" width="420" height="62" rx="8" stroke-width="0.5"/>
+    <text class="th" x="340" y="129" text-anchor="middle" dominant-baseline="central">Query expansion layer</text>
+    <text class="ts" x="340" y="150" text-anchor="middle" dominant-baseline="central">Rewrite · 3 variations · HyDE hypothetical answer</text>
+  </g>
+
+  <!-- 3 branches from expansion -->
+  <line x1="200" y1="170" x2="112" y2="210" class="arr" marker-end="url(#arr)" stroke="var(--color-border-secondary)"/>
+  <line x1="340" y1="170" x2="340" y2="210" class="arr" marker-end="url(#arr)" stroke="var(--color-border-secondary)"/>
+  <line x1="480" y1="170" x2="568" y2="210" class="arr" marker-end="url(#arr)" stroke="var(--color-border-secondary)"/>
+
+  <!-- Row 3: 3 query variants -->
+  <g class="node c-teal" onclick="sendPrompt('What is query rewriting for Arabic chemistry?')">
+    <rect x="40" y="210" width="144" height="48" rx="8" stroke-width="0.5"/>
+    <text class="th" x="112" y="229" text-anchor="middle" dominant-baseline="central">Rewritten query</text>
+    <text class="ts" x="112" y="248" text-anchor="middle" dominant-baseline="central">Clarified + expanded</text>
+  </g>
+  <g class="node c-teal" onclick="sendPrompt('What is multi-query retrieval?')">
+    <rect x="268" y="210" width="144" height="48" rx="8" stroke-width="0.5"/>
+    <text class="th" x="340" y="229" text-anchor="middle" dominant-baseline="central">3 query variants</text>
+    <text class="ts" x="340" y="248" text-anchor="middle" dominant-baseline="central">Different phrasings</text>
+  </g>
+  <g class="node c-teal" onclick="sendPrompt('What is HyDE hypothetical document embedding?')">
+    <rect x="496" y="210" width="144" height="48" rx="8" stroke-width="0.5"/>
+    <text class="th" x="568" y="229" text-anchor="middle" dominant-baseline="central">HyDE vector</text>
+    <text class="ts" x="568" y="248" text-anchor="middle" dominant-baseline="central">Hypothetical answer</text>
+  </g>
+
+  <!-- Arrows down to embedding -->
+  <line x1="112" y1="258" x2="220" y2="300" class="arr" marker-end="url(#arr)" stroke="var(--color-border-secondary)"/>
+  <line x1="340" y1="258" x2="340" y2="300" class="arr" marker-end="url(#arr)" stroke="var(--color-border-secondary)"/>
+  <line x1="568" y1="258" x2="460" y2="300" class="arr" marker-end="url(#arr)" stroke="var(--color-border-secondary)"/>
+
+  <!-- Row 4: Embed -->
+  <g class="node c-amber" onclick="sendPrompt('Why use Google text-embedding-004 for Arabic chemistry?')">
+    <rect x="160" y="300" width="360" height="48" rx="8" stroke-width="0.5"/>
+    <text class="th" x="340" y="319" text-anchor="middle" dominant-baseline="central">Google text-embedding-004 (768-dim)</text>
+    <text class="ts" x="340" y="338" text-anchor="middle" dominant-baseline="central">Best Arabic support · cheap · fast</text>
+  </g>
+
+  <!-- Two arrows to two sources -->
+  <line x1="260" y1="348" x2="160" y2="400" class="arr" marker-end="url(#arr)" stroke="var(--color-border-secondary)"/>
+  <line x1="420" y1="348" x2="520" y2="400" class="arr" marker-end="url(#arr)" stroke="var(--color-border-secondary)"/>
+
+  <!-- Row 5: Two Qdrant collections -->
+  <g class="node c-blue" onclick="sendPrompt('How does the chemistry textbook collection work in Qdrant?')">
+    <rect x="40" y="400" width="240" height="56" rx="8" stroke-width="0.5"/>
+    <text class="th" x="160" y="421" text-anchor="middle" dominant-baseline="central">Qdrant: chemistry_book</text>
+    <text class="ts" x="160" y="440" text-anchor="middle" dominant-baseline="central">source=textbook · 96 pages</text>
+  </g>
+  <g class="node c-coral" onclick="sendPrompt('How does the solution book collection work in Qdrant?')">
+    <rect x="400" y="400" width="240" height="56" rx="8" stroke-width="0.5"/>
+    <text class="th" x="520" y="421" text-anchor="middle" dominant-baseline="central">Qdrant: solution_book</text>
+    <text class="ts" x="520" y="440" text-anchor="middle" dominant-baseline="central">source=solutions · worked examples</text>
+  </g>
+
+  <!-- Both converge to reranker -->
+  <line x1="160" y1="456" x2="285" y2="506" class="arr" marker-end="url(#arr)" stroke="var(--color-border-secondary)"/>
+  <line x1="520" y1="456" x2="395" y2="506" class="arr" marker-end="url(#arr)" stroke="var(--color-border-secondary)"/>
+
+  <!-- Row 6: Reranker -->
+  <g class="node c-purple" onclick="sendPrompt('How does cross-encoder reranking improve RAG results?')">
+    <rect x="180" y="506" width="320" height="48" rx="8" stroke-width="0.5"/>
+    <text class="th" x="340" y="525" text-anchor="middle" dominant-baseline="central">Cross-encoder reranker</text>
+    <text class="ts" x="340" y="544" text-anchor="middle" dominant-baseline="central">Top-20 → top-5 · scores both sources fairly</text>
+  </g>
+
+  <line x1="340" y1="554" x2="340" y2="588" class="arr" marker-end="url(#arr)" stroke="var(--color-border-secondary)"/>
+
+  <!-- Row 7: Claude answer -->
+  <g class="node c-teal" onclick="sendPrompt('How does Claude generate grounded answers from dual sources?')">
+    <rect x="200" y="588" width="280" height="26" rx="6" stroke-width="0.5"/>
+    <text class="th" x="340" y="601" text-anchor="middle" dominant-baseline="central">Claude Sonnet — grounded answer</text>
+  </g>
+</svg>
+
+<div class="card" style="margin-top:12px">
+  <div class="card-t">Why each layer matters</div>
+  <div class="card-b">
+    <span class="bx b-pur">Query expansion</span> A student writes "ما الجدول الدوري؟" — the raw embedding of that short question may not match the textbook's phrasing. Rewriting expands it before embedding.<br>
+    <span class="bx b-teal">HyDE</span> Instead of embedding the question, we ask the LLM to generate a hypothetical answer, then embed that. A good answer vector is much closer to the real answer chunks in embedding space.<br>
+    <span class="bx b-blue">Multi-query</span> 3 different phrasings of the same question — results from all 3 merged with Reciprocal Rank Fusion (RRF). Catches chunks that only match one phrasing.<br>
+    <span class="bx b-coral">Dual source</span> The chemistry book explains concepts. The solution book shows worked examples. A student asking "how to balance this equation" needs BOTH.<br>
+    <span class="bx b-pur">Reranker</span> A cross-encoder reads the question + each candidate chunk together (not just cosine similarity). Much more accurate than vector similarity alone.
+  </div>
+</div>
+</div>
+
+<!-- SEMANTIC SEARCH -->
+<div class="pn" id="pn-semantic">
+<div class="sec">The 4 techniques that make RAG "understand" — not just "search"</div>
+
+<div class="card">
+  <div class="step">
+    <div class="step-num" style="background:#E1F5EE;color:#0F6E56">1</div>
+    <div class="step-b">
+      <div class="step-t">Query rewriting — fix the question before searching</div>
+      <div class="step-d">A Grade 9 student's Arabic question is often short, informal, or missing chemistry terms. Before embedding it, we pass it through the LLM with a prompt that expands, clarifies, and adds relevant chemistry vocabulary. "ما هو الجدول؟" becomes "ما هو الجدول الدوري للعناصر؟ وكيف يتم ترتيب العناصر الكيميائية فيه؟"</div>
+      <div class="step-code">QUERY_REWRITE_PROMPT = """
+أنت مساعد تعليمي في مادة الكيمياء للصف التاسع.
+أعد صياغة سؤال الطالب ليكون أكثر وضوحاً ودقةً علمية.
+أضف المصطلحات الكيميائية المناسبة. لا تجب عن السؤال.
+السؤال الأصلي: {question}
+السؤال المُحسَّن:"""</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num" style="background:#EEEDFE;color:#534AB7">2</div>
+    <div class="step-b">
+      <div class="step-t">HyDE — embed a hypothetical answer, not the question</div>
+      <div class="step-d">The intuition: if you embed "ما هو الجدول الدوري؟" it lands near other questions. But if you ask the LLM to write what a textbook answer would look like, then embed THAT — it lands near the actual textbook chunks. This is Hypothetical Document Embeddings (HyDE). The vector of a good answer is much closer to real answer chunks than the vector of the question.</div>
+      <div class="step-code">HYDE_PROMPT = """
+اكتب فقرة موجزة من كتاب الكيمياء للصف التاسع تجيب عن:
+{question}
+اكتب بأسلوب كتاب مدرسي. لا تقل "الجواب هو"."""</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num" style="background:#E6F1FB;color:#185FA5">3</div>
+    <div class="step-b">
+      <div class="step-t">Multi-query + RRF — search with 3 phrasings, merge results</div>
+      <div class="step-d">Generate 3 different formulations of the same question, run 3 separate Qdrant searches, then merge the ranked result lists using Reciprocal Rank Fusion. If a chunk appears in all 3 results it scores very high. If it only appears in 1 result it scores low. This makes retrieval robust — a chunk that only matches one specific phrasing of the question still gets found.</div>
+      <div class="step-code">RRF score for chunk c:
+  score(c) = Σ  1 / (rank_in_query_i(c) + 60)
+             i=1..3
+Top-20 chunks by RRF score → passed to reranker</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num" style="background:#FAEEDA;color:#854F0B">4</div>
+    <div class="step-b">
+      <div class="step-t">Cross-encoder reranking — actually read question + chunk together</div>
+      <div class="step-d">Vector similarity is fast but shallow — it compares embeddings independently. A cross-encoder reads the original question AND each candidate chunk together in one forward pass, scoring their relevance jointly. This is much more accurate but too slow to run on the whole corpus. So we use vector search to get top-20 candidates quickly, then rerank those 20 with the cross-encoder to get the final top-5. We use either a lightweight BGE reranker or a Gemini API call as the reranker.</div>
+      <div class="step-code">Reranker options for Arabic:
+  1. BAAI/bge-reranker-v2-m3  (local, free, multilingual)
+  2. Gemini API: "Score 0-10: how relevant is this passage to the question?"
+  3. Cohere Rerank API (Arabic supported)</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- DUAL SOURCE -->
+<div class="pn" id="pn-dual">
+<div class="sec">Two books, one search — how to architect it</div>
+
+<div class="vs-grid">
+  <div class="vs-col">
+    <div class="vs-hd" style="background:#E6F1FB;color:#185FA5">Chemistry textbook</div>
+    <div class="vs-row"><span class="vs-lbl">Content</span><span class="vs-val">Concepts, definitions, theory, diagrams, examples</span></div>
+    <div class="vs-row"><span class="vs-lbl">Use when</span><span class="vs-val">Student asks "what is X" or "explain Y"</span></div>
+    <div class="vs-row"><span class="vs-lbl">Metadata</span><span class="vs-val">source="textbook", chapter_id, page_num</span></div>
+    <div class="vs-row"><span class="vs-lbl">Pages</span><span class="vs-val">96 pages classified (Stage 1 done)</span></div>
+    <div class="vs-row"><span class="vs-lbl">Collection</span><span class="vs-val">syria_grade_9_chemistry</span></div>
+  </div>
+  <div class="vs-col">
+    <div class="vs-hd" style="background:#FAECE7;color:#993C1D">Solution book</div>
+    <div class="vs-row"><span class="vs-lbl">Content</span><span class="vs-val">Worked examples, step-by-step solutions, answer keys</span></div>
+    <div class="vs-row"><span class="vs-lbl">Use when</span><span class="vs-val">Student asks "how to solve X" or "balance this equation"</span></div>
+    <div class="vs-row"><span class="vs-lbl">Metadata</span><span class="vs-val">source="solutions", exercise_num, chapter_id</span></div>
+    <div class="vs-row"><span class="vs-lbl">Pages</span><span class="vs-val">To be classified (Stage 1 needs to run)</span></div>
+    <div class="vs-row"><span class="vs-lbl">Collection</span><span class="vs-val">syria_grade_9_chemistry (same, filtered by source)</span></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-t">Single collection vs two collections — use ONE collection</div>
+  <div class="card-b">Store both books in the same Qdrant collection (<code>syria_grade_9_chemistry</code>) with a <code>source</code> metadata field (<code>"textbook"</code> or <code>"solutions"</code>). This lets you:<br><br>
+    <span class="bx b-teal">Cross-source search</span> Search both books in ONE query — reranker sees all 20 candidates from both sources and picks the 5 best regardless of source.<br>
+    <span class="bx b-teal">Filter when needed</span> Add <code>must=[FieldCondition(key="source", match="solutions")]</code> when you know the student needs a worked solution.<br>
+    <span class="bx b-teal">Source attribution</span> Every chunk has its source in metadata — the LLM always knows which book each passage came from and can cite it.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-t">Smart source routing — when to search which</div>
+  <div class="card-b">
+    <span class="bx b-blue">Theory question</span> "ما هو الجدول الدوري؟" → search textbook only (source=textbook)<br>
+    <span class="bx b-coral">Solve question</span> "احسب الكتلة المولية لـ H₂O" → search solutions first, textbook as fallback<br>
+    <span class="bx b-pur">Mixed question</span> "فسر ثم احل معادلة..." → search BOTH, reranker decides the mix<br>
+    <span class="bx b-gold">Default</span> Search both, let the reranker pick — safe for all question types<br><br>
+    Route is decided by a lightweight classifier (keyword detection + LLM call with cache). "احسب", "حل", "اوجد" → solutions. "عرّف", "فسر", "ما هو" → textbook.
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-t">What the LLM prompt looks like with dual sources</div>
+  <div class="step-code" style="margin-top:6px">أنت مدرّس كيمياء للصف التاسع. أجب على سؤال الطالب باستخدام
+المقاطع التالية فقط. أشر إلى المصدر في إجابتك.
+
+[من الكتاب المدرسي — صفحة 45]:
+الجدول الدوري هو ترتيب للعناصر الكيميائية...
+
+[من كتاب الحلول — تمرين 3.2]:
+الحل: أولاً نوازن المعادلة، ثم...
+
+سؤال الطالب: {question}
+إجابتك (بالعربية):</div>
+</div>
+</div>
+
+<!-- IMPLEMENTATION CODE -->
+<div class="pn" id="pn-code">
+<div class="sec">Core service: semantic_rag.py</div>
+
+<div class="code" style="position:relative"><button class="copy-btn" onclick="cp(this)">Copy</button><span class="cm">"""
+app/services/semantic_rag.py
+Full semantic RAG pipeline with query expansion, HyDE,
+multi-query retrieval, and cross-encoder reranking.
+Searches both chemistry_book and solution_book sources.
+"""</span>
+<span class="kw">from</span> __future__ <span class="kw">import</span> annotations
+<span class="kw">import</span> asyncio, hashlib, json
+<span class="kw">from</span> dataclasses <span class="kw">import</span> dataclass
+<span class="kw">from</span> typing <span class="kw">import</span> Literal
+
+<span class="kw">import</span> google.generativeai <span class="kw">as</span> genai
+<span class="kw">from</span> qdrant_client <span class="kw">import</span> AsyncQdrantClient
+<span class="kw">from</span> qdrant_client.models <span class="kw">import</span> Filter, FieldCondition, MatchValue, ScoredPoint
+
+<span class="kw">from</span> app.core.config <span class="kw">import</span> settings
+<span class="kw">from</span> app.core.redis <span class="kw">import</span> redis_client
+
+COLLECTION    = <span class="str">"syria_grade_9_chemistry"</span>
+TOP_VECTOR_K  = 20   <span class="cm"># retrieve from Qdrant before reranking</span>
+TOP_FINAL_K   = 5    <span class="cm"># after reranking — fed to LLM</span>
+EMBED_MODEL   = <span class="str">"models/text-embedding-004"</span>
+RERANK_MODEL  = <span class="str">"gemini-2.0-flash"</span>
+
+
+<span class="cm"># ── data classes ─────────────────────────────────────────────────</span>
+@dataclass
+<span class="kw">class</span> <span class="fn">RetrievedChunk</span>:
+    content:    str
+    source:     Literal[<span class="str">"textbook"</span>, <span class="str">"solutions"</span>]
+    page:       int
+    chapter_id: int | None
+    score:      float
+
+
+@dataclass
+<span class="kw">class</span> <span class="fn">RAGContext</span>:
+    chunks:          list[RetrievedChunk]
+    rewritten_query: str
+    sources_used:    list[str]
+    retrieval_method: str
+
+
+<span class="cm"># ── embedding ─────────────────────────────────────────────────────</span>
+<span class="kw">async def</span> <span class="fn">embed</span>(text: str, task: str = <span class="str">"retrieval_query"</span>) -> list[float]:
+    result = genai.embed_content(
+        model=EMBED_MODEL, content=text, task_type=task
+    )
+    <span class="kw">return</span> result[<span class="str">"embedding"</span>]
+
+
+<span class="cm"># ── Stage 1: query rewriting ─────────────────────────────────────</span>
+REWRITE_PROMPT = <span class="str">"""
+أنت مساعد تعليمي في مادة الكيمياء للصف التاسع.
+أعد صياغة سؤال الطالب ليكون أكثر وضوحاً ودقةً علمية.
+أضف المصطلحات الكيميائية المناسبة. لا تجب عن السؤال.
+أخرج السؤال المُحسَّن فقط بدون أي شرح.
+السؤال: {q}
+"""</span>
+
+<span class="kw">async def</span> <span class="fn">rewrite_query</span>(question: str) -> str:
+    model = genai.GenerativeModel(RERANK_MODEL)
+    r = <span class="kw">await</span> model.generate_content_async(
+        REWRITE_PROMPT.format(q=question),
+        generation_config={<span class="str">"temperature"</span>: 0.1, <span class="str">"max_output_tokens"</span>: 200}
+    )
+    <span class="kw">return</span> r.text.strip()
+
+
+<span class="cm"># ── Stage 2: HyDE ─────────────────────────────────────────────────</span>
+HYDE_PROMPT = <span class="str">"""
+اكتب فقرة قصيرة كما لو كانت من كتاب الكيمياء للصف التاسع
+تجيب عن السؤال التالي. اكتب بأسلوب علمي مباشر.
+السؤال: {q}
+"""</span>
+
+<span class="kw">async def</span> <span class="fn">generate_hyde_vector</span>(question: str) -> list[float]:
+    model = genai.GenerativeModel(RERANK_MODEL)
+    r = <span class="kw">await</span> model.generate_content_async(
+        HYDE_PROMPT.format(q=question),
+        generation_config={<span class="str">"temperature"</span>: 0.3, <span class="str">"max_output_tokens"</span>: 300}
+    )
+    hyp_doc = r.text.strip()
+    <span class="kw">return await</span> embed(hyp_doc, task=<span class="str">"retrieval_document"</span>)
+
+
+<span class="cm"># ── Stage 3: multi-query variants ─────────────────────────────────</span>
+VARIANTS_PROMPT = <span class="str">"""
+اكتب 3 صياغات مختلفة للسؤال التالي في مادة الكيمياء.
+أخرج كل سؤال في سطر منفصل فقط.
+السؤال: {q}
+"""</span>
+
+<span class="kw">async def</span> <span class="fn">generate_query_variants</span>(question: str) -> list[str]:
+    model = genai.GenerativeModel(RERANK_MODEL)
+    r = <span class="kw">await</span> model.generate_content_async(
+        VARIANTS_PROMPT.format(q=question),
+        generation_config={<span class="str">"temperature"</span>: 0.4, <span class="str">"max_output_tokens"</span>: 300}
+    )
+    lines = [l.strip() <span class="kw">for</span> l <span class="kw">in</span> r.text.strip().splitlines() <span class="kw">if</span> l.strip()]
+    <span class="kw">return</span> lines[:3] <span class="kw">or</span> [question]
+
+
+<span class="cm"># ── Stage 4: Qdrant vector search ─────────────────────────────────</span>
+<span class="kw">async def</span> <span class="fn">vector_search</span>(
+    client: AsyncQdrantClient,
+    vector: list[float],
+    source_filter: str | None = None,
+    top_k: int = TOP_VECTOR_K,
+) -> list[ScoredPoint]:
+    filt = None
+    <span class="kw">if</span> source_filter:
+        filt = Filter(must=[FieldCondition(
+            key=<span class="str">"source"</span>, match=MatchValue(value=source_filter)
+        )])
+    <span class="kw">return await</span> client.search(
+        collection_name=COLLECTION,
+        query_vector=vector,
+        query_filter=filt,
+        limit=top_k,
+        with_payload=True,
+    )
+
+
+<span class="cm"># ── Stage 5: Reciprocal Rank Fusion ───────────────────────────────</span>
+<span class="kw">def</span> <span class="fn">reciprocal_rank_fusion</span>(
+    ranked_lists: list[list[ScoredPoint]],
+    k: int = 60
+) -> list[ScoredPoint]:
+    scores: dict[str, float] = {}
+    points: dict[str, ScoredPoint] = {}
+    <span class="kw">for</span> ranked <span class="kw">in</span> ranked_lists:
+        <span class="kw">for</span> rank, point <span class="kw">in</span> enumerate(ranked):
+            pid = str(point.id)
+            scores[pid] = scores.get(pid, 0.0) + 1.0 / (rank + k)
+            points[pid] = point
+    sorted_ids = sorted(scores, key=<span class="kw">lambda</span> x: scores[x], reverse=True)
+    <span class="kw">return</span> [points[pid] <span class="kw">for</span> pid <span class="kw">in</span> sorted_ids[:TOP_VECTOR_K]]
+
+
+<span class="cm"># ── Stage 6: cross-encoder reranking with Gemini ─────────────────</span>
+RERANK_PROMPT = <span class="str">"""
+من 0 إلى 10، كم هي صلة هذا المقطع بالسؤال؟
+أخرج رقماً واحداً فقط.
+السؤال: {q}
+المقطع: {chunk}
+الدرجة:"""</span>
+
+<span class="kw">async def</span> <span class="fn">rerank_chunks</span>(
+    question: str,
+    candidates: list[ScoredPoint],
+) -> list[RetrievedChunk]:
+    model = genai.GenerativeModel(RERANK_MODEL)
+
+    <span class="kw">async def</span> <span class="fn">score_one</span>(point: ScoredPoint) -> tuple[ScoredPoint, float]:
+        chunk_text = point.payload.get(<span class="str">"content"</span>, <span class="str">""</span>)[:600]
+        <span class="kw">try</span>:
+            r = <span class="kw">await</span> model.generate_content_async(
+                RERANK_PROMPT.format(q=question, chunk=chunk_text),
+                generation_config={<span class="str">"temperature"</span>: 0.0, <span class="str">"max_output_tokens"</span>: 5}
+            )
+            score = float(r.text.strip().split()[0])
+        <span class="kw">except</span>:
+            score = point.score * 10
+        <span class="kw">return</span> point, score
+
+    scored = <span class="kw">await</span> asyncio.gather(*[score_one(p) <span class="kw">for</span> p <span class="kw">in</span> candidates])
+    scored.sort(key=<span class="kw">lambda</span> x: x[1], reverse=True)
+
+    result = []
+    <span class="kw">for</span> point, score <span class="kw">in</span> scored[:TOP_FINAL_K]:
+        payload = point.payload
+        result.append(RetrievedChunk(
+            content=payload.get(<span class="str">"content"</span>, <span class="str">""</span>),
+            source=payload.get(<span class="str">"source"</span>, <span class="str">"textbook"</span>),
+            page=payload.get(<span class="str">"page"</span>, 0),
+            chapter_id=payload.get(<span class="str">"chapter_id"</span>),
+            score=score / 10,
+        ))
+    <span class="kw">return</span> result
+
+
+<span class="cm"># ── Main entry point ──────────────────────────────────────────────</span>
+<span class="kw">async def</span> <span class="fn">get_rag_context</span>(
+    question: str,
+    client: AsyncQdrantClient,
+    source_hint: Literal[<span class="str">"both"</span>, <span class="str">"textbook"</span>, <span class="str">"solutions"</span>] = <span class="str">"both"</span>,
+    use_hyde: bool = True,
+    use_reranker: bool = True,
+) -> RAGContext:
+    <span class="cm"># cache key</span>
+    cache_key = f<span class="str">"rag:{hashlib.md5(question.encode()).hexdigest()}:{source_hint}"</span>
+    cached = <span class="kw">await</span> redis_client.get(cache_key)
+    <span class="kw">if</span> cached:
+        <span class="kw">return</span> RAGContext(**json.loads(cached))
+
+    <span class="cm"># run expansion stages in parallel</span>
+    rewritten, variants, hyde_vec = <span class="kw">await</span> asyncio.gather(
+        rewrite_query(question),
+        generate_query_variants(question),
+        generate_hyde_vector(question) <span class="kw">if</span> use_hyde <span class="kw">else</span> asyncio.sleep(0),
+    )
+    <span class="kw">if not</span> use_hyde:
+        hyde_vec = None
+
+    <span class="cm"># embed all query variants + rewritten</span>
+    all_queries = [rewritten] + variants
+    embed_tasks = [embed(q) <span class="kw">for</span> q <span class="kw">in</span> all_queries]
+    <span class="kw">if</span> hyde_vec:
+        embed_tasks = [asyncio.coroutine(<span class="kw">lambda</span> v=hyde_vec: v)()] + embed_tasks
+    vectors = <span class="kw">await</span> asyncio.gather(*embed_tasks)
+
+    <span class="cm"># search Qdrant with each vector</span>
+    src = None <span class="kw">if</span> source_hint == <span class="str">"both"</span> <span class="kw">else</span> source_hint
+    search_tasks = [vector_search(client, v, src) <span class="kw">for</span> v <span class="kw">in</span> vectors]
+    ranked_lists = <span class="kw">await</span> asyncio.gather(*search_tasks)
+
+    <span class="cm"># fuse results</span>
+    fused = reciprocal_rank_fusion(list(ranked_lists))
+
+    <span class="cm"># rerank</span>
+    chunks = <span class="kw">await</span> rerank_chunks(question, fused) <span class="kw">if</span> use_reranker \
+        <span class="kw">else</span> [RetrievedChunk(
+            content=p.payload.get(<span class="str">"content"</span>,<span class="str">""</span>),
+            source=p.payload.get(<span class="str">"source"</span>,<span class="str">"textbook"</span>),
+            page=p.payload.get(<span class="str">"page"</span>,0),
+            chapter_id=p.payload.get(<span class="str">"chapter_id"</span>),
+            score=p.score
+        ) <span class="kw">for</span> p <span class="kw">in</span> fused[:TOP_FINAL_K]]
+
+    ctx = RAGContext(
+        chunks=chunks,
+        rewritten_query=rewritten,
+        sources_used=list({c.source <span class="kw">for</span> c <span class="kw">in</span> chunks}),
+        retrieval_method=<span class="str">"semantic+hyde+multiquery+reranker"</span>,
+    )
+    <span class="kw">await</span> redis_client.setex(cache_key, 3600, json.dumps(ctx.__dict__))
+    <span class="kw">return</span> ctx</div>
+
+<div class="sec">Ingestion script for solution book</div>
+<div class="code" style="position:relative"><button class="copy-btn" onclick="cp(this)">Copy</button><span class="cm">"""
+backend/scratch/ingest_solution_book.py
+Runs the same extraction pipeline on the solution book PDF.
+Adds source="solutions" to every chunk payload.
+"""</span>
+<span class="kw">import</span> asyncio
+<span class="kw">from</span> pathlib <span class="kw">import</span> Path
+<span class="kw">from</span> backend.scratch.extract_pages <span class="kw">import</span> run <span class="kw">as</span> extract_pages
+<span class="kw">from</span> backend.scratch.build_chunks <span class="kw">import</span> build_chunks
+<span class="kw">from</span> backend.scratch.seed_chunks <span class="kw">import</span> seed_to_qdrant
+
+SOLUTION_PDF = Path(<span class="str">"data/textbooks/syria_grade_9/solution_book.pdf"</span>)
+OUTPUT_DIR   = Path(<span class="str">"data/textbooks/syria_grade_9/solutions/"</span>)
+
+<span class="kw">async def</span> <span class="fn">main</span>():
+    print(<span class="str">"Stage 1: classify + extract solution book pages..."</span>)
+    <span class="cm"># reuse same extract_pages.py logic, different output dir + PDF</span>
+    extract_pages(
+        pdf_path=SOLUTION_PDF,
+        output_dir=OUTPUT_DIR,
+        source_tag=<span class="str">"solutions"</span>,  <span class="cm"># added to every chunk payload</span>
+    )
+
+    print(<span class="str">"Stage 2: build chunks from solution pages..."</span>)
+    chunks = build_chunks(
+        pages_dir=OUTPUT_DIR / <span class="str">"pages"</span>,
+        chunk_size=500,   <span class="cm"># smaller chunks for worked solutions</span>
+        chunk_overlap=60,
+        source_tag=<span class="str">"solutions"</span>,
+        output_file=OUTPUT_DIR / <span class="str">"chunks.json"</span>,
+    )
+    print(f<span class="str">"  Built {len(chunks)} solution chunks"</span>)
+
+    print(<span class="str">"Stage 3: embed + upsert to Qdrant..."</span>)
+    <span class="cm"># same collection, source="solutions" in payload</span>
+    <span class="kw">await</span> seed_to_qdrant(
+        chunks=chunks,
+        collection=<span class="str">"syria_grade_9_chemistry"</span>,
+        source_tag=<span class="str">"solutions"</span>,
+    )
+    print(<span class="str">"Done — solution book is now searchable alongside textbook."</span>)
+
+<span class="kw">if</span> __name__ == <span class="str">"__main__"</span>:
+    asyncio.run(main())</div>
+</div>
+
+<!-- CODEX PROMPT -->
+<div class="pn" id="pn-prompt">
+<div class="prompt-wrap">
+  <div class="pm-head" style="color:#534AB7">Codex / Claude Sonnet 4.5 — complete implementation prompt</div>
+  <button class="copy-btn" onclick="cpPrompt('codex-prompt')" style="position:absolute;top:12px;right:12px;font-size:10px;padding:3px 8px;border-radius:5px;border:.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-secondary);cursor:pointer;font-family:inherit">Copy</button>
+  <div class="pm-body" id="codex-prompt">
+You are a senior AI/ML engineer and Python expert. I am building EduMind — an AI Chemistry Tutor for Grade 9 Arabic-speaking students. The backend uses FastAPI (async), PostgreSQL + pgvector, Redis, Qdrant, and Celery.
+
+I need you to implement a SEMANTIC RAG system with dual-source retrieval. Read every file I attach before writing any code.
+
+---
+
+## CONTEXT: What already exists
+
+- `backend/scratch/extract_pages.py` — extracts text from PDF pages (pdfplumber + Gemini OCR)
+- `backend/scratch/build_chunks.py` — splits extracted text into chunks
+- `backend/scratch/seed_chunks.py` — embeds chunks and upserts to Qdrant
+- `data/textbooks/syria_grade_9/page_classification.json` — 96 pages classified
+- `data/textbooks/syria_grade_9/pages/page_NNN.json` — extracted page content (Stage 2 output)
+- Current Qdrant collection: `syria_grade_9_chemistry` (chemistry textbook chunks)
+- Embedding model: Google `text-embedding-004` (768-dim)
+- LLM: Gemini 2.0 Flash (via `google-generativeai` SDK)
+
+## TASK 1 — Upgrade existing seed_chunks.py for dual-source support
+
+Modify `seed_chunks.py` so every chunk payload in Qdrant includes these fields:
+```json
+{
+  "content": "...",
+  "source": "textbook",          ← "textbook" or "solutions"
+  "page": 12,
+  "chapter_id": 3,
+  "section": "الروابط الكيميائية",
+  "content_types": ["arabic_text", "equation"],
+  "char_count": 487
+}
+```
+
+Add a `--source` CLI argument: `python3 seed_chunks.py --source textbook` or `--source solutions`.
+
+## TASK 2 — Ingest the solution book
+
+Create `backend/scratch/ingest_solution_book.py` that:
+1. Takes `--pdf` path to the solutions PDF as an argument
+2. Runs `classify_pages.py` logic on the solutions PDF (save to `data/textbooks/syria_grade_9/solutions/`)
+3. Runs `extract_pages.py` logic using the same OCRArena/Gemini pipeline
+4. Runs `build_chunks.py` with `chunk_size=500, chunk_overlap=60` (solutions are denser)
+5. Calls `seed_chunks.py` with `--source solutions`
+6. Reports: total pages, chunks created, embedding time, upserted count
+
+## TASK 3 — Create app/services/semantic_rag.py
+
+Build a complete semantic RAG service with these 6 stages in a pipeline:
+
+### Stage 1: Query rewriting
+Use Gemini 2.0 Flash to rewrite the student's Arabic question. Add chemistry vocabulary. Remove ambiguity.
+
+Prompt (use exactly this):
+```
+أنت مساعد تعليمي في مادة الكيمياء للصف التاسع.
+أعد صياغة سؤال الطالب ليكون أكثر وضوحاً ودقةً علمية.
+أضف المصطلحات الكيميائية المناسبة. لا تجب عن السؤال.
+أخرج السؤال المُحسَّن فقط بدون أي شرح.
+السؤال: {question}
+```
+
+### Stage 2: HyDE (Hypothetical Document Embeddings)
+Generate a hypothetical textbook answer → embed it → use that vector for searching.
+
+Prompt (use exactly this):
+```
+اكتب فقرة قصيرة كما لو كانت من كتاب الكيمياء للصف التاسع تجيب عن السؤال التالي.
+اكتب بأسلوب كتاب مدرسي علمي. لا تقل "الجواب هو".
+السؤال: {question}
+```
+
+### Stage 3: Multi-query generation
+Generate 3 different phrasings of the question. Embed each one separately.
+
+### Stage 4: Qdrant search (dual source)
+- Search the Qdrant collection `syria_grade_9_chemistry` with EACH vector
+- Support `source_hint` parameter: "both" | "textbook" | "solutions"
+  - "textbook": add `must=[FieldCondition(key="source", match=MatchValue(value="textbook"))]`
+  - "solutions": filter to solutions only
+  - "both": no filter — search everything
+- Retrieve top-20 candidates per vector search
+
+### Stage 5: Reciprocal Rank Fusion
+Merge all result lists (from multi-query + HyDE + rewritten query) using RRF formula:
+`score(chunk) = Σ 1 / (rank_in_list_i + 60)` for each list where the chunk appears.
+Return top-20 by RRF score.
+
+### Stage 6: Cross-encoder reranking
+Re-score the top-20 candidates by asking Gemini to score each one 0-10 for relevance to the original question. Use asyncio.gather to run all reranking calls in parallel. Return top-5.
+
+Reranking prompt (use exactly this):
+```
+من 0 إلى 10، كم هي صلة هذا المقطع بسؤال الطالب؟
+أخرج رقماً واحداً فقط بدون أي شرح.
+السؤال: {question}
+المقطع: {chunk}
+الدرجة:
+```
+
+### Main function signature
+```python
+async def get_rag_context(
+    question: str,
+    qdrant_client: AsyncQdrantClient,
+    source_hint: Literal["both", "textbook", "solutions"] = "both",
+    use_hyde: bool = True,
+    use_reranker: bool = True,
+    cache_ttl: int = 3600,
+) -> RAGContext:
+```
+
+Cache result in Redis with key = `rag:{md5(question)}:{source_hint}`. TTL = 3600 seconds.
+
+Return a `RAGContext` dataclass:
+```python
+@dataclass
+class RAGContext:
+    chunks: list[RetrievedChunk]   # top-5 after reranking
+    rewritten_query: str
+    sources_used: list[str]        # ["textbook", "solutions"]
+    retrieval_method: str          # "semantic+hyde+multiquery+reranker"
+```
+
+Each `RetrievedChunk`:
+```python
+@dataclass
+class RetrievedChunk:
+    content: str
+    source: Literal["textbook", "solutions"]
+    page: int
+    chapter_id: int | None
+    score: float   # 0.0 - 1.0 after reranking
+```
+
+## TASK 4 — Source routing classifier
+
+Create `app/services/source_router.py` with:
+```python
+def classify_source_intent(question: str) -> Literal["both", "textbook", "solutions"]:
+```
+
+Rules:
+- If question contains: احسب، حل، أوجد، طبّق، وازن → return "solutions"
+- If question contains: عرّف، ما هو، اشرح، فسّر، لماذا → return "textbook"
+- Otherwise → return "both"
+
+Cache the result per question.
+
+## TASK 5 — Update the chat endpoint to use semantic RAG
+
+In `app/api/chat.py`, replace any existing call to `rag_service.get_relevant_context()` with:
+```python
+from app.services.source_router import classify_source_intent
+from app.services.semantic_rag import get_rag_context
+
+source_hint = classify_source_intent(user_message)
+rag_ctx = await get_rag_context(
+    question=user_message,
+    qdrant_client=qdrant_client,
+    source_hint=source_hint,
+)
+```
+
+Build the LLM system prompt using the retrieved chunks, citing sources:
+```python
+def build_context_prompt(rag_ctx: RAGContext) -> str:
+    parts = []
+    for chunk in rag_ctx.chunks:
+        label = "من الكتاب المدرسي" if chunk.source == "textbook" else "من كتاب الحلول"
+        parts.append(f"[{label} — صفحة {chunk.page}]:\n{chunk.content}")
+    return "\n\n".join(parts)
+```
+
+## TASK 6 — Update test_rag.py for dual-source testing
+
+Add these test queries to `backend/scratch/test_rag.py`:
+```python
+TEST_QUERIES = [
+    ("ما هو الجدول الدوري؟",            "textbook"),   # concept → textbook
+    ("احسب الكتلة المولية لـ H₂SO₄",    "solutions"),  # calculation → solutions
+    ("فسر ثم احل معادلة الاحتراق",       "both"),       # mixed → both
+    ("ما الفرق بين الرابطة الأيونية والتساهمية؟", "textbook"),
+]
+```
+
+For each query, print:
+- Rewritten query
+- Source routing decision
+- Number of chunks from each source
+- Top 3 chunks with source label and score
+- Total pipeline latency (ms)
+
+---
+
+## HARD RULES — do not violate
+
+1. ALL Qdrant calls must be async (use `AsyncQdrantClient`)
+2. ALL Gemini calls must use `generate_content_async` (never sync)
+3. Run independent stages in parallel with `asyncio.gather`
+4. Cache both query rewrites (TTL=600s) and RAG results (TTL=3600s) in Redis
+5. The embedding dimension MUST stay at 768 — never change the vector size
+6. Arabic text must never be transliterated — always keep original Arabic script
+7. Every function must have a Google-style docstring
+8. No hardcoded API keys — use `settings.GEMINI_API_KEY`, `settings.QDRANT_URL`
+9. The `source` field in Qdrant payload is a string: "textbook" or "solutions" (never a boolean or int)
+10. Run `ruff check . --fix` before finishing — zero warnings allowed
+
+## Files to attach
+
+- `backend/scratch/extract_pages.py`
+- `backend/scratch/build_chunks.py`
+- `backend/scratch/seed_chunks.py`
+- `backend/scratch/test_rag.py`
+- `app/core/config.py`
+- `app/api/chat.py` (the existing chat endpoint)
+- `docker-compose.yml` (for Qdrant service name/port)
+- `requirements.txt`
+  </div>
+</div>
+</div>
+
+<script>
+function tab(btn, id) {
+  document.querySelectorAll('.tb').forEach(b => b.classList.remove('on'));
+  document.querySelectorAll('.pn').forEach(p => p.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('pn-' + id).classList.add('on');
+}
+function cp(btn) {
+  const text = btn.parentElement.innerText.replace('Copy','').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 2000);
+  });
+}
+function cpPrompt(id) {
+  const text = document.getElementById(id).innerText.trim();
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector(`[onclick="cpPrompt('${id}')"]`);
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 2000);
+  });
+}
+</script>

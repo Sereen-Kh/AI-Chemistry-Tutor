@@ -1,0 +1,44 @@
+{
+  "page_number": 5,
+  "page_type": "MIXED_VISION",
+  "extraction_methods": [
+    "pymupdf",
+    "pdfplumber",
+    "text_layer_only"
+  ],
+  "extraction_method": "pymupdf+pdfplumber+text_layer_only",
+  "status": "completed_text_only",
+  "text_layer_content": "5\n \n \n2\n- \n7\n7\n2\n2\n4\n10\n1000\n5\n4\n10\n20 10\nB\n10 T\nNI\nB\nB\n−\n−\n−\n−\n= \n\n= \n\n= \n \n3\n- \n تصبح ضعفي ماكانت عليه10A\nI =\n \n \n:ًرابعا \n  ارسم خطوط الحقل المغناطيسي \n  المتول دة \n:عن1\n- \n  ملف \n  دائري \n  يمر  فيه تي ار كهربائي \n.متواصل \n2\n- \n  وشيعة يمر  فيه تي ار كهربائي \n                                                  \n \n.متواصل \n \n1\n-\n \n \n \n \n \n2\n-\n\n|  |  |  |\n| --- | --- | --- |\n|  | NI\nB = 410−7\n10005\nB = 410−7 -2\n2010−2\nB= 10−2T\nI =10A هيلع تناكام يفعض حبصت -3\n:ًاعبار\nي ئابرهك را يت هيف ر مي ي رئاد ف لم -1:نع ةد لوتملا ي سيطانغملا لقحلا طوطخ مسرا\n.لصاوتم\nي ئابرهك را يت هيف ر مي ةعيشو - 2\n.لصاوتم\n-1\n-2\n5 |  |\n|  |  |  |",
+  "vision_content": {},
+  "gemini_pdf_content": {},
+  "gemini_fallback_model_content": {},
+  "gemini_image_fallback_content": {},
+  "merged_content": "5\n \n \n2\n- \n7\n7\n2\n2\n4\n10\n1000\n5\n4\n10\n20 10\nB\n10 T\nNI\nB\nB\n−\n−\n−\n−\n= \n\n= \n\n= \n \n3\n- \n تصبح ضعفي ماكانت عليه10A\nI =\n \n \n:ًرابعا \n  ارسم خطوط الحقل المغناطيسي \n  المتول دة \n:عن1\n- \n  ملف \n  دائري \n  يمر  فيه تي ار كهربائي \n.متواصل \n2\n- \n  وشيعة يمر  فيه تي ار كهربائي \n                                                  \n \n.متواصل \n \n1\n-\n \n \n \n \n \n2\n-\n\n|  |  |  |\n| --- | --- | --- |\n|  | NI\nB = 410−7\n10005\nB = 410−7 -2\n2010−2\nB= 10−2T\nI =10A هيلع تناكام يفعض حبصت -3\n:ًاعبار\nي ئابرهك را يت هيف ر مي ي رئاد ف لم -1:نع ةد لوتملا ي سيطانغملا لقحلا طوطخ مسرا\n.لصاوتم\nي ئابرهك را يت هيف ر مي ةعيشو - 2\n.لصاوتم\n-1\n-2\n5 |  |\n|  |  |  |",
+  "raw_markdown": "5\n \n \n2\n- \n7\n7\n2\n2\n4\n10\n1000\n5\n4\n10\n20 10\nB\n10 T\nNI\nB\nB\n−\n−\n−\n−\n= \n\n= \n\n= \n \n3\n- \n تصبح ضعفي ماكانت عليه10A\nI =\n \n \n:ًرابعا \n  ارسم خطوط الحقل المغناطيسي \n  المتول دة \n:عن1\n- \n  ملف \n  دائري \n  يمر  فيه تي ار كهربائي \n.متواصل \n2\n- \n  وشيعة يمر  فيه تي ار كهربائي \n                                                  \n \n.متواصل \n \n1\n-\n \n \n \n \n \n2\n-\n\n|  |  |  |\n| --- | --- | --- |\n|  | NI\nB = 410−7\n10005\nB = 410−7 -2\n2010−2\nB= 10−2T\nI =10A هيلع تناكام يفعض حبصت -3\n:ًاعبار\nي ئابرهك را يت هيف ر مي ي رئاد ف لم -1:نع ةد لوتملا ي سيطانغملا لقحلا طوطخ مسرا\n.لصاوتم\nي ئابرهك را يت هيف ر مي ةعيشو - 2\n.لصاوتم\n-1\n-2\n5 |  |\n|  |  |  |",
+  "sections": [
+    {
+      "heading": null,
+      "content": "5\n \n \n2\n- \n7\n7\n2\n2\n4\n10\n1000\n5\n4\n10\n20 10\nB\n10 T\nNI\nB\nB\n−\n−\n−\n−\n= \n\n= \n\n= \n \n3\n- \n تصبح ضعفي ماكانت عليه10A\nI =\n \n \n:ًرابعا \n  ارسم خطوط الحقل المغناطيسي \n  المتول دة \n:عن1\n- \n  ملف \n  دائري \n  يمر  فيه تي ار كهربائي \n.متواصل \n2\n- \n  وشيعة يمر  فيه تي ار كهربائي \n                                                  \n \n.متواصل \n \n1\n-\n \n \n \n \n \n2\n-\n\n|  |  |  |\n| --- | --- | --- |\n|  | NI\nB = 410−7\n10005\nB = 410−7 -2\n2010−2\nB= 10−2T\nI =10A هيلع تناكام يفعض حبصت -3\n:ًاعبار\nي ئابرهك را يت هيف ر مي ي رئاد ف لم -1:نع ةد لوتملا ي سيطانغملا لقحلا طوطخ مسرا\n.لصاوتم\nي ئابرهك را يت هيف ر مي ةعيشو - 2\n.لصاوتم\n-1\n-2\n5 |  |\n|  |  |  |",
+      "content_type": "text"
+    }
+  ],
+  "questions": [],
+  "diagrams": [],
+  "tables": [],
+  "equations": [],
+  "warnings": [
+    "Gemini document extraction is not configured. Used selectable text layer only."
+  ],
+  "errors": [],
+  "char_count": 640,
+  "completeness_score": 0.75,
+  "detected_language": "ar",
+  "vision_provider": null,
+  "vision_source": null,
+  "neighboring_pages": [],
+  "uploaded_pdf": null,
+  "raw_text": null,
+  "quality_report": {},
+  "classification": "MIXED_VISION",
+  "source_id": 2
+}

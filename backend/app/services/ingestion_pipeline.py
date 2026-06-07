@@ -197,7 +197,9 @@ def _vision_quality_issue(payload: dict) -> str | None:
     char_count = payload.get("char_count")
     if char_count is None:
         char_count = _vision_payload_char_count(payload)
-    if int(char_count or 0) < settings.gemini_min_page_chars:
+    sparse_structured_min_chars = max(12, settings.gemini_min_page_chars // 2)
+    sparse_but_usable = _has_structured_vision_content(payload) and int(char_count or 0) >= sparse_structured_min_chars
+    if int(char_count or 0) < settings.gemini_min_page_chars and not sparse_but_usable:
         return f"very_low_char_count:{int(char_count or 0)}"
 
     completeness_score = payload.get("completeness_score")
@@ -265,6 +267,36 @@ async def _extract_page(
             text_layer_content=text_layer_content,
             vision_payload=None,
             sections=text_sections if page_type == "MIXED_VISION" else [],
+            questions=[],
+            diagrams=[],
+            tables=[],
+            equations=[],
+            warnings=warnings,
+            errors=errors,
+            completeness_score=completeness_score,
+            vision_source=None,
+            uploaded_pdf=None,
+        )
+        return payload, "+".join(extraction_methods)
+
+    if not vision_provider.is_configured and page_type in VISION_PAGE_TYPES and not vision_required:
+        extraction_methods.append("text_layer_only")
+        warnings = ["Gemini document extraction is not configured. Used selectable text layer only."]
+        errors = []
+        status = "completed_text_only" if text_sections else "skipped_dry_run"
+        completeness_score = 0.75 if text_sections else 0.0
+        if not text_sections and production_mode:
+            status = "failed"
+            errors.append("No selectable text was available and OCR was disabled for this vision page.")
+            warnings = []
+        payload = _page_cache_payload(
+            page_number=page_num,
+            page_type=page_type,
+            extraction_methods=extraction_methods,
+            status=status,
+            text_layer_content=text_layer_content,
+            vision_payload=None,
+            sections=text_sections,
             questions=[],
             diagrams=[],
             tables=[],
@@ -557,7 +589,7 @@ async def run_full_ingestion(
         vision_pages = [*needs_vision_pages, *mixed_vision_pages]
         uploaded_pdf: UploadedDocument | None = None
 
-        if resolved_ingestion_mode == "production" and not vision_provider.is_configured:
+        if resolved_ingestion_mode == "production" and not vision_provider.is_configured and resolved_ocr_required:
             errors.append("GEMINI_API_KEY is required before production ingestion can run.")
             failed_pages.extend(range(1, pages_to_process + 1))
             source.status = "failed"

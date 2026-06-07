@@ -49,6 +49,9 @@ def evaluate_extraction_quality(
     warning_count = len(result.warnings)
     min_page_chars = settings.gemini_min_page_chars if min_chars is None else min_chars
     min_score = settings.gemini_min_completeness_score if min_completeness_score is None else min_completeness_score
+    structured_count = section_count + question_count + table_count + equation_count + diagram_count
+    sparse_structured_min_chars = max(12, min_page_chars // 2)
+    sparse_but_usable = structured_count > 0 and char_count >= sparse_structured_min_chars
 
     issues: list[str] = []
     if not result.schema_valid:
@@ -57,7 +60,7 @@ def evaluate_extraction_quality(
         issues.append("empty_output")
     if raw_markdown_chars == 0:
         issues.append("missing_raw_markdown")
-    if char_count < min_page_chars:
+    if char_count < min_page_chars and not sparse_but_usable:
         issues.append(f"very_low_char_count:{char_count}")
     if section_count == 0 and page_type in {"NEEDS_VISION", "MIXED_VISION", None}:
         issues.append("empty_sections")

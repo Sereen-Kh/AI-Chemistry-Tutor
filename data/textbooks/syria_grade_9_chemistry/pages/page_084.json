@@ -2,35 +2,165 @@
   "page_number": 84,
   "page_type": "NEEDS_VISION",
   "extraction_methods": [
-    "exception"
+    "gemini_pdf_file",
+    "gemini_image_300dpi"
   ],
-  "extraction_method": "exception",
-  "status": "failed",
-  "text_layer_content": "",
-  "vision_content": {},
+  "extraction_method": "gemini_pdf_file+gemini_image_300dpi",
+  "status": "completed_with_image_fallback",
+  "text_layer_content": "1\n1 -\n.ّالنَّشاط اإلشعاعي6",
+  "vision_content": {
+    "page_number": 84,
+    "detected_language": "ar",
+    "raw_markdown": "# 6\n\n## ١- النَّشاط الإشعاعي.",
+    "sections": [
+      {
+        "heading": "6",
+        "content": "١- النَّشاط الإشعاعي.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [],
+    "diagrams": [
+      {
+        "title": "انفجار نووي",
+        "description": "صورة تعبيرية تظهر سحابة الفطر الناتجة عن انفجار نووي ضخم، مع إشعاع لهب ساطع وغيوم داكنة تحيط به، ترمز إلى موضوع النشاط الإشعاعي.",
+        "labels": [],
+        "related_text": "١- النَّشاط الإشعاعي."
+      }
+    ],
+    "tables": [],
+    "equations": [],
+    "warnings": [],
+    "extraction_notes": "هذه الصفحة هي صفحة غلاف الفصل السادس من الكتاب وتحتوي على عنوان الفصل وصورة تعبيرية فقط.",
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.5-flash",
+    "schema_valid": true,
+    "char_count": 25,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 84,
+      "schema_valid": true,
+      "raw_markdown_chars": 29,
+      "char_count": 25,
+      "section_count": 1,
+      "question_count": 0,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.4486,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 84,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"# 6\\n\\n## ١- النَّشاط الإشعاعي.\",\n  \"sections\": [\n    {\n      \"heading\": \"6\",\n      \"content\": \"١- النَّشاط الإشعاعي.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [],\n  \"diagrams\": [\n    {\n      \"title\": \"انفجار نووي\",\n      \"description\": \"صورة تعبيرية تظهر سحابة الفطر الناتجة عن انفجار نووي ضخم، مع إشعاع لهب ساطع وغيوم داكنة تحيط به، ترمز إلى موضوع النشاط الإشعاعي.\",\n      \"labels\": [],\n      \"related_text\": \"١- النَّشاط الإشعاعي.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [],\n  \"warnings\": [],\n  \"extraction_notes\": \"هذه الصفحة هي صفحة غلاف الفصل السادس من الكتاب وتحتوي على عنوان الفصل وصورة تعبيرية فقط.\",\n  \"provider\": \"google/gemini-2.5-pro\",\n  \"model_name\": \"gemini-2.5-pro\",\n  \"schema_valid\": true,\n  \"char_count\": 25,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 84,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 25,\n    \"char_count\": 25,\n    \"section_count\": 1,\n    \"question_count\": 0,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 1,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.6,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  }\n}"
+  },
   "gemini_pdf_content": {},
   "gemini_fallback_model_content": {},
-  "gemini_image_fallback_content": {},
-  "merged_content": "",
-  "raw_markdown": "",
-  "sections": [],
+  "gemini_image_fallback_content": {
+    "page_number": 84,
+    "detected_language": "ar",
+    "raw_markdown": "# 6\n\n## ١- النَّشاط الإشعاعي.",
+    "sections": [
+      {
+        "heading": "6",
+        "content": "١- النَّشاط الإشعاعي.",
+        "content_type": "text"
+      }
+    ],
+    "questions": [],
+    "diagrams": [
+      {
+        "title": "انفجار نووي",
+        "description": "صورة تعبيرية تظهر سحابة الفطر الناتجة عن انفجار نووي ضخم، مع إشعاع لهب ساطع وغيوم داكنة تحيط به، ترمز إلى موضوع النشاط الإشعاعي.",
+        "labels": [],
+        "related_text": "١- النَّشاط الإشعاعي."
+      }
+    ],
+    "tables": [],
+    "equations": [],
+    "warnings": [],
+    "extraction_notes": "هذه الصفحة هي صفحة غلاف الفصل السادس من الكتاب وتحتوي على عنوان الفصل وصورة تعبيرية فقط.",
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.5-flash",
+    "schema_valid": true,
+    "char_count": 25,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 84,
+      "schema_valid": true,
+      "raw_markdown_chars": 29,
+      "char_count": 25,
+      "section_count": 1,
+      "question_count": 0,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.4486,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 84,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"# 6\\n\\n## ١- النَّشاط الإشعاعي.\",\n  \"sections\": [\n    {\n      \"heading\": \"6\",\n      \"content\": \"١- النَّشاط الإشعاعي.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [],\n  \"diagrams\": [\n    {\n      \"title\": \"انفجار نووي\",\n      \"description\": \"صورة تعبيرية تظهر سحابة الفطر الناتجة عن انفجار نووي ضخم، مع إشعاع لهب ساطع وغيوم داكنة تحيط به، ترمز إلى موضوع النشاط الإشعاعي.\",\n      \"labels\": [],\n      \"related_text\": \"١- النَّشاط الإشعاعي.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [],\n  \"warnings\": [],\n  \"extraction_notes\": \"هذه الصفحة هي صفحة غلاف الفصل السادس من الكتاب وتحتوي على عنوان الفصل وصورة تعبيرية فقط.\",\n  \"provider\": \"google/gemini-2.5-pro\",\n  \"model_name\": \"gemini-2.5-pro\",\n  \"schema_valid\": true,\n  \"char_count\": 25,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 84,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 25,\n    \"char_count\": 25,\n    \"section_count\": 1,\n    \"question_count\": 0,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 1,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.6,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  }\n}"
+  },
+  "merged_content": "6\n١- النَّشاط الإشعاعي.",
+  "raw_markdown": "# 6\n\n## ١- النَّشاط الإشعاعي.",
+  "sections": [
+    {
+      "heading": "6",
+      "content": "١- النَّشاط الإشعاعي.",
+      "content_type": "text"
+    }
+  ],
   "questions": [],
-  "diagrams": [],
+  "diagrams": [
+    {
+      "title": "انفجار نووي",
+      "description": "صورة تعبيرية تظهر سحابة الفطر الناتجة عن انفجار نووي ضخم، مع إشعاع لهب ساطع وغيوم داكنة تحيط به، ترمز إلى موضوع النشاط الإشعاعي.",
+      "labels": [],
+      "related_text": "١- النَّشاط الإشعاعي."
+    }
+  ],
   "tables": [],
   "equations": [],
-  "warnings": [],
-  "errors": [
-    "Gemini document extraction failed quality checks for page 84: very_low_char_count:26"
+  "warnings": [
+    "Gemini PDF extraction failed; using 300 DPI image fallback: Gemini document extraction failed for page 84; all configured models failed: gemini-3.5-flash: request_failed:400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'Request contains an invalid argument.', 'status': 'INVALID_ARGUMENT'}}; gemini-2.5-pro: request_failed:429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_toke...; gemini-2.5-flash-lite: request_failed:400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'Request contains an invalid argument.', 'status': 'INVALID_ARGUMENT'}}"
   ],
-  "char_count": 0,
-  "completeness_score": 0.0,
+  "errors": [],
+  "char_count": 23,
+  "completeness_score": 1.0,
   "detected_language": "ar",
-  "vision_provider": null,
-  "vision_source": null,
-  "neighboring_pages": [],
-  "uploaded_pdf": null,
-  "raw_text": null,
-  "quality_report": {},
+  "vision_provider": "gemini_document_image",
+  "vision_source": "gemini_rendered_image_300dpi",
+  "neighboring_pages": [
+    83,
+    85
+  ],
+  "uploaded_pdf": {
+    "provider": "gemini_document",
+    "name": "files/1sq64h59sf8p",
+    "uri": "https://generativelanguage.googleapis.com/v1beta/files/1sq64h59sf8p",
+    "mime_type": "application/pdf",
+    "display_name": "Chemistry.pdf"
+  },
+  "raw_text": "{\n  \"page_number\": 84,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"# 6\\n\\n## ١- النَّشاط الإشعاعي.\",\n  \"sections\": [\n    {\n      \"heading\": \"6\",\n      \"content\": \"١- النَّشاط الإشعاعي.\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"questions\": [],\n  \"diagrams\": [\n    {\n      \"title\": \"انفجار نووي\",\n      \"description\": \"صورة تعبيرية تظهر سحابة الفطر الناتجة عن انفجار نووي ضخم، مع إشعاع لهب ساطع وغيوم داكنة تحيط به، ترمز إلى موضوع النشاط الإشعاعي.\",\n      \"labels\": [],\n      \"related_text\": \"١- النَّشاط الإشعاعي.\"\n    }\n  ],\n  \"tables\": [],\n  \"equations\": [],\n  \"warnings\": [],\n  \"extraction_notes\": \"هذه الصفحة هي صفحة غلاف الفصل السادس من الكتاب وتحتوي على عنوان الفصل وصورة تعبيرية فقط.\",\n  \"provider\": \"google/gemini-2.5-pro\",\n  \"model_name\": \"gemini-2.5-pro\",\n  \"schema_valid\": true,\n  \"char_count\": 25,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 84,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 25,\n    \"char_count\": 25,\n    \"section_count\": 1,\n    \"question_count\": 0,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 1,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.6,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  }\n}",
+  "quality_report": {
+    "page_number": 84,
+    "schema_valid": true,
+    "raw_markdown_chars": 29,
+    "char_count": 25,
+    "section_count": 1,
+    "question_count": 0,
+    "table_count": 0,
+    "equation_count": 0,
+    "diagram_count": 1,
+    "warning_count": 0,
+    "arabic_char_ratio": 0.4486,
+    "completeness_score": 1.0,
+    "issues": [],
+    "should_fallback": false
+  },
   "classification": "NEEDS_VISION",
   "source_id": 1
 }

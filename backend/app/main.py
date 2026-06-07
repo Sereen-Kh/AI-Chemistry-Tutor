@@ -10,6 +10,7 @@ import app.models  # noqa: F401
 from app.api.router import api_router
 from app.core.config import PROJECT_DIR, settings
 from app.core.middleware import RateLimitMiddleware
+from app.database import init_sqlite_schema_for_dev
 from app.schemas.common import HealthResponse
 
 # Setup logging
@@ -19,10 +20,12 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("Starting EduMind API...")
+    init_sqlite_schema_for_dev()
     yield
     logger.info("Shutting down EduMind API...")
 
-# Migrations are now handled by Alembic. No create_all() here.
+# PostgreSQL migrations are handled by Alembic. Local SQLite dev startup
+# creates missing tables so Swagger/frontend smoke tests work from any cwd.
 app = FastAPI(
     title="AI Chemistry Tutor API",
     description="Backend API for the AI Chemistry Tutor application",

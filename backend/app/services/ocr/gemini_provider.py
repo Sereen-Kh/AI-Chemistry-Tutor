@@ -12,7 +12,7 @@ from pathlib import Path
 from pydantic import ValidationError
 
 from app.core.config import settings
-from app.services.gemini_client import document_generation_config, get_gemini_client
+from app.services.gemini_client import document_generation_config, get_gemini_client, split_gemini_model_names
 from app.services.ocr.base import PageExtractionResult, UploadedDocument, VisionExtractionProvider
 from app.services.ocr.quality import evaluate_extraction_quality
 
@@ -102,6 +102,13 @@ def _finalize_result(result: PageExtractionResult, *, model_name: str, provider:
     return result
 
 
+def _short_issue(issue: str, max_chars: int = 420) -> str:
+    text = " ".join(str(issue).split())
+    if len(text) <= max_chars:
+        return text
+    return f"{text[: max_chars - 3]}..."
+
+
 class GeminiExtractionQualityError(RuntimeError):
     """Raised when direct Gemini document extraction cannot meet quality thresholds."""
 
@@ -157,11 +164,7 @@ class GeminiVisionProvider(VisionExtractionProvider):
         return parse_gemini_json(response.text or "", page_number, provider=provider, model_name=model_name)
 
     def _document_models(self) -> list[str]:
-        models = [settings.gemini_document_model]
-        fallback = settings.gemini_document_fallback_model
-        if fallback and fallback not in models:
-            models.append(fallback)
-        return models
+        return split_gemini_model_names(settings.gemini_document_model, settings.gemini_document_fallback_model)
 
     async def prepare_document(self, pdf_path: str) -> UploadedDocument | None:
         """Upload a PDF once for an ingestion job.
@@ -198,51 +201,50 @@ class GeminiVisionProvider(VisionExtractionProvider):
         build_contents,
     ) -> PageExtractionResult:
         """Run primary document model, then fallback model when quality is too low."""
-        last_issue = ""
-        primary_issue = ""
+        model_issues: list[str] = []
+        models = self._document_models()
 
-        for index, model_name in enumerate(self._document_models()):
+        for index, model_name in enumerate(models):
             try:
                 result = await asyncio.to_thread(
                     lambda: self._generate_result(build_contents(), model_name, page_number, provider)
                 )
             except Exception as exc:
-                last_issue = f"request_failed:{exc}"
-                if index == 0:
-                    primary_issue = last_issue
-                    logger.warning(
-                        "Gemini document extraction request failed for page %s with model %s: %s",
-                        page_number,
-                        model_name,
-                        exc,
-                    )
+                issue = f"request_failed:{exc}"
+                model_issues.append(f"{model_name}: {_short_issue(issue)}")
+                logger.warning(
+                    "Gemini document extraction request failed for page %s with model %s: %s",
+                    page_number,
+                    model_name,
+                    exc,
+                )
+                if index < len(models) - 1:
                     continue
                 raise GeminiExtractionQualityError(
-                    f"Gemini document extraction failed for page {page_number} with model {model_name}: {exc}"
+                    f"Gemini document extraction failed for page {page_number}; "
+                    f"all configured models failed: {'; '.join(model_issues)}"
                 ) from exc
 
             result = _finalize_result(result, model_name=model_name, provider=provider)
             issue = _quality_issue(result)
             if not issue:
-                if primary_issue:
+                if model_issues:
                     result.warnings.insert(
                         0,
-                        f"Primary Gemini document model {settings.gemini_document_model} failed quality check: {primary_issue}.",
+                        f"Earlier Gemini document model attempt(s) failed: {'; '.join(model_issues)}.",
                     )
                 return result
 
-            last_issue = issue
-            if index == 0:
-                primary_issue = issue
-                logger.warning(
-                    "Gemini document extraction quality check failed for page %s with model %s: %s",
-                    page_number,
-                    model_name,
-                    issue,
-                )
+            model_issues.append(f"{model_name}: {_short_issue(issue)}")
+            logger.warning(
+                "Gemini document extraction quality check failed for page %s with model %s: %s",
+                page_number,
+                model_name,
+                issue,
+            )
 
         raise GeminiExtractionQualityError(
-            f"Gemini document extraction failed quality checks for page {page_number}: {last_issue}"
+            f"Gemini document extraction failed quality checks for page {page_number}: {'; '.join(model_issues)}"
         )
 
     async def upload_pdf(self, pdf_path: str) -> UploadedDocument | None:

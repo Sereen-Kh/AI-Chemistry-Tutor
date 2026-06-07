@@ -50,7 +50,7 @@ class ChatAskRequest(BaseModel):
     question: str = Field(..., min_length=1)
     lesson_id: int | None = None
     topic_id: int | None = None
-    source_types: list[str] = Field(default_factory=lambda: ["textbook"])
+    source_types: list[str] | None = None
     preferred_answer_type: str = Field("text", pattern="^(auto|text|image|audio|video|mixed)$")
     answer_scope: str = Field("auto", pattern="^(auto|book_only|tutor_general)$")
     teaching_style: str | None = None

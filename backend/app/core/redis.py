@@ -20,3 +20,8 @@ async def get_redis() -> Redis:
 def get_redis_client() -> Redis:
     """Get a raw redis client using the global pool."""
     return Redis(connection_pool=_redis_pool)
+
+
+async def close_redis_pool() -> None:
+    """Close the shared Redis pool in one-shot scripts."""
+    await _redis_pool.aclose()

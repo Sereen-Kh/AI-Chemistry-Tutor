@@ -27,9 +27,10 @@ from app.services.rag import (
     clean_query,
     format_context,
     lexical_relevance_score,
-    retrieve_context,
     rewrite_query,
 )
+from app.services.semantic_rag import semantic_retrieve_context
+from app.services.source_router import route_source
 
 logger = logging.getLogger(__name__)
 
@@ -1557,7 +1558,14 @@ async def send_message(
     intent = _classify_intent(content)
     logger.info("Chat intent classified: %s for query: %s", intent, content[:80])
 
-    chunks = await retrieve_context(db, content, user_id=user_id, top_k=6, min_similarity=0.0, intent=intent)
+    semantic_result = await semantic_retrieve_context(
+        db,
+        content,
+        user_id=user_id,
+        top_k=6,
+        intent=intent,
+    )
+    chunks = semantic_result.chunks
     context = format_context(chunks)
 
     if context:
@@ -1718,6 +1726,16 @@ async def ask_question(
         },
         "gemini_available": bool(settings.effective_gemini_api_key),
     }
+    source_route = await route_source(question, source_types)
+    routed_source_types = source_route.source_types
+    diagnostics["source_route"] = {
+        "route": source_route.route,
+        "source_types": routed_source_types,
+        "reason": source_route.reason,
+        "confidence": source_route.confidence,
+        "matched_terms": source_route.matched_terms,
+        "cache_hit": source_route.cache_hit,
+    }
 
     simple_dictionary_intents = {"definition_lookup", "formula_lookup", "property_lookup"}
 
@@ -1847,16 +1865,30 @@ async def ask_question(
     else:
         retrieval_question = question
 
-    chunks = await retrieve_context(
+    semantic_result = await semantic_retrieve_context(
         db,
         retrieval_question,
         user_id=user_id,
         lesson_id=lesson_id,
         topic_id=topic_id,
-        source_types=source_types,
+        source_types=routed_source_types,
         top_k=6,
         intent=intent,
     )
+    chunks = semantic_result.chunks
+    semantic_diagnostics = semantic_result.diagnostics
+    diagnostics["semantic_rag"] = {
+        "pipeline": semantic_diagnostics.get("pipeline"),
+        "cache_hit": semantic_diagnostics.get("cache_hit"),
+        "source_route": semantic_diagnostics.get("source_route"),
+        "rewritten_query": semantic_diagnostics.get("rewritten_query"),
+        "multi_queries": semantic_diagnostics.get("multi_queries"),
+        "variant_count": semantic_diagnostics.get("variant_count"),
+        "fused_candidate_count": semantic_diagnostics.get("fused_candidate_count"),
+        "reranker_used": semantic_diagnostics.get("reranker_used"),
+        "reranker_model": semantic_diagnostics.get("reranker_model"),
+        "reranked_candidates": semantic_diagnostics.get("reranked_candidates"),
+    }
     page_numbers = sorted({chunk.page_number for chunk in chunks if chunk.page_number is not None})
     diagnostics.update(
         {

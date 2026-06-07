@@ -1,0 +1,44 @@
+{
+  "page_number": 1,
+  "page_type": "MIXED_VISION",
+  "extraction_methods": [
+    "pymupdf",
+    "pdfplumber",
+    "text_layer_only"
+  ],
+  "extraction_method": "pymupdf+pdfplumber+text_layer_only",
+  "status": "completed_text_only",
+  "text_layer_content": "1\n \n \n \n \nالجمهوريّة العربيّة السوريّة \nوزارة التربية \nالمركز الوطني لتطوير المناهج التربويّة \n \n \n \n \n \n \n \nحلول كتاب الفيزياء و\nالكيمياء للصف التاسع\n\n|  |  |  |\n| --- | --- | --- |\n|  | ةّيروسلا ةّيبرعلا ةّيروهمجلا\nةيبرتلا ةرازو\nةّيوبرتلا جهانملا ريوطتل ينطولا زكرملا\nعساتلا فصلل ءايميكلاو ءايزيفلا باتك لولح\n1 |  |\n|  |  |  |",
+  "vision_content": {},
+  "gemini_pdf_content": {},
+  "gemini_fallback_model_content": {},
+  "gemini_image_fallback_content": {},
+  "merged_content": "1\n \n \n \n \nالجمهوريّة العربيّة السوريّة \nوزارة التربية \nالمركز الوطني لتطوير المناهج التربويّة \n \n \n \n \n \n \n \nحلول كتاب الفيزياء و\nالكيمياء للصف التاسع\n\n|  |  |  |\n| --- | --- | --- |\n|  | ةّيروسلا ةّيبرعلا ةّيروهمجلا\nةيبرتلا ةرازو\nةّيوبرتلا جهانملا ريوطتل ينطولا زكرملا\nعساتلا فصلل ءايميكلاو ءايزيفلا باتك لولح\n1 |  |\n|  |  |  |",
+  "raw_markdown": "1\n \n \n \n \nالجمهوريّة العربيّة السوريّة \nوزارة التربية \nالمركز الوطني لتطوير المناهج التربويّة \n \n \n \n \n \n \n \nحلول كتاب الفيزياء و\nالكيمياء للصف التاسع\n\n|  |  |  |\n| --- | --- | --- |\n|  | ةّيروسلا ةّيبرعلا ةّيروهمجلا\nةيبرتلا ةرازو\nةّيوبرتلا جهانملا ريوطتل ينطولا زكرملا\nعساتلا فصلل ءايميكلاو ءايزيفلا باتك لولح\n1 |  |\n|  |  |  |",
+  "sections": [
+    {
+      "heading": null,
+      "content": "1\n \n \n \n \nالجمهوريّة العربيّة السوريّة \nوزارة التربية \nالمركز الوطني لتطوير المناهج التربويّة \n \n \n \n \n \n \n \nحلول كتاب الفيزياء و\nالكيمياء للصف التاسع\n\n|  |  |  |\n| --- | --- | --- |\n|  | ةّيروسلا ةّيبرعلا ةّيروهمجلا\nةيبرتلا ةرازو\nةّيوبرتلا جهانملا ريوطتل ينطولا زكرملا\nعساتلا فصلل ءايميكلاو ءايزيفلا باتك لولح\n1 |  |\n|  |  |  |",
+      "content_type": "text"
+    }
+  ],
+  "questions": [],
+  "diagrams": [],
+  "tables": [],
+  "equations": [],
+  "warnings": [
+    "Gemini document extraction is not configured. Used selectable text layer only."
+  ],
+  "errors": [],
+  "char_count": 328,
+  "completeness_score": 0.75,
+  "detected_language": "ar",
+  "vision_provider": null,
+  "vision_source": null,
+  "neighboring_pages": [],
+  "uploaded_pdf": null,
+  "raw_text": null,
+  "quality_report": {},
+  "classification": "MIXED_VISION",
+  "source_id": 2
+}

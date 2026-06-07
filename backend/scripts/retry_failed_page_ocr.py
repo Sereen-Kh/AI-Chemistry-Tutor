@@ -23,6 +23,13 @@ sys.path.insert(0, str(BACKEND_DIR))
 from app.core.config import PROJECT_DIR as APP_PROJECT_DIR  # noqa: E402
 from app.database import SessionLocal  # noqa: E402
 from app.models.textbook import ContentSource  # noqa: E402
+from app.core.config import settings  # noqa: E402
+from app.services.gemini_client import (  # noqa: E402
+    GeminiConfigurationError,
+    is_gemini_auth_error,
+    is_gemini_quota_error,
+    preflight_gemini_models,
+)
 from app.services.ingestion_pipeline import (  # noqa: E402
     _extract_page,
     _neighboring_pages,
@@ -33,9 +40,6 @@ from app.services.ocr import get_vision_provider  # noqa: E402
 
 DEFAULT_CACHE_DIR = APP_PROJECT_DIR / "data" / "textbooks" / "syria_grade_9_chemistry" / "pages"
 DEFAULT_PDF_PATH = APP_PROJECT_DIR / "data" / "textbooks" / "syria_grade_9" / "Chemistry.pdf"
-AUTH_MARKERS = ("401", "UNAUTHENTICATED", "ACCESS_TOKEN_TYPE_UNSUPPORTED", "invalid authentication")
-QUOTA_MARKERS = ("429", "RESOURCE_EXHAUSTED", "quota", "Quota", "rate limit", "RATE_LIMIT")
-
 
 def _resolve_project_path(path: str | Path) -> Path:
     candidate = Path(path).expanduser()
@@ -85,14 +89,14 @@ def _page_char_count(payload: dict[str, Any]) -> int:
     return len(str(fallback).strip())
 
 
-def _load_target_pages(cache_dir: Path, requested_pages: set[int] | None) -> list[dict[str, Any]]:
+def _load_target_pages(cache_dir: Path, requested_pages: set[int] | None, *, force: bool = False) -> list[dict[str, Any]]:
     targets: list[dict[str, Any]] = []
     for page_file in sorted(cache_dir.glob("page_*.json")):
         payload = json.loads(page_file.read_text(encoding="utf-8"))
         page_number = int(payload.get("page_number") or page_file.stem.split("_")[-1])
         if requested_pages is not None and page_number not in requested_pages:
             continue
-        if payload.get("status") == "failed" or _page_char_count(payload) <= 0:
+        if force or payload.get("status") == "failed" or _page_char_count(payload) <= 0:
             targets.append(
                 {
                     "page_number": page_number,
@@ -113,14 +117,6 @@ def _source_id_for_title(title: str) -> int | None:
         db.close()
 
 
-def _is_quota_error(error: str) -> bool:
-    return any(marker in error for marker in QUOTA_MARKERS)
-
-
-def _is_auth_error(error: str) -> bool:
-    return any(marker in error for marker in AUTH_MARKERS)
-
-
 async def retry_failed_pages(
     *,
     pdf_path: Path,
@@ -129,6 +125,8 @@ async def retry_failed_pages(
     source_type: str,
     pages: set[int] | None,
     stop_on_quota: bool,
+    force: bool,
+    preflight: bool,
 ) -> dict[str, Any]:
     provider = get_vision_provider("gemini")
     if not provider.is_configured:
@@ -138,7 +136,21 @@ async def retry_failed_pages(
     if not cache_dir.exists():
         raise FileNotFoundError(f"Cache directory not found: {cache_dir}")
 
-    targets = _load_target_pages(cache_dir, pages)
+    preflight_result: dict[str, Any] | None = None
+    if preflight:
+        try:
+            preflight_result = preflight_gemini_models(
+                [settings.gemini_document_model, settings.gemini_document_fallback_model]
+            )
+            print(
+                "Gemini preflight ok: "
+                f"{settings.gemini_document_model}, {settings.gemini_document_fallback_model}",
+                flush=True,
+            )
+        except GeminiConfigurationError:
+            raise
+
+    targets = _load_target_pages(cache_dir, pages, force=force)
     source_id = _source_id_for_title(title)
     total_pages = max(
         [item["page_number"] for item in targets]
@@ -223,9 +235,9 @@ async def retry_failed_pages(
                 failed_payload["source_id"] = source_id
             _write_page_cache(title, page_number, failed_payload)
             print(f"  -> failed: {error}", flush=True)
-            if stop_on_quota and (_is_quota_error(error) or _is_auth_error(error)):
-                stopped_for_quota = _is_quota_error(error)
-                stopped_for_auth = _is_auth_error(error)
+            if stop_on_quota and (is_gemini_quota_error(error) or is_gemini_auth_error(error)):
+                stopped_for_quota = is_gemini_quota_error(error)
+                stopped_for_auth = is_gemini_auth_error(error)
                 stopped_reason = "auth" if stopped_for_auth else "quota"
                 print(f"Stopping after unrecoverable Gemini {stopped_reason} error.", flush=True)
                 break
@@ -240,6 +252,8 @@ async def retry_failed_pages(
         "stopped_for_auth": stopped_for_auth,
         "stopped_reason": stopped_reason,
         "upload_warning": upload_warning,
+        "force": force,
+        "preflight": preflight_result,
     }
 
 
@@ -250,6 +264,8 @@ async def main() -> None:
     parser.add_argument("--title", default="syria_grade_9_chemistry")
     parser.add_argument("--source-type", default="textbook")
     parser.add_argument("--pages", default=None, help="Optional comma/range list, e.g. 3,14,41-45")
+    parser.add_argument("--force", action="store_true", help="Retry requested pages even if their cache is completed.")
+    parser.add_argument("--skip-preflight", action="store_true", help="Skip Gemini auth/model metadata preflight.")
     parser.add_argument("--keep-going-on-quota", action="store_true")
     parser.add_argument("--output", default=None)
     args = parser.parse_args()
@@ -261,6 +277,8 @@ async def main() -> None:
         source_type=args.source_type,
         pages=_parse_pages(args.pages),
         stop_on_quota=not args.keep_going_on_quota,
+        force=args.force,
+        preflight=not args.skip_preflight,
     )
     output = json.dumps(result, ensure_ascii=False, indent=2)
     if args.output:

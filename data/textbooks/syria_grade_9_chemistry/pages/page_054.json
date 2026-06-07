@@ -2,35 +2,218 @@
   "page_number": 54,
   "page_type": "MIXED_VISION",
   "extraction_methods": [
-    "exception"
+    "pymupdf",
+    "pdfplumber",
+    "gemini_image_300dpi"
   ],
-  "extraction_method": "exception",
-  "status": "failed",
-  "text_layer_content": "",
-  "vision_content": {},
+  "extraction_method": "pymupdf+pdfplumber+gemini_image_300dpi",
+  "status": "completed_with_image_fallback",
+  "text_layer_content": "1\n1 -\n \u0007مدخل إلى الكيمياء\nالعضويَّة\n2\n2 -\n \u0007مشروع الكيمياء تكرير\nالنَّفط\n3\n3 -\u0007المركَّ بات الهدروكربونيَّة\n \n المركَّ بات -١\n الهدروكربونيَّة المشبعة\nاأللكانات (البرافينات)\n \n المركّبات -٢\n الهدروكربونيَّة غير\nالمشبعة\n4\n4 -أسئلة وحدة العضويَّة5",
+  "vision_content": {
+    "page_number": 54,
+    "detected_language": "ar",
+    "raw_markdown": "# 5\n\n1- مدخل إلى الكيمياء العضوية\n2- مشروع الكيمياء تكرير النفط\n3- المركبات الهيدروكربونية\n4- المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\n5- المركبات الهيدروكربونية غير المشبعة\n6- أسئلة وحدة العضوية",
+    "sections": [
+      {
+        "heading": null,
+        "content": "1- مدخل إلى الكيمياء العضوية\n2- مشروع الكيمياء تكرير النفط\n3- المركبات الهيدروكربونية\n4- المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\n5- المركبات الهيدروكربونية غير المشبعة\n6- أسئلة وحدة العضوية",
+        "content_type": "text"
+      }
+    ],
+    "questions": [],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "صورة فوتوغرافية ليدين تحملان كمية من الفحم الحجري الأسود.",
+        "labels": [],
+        "related_text": null
+      }
+    ],
+    "tables": [],
+    "equations": [],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:The write operation timed out."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 235,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 54,
+      "schema_valid": true,
+      "raw_markdown_chars": 209,
+      "char_count": 235,
+      "section_count": 1,
+      "question_count": 0,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.6763,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 54,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"# 5\\n\\n1- مدخل إلى الكيمياء العضوية\\n2- مشروع الكيمياء تكرير النفط\\n3- المركبات الهيدروكربونية\\n4- المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\\n5- المركبات الهيدروكربونية غير المشبعة\\n6- أسئلة وحدة العضوية\",\n  \"sections\": [\n    {\n      \"heading\": null,\n      \"content\": \"1- مدخل إلى الكيمياء العضوية\\n2- مشروع الكيمياء تكرير النفط\\n3- المركبات الهيدروكربونية\\n4- المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\\n5- المركبات الهيدروكربونية غير المشبعة\\n6- أسئلة وحدة العضوية\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"description\": \"صورة فوتوغرافية ليدين تحملان كمية من الفحم الحجري الأسود.\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true,\n  \"char_count\": 235,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 54,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 235,\n    \"char_count\": 235,\n    \"section_count\": 1,\n    \"question_count\": 0,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 1,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.85,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  }\n}"
+  },
   "gemini_pdf_content": {},
-  "gemini_fallback_model_content": {},
-  "gemini_image_fallback_content": {},
-  "merged_content": "",
-  "raw_markdown": "",
-  "sections": [],
+  "gemini_fallback_model_content": {
+    "page_number": 54,
+    "detected_language": "ar",
+    "raw_markdown": "# 5\n\n1- مدخل إلى الكيمياء العضوية\n2- مشروع الكيمياء تكرير النفط\n3- المركبات الهيدروكربونية\n4- المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\n5- المركبات الهيدروكربونية غير المشبعة\n6- أسئلة وحدة العضوية",
+    "sections": [
+      {
+        "heading": null,
+        "content": "1- مدخل إلى الكيمياء العضوية\n2- مشروع الكيمياء تكرير النفط\n3- المركبات الهيدروكربونية\n4- المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\n5- المركبات الهيدروكربونية غير المشبعة\n6- أسئلة وحدة العضوية",
+        "content_type": "text"
+      }
+    ],
+    "questions": [],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "صورة فوتوغرافية ليدين تحملان كمية من الفحم الحجري الأسود.",
+        "labels": [],
+        "related_text": null
+      }
+    ],
+    "tables": [],
+    "equations": [],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:The write operation timed out."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 235,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 54,
+      "schema_valid": true,
+      "raw_markdown_chars": 209,
+      "char_count": 235,
+      "section_count": 1,
+      "question_count": 0,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.6763,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 54,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"# 5\\n\\n1- مدخل إلى الكيمياء العضوية\\n2- مشروع الكيمياء تكرير النفط\\n3- المركبات الهيدروكربونية\\n4- المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\\n5- المركبات الهيدروكربونية غير المشبعة\\n6- أسئلة وحدة العضوية\",\n  \"sections\": [\n    {\n      \"heading\": null,\n      \"content\": \"1- مدخل إلى الكيمياء العضوية\\n2- مشروع الكيمياء تكرير النفط\\n3- المركبات الهيدروكربونية\\n4- المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\\n5- المركبات الهيدروكربونية غير المشبعة\\n6- أسئلة وحدة العضوية\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"description\": \"صورة فوتوغرافية ليدين تحملان كمية من الفحم الحجري الأسود.\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true,\n  \"char_count\": 235,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 54,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 235,\n    \"char_count\": 235,\n    \"section_count\": 1,\n    \"question_count\": 0,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 1,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.85,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  }\n}"
+  },
+  "gemini_image_fallback_content": {
+    "page_number": 54,
+    "detected_language": "ar",
+    "raw_markdown": "# 5\n\n1- مدخل إلى الكيمياء العضوية\n2- مشروع الكيمياء تكرير النفط\n3- المركبات الهيدروكربونية\n4- المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\n5- المركبات الهيدروكربونية غير المشبعة\n6- أسئلة وحدة العضوية",
+    "sections": [
+      {
+        "heading": null,
+        "content": "1- مدخل إلى الكيمياء العضوية\n2- مشروع الكيمياء تكرير النفط\n3- المركبات الهيدروكربونية\n4- المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\n5- المركبات الهيدروكربونية غير المشبعة\n6- أسئلة وحدة العضوية",
+        "content_type": "text"
+      }
+    ],
+    "questions": [],
+    "diagrams": [
+      {
+        "title": null,
+        "description": "صورة فوتوغرافية ليدين تحملان كمية من الفحم الحجري الأسود.",
+        "labels": [],
+        "related_text": null
+      }
+    ],
+    "tables": [],
+    "equations": [],
+    "warnings": [
+      "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:The write operation timed out."
+    ],
+    "extraction_notes": null,
+    "provider": "gemini_document_image",
+    "model_name": "gemini-3.1-flash-lite",
+    "schema_valid": true,
+    "char_count": 235,
+    "completeness_score": 1.0,
+    "quality_report": {
+      "page_number": 54,
+      "schema_valid": true,
+      "raw_markdown_chars": 209,
+      "char_count": 235,
+      "section_count": 1,
+      "question_count": 0,
+      "table_count": 0,
+      "equation_count": 0,
+      "diagram_count": 1,
+      "warning_count": 0,
+      "arabic_char_ratio": 0.6763,
+      "completeness_score": 1.0,
+      "issues": [],
+      "should_fallback": false
+    },
+    "raw_text": "{\n  \"page_number\": 54,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"# 5\\n\\n1- مدخل إلى الكيمياء العضوية\\n2- مشروع الكيمياء تكرير النفط\\n3- المركبات الهيدروكربونية\\n4- المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\\n5- المركبات الهيدروكربونية غير المشبعة\\n6- أسئلة وحدة العضوية\",\n  \"sections\": [\n    {\n      \"heading\": null,\n      \"content\": \"1- مدخل إلى الكيمياء العضوية\\n2- مشروع الكيمياء تكرير النفط\\n3- المركبات الهيدروكربونية\\n4- المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\\n5- المركبات الهيدروكربونية غير المشبعة\\n6- أسئلة وحدة العضوية\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"description\": \"صورة فوتوغرافية ليدين تحملان كمية من الفحم الحجري الأسود.\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true,\n  \"char_count\": 235,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 54,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 235,\n    \"char_count\": 235,\n    \"section_count\": 1,\n    \"question_count\": 0,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 1,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.85,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  }\n}"
+  },
+  "merged_content": "1\n1 -\n \u0007مدخل إلى الكيمياء\nالعضويَّة\n2\n2 -\n \u0007مشروع الكيمياء تكرير\nالنَّفط\n3\n3 -\u0007المركَّ بات الهدروكربونيَّة\n \n المركَّ بات -١\n الهدروكربونيَّة المشبعة\nاأللكانات (البرافينات)\n \n المركّبات -٢\n الهدروكربونيَّة غير\nالمشبعة\n4\n4 -أسئلة وحدة العضويَّة5\n\n1- مدخل إلى الكيمياء العضوية\n2- مشروع الكيمياء تكرير النفط\n3- المركبات الهيدروكربونية\n4- المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\n5- المركبات الهيدروكربونية غير المشبعة\n6- أسئلة وحدة العضوية",
+  "raw_markdown": "# 5\n\n1- مدخل إلى الكيمياء العضوية\n2- مشروع الكيمياء تكرير النفط\n3- المركبات الهيدروكربونية\n4- المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\n5- المركبات الهيدروكربونية غير المشبعة\n6- أسئلة وحدة العضوية",
+  "sections": [
+    {
+      "heading": null,
+      "content": "1\n1 -\n \u0007مدخل إلى الكيمياء\nالعضويَّة\n2\n2 -\n \u0007مشروع الكيمياء تكرير\nالنَّفط\n3\n3 -\u0007المركَّ بات الهدروكربونيَّة\n \n المركَّ بات -١\n الهدروكربونيَّة المشبعة\nاأللكانات (البرافينات)\n \n المركّبات -٢\n الهدروكربونيَّة غير\nالمشبعة\n4\n4 -أسئلة وحدة العضويَّة5",
+      "content_type": "text"
+    },
+    {
+      "heading": null,
+      "content": "1- مدخل إلى الكيمياء العضوية\n2- مشروع الكيمياء تكرير النفط\n3- المركبات الهيدروكربونية\n4- المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\n5- المركبات الهيدروكربونية غير المشبعة\n6- أسئلة وحدة العضوية",
+      "content_type": "text"
+    }
+  ],
   "questions": [],
-  "diagrams": [],
+  "diagrams": [
+    {
+      "title": null,
+      "description": "صورة فوتوغرافية ليدين تحملان كمية من الفحم الحجري الأسود.",
+      "labels": [],
+      "related_text": null
+    }
+  ],
   "tables": [],
   "equations": [],
-  "warnings": [],
-  "errors": [
-    "Gemini document extraction failed for page 54 with model gemini-3.1-flash-lite: The write operation timed out"
+  "warnings": [
+    "Gemini PDF upload failed; using image fallback: [Errno 60] Operation timed out",
+    "Primary Gemini document model gemini-2.5-flash failed quality check: request_failed:The write operation timed out."
   ],
-  "char_count": 0,
-  "completeness_score": 0.0,
+  "errors": [],
+  "char_count": 450,
+  "completeness_score": 1.0,
   "detected_language": "ar",
-  "vision_provider": null,
-  "vision_source": null,
-  "neighboring_pages": [],
+  "vision_provider": "gemini_document_image",
+  "vision_source": "gemini_rendered_image_300dpi",
+  "neighboring_pages": [
+    53,
+    55
+  ],
   "uploaded_pdf": null,
-  "raw_text": null,
-  "quality_report": {},
+  "raw_text": "{\n  \"page_number\": 54,\n  \"detected_language\": \"ar\",\n  \"raw_markdown\": \"# 5\\n\\n1- مدخل إلى الكيمياء العضوية\\n2- مشروع الكيمياء تكرير النفط\\n3- المركبات الهيدروكربونية\\n4- المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\\n5- المركبات الهيدروكربونية غير المشبعة\\n6- أسئلة وحدة العضوية\",\n  \"sections\": [\n    {\n      \"heading\": null,\n      \"content\": \"1- مدخل إلى الكيمياء العضوية\\n2- مشروع الكيمياء تكرير النفط\\n3- المركبات الهيدروكربونية\\n4- المركبات الهيدروكربونية المشبعة الألكانات (البرافينات)\\n5- المركبات الهيدروكربونية غير المشبعة\\n6- أسئلة وحدة العضوية\",\n      \"content_type\": \"text\"\n    }\n  ],\n  \"diagrams\": [\n    {\n      \"description\": \"صورة فوتوغرافية ليدين تحملان كمية من الفحم الحجري الأسود.\"\n    }\n  ],\n  \"provider\": \"manual\",\n  \"schema_valid\": true,\n  \"char_count\": 235,\n  \"completeness_score\": 1.0,\n  \"quality_report\": {\n    \"page_number\": 54,\n    \"schema_valid\": true,\n    \"raw_markdown_chars\": 235,\n    \"char_count\": 235,\n    \"section_count\": 1,\n    \"question_count\": 0,\n    \"table_count\": 0,\n    \"equation_count\": 0,\n    \"diagram_count\": 1,\n    \"warning_count\": 0,\n    \"arabic_char_ratio\": 0.85,\n    \"completeness_score\": 1.0,\n    \"issues\": [],\n    \"should_fallback\": false\n  }\n}",
+  "quality_report": {
+    "page_number": 54,
+    "schema_valid": true,
+    "raw_markdown_chars": 209,
+    "char_count": 235,
+    "section_count": 1,
+    "question_count": 0,
+    "table_count": 0,
+    "equation_count": 0,
+    "diagram_count": 1,
+    "warning_count": 0,
+    "arabic_char_ratio": 0.6763,
+    "completeness_score": 1.0,
+    "issues": [],
+    "should_fallback": false
+  },
   "classification": "MIXED_VISION",
   "source_id": 1
 }

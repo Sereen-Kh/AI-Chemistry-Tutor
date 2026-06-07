@@ -24,7 +24,7 @@ Source plan: `docs/implementation_plan_new.md`
 - [x] Integrate semantic retrieval into `chat_service.py`.
 - [x] Add `backend/scripts/test_semantic_rag.py`.
 - [x] Run verification queries for textbook, solutions, and mixed intents.
-- [ ] Document remaining quality gaps and follow-up work.
+- [x] Document remaining quality gaps and follow-up work.
 
 ## Execution Notes
 
@@ -35,3 +35,4 @@ Source plan: `docs/implementation_plan_new.md`
 - 2026-06-07: Rebuilt textbook cache into PostgreSQL/pgvector with `source_id=3`, `672` chunks, `96` stored pages, and `134` extracted questions.
 - 2026-06-07: Semantic RAG smoke test passed for `ما هي الحموض؟`, Solutions page 117 acid table, and mixed explain+solve prompts.
 - 2026-06-07: Known content gap: `ما هو الجدول الدوري؟` routes correctly to `textbook` but returns no chunks from the current cached textbook source.
+- 2026-06-07: Debugged and resolved path resolution bug in `_chemistry_dictionary()`, dynamic `PROJECT_DIR` container mapping, dictionary response short-circuiting logic for calculations containing dictionary terms, and LaTeX math-formatting override for chemical symbols.

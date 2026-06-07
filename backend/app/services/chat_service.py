@@ -13,7 +13,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from app.core.config import PROJECT_DIR, settings
+from app.core.config import BACKEND_DIR, PROJECT_DIR, settings
 from app.models.chat import ChatMessage, ChatSession
 from app.rag.answer_verifier import verify_answer
 from app.rag.arabic_normalizer import normalize_arabic
@@ -164,7 +164,7 @@ _DEFINITION_CHUNK_PENALTY_MARKERS = (
 )
 
 _ANSWER_SCOPES = {"auto", "book_only", "tutor_general"}
-_CHEMISTRY_DICTIONARY_PATH = PROJECT_DIR / "backend" / "app" / "rag" / "data" / "chemistry_entities.json"
+_CHEMISTRY_DICTIONARY_PATH = BACKEND_DIR / "app" / "rag" / "data" / "chemistry_entities.json"
 _CHEMISTRY_DICTIONARY_CACHE: list[ChemistryDictionaryEntry] | None = None
 
 
@@ -1290,25 +1290,33 @@ _SYSTEM_PROMPT_WITH_CONTEXT = (
     "2. اذكر رقم الصفحة لكل معلومة تستخدمها بالشكل: (صفحة XX).\n"
     "3. إذا لم تجد الإجابة في المقاطع، قل ذلك بوضوح.\n"
     "4. لا تخترع معلومات أو مصادر غير موجودة في المقاطع.\n"
-    "5. رتب إجابتك: التعريف أولاً، ثم التفاصيل، ثم الأمثلة.\n\n"
+    "5. رتب إجابتك: التعريف أولاً، ثم التفاصيل، ثم الأمثلة.\n"
+    "6. تنبيه هام جداً: لا تستخدم صيغة LaTeX أو لغة الرياضيات (مثل $...$ أو $$...$$ أو \\text) لكتابة الصيغ الكيميائية أو المعادلات. اكتب الصيغ الكيميائية دائماً كنص عادي باستخدام الرموز الكيميائية والأرقام السفلية (مثل CO₂، H₂O، H₂SO₄)، واكتب المعادلات الكيميائية على سطر منفرد جديد كرموز نصية عادية مع السهم -> أو → (مثل: 2H2 + O2 -> 2H2O).\n"
+    "CRITICAL: Never use LaTeX or math mode ($...$, $$...$$, \\text) for chemistry formulas or equations. Render formulas as normal text with subscript numbers (e.g., CO₂, H₂O, H₂SO₄) and equations as clean plain text on a new line (e.g., 2H2 + O2 -> 2H2O).\n\n"
     "المقاطع:\n{context}"
 )
 
 _SYSTEM_PROMPT_NO_CONTEXT = (
     "أنت مدرس كيمياء للصف التاسع. أجب بالعربية.\n"
     "إذا لم تكن الإجابة موجودة في مصادر الكتاب أو الامتحانات المتاحة، "
-    "قل بوضوح إنك لم تجدها في المصادر المتاحة، ثم يمكنك تقديم شرح عام منفصل."
+    "قل بوضوح إنك لم تجدها في المصادر المتاحة، ثم يمكنك تقديم شرح عام منفصل.\n"
+    "تنبيه هام جداً: لا تستخدم صيغة LaTeX أو لغة الرياضيات (مثل $...$ أو $$...$$ أو \\text) لكتابة الصيغ الكيميائية أو المعادلات. اكتب الصيغ الكيميائية دائماً كنص عادي باستخدام الرموز الكيميائية والأرقام السفلية (مثل CO₂، H₂O، H₂SO₄)، واكتب المعادلات الكيميائية على سطر منفرد جديد كرموز نصية عادية مع السهم -> أو → (مثل: 2H2 + O2 -> 2H2O).\n"
+    "CRITICAL: Never use LaTeX or math mode ($...$, $$...$$, \\text) for chemistry formulas or equations. Render formulas as normal text with subscript numbers (e.g., CO₂, H₂O, H₂SO₄) and equations as clean plain text on a new line (e.g., 2H2 + O2 -> 2H2O)."
 )
 
 _SYSTEM_PROMPT_ASK_WITH_CONTEXT = (
     "أنت مدرس كيمياء للصف التاسع. أجب بالاعتماد على المصادر التالية.\n"
-    "اذكر رقم الصفحة عندما يكون متاحاً. لا تخترع مصادر.\n\n"
+    "اذكر رقم الصفحة عندما يكون متاحاً. لا تخترع مصادر.\n"
+    "تنبيه هام جداً: لا تستخدم صيغة LaTeX أو لغة الرياضيات (مثل $...$ أو $$...$$ أو \\text) لكتابة الصيغ الكيميائية أو المعادلات. اكتب الصيغ الكيميائية دائماً كنص عادي باستخدام الرموز الكيميائية والأرقام السفلية (مثل CO₂، H₂O، H₂SO₄)، واكتب المعادلات الكيميائية على سطر منفرد جديد كرموز نصية عادية مع السهم -> أو → (مثل: 2H2 + O2 -> 2H2O).\n"
+    "CRITICAL: Never use LaTeX or math mode ($...$, $$...$$, \\text) for chemistry formulas or equations. Render formulas as normal text with subscript numbers (e.g., CO₂, H₂O, H₂SO₄) and equations as clean plain text on a new line (e.g., 2H2 + O2 -> 2H2O).\n\n"
     "المقاطع:\n{context}"
 )
 
 _SYSTEM_PROMPT_ASK_NO_CONTEXT = (
     "أنت مدرس كيمياء للصف التاسع. أجب بالعربية.\n"
-    "اذكر بوضوح أن السياق المدرسي المتاح غير كاف إذا لم تجد مصدراً."
+    "اذكر بوضوح أن السياق المدرسي المتاح غير كاف إذا لم تجد مصدراً.\n"
+    "تنبيه هام جداً: لا تستخدم صيغة LaTeX أو لغة الرياضيات (مثل $...$ أو $$...$$ أو \\text) لكتابة الصيغ الكيميائية أو المعادلات. اكتب الصيغ الكيميائية دائماً كنص عادي باستخدام الرموز الكيميائية والأرقام السفلية (مثل CO₂، H₂O، H₂SO₄)، واكتب المعادلات الكيميائية على سطر منفرد جديد كرموز نصية عادية مع السهم -> أو → (مثل: 2H2 + O2 -> 2H2O).\n"
+    "CRITICAL: Never use LaTeX or math mode ($...$, $$...$$, \\text) for chemistry formulas or equations. Render formulas as normal text with subscript numbers (e.g., CO₂, H₂O, H₂SO₄) and equations as clean plain text on a new line (e.g., 2H2 + O2 -> 2H2O)."
 )
 
 
@@ -1926,7 +1934,7 @@ async def ask_question(
             chunks,
         )
 
-    if dictionary_entry and (explicit_book or answer_scope == "book_only"):
+    if dictionary_entry and intent in simple_dictionary_intents and (explicit_book or answer_scope == "book_only"):
         if answer_scope == "book_only":
             if not dictionary_valid_chunks:
                 return _finalize_answer(_not_found_response(

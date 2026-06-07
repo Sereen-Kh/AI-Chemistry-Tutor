@@ -7,7 +7,10 @@ from sqlalchemy.engine import make_url
 
 
 BACKEND_DIR = Path(__file__).resolve().parents[2]
-PROJECT_DIR = BACKEND_DIR.parent
+if (BACKEND_DIR.parent / "data").exists():
+    PROJECT_DIR = BACKEND_DIR.parent
+else:
+    PROJECT_DIR = BACKEND_DIR
 
 
 class Settings(BaseSettings):

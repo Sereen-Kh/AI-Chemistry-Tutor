@@ -1,20 +1,17 @@
-from pydantic_settings import BaseSettings
-from typing import List
-
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
-    app_name: str = "AI Chemistry Tutor"
-    debug: bool = False
-    database_url: str = "sqlite:///./chemistry_tutor.db"
-    secret_key: str = "change-me-to-a-long-random-string"
-    access_token_expire_minutes: int = 30
-    allowed_origins: List[str] = [
-        "http://localhost:3000",
-        "http://localhost:8080",
-    ]
+    DATABASE_URL: str
+    SECRET_KEY: str
+    ALGORITHM: str
+    ACCESS_TOKEN_EXPIRE_MINUTES: int
 
-    class Config:
+    RESEND_API_KEY: str
+    EMAIL_FROM: str
+    NGROK_AUTH_TOKEN: str = ""
+
+    model_config = SettingsConfigDict(
         env_file = ".env"
-
+    )
 
 settings = Settings()

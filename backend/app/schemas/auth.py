@@ -1,14 +1,10 @@
-from pydantic import BaseModel, EmailStr
-from datetime import datetime
+from pydantic import (
+    BaseModel,
+    EmailStr
+)
 
 
-class RegisterRequest(BaseModel):
-    name: str
-    email: EmailStr
-    password: str
-
-
-class LoginRequest(BaseModel):
+class UserLogin(BaseModel):
     email: EmailStr
     password: str
 
@@ -18,10 +14,14 @@ class TokenResponse(BaseModel):
     token_type: str = "bearer"
 
 
-class UserResponse(BaseModel):
-    id: int
-    name: str
-    email: str
-    created_at: datetime
+class ForgotPasswordRequest(
+    BaseModel
+):
+    email: EmailStr
 
-    model_config = {"from_attributes": True}
+
+class ResetPasswordRequest(
+    BaseModel
+):
+    token: str
+    new_password: str

@@ -1,4 +1,0 @@
-# Shared dependencies (both FastAPI and Django)
-python-dotenv==1.0.1
-httpx==0.27.0
-Pillow==10.3.0

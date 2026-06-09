@@ -18,6 +18,8 @@ from app.services.chat_service import (
     ask_question,
 )
 from app.services.rag import RetrievedChunk, _hybrid_score, clean_query, lexical_relevance_score, rewrite_query
+from app.services.semantic_rag import FusedCandidate, _minimum_score_for_intent, _semantic_relevance_score
+from app.schemas.rag import DEFAULT_RAG_MIN_SIMILARITY, RagRetrieveDebugRequest, RagRetrieveRequest
 
 
 def chunk(chunk_id: int, page_number: int, content: str, score: float = 0.8) -> RetrievedChunk:
@@ -38,6 +40,13 @@ def chunk(chunk_id: int, page_number: int, content: str, score: float = 0.8) -> 
 
 
 class ArabicRagRankingTests(TestCase):
+    def test_rag_request_defaults_keep_raw_retrieve_strict_and_debug_permissive(self):
+        retrieve_request = RagRetrieveRequest(query="ما هي الحموض؟")
+        debug_request = RagRetrieveDebugRequest(query="ما هي الحموض؟")
+
+        self.assertEqual(retrieve_request.min_similarity, DEFAULT_RAG_MIN_SIMILARITY)
+        self.assertEqual(debug_request.min_similarity, 0.0)
+
     def test_acid_query_prefers_matching_textbook_chunk_over_weak_vector_score(self):
         query = "اشرح لي ما هي الحموض من الكتاب؟"
         acid_content = """
@@ -134,6 +143,62 @@ class ArabicRagRankingTests(TestCase):
         )
 
         self.assertGreater(definition_score, objectives_score)
+
+    def test_salt_definition_ranking_penalizes_exercise_chunks(self):
+        query = rewrite_query(clean_query("ما هي الأملاح؟"))
+        salt_definition = """
+        نتيجة:
+        يتشكل الملح من تفاعل محلول حمض مع ملح.
+        يتشكل الملح من تفاعل ملح مع ملح آخر.
+        جدول الأملاح يوضح أيونات الملح والصيغة الجزيئية واسم الملح.
+        """
+        exercise_noise = """
+        أختبر نفسي: اختر الإجابة الصحيحة. مركب يصنف من الأملاح هو نترات الأمونيوم.
+        السؤال الثالث: صيغة الملح المتكون من تجاذب الأيونات هي...
+        """
+
+        definition_score = _hybrid_score(
+            query,
+            salt_definition,
+            vector_score=0.18,
+            intent="definition_lookup",
+            content_type="text",
+        )
+        exercise_score = _hybrid_score(
+            query,
+            exercise_noise,
+            vector_score=0.82,
+            intent="definition_lookup",
+            content_type="exercise",
+        )
+
+        self.assertGreater(definition_score, exercise_score)
+
+    def test_sodium_carbonate_entity_is_available_for_exact_lookup(self):
+        entry = _dictionary_entry_for_question("ما صيغة كربونات الصوديوم؟", intent="formula_lookup")
+
+        self.assertIsNotNone(entry)
+        assert entry is not None
+        self.assertEqual(entry.id, "sodium_carbonate")
+        self.assertEqual(entry.formula, "Na₂CO₃")
+
+    def test_semantic_relevance_score_passes_good_definition_gate(self):
+        candidate = FusedCandidate(
+            chunk=chunk(
+                43,
+                43,
+                "يتشكل الملح من تفاعل محلول حمض مع ملح. جدول الأملاح يوضح أيونات الملح والصيغة الجزيئية.",
+                score=0.72,
+            ),
+            rrf_score=0.06,
+            retrieval_score=0.72,
+            origins=["original", "rewritten"],
+        )
+
+        score, reasons = _semantic_relevance_score("ما هي الأملاح؟", candidate, intent="definition_lookup")
+
+        self.assertGreaterEqual(score, _minimum_score_for_intent("definition_lookup"))
+        self.assertTrue(any("salt_evidence" in reason for reason in reasons))
 
     def test_direct_base_definition_answer_is_short_and_focused(self):
         entity = _definition_entity_for_question("ما هي الأسس؟")

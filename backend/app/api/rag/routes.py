@@ -5,8 +5,18 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.dependencies import get_current_user_id
 from app.database import get_async_db
-from app.schemas.rag import RagRetrieveDebugResponse, RagRetrieveRequest, RagRetrieveResponse, RetrievedChunkResponse
+from app.schemas.rag import (
+    DEFAULT_RAG_MIN_SIMILARITY,
+    RagRetrieveDebugRequest,
+    RagRetrieveDebugResponse,
+    RagRetrieveRequest,
+    RagRetrieveResponse,
+    RagSemanticRetrieveRequest,
+    RagSemanticRetrieveResponse,
+    RetrievedChunkResponse,
+)
 from app.services.rag import retrieve_context
+from app.services.semantic_rag import semantic_retrieve_context
 
 router = APIRouter(prefix="/rag", tags=["rag"])
 
@@ -37,7 +47,7 @@ async def search_rag(
     source_types: list[str] | None = Query(default=None),
     content_types: list[str] | None = Query(default=None),
     top_k: int = Query(5, ge=1, le=20),
-    min_similarity: float = Query(0.0, ge=-1.0, le=1.0),
+    min_similarity: float = Query(DEFAULT_RAG_MIN_SIMILARITY, ge=0.0, le=1.0),
     user_id: int = Depends(get_current_user_id),
     db: AsyncSession = Depends(get_async_db),
 ):
@@ -78,9 +88,34 @@ async def retrieve_rag(
     return RagRetrieveResponse(chunks=[_chunk_response(item) for item in chunks])
 
 
+@router.post("/semantic-retrieve", response_model=RagSemanticRetrieveResponse)
+async def semantic_retrieve_rag(
+    request: RagSemanticRetrieveRequest,
+    user_id: int = Depends(get_current_user_id),
+    db: AsyncSession = Depends(get_async_db),
+):
+    result = await semantic_retrieve_context(
+        db,
+        request.query,
+        user_id=user_id,
+        source_types=request.source_types,
+        chapter_id=request.chapter_id,
+        lesson_id=request.lesson_id,
+        topic_id=request.topic_id,
+        top_k=request.top_k,
+        intent=request.intent,
+    )
+    quality_gate = result.diagnostics.get("quality_gate")
+    return RagSemanticRetrieveResponse(
+        chunks=[_chunk_response(item) for item in result.chunks],
+        diagnostics=result.diagnostics,
+        quality_gate=quality_gate if isinstance(quality_gate, dict) else None,
+    )
+
+
 @router.post("/retrieve-debug", response_model=RagRetrieveDebugResponse)
 async def retrieve_rag_debug(
-    request: RagRetrieveRequest,
+    request: RagRetrieveDebugRequest,
     user_id: int = Depends(get_current_user_id),
     db: AsyncSession = Depends(get_async_db),
 ):

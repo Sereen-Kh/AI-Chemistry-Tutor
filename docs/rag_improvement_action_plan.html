@@ -1,0 +1,529 @@
+
+<h2 class="sr-only">RAG improvement action plan: 4 steps ordered by impact, with exact code changes for each file</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);font-size:13px;color:var(--color-text-primary)}
+
+/* tabs */
+.tnav{display:flex;gap:2px;flex-wrap:wrap;border-bottom:.5px solid var(--color-border-tertiary);margin-bottom:18px}
+.tb{padding:7px 12px;font-size:11px;cursor:pointer;border:.5px solid transparent;border-radius:6px 6px 0 0;color:var(--color-text-secondary);background:none;margin-bottom:-.5px;font-family:inherit;white-space:nowrap}
+.tb:hover{color:var(--color-text-primary);background:var(--color-background-secondary)}
+.tb.on{color:var(--color-text-primary);background:var(--color-background-primary);border-color:var(--color-border-tertiary);border-bottom-color:var(--color-background-primary);font-weight:500}
+.pn{display:none}.pn.on{display:block}
+
+/* shared */
+.sec{font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.6px;margin:18px 0 9px}
+.card{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:13px 15px;margin-bottom:9px}
+.bx{display:inline-block;font-size:10px;font-weight:500;padding:2px 7px;border-radius:4px;margin:2px 2px 2px 0}
+.b-red{background:#FAECE7;color:#993C1D}.b-gold{background:#FAEEDA;color:#854F0B}
+.b-teal{background:#E1F5EE;color:#0F6E56}.b-blue{background:#E6F1FB;color:#185FA5}
+.b-pur{background:#EEEDFE;color:#534AB7}.b-gray{background:var(--color-background-secondary);color:var(--color-text-secondary)}
+
+/* step cards */
+.step-card{border-radius:var(--border-radius-lg);overflow:hidden;margin-bottom:12px;border:.5px solid var(--color-border-tertiary)}
+.step-hd{padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.step-hd:hover{filter:brightness(1.04)}
+.step-num{width:36px;height:36px;border-radius:50%;font-size:16px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-info{flex:1}
+.step-title{font-size:14px;font-weight:500;margin-bottom:2px}
+.step-sub{font-size:11px;opacity:.8}
+.step-meta{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
+.step-time{font-size:10px;font-weight:500;opacity:.8}
+.step-arrow{font-size:11px;opacity:.6;transition:transform .15s}
+.step-arrow.op{transform:rotate(90deg)}
+.step-body{display:none;padding:14px 16px;border-top:.5px solid var(--color-border-tertiary);background:var(--color-background-primary)}
+.step-body.op{display:block}
+
+/* before/after */
+.ba{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.ba-col{border-radius:var(--border-radius-md);overflow:hidden;border:.5px solid var(--color-border-tertiary)}
+.ba-hd{padding:7px 11px;font-size:11px;font-weight:500;border-bottom:.5px solid var(--color-border-tertiary)}
+.ba-body{padding:9px 11px;font-size:12px;color:var(--color-text-secondary);line-height:1.7;font-family:var(--font-mono)}
+
+/* code */
+.code{font-family:var(--font-mono);font-size:11px;line-height:1.8;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:11px 13px;border:.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);white-space:pre-wrap;word-break:break-all;position:relative;margin-bottom:9px}
+.code .kw{color:var(--color-text-info)}.code .str{color:var(--color-text-success)}.code .cm{color:var(--color-text-tertiary)}.code .num{color:var(--color-text-warning)}.code .fn{color:var(--color-text-primary);font-weight:500}
+.copy-btn{position:absolute;top:7px;right:7px;font-size:10px;padding:3px 8px;border-radius:4px;border:.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-secondary);cursor:pointer;font-family:inherit;transition:background .12s}
+.copy-btn:hover{background:var(--color-background-secondary)}
+.file-tag{font-size:10px;font-weight:500;padding:2px 8px;border-radius:4px;background:#0F1F38;color:#85B7EB;margin-bottom:7px;display:inline-block;font-family:var(--font-mono)}
+
+/* test result rows */
+.test-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:.5px solid var(--color-border-tertiary)}
+.test-row:last-child{border-bottom:none}
+.test-q{font-size:12px;font-weight:500;flex:1}
+.test-before{font-size:11px;color:var(--color-text-danger);min-width:80px;text-align:center}
+.test-after{font-size:11px;color:var(--color-text-success);min-width:80px;text-align:center}
+.test-reason{font-size:11px;color:var(--color-text-secondary);flex:1.5}
+
+/* roadmap timeline */
+.tl{display:flex;flex-direction:column;gap:0}
+.tl-row{display:grid;grid-template-columns:80px 18px 1fr;gap:0 12px;align-items:start;min-height:60px}
+.tl-time{font-size:11px;font-weight:500;color:var(--color-text-secondary);padding-top:3px;text-align:right}
+.tl-spine{display:flex;flex-direction:column;align-items:center}
+.tl-dot{width:18px;height:18px;border-radius:50%;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500;color:#fff}
+.tl-line{flex:1;width:2px;background:var(--color-border-tertiary);margin-top:2px;min-height:30px}
+.tl-row:last-child .tl-line{display:none}
+.tl-content{padding:2px 0 18px}
+.tl-title{font-size:13px;font-weight:500;margin-bottom:3px}
+.tl-desc{font-size:11px;color:var(--color-text-secondary);line-height:1.55}
+</style>
+
+<div style="margin-bottom:16px">
+  <div style="font-size:19px;font-weight:500;margin-bottom:4px">How to improve your RAG answers</div>
+  <div style="font-size:12px;color:var(--color-text-secondary)">4 steps · ordered by impact · start with Step 1 right now</div>
+</div>
+
+<!-- ROOT CAUSE BANNER -->
+<div style="background:linear-gradient(135deg,#FAECE7,#FAEEDA);border:.5px solid #F5A623;border-radius:var(--border-radius-lg);padding:13px 15px;margin-bottom:16px">
+  <div style="font-size:13px;font-weight:500;margin-bottom:5px;color:#633806">🔍 Root cause — one number is breaking everything</div>
+  <div style="font-size:12px;color:#633806;line-height:1.65">Your hybrid scoring uses <strong>65% lexical weight + 35% vector weight</strong>. Arabic morphology makes keyword matching unreliable — "الأملاح" doesn't match "أملاح". The lexical score collapses to near zero, dragging the combined score down to 28-44% even when the vector similarity is actually 72-80%. Flip those weights and you fix the core problem instantly.</div>
+</div>
+
+<div class="tnav">
+  <button class="tb on" onclick="tab(this,'steps')">4 steps to start</button>
+  <button class="tb" onclick="tab(this,'s1')">Step 1 — weights</button>
+  <button class="tb" onclick="tab(this,'s2')">Step 2 — threshold</button>
+  <button class="tb" onclick="tab(this,'s3')">Step 3 — intent</button>
+  <button class="tb" onclick="tab(this,'s4')">Step 4 — prompt</button>
+  <button class="tb" onclick="tab(this,'test')">How to test</button>
+</div>
+
+<!-- OVERVIEW -->
+<div class="pn on" id="pn-steps">
+
+<div class="sec">Start here — in this exact order</div>
+
+<!-- Step 1 -->
+<div class="step-card">
+  <div class="step-hd" style="background:#E1F5EE" onclick="tog(this)">
+    <div class="step-num" style="background:#1D9E75;color:#fff">1</div>
+    <div class="step-info">
+      <div class="step-title" style="color:#035040">Flip the hybrid scoring weights</div>
+      <div class="step-sub" style="color:#0F6E56">1 file · 2 numbers · biggest single improvement you can make</div>
+    </div>
+    <div class="step-meta">
+      <span class="bx b-teal">5 minutes</span>
+      <span class="step-arrow">▶</span>
+    </div>
+  </div>
+  <div class="step-body">
+    <div class="ba">
+      <div class="ba-col">
+        <div class="ba-hd" style="background:#FAECE7;color:#993C1D">❌ Now — scores collapse to 28-44%</div>
+        <div class="ba-body">VECTOR_WEIGHT  = 0.35<br>LEXICAL_WEIGHT = 0.65<br><br>Arabic "الأملاح" ≠ "أملاح"<br>→ lexical score = 0.05<br>→ 0.35×0.72 + 0.65×0.05<br>→ final = <strong>0.28 😢</strong></div>
+      </div>
+      <div class="ba-col">
+        <div class="ba-hd" style="background:#E1F5EE;color:#035040">✅ Fixed — scores jump to 65-80%</div>
+        <div class="ba-body">VECTOR_WEIGHT  = 0.75<br>LEXICAL_WEIGHT = 0.25<br><br>Same chunk, same embedding<br>→ 0.75×0.72 + 0.25×0.05<br>→ final = <strong>0.55 ✅</strong></div>
+      </div>
+    </div>
+    <div class="file-tag">backend/app/services/rag.py</div>
+    <div class="code"><button class="copy-btn" onclick="cp(this)">Copy</button><span class="cm"># Find these two lines and change them:</span>
+
+<span class="cm"># BEFORE</span>
+VECTOR_WEIGHT  = <span class="num">0.35</span>
+LEXICAL_WEIGHT = <span class="num">0.65</span>
+
+<span class="cm"># AFTER</span>
+VECTOR_WEIGHT  = <span class="num">0.75</span>
+LEXICAL_WEIGHT = <span class="num">0.25</span>
+
+<span class="cm"># If you have these as part of a function, it looks like:</span>
+<span class="kw">def</span> <span class="fn">hybrid_score</span>(vector_sim: float, lexical_sim: float) -> float:
+    <span class="kw">return</span> <span class="num">0.75</span> * vector_sim + <span class="num">0.25</span> * lexical_sim</div>
+  </div>
+</div>
+
+<!-- Step 2 -->
+<div class="step-card">
+  <div class="step-hd" style="background:#E6F1FB" onclick="tog(this)">
+    <div class="step-num" style="background:#378ADD;color:#fff">2</div>
+    <div class="step-info">
+      <div class="step-title" style="color:#0A2D50">Raise min_similarity from 0.25 to 0.55</div>
+      <div class="step-sub" style="color:#185FA5">Stop showing irrelevant chunks to students — 1 number change</div>
+    </div>
+    <div class="step-meta">
+      <span class="bx b-blue">5 minutes</span>
+      <span class="step-arrow">▶</span>
+    </div>
+  </div>
+  <div class="step-body">
+    <div class="file-tag">backend/app/services/rag.py</div>
+    <div class="code"><button class="copy-btn" onclick="cp(this)">Copy</button><span class="cm"># Find your min_similarity parameter and change it:</span>
+
+<span class="cm"># BEFORE — allows 28% matches through (garbage)</span>
+MIN_SIMILARITY = <span class="num">0.25</span>
+
+<span class="cm"># AFTER — only show chunks the AI actually matched</span>
+MIN_SIMILARITY = <span class="num">0.55</span>
+
+<span class="cm"># Also update the API endpoint default:</span>
+<span class="cm"># In your POST /api/v1/rag/retrieve payload example</span>
+<span class="cm"># change "min_similarity": 0.25 → "min_similarity": 0.55</span>
+
+<span class="cm"># If min_similarity is in the request body schema (Pydantic):</span>
+<span class="kw">class</span> <span class="fn">RAGRequest</span>(BaseModel):
+    query: str
+    top_k: int = <span class="num">5</span>
+    min_similarity: float = <span class="num">0.55</span>  <span class="cm"># was 0.25</span></div>
+    <div style="background:var(--color-background-secondary);border-radius:6px;padding:9px 12px;font-size:12px;color:var(--color-text-secondary);line-height:1.6;margin-top:4px">
+      After this fix: "ما هي كربونات الصوديوم؟" will return 0 chunks (correct — it's not in the textbook) instead of 6 wrong organic chemistry chunks. The AI will then say "لم أجد تعريفاً محدداً" instead of a confusing partial answer.
+    </div>
+  </div>
+</div>
+
+<!-- Step 3 -->
+<div class="step-card">
+  <div class="step-hd" style="background:#EEEDFE" onclick="tog(this)">
+    <div class="step-num" style="background:#7F77DD;color:#fff">3</div>
+    <div class="step-info">
+      <div class="step-title" style="color:#26215C">Add intent detection + content_type boost</div>
+      <div class="step-sub" style="color:#534AB7">Stops exercise chunks appearing for "ما هي؟" questions — ~1 hour</div>
+    </div>
+    <div class="step-meta">
+      <span class="bx b-pur">1 hour</span>
+      <span class="step-arrow">▶</span>
+    </div>
+  </div>
+  <div class="step-body">
+    <div class="file-tag">backend/app/services/rag.py</div>
+    <div class="code"><button class="copy-btn" onclick="cp(this)">Copy</button><span class="cm"># Add these two functions to rag.py</span>
+
+DEFINITION_TRIGGERS = [<span class="str">"ما هو"</span>, <span class="str">"ما هي"</span>, <span class="str">"عرّف"</span>, <span class="str">"اشرح"</span>, <span class="str">"فسّر"</span>, <span class="str">"ما المقصود"</span>, <span class="str">"ما الفرق"</span>]
+CALCULATION_TRIGGERS = [<span class="str">"احسب"</span>, <span class="str">"أوجد"</span>, <span class="str">"حل"</span>, <span class="str">"طبّق"</span>, <span class="str">"وازن"</span>]
+
+<span class="kw">def</span> <span class="fn">detect_intent</span>(query: str) -> str:
+    <span class="str">"""Classify Arabic query as definition, calculation, or default."""</span>
+    <span class="kw">if</span> any(t <span class="kw">in</span> query <span class="kw">for</span> t <span class="kw">in</span> DEFINITION_TRIGGERS):
+        <span class="kw">return</span> <span class="str">"definition"</span>
+    <span class="kw">if</span> any(t <span class="kw">in</span> query <span class="kw">for</span> t <span class="kw">in</span> CALCULATION_TRIGGERS):
+        <span class="kw">return</span> <span class="str">"calculation"</span>
+    <span class="kw">return</span> <span class="str">"default"</span>
+
+
+<span class="kw">def</span> <span class="fn">apply_intent_boost</span>(
+    score: float,
+    content_type: str,
+    intent: str
+) -> float:
+    <span class="str">"""Boost or penalise a chunk score based on its type vs query intent."""</span>
+    <span class="kw">if</span> intent == <span class="str">"definition"</span>:
+        <span class="kw">if</span> content_type <span class="kw">in</span> (<span class="str">"definition"</span>, <span class="str">"text"</span>):
+            <span class="kw">return</span> score + <span class="num">0.08</span>   <span class="cm"># prefer definition chunks</span>
+        <span class="kw">if</span> content_type == <span class="str">"exercise"</span>:
+            <span class="kw">return</span> score - <span class="num">0.12</span>   <span class="cm"># strongly penalise exercises</span>
+    <span class="kw">elif</span> intent == <span class="str">"calculation"</span>:
+        <span class="kw">if</span> content_type <span class="kw">in</span> (<span class="str">"exercise"</span>, <span class="str">"result"</span>):
+            <span class="kw">return</span> score + <span class="num">0.08</span>   <span class="cm"># exercises are good for calculations</span>
+    <span class="kw">return</span> score
+
+
+<span class="cm"># In your main retrieval function, use it like this:</span>
+<span class="kw">def</span> <span class="fn">retrieve_chunks</span>(query: str, ...) -> list:
+    intent = detect_intent(query)
+
+    <span class="cm"># ... your existing vector search ...</span>
+
+    <span class="cm"># After getting candidates, apply boost + filter:</span>
+    boosted = []
+    <span class="kw">for</span> chunk <span class="kw">in</span> candidates:
+        final_score = hybrid_score(chunk.vector_sim, chunk.lexical_sim)
+        final_score = apply_intent_boost(
+            final_score, chunk.content_type, intent
+        )
+        <span class="kw">if</span> final_score >= MIN_SIMILARITY:
+            chunk.similarity_score = final_score
+            boosted.append(chunk)
+
+    <span class="kw">return</span> sorted(boosted, key=<span class="kw">lambda</span> c: c.similarity_score, reverse=<span class="kw">True</span>)[:<span class="num">6</span>]</div>
+  </div>
+</div>
+
+<!-- Step 4 -->
+<div class="step-card">
+  <div class="step-hd" style="background:#FAEEDA" onclick="tog(this)">
+    <div class="step-num" style="background:#F5A623;color:#fff">4</div>
+    <div class="step-info">
+      <div class="step-title" style="color:#412402">Fix the LLM system prompt for weak/missing context</div>
+      <div class="step-sub" style="color:#633806">Stops truncated answers like "تعريف الملح:" with nothing after it</div>
+    </div>
+    <div class="step-meta">
+      <span class="bx b-gold">30 min</span>
+      <span class="step-arrow">▶</span>
+    </div>
+  </div>
+  <div class="step-body">
+    <div class="file-tag">backend/app/services/ai_service.py</div>
+    <div class="code"><button class="copy-btn" onclick="cp(this)">Copy</button><span class="cm"># Add this block to your existing system instruction</span>
+<span class="cm"># (append AFTER the tutor persona text)</span>
+
+ANSWER_QUALITY_RULES = <span class="str">"""
+قواعد الإجابة — يجب الالتزام بها دائماً:
+
+١. إذا وجدت معلومات واضحة في السياق:
+   → أجب منها مباشرةً. اذكر رقم الصفحة في النهاية.
+
+٢. إذا كانت المعلومات جزئية أو غير مكتملة:
+   → قدّم ما لديك، ثم قل:
+   "للاطلاع على التفاصيل الكاملة راجع [الفصل/الصفحة المناسبة]."
+
+٣. إذا لم تجد معلومات كافية في السياق المقدَّم:
+   → قل بوضوح:
+   "لم أجد تعريفاً لهذا الموضوع في الأقسام المتاحة من الكتاب.
+    هل تريد أن أشرح لك من معرفتي العامة بمنهج الصف التاسع؟"
+
+٤. لا تبدأ عنواناً مثل **تعريف X:** أو **خصائص X:**
+   إلا إذا كان لديك محتوى حقيقي من السياق تضعه تحته مباشرةً.
+
+٥. إجابتك يجب ألا تتجاوز 120 كلمة. كن دقيقاً ومركّزاً.
+"""</span>
+
+<span class="cm"># Also add a safety check before calling the LLM:</span>
+<span class="kw">def</span> <span class="fn">build_context_block</span>(chunks: list) -> str:
+    <span class="kw">if not</span> chunks <span class="kw">or</span> max(c.similarity_score <span class="kw">for</span> c <span class="kw">in</span> chunks) < <span class="num">0.55</span>:
+        <span class="kw">return</span> <span class="str">"[لا توجد مقاطع ذات صلة كافية — استخدم معرفتك العامة وأشر أن الإجابة ليست من الكتاب]"</span>
+
+    parts = []
+    <span class="kw">for</span> chunk <span class="kw">in</span> chunks:
+        source = <span class="str">"كتاب مدرسي"</span> <span class="kw">if</span> chunk.source_type == <span class="str">"textbook"</span> <span class="kw">else</span> <span class="str">"كتاب الحلول"</span>
+        parts.append(
+            f<span class="str">"[{source} — صفحة {chunk.page_number} — نوع: {chunk.content_type}]\n"</span>
+            f<span class="str">"{chunk.content[:400]}"</span>
+        )
+    <span class="kw">return</span> <span class="str">"\n\n"</span>.join(parts)</div>
+  </div>
+</div>
+</div>
+
+<!-- STEP 1 DEEP DIVE -->
+<div class="pn" id="pn-s1">
+<div class="sec">Step 1 — where exactly to look in rag.py</div>
+<div class="card">
+  <div style="font-size:13px;font-weight:500;margin-bottom:6px">Search for these patterns in your rag.py file</div>
+  <div style="font-size:12px;color:var(--color-text-secondary);line-height:1.7">Open <code>backend/app/services/rag.py</code> and search (Cmd+F or Ctrl+F) for these terms to find the right place:</div>
+</div>
+<div class="code"><button class="copy-btn" onclick="cp(this)">Copy</button><span class="cm"># Search for any of these — they all mean the same thing:</span>
+<span class="cm"># "0.35"  "0.65"  "VECTOR_WEIGHT"  "LEXICAL_WEIGHT"  "hybrid"  "blend"</span>
+
+<span class="cm"># Pattern 1 — constants at top of file</span>
+VECTOR_WEIGHT  = <span class="num">0.35</span>   <span class="cm"># ← change to 0.75</span>
+LEXICAL_WEIGHT = <span class="num">0.65</span>   <span class="cm"># ← change to 0.25</span>
+
+<span class="cm"># Pattern 2 — inline in a function</span>
+score = <span class="num">0.35</span> * vector_sim + <span class="num">0.65</span> * lexical_sim
+<span class="cm"># ↑ change to:</span>
+score = <span class="num">0.75</span> * vector_sim + <span class="num">0.25</span> * lexical_sim
+
+<span class="cm"># Pattern 3 — your architecture doc mentions specifically:</span>
+<span class="cm"># "Blends: 0.35 * Vector Similarity + 0.65 * Lexical Score"</span>
+<span class="cm"># Search for 0.35 and you will find it immediately</span></div>
+<div class="sec">Verify the fix worked</div>
+<div class="code"><button class="copy-btn" onclick="cp(this)">Copy</button"><span class="cm"># In your test_rag.py or a quick Python script:</span>
+<span class="kw">import</span> asyncio
+<span class="kw">from</span> app.services.rag <span class="kw">import</span> retrieve_chunks
+
+<span class="kw">async def</span> <span class="fn">test</span>():
+    results = <span class="kw">await</span> retrieve_chunks(<span class="str">"ما هي الاملاح؟"</span>, top_k=<span class="num">5</span>)
+    <span class="kw">for</span> r <span class="kw">in</span> results:
+        print(f<span class="str">"Score: {r.similarity_score:.2f} | Type: {r.content_type} | Page: {r.page_number}"</span>)
+
+asyncio.run(test())
+
+<span class="cm"># Expected BEFORE fix: scores 0.28–0.44</span>
+<span class="cm"># Expected AFTER fix:  scores 0.60–0.82</span></div>
+</div>
+
+<!-- STEP 2 DEEP DIVE -->
+<div class="pn" id="pn-s2">
+<div class="sec">Step 2 — finding and changing min_similarity</div>
+<div class="code"><button class="copy-btn" onclick="cp(this)">Copy</button><span class="cm"># Search in rag.py for: "min_similarity" or "0.25" or "threshold"</span>
+
+<span class="cm"># It may appear in multiple places — change ALL of them:</span>
+
+<span class="cm"># 1. The default constant</span>
+DEFAULT_MIN_SIMILARITY = <span class="num">0.25</span>   <span class="cm"># ← change to 0.55</span>
+
+<span class="cm"># 2. The Pydantic schema default (if you have one)</span>
+<span class="kw">class</span> <span class="fn">RAGRequest</span>(BaseModel):
+    min_similarity: float = <span class="num">0.25</span>  <span class="cm"># ← change to 0.55</span>
+
+<span class="cm"># 3. The filtering step in your retrieval function</span>
+chunks = [c <span class="kw">for</span> c <span class="kw">in</span> candidates <span class="kw">if</span> c.similarity_score >= min_similarity]
+
+<span class="cm"># 4. In your pgvector SQL query (if you have a WHERE clause):</span>
+<span class="cm"># WHERE 1 - (embedding <=> $1::vector) >= 0.25</span>
+<span class="cm">#                                        ↑ change to 0.55</span></div>
+<div class="card">
+  <div style="font-size:13px;font-weight:500;margin-bottom:5px">⚠️ Important — what to expect</div>
+  <div style="font-size:12px;color:var(--color-text-secondary);line-height:1.65">After raising the threshold, some questions will return <strong>0 chunks</strong>. This is correct and expected — it means the answer truly is not in the textbook pages you've ingested. The LLM should then say "لم أجد معلومات كافية" (see Step 4). Do NOT lower the threshold back down just because you see 0 results — that's the right behaviour.</div>
+</div>
+</div>
+
+<!-- STEP 3 DEEP DIVE -->
+<div class="pn" id="pn-s3">
+<div class="sec">Step 3 — where to add intent detection in the retrieval flow</div>
+<div class="code"><button class="copy-btn" onclick="cp(this)">Copy</button><span class="cm"># In rag.py, find your main retrieval function.</span>
+<span class="cm"># It probably looks like one of these:</span>
+<span class="cm"># get_relevant_context(), retrieve_chunks(), search_rag(), hybrid_search()</span>
+
+<span class="cm"># Add detect_intent() call at the TOP of the function:</span>
+
+<span class="kw">async def</span> <span class="fn">get_relevant_context</span>(
+    query: str,
+    lesson_id: int | None = None,
+    top_k: int = <span class="num">5</span>,
+    min_similarity: float = <span class="num">0.55</span>,
+) -> list[RetrievedChunk]:
+
+    <span class="cm"># ← ADD THIS LINE at the start</span>
+    intent = detect_intent(query)
+
+    <span class="cm"># your existing: clean_query, rewrite_query, embed_query ...</span>
+    cleaned = clean_query(query)
+    rewritten = <span class="kw">await</span> rewrite_query(cleaned)
+    vector = <span class="kw">await</span> embed_query(rewritten)
+
+    <span class="cm"># your existing: pgvector search ...</span>
+    candidates = <span class="kw">await</span> vector_search(vector, top_k=top_k * <span class="num">3</span>)
+
+    <span class="cm"># your existing: hybrid scoring ...</span>
+    scored = []
+    <span class="kw">for</span> c <span class="kw">in</span> candidates:
+        score = hybrid_score(c.vector_sim, c.lexical_sim)   <span class="cm"># now uses 0.75/0.25</span>
+        score = apply_intent_boost(score, c.content_type, intent)  <span class="cm"># ← ADD THIS</span>
+        c.similarity_score = score
+        scored.append(c)
+
+    <span class="cm"># filter + sort + return</span>
+    filtered = [c <span class="kw">for</span> c <span class="kw">in</span> scored <span class="kw">if</span> c.similarity_score >= min_similarity]
+    <span class="kw">return</span> sorted(filtered, key=<span class="kw">lambda</span> x: x.similarity_score, reverse=<span class="kw">True</span>)[:top_k]</div>
+</div>
+
+<!-- STEP 4 DEEP DIVE -->
+<div class="pn" id="pn-s4">
+<div class="sec">Step 4 — fixing the system prompt in ai_service.py</div>
+<div class="code"><button class="copy-btn" onclick="cp(this)">Copy</button><span class="cm"># In ai_service.py, find your system instruction.</span>
+<span class="cm"># It likely starts with something like: "أنت مدرّس كيمياء..."</span>
+<span class="cm"># or "You are EduMind, an AI chemistry tutor..."</span>
+<span class="cm"># APPEND these rules at the end of it:</span>
+
+ANSWER_RULES_AR = <span class="str">"""
+
+قواعد يجب الالتزام بها دائماً:
+١. إذا وجدت معلومات واضحة في السياق → أجب منها مع ذكر رقم الصفحة.
+٢. إذا كانت المعلومات جزئية → قدّم ما لديك وقل "للمزيد راجع [الصفحة/الفصل]."
+٣. إذا لم تجد معلومات كافية → قل: "لم أجد تعريفاً محدداً في الأقسام المتاحة.
+   هل تريد أن أشرح من معرفتي العامة بالمنهج؟"
+٤. لا تبدأ عنواناً مثل **تعريف X:** إلا إذا كان لديك محتوى حقيقي تحته.
+٥. لا تتجاوز 120 كلمة في الإجابة الواحدة.
+"""</span>
+
+<span class="cm"># Also wrap your context injection with a safety check:</span>
+<span class="kw">def</span> <span class="fn">format_context_for_llm</span>(chunks: list) -> str:
+    <span class="kw">if not</span> chunks:
+        <span class="kw">return</span> (
+            <span class="str">"[لم يتم العثور على مقاطع مرتبطة بالسؤال في الكتاب. "</span>
+            <span class="str">"اعتمد على معرفتك العامة بمنهج الصف التاسع وأشر إلى ذلك.]"</span>
+        )
+    parts = []
+    <span class="kw">for</span> c <span class="kw">in</span> chunks:
+        src = <span class="str">"كتاب مدرسي"</span> <span class="kw">if</span> c.source_type == <span class="str">"textbook"</span> <span class="kw">else</span> <span class="str">"كتاب الحلول"</span>
+        parts.append(
+            f<span class="str">"[{src} · صفحة {c.page_number} · {c.content_type}]\n{c.content[:400]}"</span>
+        )
+    <span class="kw">return</span> <span class="str">"\n\n"</span>.join(parts)</div>
+</div>
+
+<!-- TEST -->
+<div class="pn" id="pn-test">
+<div class="sec">Test your 4 fixes — run these exact queries</div>
+<div class="card">
+  <div style="display:grid;grid-template-columns:2fr 1fr 1fr 2fr;gap:8px;margin-bottom:6px">
+    <div style="font-size:10px;font-weight:500;color:var(--color-text-tertiary)">Question</div>
+    <div style="font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-align:center">Before</div>
+    <div style="font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-align:center">After</div>
+    <div style="font-size:10px;font-weight:500;color:var(--color-text-tertiary)">Why it changes</div>
+  </div>
+  <div class="test-row">
+    <div class="test-q">ما هي الاملاح؟</div>
+    <div class="test-before">34% 😢</div>
+    <div class="test-after">72% ✅</div>
+    <div class="test-reason">Weights flip: 0.75×vector vs 0.35×vector</div>
+  </div>
+  <div class="test-row">
+    <div class="test-q">ما التفاعلات الكيمياءيه؟</div>
+    <div class="test-before">exercise×6</div>
+    <div class="test-after">definition×4</div>
+    <div class="test-reason">Intent="definition" → exercise penalised -0.12</div>
+  </div>
+  <div class="test-row">
+    <div class="test-q">ما هي كربونات الصوديوم؟</div>
+    <div class="test-before">wrong chunks 38%</div>
+    <div class="test-after">0 chunks → honest reply</div>
+    <div class="test-reason">Threshold 0.55 filters wrong matches out</div>
+  </div>
+  <div class="test-row">
+    <div class="test-q">ما هي الحموض؟</div>
+    <div class="test-before">short answer</div>
+    <div class="test-after">full answer with page</div>
+    <div class="test-reason">Better chunks → LLM has real content to use</div>
+  </div>
+  <div class="test-row">
+    <div class="test-q">احسب الكتلة المولية لـ H₂O</div>
+    <div class="test-before">definition chunks</div>
+    <div class="test-after">exercise chunks ✅</div>
+    <div class="test-reason">Intent="calculation" → exercise boosted +0.08</div>
+  </div>
+</div>
+
+<div class="sec">Quick test script — run after every change</div>
+<div class="code"><button class="copy-btn" onclick="cp(this)">Copy</button><span class="cm"># Save as backend/scratch/test_rag_improvements.py</span>
+<span class="kw">import</span> asyncio
+<span class="kw">from</span> app.services.rag <span class="kw">import</span> get_relevant_context
+
+TESTS = [
+    (<span class="str">"ما هي الاملاح؟"</span>,              <span class="num">0.60</span>, <span class="str">"definition"</span>),
+    (<span class="str">"ما التفاعلات الكيميائية؟"</span>,    <span class="num">0.60</span>, <span class="str">"definition"</span>),
+    (<span class="str">"ما هي الحموض؟"</span>,              <span class="num">0.65</span>, <span class="str">"definition"</span>),
+    (<span class="str">"احسب الكتلة المولية لـ H₂O"</span>, <span class="num">0.50</span>, <span class="str">"exercise"</span>),
+    (<span class="str">"ما هي الأسس؟"</span>,               <span class="num">0.60</span>, <span class="str">"definition"</span>),
+]
+
+<span class="kw">async def</span> <span class="fn">run_tests</span>():
+    passed, failed = <span class="num">0</span>, <span class="num">0</span>
+    <span class="kw">for</span> query, min_score, expected_type <span class="kw">in</span> TESTS:
+        chunks = <span class="kw">await</span> get_relevant_context(query, top_k=<span class="num">3</span>)
+        top_score = chunks[<span class="num">0</span>].similarity_score <span class="kw">if</span> chunks <span class="kw">else</span> <span class="num">0</span>
+        top_type  = chunks[<span class="num">0</span>].content_type   <span class="kw">if</span> chunks <span class="kw">else</span> <span class="str">"none"</span>
+        ok = top_score >= min_score
+        status = <span class="str">"✅ PASS"</span> <span class="kw">if</span> ok <span class="kw">else</span> <span class="str">"❌ FAIL"</span>
+        <span class="kw">if</span> ok: passed += <span class="num">1</span>
+        <span class="kw">else</span>:  failed += <span class="num">1</span>
+        print(f<span class="str">"{status} | {query[:30]:<30} | score={top_score:.2f} (want >={min_score}) | type={top_type}"</span>)
+    print(f<span class="str">"\n{passed}/{passed+failed} passed"</span>)
+
+asyncio.run(run_tests())</div>
+</div>
+</div>
+
+<script>
+function tab(btn,id){
+  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.pn').forEach(p=>p.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('pn-'+id).classList.add('on');
+}
+function tog(el){
+  const body=el.nextElementSibling;
+  const arrow=el.querySelector('.step-arrow');
+  const op=body.classList.toggle('op');
+  arrow.classList.toggle('op',op);
+}
+function cp(btn){
+  const code=btn.parentElement.innerText.replace('Copy','').trim();
+  navigator.clipboard.writeText(code).then(()=>{
+    btn.textContent='Copied!';
+    setTimeout(()=>btn.textContent='Copy',2000);
+  });
+}
+</script>

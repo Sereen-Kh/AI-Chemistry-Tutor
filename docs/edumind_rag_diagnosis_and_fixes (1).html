@@ -1,0 +1,557 @@
+
+<h2 class="sr-only">EduMind RAG system diagnosis: 6 problems found in screenshots with specific fixes mapped to the existing architecture</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);font-size:13px;color:var(--color-text-primary)}
+.tnav{display:flex;gap:2px;flex-wrap:wrap;border-bottom:.5px solid var(--color-border-tertiary);margin-bottom:16px}
+.tb{padding:7px 11px;font-size:11px;cursor:pointer;border:.5px solid transparent;border-radius:6px 6px 0 0;color:var(--color-text-secondary);background:none;margin-bottom:-.5px;font-family:inherit}
+.tb:hover{color:var(--color-text-primary);background:var(--color-background-secondary)}
+.tb.on{color:var(--color-text-primary);background:var(--color-background-primary);border-color:var(--color-border-tertiary);border-bottom-color:var(--color-background-primary);font-weight:500}
+.pn{display:none}.pn.on{display:block}
+.sec{font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.6px;margin:18px 0 8px}
+.card{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:12px 14px;margin-bottom:8px}
+.bx{display:inline-block;font-size:10px;font-weight:500;padding:2px 7px;border-radius:4px;margin:2px 2px 2px 0}
+.b-red{background:#FAECE7;color:#993C1D}.b-gold{background:#FAEEDA;color:#854F0B}.b-teal{background:#E1F5EE;color:#0F6E56}
+.b-blue{background:#E6F1FB;color:#185FA5}.b-pur{background:#EEEDFE;color:#534AB7}.b-gray{background:var(--color-background-secondary);color:var(--color-text-secondary)}
+.b-ok{background:#EAF3DE;color:#3B6D11}
+
+.issue{border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:10px;overflow:hidden}
+.issue-head{padding:11px 14px;display:flex;align-items:center;gap:9px;cursor:pointer}
+.issue-head:hover{background:var(--color-background-secondary)}
+.issue-sev{width:24px;height:24px;border-radius:50%;font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.issue-title{font-size:13px;font-weight:500;flex:1}
+.issue-arrow{font-size:10px;color:var(--color-text-tertiary);transition:transform .15s}
+.issue-arrow.op{transform:rotate(90deg)}
+.issue-body{display:none;padding:12px 14px;border-top:.5px solid var(--color-border-tertiary)}
+.issue-body.op{display:block}
+.diag{background:var(--color-background-secondary);border-radius:6px;padding:9px 12px;font-size:12px;color:var(--color-text-secondary);line-height:1.65;margin-bottom:8px;border-left:3px solid var(--color-border-secondary)}
+.fix-label{font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
+.code{font-family:var(--font-mono);font-size:11px;line-height:1.75;background:var(--color-background-secondary);border-radius:6px;padding:10px 12px;border:.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);white-space:pre-wrap;word-break:break-all;position:relative}
+.code .kw{color:var(--color-text-info)}.code .str{color:var(--color-text-success)}.code .cm{color:var(--color-text-tertiary)}.code .num{color:var(--color-text-warning)}
+.copy-btn{position:absolute;top:6px;right:6px;font-size:10px;padding:2px 7px;border-radius:4px;border:.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-secondary);cursor:pointer;font-family:inherit}
+.impact{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+
+.prompt-box{background:var(--color-background-secondary);border:.5px solid var(--color-border-secondary);border-radius:var(--border-radius-lg);padding:13px 15px;margin-bottom:10px;position:relative}
+.pm-head{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.pm-body{font-size:12px;color:var(--color-text-primary);line-height:1.75}
+
+.score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.sg{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px;text-align:center}
+.sg .sv{font-size:20px;font-weight:500;margin-bottom:2px}
+.sg .sl{font-size:10px;color:var(--color-text-secondary)}
+
+.before-after{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.ba-col{border-radius:var(--border-radius-md);overflow:hidden;border:.5px solid var(--color-border-tertiary)}
+.ba-hd{padding:7px 11px;font-size:11px;font-weight:500;border-bottom:.5px solid var(--color-border-tertiary)}
+.ba-body{padding:9px 11px;font-size:11px;color:var(--color-text-secondary);line-height:1.65}
+</style>
+
+<div style="margin-bottom:14px">
+  <div style="font-size:17px;font-weight:500;margin-bottom:3px">RAG diagnosis — 6 problems, 6 fixes</div>
+  <div style="font-size:12px;color:var(--color-text-secondary)">Based on your 4 screenshots + system_architecture_reference.md</div>
+</div>
+
+<div class="score-grid">
+  <div class="sg"><div class="sv" style="color:#E24B4A">28–44%</div><div class="sl">Similarity scores (should be 65%+)</div></div>
+  <div class="sg"><div class="sv" style="color:#EF9F27">0.25</div><div class="sl">Your min_similarity (way too low)</div></div>
+  <div class="sg"><div class="sv" style="color:#1D9E75">6</div><div class="sl">Fixable issues found</div></div>
+</div>
+
+<div class="tnav">
+  <button class="tb on" onclick="tab(this,'diag')">All 6 issues</button>
+  <button class="tb" onclick="tab(this,'weights')">Fix scoring weights</button>
+  <button class="tb" onclick="tab(this,'prompt')">Fix LLM prompt</button>
+  <button class="tb" onclick="tab(this,'codex')">Codex prompt</button>
+</div>
+
+<!-- ALL 6 ISSUES -->
+<div class="pn on" id="pn-diag">
+
+<!-- Issue 1 -->
+<div class="issue">
+  <div class="issue-head" onclick="tog(this)">
+    <div class="issue-sev" style="background:#FAECE7;color:#993C1D">1</div>
+    <div class="issue-title">min_similarity is 0.25 — you're accepting completely irrelevant chunks</div>
+    <span class="bx b-red">Critical</span>
+    <span class="issue-arrow">▶</span>
+  </div>
+  <div class="issue-body">
+    <div class="diag">Your API spec shows <code>min_similarity: 0.25</code>. This means a chunk only needs 25% cosine similarity to be returned. At this threshold, almost every chunk in the textbook qualifies — the RAG is showing noise as results. The screenshots confirm this: scores of 28%, 30%, 31% are being returned and displayed to the student. These chunks have nearly zero relevance to the question.</div>
+    <div class="fix-label">Fix — raise threshold + add intent-based floor</div>
+    <div class="code"><button class="copy-btn" onclick="cp(this)">Copy</button><span class="cm"># rag.py — change the thresholds</span>
+<span class="cm"># Before</span>
+MIN_SIMILARITY = <span class="num">0.25</span>   <span class="cm"># ← returns garbage</span>
+
+<span class="cm"># After: intent-based thresholds</span>
+SIMILARITY_THRESHOLDS = {
+    <span class="str">"definition"</span>:  <span class="num">0.58</span>,  <span class="cm"># ما هو، ما هي → need close definition match</span>
+    <span class="str">"calculation"</span>: <span class="num">0.52</span>,  <span class="cm"># احسب، أوجد → worked examples are looser</span>
+    <span class="str">"exercise"</span>:    <span class="num">0.50</span>,  <span class="cm"># تمرين → exercises can be broader</span>
+    <span class="str">"default"</span>:     <span class="num">0.55</span>,  <span class="cm"># everything else</span>
+}
+
+<span class="cm"># Also add a HARD minimum — never show below 0.45 regardless of intent</span>
+ABSOLUTE_MIN_SIMILARITY = <span class="num">0.45</span></div>
+    <div class="impact"><span class="bx b-teal">Expected improvement</span> Scores jump from 28-44% to 55-80%. Irrelevant chunks stop appearing.</div>
+  </div>
+</div>
+
+<!-- Issue 2 -->
+<div class="issue">
+  <div class="issue-head" onclick="tog(this)">
+    <div class="issue-sev" style="background:#FAECE7;color:#993C1D">2</div>
+    <div class="issue-title">Hybrid scoring: 65% lexical weight is killing semantic matching</div>
+    <span class="bx b-red">Critical</span>
+    <span class="issue-arrow">▶</span>
+  </div>
+  <div class="issue-body">
+    <div class="diag">Your architecture says: <code>0.35 * Vector Similarity + 0.65 * Lexical Score</code>. This means keyword matching gets 65% of the weight. For short Arabic questions like "ما هي الاملاح؟", the lexical tokenizer often can't find exact matches in the chunks — Arabic morphology changes words heavily. So the lexical score is near 0, dragging the final score down to 35% of the real vector similarity. The REAL vector similarity might be 0.75 but after lexical dragging it becomes 0.26.</div>
+    <div class="fix-label">Fix — flip the weights</div>
+    <div class="code"><button class="copy-btn" onclick="cp(this)">Copy</button><span class="cm"># rag.py — fix hybrid scoring weights</span>
+<span class="cm"># Before (killing semantic search)</span>
+VECTOR_WEIGHT  = <span class="num">0.35</span>
+LEXICAL_WEIGHT = <span class="num">0.65</span>
+
+<span class="cm"># After (let the embedding model do its job)</span>
+VECTOR_WEIGHT  = <span class="num">0.70</span>
+LEXICAL_WEIGHT = <span class="num">0.30</span>
+
+<span class="cm"># Reason: gemini-embedding-001 is trained specifically for Arabic</span>
+<span class="cm"># semantic similarity. Trust it. Lexical is a light correctness check,</span>
+<span class="cm"># not the primary signal.</span>
+
+<span class="cm"># The hybrid score function should be:</span>
+<span class="kw">def</span> hybrid_score(vector_sim: float, lexical_sim: float, intent: str) -> float:
+    v_weight = <span class="num">0.80</span> <span class="kw">if</span> intent == <span class="str">"definition"</span> <span class="kw">else</span> <span class="num">0.70</span>
+    l_weight = <span class="num">1.0</span> - v_weight
+    base = v_weight * vector_sim + l_weight * lexical_sim
+    <span class="kw">return</span> min(base, <span class="num">1.0</span>)</div>
+    <div class="impact"><span class="bx b-teal">Expected improvement</span> Correct semantic matches will score 70-85%. "ما هي الاملاح؟" will find the salt definition page correctly.</div>
+  </div>
+</div>
+
+<!-- Issue 3 -->
+<div class="issue">
+  <div class="issue-head" onclick="tog(this)">
+    <div class="issue-sev" style="background:#FAEEDA;color:#854F0B">3</div>
+    <div class="issue-title">Exercise chunks returned for definition questions (see screenshot 2)</div>
+    <span class="bx b-gold">High</span>
+    <span class="issue-arrow">▶</span>
+  </div>
+  <div class="issue-body">
+    <div class="diag">Screenshot 2: "ما التفاعلات الكيمياءيه؟" returns 6/6 chunks of type "exercise". The student asked what chemical reactions ARE — a definitional question. Exercise chunks contain problems like "احسب..." not explanations. Your system has a +0.18 boost for "definition" intent matches but it's not filtering out exercises for definition queries.</div>
+    <div class="fix-label">Fix — content_type filter for definition intent</div>
+    <div class="code"><button class="copy-btn" onclick="cp(this)">Copy</button><span class="cm"># rag.py — add content_type weighting by intent</span>
+CONTENT_TYPE_PRIORITY = {
+    <span class="str">"definition"</span>:  [<span class="str">"definition"</span>, <span class="str">"text"</span>, <span class="str">"result"</span>],
+    <span class="str">"calculation"</span>: [<span class="str">"exercise"</span>, <span class="str">"result"</span>, <span class="str">"equation"</span>],
+    <span class="str">"default"</span>:     [<span class="str">"definition"</span>, <span class="str">"text"</span>, <span class="str">"result"</span>, <span class="str">"exercise"</span>],
+}
+
+CONTENT_TYPE_BOOST = {
+    <span class="str">"definition"</span>: +<span class="num">0.12</span>,
+    <span class="str">"text"</span>:       +<span class="num">0.08</span>,
+    <span class="str">"result"</span>:     +<span class="num">0.05</span>,
+    <span class="str">"exercise"</span>:   -<span class="num">0.10</span>,  <span class="cm"># PENALISE exercises for definition questions</span>
+    <span class="str">"equation"</span>:   -<span class="num">0.03</span>,
+}
+
+<span class="kw">def</span> apply_content_type_boost(
+    score: float,
+    chunk_content_type: str,
+    query_intent: str
+) -> float:
+    <span class="kw">if</span> query_intent == <span class="str">"definition"</span>:
+        boost = CONTENT_TYPE_BOOST.get(chunk_content_type, <span class="num">0</span>)
+        <span class="kw">return</span> score + boost
+    <span class="kw">return</span> score</div>
+    <div class="impact"><span class="bx b-teal">Expected improvement</span> Definition questions will return definition/text chunks. Exercise chunks will still appear for calculation questions.</div>
+  </div>
+</div>
+
+<!-- Issue 4 -->
+<div class="issue">
+  <div class="issue-head" onclick="tog(this)">
+    <div class="issue-sev" style="background:#FAEEDA;color:#854F0B">4</div>
+    <div class="issue-title">LLM answer is truncated — "تعريف الملح:" with nothing after</div>
+    <span class="bx b-gold">High</span>
+    <span class="issue-arrow">▶</span>
+  </div>
+  <div class="issue-body">
+    <div class="diag">Screenshot 4: "ما هي الاملاح؟" — The AI answers "أهلاً بك يا بني. بناءً على كتاب الكيمياء... إليك تعريف الملح وكيفية تشكله وخصائصه: **تعريف الملح:**" and then stops. The LLM starts answering but the context chunks it received either had very low content quality (low similarity scores = irrelevant chunks) or the system prompt is telling it to format an answer it can't complete from the retrieved chunks. Two sub-problems: (a) wrong chunks → LLM has no good content; (b) the system prompt asks for a structured multi-section answer which the LLM can't fill from 28-35% similarity chunks.</div>
+    <div class="fix-label">Fix — add fallback instruction + grounding check</div>
+    <div class="code"><button class="copy-btn" onclick="cp(this)">Copy</button><span class="cm"># ai_service.py — add explicit instructions for low-confidence context</span>
+SYSTEM_PROMPT_ADDITION = <span class="str">"""
+قواعد الإجابة:
+1. إذا وجدت معلومات واضحة في السياق → أجب منها مباشرةً.
+2. إذا كانت المعلومات جزئية → قدّم ما لديك وأشر للطالب
+   أن يراجع الصفحة المذكورة.
+3. إذا لم تجد معلومات كافية → قل بوضوح:
+   "لم أجد تعريفاً محدداً لهذا الموضوع في الصفحات المتاحة.
+   أنصحك بمراجعة الفصل المناسب مباشرةً."
+4. لا تبدأ إجابةً لا تستطيع إكمالها.
+5. لا تستخدم عناوين مثل **تعريف X:** إلا إذا كان لديك
+   محتوى حقيقي من السياق لتضعه تحتها.
+"""</span>
+
+<span class="cm"># Also add a min_chunk_quality check before calling the LLM:</span>
+<span class="kw">def</span> should_use_rag_context(chunks: list, threshold: float = <span class="num">0.55</span>) -> bool:
+    <span class="kw">if not</span> chunks:
+        <span class="kw">return False</span>
+    top_score = max(c.similarity_score <span class="kw">for</span> c <span class="kw">in</span> chunks)
+    <span class="kw">return</span> top_score >= threshold
+
+<span class="cm"># If should_use_rag_context is False → use LLM general knowledge</span>
+<span class="cm"># with a disclaimer, or return a "not in textbook" message</span></div>
+    <div class="impact"><span class="bx b-teal">Expected improvement</span> No more truncated answers. If context is weak, the AI will say so honestly instead of starting a half-answer.</div>
+  </div>
+</div>
+
+<!-- Issue 5 -->
+<div class="issue">
+  <div class="issue-head" onclick="tog(this)">
+    <div class="issue-sev" style="background:#E6F1FB;color:#185FA5">5</div>
+    <div class="issue-title">Missing entities in chemistry_entities.json (sodium carbonate, etc.)</div>
+    <span class="bx b-blue">Medium</span>
+    <span class="issue-arrow">▶</span>
+  </div>
+  <div class="issue-body">
+    <div class="diag">Screenshot 1: "ما هي كربونات الصوديوم؟" — The system correctly identifies the topic isn't in retrieved chunks, but the deterministic entity lookup (chemistry_entities.json) also doesn't have it. The system should know sodium carbonate (Na₂CO₃) is a salt, and route this question to the "salts" chapter context automatically.</div>
+    <div class="fix-label">Fix — add common Grade 9 compounds to chemistry_entities.json</div>
+    <div class="code"><button class="copy-btn" onclick="cp(this)">Copy</button"><span class="cm">// chemistry_entities.json — add these entries</span>
+{
+  <span class="str">"كربونات الصوديوم"</span>: {
+    <span class="str">"formula"</span>: <span class="str">"Na₂CO₃"</span>,
+    <span class="str">"category"</span>: <span class="str">"salt"</span>,
+    <span class="str">"aliases"</span>: [<span class="str">"سودا الغسيل"</span>, <span class="str">"الصودا"</span>],
+    <span class="str">"topic_hint"</span>: <span class="str">"الأملاح"</span>,
+    <span class="str">"chapter_search_hint"</span>: <span class="str">"الأملاح والتفاعلات"</span>
+  },
+  <span class="str">"كلوريد الصوديوم"</span>: {
+    <span class="str">"formula"</span>: <span class="str">"NaCl"</span>,
+    <span class="str">"category"</span>: <span class="str">"salt"</span>,
+    <span class="str">"aliases"</span>: [<span class="str">"ملح الطعام"</span>, <span class="str">"ملح الكوكل"</span>],
+    <span class="str">"topic_hint"</span>: <span class="str">"الأملاح"</span>
+  },
+  <span class="str">"هيدروكسيد الصوديوم"</span>: {
+    <span class="str">"formula"</span>: <span class="str">"NaOH"</span>,
+    <span class="str">"category"</span>: <span class="str">"base"</span>,
+    <span class="str">"aliases"</span>: [<span class="str">"الصودا الكاوية"</span>],
+    <span class="str">"topic_hint"</span>: <span class="str">"الأسس"</span>
+  }
+}
+<span class="cm">// Then in rag.py, when query contains a known entity alias,</span>
+<span class="cm">// use topic_hint to add a chapter filter to the Qdrant query.</span></div>
+    <div class="impact"><span class="bx b-teal">Expected improvement</span> "كربونات الصوديوم" routes to the salts chapter. Even if not in the textbook, the AI will say "هذا المركب ملح — راجع فصل الأملاح" instead of a confusing non-answer.</div>
+  </div>
+</div>
+
+<!-- Issue 6 -->
+<div class="issue">
+  <div class="issue-head" onclick="tog(this)">
+    <div class="issue-sev" style="background:#E6F1FB;color:#185FA5">6</div>
+    <div class="issue-title">Similarity scores displayed as raw numbers confuse students</div>
+    <span class="bx b-blue">UX</span>
+    <span class="issue-arrow">▶</span>
+  </div>
+  <div class="issue-body">
+    <div class="diag">The UI shows "28%", "34%", "39%" next to source chunks. A student seeing 28% thinks "the AI is only 28% sure". But these are cosine similarity scores, not confidence levels. Even more confusingly, after fixing the weights and threshold, the displayed numbers will jump to 65-80% — but students shouldn't need to see raw scores at all. The source cards should show page number and chapter name, not a raw similarity percentage.</div>
+    <div class="fix-label">Fix — replace % with confidence label OR hide it</div>
+    <div class="code"><button class="copy-btn" onclick="cp(this)">Copy</button"><span class="cm">// Flutter — replace raw score with confidence label</span>
+String scoreLabel(double score) {
+  <span class="kw">if</span> (score >= <span class="num">0.75</span>) <span class="kw">return</span> <span class="str">"مطابقة عالية"</span>;
+  <span class="kw">if</span> (score >= <span class="num">0.60</span>) <span class="kw">return</span> <span class="str">"مطابقة جيدة"</span>;
+  <span class="kw">if</span> (score >= <span class="num">0.50</span>) <span class="kw">return</span> <span class="str">"مطابقة متوسطة"</span>;
+  <span class="kw">return</span> <span class="str">"مطابقة منخفضة"</span>;  <span class="cm">// should rarely appear after threshold fix</span>
+}
+
+<span class="cm">// Or simply hide the score entirely and show:</span>
+<span class="cm">// "من الكتاب المدرسي · صفحة 47 · تعريف"</span>
+<span class="cm">// This is what ChatGPT and Gemini do — no raw scores shown</span></div>
+    <div class="impact"><span class="bx b-teal">Expected improvement</span> Less confusing UI. Students see "من الكتاب المدرسي · صفحة 47" not a scary "28%".</div>
+  </div>
+</div>
+</div>
+
+<!-- FIX SCORING WEIGHTS -->
+<div class="pn" id="pn-weights">
+<div class="sec">The root cause — why all scores are 28-44%</div>
+
+<div class="before-after">
+  <div class="ba-col">
+    <div class="ba-hd" style="background:#FAECE7;color:#993C1D">Current (broken)</div>
+    <div class="ba-body">
+      Vector weight: <strong>0.35</strong><br>
+      Lexical weight: <strong>0.65</strong><br>
+      Min similarity: <strong>0.25</strong><br><br>
+      What happens: Gemini embedding finds the right chunk with 0.72 vector similarity. But the Arabic tokenizer fails to find "الأملاح" in the chunk that says "أملاح" (different form). Lexical score = 0.05. Final score = 0.35 × 0.72 + 0.65 × 0.05 = <strong>0.28</strong>. That's why you're seeing 28%!
+    </div>
+  </div>
+  <div class="ba-col">
+    <div class="ba-hd" style="background:#E1F5EE;color:#0F6E56">Fixed</div>
+    <div class="ba-body">
+      Vector weight: <strong>0.75</strong><br>
+      Lexical weight: <strong>0.25</strong><br>
+      Min similarity: <strong>0.55</strong><br><br>
+      What happens: Same chunk, same embedding. 0.75 × 0.72 + 0.25 × 0.05 = <strong>0.55</strong>. Passes threshold. Returned to student. The LLM now has good content to answer from.
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div style="font-size:13px;font-weight:500;margin-bottom:8px">Full rag.py scoring fix — drop this into your existing hybrid_score function</div>
+  <div class="code"><button class="copy-btn" onclick="cp(this)">Copy</button><span class="cm"># backend/app/services/rag.py</span>
+<span class="cm"># Find your existing hybrid scoring section and replace with this:</span>
+
+INTENT_SCORING_CONFIG = {
+    <span class="str">"definition"</span>: {
+        <span class="str">"vector_weight"</span>: <span class="num">0.80</span>,
+        <span class="str">"lexical_weight"</span>: <span class="num">0.20</span>,
+        <span class="str">"min_similarity"</span>: <span class="num">0.58</span>,
+        <span class="str">"preferred_types"</span>: [<span class="str">"definition"</span>, <span class="str">"text"</span>],
+        <span class="str">"penalised_types"</span>: [<span class="str">"exercise"</span>],
+    },
+    <span class="str">"calculation"</span>: {
+        <span class="str">"vector_weight"</span>: <span class="num">0.65</span>,
+        <span class="str">"lexical_weight"</span>: <span class="num">0.35</span>,
+        <span class="str">"min_similarity"</span>: <span class="num">0.50</span>,
+        <span class="str">"preferred_types"</span>: [<span class="str">"exercise"</span>, <span class="str">"result"</span>],
+        <span class="str">"penalised_types"</span>: [],
+    },
+    <span class="str">"default"</span>: {
+        <span class="str">"vector_weight"</span>: <span class="num">0.72</span>,
+        <span class="str">"lexical_weight"</span>: <span class="num">0.28</span>,
+        <span class="str">"min_similarity"</span>: <span class="num">0.55</span>,
+        <span class="str">"preferred_types"</span>: [<span class="str">"definition"</span>, <span class="str">"text"</span>],
+        <span class="str">"penalised_types"</span>: [],
+    },
+}
+
+<span class="kw">def</span> compute_final_score(
+    vector_sim: float,
+    lexical_sim: float,
+    chunk_content_type: str,
+    query_intent: str,
+) -> float:
+    cfg = INTENT_SCORING_CONFIG.get(query_intent, INTENT_SCORING_CONFIG[<span class="str">"default"</span>])
+    base = cfg[<span class="str">"vector_weight"</span>] * vector_sim + cfg[<span class="str">"lexical_weight"</span>] * lexical_sim
+
+    <span class="cm"># type boosting from architecture (keep your existing boosts)</span>
+    <span class="kw">if</span> chunk_content_type <span class="kw">in</span> cfg[<span class="str">"preferred_types"</span>]:
+        base += <span class="num">0.08</span>
+    <span class="kw">elif</span> chunk_content_type <span class="kw">in</span> cfg[<span class="str">"penalised_types"</span>]:
+        base -= <span class="num">0.12</span>
+
+    <span class="kw">return</span> min(max(base, <span class="num">0.0</span>), <span class="num">1.0</span>)
+
+
+<span class="kw">def</span> detect_intent(query: str) -> str:
+    definition_words = [<span class="str">"ما هو"</span>, <span class="str">"ما هي"</span>, <span class="str">"عرّف"</span>, <span class="str">"اشرح"</span>, <span class="str">"فسّر"</span>, <span class="str">"ما المقصود"</span>]
+    calculation_words = [<span class="str">"احسب"</span>, <span class="str">"أوجد"</span>, <span class="str">"حل"</span>, <span class="str">"طبّق"</span>, <span class="str">"وازن"</span>]
+    <span class="kw">if</span> any(w <span class="kw">in</span> query <span class="kw">for</span> w <span class="kw">in</span> definition_words):
+        <span class="kw">return</span> <span class="str">"definition"</span>
+    <span class="kw">if</span> any(w <span class="kw">in</span> query <span class="kw">for</span> w <span class="kw">in</span> calculation_words):
+        <span class="kw">return</span> <span class="str">"calculation"</span>
+    <span class="kw">return</span> <span class="str">"default"</span></div>
+</div>
+</div>
+
+<!-- FIX LLM PROMPT -->
+<div class="pn" id="pn-prompt">
+<div class="sec">The system prompt causing truncated answers</div>
+<div class="card" style="margin-bottom:12px">
+  <div style="font-size:13px;font-weight:500;margin-bottom:5px">Why "تعريف الملح:" appears with nothing after it</div>
+  <div style="font-size:12px;color:var(--color-text-secondary);line-height:1.65">The LLM receives chunks with 28-35% similarity — content that's mostly about organic chemistry/alkanes, not salts. The LLM starts writing "تعريف الملح:" because the system prompt asks it to be a structured tutor, but then it has no actual definition content in the retrieved chunks to put there, so it either truncates or hallucinates. The fix is two-part: better chunks (from fixing the threshold) AND a smarter prompt that handles empty/weak context gracefully.</div>
+</div>
+
+<div class="prompt-box">
+  <div class="pm-head" style="color:#534AB7">Add this to your system instruction in ai_service.py</div>
+  <button class="copy-btn" onclick="cpTxt('p1')" style="position:absolute;top:10px;right:10px;font-size:10px;padding:2px 7px;border-radius:4px;border:.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-secondary);cursor:pointer;font-family:inherit">Copy</button>
+  <div class="pm-body" id="p1">
+قواعد الإجابة:
+
+١. إذا وجدت تعريفاً أو شرحاً واضحاً في المقاطع المسترجعة:
+   → أجب مباشرةً من المحتوى المتاح. اذكر رقم الصفحة.
+
+٢. إذا كانت المقاطع المسترجعة تحتوي معلومات جزئية فقط:
+   → قدّم ما لديك بوضوح، وأضف: "للمزيد راجع [الفصل المناسب] مباشرةً."
+
+٣. إذا كانت المقاطع غير ذات صلة بالسؤال (أقل من 55% تشابه):
+   → لا تحاول الإجابة من هذه المقاطع. قل:
+   "لم أجد تعريفاً محدداً لهذا الموضوع في الأقسام المتاحة من الكتاب.
+   يبدو أن هذا الموضوع قد يكون في فصل [X] — هل تريد أن أشرح لك من معرفتي العامة؟"
+
+٤. لا تبدأ عنواناً (مثل **تعريف X:**) إلا إذا كان لديك محتوى حقيقي تضعه تحته.
+
+٥. لا تتجاوز 150 كلمة في الإجابة الواحدة — كن مركّزاً وواضحاً.
+  </div>
+</div>
+
+<div class="prompt-box">
+  <div class="pm-head" style="color:#0F6E56">Add this context injection to your prompt builder</div>
+  <button class="copy-btn" onclick="cpTxt('p2')" style="position:absolute;top:10px;right:10px;font-size:10px;padding:2px 7px;border-radius:4px;border:.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-secondary);cursor:pointer;font-family:inherit">Copy</button>
+  <div class="pm-body" id="p2">
+def build_rag_prompt(question: str, chunks: list, intent: str) -> str:
+    if not chunks or max(c.similarity_score for c in chunks) < 0.55:
+        # Weak context — tell the LLM explicitly
+        context_block = """
+[تنبيه: لم يتم العثور على مقاطع ذات صلة كافية في الكتاب لهذا السؤال.
+استخدم معرفتك العامة بمنهج كيمياء الصف التاسع واذكر أن الإجابة
+ليست من الكتاب مباشرةً.]
+"""
+    else:
+        parts = []
+        for c in chunks:
+            label = "كتاب مدرسي" if c.source_type == "textbook" else "كتاب الحلول"
+            parts.append(
+                f"[{label} — صفحة {c.page_number} — نوع: {c.content_type}]\n"
+                f"{c.content[:400]}"
+            )
+        context_block = "\n\n".join(parts)
+
+    return f"""السياق من الكتاب:
+{context_block}
+
+سؤال الطالب: {question}
+أجب بالعربية. كن موجزاً ومفيداً."""
+  </div>
+</div>
+</div>
+
+<!-- CODEX PROMPT -->
+<div class="pn" id="pn-codex">
+<div class="prompt-box">
+  <div class="pm-head" style="color:#534AB7">Codex / Claude Sonnet — implement all 6 fixes</div>
+  <button class="copy-btn" onclick="cpTxt('codex')" style="position:absolute;top:10px;right:10px;font-size:10px;padding:2px 7px;border-radius:4px;border:.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-secondary);cursor:pointer;font-family:inherit">Copy</button>
+  <div class="pm-body" id="codex">
+You are a senior ML engineer reviewing and fixing a production RAG system for an Arabic chemistry tutoring app. The system is working but returning poor quality answers. I have identified 6 specific issues from live screenshots. Fix all of them.
+
+## PROJECT CONTEXT
+
+Stack: FastAPI, PostgreSQL + pgvector, Redis, Gemini API, SQLAlchemy 2.0 async.
+Files to modify: `backend/app/services/rag.py`, `backend/app/services/ai_service.py`, `backend/app/rag/data/chemistry_entities.json`.
+Embedding model: `gemini-embedding-001` (768-dim, Arabic-optimised).
+Vector database: pgvector with `ivfflat` index, `vector_cosine_ops`.
+
+## PROBLEM SUMMARY
+
+The live system returns answers with 28-44% similarity scores when they should be 65-80%+. Root cause: the hybrid scoring weights are (0.35 vector, 0.65 lexical) — Arabic morphology makes lexical matching unreliable, so it drags scores down. Also: min_similarity is 0.25, allowing irrelevant chunks through.
+
+## FIX 1 — rag.py: fix hybrid scoring weights
+
+Change:
+- VECTOR_WEIGHT from 0.35 → 0.75
+- LEXICAL_WEIGHT from 0.65 → 0.25
+- min_similarity from 0.25 → 0.55 (hard floor: never return below 0.45)
+
+Make these intent-dependent:
+- For "definition" intent (ما هو، ما هي، عرّف، اشرح): vector_weight=0.80, min_sim=0.58
+- For "calculation" intent (احسب، أوجد، حل): vector_weight=0.65, min_sim=0.50
+- Default: vector_weight=0.72, min_sim=0.55
+
+## FIX 2 — rag.py: add detect_intent() function
+
+Create a function detect_intent(query: str) -> str that returns:
+- "definition" if query contains: ما هو، ما هي، عرّف، اشرح، فسّر، ما المقصود، ما الفرق
+- "calculation" if query contains: احسب، أوجد، حل، طبّق، وازن، قارن
+- "default" otherwise
+
+Use the detected intent to:
+1. Select the correct scoring weights (Fix 1)
+2. Apply content_type boosting (Fix 3)
+
+## FIX 3 — rag.py: apply content_type boosting by intent
+
+For "definition" intent queries:
+- Add +0.08 to score if chunk.content_type in ["definition", "text"]
+- Add -0.12 to score if chunk.content_type == "exercise"
+- This ensures exercise chunks don't appear for "ما هي X؟" questions
+
+For "calculation" intent queries:
+- Add +0.08 if chunk.content_type in ["exercise", "result"]
+- No penalty on "definition" chunks
+
+## FIX 4 — ai_service.py: fix the system prompt for weak context
+
+Add this to the system instruction (AFTER the existing tutor persona instructions):
+
+"""
+قواعد الإجابة:
+١. إذا وجدت معلومات واضحة في السياق → أجب منها مع ذكر رقم الصفحة.
+٢. إذا كانت المعلومات جزئية → قدّم ما لديك وأشر للطالب لمراجعة الفصل.
+٣. إذا كانت المقاطع غير ذات صلة → قل: "لم أجد تعريفاً محدداً في الأقسام المتاحة."
+٤. لا تبدأ عنواناً مثل **تعريف X:** إلا إذا كان لديك محتوى حقيقي تحته.
+٥. لا تتجاوز 150 كلمة في الإجابة الواحدة.
+"""
+
+Also add a build_rag_prompt() helper that:
+- If top chunk score < 0.55: injects a "[تنبيه: لم يتم العثور على مقاطع ذات صلة]" warning in the context block
+- If chunks are good: formats as "[كتاب مدرسي — صفحة X — نوع: definition]\n{content[:400]}"
+
+## FIX 5 — chemistry_entities.json: add missing Grade 9 compounds
+
+Add these entries to the entities dictionary:
+- كربونات الصوديوم: formula=Na₂CO₃, category=salt, aliases=[سودا الغسيل], topic_hint=الأملاح
+- كلوريد الصوديوم: formula=NaCl, category=salt, aliases=[ملح الطعام], topic_hint=الأملاح
+- هيدروكسيد الصوديوم: formula=NaOH, category=base, aliases=[الصودا الكاوية], topic_hint=الأسس
+- حمض الكبريتيك: formula=H₂SO₄, category=acid, aliases=[حمض الكبريت], topic_hint=الحموض
+- هيدروكسيد الكالسيوم: formula=Ca(OH)₂, category=base, aliases=[ماء الجير], topic_hint=الأسس
+
+When an entity alias is detected in a query, add a topic_hint-based filter to the pgvector query to restrict search to the relevant chapter.
+
+## FIX 6 — Flutter: replace raw similarity % with confidence labels
+
+In the source cards UI, replace the raw percentage display with:
+- score >= 0.75 → "مطابقة عالية" (green)
+- score >= 0.60 → "مطابقة جيدة" (teal)
+- score >= 0.50 → "مطابقة متوسطة" (yellow)
+- score < 0.50 → don't show this chunk (after threshold fix, this should never appear)
+
+## ACCEPTANCE CRITERIA
+
+After your changes:
+1. "ما هي الاملاح؟" returns chunks with score >= 0.60, content_type="definition", and the LLM produces a complete answer.
+2. "ما التفاعلات الكيمياءيه؟" returns at least 3 "text" or "definition" chunks, not just "exercise" chunks.
+3. "ما هي كربونات الصوديوم؟" triggers the entity lookup and routes to the salts chapter context.
+4. No answer is generated from chunks scoring below 0.55.
+5. The LLM never produces a truncated answer like "تعريف الملح:" with nothing after it.
+
+## FILES TO ATTACH
+
+- backend/app/services/rag.py (the current hybrid scoring implementation)
+- backend/app/services/ai_service.py (the system prompt + LLM call)
+- backend/app/rag/data/chemistry_entities.json
+- lib/features/chat/ folder (Flutter chat UI for Fix 6)
+  </div>
+</div>
+</div>
+
+<script>
+function tab(btn,id){
+  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.pn').forEach(p=>p.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('pn-'+id).classList.add('on');
+}
+function tog(el){
+  const body=el.nextElementSibling;
+  const arrow=el.querySelector('.issue-arrow');
+  const op=body.classList.toggle('op');
+  arrow.classList.toggle('op',op);
+}
+function cp(btn){
+  const text=btn.parentElement.innerText.replace('Copy','').trim();
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='Copied!';
+    setTimeout(()=>btn.textContent='Copy',2000);
+  });
+}
+function cpTxt(id){
+  const text=document.getElementById(id).innerText.trim();
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn=document.querySelector(`[onclick="cpTxt('${id}')"]`);
+    btn.textContent='Copied!';
+    setTimeout(()=>btn.textContent='Copy',2000);
+  });
+}
+</script>

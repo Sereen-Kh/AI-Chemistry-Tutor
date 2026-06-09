@@ -34,9 +34,76 @@ logger = logging.getLogger(__name__)
 
 _REWRITE_CACHE_TTL_SECONDS = 600
 _RESULT_CACHE_TTL_SECONDS = 3600
-_CACHE_VERSION = "v1"
+_CACHE_VERSION = "v3"
 _RRF_K = 60
 _MAX_RERANK_CANDIDATES = 16
+_QUALITY_GATE_MIN_SCORE = 0.45
+_INTENT_MIN_SCORES = {
+    "definition_lookup": 0.52,
+    "property_lookup": 0.50,
+    "formula_lookup": 0.48,
+    "equation_lookup": 0.48,
+    "reaction_query": 0.48,
+    "table_lookup": 0.48,
+    "book_grounded": 0.45,
+    "exercise_lookup": 0.42,
+    "general": 0.45,
+}
+_INTENT_PREFERRED_CONTENT_TYPES = {
+    "definition_lookup": {"definition", "text", "result", "learned_summary", "summary", "concept"},
+    "property_lookup": {"definition", "text", "result", "learned_summary", "table"},
+    "formula_lookup": {"formula", "equation", "table", "definition", "text"},
+    "equation_lookup": {"equation", "result", "exercise", "text", "table"},
+    "reaction_query": {"equation", "result", "exercise", "text", "table"},
+    "table_lookup": {"table", "text"},
+    "exercise_lookup": {"exercise", "equation", "result", "table", "text"},
+    "book_grounded": {"definition", "text", "result", "learned_summary", "table"},
+}
+_INTENT_PENALIZED_CONTENT_TYPES = {
+    "definition_lookup": {"exercise", "question", "questions", "exam_question", "objectives", "objective"},
+    "property_lookup": {"exercise", "question", "questions", "exam_question", "objectives", "objective"},
+    "formula_lookup": {"objectives", "objective"},
+    "table_lookup": {"exercise", "question", "questions"},
+}
+_ENTITY_COVERAGE_GROUPS = (
+    ("sodium_carbonate", ("كربونات الصوديوم", "na2co3")),
+    ("calcium_carbonate", ("كربونات الكالسيوم", "caco3")),
+    ("sodium_bicarbonate", ("بيكربونات الصوديوم", "nahco3")),
+    ("potassium_hydroxide", ("هيدروكسيد البوتاسيوم", "koh")),
+    ("copper", ("نحاس", "النحاس", "cu")),
+    ("iron", ("حديد", "الحديد", "fe")),
+    ("zinc", ("زنك", "الزنك", "خارصين", "zn")),
+    ("sulfuric_acid", ("حمض الكبريت", "h2so4")),
+    ("hydrochloric_acid", ("حمض كلور الماء", "كلور الهيدروجين", "hcl")),
+    ("ammonia", ("النشادر", "nh3")),
+    ("ammonium_chloride", ("كلوريد الامونيوم", "كلوريد الأمونيوم", "nh4cl")),
+    ("water_decomposition", ("تفكك الماء", "وعاء فولتا")),
+)
+_ARABIC_DIACRITICS_RE = re.compile(r"[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED]")
+_ARABIC_NORMALIZATION = str.maketrans(
+    {
+        "أ": "ا",
+        "إ": "ا",
+        "آ": "ا",
+        "ٱ": "ا",
+        "ؤ": "و",
+        "ئ": "ي",
+        "ى": "ي",
+        "ة": "ه",
+        "₀": "0",
+        "₁": "1",
+        "₂": "2",
+        "₃": "3",
+        "₄": "4",
+        "₅": "5",
+        "₆": "6",
+        "₇": "7",
+        "₈": "8",
+        "₉": "9",
+        "⁺": "+",
+        "⁻": "-",
+    }
+)
 
 
 @dataclass(frozen=True)
@@ -91,6 +158,14 @@ async def _redis_set_json(key: str, payload: Any, ttl_seconds: int) -> None:
 def _hash_payload(*parts: object) -> str:
     raw = json.dumps(parts, ensure_ascii=False, sort_keys=True, default=str)
     return hashlib.sha256(raw.encode("utf-8", errors="ignore")).hexdigest()
+
+
+def _normalize_relevance_text(text: str) -> str:
+    lowered = (text or "").lower().replace("ـ", "")
+    lowered = _ARABIC_DIACRITICS_RE.sub("", lowered)
+    lowered = lowered.translate(_ARABIC_NORMALIZATION)
+    lowered = re.sub(r"[؟?!.،,؛;:()\[\]{}$\\_]+", " ", lowered)
+    return " ".join(lowered.split()).strip()
 
 
 def _chunk_to_dict(chunk: RetrievedChunk) -> dict[str, Any]:
@@ -279,9 +354,69 @@ def _rrf_fuse(variant_results: list[tuple[str, list[RetrievedChunk], dict[str, A
     return fused
 
 
-def _fallback_rerank_score(query: str, candidate: FusedCandidate) -> float:
+def _content_type_adjustment(query: str, candidate: FusedCandidate, *, intent: str) -> tuple[float, list[str]]:
+    content_type = (candidate.chunk.content_type or "text").strip().lower()
+    query_norm = _normalize_relevance_text(query)
+    content_norm = _normalize_relevance_text(candidate.chunk.content)
+    adjustment = 0.0
+    reasons: list[str] = []
+
+    preferred = _INTENT_PREFERRED_CONTENT_TYPES.get(intent, set())
+    penalized = _INTENT_PENALIZED_CONTENT_TYPES.get(intent, set())
+    if content_type in preferred:
+        adjustment += 0.08
+        reasons.append(f"preferred_content_type:{content_type}")
+    if content_type in penalized:
+        adjustment -= 0.18
+        reasons.append(f"penalized_content_type:{content_type}")
+
+    if intent == "definition_lookup":
+        if any(marker in content_norm for marker in ("الاهداف", "يتعرف", "يميز", "اختر الاجابه")):
+            adjustment -= 0.12
+            reasons.append("definition_noise_marker")
+        if any(marker in content_norm for marker in ("مواد تعطي", "هو عدد", "هي مواد", "يتشكل الملح")):
+            adjustment += 0.12
+            reasons.append("definition_evidence_marker")
+
+    for entity_key, aliases in _ENTITY_COVERAGE_GROUPS:
+        query_mentions_entity = any(alias in query_norm for alias in aliases)
+        if not query_mentions_entity:
+            continue
+        content_mentions_entity = any(alias in content_norm for alias in aliases)
+        if content_mentions_entity:
+            adjustment += 0.12
+            reasons.append(f"exact_entity:{entity_key}")
+        else:
+            adjustment -= 0.20
+            reasons.append(f"missing_entity:{entity_key}")
+
+    if any(term in query_norm for term in ("املاح", "الاملاح", "ملح", "الملح")):
+        if any(term in content_norm for term in ("ايونات الملح", "اسم الملح", "يتشكل الملح", "الصيغه الجزيئيه")):
+            adjustment += 0.14
+            reasons.append("salt_evidence")
+
+    return adjustment, reasons
+
+
+def _semantic_relevance_score(
+    query: str,
+    candidate: FusedCandidate,
+    *,
+    intent: str,
+    gemini_score: float | None = None,
+) -> tuple[float, list[str]]:
     lexical = lexical_relevance_score(query, candidate.chunk.content)
-    return (0.55 * candidate.rrf_score) + (0.35 * candidate.retrieval_score) + (0.10 * lexical)
+    rrf_signal = min(candidate.rrf_score * 4.0, 0.18)
+    adjustment, reasons = _content_type_adjustment(query, candidate, intent=intent)
+
+    if gemini_score is None:
+        score = (0.68 * candidate.retrieval_score) + (0.24 * lexical) + rrf_signal + adjustment
+        reasons.append("fallback_retrieval_lexical_rrf")
+    else:
+        score = (0.46 * gemini_score) + (0.34 * candidate.retrieval_score) + (0.14 * lexical) + rrf_signal + adjustment
+        reasons.append("gemini_retrieval_lexical_rrf")
+
+    return round(max(0.0, min(1.0, score)), 4), reasons
 
 
 async def _gemini_rerank(query: str, candidates: list[FusedCandidate]) -> dict[int, dict[str, Any]] | None:
@@ -321,24 +456,52 @@ async def _gemini_rerank(query: str, candidates: list[FusedCandidate]) -> dict[i
     return scores or None
 
 
-async def _rerank(query: str, fused: list[FusedCandidate], top_k: int) -> tuple[list[RetrievedChunk], dict[str, Any]]:
+def _minimum_score_for_intent(intent: str) -> float:
+    return max(_QUALITY_GATE_MIN_SCORE, _INTENT_MIN_SCORES.get(intent, _INTENT_MIN_SCORES["general"]))
+
+
+async def _rerank(
+    query: str,
+    fused: list[FusedCandidate],
+    top_k: int,
+    *,
+    intent: str,
+) -> tuple[list[RetrievedChunk], dict[str, Any]]:
     candidate_pool = fused[: max(top_k * 4, _MAX_RERANK_CANDIDATES)]
     gemini_scores = await _gemini_rerank(query, candidate_pool)
+    min_score = _minimum_score_for_intent(intent)
     diagnostics: dict[str, Any] = {
         "reranker_model": settings.gemini_reranker_model,
         "reranker_used": bool(gemini_scores),
+        "quality_gate_min_score": min_score,
     }
 
     scored: list[tuple[float, FusedCandidate, str]] = []
+    rejected: list[dict[str, Any]] = []
     for candidate in candidate_pool:
         if gemini_scores and candidate.chunk.id in gemini_scores:
             gemini_score = float(gemini_scores[candidate.chunk.id]["score"])
-            score = (0.72 * gemini_score) + (0.18 * candidate.rrf_score) + (0.10 * candidate.retrieval_score)
+            score, reasons = _semantic_relevance_score(query, candidate, intent=intent, gemini_score=gemini_score)
             reason = str(gemini_scores[candidate.chunk.id].get("reason") or "gemini_rerank")
+            if reasons:
+                reason = f"{reason}; {';'.join(reasons)}"
         else:
-            score = _fallback_rerank_score(query, candidate)
-            reason = "fallback_rrf_lexical"
-        scored.append((score, candidate, reason))
+            score, reasons = _semantic_relevance_score(query, candidate, intent=intent)
+            reason = ";".join(reasons) or "fallback_retrieval_lexical_rrf"
+        if score >= min_score:
+            scored.append((score, candidate, reason))
+        else:
+            rejected.append(
+                {
+                    "chunk_id": candidate.chunk.id,
+                    "page_number": candidate.chunk.page_number,
+                    "source_type": candidate.chunk.source_type,
+                    "content_type": candidate.chunk.content_type,
+                    "score": round(float(score), 4),
+                    "retrieval_score": round(candidate.retrieval_score, 4),
+                    "reason": "below_quality_gate",
+                }
+            )
 
     scored.sort(key=lambda item: item[0], reverse=True)
     final_chunks = [
@@ -359,6 +522,12 @@ async def _rerank(query: str, fused: list[FusedCandidate], top_k: int) -> tuple[
         }
         for score, candidate, reason in scored[:top_k]
     ]
+    diagnostics["quality_gate"] = {
+        "min_score": min_score,
+        "accepted_count": len(scored),
+        "rejected_count": len(rejected),
+        "rejected_candidates": rejected[:12],
+    }
     return final_chunks, diagnostics
 
 
@@ -428,7 +597,7 @@ async def semantic_retrieve_context(
         ]
     )
     fused = _rrf_fuse(list(variant_results))
-    final_chunks, rerank_diagnostics = await _rerank(query, fused, top_k)
+    final_chunks, rerank_diagnostics = await _rerank(query, fused, top_k, intent=intent)
 
     diagnostics: dict[str, Any] = {
         "pipeline": "semantic_rag_pgvector",

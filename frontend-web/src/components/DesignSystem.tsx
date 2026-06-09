@@ -70,16 +70,27 @@ export const PageHeader = ({
   </header>
 );
 
-export const SourceCard = ({ source }: { source: SourceCitation }) => (
-  <article className="source-card">
-    <div>
-      <strong>{source.title}</strong>
-      <span>صفحة {source.page ?? '-'}</span>
-    </div>
-    {source.quote && <p>{source.quote}</p>}
-    {typeof source.score === 'number' && <StatusPill tone="blue">{Math.round(source.score * 100)}%</StatusPill>}
-  </article>
-);
+const sourceQuality = (score?: number): { label: string; tone: string } | null => {
+  if (typeof score !== 'number') return null;
+  if (score >= 0.75) return { label: 'مطابقة عالية', tone: 'teal' };
+  if (score >= 0.6) return { label: 'مطابقة جيدة', tone: 'blue' };
+  if (score >= 0.45) return { label: 'مطابقة متوسطة', tone: 'gold' };
+  return null;
+};
+
+export const SourceCard = ({ source }: { source: SourceCitation }) => {
+  const quality = sourceQuality(source.score);
+  return (
+    <article className="source-card">
+      <div>
+        <strong>{source.title}</strong>
+        <span>صفحة {source.page ?? '-'}</span>
+      </div>
+      {source.quote && <p>{source.quote}</p>}
+      {quality && <StatusPill tone={quality.tone}>{quality.label}</StatusPill>}
+    </article>
+  );
+};
 
 export const StudyMissionCard = ({
   title,

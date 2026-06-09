@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 _CACHE: dict[str, tuple[float, list["RetrievedChunk"]]] = {}
 _CACHE_TTL_SECONDS = 3600
-_CACHE_VERSION = "v13"
+_CACHE_VERSION = "v14"
 # Allow local dry-run sources for retrieval/debugging without marking ingestion complete.
 _RETRIEVABLE_SOURCE_STATUSES = [
     "completed",
@@ -47,6 +47,22 @@ _ARABIC_NORMALIZATION = str.maketrans(
         "ئ": "ي",
         "ى": "ي",
         "ة": "ه",
+    }
+)
+_CHEMISTRY_GLYPH_NORMALIZATION = str.maketrans(
+    {
+        "₀": "0",
+        "₁": "1",
+        "₂": "2",
+        "₃": "3",
+        "₄": "4",
+        "₅": "5",
+        "₆": "6",
+        "₇": "7",
+        "₈": "8",
+        "₉": "9",
+        "⁺": "+",
+        "⁻": "-",
     }
 )
 
@@ -118,7 +134,25 @@ _TERM_EXPANSIONS = {
         "oh", "oh-", "اسس", "الاسس", "قواعد", "القواعد",
     },
     "املاح": {
-        "املاح", "الاملاح", "ملح", "الملح", "تعديل", "التعديل",
+        "املاح", "الاملاح", "أملاح", "ملح", "الملح", "تعديل", "التعديل",
+        "أيونات الملح", "ايونات الملح", "اسم الملح", "الصيغه الجزيئيه",
+        "الصيغة الجزيئية", "يتشكل الملح", "يتشكّل الملح", "طرائق تحضير الاملاح",
+        "كربونات الصوديوم", "كلوريد الصوديوم", "كبريتات الصوديوم",
+    },
+    "ملح": {
+        "املاح", "الاملاح", "ملح", "الملح", "أيونات الملح", "ايونات الملح",
+        "اسم الملح", "الصيغه الجزيئيه", "الصيغة الجزيئية", "يتشكل الملح",
+        "يتشكّل الملح", "حمض مع اساس", "حمض مع معدن", "حمض مع ملح",
+        "ملح مع ملح",
+    },
+    "صوديوم": {
+        "صوديوم", "الصوديوم", "na", "na+", "كلوريد الصوديوم", "nacl",
+        "كربونات الصوديوم", "na2co3", "كبريتات الصوديوم", "na2so4",
+        "هيدروكسيد الصوديوم", "naoh",
+    },
+    "كربونات": {
+        "كربونات", "الكربونات", "كربونات الصوديوم", "كربونات الكالسيوم",
+        "na2co3", "caCO3", "caco3", "co3", "co32-", "co₃",
     },
     "تاكسد": {
         "تاكسد", "التاكسد", "اكسده", "الاكسده", "ارجاع", "الارجاع",
@@ -183,12 +217,14 @@ _TERM_EXPANSIONS = {
 }
 
 # Content types that get a boost when the intent is definition_lookup
-_DEFINITION_CONTENT_TYPES = {"definition", "summary", "concept", "key_point", "learned_summary", "result"}
+_DEFINITION_CONTENT_TYPES = {"definition", "summary", "concept", "key_point", "learned_summary", "result", "text"}
 _OBJECTIVE_CONTENT_TYPES = {"objectives", "objective"}
 _EQUATION_CONTENT_TYPES = {"equation", "activity", "result", "exercise", "mixed", "full_page"}
+_EXERCISE_CONTENT_TYPES = {"exercise", "question", "questions", "exam_question"}
 _INTENT_CONTENT_TYPE_BOOSTS = {
     "definition_lookup": {
         "definition": 0.24,
+        "text": 0.10,
         "learned_summary": 0.16,
         "result": 0.14,
         "table": 0.04,
@@ -213,10 +249,29 @@ _INTENT_CONTENT_TYPE_BOOSTS = {
         "table": 0.08,
     },
     "property_lookup": {
+        "text": 0.08,
         "definition": 0.12,
         "result": 0.18,
         "learned_summary": 0.18,
         "table": 0.08,
+    },
+    "table_lookup": {
+        "table": 0.28,
+        "text": 0.08,
+        "result": 0.06,
+    },
+    "exercise_lookup": {
+        "exercise": 0.26,
+        "equation": 0.18,
+        "result": 0.12,
+        "table": 0.10,
+        "text": 0.04,
+    },
+    "book_grounded": {
+        "definition": 0.12,
+        "text": 0.10,
+        "result": 0.10,
+        "learned_summary": 0.10,
     },
 }
 _DEFINITION_PENALTY_MARKERS = (
@@ -344,6 +399,7 @@ def _embedding_values(embedding) -> list[float]:
 def _normalize_lexical_text(text: str) -> str:
     """Normalize Arabic text enough for lexical matching over noisy OCR chunks."""
     lowered = text.lower().replace("ـ", "")
+    lowered = lowered.translate(_CHEMISTRY_GLYPH_NORMALIZATION)
     without_diacritics = _ARABIC_DIACRITICS_RE.sub("", lowered)
     normalized = without_diacritics.translate(_ARABIC_NORMALIZATION)
     normalized = normalized.replace("اال", "ال")
@@ -412,6 +468,12 @@ def _candidate_reasons(query: str, content: str, *, intent: str, content_type: s
         "اكسيد الكالسيوم" in normalized or "هيدروكسيد الكالسيوم" in normalized or "cao" in normalized
     ):
         reasons.append("exact_entity:calcium_oxide")
+    if "كربونات الصوديوم" in query_norm and ("كربونات الصوديوم" in normalized or "na2co3" in normalized):
+        reasons.append("exact_entity:sodium_carbonate")
+    if any(term in query_norm for term in ("املاح", "الاملاح", "ملح", "الملح")) and any(
+        term in normalized for term in ("ايونات الملح", "اسم الملح", "يتشكل الملح", "يتشكل الملح")
+    ):
+        reasons.append("salt_concept_evidence")
     return reasons[:8]
 
 
@@ -466,15 +528,18 @@ def _hybrid_score(
     """Compute a blended vector+lexical score with intent-based boosting."""
     lexical_score = lexical_relevance_score(query, content)
     if lexical_score <= 0:
-        return round(max(vector_score, 0.0), 4)
-    blended = (0.35 * max(vector_score, 0.0)) + (0.65 * lexical_score)
+        score = max(vector_score, 0.0) * 0.72
+    else:
+        blended = (0.55 * max(vector_score, 0.0)) + (0.45 * lexical_score)
+        score = max(blended, lexical_score, vector_score)
     # Exact lexical matches in the textbook should outrank weak local/hash embeddings.
-    score = max(blended, lexical_score, vector_score)
 
     normalized = _normalize_lexical_text(content)
     query_norm = _normalize_lexical_text(query)
     base_query = any(term in query_norm for term in ("اسس", "اساس", "قاعده", "قواعد", "اساسي", "اساسيه"))
     acid_query = any(term in query_norm for term in ("حموض", "احماض", "حمض", "حمضي", "حمضيه"))
+    salt_query = any(term in query_norm for term in ("املاح", "الاملاح", "ملح", "الملح"))
+    sodium_carbonate_query = "كربونات الصوديوم" in query_norm or "na2co3" in query_norm
     base_markers = ("هيدروكسيد", "oh-", "oh⁻", "oh", "الاسس", "اساس", "اساسيه", "قلوي")
     acid_markers = ("حموض", "حمض", "حمضيه", "هيدروجين", "هدروجين", "h+", "h⁺")
 
@@ -484,6 +549,8 @@ def _hybrid_score(
             score += 0.18
         if content_type in _OBJECTIVE_CONTENT_TYPES:
             score -= 0.32
+        if content_type in _EXERCISE_CONTENT_TYPES:
+            score -= 0.22
         elif any(marker in normalized for marker in _DEFINITION_PENALTY_MARKERS):
             score -= 0.08
         if "مواد تعطي" in normalized:
@@ -498,6 +565,11 @@ def _hybrid_score(
         if acid_query:
             if "ايونات الهدروجين" in normalized or "ايون الهدروجين" in normalized or "h+" in normalized:
                 score += 0.24
+        if salt_query:
+            if any(marker in normalized for marker in ("ايونات الملح", "اسم الملح", "الصيغه الجزيئيه")):
+                score += 0.24
+            if "يتشكل الملح" in normalized or "يتشكّل الملح" in normalized:
+                score += 0.18
     elif intent in {"equation_lookup", "reaction_query"}:
         if content_type in _EQUATION_CONTENT_TYPES:
             score += 0.18
@@ -523,6 +595,13 @@ def _hybrid_score(
         "اكسيد الكالسيوم" in normalized or "هيدروكسيد الكالسيوم" in normalized or "cao" in normalized
     ):
         score += 0.28
+    if sodium_carbonate_query:
+        if "كربونات الصوديوم" in normalized or "na2co3" in normalized or "na co3" in normalized:
+            score += 0.34
+        else:
+            score -= 0.34
+    if salt_query and any(marker in normalized for marker in ("ايونات الملح", "اسم الملح", "يتشكل الملح", "يتشكّل الملح")):
+        score += 0.16
     if "تفكك الماء" in query_norm and ("وعاء فولتا" in normalized or "h2o" in normalized):
         score += 0.20
 

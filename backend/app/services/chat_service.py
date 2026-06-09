@@ -38,10 +38,22 @@ _QUESTION_PASSAGE_HINTS = ("؟", "السؤال", "اختر", "ضع اشارة", 
 _LOW_VALUE_PASSAGE_HINTS = ("اهداف", "اﻫﺪاف", "الكلمات المفتاحية", "اﻟﻜﻠﻤﺎت", "نشاط", "ﻧﺸﺎط")
 _PASSAGE_SPLIT_RE = re.compile(r"(?<=[.؟!])\s+")
 
-# Lowered from 0.55 to 0.25 because hash-based fallback embeddings produce
-# scores around 0.3–0.5 even for perfect lexical matches.  Raise to 0.45–0.55
-# once real Gemini embeddings are active.
-_MIN_BOOK_GROUNDED_CONFIDENCE = 0.25
+# Minimum confidence required before the chat layer is allowed to present an
+# answer as grounded in textbook/solutions context. The semantic retriever now
+# calibrates scores after fusion, so these thresholds can be stricter than the
+# old hash-embedding-only fallback.
+_MIN_BOOK_GROUNDED_CONFIDENCE = 0.45
+_INTENT_BOOK_GROUNDED_THRESHOLDS = {
+    "definition_lookup": 0.55,
+    "property_lookup": 0.52,
+    "formula_lookup": 0.50,
+    "equation_lookup": 0.48,
+    "reaction_query": 0.48,
+    "table_lookup": 0.48,
+    "book_grounded": 0.45,
+    "exercise_lookup": 0.45,
+    "general": 0.45,
+}
 
 # ---------------------------------------------------------------------------
 # Intent classification
@@ -355,6 +367,10 @@ def _select_answer_type(intent: str, preferred_answer_type: str | None = "auto")
     if intent == "clarification":
         return "clarification"
     return "text"
+
+
+def _confidence_threshold_for_intent(intent: str) -> float:
+    return max(_MIN_BOOK_GROUNDED_CONFIDENCE, _INTENT_BOOK_GROUNDED_THRESHOLDS.get(intent, _MIN_BOOK_GROUNDED_CONFIDENCE))
 
 
 def _page_image_url(page_number: int | None, source_slug: str = _SOURCE_SLUG) -> str | None:
@@ -1283,6 +1299,14 @@ def _compute_confidence(
 # Source-grounded system prompts
 # ---------------------------------------------------------------------------
 
+_ANSWER_QUALITY_PROMPT_RULES = (
+    "قواعد جودة الإجابة:\n"
+    "- لا تكتب عنواناً فارغاً أو عنواناً لا يتبعه محتوى حقيقي من السياق مباشرة.\n"
+    "- إذا كان سياق الكتاب ضعيفاً أو غير كاف، قل بوضوح: لم أجد معلومات كافية في مقاطع الكتاب المتاحة.\n"
+    "- لا تستخدم معرفة عامة إلا إذا كان نطاق الإجابة يسمح بذلك. إذا استخدمتها، افصلها عن إجابة الكتاب واذكر أنها ليست من المصدر المسترجع.\n"
+    "Answer quality rules: never create empty headings; if book context is weak, say the available book context is insufficient; use general knowledge only when answer_scope allows it, and label it separately from retrieved textbook context.\n"
+)
+
 _SYSTEM_PROMPT_WITH_CONTEXT = (
     "أنت مدرس كيمياء للصف التاسع. أجب بالاعتماد حصرياً على المقاطع التالية من الكتاب.\n"
     "التعليمات:\n"
@@ -1291,8 +1315,9 @@ _SYSTEM_PROMPT_WITH_CONTEXT = (
     "3. إذا لم تجد الإجابة في المقاطع، قل ذلك بوضوح.\n"
     "4. لا تخترع معلومات أو مصادر غير موجودة في المقاطع.\n"
     "5. رتب إجابتك: التعريف أولاً، ثم التفاصيل، ثم الأمثلة.\n"
-    "6. تنبيه هام جداً: لا تستخدم صيغة LaTeX أو لغة الرياضيات (مثل $...$ أو $$...$$ أو \\text) لكتابة الصيغ الكيميائية أو المعادلات. اكتب الصيغ الكيميائية دائماً كنص عادي باستخدام الرموز الكيميائية والأرقام السفلية (مثل CO₂، H₂O، H₂SO₄)، واكتب المعادلات الكيميائية على سطر منفرد جديد كرموز نصية عادية مع السهم -> أو → (مثل: 2H2 + O2 -> 2H2O).\n"
+    "6. تنبيه هام جداً: لا تستخدم صيغة LaTeX أو لغة الرياضيات (مثل $...$ أو $$...$$ أو \\text) لكتابة الصيغ الكيميائية أو المعادلات. اكتب الصيغ الكيميائية دائماً كنص عادي باستخدام الرموز الكيميائية والأرقام السفلية (Subscripts) (مثل CO₂، H₂O، H₂SO₄)، واكتب المعادلات الكيميائية على سطر منفرد جديد كرموز نصية عادية مع السهم -> أو → (مثل: 2H2 + O2 -> 2H2O).\n"
     "CRITICAL: Never use LaTeX or math mode ($...$, $$...$$, \\text) for chemistry formulas or equations. Render formulas as normal text with subscript numbers (e.g., CO₂, H₂O, H₂SO₄) and equations as clean plain text on a new line (e.g., 2H2 + O2 -> 2H2O).\n\n"
+    f"{_ANSWER_QUALITY_PROMPT_RULES}\n"
     "المقاطع:\n{context}"
 )
 
@@ -1300,23 +1325,26 @@ _SYSTEM_PROMPT_NO_CONTEXT = (
     "أنت مدرس كيمياء للصف التاسع. أجب بالعربية.\n"
     "إذا لم تكن الإجابة موجودة في مصادر الكتاب أو الامتحانات المتاحة، "
     "قل بوضوح إنك لم تجدها في المصادر المتاحة، ثم يمكنك تقديم شرح عام منفصل.\n"
-    "تنبيه هام جداً: لا تستخدم صيغة LaTeX أو لغة الرياضيات (مثل $...$ أو $$...$$ أو \\text) لكتابة الصيغ الكيميائية أو المعادلات. اكتب الصيغ الكيميائية دائماً كنص عادي باستخدام الرموز الكيميائية والأرقام السفلية (مثل CO₂، H₂O، H₂SO₄)، واكتب المعادلات الكيميائية على سطر منفرد جديد كرموز نصية عادية مع السهم -> أو → (مثل: 2H2 + O2 -> 2H2O).\n"
-    "CRITICAL: Never use LaTeX or math mode ($...$, $$...$$, \\text) for chemistry formulas or equations. Render formulas as normal text with subscript numbers (e.g., CO₂, H₂O, H₂SO₄) and equations as clean plain text on a new line (e.g., 2H2 + O2 -> 2H2O)."
+    "تنبيه هام جداً: لا تستخدم صيغة LaTeX أو لغة الرياضيات (مثل $...$ أو $$...$$ أو \\text) لكتابة الصيغ الكيميائية أو المعادلات. اكتب الصيغ الكيميائية دائماً كنص عادي باستخدام الرموز الكيميائية والأرقام السفلية (Subscripts) (مثل CO₂، H₂O، H₂SO₄)، واكتب المعادلات الكيميائية على سطر منفرد جديد كرموز نصية عادية مع السهم -> أو → (مثل: 2H2 + O2 -> 2H2O).\n"
+    "CRITICAL: Never use LaTeX or math mode ($...$, $$...$$, \\text) for chemistry formulas or equations. Render formulas as normal text with subscript numbers (e.g., CO₂, H₂O, H₂SO₄) and equations as clean plain text on a new line (e.g., 2H2 + O2 -> 2H2O).\n\n"
+    f"{_ANSWER_QUALITY_PROMPT_RULES}"
 )
 
 _SYSTEM_PROMPT_ASK_WITH_CONTEXT = (
     "أنت مدرس كيمياء للصف التاسع. أجب بالاعتماد على المصادر التالية.\n"
     "اذكر رقم الصفحة عندما يكون متاحاً. لا تخترع مصادر.\n"
-    "تنبيه هام جداً: لا تستخدم صيغة LaTeX أو لغة الرياضيات (مثل $...$ أو $$...$$ أو \\text) لكتابة الصيغ الكيميائية أو المعادلات. اكتب الصيغ الكيميائية دائماً كنص عادي باستخدام الرموز الكيميائية والأرقام السفلية (مثل CO₂، H₂O، H₂SO₄)، واكتب المعادلات الكيميائية على سطر منفرد جديد كرموز نصية عادية مع السهم -> أو → (مثل: 2H2 + O2 -> 2H2O).\n"
+    "تنبيه هام جداً: لا تستخدم صيغة LaTeX أو لغة الرياضيات (مثل $...$ أو $$...$$ أو \\text) لكتابة الصيغ الكيميائية أو المعادلات. اكتب الصيغ الكيميائية دائماً كنص عادي باستخدام الرموز الكيميائية والأرقام السفلية (Subscripts) (مثل CO₂، H₂O، H₂SO₄)، واكتب المعادلات الكيميائية على سطر منفرد جديد كرموز نصية عادية مع السهم -> أو → (مثل: 2H2 + O2 -> 2H2O).\n"
     "CRITICAL: Never use LaTeX or math mode ($...$, $$...$$, \\text) for chemistry formulas or equations. Render formulas as normal text with subscript numbers (e.g., CO₂, H₂O, H₂SO₄) and equations as clean plain text on a new line (e.g., 2H2 + O2 -> 2H2O).\n\n"
+    f"{_ANSWER_QUALITY_PROMPT_RULES}\n"
     "المقاطع:\n{context}"
 )
 
 _SYSTEM_PROMPT_ASK_NO_CONTEXT = (
     "أنت مدرس كيمياء للصف التاسع. أجب بالعربية.\n"
     "اذكر بوضوح أن السياق المدرسي المتاح غير كاف إذا لم تجد مصدراً.\n"
-    "تنبيه هام جداً: لا تستخدم صيغة LaTeX أو لغة الرياضيات (مثل $...$ أو $$...$$ أو \\text) لكتابة الصيغ الكيميائية أو المعادلات. اكتب الصيغ الكيميائية دائماً كنص عادي باستخدام الرموز الكيميائية والأرقام السفلية (مثل CO₂، H₂O، H₂SO₄)، واكتب المعادلات الكيميائية على سطر منفرد جديد كرموز نصية عادية مع السهم -> أو → (مثل: 2H2 + O2 -> 2H2O).\n"
-    "CRITICAL: Never use LaTeX or math mode ($...$, $$...$$, \\text) for chemistry formulas or equations. Render formulas as normal text with subscript numbers (e.g., CO₂, H₂O, H₂SO₄) and equations as clean plain text on a new line (e.g., 2H2 + O2 -> 2H2O)."
+    "تنبيه هام جداً: لا تستخدم صيغة LaTeX أو لغة الرياضيات (مثل $...$ أو $$...$$ أو \\text) لكتابة الصيغ الكيميائية أو المعادلات. اكتب الصيغ الكيميائية دائماً كنص عادي باستخدام الرموز الكيميائية والأرقام السفلية (Subscripts) (مثل CO₂، H₂O، H₂SO₄)، واكتب المعادلات الكيميائية على سطر منفرد جديد كرموز نصية عادية مع السهم -> أو → (مثل: 2H2 + O2 -> 2H2O).\n"
+    "CRITICAL: Never use LaTeX or math mode ($...$, $$...$$, \\text) for chemistry formulas or equations. Render formulas as normal text with subscript numbers (e.g., CO₂, H₂O, H₂SO₄) and equations as clean plain text on a new line (e.g., 2H2 + O2 -> 2H2O).\n\n"
+    f"{_ANSWER_QUALITY_PROMPT_RULES}"
 )
 
 
@@ -1896,6 +1924,7 @@ async def ask_question(
         "reranker_used": semantic_diagnostics.get("reranker_used"),
         "reranker_model": semantic_diagnostics.get("reranker_model"),
         "reranked_candidates": semantic_diagnostics.get("reranked_candidates"),
+        "quality_gate": semantic_diagnostics.get("quality_gate"),
     }
     page_numbers = sorted({chunk.page_number for chunk in chunks if chunk.page_number is not None})
     diagnostics.update(
@@ -2037,7 +2066,8 @@ async def ask_question(
             grounding="book" if supporting_chunks else "approved_dictionary",
         ), question)
 
-    if confidence < _MIN_BOOK_GROUNDED_CONFIDENCE:
+    confidence_threshold = _confidence_threshold_for_intent(intent)
+    if confidence < confidence_threshold:
         if answer_scope == "book_only":
             return _finalize_answer(_not_found_response(
                 question=question,
@@ -2052,7 +2082,7 @@ async def ask_question(
             "أما الآن فلا أريد أن أعطيك جواباً منسوباً للكتاب بثقة ضعيفة."
         )
         answer_type = "not_found"
-        diagnostics.update({"low_confidence": True, "confidence_threshold": _MIN_BOOK_GROUNDED_CONFIDENCE})
+        diagnostics.update({"low_confidence": True, "confidence_threshold": confidence_threshold})
         diagnostics["confidence_components"]["final_confidence"] = round(float(confidence), 4)
         return _finalize_answer({
             "answer": answer,

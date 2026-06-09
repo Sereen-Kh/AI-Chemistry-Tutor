@@ -140,6 +140,41 @@
     "must_contain": ["نترات الفضة", "كلوريد الصوديوم", "تبادل ثنائي"]
   },
   {
+    "id": "salt_definition",
+    "question": "ما هي الأملاح؟",
+    "intent": "definition_lookup",
+    "expected_pages": [42, 43, 44, 49, 64, 65],
+    "expected_source_types": ["textbook", "solutions"],
+    "preferred_content_types": ["definition", "text", "result", "table"],
+    "must_contain": ["ملح", "أيونات", "الصيغة"]
+  },
+  {
+    "id": "salt_preparation_routes",
+    "question": "ما طرائق تحضير الأملاح من الكتاب؟",
+    "intent": "definition_lookup",
+    "expected_pages": [42, 43, 49],
+    "preferred_content_types": ["text", "result"],
+    "must_contain": ["يتشكل الملح", "حمض", "ملح"]
+  },
+  {
+    "id": "sodium_carbonate_formula",
+    "question": "ما صيغة كربونات الصوديوم؟",
+    "intent": "formula_lookup",
+    "expected_pages": [44, 64],
+    "expected_source_types": ["textbook", "solutions"],
+    "preferred_content_types": ["table", "equation", "text"],
+    "must_contain": ["كربونات الصوديوم", "Na", "CO3"]
+  },
+  {
+    "id": "sodium_carbonate_hcl_reaction",
+    "question": "ما تفاعل كربونات الصوديوم مع حمض كلور الماء؟",
+    "intent": "reaction_query",
+    "expected_pages": [43, 48, 65],
+    "expected_source_types": ["textbook", "solutions"],
+    "preferred_content_types": ["equation", "text", "exercise"],
+    "must_contain": ["كربونات الصوديوم", "حمض كلور الماء", "CO2"]
+  },
+  {
     "id": "exam_metal_iron_sulfate",
     "question": "أي معدن يمكن أن يتفاعل مع كبريتات الحديد؟",
     "intent": "exercise_lookup",

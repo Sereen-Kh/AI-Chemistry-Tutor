@@ -1,10 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, lazy, Suspense } from 'react';
 import type { FormEvent, ReactElement } from 'react';
 import { Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import {
   aiApi,
   authApi,
-  flashcardsApi,
   labApi,
   studyPlanApi,
   toErrorMessage,
@@ -20,7 +19,6 @@ import {
   Card,
   ChatMessage,
   ErrorBanner,
-  Flashcard,
   LessonCard,
   LoadingSkeleton,
   PageHeader,
@@ -30,18 +28,24 @@ import {
   StudyMissionCard,
 } from './components/DesignSystem';
 import { clearToken, getToken, loadPreferences, savePreferences } from './lib/storage';
+import { LessonsPage, RagSearchPage } from './pages/LearningPages';
+
+const QuizzesPage = lazy(() => import('./pages/QuizzesPage').then(module => ({ default: module.QuizzesPage })));
+const FlashcardsPage = lazy(() => import('./pages/FlashcardsPage').then(module => ({ default: module.FlashcardsPage })));
+const LessonDetailPage = lazy(() => import('./pages/LessonDetailPage').then(module => ({ default: module.LessonDetailPage })));
 import type {
   AiAskResponse,
   AiAskRequest,
   AnswerFormat,
   BalanceResult,
-  FlashcardDeck,
   InterestCategory,
   StudyPlan,
   TeachingStyle,
   UserPreferences,
   UserProfile,
 } from './types';
+
+type AnswerScope = NonNullable<AiAskRequest['answer_scope']>;
 
 interface AuthState {
   user: UserProfile | null;
@@ -67,6 +71,20 @@ const preferenceLabel = (value: string): string =>
     image: 'صورة',
     video: 'Reel',
   })[value] ?? value;
+
+const answerScopeLabels: Array<{ value: AnswerScope; label: string }> = [
+  { value: 'auto', label: 'تلقائي' },
+  { value: 'book_only', label: 'من الكتاب فقط' },
+  { value: 'tutor_general', label: 'شرح عام عند الحاجة' },
+];
+
+const suggestedChemistryQuestions = [
+  'ما هو الماء؟',
+  'ما هي الحموض؟',
+  'لماذا نضيف الحمض إلى الماء وليس العكس؟',
+  'ما هو التركيز المولي؟',
+  'محلول HCl حجمه 100 mL ويحتوي 3.65 g. احسب التركيز الغرامي والمولي؟',
+];
 
 const ProtectedRoute = ({ user, booting }: { user: UserProfile | null; booting: boolean }) => {
   const location = useLocation();
@@ -311,7 +329,7 @@ const OnboardingPage = ({
 const DashboardPage = ({ user, preferences }: { user: UserProfile; preferences: UserPreferences }) => {
   const quickActions = [
     { to: '/ask-ai', label: 'اسأل', tone: 'blue' },
-    { to: '/study-plan', label: 'اختبار', tone: 'gold' },
+    { to: '/quizzes', label: 'اختبار', tone: 'gold' },
     { to: '/ask-ai', label: 'Reel', tone: 'purple' },
     { to: '/flashcards', label: 'بطاقات', tone: 'teal' },
     { to: '/lab/equation-balancer', label: 'موازنة', tone: 'coral' },
@@ -410,51 +428,6 @@ const StudyPlanPage = () => {
   );
 };
 
-const FlashcardsPage = () => {
-  const [decks, setDecks] = useState<FlashcardDeck[]>([]);
-  const [deckIndex, setDeckIndex] = useState(0);
-  const [cardIndex, setCardIndex] = useState(0);
-  const [flipped, setFlipped] = useState(false);
-  const [known, setKnown] = useState(0);
-
-  useEffect(() => {
-    flashcardsApi.getDecks().then(setDecks);
-  }, []);
-
-  const deck = decks[deckIndex];
-  const card = deck?.cards[cardIndex];
-
-  const mark = (isKnown: boolean) => {
-    if (isKnown) setKnown((value) => value + 1);
-    setFlipped(false);
-    setCardIndex((value) => (deck ? (value + 1) % deck.cards.length : 0));
-  };
-
-  if (!deck || !card) return <LoadingSkeleton rows={5} />;
-
-  return (
-    <div className="flashcard-layout">
-      <PageHeader eyebrow="مراجعة" title="البطاقات التعليمية" subtitle="اقلب البطاقة، تذكر الإجابة، ثم قيّم ثقتك." />
-      <div className="deck-tabs">
-        {decks.map((item, index) => (
-          <button key={item.id} type="button" className={index === deckIndex ? 'active' : ''} onClick={() => { setDeckIndex(index); setCardIndex(0); setFlipped(false); }}>
-            {item.title}
-          </button>
-        ))}
-      </div>
-      <Card className="flashcard-stage">
-        <Flashcard card={card} flipped={flipped} onFlip={() => setFlipped((value) => !value)} />
-        <div className="flashcard-actions">
-          <Button variant="secondary" onClick={() => mark(false)}>لا أعرفها</Button>
-          <Button onClick={() => mark(true)}>أعرفها</Button>
-        </div>
-        <ProgressBar value={Math.round(((cardIndex + 1) / deck.cards.length) * 100)} tone="teal" />
-        <p>{known} إجابات معروفة في هذه الجلسة · {deck.mastered}/{deck.count} متقنة قبل اليوم</p>
-      </Card>
-    </div>
-  );
-};
-
 const EquationBalancerPage = () => {
   const [input, setInput] = useState('H2 + O2 -> H2O');
   const [result, setResult] = useState<BalanceResult | null>(null);
@@ -525,6 +498,7 @@ const AskAiPage = ({ preferences, setPreferences }: { preferences: UserPreferenc
   const [question, setQuestion] = useState(initialQuestion);
   const [format, setFormat] = useState<AnswerFormat>(preferences.answerFormat);
   const [style, setStyle] = useState<TeachingStyle>(preferences.teachingStyle);
+  const [answerScope, setAnswerScope] = useState<AnswerScope>('auto');
   const [conversationId] = useState(() => `web-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`);
   const [messages, setMessages] = useState<ChatItem[]>([
     {
@@ -557,7 +531,7 @@ const AskAiPage = ({ preferences, setPreferences }: { preferences: UserPreferenc
         teaching_style: style,
         interests: preferences.interests,
         language: preferences.language,
-        answer_scope: 'auto',
+        answer_scope: answerScope,
         action,
         previous_question: previousAssistant?.question || previousUser?.content,
         previous_answer: previousAssistant?.response?.answer,
@@ -599,6 +573,12 @@ const AskAiPage = ({ preferences, setPreferences }: { preferences: UserPreferenc
               {styleLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
             </select>
           </label>
+          <label>
+            نطاق الإجابة
+            <select value={answerScope} onChange={(event) => setAnswerScope(event.target.value as AnswerScope)}>
+              {answerScopeLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+            </select>
+          </label>
           <AnswerFormatSelector value={format} onChange={saveAnswerPreference} />
         </div>
         <div className="chat-feed">
@@ -606,6 +586,13 @@ const AskAiPage = ({ preferences, setPreferences }: { preferences: UserPreferenc
             <ChatMessage key={message.id} role={message.role} content={message.content} response={message.response} />
           ))}
           {loading && <div className="typing-dots" aria-label="AI is typing"><span /><span /><span /></div>}
+        </div>
+        <div className="suggestion-row chat-suggestions" aria-label="أسئلة مقترحة">
+          {suggestedChemistryQuestions.map((item) => (
+            <button key={item} type="button" onClick={() => void ask(item)} disabled={loading}>
+              {item}
+            </button>
+          ))}
         </div>
         {error && <ErrorBanner message={error} onRetry={() => ask(messages.findLast((item) => item.role === 'user')?.content)} />}
         <div className="chat-actions">
@@ -756,30 +743,36 @@ function App() {
   return (
     <div dir="rtl" lang="ar">
       <MoleculeBackground />
-      <Routes>
-        <Route path="/login" element={<GuestOnly user={auth.user}><LoginPage onLogin={refreshUser} /></GuestOnly>} />
-        <Route path="/register" element={<GuestOnly user={auth.user}><RegisterPage onRegistered={refreshUser} /></GuestOnly>} />
-        <Route
-          path="/onboarding/interests"
-          element={
-            auth.user ? (
-              <OnboardingPage preferences={auth.preferences} onSave={updatePreferences} />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
-        <Route element={auth.user ? <AppShell userName={userName} onLogout={logout} /> : <ProtectedRoute user={auth.user} booting={auth.booting} />}>
-          <Route path="/dashboard" element={auth.user && <DashboardPage user={auth.user} preferences={auth.preferences} />} />
-          <Route path="/study-plan" element={<StudyPlanPage />} />
-          <Route path="/flashcards" element={<FlashcardsPage />} />
-          <Route path="/lab/equation-balancer" element={<EquationBalancerPage />} />
-          <Route path="/ask-ai" element={<AskAiPage preferences={auth.preferences} setPreferences={updatePreferences} />} />
-          <Route path="/profile" element={auth.user && <ProfilePage user={auth.user} preferences={auth.preferences} setPreferences={updatePreferences} />} />
-        </Route>
-        <Route path="/" element={<Navigate to={auth.user ? '/dashboard' : '/login'} replace />} />
-        <Route path="*" element={<Navigate to={auth.user ? '/dashboard' : '/login'} replace />} />
-      </Routes>
+      <Suspense fallback={<main className="route-loading"><LoadingSkeleton rows={5} /></main>}>
+        <Routes>
+          <Route path="/login" element={<GuestOnly user={auth.user}><LoginPage onLogin={refreshUser} /></GuestOnly>} />
+          <Route path="/register" element={<GuestOnly user={auth.user}><RegisterPage onRegistered={refreshUser} /></GuestOnly>} />
+          <Route
+            path="/onboarding/interests"
+            element={
+              auth.user ? (
+                <OnboardingPage preferences={auth.preferences} onSave={updatePreferences} />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
+          <Route element={auth.user ? <AppShell userName={userName} onLogout={logout} /> : <ProtectedRoute user={auth.user} booting={auth.booting} />}>
+            <Route path="/dashboard" element={auth.user && <DashboardPage user={auth.user} preferences={auth.preferences} />} />
+            <Route path="/lessons" element={<LessonsPage />} />
+            <Route path="/lessons/:lessonId" element={<LessonDetailPage />} />
+            <Route path="/rag-search" element={<RagSearchPage />} />
+            <Route path="/quizzes" element={<QuizzesPage />} />
+            <Route path="/study-plan" element={<StudyPlanPage />} />
+            <Route path="/flashcards" element={<FlashcardsPage />} />
+            <Route path="/lab/equation-balancer" element={<EquationBalancerPage />} />
+            <Route path="/ask-ai" element={<AskAiPage preferences={auth.preferences} setPreferences={updatePreferences} />} />
+            <Route path="/profile" element={auth.user && <ProfilePage user={auth.user} preferences={auth.preferences} setPreferences={updatePreferences} />} />
+          </Route>
+          <Route path="/" element={<Navigate to={auth.user ? '/dashboard' : '/login'} replace />} />
+          <Route path="*" element={<Navigate to={auth.user ? '/dashboard' : '/login'} replace />} />
+        </Routes>
+      </Suspense>
     </div>
   );
 }

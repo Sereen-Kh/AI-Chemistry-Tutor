@@ -394,3 +394,177 @@ def build_page_chunk_records(
             ),
         )
     return records
+
+
+# ---------------------------------------------------------------------------
+# Solution Book — sentence-aware chunking
+# ---------------------------------------------------------------------------
+
+# Sentence-ending punctuation (Arabic + Latin)
+_SENTENCE_END_RE = re.compile(r"(?<=[.؟!؛\n])\s+")
+
+# Chemical equation / calculation line: contains = and chemical tokens
+_EQUATION_LINE_RE = re.compile(
+    r"(?:[A-Z][a-z]?[0-9₀-₉]*|[+→⟶⇌←↔]|\d+(?:[.,]\d+)?(?:\s*(?:g|mol|L|mL|M|g/L|mol/L))?|[=×÷]){3,}"
+)
+
+# Table row: markdown pipe or Arabic table marker
+_TABLE_ROW_RE = re.compile(r"^\s*\|.+\|")
+
+# Solution book semantic content type classifiers (ordered by priority)
+_SOLUTION_CONTENT_TYPES: list[tuple[re.Pattern, str]] = [
+    (re.compile(r"(?:السؤال|المطلوب|تمرين|سؤال)\s*(?:رقم\s*)?\d*", re.IGNORECASE), "exercise_question"),
+    (re.compile(r"الحل\s*:|حل\s*:|الإجابة\s*:|إجابة\s*:", re.IGNORECASE), "exercise_solution"),
+    (re.compile(r"(?:الخطوة|خطوة)\s*\d+|step\s*\d+", re.IGNORECASE), "solution_step"),
+    (re.compile(r"الجواب\s*(?:النهائي|الأخير)?:|إذن[,،]|وعليه[,،]|∴|نستنتج أن", re.IGNORECASE), "final_answer"),
+    (re.compile(r"[\u0600-\u06FF\s]*(?:[A-Z][a-z]?[0-9₀-₉]*){2,}\s*[=+→⟶⇌]", re.IGNORECASE), "equation"),
+    (re.compile(r"^\s*\|.+\|", re.MULTILINE), "table"),
+    (re.compile(r"(?:الدرس|الفصل|الوحدة)\s+(?:رقم\s*)?\d+", re.IGNORECASE), "lesson_reference"),
+    (re.compile(r"(?:انظر|الشكل|رسم|مخطط)\s+\d+", re.IGNORECASE), "diagram_solution"),
+    (re.compile(r"(?:صفحة|ص\.?)\s*\d+", re.IGNORECASE), "page_header"),
+]
+
+
+def _classify_solution_chunk(text: str) -> str:
+    """Return the best-matching solution book semantic content type.
+
+    Priority order (highest wins): final_answer > solution_step >
+    exercise_solution > equation > exercise_question > table >
+    diagram_solution > lesson_reference > page_header > explanation.
+    """
+    # Test in reverse priority so later matches override earlier ones
+    result = "explanation"
+    for pattern, content_type in reversed(_SOLUTION_CONTENT_TYPES):
+        if pattern.search(text):
+            result = content_type
+    # Override with high-priority types if present
+    if re.search(r"الجواب\s*(?:النهائي|الأخير)?:|إذن[,،]|وعليه[,،]|∴|نستنتج أن", text, re.IGNORECASE):
+        return "final_answer"
+    if re.search(r"(?:الخطوة|خطوة)\s*\d+|step\s*\d+", text, re.IGNORECASE):
+        return "solution_step"
+    if re.search(r"الحل\s*:|حل\s*:|الإجابة\s*:|إجابة\s*:", text, re.IGNORECASE):
+        return "exercise_solution"
+    return result
+
+
+def _is_protected_line(line: str) -> bool:
+    """Return True for lines that must not be split (equations, table rows, calculation lines)."""
+    stripped = line.strip()
+    if not stripped:
+        return False
+    if _TABLE_ROW_RE.match(stripped):
+        return True
+    if _EQUATION_LINE_RE.search(stripped):
+        return True
+    # Calculation line: number followed by operation or unit
+    if re.search(r"\d+(?:[.,]\d+)?\s*(?:g|mol|L|mL|g/L|mol/L|×|÷|/)", stripped):
+        return True
+    return False
+
+
+def split_solution_book_text(
+    text: str,
+    *,
+    max_chars: int = 800,
+    page_number: int | None = None,
+    document_id: str | None = None,
+    lesson_no: int | None = None,
+    source_pdf: str | None = None,
+) -> list[ChunkRecord]:
+    """Sentence-aware splitter for solution book page text.
+
+    Splits only at sentence/paragraph boundaries and never inside chemical
+    equations, formulas, calculation lines, or table rows.  Each produced
+    ``ChunkRecord`` is annotated with a semantic *content_type* from
+    the solution book taxonomy.
+
+    Args:
+        text: Raw page text from the solution book.
+        max_chars: Soft upper limit for chunk length in characters.
+        page_number: Source PDF page number (stored in metadata).
+        document_id: Solution book document identifier (e.g. ``"chemistry_grade9_solution_book"``).
+        lesson_no: Lesson number if detected for this page.
+        source_pdf: Base filename of the source PDF.
+
+    Returns:
+        List of :class:`ChunkRecord` instances, one per logical text unit.
+    """
+    if not text or not text.strip():
+        return []
+
+    base_meta: dict = {}
+    if document_id is not None:
+        base_meta["document_id"] = document_id
+    if page_number is not None:
+        base_meta["page_number"] = page_number
+    if lesson_no is not None:
+        base_meta["lesson_no"] = lesson_no
+    if source_pdf is not None:
+        base_meta["source_pdf"] = source_pdf
+    base_meta["document_type"] = "solution_book"
+
+    # Split into paragraphs (double newline boundary)
+    paragraphs = [p.strip() for p in re.split(r"\n\s*\n", text) if p.strip()]
+
+    chunks: list[str] = []
+    current: list[str] = []
+    current_len = 0
+
+    def _flush() -> None:
+        if current:
+            chunks.append("\n\n".join(current).strip())
+            current.clear()
+        nonlocal current_len
+        current_len = 0
+
+    for para in paragraphs:
+        lines = para.splitlines()
+
+        # Protected block (table / equation block): never break inside
+        if all(_is_protected_line(ln) for ln in lines if ln.strip()):
+            if current_len + len(para) > max_chars:
+                _flush()
+            current.append(para)
+            current_len += len(para)
+            continue
+
+        # Split paragraph into sentences
+        sentences = _SENTENCE_END_RE.split(para)
+        for sentence in sentences:
+            sentence = sentence.strip()
+            if not sentence:
+                continue
+            # Never split a protected line mid-sentence
+            if _is_protected_line(sentence):
+                if current_len + len(sentence) > max_chars:
+                    _flush()
+                current.append(sentence)
+                current_len += len(sentence)
+                continue
+            if current_len + len(sentence) > max_chars and current:
+                _flush()
+            current.append(sentence)
+            current_len += len(sentence)
+
+    _flush()
+
+    records: list[ChunkRecord] = []
+    fingerprints: set[str] = set()
+    for idx, chunk_text in enumerate(chunks):
+        content_type = _classify_solution_chunk(chunk_text)
+        meta = {
+            **base_meta,
+            "chunk_index": idx,
+            "content_type": content_type,
+            "char_count": len(chunk_text),
+        }
+        _append_unique_chunk(
+            records,
+            fingerprints,
+            ChunkRecord(
+                content=chunk_text,
+                content_type=content_type,
+                metadata=meta,
+            ),
+        )
+    return records

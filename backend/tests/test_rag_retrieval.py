@@ -18,6 +18,7 @@ from app.services.chat_service import (
     ask_question,
 )
 from app.services.rag import RetrievedChunk, _hybrid_score, clean_query, lexical_relevance_score, rewrite_query
+from app.rag.chunk_validator import validate_chunks
 from app.services.semantic_rag import FusedCandidate, _minimum_score_for_intent, _semantic_relevance_score
 from app.schemas.rag import DEFAULT_RAG_MIN_SIMILARITY, RagRetrieveDebugRequest, RagRetrieveRequest
 
@@ -66,6 +67,72 @@ class ArabicRagRankingTests(TestCase):
             _hybrid_score(query, unrelated_content, vector_score=0.6),
         )
 
+    def test_acid_to_water_safety_query_prefers_warning_over_generic_acid_definition(self):
+        query = "لماذا نضيف الحمض إلى الماء وليس العكس؟"
+        warning_content = "تحذير: دائما أضف الحمض إلى الماء."
+        acid_definition = "الحموض: مواد تُعطي عند انحلالها في الماء أيونات الهيدروجين H+."
+
+        self.assertGreater(
+            _hybrid_score(query, warning_content, vector_score=0.12),
+            _hybrid_score(query, acid_definition, vector_score=0.92, intent="definition_lookup", content_type="definition"),
+        )
+
+    def test_acid_to_water_safety_rewrite_preserves_safety_intent(self):
+        rewritten = rewrite_query(clean_query("لماذا نضيف الحمض إلى الماء وليس العكس؟"))
+
+        self.assertEqual(rewritten, "تحذير أضف الحمض إلى الماء وليس العكس احتياطات السلامة حرارة تطاير غليان")
+        self.assertNotIn("تعريف الحموض", rewritten)
+        self.assertNotIn("أيونات الهدروجين", rewritten)
+        self.assertNotIn("H+", rewritten)
+
+    def test_safety_chunk_validation_rejects_generic_acid_definition(self):
+        validations = validate_chunks(
+            "لماذا نضيف الحمض إلى الماء وليس العكس؟",
+            [
+                chunk(52, 7, "تحذير دائما أضف الحمض إلى الماء", score=0.92),
+                chunk(70, 11, "الحموض مواد تعطي عند انحلالها في الماء أيونات الهيدروجين H+.", score=0.8),
+            ],
+            intent="safety_question",
+        )
+
+        self.assertTrue(validations[0].valid_for_answer)
+        self.assertFalse(validations[1].valid_for_answer)
+        self.assertEqual(
+            validations[1].rejection_reason,
+            "Rejected: generic acid definition does not answer safety question.",
+        )
+
+    def test_local_fallback_answers_acid_to_water_safety_question(self):
+        answer = _local_rag_answer(
+            "لماذا نضيف الحمض إلى الماء وليس العكس؟",
+            [
+                chunk(52, 7, "تحذير دائما أضف الحمض إلى الماء", score=0.92),
+                chunk(70, 11, "الحموض: مواد تُعطي عند انحلالها في الماء أيونات الهيدروجين H+.", score=0.8),
+            ],
+        )
+
+        self.assertIn("أضف الحمض إلى الماء", answer)
+        self.assertIn("حرارة", answer)
+        self.assertIn("صفحة 7", answer)
+        self.assertNotIn("الحموض هي مواد تعطي", answer)
+
+    def test_chat_ask_safety_question_uses_safety_rule_before_rag(self):
+        result = asyncio.run(
+            ask_question(
+                db=None,
+                user_id=1,
+                question="لماذا نضيف الحمض إلى الماء وليس العكس؟",
+                answer_scope="auto",
+            )
+        )
+
+        self.assertEqual(result["route"], "safety_rule")
+        self.assertEqual(result["diagnostics"]["intent"], "safety_question")
+        self.assertTrue(result["diagnostics"]["rag_search_skipped"])
+        self.assertIn("حرارة", result["answer"])
+        self.assertIn("تطاير", result["answer"])
+        self.assertNotIn("الحموض هي مواد", result["answer"])
+
     def test_local_fallback_extracts_answer_lines_instead_of_dumping_unrelated_chunks(self):
         answer = _local_rag_answer(
             "اشرح لي ما هي الحموض من الكتاب؟",
@@ -113,6 +180,12 @@ class ArabicRagRankingTests(TestCase):
         self.assertEqual(classification["entity"], "الأسس")
         self.assertEqual(classification["normalized_entity"], "الاسس")
         self.assertEqual(classification["answer_style"], "direct")
+
+    def test_safety_question_is_not_classified_as_acid_definition(self):
+        classification = _classify_question("لماذا نضيف الحمض إلى الماء وليس العكس؟")
+
+        self.assertEqual(classification["intent"], "safety_question")
+        self.assertEqual(classification["route"], "safety_rule")
 
     def test_base_definition_ranking_penalizes_objectives(self):
         query = rewrite_query(clean_query("ما هي الأسس؟"))
@@ -304,6 +377,39 @@ class ArabicRagRankingTests(TestCase):
         self.assertEqual(result["grounding"], "approved_dictionary")
         self.assertIn("H₂O", result["answer"])
         self.assertNotIn("الحموض", result["answer"])
+
+    def test_hcl_concentration_question_uses_math_solver(self):
+        result = asyncio.run(
+            ask_question(
+                db=None,
+                user_id=1,
+                question="محلول HCl حجمه 100 mL ويحتوي 3.65 g. احسب التركيز الغرامي والمولي؟",
+                answer_scope="auto",
+            )
+        )
+
+        self.assertEqual(result["route"], "math_solver")
+        self.assertEqual(result["diagnostics"]["intent"], "exercise_solving")
+        self.assertTrue(result["diagnostics"]["rag_search_skipped"])
+        self.assertIn("Cm = m / V", result["answer"])
+        self.assertIn("36.5 g/L", result["answer"])
+        self.assertIn("C = n / V", result["answer"])
+        self.assertIn("1 mol/L", result["answer"])
+        self.assertNotIn("not_found", result["route"])
+
+    def test_molar_concentration_question_uses_direct_definition(self):
+        result = asyncio.run(
+            ask_question(
+                db=None,
+                user_id=1,
+                question="ما هو التركيز المولي؟",
+                answer_scope="auto",
+            )
+        )
+
+        self.assertIn(result["route"], {"dictionary_first", "book_knowledge"})
+        self.assertIn("C = n / V", result["answer"])
+        self.assertIn("mol/L", result["answer"])
 
     def test_water_book_validation_rejects_in_water_acid_chunk(self):
         entry = _dictionary_entry_for_question("ما هو الماء؟", intent="definition_lookup")

@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import re
 from collections.abc import Callable
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from sqlalchemy.orm import Session
@@ -14,7 +15,7 @@ from app.database import SessionLocal
 from app.models.textbook import ContentSource, ExtractedQuestion, RagChunk
 from app.services.chunking import build_page_chunk_records, deduplicate_sections, normalize_arabic, section_text
 from app.services.embeddings import embed_batch
-from app.services.ocr import UploadedDocument, VisionExtractionProvider, get_vision_provider
+from app.services.ocr import NoneVisionProvider, UploadedDocument, VisionExtractionProvider, get_vision_provider
 from app.services.pdf_processor import (
     classify_pages,
     extract_selectable_text_page,
@@ -30,6 +31,143 @@ SUCCESS_PAGE_STATUSES = {
     "completed_with_fallback_model",
     "completed_with_image_fallback",
 }
+
+# ---------------------------------------------------------------------------
+# OCR requirement detection
+# ---------------------------------------------------------------------------
+
+_MIN_TEXT_CHARS_PER_PAGE = 80
+_FORMULA_HEAVY_RATIO = 0.35  # fraction of characters that look like formula tokens
+_FORMULA_TOKEN_RE = re.compile(
+    r"[A-Z][a-z]?[₀-₉0-9]*|[+→⟶⇌←↔=]+|\d+(?:[.,]\d+)?"
+)
+
+
+@dataclass
+class OcrDetectionResult:
+    needs_ocr: bool
+    reasons: list[str] = field(default_factory=list)
+
+    def as_dict(self) -> dict:
+        return {"needs_ocr": self.needs_ocr, "reasons": self.reasons}
+
+
+def detect_ocr_needed(
+    text_content: str,
+    visual_info: dict | None = None,
+) -> OcrDetectionResult:
+    """Determine whether OCR is required for a page.
+
+    Args:
+        text_content: Selectable text extracted from the PDF page.
+        visual_info: Optional dict with keys ``has_images``, ``has_tables``,
+            ``image_area_ratio`` from the PDF processor.
+
+    Returns:
+        :class:`OcrDetectionResult` with ``needs_ocr=True`` and a list of
+        human-readable ``reasons`` when OCR is required.
+    """
+    reasons: list[str] = []
+    info = visual_info or {}
+
+    stripped = (text_content or "").strip()
+    if len(stripped) < _MIN_TEXT_CHARS_PER_PAGE:
+        reasons.append(f"low_text_length ({len(stripped)} chars < {_MIN_TEXT_CHARS_PER_PAGE})")
+
+    # Broken / garbage characters
+    garbage_ratio = sum(1 for ch in stripped if ord(ch) > 0xFB00 and not (0x0600 <= ord(ch) <= 0x06FF)) / max(len(stripped), 1)
+    if garbage_ratio > 0.05:
+        reasons.append(f"broken_characters (ratio={garbage_ratio:.2f})")
+
+    if info.get("has_tables"):
+        reasons.append("table_detected")
+
+    if info.get("has_images") and info.get("image_area_ratio", 0) > 0.4:
+        reasons.append(f"image_heavy_page (ratio={info['image_area_ratio']:.2f})")
+
+    # Formula-heavy page
+    formula_chars = sum(len(m) for m in _FORMULA_TOKEN_RE.findall(stripped))
+    if formula_chars / max(len(stripped), 1) > _FORMULA_HEAVY_RATIO and len(stripped) > 30:
+        reasons.append(f"formula_heavy_page (ratio={formula_chars/len(stripped):.2f})")
+
+    return OcrDetectionResult(needs_ocr=bool(reasons), reasons=reasons)
+
+
+# ---------------------------------------------------------------------------
+# Solution-to-textbook chunk linking
+# ---------------------------------------------------------------------------
+
+
+def link_solution_to_textbook(
+    db: Session,
+    solution_chunks: list[dict],
+    textbook_document_id: str | None = None,
+) -> list[dict]:
+    """Annotate *solution_chunks* with links to matching textbook ``RagChunk`` ids.
+
+    Matching criteria (in priority order):
+    1. Exact ``page_number`` overlap with textbook chunks.
+    2. Lesson number match (``lesson_no`` in chunk metadata).
+    3. Formula token overlap between chunk content.
+
+    Each output dict has two extra keys appended:
+    * ``linked_textbook_pages`` — sorted list of matched textbook page numbers.
+    * ``linked_textbook_chunk_ids`` — sorted list of matched ``RagChunk.id``\s.
+    """
+    # Load all textbook chunks into a lightweight lookup structure
+    tb_filter = [RagChunk.source_type == "textbook"]
+    if textbook_document_id:
+        # Filter by document_id stored in metadata_json
+        # SQLAlchemy JSON path queries differ by DB; fall back to Python filter
+        pass
+    textbook_rows = db.query(
+        RagChunk.id,
+        RagChunk.page_number,
+        RagChunk.lesson_id,
+        RagChunk.content,
+        RagChunk.metadata_json,
+    ).filter(*tb_filter).all()
+
+    # Build lookup: page_number → [chunk_id]
+    page_to_ids: dict[int, list[int]] = {}
+    lesson_to_ids: dict[int | None, list[int]] = {}
+    for row in textbook_rows:
+        if row.page_number is not None:
+            page_to_ids.setdefault(row.page_number, []).append(row.id)
+        if row.lesson_id is not None:
+            lesson_to_ids.setdefault(row.lesson_id, []).append(row.id)
+
+    _formula_re = re.compile(r"[A-Z][a-z]?[0-9₀-₉]*")
+
+    enriched: list[dict] = []
+    for chunk in solution_chunks:
+        linked_ids: set[int] = set()
+        linked_pages: set[int] = set()
+
+        # Page-based link
+        pg = chunk.get("page_number")
+        if pg is not None:
+            for cid in page_to_ids.get(pg, []):
+                linked_ids.add(cid)
+                linked_pages.add(pg)
+
+        # Lesson-based link
+        meta = chunk.get("metadata_json") or {}
+        lesson_no = meta.get("lesson_no")
+        if lesson_no is not None:
+            for cid in lesson_to_ids.get(lesson_no, []):
+                linked_ids.add(cid)
+                # recover page from textbook_rows
+                for row in textbook_rows:
+                    if row.id == cid and row.page_number is not None:
+                        linked_pages.add(row.page_number)
+
+        enriched.append({
+            **chunk,
+            "linked_textbook_pages": sorted(linked_pages),
+            "linked_textbook_chunk_ids": sorted(linked_ids),
+        })
+    return enriched
 
 
 def slugify_source(title: str) -> str:
@@ -421,12 +559,35 @@ async def _store_page_chunks(
     topic_id: int | None,
     extraction_method: str,
     chunk_index_start: int,
+    *,
+    document_id: str | None = None,
+    document_type: str | None = None,
+    related_document_id: str | None = None,
 ) -> int:
     """Create RagChunk rows for one extracted page and return chunks created."""
     chunk_records = build_page_chunk_records(page_payload)
 
-    embeddings = await embed_batch([record.content for record in chunk_records])
+    # Embed with optional prefix for solution book chunks
+    texts_to_embed: list[str] = []
+    for record in chunk_records:
+        if document_type == "solution_book":
+            lesson_no = (record.metadata or {}).get("lesson_no")
+            lesson_part = f" | الدرس {lesson_no}" if lesson_no else ""
+            prefix = f"كتاب الحلول{lesson_part} | [{record.content_type}]"
+            texts_to_embed.append(f"{prefix} | {record.content}")
+        else:
+            texts_to_embed.append(record.content)
+
+    embeddings = await embed_batch(texts_to_embed)
     for offset, (record, embedding) in enumerate(zip(chunk_records, embeddings)):
+        extra_meta: dict = {}
+        if document_id is not None:
+            extra_meta["document_id"] = document_id
+        if document_type is not None:
+            extra_meta["document_type"] = document_type
+        if related_document_id is not None:
+            extra_meta["related_document_id"] = related_document_id
+
         db.add(
             RagChunk(
                 source_id=source.id,
@@ -438,12 +599,13 @@ async def _store_page_chunks(
                 content=record.content,
                 normalized_content=normalize_arabic(record.content),
                 content_type=record.content_type,
-                source_type=source.source_type,
+                source_type=document_type or source.source_type,
                 extraction_method=extraction_method,
                 language=page_payload.get("detected_language") or "ar",
                 embedding=embedding,
                 metadata_json={
                     **record.metadata,
+                    **extra_meta,
                     "extraction_methods": page_payload.get("extraction_methods") or [],
                     "warnings": page_payload.get("warnings") or [],
                 },
@@ -545,8 +707,25 @@ async def run_full_ingestion(
     clear_existing: bool = False,
     progress_callback: ProgressCallback | None = None,
     db: Session | None = None,
+    # Solution book / multi-document metadata
+    document_id: str | None = None,
+    document_type: str | None = None,
+    related_document_id: str | None = None,
 ) -> dict:
-    """Classify, extract, cache, chunk, embed, and store a source PDF."""
+    """Classify, extract, cache, chunk, embed, and store a source PDF.
+
+    Extra keyword arguments for solution book ingestion:
+
+    * ``document_id`` — stable identifier for this document
+      (e.g. ``"chemistry_grade9_solution_book"``).
+    * ``document_type`` — ``"textbook"`` or ``"solution_book"``.  When set,
+      overrides the ``source_type`` column of stored ``RagChunk`` rows so that
+      retrieval filters work correctly.
+    * ``related_document_id`` — identifier of the linked textbook
+      (e.g. ``"chemistry_grade9_textbook"``).
+    """
+    # document_type overrides source_type for the RagChunk column
+    effective_source_type = document_type or source_type
     owns_db = db is None
     session = db or SessionLocal()
     errors: list[str] = []
@@ -571,10 +750,31 @@ async def run_full_ingestion(
         settings.allow_partial_ingestion if allow_partial_ingestion is None else allow_partial_ingestion
     )
 
+    # Fast-fail: if caller explicitly disables OCR but the document has
+    # vision pages that require it, abort immediately with a clear error.
+    selected_provider = (ocr_provider_name or settings.ocr_provider or "gemini").strip().lower()
+    if selected_provider == "none" and resolved_ocr_required:
+        raise ValueError(
+            "ocr_provider is set to 'none' but this document requires OCR for "
+            "vision/image pages. Set ocr_provider to 'gemini' or pass "
+            "ocr_required_for_vision=False to allow text-only extraction."
+        )
+
     try:
         if progress_callback:
             progress_callback(1, "registering source")
-        source = _get_or_create_source(session, pdf_path, title, source_type, grade, subject, year)
+        source = _get_or_create_source(session, pdf_path, title, effective_source_type, grade, subject, year)
+        # Store document metadata in source metadata_json
+        source_meta: dict = dict(source.metadata_json or {})
+        if document_id is not None:
+            source_meta["document_id"] = document_id
+        if document_type is not None:
+            source_meta["document_type"] = document_type
+        if related_document_id is not None:
+            source_meta["related_document_id"] = related_document_id
+        source.metadata_json = source_meta
+        session.commit()
+
         vision_provider = get_vision_provider(ocr_provider_name)
 
         if progress_callback:
@@ -730,6 +930,9 @@ async def run_full_ingestion(
                         topic_id,
                         method,
                         chunks_created,
+                        document_id=document_id,
+                        document_type=document_type,
+                        related_document_id=related_document_id,
                     )
                     chunks_created += created
                     questions_extracted += _store_questions(

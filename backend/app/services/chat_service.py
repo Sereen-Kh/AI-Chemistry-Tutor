@@ -29,6 +29,7 @@ from app.services.rag import (
     lexical_relevance_score,
     rewrite_query,
 )
+from app.services.safety_rules import answer_safety_rule, is_acid_to_water_safety_question
 from app.services.semantic_rag import semantic_retrieve_context
 from app.services.source_router import route_source
 
@@ -52,6 +53,8 @@ _INTENT_BOOK_GROUNDED_THRESHOLDS = {
     "table_lookup": 0.48,
     "book_grounded": 0.45,
     "exercise_lookup": 0.45,
+    "exercise_solving": 0.45,
+    "safety_question": 0.45,
     "general": 0.45,
 }
 
@@ -65,6 +68,15 @@ _FORMULA_TRIGGERS = ("صيغة", "الصيغة", "رمز", "الرمز", "formul
 _EQUATION_TRIGGERS = ("معادلة", "المعادلة", "وازن", "موزونة", "اكتب المعادلة")
 _REACTION_TRIGGERS = ("تفاعل", "يتفاعل", "تتفاعل", "مع حمض", "مع الماء", "ناتج", "الناتج")
 _TABLE_TRIGGERS = ("جدول", "الجدول", "سلسلة", "السلسلة")
+_SAFETY_TRIGGERS = (
+    "نضيف الحمض الى الماء",
+    "اضف الحمض الى الماء",
+    "وليس العكس",
+    "لماذا نضيف الحمض",
+    "الماء الى الحمض",
+    "احتياطات",
+    "السلامه",
+)
 _VALID_ANSWER_TYPES = {"auto", "text", "image", "audio", "video", "mixed"}
 _EQUATION_LINE_RE = re.compile(
     r"(?=.*(?:→|⇌|->|=))(?=.*(?:[A-Z][a-z]?\d*|H2|HCl|H2SO4|NaOH|Cu|Fe|Zn|Mg|Al)).+"
@@ -274,21 +286,30 @@ def _classify_question(question: str) -> dict:
         "normalized_entity": entity.normalized_entity if entity else None,
     }
 
+    if is_acid_to_water_safety_question(question):
+        return {
+            "intent": "safety_question",
+            "answer_style": "direct",
+            "route": "safety_rule",
+            **entity_payload,
+        }
+
     if any(term in normalized for term in ("لون", "ورقه عباد", "عباد الشمس", "تلون")):
-        return {"intent": "property_lookup", "answer_style": "direct", **entity_payload}
+        return {"intent": "property_lookup", "answer_style": "direct", "route": "dictionary_first", **entity_payload}
 
     base_intent = _classify_intent(question)
     if base_intent in {"formula_lookup", "equation_lookup", "reaction_query", "table_lookup"}:
-        return {"intent": base_intent, "answer_style": "direct" if entity else "normal", **entity_payload}
+        return {"intent": base_intent, "answer_style": "direct" if entity else "normal", "route": "dictionary_first", **entity_payload}
 
     if (
         any(trigger in normalized for trigger in ("ما هي", "ما هو", "ماهي", "ماهو", "عرف", "تعريف"))
         or "اشرح معني" in normalized
         or "اشرح معنى" in normalized
     ):
-        return {"intent": "definition_lookup", "answer_style": "direct", **entity_payload}
+        return {"intent": "definition_lookup", "answer_style": "direct", "route": "dictionary_first", **entity_payload}
 
-    return {"intent": base_intent, "answer_style": "normal", **entity_payload}
+    route = "math_solver" if base_intent == "exercise_solving" else "rag"
+    return {"intent": base_intent, "answer_style": "normal", "route": route, **entity_payload}
 
 
 _FOLLOWUP_REPHRASE_TRIGGERS = (
@@ -329,6 +350,18 @@ def _classify_intent(question: str) -> str:
     normalized_lower = normalized.lower()
 
     normalized_for_property = _normalize_intent_text(question)
+    if is_acid_to_water_safety_question(question) or (
+        "حمض" in normalized_for_property
+        and "ماء" in normalized_for_property
+        and any(trigger in normalized_for_property for trigger in _SAFETY_TRIGGERS)
+    ):
+        return "safety_question"
+
+    if "تركيز" in normalized_for_property and any(
+        trigger in normalized_for_property for trigger in ("احسب", "حل", "مساله", "تمرين", "اوجد", "جد")
+    ):
+        return "exercise_solving"
+
     if any(term in normalized_for_property for term in ("لون", "ورقه عباد", "عباد الشمس", "تلون")):
         return "property_lookup"
 
@@ -904,6 +937,79 @@ def _litmus_rule_response(
     }
 
 
+def _safety_rule_response(
+    *,
+    question: str,
+    preferred_answer_type: str,
+    answer_scope: str,
+    diagnostics: dict,
+) -> dict | None:
+    safety_answer = answer_safety_rule(question)
+    if not safety_answer:
+        return None
+
+    answer_type = _select_answer_type("safety_question", preferred_answer_type)
+    diagnostics.update(
+        _retrieval_diagnostics(
+            question=question,
+            intent="safety_question",
+            entity=None,
+            chunks=[],
+            confidence=safety_answer.confidence,
+        )
+    )
+    diagnostics.update(
+        {
+            "intent": safety_answer.intent,
+            "route": safety_answer.route,
+            "grounding": "safety_rule",
+            "answer_scope": answer_scope,
+            "rule_engine": "acid_to_water_safety",
+            "matched_terms": safety_answer.matched_terms,
+            "retrieved_chunks": [],
+            "selected_context": [],
+            "selected_source_pages": safety_answer.page_numbers,
+            "rag_search_skipped": True,
+            "fallback_used": "local_router",
+            "gemini_available": bool(settings.effective_gemini_api_key),
+            "gemini_error": None,
+            "gemini_skipped_reason": "deterministic_safety_rule",
+        }
+    )
+    source_blocks = [
+        {
+            "book_id": _SOURCE_SLUG,
+            "page": page,
+            "chunk_id": 0,
+            "chunk_type": "safety_rule",
+            "score": safety_answer.confidence,
+        }
+        for page in safety_answer.page_numbers
+    ]
+    blocks = _build_answer_blocks(
+        safety_answer.answer,
+        [],
+        answer_type=answer_type,
+        preferred_answer_type=preferred_answer_type,
+        page_numbers=safety_answer.page_numbers,
+        diagnostics=diagnostics,
+    )
+    return {
+        "answer": safety_answer.answer,
+        "answer_type": answer_type,
+        "route": safety_answer.route,
+        "grounding": "safety_rule",
+        "answer_scope": answer_scope,
+        "blocks": blocks,
+        "sources": [],
+        "source_blocks": source_blocks,
+        "page_numbers": safety_answer.page_numbers,
+        "confidence": round(float(safety_answer.confidence), 4),
+        "diagnostics": diagnostics,
+        "suggested_next_action": safety_answer.suggested_next_action,
+    }
+
+
 def _book_knowledge_response(
     *,
     item: BookKnowledgeAnswer,
@@ -1452,6 +1558,31 @@ def _acid_answer_from_chunks(chunks: list[RetrievedChunk]) -> str | None:
     )
 
 
+def _is_acid_to_water_safety_question(question: str) -> bool:
+    return is_acid_to_water_safety_question(question)
+
+
+def _acid_to_water_safety_answer_from_chunks(chunks: list[RetrievedChunk]) -> str | None:
+    combined = "\n".join(chunk.content for chunk in chunks)
+    normalized = combined.replace("إ", "ا").replace("أ", "ا").replace("آ", "ا").replace("ة", "ه")
+    if "حمض" not in normalized or "ماء" not in normalized:
+        return None
+    if "اضف الحمض الى الماء" not in normalized and "تحذير" not in normalized:
+        return None
+
+    pages = sorted({chunk.page_number for chunk in chunks if chunk.page_number is not None})
+    selected_pages = "، ".join(str(page) for page in pages if page in {7}) or "، ".join(str(page) for page in pages)
+    return (
+        "من الكتاب:\n"
+        "يرد التحذير: أضف الحمض إلى الماء، وليس العكس.\n\n"
+        "السبب:\n"
+        "- تمديد الحمض بالماء يحرر حرارة.\n"
+        "- عند إضافة الماء إلى الحمض المركز قد ترتفع الحرارة بسرعة ويتطاير الحمض خارج الوعاء.\n"
+        "- لذلك نضيف الحمض تدريجياً إلى كمية أكبر من الماء مع التحريك لتتوزع الحرارة بأمان.\n\n"
+        f"المصدر: صفحة {selected_pages}."
+    )
+
+
 def _local_rag_answer(question: str, chunks: list[RetrievedChunk], reason: str | None = None) -> str:
     """Build a useful source-backed fallback when no Gemini key is configured."""
     intro = "إجابة مبنية على مقاطع الكتاب المتاحة."
@@ -1460,6 +1591,11 @@ def _local_rag_answer(question: str, chunks: list[RetrievedChunk], reason: str |
             f"{intro}\n\n"
             "لم أجد مقاطع كافية من الكتاب للإجابة عن السؤال بدقة."
         )
+
+    if _is_acid_to_water_safety_question(question):
+        answer = _acid_to_water_safety_answer_from_chunks(chunks)
+        if answer:
+            return answer
 
     if _is_acids_question(question):
         answer = _acid_answer_from_chunks(chunks)
@@ -1506,14 +1642,33 @@ async def _answer_with_rag_fallback(
     question: str,
     chunks: list[RetrievedChunk],
     system_prompt: str,
+    diagnostics: dict | None = None,
 ) -> str:
     if not settings.effective_gemini_api_key:
+        if diagnostics is not None:
+            diagnostics.update(
+                {
+                    "gemini_available": False,
+                    "gemini_error": "API_KEY_MISSING",
+                    "fallback_used": "local_router",
+                }
+            )
         return _local_rag_answer(question, chunks)
 
     try:
         answer = await ai_service.get_ai_response(messages, system_prompt=system_prompt, raise_on_error=True)
         if answer.strip():
+            if diagnostics is not None:
+                diagnostics.update({"gemini_available": True, "gemini_error": None, "fallback_used": None})
             return answer
+        if diagnostics is not None:
+            diagnostics.update(
+                {
+                    "gemini_available": False,
+                    "gemini_error": "EMPTY_RESPONSE",
+                    "fallback_used": "local_router",
+                }
+            )
         return _local_rag_answer(
             question,
             chunks,
@@ -1521,6 +1676,14 @@ async def _answer_with_rag_fallback(
         )
     except ai_service.AIQuotaExceededError:
         logger.info("Gemini quota exceeded; using local RAG fallback.")
+        if diagnostics is not None:
+            diagnostics.update(
+                {
+                    "gemini_available": False,
+                    "gemini_error": "RESOURCE_EXHAUSTED",
+                    "fallback_used": "local_router",
+                }
+            )
         return _local_rag_answer(
             question,
             chunks,
@@ -1528,6 +1691,14 @@ async def _answer_with_rag_fallback(
         )
     except ai_service.AIServiceError:
         logger.info("Gemini service failed; using local RAG fallback.")
+        if diagnostics is not None:
+            diagnostics.update(
+                {
+                    "gemini_available": False,
+                    "gemini_error": "SERVICE_UNAVAILABLE",
+                    "fallback_used": "local_router",
+                }
+            )
         return _local_rag_answer(
             question,
             chunks,
@@ -1762,6 +1933,136 @@ async def ask_question(
         },
         "gemini_available": bool(settings.effective_gemini_api_key),
     }
+
+    safety_rule = _safety_rule_response(
+        question=question,
+        preferred_answer_type=preferred_answer_type,
+        answer_scope=answer_scope,
+        diagnostics=diagnostics,
+    )
+    if safety_rule:
+        return _finalize_answer(safety_rule, question)
+
+    # -----------------------------------------------------------------------
+    # Exercise solving: try Solution Book RAG first (high-confidence), then
+    # fall back to the deterministic math_solver rule engine.
+    # -----------------------------------------------------------------------
+    if intent == "exercise_solving" or classification.get("route") == "math_solver":
+        # 1. Try Solution Book RAG if we have a DB session (async context)
+        _solution_rag_confidence_threshold = 0.72
+        _solution_rag_chunks: list = []
+        try:
+            _sol_rag_result = await semantic_retrieve_context(
+                db,
+                question,
+                source_types=["solution_book"],
+                top_k=4,
+                intent="exercise_solving",
+                document_type="solution_book",
+            )
+            _solution_rag_chunks = _sol_rag_result.chunks
+        except Exception:
+            _solution_rag_chunks = []
+
+        _top_sol_score = max(
+            (getattr(c, "similarity_score", 0) or 0 for c in _solution_rag_chunks),
+            default=0,
+        )
+        if _solution_rag_chunks and _top_sol_score >= _solution_rag_confidence_threshold:
+            # High-confidence solution book match — build answer from these chunks
+            answer_type = _select_answer_type("exercise_solving", preferred_answer_type)
+            _sol_context = format_context(_solution_rag_chunks)
+            _sol_system_prompt = (
+                _SYSTEM_PROMPT_ASK_WITH_CONTEXT.format(context=_sol_context)
+                if _sol_context
+                else _SYSTEM_PROMPT_ASK_NO_CONTEXT
+            )
+            _sol_answer = await _answer_with_rag_fallback(
+                messages=[{"role": "user", "content": question}],
+                question=question,
+                chunks=_solution_rag_chunks,
+                system_prompt=_sol_system_prompt,
+                diagnostics=diagnostics,
+            )
+            diagnostics.update(
+                {
+                    "intent": "exercise_solving",
+                    "route": "solution_book_rag",
+                    "grounding": "solution_book",
+                    "answer_scope": answer_scope,
+                    "retrieved_chunks": [getattr(c, "id", None) for c in _solution_rag_chunks],
+                    "solution_book_confidence": _top_sol_score,
+                    "rag_search_skipped": False,
+                    "fallback_used": None,
+                }
+            )
+            return _finalize_answer(
+                {
+                    "answer": _sol_answer,
+                    "answer_type": answer_type,
+                    "route": "solution_book_rag",
+                    "grounding": "solution_book",
+                    "answer_scope": answer_scope,
+                    "blocks": _build_answer_blocks(
+                        _sol_answer,
+                        _solution_rag_chunks,
+                        answer_type=answer_type,
+                        preferred_answer_type=preferred_answer_type,
+                        diagnostics=diagnostics,
+                    ),
+                    "sources": _solution_rag_chunks,
+                    "source_blocks": _source_blocks(_solution_rag_chunks),
+                    "page_numbers": sorted({c.page_number for c in _solution_rag_chunks if c.page_number}),
+                    "confidence": _top_sol_score,
+                    "diagnostics": diagnostics,
+                    "suggested_next_action": None,
+                },
+                question,
+            )
+
+        # 2. Deterministic math_solver fallback
+        math_answer = route_direct_answer(question)
+        if math_answer:
+            answer_type = _select_answer_type(math_answer.intent, preferred_answer_type)
+            diagnostics.update(
+                {
+                    "intent": math_answer.intent,
+                    "rule_engine": "math_solver",
+                    "route": math_answer.route,
+                    "grounding": math_answer.grounding,
+                    "answer_scope": answer_scope,
+                    "extracted_values": getattr(math_answer, "extracted_values", None) or {},
+                    "retrieved_chunks": [],
+                    "selected_context": [],
+                    "rag_search_skipped": True,
+                    "fallback_used": "local_router",
+                }
+            )
+            return _finalize_answer(
+                {
+                    "answer": math_answer.answer,
+                    "answer_type": answer_type,
+                    "route": math_answer.route,
+                    "grounding": math_answer.grounding,
+                    "answer_scope": answer_scope,
+                    "blocks": _build_answer_blocks(
+                        math_answer.answer,
+                        [],
+                        answer_type=answer_type,
+                        preferred_answer_type=preferred_answer_type,
+                        page_numbers=math_answer.page_numbers,
+                        diagnostics=diagnostics,
+                    ),
+                    "sources": [],
+                    "source_blocks": [],
+                    "page_numbers": math_answer.page_numbers,
+                    "confidence": math_answer.confidence,
+                    "diagnostics": diagnostics,
+                    "suggested_next_action": math_answer.suggested_next_action,
+                },
+                question,
+            )
+
     source_route = await route_source(question, source_types)
     routed_source_types = source_route.source_types
     diagnostics["source_route"] = {
@@ -1867,15 +2168,20 @@ async def ask_question(
             {
                 "intent": direct_answer.intent,
                 "rule_engine": "direct_router",
-                "route": "dictionary_first",
-                "grounding": "approved_dictionary",
+                "route": direct_answer.route,
+                "grounding": direct_answer.grounding,
+                "answer_scope": answer_scope,
+                "retrieved_chunks": [],
+                "selected_context": [],
+                "rag_search_skipped": True,
+                "fallback_used": "local_router",
             }
         )
         return _finalize_answer({
             "answer": direct_answer.answer,
             "answer_type": answer_type,
-            "route": "dictionary_first",
-            "grounding": "approved_dictionary",
+            "route": direct_answer.route,
+            "grounding": direct_answer.grounding,
             "answer_scope": answer_scope,
             "blocks": _build_answer_blocks(
                 direct_answer.answer,
@@ -2117,12 +2423,13 @@ async def ask_question(
         question=question,
         chunks=chunks,
         system_prompt=system_prompt,
+        diagnostics=diagnostics,
     )
     answer_type = _select_answer_type(intent, preferred_answer_type)
     diagnostics.update(
         {
             "low_confidence": False,
-            "fallback_used": None if settings.effective_gemini_api_key else "local_rag",
+            "fallback_used": diagnostics.get("fallback_used"),
             "route": "textbook_rag",
             "grounding": "book",
         }

@@ -4,9 +4,15 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import time
 
 from app.core.config import settings
-from app.services.gemini_client import get_gemini_client, tutor_generation_config
+from app.services.gemini_client import (
+    get_gemini_client,
+    is_gemini_auth_error,
+    is_gemini_quota_error,
+    tutor_generation_config,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +31,10 @@ class AIQuotaExceededError(AIServiceError):
     """Raised when Gemini refuses a request because quota or rate limit is exhausted."""
 
 
+_GEMINI_GENERATION_DISABLED_UNTIL = 0.0
+_GEMINI_GENERATION_DISABLED_REASON = ""
+
+
 def _is_quota_error(exc: Exception) -> bool:
     text = str(exc)
     return any(
@@ -39,6 +49,33 @@ def _is_quota_error(exc: Exception) -> bool:
             "GenerateRequestsPerDayPerProjectPerModel-FreeTier",
         )
     )
+
+
+def _is_transient_generation_error(exc: Exception) -> bool:
+    text = str(exc)
+    return any(
+        marker in text
+        for marker in (
+            "503",
+            "504",
+            "UNAVAILABLE",
+            "DEADLINE_EXCEEDED",
+            "timeout",
+            "Timeout",
+            "high demand",
+        )
+    )
+
+
+def _disable_generation_temporarily(reason: str, *, cooldown_seconds: int | None = None) -> None:
+    global _GEMINI_GENERATION_DISABLED_REASON, _GEMINI_GENERATION_DISABLED_UNTIL
+    cooldown = settings.gemini_failure_cooldown_seconds if cooldown_seconds is None else cooldown_seconds
+    _GEMINI_GENERATION_DISABLED_UNTIL = time.monotonic() + max(1, cooldown)
+    _GEMINI_GENERATION_DISABLED_REASON = reason
+
+
+def _generation_cooldown_remaining() -> float:
+    return max(0.0, _GEMINI_GENERATION_DISABLED_UNTIL - time.monotonic())
 
 
 def _message_contents(messages: list[dict[str, str]]):
@@ -62,12 +99,21 @@ async def get_ai_response(
     raise_on_error: bool = False,
 ) -> str:
     """Generate a tutor answer from conversation messages."""
-    if not settings.effective_gemini_api_key:
+    if not settings.effective_gemini_api_key or not settings.gemini_tutor_generation_enabled:
         last_message = messages[-1]["content"] if messages else ""
         return (
             "وضع الاختبار المحلي يعمل، لكن مفتاح Gemini غير مضبوط. "
             f"سؤالك كان: {last_message}"
         )
+    cooldown_remaining = _generation_cooldown_remaining()
+    if cooldown_remaining > 0:
+        message = (
+            "Gemini tutor generation is temporarily disabled after a recent failure "
+            f"({_GEMINI_GENERATION_DISABLED_REASON}); retry in {cooldown_remaining:.0f}s."
+        )
+        if raise_on_error:
+            raise AIServiceError(message)
+        return "تعذر استخدام Gemini حالياً، لذلك استخدم إجابة المصادر المحلية المتاحة."
 
     def _call() -> str:
         client = get_gemini_client()
@@ -81,14 +127,28 @@ async def get_ai_response(
     try:
         return await asyncio.to_thread(_call)
     except Exception as exc:  # pragma: no cover - external API failure
-        logger.exception("Gemini request failed")
-        if _is_quota_error(exc):
+        if is_gemini_auth_error(exc):
+            _disable_generation_temporarily("auth_error")
+            logger.warning("Gemini tutor generation auth failed; using local fallback: %s", exc)
+            if raise_on_error:
+                raise AIServiceError("Gemini authentication failed.") from exc
+            return "تعذر استخدام Gemini بسبب مشكلة في المفتاح، لذلك استخدم إجابة المصادر المحلية المتاحة."
+        if is_gemini_quota_error(exc) or _is_quota_error(exc):
+            _disable_generation_temporarily("quota_exceeded")
+            logger.warning("Gemini tutor generation quota exceeded; using local fallback: %s", exc)
             if raise_on_error:
                 raise AIQuotaExceededError("Gemini quota or rate limit was exceeded.") from exc
             return (
                 "وصلت خدمة Gemini إلى حد الاستخدام المؤقت أو اليومي. "
                 "أعد المحاولة لاحقاً أو استخدم إجابة المصادر المحلية المتاحة."
             )
+        if _is_transient_generation_error(exc):
+            _disable_generation_temporarily("transient_service_error", cooldown_seconds=60)
+            logger.warning("Gemini tutor generation unavailable; using local fallback: %s", exc)
+            if raise_on_error:
+                raise AIServiceError("Gemini service is temporarily unavailable.") from exc
+            return "تعذر استخدام Gemini حالياً، لذلك استخدم إجابة المصادر المحلية المتاحة."
+        logger.exception("Gemini request failed")
         if raise_on_error:
             raise AIServiceError("Gemini request failed.") from exc
         return "تعذر الاتصال بخدمة الذكاء الاصطناعي حالياً. أعد المحاولة لاحقاً."

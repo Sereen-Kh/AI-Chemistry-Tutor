@@ -19,6 +19,7 @@ from app.models.textbook import ContentSource, RagChunk
 from app.services.chunking import extract_formula_terms, normalize_formula
 from app.services.embeddings import embed_query
 from app.services.rag_diagnostics import CandidateInfo, RetrievalDiagnostics
+from app.services.safety_rules import ACID_TO_WATER_REWRITE
 
 logger = logging.getLogger(__name__)
 
@@ -267,6 +268,21 @@ _INTENT_CONTENT_TYPE_BOOSTS = {
         "table": 0.10,
         "text": 0.04,
     },
+    "exercise_solving": {
+        "exercise": 0.28,
+        "equation": 0.18,
+        "result": 0.12,
+        "table": 0.10,
+        "text": 0.04,
+    },
+    "safety_question": {
+        "warning": 0.34,
+        "safety": 0.34,
+        "objective": 0.12,
+        "objectives": 0.12,
+        "text": 0.10,
+        "learned_summary": 0.08,
+    },
     "book_grounded": {
         "definition": 0.12,
         "text": 0.10,
@@ -310,6 +326,17 @@ def clean_query(raw_query: str) -> str:
 
 def rewrite_query(cleaned_query: str) -> str:
     """Expand a cleaned query with semantically related terms for better recall."""
+    normalized = _normalize_lexical_text(cleaned_query)
+    if _acid_to_water_safety_query(normalized):
+        return ACID_TO_WATER_REWRITE
+    if "hcl" in normalized and "تركيز" in normalized and any(term in normalized for term in ("احسب", "مساله", "مسالة", "تمرين")):
+        original = cleaned_query.strip()
+        exercise_rewrite = (
+            "مسألة تركيز حمض كلور الماء HCl التركيز الغرامي التركيز المولي "
+            "Cm=m/V C=n/V كتلة حجم mol/L g/L"
+        )
+        return f"{original} {exercise_rewrite}".strip()
+
     terms = _query_terms(cleaned_query)
     original_tokens = [t for t in _tokens(cleaned_query) if t not in _QUERY_STOPWORDS and len(t) > 1]
     # Keep originals first, then add expansions
@@ -317,7 +344,6 @@ def rewrite_query(cleaned_query: str) -> str:
     for term in terms:
         if term not in all_parts:
             all_parts.append(term)
-    normalized = _normalize_lexical_text(cleaned_query)
     if any(term in normalized for term in ("تفاعل", "معادله", "معادلة")):
         for term in ("تفاعلات الازاحه", "سلسله النشاط", "النشاط الكيميائي", "لا يحدث تفاعل"):
             if term not in all_parts:
@@ -450,6 +476,47 @@ def _formula_overlap(query: str, content: str) -> set[str]:
     return query_formulas & content_formulas
 
 
+def _acid_to_water_safety_query(query_norm: str) -> bool:
+    return (
+        "حمض" in query_norm
+        and "ماء" in query_norm
+        and any(
+            term in query_norm
+            for term in (
+                "نضيف",
+                "اضف",
+                "اضافه",
+                "اضافة",
+                "العكس",
+                "وليس",
+                "احتياطات",
+                "السلامه",
+                "السلامة",
+            )
+        )
+    )
+
+
+def _acid_to_water_safety_content(normalized_content: str) -> bool:
+    return (
+        "حمض" in normalized_content
+        and "ماء" in normalized_content
+        and any(
+            term in normalized_content
+            for term in (
+                "اضف الحمض الى الماء",
+                "اضافه الحمض الى الماء",
+                "تحذير",
+                "احتياطات",
+                "السلامه",
+                "السلامة",
+                "تطاير",
+                "غليان",
+            )
+        )
+    )
+
+
 def _candidate_reasons(query: str, content: str, *, intent: str, content_type: str) -> list[str]:
     reasons: list[str] = []
     matched = _matched_query_terms(query, content)
@@ -470,6 +537,8 @@ def _candidate_reasons(query: str, content: str, *, intent: str, content_type: s
         reasons.append("exact_entity:calcium_oxide")
     if "كربونات الصوديوم" in query_norm and ("كربونات الصوديوم" in normalized or "na2co3" in normalized):
         reasons.append("exact_entity:sodium_carbonate")
+    if _acid_to_water_safety_query(query_norm) and _acid_to_water_safety_content(normalized):
+        reasons.append("acid_to_water_safety_warning")
     if any(term in query_norm for term in ("املاح", "الاملاح", "ملح", "الملح")) and any(
         term in normalized for term in ("ايونات الملح", "اسم الملح", "يتشكل الملح", "يتشكل الملح")
     ):
@@ -524,6 +593,7 @@ def _hybrid_score(
     *,
     intent: str = "general",
     content_type: str = "text",
+    source_type: str = "textbook",
 ) -> float:
     """Compute a blended vector+lexical score with intent-based boosting."""
     lexical_score = lexical_relevance_score(query, content)
@@ -591,6 +661,19 @@ def _hybrid_score(
         score += min(0.24, 0.08 * len(formula_overlap))
     if "عباد الشمس" in query_norm and "عباد الشمس" in normalized:
         score += 0.20
+    if _acid_to_water_safety_query(query_norm):
+        if _acid_to_water_safety_content(normalized):
+            score += 0.58
+        elif content_type in {"definition", "result", "learned_summary"} and (
+            "ايونات الهدروجين" in normalized
+            or "ايون الهدروجين" in normalized
+            or "ايونات الهيدروجين" in normalized
+            or "ايون الهيدروجين" in normalized
+            or "h+" in normalized
+            or "مواد تعطي" in normalized
+            or "تتاين الحموض" in normalized
+        ):
+            score = min(score, 0.32)
     if "اكسيد الكالسيوم" in query_norm and (
         "اكسيد الكالسيوم" in normalized or "هيدروكسيد الكالسيوم" in normalized or "cao" in normalized
     ):
@@ -621,6 +704,18 @@ def _hybrid_score(
         score -= 0.50
     if "طلاء الاظافر" in query_norm and "طلاء الاظافر" not in normalized:
         score -= 0.25
+
+    # Solution book boost: for exercise_solving intent, prefer solution_book chunks
+    # and boost exact formula / calculation content within them.
+    if intent == "exercise_solving" and source_type in {"solution_book", "solutions"}:
+        score += 0.22
+        if content_type in {"exercise_solution", "solution_step", "final_answer", "equation"}:
+            score += 0.14
+        # Boost if query contains numeric values that also appear in content
+        query_numbers = set(re.findall(r"\d+(?:[.,]\d+)?", query))
+        content_numbers = set(re.findall(r"\d+(?:[.,]\d+)?", content))
+        if query_numbers & content_numbers:
+            score += 0.10
 
     return round(min(max(score, 0.0), 1.0), 4)
 
@@ -655,6 +750,12 @@ async def retrieve_context(
     min_similarity: float = 0.0,
     intent: str = "general",
     diagnostics_callback: Callable[[dict], None] | None = None,
+    # Solution book extended filters
+    document_type: str | None = None,
+    document_id: str | None = None,
+    related_document_id: str | None = None,
+    lesson_no: int | None = None,
+    source_pdf: str | None = None,
 ) -> list[RetrievedChunk]:
     """Retrieve relevant source chunks for a query.
 
@@ -676,7 +777,8 @@ async def retrieve_context(
 
     cache_key_raw = (
         f"{query}|{user_id}|{chapter_id}|{lesson_id}|{topic_id}|"
-        f"{source_types}|{content_types}|{top_k}|{min_similarity}|{intent}"
+        f"{source_types}|{content_types}|{top_k}|{min_similarity}|{intent}|"
+        f"{document_type}|{document_id}|{lesson_no}"
     )
     cache_key = f"rag_cache:{_CACHE_VERSION}:" + hashlib.md5(cache_key_raw.encode()).hexdigest()
 
@@ -725,6 +827,9 @@ async def retrieve_context(
         stmt = stmt.where(RagChunk.source_type.in_(source_types))
     if content_types:
         stmt = stmt.where(RagChunk.content_type.in_(content_types))
+    # Solution book extended SQL filters (stored in source_type column for index performance)
+    if document_type is not None and not source_types:
+        stmt = stmt.where(RagChunk.source_type == document_type)
 
     scored: list[RetrievedChunk] = []
     all_candidates: list[CandidateInfo] = []
@@ -771,6 +876,7 @@ async def retrieve_context(
         score = _hybrid_score(
             scoring_query, lexical_content, vector_score,
             intent=intent, content_type=chunk.content_type,
+            source_type=chunk.source_type,
         )
 
         # Track all candidates for diagnostics

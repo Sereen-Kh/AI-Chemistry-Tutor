@@ -20,7 +20,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.config import settings
 from app.core.redis import get_redis_client
 from app.database import AsyncSessionLocal
-from app.services.gemini_client import get_gemini_client, is_gemini_auth_error, is_gemini_quota_error
+from app.services.gemini_client import (
+    get_gemini_client,
+    is_gemini_auth_error,
+    is_gemini_quota_error,
+    semantic_helper_http_options,
+)
 from app.services.rag import (
     RetrievedChunk,
     clean_query,
@@ -35,6 +40,8 @@ logger = logging.getLogger(__name__)
 _REWRITE_CACHE_TTL_SECONDS = 600
 _RESULT_CACHE_TTL_SECONDS = 3600
 _CACHE_VERSION = "v3"
+_GEMINI_HELPER_DISABLED_UNTIL = 0.0
+_GEMINI_HELPER_DISABLED_REASON = ""
 _RRF_K = 60
 _MAX_RERANK_CANDIDATES = 16
 _QUALITY_GATE_MIN_SCORE = 0.45
@@ -47,6 +54,8 @@ _INTENT_MIN_SCORES = {
     "table_lookup": 0.48,
     "book_grounded": 0.45,
     "exercise_lookup": 0.42,
+    "exercise_solving": 0.42,
+    "safety_question": 0.45,
     "general": 0.45,
 }
 _INTENT_PREFERRED_CONTENT_TYPES = {
@@ -57,6 +66,8 @@ _INTENT_PREFERRED_CONTENT_TYPES = {
     "reaction_query": {"equation", "result", "exercise", "text", "table"},
     "table_lookup": {"table", "text"},
     "exercise_lookup": {"exercise", "equation", "result", "table", "text"},
+    "exercise_solving": {"exercise", "equation", "result", "table", "text"},
+    "safety_question": {"warning", "safety", "objective", "objectives", "text", "learned_summary"},
     "book_grounded": {"definition", "text", "result", "learned_summary", "table"},
 }
 _INTENT_PENALIZED_CONTENT_TYPES = {
@@ -64,6 +75,7 @@ _INTENT_PENALIZED_CONTENT_TYPES = {
     "property_lookup": {"exercise", "question", "questions", "exam_question", "objectives", "objective"},
     "formula_lookup": {"objectives", "objective"},
     "table_lookup": {"exercise", "question", "questions"},
+    "safety_question": {"definition", "exercise", "question", "questions", "exam_question"},
 }
 _ENTITY_COVERAGE_GROUPS = (
     ("sodium_carbonate", ("كربونات الصوديوم", "na2co3")),
@@ -190,7 +202,10 @@ def _chunk_from_dict(payload: dict[str, Any]) -> RetrievedChunk:
 
 
 async def _gemini_json(prompt: str, *, max_output_tokens: int = 2048) -> Any | None:
-    if not settings.effective_gemini_api_key:
+    global _GEMINI_HELPER_DISABLED_REASON, _GEMINI_HELPER_DISABLED_UNTIL
+    if not settings.gemini_semantic_helpers_enabled or not settings.effective_gemini_api_key:
+        return None
+    if _GEMINI_HELPER_DISABLED_UNTIL > time.monotonic():
         return None
 
     def _call() -> Any | None:
@@ -201,6 +216,7 @@ async def _gemini_json(prompt: str, *, max_output_tokens: int = 2048) -> Any | N
             model=settings.gemini_reranker_model,
             contents=prompt,
             config=types.GenerateContentConfig(
+                http_options=semantic_helper_http_options(),
                 response_mime_type="application/json",
                 temperature=0.0,
                 max_output_tokens=max_output_tokens,
@@ -213,8 +229,12 @@ async def _gemini_json(prompt: str, *, max_output_tokens: int = 2048) -> Any | N
         return await asyncio.to_thread(_call)
     except Exception as exc:  # pragma: no cover - external model behavior
         if is_gemini_auth_error(exc) or is_gemini_quota_error(exc):
+            _GEMINI_HELPER_DISABLED_REASON = "auth_or_quota_error"
+            _GEMINI_HELPER_DISABLED_UNTIL = time.monotonic() + max(1, settings.gemini_failure_cooldown_seconds)
             logger.info("Gemini semantic RAG helper unavailable: %s", exc)
         else:
+            _GEMINI_HELPER_DISABLED_REASON = "service_error"
+            _GEMINI_HELPER_DISABLED_UNTIL = time.monotonic() + 60
             logger.warning("Gemini semantic RAG helper failed: %s", exc)
         return None
 
@@ -302,6 +322,7 @@ async def _retrieve_variant(
     topic_id: int | None,
     top_k: int,
     intent: str,
+    document_type: str | None = None,
 ) -> tuple[str, list[RetrievedChunk], dict[str, Any]]:
     diagnostics: dict[str, Any] = {}
     # SQLAlchemy AsyncSession does not permit concurrent operations. Semantic
@@ -320,6 +341,7 @@ async def _retrieve_variant(
             min_similarity=0.0,
             intent=intent,
             diagnostics_callback=diagnostics.update,
+            document_type=document_type,
         )
     return label, chunks, diagnostics
 
@@ -378,6 +400,29 @@ def _content_type_adjustment(query: str, candidate: FusedCandidate, *, intent: s
             adjustment += 0.12
             reasons.append("definition_evidence_marker")
 
+    acid_to_water_query = (
+        "حمض" in query_norm
+        and "ماء" in query_norm
+        and any(term in query_norm for term in ("نضيف", "اضف", "اضافه", "اضافة", "العكس", "وليس"))
+    )
+    acid_to_water_warning = (
+        "حمض" in content_norm
+        and "ماء" in content_norm
+        and any(term in content_norm for term in ("اضف الحمض الى الماء", "اضافه الحمض الى الماء", "تحذير"))
+    )
+    if acid_to_water_query:
+        if acid_to_water_warning:
+            adjustment += 0.36
+            reasons.append("acid_to_water_safety_warning")
+        elif (
+            "ايونات الهدروجين" in content_norm
+            or "ايونات الهيدروجين" in content_norm
+            or "h+" in content_norm
+            or "مواد تعطي عند انحلالها" in content_norm
+        ):
+            adjustment -= 0.55
+            reasons.append("acid_definition_not_safety_answer")
+
     for entity_key, aliases in _ENTITY_COVERAGE_GROUPS:
         query_mentions_entity = any(alias in query_norm for alias in aliases)
         if not query_mentions_entity:
@@ -420,7 +465,7 @@ def _semantic_relevance_score(
 
 
 async def _gemini_rerank(query: str, candidates: list[FusedCandidate]) -> dict[int, dict[str, Any]] | None:
-    if not settings.effective_gemini_api_key or not candidates:
+    if not settings.gemini_semantic_helpers_enabled or not settings.effective_gemini_api_key or not candidates:
         return None
 
     payload = [
@@ -472,6 +517,8 @@ async def _rerank(
     min_score = _minimum_score_for_intent(intent)
     diagnostics: dict[str, Any] = {
         "reranker_model": settings.gemini_reranker_model,
+        "semantic_helpers_enabled": settings.gemini_semantic_helpers_enabled,
+        "semantic_helper_disabled_reason": _GEMINI_HELPER_DISABLED_REASON or None,
         "reranker_used": bool(gemini_scores),
         "quality_gate_min_score": min_score,
     }
@@ -542,6 +589,7 @@ async def semantic_retrieve_context(
     topic_id: int | None = None,
     top_k: int = 5,
     intent: str = "general",
+    document_type: str | None = None,
 ) -> SemanticRagResult:
     """Run the full semantic RAG retrieval pipeline."""
     start = time.monotonic()
@@ -592,6 +640,7 @@ async def semantic_retrieve_context(
                 topic_id=topic_id,
                 top_k=retrieval_top_k,
                 intent=intent,
+                document_type=document_type,
             )
             for label, variant_query in deduped_variants
         ]

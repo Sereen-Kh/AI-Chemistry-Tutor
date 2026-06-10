@@ -59,3 +59,24 @@ class QueryRouterTests(TestCase):
         self.assertIn("المحاليل المائية", result.answer)
         self.assertIn("يتعرّف المحلول المائي", result.answer)
         self.assertIn(2, result.page_numbers)
+
+    def test_hcl_concentration_exercise_is_math_solver(self):
+        result = route_direct_answer("محلول HCl حجمه 100 mL ويحتوي 3.65 g. احسب التركيز الغرامي والمولي؟")
+
+        self.assertIsNotNone(result)
+        assert result is not None
+        self.assertEqual(result.intent, "exercise_solving")
+        self.assertEqual(result.route, "math_solver")
+        self.assertIn("Cm = m / V", result.answer)
+        self.assertIn("36.5 g/L", result.answer)
+        self.assertIn("C = n / V", result.answer)
+        self.assertIn("1 mol/L", result.answer)
+
+    def test_molar_concentration_definition_is_direct(self):
+        result = route_direct_answer("ما هو التركيز المولي؟")
+
+        self.assertIsNotNone(result)
+        assert result is not None
+        self.assertEqual(result.route, "dictionary_first")
+        self.assertIn("C = n / V", result.answer)
+        self.assertIn("mol/L", result.answer)

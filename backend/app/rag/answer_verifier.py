@@ -38,4 +38,20 @@ def verify_answer(question: str, answer: str) -> VerificationResult:
         return VerificationResult("الاحمر" in a, None if "الاحمر" in a else "acidic litmus answer must mention red")
     if "عباد الشمس" in q and any(term in q for term in ("اساسي", "الاسس", "قاعد")):
         return VerificationResult("الازرق" in a, None if "الازرق" in a else "basic litmus answer must mention blue")
+    # Safety: acid-to-water question must mention heat/splashing/boiling/safety
+    if ("نضيف الحمض" in q or "اضف الحمض" in q or "الماء الى الحمض" in q or "وليس العكس" in q) and "حمض" in q and "ماء" in q:
+        ok = any(term in a for term in ("حراره", "تطاير", "غليان", "سلامه"))
+        return VerificationResult(ok, None if ok else "safety answer must mention heat, splashing, boiling, or safety")
+    # Math: HCl concentration exercise answer must contain computed values
+    if "hcl" in q and "تركيز" in q and any(term in q for term in ("احسب", "حل", "مساله", "تمرين", "اوجد")):
+        ok = "g/l" in a and "mol/l" in a and "cm" in a
+        return VerificationResult(ok, None if ok else "concentration exercise answer must contain g/L, mol/L, and Cm")
+    # Molar concentration definition
+    if "تركيز" in q and ("مولي" in q or "موليه" in q) and any(term in q for term in ("ما هو", "ماهو", "ماهي", "ما هي", "تعريف", "عرف")):
+        ok = ("c = n / v" in a or "c=n/v" in a or "c = n/v" in a) and "mol/l" in a
+        return VerificationResult(ok, None if ok else "molar concentration definition must contain C = n / V and mol/L")
+    # Copper + dilute acid → no reaction
+    if ("نحاس" in q or "cu" in q) and "حمض" in q and any(term in q for term in ("تفاعل", "يتفاعل", "تتفاعل")):
+        ok = "لا يحدث تفاعل" in a or "لا تفاعل" in a
+        return VerificationResult(ok, None if ok else "copper + dilute acid answer must state no reaction")
     return VerificationResult(True)

@@ -107,13 +107,34 @@ def preflight_gemini_models(model_names: Iterable[str]) -> dict[str, object]:
     }
 
 
-def generation_http_options():
-    """Return shared generation timeout/retry options."""
+def _generation_http_options(*, timeout_seconds: int, retry_attempts: int):
+    """Return Google GenAI HTTP options with explicit timeout/retry policy."""
     from google.genai import types
 
     return types.HttpOptions(
-        timeout=settings.ai_request_timeout_seconds * 1000,
-        retry_options=types.HttpRetryOptions(attempts=5),
+        timeout=timeout_seconds * 1000,
+        retry_options=types.HttpRetryOptions(attempts=max(1, retry_attempts)),
+    )
+
+
+def generation_http_options():
+    """Return document extraction timeout/retry options."""
+    return _generation_http_options(timeout_seconds=settings.ai_request_timeout_seconds, retry_attempts=5)
+
+
+def tutor_generation_http_options():
+    """Return low-latency tutor chat timeout/retry options."""
+    return _generation_http_options(
+        timeout_seconds=settings.gemini_tutor_timeout_seconds,
+        retry_attempts=settings.gemini_tutor_retry_attempts,
+    )
+
+
+def semantic_helper_http_options():
+    """Return low-latency semantic helper timeout/retry options."""
+    return _generation_http_options(
+        timeout_seconds=settings.gemini_semantic_helper_timeout_seconds,
+        retry_attempts=settings.gemini_semantic_helper_retry_attempts,
     )
 
 
@@ -135,7 +156,7 @@ def tutor_generation_config(system_prompt: str, *, temperature: float = 0.4, max
     from google.genai import types
 
     return types.GenerateContentConfig(
-        http_options=generation_http_options(),
+        http_options=tutor_generation_http_options(),
         system_instruction=system_prompt,
         temperature=temperature,
         max_output_tokens=max_output_tokens,

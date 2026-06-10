@@ -44,6 +44,12 @@ class RagRoutingFoundationTests(TestCase):
         self.assertEqual(classify_intent("ما لون ورقة عباد الشمس في المحلول الحمضي؟").intent, "property_lookup")
         self.assertEqual(classify_intent("اشرح بطريقة أبسط").intent, "followup_rephrase")
         self.assertEqual(classify_intent("Explain this differently with a simpler example").intent, "followup_rephrase")
+        safety = classify_intent("لماذا نضيف الحمض إلى الماء وليس العكس؟")
+        self.assertEqual(safety.intent, "safety_question")
+        self.assertEqual(safety.route, "safety_rule")
+        calculation = classify_intent("محلول HCl حجمه 100 mL ويحتوي 3.65 g. احسب التركيز الغرامي والمولي؟")
+        self.assertEqual(calculation.intent, "exercise_solving")
+        self.assertEqual(calculation.route, "math_solver")
 
     def test_dictionary_answers_simple_direct_facts(self):
         water = answer_from_dictionary("ما هو رمز الماء؟", "formula_lookup")
@@ -102,4 +108,3 @@ class RagRoutingFoundationTests(TestCase):
                 "CaO + H₂O → Ca(OH)₂",
             ).passed
         )
-

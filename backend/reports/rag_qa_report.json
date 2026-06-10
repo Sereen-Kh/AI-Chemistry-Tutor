@@ -1,0 +1,4028 @@
+{
+  "generated_at": "2026-06-09T10:28:37.887183+00:00",
+  "mode": "unit",
+  "dataset": "/Users/sereenkh/Github-Projects/AI-Chemistry-Tutor/backend/tests/fixtures/rag_grade9_qa_cases.json",
+  "summary": {
+    "total_checks": 168,
+    "passed_checks": 168,
+    "failed_checks": 0,
+    "pass_rate": 1.0,
+    "failures_by_stage": {}
+  },
+  "results": [
+    {
+      "case_id": "acid_definition",
+      "category": "acids",
+      "endpoint": "rag/retrieve",
+      "question": "ما هي الحموض؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الحموض",
+        "أيونات الهيدروجين",
+        "H+"
+      ],
+      "actual_answer": "سؤال: ما هي الحموض؟\nموضوعات المصدر: الحموض، المحاليل الحمضية\nإجابة الكتاب: الحموض، أيونات الهيدروجين، H+",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 318868,
+          "source_id": 9502,
+          "page_number": 36,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما هي الحموض؟\nموضوعات المصدر: الحموض، المحاليل الحمضية\nإجابة الكتاب: الحموض، أيونات الهيدروجين، H+"
+        }
+      ]
+    },
+    {
+      "case_id": "acid_definition",
+      "category": "acids",
+      "endpoint": "chat/ask",
+      "question": "ما هي الحموض؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الحموض",
+        "أيونات الهيدروجين",
+        "H+"
+      ],
+      "actual_answer": "إجابة من الكتاب: الحموض، أيونات الهيدروجين، H+. (صفحة 36)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 318868,
+          "source_id": 9502,
+          "page_number": 36,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "acid_definition",
+      "category": "acids",
+      "endpoint": "homework/solve-text",
+      "question": "ما هي الحموض؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الحموض",
+        "أيونات الهيدروجين",
+        "H+"
+      ],
+      "actual_answer": "إجابة من الكتاب: الحموض، أيونات الهيدروجين، H+. (صفحة 36)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 318868,
+          "source_id": 9502,
+          "page_number": 36,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما هي الحموض؟\nموضوعات المصدر: الحموض، المحاليل الحمضية\nإجابة الكتاب: الحموض، أيونات الهيدروجين، H+"
+        }
+      ]
+    },
+    {
+      "case_id": "acid_hydrogen_ion",
+      "category": "acids",
+      "endpoint": "rag/retrieve",
+      "question": "ما الأيون الذي تعطيه الحموض في الماء؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "أيونات الهيدروجين",
+        "H+",
+        "الماء"
+      ],
+      "actual_answer": "سؤال: ما الأيون الذي تعطيه الحموض في الماء؟\nموضوعات المصدر: الحموض، التأين\nإجابة الكتاب: أيونات الهيدروجين، H+، الماء",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 165465,
+          "source_id": 9502,
+          "page_number": 41,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما الأيون الذي تعطيه الحموض في الماء؟\nموضوعات المصدر: الحموض، التأين\nإجابة الكتاب: أيونات الهيدروجين، H+، الماء"
+        }
+      ]
+    },
+    {
+      "case_id": "acid_hydrogen_ion",
+      "category": "acids",
+      "endpoint": "chat/ask",
+      "question": "ما الأيون الذي تعطيه الحموض في الماء؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "أيونات الهيدروجين",
+        "H+",
+        "الماء"
+      ],
+      "actual_answer": "إجابة من الكتاب: أيونات الهيدروجين، H+، الماء. (صفحة 41)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 165465,
+          "source_id": 9502,
+          "page_number": 41,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "acid_hydrogen_ion",
+      "category": "acids",
+      "endpoint": "homework/solve-text",
+      "question": "ما الأيون الذي تعطيه الحموض في الماء؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "أيونات الهيدروجين",
+        "H+",
+        "الماء"
+      ],
+      "actual_answer": "إجابة من الكتاب: أيونات الهيدروجين، H+، الماء. (صفحة 41)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 165465,
+          "source_id": 9502,
+          "page_number": 41,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما الأيون الذي تعطيه الحموض في الماء؟\nموضوعات المصدر: الحموض، التأين\nإجابة الكتاب: أيونات الهيدروجين، H+، الماء"
+        }
+      ]
+    },
+    {
+      "case_id": "strong_acids",
+      "category": "acids",
+      "endpoint": "rag/retrieve",
+      "question": "ماذا يعني الحمض القوي؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "حمض قوي",
+        "تأين كلي",
+        "الماء"
+      ],
+      "actual_answer": "سؤال: ماذا يعني الحمض القوي؟\nموضوعات المصدر: الحموض القوية، التأين\nإجابة الكتاب: حمض قوي، تأين كلي، الماء",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 360802,
+          "source_id": 9502,
+          "page_number": 18,
+          "similarity_score": 0.82,
+          "content": "سؤال: ماذا يعني الحمض القوي؟\nموضوعات المصدر: الحموض القوية، التأين\nإجابة الكتاب: حمض قوي، تأين كلي، الماء"
+        }
+      ]
+    },
+    {
+      "case_id": "strong_acids",
+      "category": "acids",
+      "endpoint": "chat/ask",
+      "question": "ماذا يعني الحمض القوي؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "حمض قوي",
+        "تأين كلي",
+        "الماء"
+      ],
+      "actual_answer": "إجابة من الكتاب: حمض قوي، تأين كلي، الماء. (صفحة 18)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 360802,
+          "source_id": 9502,
+          "page_number": 18,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "strong_acids",
+      "category": "acids",
+      "endpoint": "homework/solve-text",
+      "question": "ماذا يعني الحمض القوي؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "حمض قوي",
+        "تأين كلي",
+        "الماء"
+      ],
+      "actual_answer": "إجابة من الكتاب: حمض قوي، تأين كلي، الماء. (صفحة 18)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 360802,
+          "source_id": 9502,
+          "page_number": 18,
+          "similarity_score": 0.82,
+          "content": "سؤال: ماذا يعني الحمض القوي؟\nموضوعات المصدر: الحموض القوية، التأين\nإجابة الكتاب: حمض قوي، تأين كلي، الماء"
+        }
+      ]
+    },
+    {
+      "case_id": "weak_acids",
+      "category": "acids",
+      "endpoint": "rag/retrieve",
+      "question": "ماذا يعني الحمض الضعيف؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "حمض ضعيف",
+        "تأين جزئي",
+        "الماء"
+      ],
+      "actual_answer": "سؤال: ماذا يعني الحمض الضعيف؟\nموضوعات المصدر: الحموض الضعيفة، التأين\nإجابة الكتاب: حمض ضعيف، تأين جزئي، الماء",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 782053,
+          "source_id": 9502,
+          "page_number": 21,
+          "similarity_score": 0.82,
+          "content": "سؤال: ماذا يعني الحمض الضعيف؟\nموضوعات المصدر: الحموض الضعيفة، التأين\nإجابة الكتاب: حمض ضعيف، تأين جزئي، الماء"
+        }
+      ]
+    },
+    {
+      "case_id": "weak_acids",
+      "category": "acids",
+      "endpoint": "chat/ask",
+      "question": "ماذا يعني الحمض الضعيف؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "حمض ضعيف",
+        "تأين جزئي",
+        "الماء"
+      ],
+      "actual_answer": "إجابة من الكتاب: حمض ضعيف، تأين جزئي، الماء. (صفحة 21)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 782053,
+          "source_id": 9502,
+          "page_number": 21,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "weak_acids",
+      "category": "acids",
+      "endpoint": "homework/solve-text",
+      "question": "ماذا يعني الحمض الضعيف؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "حمض ضعيف",
+        "تأين جزئي",
+        "الماء"
+      ],
+      "actual_answer": "إجابة من الكتاب: حمض ضعيف، تأين جزئي، الماء. (صفحة 21)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 782053,
+          "source_id": 9502,
+          "page_number": 21,
+          "similarity_score": 0.82,
+          "content": "سؤال: ماذا يعني الحمض الضعيف؟\nموضوعات المصدر: الحموض الضعيفة، التأين\nإجابة الكتاب: حمض ضعيف، تأين جزئي، الماء"
+        }
+      ]
+    },
+    {
+      "case_id": "acid_litmus",
+      "category": "acids",
+      "endpoint": "rag/retrieve",
+      "question": "ما لون ورقة عباد الشمس في المحلول الحمضي؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "ورقة عباد الشمس",
+        "الأحمر",
+        "محلول حمضي"
+      ],
+      "actual_answer": "سؤال: ما لون ورقة عباد الشمس في المحلول الحمضي؟\nموضوعات المصدر: خواص الحموض، الكواشف\nإجابة الكتاب: ورقة عباد الشمس، الأحمر، محلول حمضي",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 547533,
+          "source_id": 9502,
+          "page_number": 29,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما لون ورقة عباد الشمس في المحلول الحمضي؟\nموضوعات المصدر: خواص الحموض، الكواشف\nإجابة الكتاب: ورقة عباد الشمس، الأحمر، محلول حمضي"
+        }
+      ]
+    },
+    {
+      "case_id": "acid_litmus",
+      "category": "acids",
+      "endpoint": "chat/ask",
+      "question": "ما لون ورقة عباد الشمس في المحلول الحمضي؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "ورقة عباد الشمس",
+        "الأحمر",
+        "محلول حمضي"
+      ],
+      "actual_answer": "إجابة من الكتاب: ورقة عباد الشمس، الأحمر، محلول حمضي. (صفحة 29)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 547533,
+          "source_id": 9502,
+          "page_number": 29,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "acid_litmus",
+      "category": "acids",
+      "endpoint": "homework/solve-text",
+      "question": "ما لون ورقة عباد الشمس في المحلول الحمضي؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "ورقة عباد الشمس",
+        "الأحمر",
+        "محلول حمضي"
+      ],
+      "actual_answer": "إجابة من الكتاب: ورقة عباد الشمس، الأحمر، محلول حمضي. (صفحة 29)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 547533,
+          "source_id": 9502,
+          "page_number": 29,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما لون ورقة عباد الشمس في المحلول الحمضي؟\nموضوعات المصدر: خواص الحموض، الكواشف\nإجابة الكتاب: ورقة عباد الشمس، الأحمر، محلول حمضي"
+        }
+      ]
+    },
+    {
+      "case_id": "acid_function_count",
+      "category": "acids",
+      "endpoint": "rag/retrieve",
+      "question": "ما عدد الوظائف الحمضية؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "عدد الوظائف الحمضية",
+        "أيونات الهيدروجين",
+        "الصيغة الأيونية"
+      ],
+      "actual_answer": "سؤال: ما عدد الوظائف الحمضية؟\nموضوعات المصدر: الحموض، الصيغ الأيونية\nإجابة الكتاب: عدد الوظائف الحمضية، أيونات الهيدروجين، الصيغة الأيونية",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 643324,
+          "source_id": 9502,
+          "page_number": 12,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما عدد الوظائف الحمضية؟\nموضوعات المصدر: الحموض، الصيغ الأيونية\nإجابة الكتاب: عدد الوظائف الحمضية، أيونات الهيدروجين، الصيغة الأيونية"
+        }
+      ]
+    },
+    {
+      "case_id": "acid_function_count",
+      "category": "acids",
+      "endpoint": "chat/ask",
+      "question": "ما عدد الوظائف الحمضية؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "عدد الوظائف الحمضية",
+        "أيونات الهيدروجين",
+        "الصيغة الأيونية"
+      ],
+      "actual_answer": "إجابة من الكتاب: عدد الوظائف الحمضية، أيونات الهيدروجين، الصيغة الأيونية. (صفحة 12)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 643324,
+          "source_id": 9502,
+          "page_number": 12,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "acid_function_count",
+      "category": "acids",
+      "endpoint": "homework/solve-text",
+      "question": "ما عدد الوظائف الحمضية؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "عدد الوظائف الحمضية",
+        "أيونات الهيدروجين",
+        "الصيغة الأيونية"
+      ],
+      "actual_answer": "إجابة من الكتاب: عدد الوظائف الحمضية، أيونات الهيدروجين، الصيغة الأيونية. (صفحة 12)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 643324,
+          "source_id": 9502,
+          "page_number": 12,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما عدد الوظائف الحمضية؟\nموضوعات المصدر: الحموض، الصيغ الأيونية\nإجابة الكتاب: عدد الوظائف الحمضية، أيونات الهيدروجين، الصيغة الأيونية"
+        }
+      ]
+    },
+    {
+      "case_id": "hcl_formula",
+      "category": "formulas",
+      "endpoint": "rag/retrieve",
+      "question": "ما صيغة حمض كلور الماء؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "حمض كلور الماء",
+        "HCl"
+      ],
+      "actual_answer": "سؤال: ما صيغة حمض كلور الماء؟\nموضوعات المصدر: الحموض، الصيغ الكيميائية\nإجابة الكتاب: حمض كلور الماء، HCl",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 841779,
+          "source_id": 9283,
+          "page_number": 35,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما صيغة حمض كلور الماء؟\nموضوعات المصدر: الحموض، الصيغ الكيميائية\nإجابة الكتاب: حمض كلور الماء، HCl"
+        }
+      ]
+    },
+    {
+      "case_id": "hcl_formula",
+      "category": "formulas",
+      "endpoint": "chat/ask",
+      "question": "ما صيغة حمض كلور الماء؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "حمض كلور الماء",
+        "HCl"
+      ],
+      "actual_answer": "إجابة من الكتاب: حمض كلور الماء، HCl. (صفحة 35)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 841779,
+          "source_id": 9283,
+          "page_number": 35,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "hcl_formula",
+      "category": "formulas",
+      "endpoint": "homework/solve-text",
+      "question": "ما صيغة حمض كلور الماء؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "حمض كلور الماء",
+        "HCl"
+      ],
+      "actual_answer": "إجابة من الكتاب: حمض كلور الماء، HCl. (صفحة 35)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 841779,
+          "source_id": 9283,
+          "page_number": 35,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما صيغة حمض كلور الماء؟\nموضوعات المصدر: الحموض، الصيغ الكيميائية\nإجابة الكتاب: حمض كلور الماء، HCl"
+        }
+      ]
+    },
+    {
+      "case_id": "h2so4_formula",
+      "category": "formulas",
+      "endpoint": "rag/retrieve",
+      "question": "ما صيغة حمض الكبريت؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "حمض الكبريت",
+        "H2SO4"
+      ],
+      "actual_answer": "سؤال: ما صيغة حمض الكبريت؟\nموضوعات المصدر: الحموض، الصيغ الكيميائية\nإجابة الكتاب: حمض الكبريت، H2SO4",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 328049,
+          "source_id": 9283,
+          "page_number": 1,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما صيغة حمض الكبريت؟\nموضوعات المصدر: الحموض، الصيغ الكيميائية\nإجابة الكتاب: حمض الكبريت، H2SO4"
+        }
+      ]
+    },
+    {
+      "case_id": "h2so4_formula",
+      "category": "formulas",
+      "endpoint": "chat/ask",
+      "question": "ما صيغة حمض الكبريت؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "حمض الكبريت",
+        "H2SO4"
+      ],
+      "actual_answer": "إجابة من الكتاب: حمض الكبريت، H2SO4. (صفحة 1)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 328049,
+          "source_id": 9283,
+          "page_number": 1,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "h2so4_formula",
+      "category": "formulas",
+      "endpoint": "homework/solve-text",
+      "question": "ما صيغة حمض الكبريت؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "حمض الكبريت",
+        "H2SO4"
+      ],
+      "actual_answer": "إجابة من الكتاب: حمض الكبريت، H2SO4. (صفحة 1)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 328049,
+          "source_id": 9283,
+          "page_number": 1,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما صيغة حمض الكبريت؟\nموضوعات المصدر: الحموض، الصيغ الكيميائية\nإجابة الكتاب: حمض الكبريت، H2SO4"
+        }
+      ]
+    },
+    {
+      "case_id": "base_definition",
+      "category": "bases",
+      "endpoint": "rag/retrieve",
+      "question": "ما هي الأسس؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الأسس",
+        "أيونات الهيدروكسيد",
+        "OH-"
+      ],
+      "actual_answer": "سؤال: ما هي الأسس؟\nموضوعات المصدر: الأسس، المحاليل الأساسية\nإجابة الكتاب: الأسس، أيونات الهيدروكسيد، OH-",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 666654,
+          "source_id": 9017,
+          "page_number": 14,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما هي الأسس؟\nموضوعات المصدر: الأسس، المحاليل الأساسية\nإجابة الكتاب: الأسس، أيونات الهيدروكسيد، OH-"
+        }
+      ]
+    },
+    {
+      "case_id": "base_definition",
+      "category": "bases",
+      "endpoint": "chat/ask",
+      "question": "ما هي الأسس؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الأسس",
+        "أيونات الهيدروكسيد",
+        "OH-"
+      ],
+      "actual_answer": "إجابة من الكتاب: الأسس، أيونات الهيدروكسيد، OH-. (صفحة 14)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 666654,
+          "source_id": 9017,
+          "page_number": 14,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "base_definition",
+      "category": "bases",
+      "endpoint": "homework/solve-text",
+      "question": "ما هي الأسس؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الأسس",
+        "أيونات الهيدروكسيد",
+        "OH-"
+      ],
+      "actual_answer": "إجابة من الكتاب: الأسس، أيونات الهيدروكسيد، OH-. (صفحة 14)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 666654,
+          "source_id": 9017,
+          "page_number": 14,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما هي الأسس؟\nموضوعات المصدر: الأسس، المحاليل الأساسية\nإجابة الكتاب: الأسس، أيونات الهيدروكسيد، OH-"
+        }
+      ]
+    },
+    {
+      "case_id": "base_hydroxide_ion",
+      "category": "bases",
+      "endpoint": "rag/retrieve",
+      "question": "ما الأيون الذي تعطيه الأسس في الماء؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "أيونات الهيدروكسيد",
+        "OH-",
+        "الماء"
+      ],
+      "actual_answer": "سؤال: ما الأيون الذي تعطيه الأسس في الماء؟\nموضوعات المصدر: الأسس، التأين\nإجابة الكتاب: أيونات الهيدروكسيد، OH-، الماء",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 545904,
+          "source_id": 9017,
+          "page_number": 32,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما الأيون الذي تعطيه الأسس في الماء؟\nموضوعات المصدر: الأسس، التأين\nإجابة الكتاب: أيونات الهيدروكسيد، OH-، الماء"
+        }
+      ]
+    },
+    {
+      "case_id": "base_hydroxide_ion",
+      "category": "bases",
+      "endpoint": "chat/ask",
+      "question": "ما الأيون الذي تعطيه الأسس في الماء؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "أيونات الهيدروكسيد",
+        "OH-",
+        "الماء"
+      ],
+      "actual_answer": "إجابة من الكتاب: أيونات الهيدروكسيد، OH-، الماء. (صفحة 32)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 545904,
+          "source_id": 9017,
+          "page_number": 32,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "base_hydroxide_ion",
+      "category": "bases",
+      "endpoint": "homework/solve-text",
+      "question": "ما الأيون الذي تعطيه الأسس في الماء؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "أيونات الهيدروكسيد",
+        "OH-",
+        "الماء"
+      ],
+      "actual_answer": "إجابة من الكتاب: أيونات الهيدروكسيد، OH-، الماء. (صفحة 32)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 545904,
+          "source_id": 9017,
+          "page_number": 32,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما الأيون الذي تعطيه الأسس في الماء؟\nموضوعات المصدر: الأسس، التأين\nإجابة الكتاب: أيونات الهيدروكسيد، OH-، الماء"
+        }
+      ]
+    },
+    {
+      "case_id": "strong_bases",
+      "category": "bases",
+      "endpoint": "rag/retrieve",
+      "question": "ماذا يعني الأساس القوي؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "أساس قوي",
+        "تأين كلي",
+        "أيونات الهيدروكسيد"
+      ],
+      "actual_answer": "سؤال: ماذا يعني الأساس القوي؟\nموضوعات المصدر: الأسس القوية، التأين\nإجابة الكتاب: أساس قوي، تأين كلي، أيونات الهيدروكسيد",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 68945,
+          "source_id": 9017,
+          "page_number": 1,
+          "similarity_score": 0.82,
+          "content": "سؤال: ماذا يعني الأساس القوي؟\nموضوعات المصدر: الأسس القوية، التأين\nإجابة الكتاب: أساس قوي، تأين كلي، أيونات الهيدروكسيد"
+        }
+      ]
+    },
+    {
+      "case_id": "strong_bases",
+      "category": "bases",
+      "endpoint": "chat/ask",
+      "question": "ماذا يعني الأساس القوي؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "أساس قوي",
+        "تأين كلي",
+        "أيونات الهيدروكسيد"
+      ],
+      "actual_answer": "إجابة من الكتاب: أساس قوي، تأين كلي، أيونات الهيدروكسيد. (صفحة 1)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 68945,
+          "source_id": 9017,
+          "page_number": 1,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "strong_bases",
+      "category": "bases",
+      "endpoint": "homework/solve-text",
+      "question": "ماذا يعني الأساس القوي؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "أساس قوي",
+        "تأين كلي",
+        "أيونات الهيدروكسيد"
+      ],
+      "actual_answer": "إجابة من الكتاب: أساس قوي، تأين كلي، أيونات الهيدروكسيد. (صفحة 1)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 68945,
+          "source_id": 9017,
+          "page_number": 1,
+          "similarity_score": 0.82,
+          "content": "سؤال: ماذا يعني الأساس القوي؟\nموضوعات المصدر: الأسس القوية، التأين\nإجابة الكتاب: أساس قوي، تأين كلي، أيونات الهيدروكسيد"
+        }
+      ]
+    },
+    {
+      "case_id": "weak_bases",
+      "category": "bases",
+      "endpoint": "rag/retrieve",
+      "question": "ماذا يعني الأساس الضعيف؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "أساس ضعيف",
+        "تأين جزئي",
+        "أيونات الهيدروكسيد"
+      ],
+      "actual_answer": "سؤال: ماذا يعني الأساس الضعيف؟\nموضوعات المصدر: الأسس الضعيفة، التأين\nإجابة الكتاب: أساس ضعيف، تأين جزئي، أيونات الهيدروكسيد",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 551063,
+          "source_id": 9017,
+          "page_number": 7,
+          "similarity_score": 0.82,
+          "content": "سؤال: ماذا يعني الأساس الضعيف؟\nموضوعات المصدر: الأسس الضعيفة، التأين\nإجابة الكتاب: أساس ضعيف، تأين جزئي، أيونات الهيدروكسيد"
+        }
+      ]
+    },
+    {
+      "case_id": "weak_bases",
+      "category": "bases",
+      "endpoint": "chat/ask",
+      "question": "ماذا يعني الأساس الضعيف؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "أساس ضعيف",
+        "تأين جزئي",
+        "أيونات الهيدروكسيد"
+      ],
+      "actual_answer": "إجابة من الكتاب: أساس ضعيف، تأين جزئي، أيونات الهيدروكسيد. (صفحة 7)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 551063,
+          "source_id": 9017,
+          "page_number": 7,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "weak_bases",
+      "category": "bases",
+      "endpoint": "homework/solve-text",
+      "question": "ماذا يعني الأساس الضعيف؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "أساس ضعيف",
+        "تأين جزئي",
+        "أيونات الهيدروكسيد"
+      ],
+      "actual_answer": "إجابة من الكتاب: أساس ضعيف، تأين جزئي، أيونات الهيدروكسيد. (صفحة 7)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 551063,
+          "source_id": 9017,
+          "page_number": 7,
+          "similarity_score": 0.82,
+          "content": "سؤال: ماذا يعني الأساس الضعيف؟\nموضوعات المصدر: الأسس الضعيفة، التأين\nإجابة الكتاب: أساس ضعيف، تأين جزئي، أيونات الهيدروكسيد"
+        }
+      ]
+    },
+    {
+      "case_id": "base_litmus",
+      "category": "bases",
+      "endpoint": "rag/retrieve",
+      "question": "ما لون ورقة عباد الشمس في المحلول الأساسي؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "ورقة عباد الشمس",
+        "الأزرق",
+        "محلول أساسي"
+      ],
+      "actual_answer": "سؤال: ما لون ورقة عباد الشمس في المحلول الأساسي؟\nموضوعات المصدر: خواص الأسس، الكواشف\nإجابة الكتاب: ورقة عباد الشمس، الأزرق، محلول أساسي",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 408523,
+          "source_id": 9017,
+          "page_number": 27,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما لون ورقة عباد الشمس في المحلول الأساسي؟\nموضوعات المصدر: خواص الأسس، الكواشف\nإجابة الكتاب: ورقة عباد الشمس، الأزرق، محلول أساسي"
+        }
+      ]
+    },
+    {
+      "case_id": "base_litmus",
+      "category": "bases",
+      "endpoint": "chat/ask",
+      "question": "ما لون ورقة عباد الشمس في المحلول الأساسي؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "ورقة عباد الشمس",
+        "الأزرق",
+        "محلول أساسي"
+      ],
+      "actual_answer": "إجابة من الكتاب: ورقة عباد الشمس، الأزرق، محلول أساسي. (صفحة 27)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 408523,
+          "source_id": 9017,
+          "page_number": 27,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "base_litmus",
+      "category": "bases",
+      "endpoint": "homework/solve-text",
+      "question": "ما لون ورقة عباد الشمس في المحلول الأساسي؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "ورقة عباد الشمس",
+        "الأزرق",
+        "محلول أساسي"
+      ],
+      "actual_answer": "إجابة من الكتاب: ورقة عباد الشمس، الأزرق، محلول أساسي. (صفحة 27)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 408523,
+          "source_id": 9017,
+          "page_number": 27,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما لون ورقة عباد الشمس في المحلول الأساسي؟\nموضوعات المصدر: خواص الأسس، الكواشف\nإجابة الكتاب: ورقة عباد الشمس، الأزرق، محلول أساسي"
+        }
+      ]
+    },
+    {
+      "case_id": "naoh_formula",
+      "category": "formulas",
+      "endpoint": "rag/retrieve",
+      "question": "ما صيغة هيدروكسيد الصوديوم؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "هيدروكسيد الصوديوم",
+        "NaOH"
+      ],
+      "actual_answer": "سؤال: ما صيغة هيدروكسيد الصوديوم؟\nموضوعات المصدر: الأسس، الصيغ الكيميائية\nإجابة الكتاب: هيدروكسيد الصوديوم، NaOH",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 187032,
+          "source_id": 9283,
+          "page_number": 8,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما صيغة هيدروكسيد الصوديوم؟\nموضوعات المصدر: الأسس، الصيغ الكيميائية\nإجابة الكتاب: هيدروكسيد الصوديوم، NaOH"
+        }
+      ]
+    },
+    {
+      "case_id": "naoh_formula",
+      "category": "formulas",
+      "endpoint": "chat/ask",
+      "question": "ما صيغة هيدروكسيد الصوديوم؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "هيدروكسيد الصوديوم",
+        "NaOH"
+      ],
+      "actual_answer": "إجابة من الكتاب: هيدروكسيد الصوديوم، NaOH. (صفحة 8)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 187032,
+          "source_id": 9283,
+          "page_number": 8,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "naoh_formula",
+      "category": "formulas",
+      "endpoint": "homework/solve-text",
+      "question": "ما صيغة هيدروكسيد الصوديوم؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "هيدروكسيد الصوديوم",
+        "NaOH"
+      ],
+      "actual_answer": "إجابة من الكتاب: هيدروكسيد الصوديوم، NaOH. (صفحة 8)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 187032,
+          "source_id": 9283,
+          "page_number": 8,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما صيغة هيدروكسيد الصوديوم؟\nموضوعات المصدر: الأسس، الصيغ الكيميائية\nإجابة الكتاب: هيدروكسيد الصوديوم، NaOH"
+        }
+      ]
+    },
+    {
+      "case_id": "salt_definition",
+      "category": "salts",
+      "endpoint": "rag/retrieve",
+      "question": "ما هي الأملاح؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الأملاح",
+        "أيونات الملح",
+        "الصيغة الجزيئية"
+      ],
+      "actual_answer": "سؤال: ما هي الأملاح؟\nموضوعات المصدر: الأملاح، المركبات الشاردية\nإجابة الكتاب: الأملاح، أيونات الملح، الصيغة الجزيئية",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 386226,
+          "source_id": 9407,
+          "page_number": 2,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما هي الأملاح؟\nموضوعات المصدر: الأملاح، المركبات الشاردية\nإجابة الكتاب: الأملاح، أيونات الملح، الصيغة الجزيئية"
+        }
+      ]
+    },
+    {
+      "case_id": "salt_definition",
+      "category": "salts",
+      "endpoint": "chat/ask",
+      "question": "ما هي الأملاح؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الأملاح",
+        "أيونات الملح",
+        "الصيغة الجزيئية"
+      ],
+      "actual_answer": "إجابة من الكتاب: الأملاح، أيونات الملح، الصيغة الجزيئية. (صفحة 2)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 386226,
+          "source_id": 9407,
+          "page_number": 2,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "salt_definition",
+      "category": "salts",
+      "endpoint": "homework/solve-text",
+      "question": "ما هي الأملاح؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الأملاح",
+        "أيونات الملح",
+        "الصيغة الجزيئية"
+      ],
+      "actual_answer": "إجابة من الكتاب: الأملاح، أيونات الملح، الصيغة الجزيئية. (صفحة 2)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 386226,
+          "source_id": 9407,
+          "page_number": 2,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما هي الأملاح؟\nموضوعات المصدر: الأملاح، المركبات الشاردية\nإجابة الكتاب: الأملاح، أيونات الملح، الصيغة الجزيئية"
+        }
+      ]
+    },
+    {
+      "case_id": "neutralization",
+      "category": "salts",
+      "endpoint": "rag/retrieve",
+      "question": "ماذا ينتج من تفاعل حمض مع أساس؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "حمض",
+        "أساس",
+        "ملح",
+        "ماء"
+      ],
+      "actual_answer": "سؤال: ماذا ينتج من تفاعل حمض مع أساس؟\nموضوعات المصدر: تعديل، تحضير الأملاح\nإجابة الكتاب: حمض، أساس، ملح، ماء",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 89829,
+          "source_id": 9407,
+          "page_number": 53,
+          "similarity_score": 0.82,
+          "content": "سؤال: ماذا ينتج من تفاعل حمض مع أساس؟\nموضوعات المصدر: تعديل، تحضير الأملاح\nإجابة الكتاب: حمض، أساس، ملح، ماء"
+        }
+      ]
+    },
+    {
+      "case_id": "neutralization",
+      "category": "salts",
+      "endpoint": "chat/ask",
+      "question": "ماذا ينتج من تفاعل حمض مع أساس؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "حمض",
+        "أساس",
+        "ملح",
+        "ماء"
+      ],
+      "actual_answer": "إجابة من الكتاب: حمض، أساس، ملح، ماء. (صفحة 53)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 89829,
+          "source_id": 9407,
+          "page_number": 53,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "neutralization",
+      "category": "salts",
+      "endpoint": "homework/solve-text",
+      "question": "ماذا ينتج من تفاعل حمض مع أساس؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "حمض",
+        "أساس",
+        "ملح",
+        "ماء"
+      ],
+      "actual_answer": "إجابة من الكتاب: حمض، أساس، ملح، ماء. (صفحة 53)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 89829,
+          "source_id": 9407,
+          "page_number": 53,
+          "similarity_score": 0.82,
+          "content": "سؤال: ماذا ينتج من تفاعل حمض مع أساس؟\nموضوعات المصدر: تعديل، تحضير الأملاح\nإجابة الكتاب: حمض، أساس، ملح، ماء"
+        }
+      ]
+    },
+    {
+      "case_id": "nacl_formula",
+      "category": "formulas",
+      "endpoint": "rag/retrieve",
+      "question": "ما صيغة كلوريد الصوديوم؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "كلوريد الصوديوم",
+        "NaCl"
+      ],
+      "actual_answer": "سؤال: ما صيغة كلوريد الصوديوم؟\nموضوعات المصدر: الأملاح، الصيغ الكيميائية\nإجابة الكتاب: كلوريد الصوديوم، NaCl",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 428335,
+          "source_id": 9283,
+          "page_number": 63,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما صيغة كلوريد الصوديوم؟\nموضوعات المصدر: الأملاح، الصيغ الكيميائية\nإجابة الكتاب: كلوريد الصوديوم، NaCl"
+        }
+      ]
+    },
+    {
+      "case_id": "nacl_formula",
+      "category": "formulas",
+      "endpoint": "chat/ask",
+      "question": "ما صيغة كلوريد الصوديوم؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "كلوريد الصوديوم",
+        "NaCl"
+      ],
+      "actual_answer": "إجابة من الكتاب: كلوريد الصوديوم، NaCl. (صفحة 63)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 428335,
+          "source_id": 9283,
+          "page_number": 63,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "nacl_formula",
+      "category": "formulas",
+      "endpoint": "homework/solve-text",
+      "question": "ما صيغة كلوريد الصوديوم؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "كلوريد الصوديوم",
+        "NaCl"
+      ],
+      "actual_answer": "إجابة من الكتاب: كلوريد الصوديوم، NaCl. (صفحة 63)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 428335,
+          "source_id": 9283,
+          "page_number": 63,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما صيغة كلوريد الصوديوم؟\nموضوعات المصدر: الأملاح، الصيغ الكيميائية\nإجابة الكتاب: كلوريد الصوديوم، NaCl"
+        }
+      ]
+    },
+    {
+      "case_id": "sodium_carbonate_formula",
+      "category": "formulas",
+      "endpoint": "rag/retrieve",
+      "question": "ما صيغة كربونات الصوديوم؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "كربونات الصوديوم",
+        "Na2CO3"
+      ],
+      "actual_answer": "سؤال: ما صيغة كربونات الصوديوم؟\nموضوعات المصدر: الأملاح، الكربونات\nإجابة الكتاب: كربونات الصوديوم، Na2CO3",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 318060,
+          "source_id": 9283,
+          "page_number": 92,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما صيغة كربونات الصوديوم؟\nموضوعات المصدر: الأملاح، الكربونات\nإجابة الكتاب: كربونات الصوديوم، Na2CO3"
+        }
+      ]
+    },
+    {
+      "case_id": "sodium_carbonate_formula",
+      "category": "formulas",
+      "endpoint": "chat/ask",
+      "question": "ما صيغة كربونات الصوديوم؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "كربونات الصوديوم",
+        "Na2CO3"
+      ],
+      "actual_answer": "إجابة من الكتاب: كربونات الصوديوم، Na2CO3. (صفحة 92)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 318060,
+          "source_id": 9283,
+          "page_number": 92,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "sodium_carbonate_formula",
+      "category": "formulas",
+      "endpoint": "homework/solve-text",
+      "question": "ما صيغة كربونات الصوديوم؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "كربونات الصوديوم",
+        "Na2CO3"
+      ],
+      "actual_answer": "إجابة من الكتاب: كربونات الصوديوم، Na2CO3. (صفحة 92)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 318060,
+          "source_id": 9283,
+          "page_number": 92,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما صيغة كربونات الصوديوم؟\nموضوعات المصدر: الأملاح، الكربونات\nإجابة الكتاب: كربونات الصوديوم، Na2CO3"
+        }
+      ]
+    },
+    {
+      "case_id": "salt_preparation_acid_base",
+      "category": "salts",
+      "endpoint": "rag/retrieve",
+      "question": "اذكر طريقة لتحضير الأملاح.",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "تحضير الأملاح",
+        "حمض",
+        "أساس"
+      ],
+      "actual_answer": "سؤال: اذكر طريقة لتحضير الأملاح.\nموضوعات المصدر: طرائق تحضير الأملاح، تعديل\nإجابة الكتاب: تحضير الأملاح، حمض، أساس",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 748060,
+          "source_id": 9407,
+          "page_number": 12,
+          "similarity_score": 0.82,
+          "content": "سؤال: اذكر طريقة لتحضير الأملاح.\nموضوعات المصدر: طرائق تحضير الأملاح، تعديل\nإجابة الكتاب: تحضير الأملاح، حمض، أساس"
+        }
+      ]
+    },
+    {
+      "case_id": "salt_preparation_acid_base",
+      "category": "salts",
+      "endpoint": "chat/ask",
+      "question": "اذكر طريقة لتحضير الأملاح.",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "تحضير الأملاح",
+        "حمض",
+        "أساس"
+      ],
+      "actual_answer": "إجابة من الكتاب: تحضير الأملاح، حمض، أساس. (صفحة 12)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 748060,
+          "source_id": 9407,
+          "page_number": 12,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "salt_preparation_acid_base",
+      "category": "salts",
+      "endpoint": "homework/solve-text",
+      "question": "اذكر طريقة لتحضير الأملاح.",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "تحضير الأملاح",
+        "حمض",
+        "أساس"
+      ],
+      "actual_answer": "إجابة من الكتاب: تحضير الأملاح، حمض، أساس. (صفحة 12)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 748060,
+          "source_id": 9407,
+          "page_number": 12,
+          "similarity_score": 0.82,
+          "content": "سؤال: اذكر طريقة لتحضير الأملاح.\nموضوعات المصدر: طرائق تحضير الأملاح، تعديل\nإجابة الكتاب: تحضير الأملاح، حمض، أساس"
+        }
+      ]
+    },
+    {
+      "case_id": "aqueous_solution",
+      "category": "solutions",
+      "endpoint": "rag/retrieve",
+      "question": "ما هو المحلول المائي؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "محلول مائي",
+        "ماء",
+        "مذيب"
+      ],
+      "actual_answer": "سؤال: ما هو المحلول المائي؟\nموضوعات المصدر: المحاليل المائية، المذيب والمذاب\nإجابة الكتاب: محلول مائي، ماء، مذيب",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 533978,
+          "source_id": 9127,
+          "page_number": 10,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما هو المحلول المائي؟\nموضوعات المصدر: المحاليل المائية، المذيب والمذاب\nإجابة الكتاب: محلول مائي، ماء، مذيب"
+        }
+      ]
+    },
+    {
+      "case_id": "aqueous_solution",
+      "category": "solutions",
+      "endpoint": "chat/ask",
+      "question": "ما هو المحلول المائي؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "محلول مائي",
+        "ماء",
+        "مذيب"
+      ],
+      "actual_answer": "إجابة من الكتاب: محلول مائي، ماء، مذيب. (صفحة 10)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 533978,
+          "source_id": 9127,
+          "page_number": 10,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "aqueous_solution",
+      "category": "solutions",
+      "endpoint": "homework/solve-text",
+      "question": "ما هو المحلول المائي؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "محلول مائي",
+        "ماء",
+        "مذيب"
+      ],
+      "actual_answer": "إجابة من الكتاب: محلول مائي، ماء، مذيب. (صفحة 10)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 533978,
+          "source_id": 9127,
+          "page_number": 10,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما هو المحلول المائي؟\nموضوعات المصدر: المحاليل المائية، المذيب والمذاب\nإجابة الكتاب: محلول مائي، ماء، مذيب"
+        }
+      ]
+    },
+    {
+      "case_id": "solute_solvent",
+      "category": "solutions",
+      "endpoint": "rag/retrieve",
+      "question": "ما الفرق بين المذاب والمذيب؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "المذاب",
+        "المذيب",
+        "المحلول"
+      ],
+      "actual_answer": "سؤال: ما الفرق بين المذاب والمذيب؟\nموضوعات المصدر: المحاليل، المذيب والمذاب\nإجابة الكتاب: المذاب، المذيب، المحلول",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 113263,
+          "source_id": 9127,
+          "page_number": 63,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما الفرق بين المذاب والمذيب؟\nموضوعات المصدر: المحاليل، المذيب والمذاب\nإجابة الكتاب: المذاب، المذيب، المحلول"
+        }
+      ]
+    },
+    {
+      "case_id": "solute_solvent",
+      "category": "solutions",
+      "endpoint": "chat/ask",
+      "question": "ما الفرق بين المذاب والمذيب؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "المذاب",
+        "المذيب",
+        "المحلول"
+      ],
+      "actual_answer": "إجابة من الكتاب: المذاب، المذيب، المحلول. (صفحة 63)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 113263,
+          "source_id": 9127,
+          "page_number": 63,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "solute_solvent",
+      "category": "solutions",
+      "endpoint": "homework/solve-text",
+      "question": "ما الفرق بين المذاب والمذيب؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "المذاب",
+        "المذيب",
+        "المحلول"
+      ],
+      "actual_answer": "إجابة من الكتاب: المذاب، المذيب، المحلول. (صفحة 63)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 113263,
+          "source_id": 9127,
+          "page_number": 63,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما الفرق بين المذاب والمذيب؟\nموضوعات المصدر: المحاليل، المذيب والمذاب\nإجابة الكتاب: المذاب، المذيب، المحلول"
+        }
+      ]
+    },
+    {
+      "case_id": "molar_concentration",
+      "category": "solutions",
+      "endpoint": "rag/retrieve",
+      "question": "ما هو التركيز المولي؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "التركيز المولي",
+        "مول",
+        "حجم المحلول"
+      ],
+      "actual_answer": "سؤال: ما هو التركيز المولي؟\nموضوعات المصدر: التركيز، المحاليل\nإجابة الكتاب: التركيز المولي، مول، حجم المحلول",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 120322,
+          "source_id": 9127,
+          "page_number": 18,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما هو التركيز المولي؟\nموضوعات المصدر: التركيز، المحاليل\nإجابة الكتاب: التركيز المولي، مول، حجم المحلول"
+        }
+      ]
+    },
+    {
+      "case_id": "molar_concentration",
+      "category": "solutions",
+      "endpoint": "chat/ask",
+      "question": "ما هو التركيز المولي؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "التركيز المولي",
+        "مول",
+        "حجم المحلول"
+      ],
+      "actual_answer": "إجابة من الكتاب: التركيز المولي، مول، حجم المحلول. (صفحة 18)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 120322,
+          "source_id": 9127,
+          "page_number": 18,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "molar_concentration",
+      "category": "solutions",
+      "endpoint": "homework/solve-text",
+      "question": "ما هو التركيز المولي؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "التركيز المولي",
+        "مول",
+        "حجم المحلول"
+      ],
+      "actual_answer": "إجابة من الكتاب: التركيز المولي، مول، حجم المحلول. (صفحة 18)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 120322,
+          "source_id": 9127,
+          "page_number": 18,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما هو التركيز المولي؟\nموضوعات المصدر: التركيز، المحاليل\nإجابة الكتاب: التركيز المولي، مول، حجم المحلول"
+        }
+      ]
+    },
+    {
+      "case_id": "mass_concentration",
+      "category": "solutions",
+      "endpoint": "rag/retrieve",
+      "question": "ما هو التركيز الغرامي؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "التركيز الغرامي",
+        "كتلة المذاب",
+        "حجم المحلول"
+      ],
+      "actual_answer": "سؤال: ما هو التركيز الغرامي؟\nموضوعات المصدر: التركيز، المحاليل\nإجابة الكتاب: التركيز الغرامي، كتلة المذاب، حجم المحلول",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 192050,
+          "source_id": 9127,
+          "page_number": 34,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما هو التركيز الغرامي؟\nموضوعات المصدر: التركيز، المحاليل\nإجابة الكتاب: التركيز الغرامي، كتلة المذاب، حجم المحلول"
+        }
+      ]
+    },
+    {
+      "case_id": "mass_concentration",
+      "category": "solutions",
+      "endpoint": "chat/ask",
+      "question": "ما هو التركيز الغرامي؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "التركيز الغرامي",
+        "كتلة المذاب",
+        "حجم المحلول"
+      ],
+      "actual_answer": "إجابة من الكتاب: التركيز الغرامي، كتلة المذاب، حجم المحلول. (صفحة 34)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 192050,
+          "source_id": 9127,
+          "page_number": 34,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "mass_concentration",
+      "category": "solutions",
+      "endpoint": "homework/solve-text",
+      "question": "ما هو التركيز الغرامي؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "التركيز الغرامي",
+        "كتلة المذاب",
+        "حجم المحلول"
+      ],
+      "actual_answer": "إجابة من الكتاب: التركيز الغرامي، كتلة المذاب، حجم المحلول. (صفحة 34)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 192050,
+          "source_id": 9127,
+          "page_number": 34,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما هو التركيز الغرامي؟\nموضوعات المصدر: التركيز، المحاليل\nإجابة الكتاب: التركيز الغرامي، كتلة المذاب، حجم المحلول"
+        }
+      ]
+    },
+    {
+      "case_id": "dilution_effect",
+      "category": "solutions",
+      "endpoint": "rag/retrieve",
+      "question": "ماذا يحدث للتركيز عند تمديد المحلول؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "تمديد",
+        "ينقص التركيز",
+        "المحلول"
+      ],
+      "actual_answer": "سؤال: ماذا يحدث للتركيز عند تمديد المحلول؟\nموضوعات المصدر: تمديد المحاليل، التركيز\nإجابة الكتاب: تمديد، ينقص التركيز، المحلول",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 693352,
+          "source_id": 9127,
+          "page_number": 24,
+          "similarity_score": 0.82,
+          "content": "سؤال: ماذا يحدث للتركيز عند تمديد المحلول؟\nموضوعات المصدر: تمديد المحاليل، التركيز\nإجابة الكتاب: تمديد، ينقص التركيز، المحلول"
+        }
+      ]
+    },
+    {
+      "case_id": "dilution_effect",
+      "category": "solutions",
+      "endpoint": "chat/ask",
+      "question": "ماذا يحدث للتركيز عند تمديد المحلول؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "تمديد",
+        "ينقص التركيز",
+        "المحلول"
+      ],
+      "actual_answer": "إجابة من الكتاب: تمديد، ينقص التركيز، المحلول. (صفحة 24)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 693352,
+          "source_id": 9127,
+          "page_number": 24,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "dilution_effect",
+      "category": "solutions",
+      "endpoint": "homework/solve-text",
+      "question": "ماذا يحدث للتركيز عند تمديد المحلول؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "تمديد",
+        "ينقص التركيز",
+        "المحلول"
+      ],
+      "actual_answer": "إجابة من الكتاب: تمديد، ينقص التركيز، المحلول. (صفحة 24)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 693352,
+          "source_id": 9127,
+          "page_number": 24,
+          "similarity_score": 0.82,
+          "content": "سؤال: ماذا يحدث للتركيز عند تمديد المحلول؟\nموضوعات المصدر: تمديد المحاليل، التركيز\nإجابة الكتاب: تمديد، ينقص التركيز، المحلول"
+        }
+      ]
+    },
+    {
+      "case_id": "concentration_units",
+      "category": "solutions",
+      "endpoint": "rag/retrieve",
+      "question": "ما وحدات قياس التركيز في المحاليل؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "مول",
+        "لتر",
+        "غرام"
+      ],
+      "actual_answer": "سؤال: ما وحدات قياس التركيز في المحاليل؟\nموضوعات المصدر: التركيز، وحدات القياس\nإجابة الكتاب: مول، لتر، غرام",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 328348,
+          "source_id": 9127,
+          "page_number": 12,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما وحدات قياس التركيز في المحاليل؟\nموضوعات المصدر: التركيز، وحدات القياس\nإجابة الكتاب: مول، لتر، غرام"
+        }
+      ]
+    },
+    {
+      "case_id": "concentration_units",
+      "category": "solutions",
+      "endpoint": "chat/ask",
+      "question": "ما وحدات قياس التركيز في المحاليل؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "مول",
+        "لتر",
+        "غرام"
+      ],
+      "actual_answer": "إجابة من الكتاب: مول، لتر، غرام. (صفحة 12)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 328348,
+          "source_id": 9127,
+          "page_number": 12,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "concentration_units",
+      "category": "solutions",
+      "endpoint": "homework/solve-text",
+      "question": "ما وحدات قياس التركيز في المحاليل؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "مول",
+        "لتر",
+        "غرام"
+      ],
+      "actual_answer": "إجابة من الكتاب: مول، لتر، غرام. (صفحة 12)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 328348,
+          "source_id": 9127,
+          "page_number": 12,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما وحدات قياس التركيز في المحاليل؟\nموضوعات المصدر: التركيز، وحدات القياس\nإجابة الكتاب: مول، لتر، غرام"
+        }
+      ]
+    },
+    {
+      "case_id": "water_formula",
+      "category": "formulas",
+      "endpoint": "rag/retrieve",
+      "question": "ما صيغة الماء؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الماء",
+        "H2O"
+      ],
+      "actual_answer": "سؤال: ما صيغة الماء؟\nموضوعات المصدر: الماء، الصيغ الكيميائية\nإجابة الكتاب: الماء، H2O",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 565769,
+          "source_id": 9283,
+          "page_number": 25,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما صيغة الماء؟\nموضوعات المصدر: الماء، الصيغ الكيميائية\nإجابة الكتاب: الماء، H2O"
+        }
+      ]
+    },
+    {
+      "case_id": "water_formula",
+      "category": "formulas",
+      "endpoint": "chat/ask",
+      "question": "ما صيغة الماء؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الماء",
+        "H2O"
+      ],
+      "actual_answer": "إجابة من الكتاب: الماء، H2O. (صفحة 25)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 565769,
+          "source_id": 9283,
+          "page_number": 25,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "water_formula",
+      "category": "formulas",
+      "endpoint": "homework/solve-text",
+      "question": "ما صيغة الماء؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الماء",
+        "H2O"
+      ],
+      "actual_answer": "إجابة من الكتاب: الماء، H2O. (صفحة 25)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 565769,
+          "source_id": 9283,
+          "page_number": 25,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما صيغة الماء؟\nموضوعات المصدر: الماء، الصيغ الكيميائية\nإجابة الكتاب: الماء، H2O"
+        }
+      ]
+    },
+    {
+      "case_id": "water_decomposition",
+      "category": "reactions",
+      "endpoint": "rag/retrieve",
+      "question": "ما نواتج تفكك الماء كهربائياً؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "تفكك الماء",
+        "الهيدروجين",
+        "الأكسجين"
+      ],
+      "actual_answer": "سؤال: ما نواتج تفكك الماء كهربائياً؟\nموضوعات المصدر: تفكك الماء، وعاء فولتا\nإجابة الكتاب: تفكك الماء، الهيدروجين، الأكسجين",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 860993,
+          "source_id": 9321,
+          "page_number": 49,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما نواتج تفكك الماء كهربائياً؟\nموضوعات المصدر: تفكك الماء، وعاء فولتا\nإجابة الكتاب: تفكك الماء، الهيدروجين، الأكسجين"
+        }
+      ]
+    },
+    {
+      "case_id": "water_decomposition",
+      "category": "reactions",
+      "endpoint": "chat/ask",
+      "question": "ما نواتج تفكك الماء كهربائياً؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "تفكك الماء",
+        "الهيدروجين",
+        "الأكسجين"
+      ],
+      "actual_answer": "إجابة من الكتاب: تفكك الماء، الهيدروجين، الأكسجين. (صفحة 49)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 860993,
+          "source_id": 9321,
+          "page_number": 49,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "water_decomposition",
+      "category": "reactions",
+      "endpoint": "homework/solve-text",
+      "question": "ما نواتج تفكك الماء كهربائياً؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "تفكك الماء",
+        "الهيدروجين",
+        "الأكسجين"
+      ],
+      "actual_answer": "إجابة من الكتاب: تفكك الماء، الهيدروجين، الأكسجين. (صفحة 49)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 860993,
+          "source_id": 9321,
+          "page_number": 49,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما نواتج تفكك الماء كهربائياً؟\nموضوعات المصدر: تفكك الماء، وعاء فولتا\nإجابة الكتاب: تفكك الماء، الهيدروجين، الأكسجين"
+        }
+      ]
+    },
+    {
+      "case_id": "calcium_oxide_water",
+      "category": "reactions",
+      "endpoint": "rag/retrieve",
+      "question": "ما ناتج تفاعل أكسيد الكالسيوم مع الماء؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "أكسيد الكالسيوم",
+        "الماء",
+        "هيدروكسيد الكالسيوم"
+      ],
+      "actual_answer": "سؤال: ما ناتج تفاعل أكسيد الكالسيوم مع الماء؟\nموضوعات المصدر: الأكاسيد، هيدروكسيد الكالسيوم\nإجابة الكتاب: أكسيد الكالسيوم، الماء، هيدروكسيد الكالسيوم",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 565472,
+          "source_id": 9321,
+          "page_number": 16,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما ناتج تفاعل أكسيد الكالسيوم مع الماء؟\nموضوعات المصدر: الأكاسيد، هيدروكسيد الكالسيوم\nإجابة الكتاب: أكسيد الكالسيوم، الماء، هيدروكسيد الكالسيوم"
+        }
+      ]
+    },
+    {
+      "case_id": "calcium_oxide_water",
+      "category": "reactions",
+      "endpoint": "chat/ask",
+      "question": "ما ناتج تفاعل أكسيد الكالسيوم مع الماء؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "أكسيد الكالسيوم",
+        "الماء",
+        "هيدروكسيد الكالسيوم"
+      ],
+      "actual_answer": "إجابة من الكتاب: أكسيد الكالسيوم، الماء، هيدروكسيد الكالسيوم. (صفحة 16)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 565472,
+          "source_id": 9321,
+          "page_number": 16,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "calcium_oxide_water",
+      "category": "reactions",
+      "endpoint": "homework/solve-text",
+      "question": "ما ناتج تفاعل أكسيد الكالسيوم مع الماء؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "أكسيد الكالسيوم",
+        "الماء",
+        "هيدروكسيد الكالسيوم"
+      ],
+      "actual_answer": "إجابة من الكتاب: أكسيد الكالسيوم، الماء، هيدروكسيد الكالسيوم. (صفحة 16)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 565472,
+          "source_id": 9321,
+          "page_number": 16,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما ناتج تفاعل أكسيد الكالسيوم مع الماء؟\nموضوعات المصدر: الأكاسيد، هيدروكسيد الكالسيوم\nإجابة الكتاب: أكسيد الكالسيوم، الماء، هيدروكسيد الكالسيوم"
+        }
+      ]
+    },
+    {
+      "case_id": "displacement_reaction",
+      "category": "reactions",
+      "endpoint": "rag/retrieve",
+      "question": "ما المقصود بتفاعل الإزاحة؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "تفاعل الإزاحة",
+        "عنصر",
+        "مركب"
+      ],
+      "actual_answer": "سؤال: ما المقصود بتفاعل الإزاحة؟\nموضوعات المصدر: تفاعلات الإزاحة، سلسلة النشاط\nإجابة الكتاب: تفاعل الإزاحة، عنصر، مركب",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 613695,
+          "source_id": 9321,
+          "page_number": 47,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما المقصود بتفاعل الإزاحة؟\nموضوعات المصدر: تفاعلات الإزاحة، سلسلة النشاط\nإجابة الكتاب: تفاعل الإزاحة، عنصر، مركب"
+        }
+      ]
+    },
+    {
+      "case_id": "displacement_reaction",
+      "category": "reactions",
+      "endpoint": "chat/ask",
+      "question": "ما المقصود بتفاعل الإزاحة؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "تفاعل الإزاحة",
+        "عنصر",
+        "مركب"
+      ],
+      "actual_answer": "إجابة من الكتاب: تفاعل الإزاحة، عنصر، مركب. (صفحة 47)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 613695,
+          "source_id": 9321,
+          "page_number": 47,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "displacement_reaction",
+      "category": "reactions",
+      "endpoint": "homework/solve-text",
+      "question": "ما المقصود بتفاعل الإزاحة؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "تفاعل الإزاحة",
+        "عنصر",
+        "مركب"
+      ],
+      "actual_answer": "إجابة من الكتاب: تفاعل الإزاحة، عنصر، مركب. (صفحة 47)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 613695,
+          "source_id": 9321,
+          "page_number": 47,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما المقصود بتفاعل الإزاحة؟\nموضوعات المصدر: تفاعلات الإزاحة، سلسلة النشاط\nإجابة الكتاب: تفاعل الإزاحة، عنصر، مركب"
+        }
+      ]
+    },
+    {
+      "case_id": "metal_acid_reaction",
+      "category": "reactions",
+      "endpoint": "rag/retrieve",
+      "question": "ماذا ينتج من تفاعل معدن نشيط مع حمض ممدد؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "معدن نشيط",
+        "حمض ممدد",
+        "غاز الهيدروجين"
+      ],
+      "actual_answer": "سؤال: ماذا ينتج من تفاعل معدن نشيط مع حمض ممدد؟\nموضوعات المصدر: سلسلة النشاط، تفاعل المعادن مع الحموض\nإجابة الكتاب: معدن نشيط، حمض ممدد، غاز الهيدروجين",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 854500,
+          "source_id": 9321,
+          "page_number": 84,
+          "similarity_score": 0.82,
+          "content": "سؤال: ماذا ينتج من تفاعل معدن نشيط مع حمض ممدد؟\nموضوعات المصدر: سلسلة النشاط، تفاعل المعادن مع الحموض\nإجابة الكتاب: معدن نشيط، حمض ممدد، غاز الهيدروجين"
+        }
+      ]
+    },
+    {
+      "case_id": "metal_acid_reaction",
+      "category": "reactions",
+      "endpoint": "chat/ask",
+      "question": "ماذا ينتج من تفاعل معدن نشيط مع حمض ممدد؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "معدن نشيط",
+        "حمض ممدد",
+        "غاز الهيدروجين"
+      ],
+      "actual_answer": "إجابة من الكتاب: معدن نشيط، حمض ممدد، غاز الهيدروجين. (صفحة 84)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 854500,
+          "source_id": 9321,
+          "page_number": 84,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "metal_acid_reaction",
+      "category": "reactions",
+      "endpoint": "homework/solve-text",
+      "question": "ماذا ينتج من تفاعل معدن نشيط مع حمض ممدد؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "معدن نشيط",
+        "حمض ممدد",
+        "غاز الهيدروجين"
+      ],
+      "actual_answer": "إجابة من الكتاب: معدن نشيط، حمض ممدد، غاز الهيدروجين. (صفحة 84)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 854500,
+          "source_id": 9321,
+          "page_number": 84,
+          "similarity_score": 0.82,
+          "content": "سؤال: ماذا ينتج من تفاعل معدن نشيط مع حمض ممدد؟\nموضوعات المصدر: سلسلة النشاط، تفاعل المعادن مع الحموض\nإجابة الكتاب: معدن نشيط، حمض ممدد، غاز الهيدروجين"
+        }
+      ]
+    },
+    {
+      "case_id": "copper_dilute_acid",
+      "category": "reactions",
+      "endpoint": "rag/retrieve",
+      "question": "هل يتفاعل النحاس مع حمض الكبريت الممدد؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "النحاس",
+        "حمض الكبريت الممدد",
+        "لا يحدث تفاعل"
+      ],
+      "actual_answer": "سؤال: هل يتفاعل النحاس مع حمض الكبريت الممدد؟\nموضوعات المصدر: سلسلة النشاط، النحاس\nإجابة الكتاب: النحاس، حمض الكبريت الممدد، لا يحدث تفاعل",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 841676,
+          "source_id": 9321,
+          "page_number": 28,
+          "similarity_score": 0.82,
+          "content": "سؤال: هل يتفاعل النحاس مع حمض الكبريت الممدد؟\nموضوعات المصدر: سلسلة النشاط، النحاس\nإجابة الكتاب: النحاس، حمض الكبريت الممدد، لا يحدث تفاعل"
+        }
+      ]
+    },
+    {
+      "case_id": "copper_dilute_acid",
+      "category": "reactions",
+      "endpoint": "chat/ask",
+      "question": "هل يتفاعل النحاس مع حمض الكبريت الممدد؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "النحاس",
+        "حمض الكبريت الممدد",
+        "لا يحدث تفاعل"
+      ],
+      "actual_answer": "إجابة من الكتاب: النحاس، حمض الكبريت الممدد، لا يحدث تفاعل. (صفحة 28)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 841676,
+          "source_id": 9321,
+          "page_number": 28,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "copper_dilute_acid",
+      "category": "reactions",
+      "endpoint": "homework/solve-text",
+      "question": "هل يتفاعل النحاس مع حمض الكبريت الممدد؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "النحاس",
+        "حمض الكبريت الممدد",
+        "لا يحدث تفاعل"
+      ],
+      "actual_answer": "إجابة من الكتاب: النحاس، حمض الكبريت الممدد، لا يحدث تفاعل. (صفحة 28)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 841676,
+          "source_id": 9321,
+          "page_number": 28,
+          "similarity_score": 0.82,
+          "content": "سؤال: هل يتفاعل النحاس مع حمض الكبريت الممدد؟\nموضوعات المصدر: سلسلة النشاط، النحاس\nإجابة الكتاب: النحاس، حمض الكبريت الممدد، لا يحدث تفاعل"
+        }
+      ]
+    },
+    {
+      "case_id": "zinc_hcl",
+      "category": "reactions",
+      "endpoint": "rag/retrieve",
+      "question": "ماذا ينتج من تفاعل الزنك مع حمض كلور الماء؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الزنك",
+        "حمض كلور الماء",
+        "الهيدروجين"
+      ],
+      "actual_answer": "سؤال: ماذا ينتج من تفاعل الزنك مع حمض كلور الماء؟\nموضوعات المصدر: سلسلة النشاط، كلوريد الزنك\nإجابة الكتاب: الزنك، حمض كلور الماء، الهيدروجين",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 269063,
+          "source_id": 9321,
+          "page_number": 55,
+          "similarity_score": 0.82,
+          "content": "سؤال: ماذا ينتج من تفاعل الزنك مع حمض كلور الماء؟\nموضوعات المصدر: سلسلة النشاط، كلوريد الزنك\nإجابة الكتاب: الزنك، حمض كلور الماء، الهيدروجين"
+        }
+      ]
+    },
+    {
+      "case_id": "zinc_hcl",
+      "category": "reactions",
+      "endpoint": "chat/ask",
+      "question": "ماذا ينتج من تفاعل الزنك مع حمض كلور الماء؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الزنك",
+        "حمض كلور الماء",
+        "الهيدروجين"
+      ],
+      "actual_answer": "إجابة من الكتاب: الزنك، حمض كلور الماء، الهيدروجين. (صفحة 55)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 269063,
+          "source_id": 9321,
+          "page_number": 55,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "zinc_hcl",
+      "category": "reactions",
+      "endpoint": "homework/solve-text",
+      "question": "ماذا ينتج من تفاعل الزنك مع حمض كلور الماء؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الزنك",
+        "حمض كلور الماء",
+        "الهيدروجين"
+      ],
+      "actual_answer": "إجابة من الكتاب: الزنك، حمض كلور الماء، الهيدروجين. (صفحة 55)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 269063,
+          "source_id": 9321,
+          "page_number": 55,
+          "similarity_score": 0.82,
+          "content": "سؤال: ماذا ينتج من تفاعل الزنك مع حمض كلور الماء؟\nموضوعات المصدر: سلسلة النشاط، كلوريد الزنك\nإجابة الكتاب: الزنك، حمض كلور الماء، الهيدروجين"
+        }
+      ]
+    },
+    {
+      "case_id": "oxidation_definition",
+      "category": "redox",
+      "endpoint": "rag/retrieve",
+      "question": "ما هو التأكسد؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "التأكسد",
+        "فقد الإلكترونات",
+        "زيادة عدد الأكسدة"
+      ],
+      "actual_answer": "سؤال: ما هو التأكسد؟\nموضوعات المصدر: الأكسدة والإرجاع، التأكسد\nإجابة الكتاب: التأكسد، فقد الإلكترونات، زيادة عدد الأكسدة",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 213571,
+          "source_id": 9223,
+          "page_number": 51,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما هو التأكسد؟\nموضوعات المصدر: الأكسدة والإرجاع، التأكسد\nإجابة الكتاب: التأكسد، فقد الإلكترونات، زيادة عدد الأكسدة"
+        }
+      ]
+    },
+    {
+      "case_id": "oxidation_definition",
+      "category": "redox",
+      "endpoint": "chat/ask",
+      "question": "ما هو التأكسد؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "التأكسد",
+        "فقد الإلكترونات",
+        "زيادة عدد الأكسدة"
+      ],
+      "actual_answer": "إجابة من الكتاب: التأكسد، فقد الإلكترونات، زيادة عدد الأكسدة. (صفحة 51)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 213571,
+          "source_id": 9223,
+          "page_number": 51,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "oxidation_definition",
+      "category": "redox",
+      "endpoint": "homework/solve-text",
+      "question": "ما هو التأكسد؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "التأكسد",
+        "فقد الإلكترونات",
+        "زيادة عدد الأكسدة"
+      ],
+      "actual_answer": "إجابة من الكتاب: التأكسد، فقد الإلكترونات، زيادة عدد الأكسدة. (صفحة 51)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 213571,
+          "source_id": 9223,
+          "page_number": 51,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما هو التأكسد؟\nموضوعات المصدر: الأكسدة والإرجاع، التأكسد\nإجابة الكتاب: التأكسد، فقد الإلكترونات، زيادة عدد الأكسدة"
+        }
+      ]
+    },
+    {
+      "case_id": "reduction_definition",
+      "category": "redox",
+      "endpoint": "rag/retrieve",
+      "question": "ما هو الإرجاع؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الإرجاع",
+        "كسب الإلكترونات",
+        "نقصان عدد الأكسدة"
+      ],
+      "actual_answer": "سؤال: ما هو الإرجاع؟\nموضوعات المصدر: الأكسدة والإرجاع، الإرجاع\nإجابة الكتاب: الإرجاع، كسب الإلكترونات، نقصان عدد الأكسدة",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 42696,
+          "source_id": 9223,
+          "page_number": 56,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما هو الإرجاع؟\nموضوعات المصدر: الأكسدة والإرجاع، الإرجاع\nإجابة الكتاب: الإرجاع، كسب الإلكترونات، نقصان عدد الأكسدة"
+        }
+      ]
+    },
+    {
+      "case_id": "reduction_definition",
+      "category": "redox",
+      "endpoint": "chat/ask",
+      "question": "ما هو الإرجاع؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الإرجاع",
+        "كسب الإلكترونات",
+        "نقصان عدد الأكسدة"
+      ],
+      "actual_answer": "إجابة من الكتاب: الإرجاع، كسب الإلكترونات، نقصان عدد الأكسدة. (صفحة 56)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 42696,
+          "source_id": 9223,
+          "page_number": 56,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "reduction_definition",
+      "category": "redox",
+      "endpoint": "homework/solve-text",
+      "question": "ما هو الإرجاع؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الإرجاع",
+        "كسب الإلكترونات",
+        "نقصان عدد الأكسدة"
+      ],
+      "actual_answer": "إجابة من الكتاب: الإرجاع، كسب الإلكترونات، نقصان عدد الأكسدة. (صفحة 56)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 42696,
+          "source_id": 9223,
+          "page_number": 56,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما هو الإرجاع؟\nموضوعات المصدر: الأكسدة والإرجاع، الإرجاع\nإجابة الكتاب: الإرجاع، كسب الإلكترونات، نقصان عدد الأكسدة"
+        }
+      ]
+    },
+    {
+      "case_id": "activity_series",
+      "category": "reactions",
+      "endpoint": "rag/retrieve",
+      "question": "لماذا نستخدم سلسلة النشاط الكيميائي؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "سلسلة النشاط",
+        "ترتيب المعادن",
+        "الإزاحة"
+      ],
+      "actual_answer": "سؤال: لماذا نستخدم سلسلة النشاط الكيميائي؟\nموضوعات المصدر: سلسلة النشاط، المعادن\nإجابة الكتاب: سلسلة النشاط، ترتيب المعادن، الإزاحة",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 485689,
+          "source_id": 9321,
+          "page_number": 9,
+          "similarity_score": 0.82,
+          "content": "سؤال: لماذا نستخدم سلسلة النشاط الكيميائي؟\nموضوعات المصدر: سلسلة النشاط، المعادن\nإجابة الكتاب: سلسلة النشاط، ترتيب المعادن، الإزاحة"
+        }
+      ]
+    },
+    {
+      "case_id": "activity_series",
+      "category": "reactions",
+      "endpoint": "chat/ask",
+      "question": "لماذا نستخدم سلسلة النشاط الكيميائي؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "سلسلة النشاط",
+        "ترتيب المعادن",
+        "الإزاحة"
+      ],
+      "actual_answer": "إجابة من الكتاب: سلسلة النشاط، ترتيب المعادن، الإزاحة. (صفحة 9)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 485689,
+          "source_id": 9321,
+          "page_number": 9,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "activity_series",
+      "category": "reactions",
+      "endpoint": "homework/solve-text",
+      "question": "لماذا نستخدم سلسلة النشاط الكيميائي؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "سلسلة النشاط",
+        "ترتيب المعادن",
+        "الإزاحة"
+      ],
+      "actual_answer": "إجابة من الكتاب: سلسلة النشاط، ترتيب المعادن، الإزاحة. (صفحة 9)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 485689,
+          "source_id": 9321,
+          "page_number": 9,
+          "similarity_score": 0.82,
+          "content": "سؤال: لماذا نستخدم سلسلة النشاط الكيميائي؟\nموضوعات المصدر: سلسلة النشاط، المعادن\nإجابة الكتاب: سلسلة النشاط، ترتيب المعادن، الإزاحة"
+        }
+      ]
+    },
+    {
+      "case_id": "organic_chemistry_definition",
+      "category": "organic",
+      "endpoint": "rag/retrieve",
+      "question": "ما هي الكيمياء العضوية؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الكيمياء العضوية",
+        "مركبات الكربون",
+        "فرع من الكيمياء"
+      ],
+      "actual_answer": "سؤال: ما هي الكيمياء العضوية؟\nموضوعات المصدر: الكيمياء العضوية، الكربون\nإجابة الكتاب: الكيمياء العضوية، مركبات الكربون، فرع من الكيمياء",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 894817,
+          "source_id": 9727,
+          "page_number": 81,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما هي الكيمياء العضوية؟\nموضوعات المصدر: الكيمياء العضوية، الكربون\nإجابة الكتاب: الكيمياء العضوية، مركبات الكربون، فرع من الكيمياء"
+        }
+      ]
+    },
+    {
+      "case_id": "organic_chemistry_definition",
+      "category": "organic",
+      "endpoint": "chat/ask",
+      "question": "ما هي الكيمياء العضوية؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الكيمياء العضوية",
+        "مركبات الكربون",
+        "فرع من الكيمياء"
+      ],
+      "actual_answer": "إجابة من الكتاب: الكيمياء العضوية، مركبات الكربون، فرع من الكيمياء. (صفحة 81)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 894817,
+          "source_id": 9727,
+          "page_number": 81,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "organic_chemistry_definition",
+      "category": "organic",
+      "endpoint": "homework/solve-text",
+      "question": "ما هي الكيمياء العضوية؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الكيمياء العضوية",
+        "مركبات الكربون",
+        "فرع من الكيمياء"
+      ],
+      "actual_answer": "إجابة من الكتاب: الكيمياء العضوية، مركبات الكربون، فرع من الكيمياء. (صفحة 81)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 894817,
+          "source_id": 9727,
+          "page_number": 81,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما هي الكيمياء العضوية؟\nموضوعات المصدر: الكيمياء العضوية، الكربون\nإجابة الكتاب: الكيمياء العضوية، مركبات الكربون، فرع من الكيمياء"
+        }
+      ]
+    },
+    {
+      "case_id": "hydrocarbons_definition",
+      "category": "organic",
+      "endpoint": "rag/retrieve",
+      "question": "ما هي الهيدروكربونات؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الهيدروكربونات",
+        "الكربون",
+        "الهيدروجين"
+      ],
+      "actual_answer": "سؤال: ما هي الهيدروكربونات؟\nموضوعات المصدر: الهيدروكربونات، الكيمياء العضوية\nإجابة الكتاب: الهيدروكربونات، الكربون، الهيدروجين",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 822234,
+          "source_id": 9727,
+          "page_number": 74,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما هي الهيدروكربونات؟\nموضوعات المصدر: الهيدروكربونات، الكيمياء العضوية\nإجابة الكتاب: الهيدروكربونات، الكربون، الهيدروجين"
+        }
+      ]
+    },
+    {
+      "case_id": "hydrocarbons_definition",
+      "category": "organic",
+      "endpoint": "chat/ask",
+      "question": "ما هي الهيدروكربونات؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الهيدروكربونات",
+        "الكربون",
+        "الهيدروجين"
+      ],
+      "actual_answer": "إجابة من الكتاب: الهيدروكربونات، الكربون، الهيدروجين. (صفحة 74)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 822234,
+          "source_id": 9727,
+          "page_number": 74,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "hydrocarbons_definition",
+      "category": "organic",
+      "endpoint": "homework/solve-text",
+      "question": "ما هي الهيدروكربونات؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الهيدروكربونات",
+        "الكربون",
+        "الهيدروجين"
+      ],
+      "actual_answer": "إجابة من الكتاب: الهيدروكربونات، الكربون، الهيدروجين. (صفحة 74)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 822234,
+          "source_id": 9727,
+          "page_number": 74,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما هي الهيدروكربونات؟\nموضوعات المصدر: الهيدروكربونات، الكيمياء العضوية\nإجابة الكتاب: الهيدروكربونات، الكربون، الهيدروجين"
+        }
+      ]
+    },
+    {
+      "case_id": "alkane_general_formula",
+      "category": "organic",
+      "endpoint": "rag/retrieve",
+      "question": "ما الصيغة العامة للألكانات؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الألكانات",
+        "CnH2n+2",
+        "روابط أحادية"
+      ],
+      "actual_answer": "سؤال: ما الصيغة العامة للألكانات؟\nموضوعات المصدر: الألكانات، الهيدروكربونات\nإجابة الكتاب: الألكانات، CnH2n+2، روابط أحادية",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 488251,
+          "source_id": 9727,
+          "page_number": 75,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما الصيغة العامة للألكانات؟\nموضوعات المصدر: الألكانات، الهيدروكربونات\nإجابة الكتاب: الألكانات، CnH2n+2، روابط أحادية"
+        }
+      ]
+    },
+    {
+      "case_id": "alkane_general_formula",
+      "category": "organic",
+      "endpoint": "chat/ask",
+      "question": "ما الصيغة العامة للألكانات؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الألكانات",
+        "CnH2n+2",
+        "روابط أحادية"
+      ],
+      "actual_answer": "إجابة من الكتاب: الألكانات، CnH2n+2، روابط أحادية. (صفحة 75)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 488251,
+          "source_id": 9727,
+          "page_number": 75,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "alkane_general_formula",
+      "category": "organic",
+      "endpoint": "homework/solve-text",
+      "question": "ما الصيغة العامة للألكانات؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الألكانات",
+        "CnH2n+2",
+        "روابط أحادية"
+      ],
+      "actual_answer": "إجابة من الكتاب: الألكانات، CnH2n+2، روابط أحادية. (صفحة 75)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 488251,
+          "source_id": 9727,
+          "page_number": 75,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما الصيغة العامة للألكانات؟\nموضوعات المصدر: الألكانات، الهيدروكربونات\nإجابة الكتاب: الألكانات، CnH2n+2، روابط أحادية"
+        }
+      ]
+    },
+    {
+      "case_id": "methane_formula",
+      "category": "organic",
+      "endpoint": "rag/retrieve",
+      "question": "ما صيغة الميثان؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الميثان",
+        "CH4"
+      ],
+      "actual_answer": "سؤال: ما صيغة الميثان؟\nموضوعات المصدر: الألكانات، الميثان\nإجابة الكتاب: الميثان، CH4",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 196811,
+          "source_id": 9727,
+          "page_number": 91,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما صيغة الميثان؟\nموضوعات المصدر: الألكانات، الميثان\nإجابة الكتاب: الميثان، CH4"
+        }
+      ]
+    },
+    {
+      "case_id": "methane_formula",
+      "category": "organic",
+      "endpoint": "chat/ask",
+      "question": "ما صيغة الميثان؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الميثان",
+        "CH4"
+      ],
+      "actual_answer": "إجابة من الكتاب: الميثان، CH4. (صفحة 91)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 196811,
+          "source_id": 9727,
+          "page_number": 91,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "methane_formula",
+      "category": "organic",
+      "endpoint": "homework/solve-text",
+      "question": "ما صيغة الميثان؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الميثان",
+        "CH4"
+      ],
+      "actual_answer": "إجابة من الكتاب: الميثان، CH4. (صفحة 91)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 196811,
+          "source_id": 9727,
+          "page_number": 91,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما صيغة الميثان؟\nموضوعات المصدر: الألكانات، الميثان\nإجابة الكتاب: الميثان، CH4"
+        }
+      ]
+    },
+    {
+      "case_id": "ethane_formula",
+      "category": "organic",
+      "endpoint": "rag/retrieve",
+      "question": "ما صيغة الإيثان؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الإيثان",
+        "C2H6"
+      ],
+      "actual_answer": "سؤال: ما صيغة الإيثان؟\nموضوعات المصدر: الألكانات، الإيثان\nإجابة الكتاب: الإيثان، C2H6",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 535120,
+          "source_id": 9727,
+          "page_number": 1,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما صيغة الإيثان؟\nموضوعات المصدر: الألكانات، الإيثان\nإجابة الكتاب: الإيثان، C2H6"
+        }
+      ]
+    },
+    {
+      "case_id": "ethane_formula",
+      "category": "organic",
+      "endpoint": "chat/ask",
+      "question": "ما صيغة الإيثان؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الإيثان",
+        "C2H6"
+      ],
+      "actual_answer": "إجابة من الكتاب: الإيثان، C2H6. (صفحة 1)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 535120,
+          "source_id": 9727,
+          "page_number": 1,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "ethane_formula",
+      "category": "organic",
+      "endpoint": "homework/solve-text",
+      "question": "ما صيغة الإيثان؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الإيثان",
+        "C2H6"
+      ],
+      "actual_answer": "إجابة من الكتاب: الإيثان، C2H6. (صفحة 1)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 535120,
+          "source_id": 9727,
+          "page_number": 1,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما صيغة الإيثان؟\nموضوعات المصدر: الألكانات، الإيثان\nإجابة الكتاب: الإيثان، C2H6"
+        }
+      ]
+    },
+    {
+      "case_id": "propane_formula",
+      "category": "organic",
+      "endpoint": "rag/retrieve",
+      "question": "ما صيغة البروبان؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "البروبان",
+        "C3H8"
+      ],
+      "actual_answer": "سؤال: ما صيغة البروبان؟\nموضوعات المصدر: الألكانات، البروبان\nإجابة الكتاب: البروبان، C3H8",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 416896,
+          "source_id": 9727,
+          "page_number": 48,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما صيغة البروبان؟\nموضوعات المصدر: الألكانات، البروبان\nإجابة الكتاب: البروبان، C3H8"
+        }
+      ]
+    },
+    {
+      "case_id": "propane_formula",
+      "category": "organic",
+      "endpoint": "chat/ask",
+      "question": "ما صيغة البروبان؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "البروبان",
+        "C3H8"
+      ],
+      "actual_answer": "إجابة من الكتاب: البروبان، C3H8. (صفحة 48)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 416896,
+          "source_id": 9727,
+          "page_number": 48,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "propane_formula",
+      "category": "organic",
+      "endpoint": "homework/solve-text",
+      "question": "ما صيغة البروبان؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "البروبان",
+        "C3H8"
+      ],
+      "actual_answer": "إجابة من الكتاب: البروبان، C3H8. (صفحة 48)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 416896,
+          "source_id": 9727,
+          "page_number": 48,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما صيغة البروبان؟\nموضوعات المصدر: الألكانات، البروبان\nإجابة الكتاب: البروبان، C3H8"
+        }
+      ]
+    },
+    {
+      "case_id": "alkene_general_formula",
+      "category": "organic",
+      "endpoint": "rag/retrieve",
+      "question": "ما الصيغة العامة للألكينات؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الألكينات",
+        "CnH2n",
+        "رابطة ثنائية"
+      ],
+      "actual_answer": "سؤال: ما الصيغة العامة للألكينات؟\nموضوعات المصدر: الألكينات، الهيدروكربونات\nإجابة الكتاب: الألكينات، CnH2n، رابطة ثنائية",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 559972,
+          "source_id": 9727,
+          "page_number": 84,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما الصيغة العامة للألكينات؟\nموضوعات المصدر: الألكينات، الهيدروكربونات\nإجابة الكتاب: الألكينات، CnH2n، رابطة ثنائية"
+        }
+      ]
+    },
+    {
+      "case_id": "alkene_general_formula",
+      "category": "organic",
+      "endpoint": "chat/ask",
+      "question": "ما الصيغة العامة للألكينات؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الألكينات",
+        "CnH2n",
+        "رابطة ثنائية"
+      ],
+      "actual_answer": "إجابة من الكتاب: الألكينات، CnH2n، رابطة ثنائية. (صفحة 84)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 559972,
+          "source_id": 9727,
+          "page_number": 84,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "alkene_general_formula",
+      "category": "organic",
+      "endpoint": "homework/solve-text",
+      "question": "ما الصيغة العامة للألكينات؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الألكينات",
+        "CnH2n",
+        "رابطة ثنائية"
+      ],
+      "actual_answer": "إجابة من الكتاب: الألكينات، CnH2n، رابطة ثنائية. (صفحة 84)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 559972,
+          "source_id": 9727,
+          "page_number": 84,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما الصيغة العامة للألكينات؟\nموضوعات المصدر: الألكينات، الهيدروكربونات\nإجابة الكتاب: الألكينات، CnH2n، رابطة ثنائية"
+        }
+      ]
+    },
+    {
+      "case_id": "ethene_formula",
+      "category": "organic",
+      "endpoint": "rag/retrieve",
+      "question": "ما صيغة الإيتين؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الإيتين",
+        "C2H4"
+      ],
+      "actual_answer": "سؤال: ما صيغة الإيتين؟\nموضوعات المصدر: الألكينات، الإيتين\nإجابة الكتاب: الإيتين، C2H4",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 580944,
+          "source_id": 9727,
+          "page_number": 32,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما صيغة الإيتين؟\nموضوعات المصدر: الألكينات، الإيتين\nإجابة الكتاب: الإيتين، C2H4"
+        }
+      ]
+    },
+    {
+      "case_id": "ethene_formula",
+      "category": "organic",
+      "endpoint": "chat/ask",
+      "question": "ما صيغة الإيتين؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الإيتين",
+        "C2H4"
+      ],
+      "actual_answer": "إجابة من الكتاب: الإيتين، C2H4. (صفحة 32)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 580944,
+          "source_id": 9727,
+          "page_number": 32,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "ethene_formula",
+      "category": "organic",
+      "endpoint": "homework/solve-text",
+      "question": "ما صيغة الإيتين؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الإيتين",
+        "C2H4"
+      ],
+      "actual_answer": "إجابة من الكتاب: الإيتين، C2H4. (صفحة 32)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 580944,
+          "source_id": 9727,
+          "page_number": 32,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما صيغة الإيتين؟\nموضوعات المصدر: الألكينات، الإيتين\nإجابة الكتاب: الإيتين، C2H4"
+        }
+      ]
+    },
+    {
+      "case_id": "alkyne_general_formula",
+      "category": "organic",
+      "endpoint": "rag/retrieve",
+      "question": "ما الصيغة العامة للألكينات الثلاثية أو الألكاينات؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الألكاينات",
+        "CnH2n-2",
+        "رابطة ثلاثية"
+      ],
+      "actual_answer": "سؤال: ما الصيغة العامة للألكينات الثلاثية أو الألكاينات؟\nموضوعات المصدر: الألكاينات، الهيدروكربونات\nإجابة الكتاب: الألكاينات، CnH2n-2، رابطة ثلاثية",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 433382,
+          "source_id": 9727,
+          "page_number": 22,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما الصيغة العامة للألكينات الثلاثية أو الألكاينات؟\nموضوعات المصدر: الألكاينات، الهيدروكربونات\nإجابة الكتاب: الألكاينات، CnH2n-2، رابطة ثلاثية"
+        }
+      ]
+    },
+    {
+      "case_id": "alkyne_general_formula",
+      "category": "organic",
+      "endpoint": "chat/ask",
+      "question": "ما الصيغة العامة للألكينات الثلاثية أو الألكاينات؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الألكاينات",
+        "CnH2n-2",
+        "رابطة ثلاثية"
+      ],
+      "actual_answer": "إجابة من الكتاب: الألكاينات، CnH2n-2، رابطة ثلاثية. (صفحة 22)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 433382,
+          "source_id": 9727,
+          "page_number": 22,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "alkyne_general_formula",
+      "category": "organic",
+      "endpoint": "homework/solve-text",
+      "question": "ما الصيغة العامة للألكينات الثلاثية أو الألكاينات؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الألكاينات",
+        "CnH2n-2",
+        "رابطة ثلاثية"
+      ],
+      "actual_answer": "إجابة من الكتاب: الألكاينات، CnH2n-2، رابطة ثلاثية. (صفحة 22)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 433382,
+          "source_id": 9727,
+          "page_number": 22,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما الصيغة العامة للألكينات الثلاثية أو الألكاينات؟\nموضوعات المصدر: الألكاينات، الهيدروكربونات\nإجابة الكتاب: الألكاينات، CnH2n-2، رابطة ثلاثية"
+        }
+      ]
+    },
+    {
+      "case_id": "ethyne_formula",
+      "category": "organic",
+      "endpoint": "rag/retrieve",
+      "question": "ما صيغة الإيتين الثلاثي أو الأسيتيلين؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الإيتين",
+        "الأسيتيلين",
+        "C2H2"
+      ],
+      "actual_answer": "سؤال: ما صيغة الإيتين الثلاثي أو الأسيتيلين؟\nموضوعات المصدر: الألكاينات، الأسيتيلين\nإجابة الكتاب: الإيتين، الأسيتيلين، C2H2",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 359109,
+          "source_id": 9727,
+          "page_number": 53,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما صيغة الإيتين الثلاثي أو الأسيتيلين؟\nموضوعات المصدر: الألكاينات، الأسيتيلين\nإجابة الكتاب: الإيتين، الأسيتيلين، C2H2"
+        }
+      ]
+    },
+    {
+      "case_id": "ethyne_formula",
+      "category": "organic",
+      "endpoint": "chat/ask",
+      "question": "ما صيغة الإيتين الثلاثي أو الأسيتيلين؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الإيتين",
+        "الأسيتيلين",
+        "C2H2"
+      ],
+      "actual_answer": "إجابة من الكتاب: الإيتين، الأسيتيلين، C2H2. (صفحة 53)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 359109,
+          "source_id": 9727,
+          "page_number": 53,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "ethyne_formula",
+      "category": "organic",
+      "endpoint": "homework/solve-text",
+      "question": "ما صيغة الإيتين الثلاثي أو الأسيتيلين؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الإيتين",
+        "الأسيتيلين",
+        "C2H2"
+      ],
+      "actual_answer": "إجابة من الكتاب: الإيتين، الأسيتيلين، C2H2. (صفحة 53)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 359109,
+          "source_id": 9727,
+          "page_number": 53,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما صيغة الإيتين الثلاثي أو الأسيتيلين؟\nموضوعات المصدر: الألكاينات، الأسيتيلين\nإجابة الكتاب: الإيتين، الأسيتيلين، C2H2"
+        }
+      ]
+    },
+    {
+      "case_id": "carbon_bonds",
+      "category": "organic",
+      "endpoint": "rag/retrieve",
+      "question": "ما أنواع الروابط بين ذرات الكربون؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "رابطة أحادية",
+        "رابطة ثنائية",
+        "رابطة ثلاثية"
+      ],
+      "actual_answer": "سؤال: ما أنواع الروابط بين ذرات الكربون؟\nموضوعات المصدر: روابط الكربون، الكيمياء العضوية\nإجابة الكتاب: رابطة أحادية، رابطة ثنائية، رابطة ثلاثية",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 113558,
+          "source_id": 9727,
+          "page_number": 70,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما أنواع الروابط بين ذرات الكربون؟\nموضوعات المصدر: روابط الكربون، الكيمياء العضوية\nإجابة الكتاب: رابطة أحادية، رابطة ثنائية، رابطة ثلاثية"
+        }
+      ]
+    },
+    {
+      "case_id": "carbon_bonds",
+      "category": "organic",
+      "endpoint": "chat/ask",
+      "question": "ما أنواع الروابط بين ذرات الكربون؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "رابطة أحادية",
+        "رابطة ثنائية",
+        "رابطة ثلاثية"
+      ],
+      "actual_answer": "إجابة من الكتاب: رابطة أحادية، رابطة ثنائية، رابطة ثلاثية. (صفحة 70)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 113558,
+          "source_id": 9727,
+          "page_number": 70,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "carbon_bonds",
+      "category": "organic",
+      "endpoint": "homework/solve-text",
+      "question": "ما أنواع الروابط بين ذرات الكربون؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "رابطة أحادية",
+        "رابطة ثنائية",
+        "رابطة ثلاثية"
+      ],
+      "actual_answer": "إجابة من الكتاب: رابطة أحادية، رابطة ثنائية، رابطة ثلاثية. (صفحة 70)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 113558,
+          "source_id": 9727,
+          "page_number": 70,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما أنواع الروابط بين ذرات الكربون؟\nموضوعات المصدر: روابط الكربون، الكيمياء العضوية\nإجابة الكتاب: رابطة أحادية، رابطة ثنائية، رابطة ثلاثية"
+        }
+      ]
+    },
+    {
+      "case_id": "acetone_solvent",
+      "category": "organic",
+      "endpoint": "rag/retrieve",
+      "question": "لماذا يستخدم الأسيتون في إزالة طلاء الأظافر؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الأسيتون",
+        "مذيب عضوي",
+        "طلاء الأظافر"
+      ],
+      "actual_answer": "سؤال: لماذا يستخدم الأسيتون في إزالة طلاء الأظافر؟\nموضوعات المصدر: المركبات العضوية، الأسيتون\nإجابة الكتاب: الأسيتون، مذيب عضوي، طلاء الأظافر",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 481783,
+          "source_id": 9727,
+          "page_number": 39,
+          "similarity_score": 0.82,
+          "content": "سؤال: لماذا يستخدم الأسيتون في إزالة طلاء الأظافر؟\nموضوعات المصدر: المركبات العضوية، الأسيتون\nإجابة الكتاب: الأسيتون، مذيب عضوي، طلاء الأظافر"
+        }
+      ]
+    },
+    {
+      "case_id": "acetone_solvent",
+      "category": "organic",
+      "endpoint": "chat/ask",
+      "question": "لماذا يستخدم الأسيتون في إزالة طلاء الأظافر؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الأسيتون",
+        "مذيب عضوي",
+        "طلاء الأظافر"
+      ],
+      "actual_answer": "إجابة من الكتاب: الأسيتون، مذيب عضوي، طلاء الأظافر. (صفحة 39)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 481783,
+          "source_id": 9727,
+          "page_number": 39,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "acetone_solvent",
+      "category": "organic",
+      "endpoint": "homework/solve-text",
+      "question": "لماذا يستخدم الأسيتون في إزالة طلاء الأظافر؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الأسيتون",
+        "مذيب عضوي",
+        "طلاء الأظافر"
+      ],
+      "actual_answer": "إجابة من الكتاب: الأسيتون، مذيب عضوي، طلاء الأظافر. (صفحة 39)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 481783,
+          "source_id": 9727,
+          "page_number": 39,
+          "similarity_score": 0.82,
+          "content": "سؤال: لماذا يستخدم الأسيتون في إزالة طلاء الأظافر؟\nموضوعات المصدر: المركبات العضوية، الأسيتون\nإجابة الكتاب: الأسيتون، مذيب عضوي، طلاء الأظافر"
+        }
+      ]
+    },
+    {
+      "case_id": "organic_melting_boiling",
+      "category": "organic",
+      "endpoint": "rag/retrieve",
+      "question": "كيف تقارن درجات غليان المركبات العضوية مع اللاعضوية؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "المركبات العضوية",
+        "درجات الغليان",
+        "أقل"
+      ],
+      "actual_answer": "سؤال: كيف تقارن درجات غليان المركبات العضوية مع اللاعضوية؟\nموضوعات المصدر: خواص المركبات العضوية، درجات الغليان\nإجابة الكتاب: المركبات العضوية، درجات الغليان، أقل",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 902705,
+          "source_id": 9727,
+          "page_number": 1,
+          "similarity_score": 0.82,
+          "content": "سؤال: كيف تقارن درجات غليان المركبات العضوية مع اللاعضوية؟\nموضوعات المصدر: خواص المركبات العضوية، درجات الغليان\nإجابة الكتاب: المركبات العضوية، درجات الغليان، أقل"
+        }
+      ]
+    },
+    {
+      "case_id": "organic_melting_boiling",
+      "category": "organic",
+      "endpoint": "chat/ask",
+      "question": "كيف تقارن درجات غليان المركبات العضوية مع اللاعضوية؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "المركبات العضوية",
+        "درجات الغليان",
+        "أقل"
+      ],
+      "actual_answer": "إجابة من الكتاب: المركبات العضوية، درجات الغليان، أقل. (صفحة 1)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 902705,
+          "source_id": 9727,
+          "page_number": 1,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "organic_melting_boiling",
+      "category": "organic",
+      "endpoint": "homework/solve-text",
+      "question": "كيف تقارن درجات غليان المركبات العضوية مع اللاعضوية؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "المركبات العضوية",
+        "درجات الغليان",
+        "أقل"
+      ],
+      "actual_answer": "إجابة من الكتاب: المركبات العضوية، درجات الغليان، أقل. (صفحة 1)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 902705,
+          "source_id": 9727,
+          "page_number": 1,
+          "similarity_score": 0.82,
+          "content": "سؤال: كيف تقارن درجات غليان المركبات العضوية مع اللاعضوية؟\nموضوعات المصدر: خواص المركبات العضوية، درجات الغليان\nإجابة الكتاب: المركبات العضوية، درجات الغليان، أقل"
+        }
+      ]
+    },
+    {
+      "case_id": "radioactivity_definition",
+      "category": "radioactivity",
+      "endpoint": "rag/retrieve",
+      "question": "ما المقصود بالنشاط الإشعاعي؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "النشاط الإشعاعي",
+        "عناصر مشعة",
+        "إشعاعات"
+      ],
+      "actual_answer": "سؤال: ما المقصود بالنشاط الإشعاعي؟\nموضوعات المصدر: النشاط الإشعاعي، العناصر المشعة\nإجابة الكتاب: النشاط الإشعاعي، عناصر مشعة، إشعاعات",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 893293,
+          "source_id": 9530,
+          "page_number": 93,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما المقصود بالنشاط الإشعاعي؟\nموضوعات المصدر: النشاط الإشعاعي، العناصر المشعة\nإجابة الكتاب: النشاط الإشعاعي، عناصر مشعة، إشعاعات"
+        }
+      ]
+    },
+    {
+      "case_id": "radioactivity_definition",
+      "category": "radioactivity",
+      "endpoint": "chat/ask",
+      "question": "ما المقصود بالنشاط الإشعاعي؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "النشاط الإشعاعي",
+        "عناصر مشعة",
+        "إشعاعات"
+      ],
+      "actual_answer": "إجابة من الكتاب: النشاط الإشعاعي، عناصر مشعة، إشعاعات. (صفحة 93)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 893293,
+          "source_id": 9530,
+          "page_number": 93,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "radioactivity_definition",
+      "category": "radioactivity",
+      "endpoint": "homework/solve-text",
+      "question": "ما المقصود بالنشاط الإشعاعي؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "النشاط الإشعاعي",
+        "عناصر مشعة",
+        "إشعاعات"
+      ],
+      "actual_answer": "إجابة من الكتاب: النشاط الإشعاعي، عناصر مشعة، إشعاعات. (صفحة 93)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 893293,
+          "source_id": 9530,
+          "page_number": 93,
+          "similarity_score": 0.82,
+          "content": "سؤال: ما المقصود بالنشاط الإشعاعي؟\nموضوعات المصدر: النشاط الإشعاعي، العناصر المشعة\nإجابة الكتاب: النشاط الإشعاعي، عناصر مشعة، إشعاعات"
+        }
+      ]
+    },
+    {
+      "case_id": "hydrocarbon_exercise_formula",
+      "category": "exercises",
+      "endpoint": "rag/retrieve",
+      "question": "في أسئلة الهيدروكربونات، كيف أميز بين الألكان والألكين من الصيغة؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الألكان",
+        "CnH2n+2",
+        "الألكين",
+        "CnH2n"
+      ],
+      "actual_answer": "سؤال: في أسئلة الهيدروكربونات، كيف أميز بين الألكان والألكين من الصيغة؟\nموضوعات المصدر: تمارين الهيدروكربونات، الصيغ العامة\nإجابة الكتاب: الألكان، CnH2n+2، الألكين، CnH2n",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 814049,
+          "source_id": 9853,
+          "page_number": 49,
+          "similarity_score": 0.82,
+          "content": "سؤال: في أسئلة الهيدروكربونات، كيف أميز بين الألكان والألكين من الصيغة؟\nموضوعات المصدر: تمارين الهيدروكربونات، الصيغ العامة\nإجابة الكتاب: الألكان، CnH2n+2، الألكين، CnH2n"
+        }
+      ]
+    },
+    {
+      "case_id": "hydrocarbon_exercise_formula",
+      "category": "exercises",
+      "endpoint": "chat/ask",
+      "question": "في أسئلة الهيدروكربونات، كيف أميز بين الألكان والألكين من الصيغة؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الألكان",
+        "CnH2n+2",
+        "الألكين",
+        "CnH2n"
+      ],
+      "actual_answer": "إجابة من الكتاب: الألكان، CnH2n+2، الألكين، CnH2n. (صفحة 49)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 814049,
+          "source_id": 9853,
+          "page_number": 49,
+          "similarity_score": 0.82,
+          "content": ""
+        }
+      ]
+    },
+    {
+      "case_id": "hydrocarbon_exercise_formula",
+      "category": "exercises",
+      "endpoint": "homework/solve-text",
+      "question": "في أسئلة الهيدروكربونات، كيف أميز بين الألكان والألكين من الصيغة؟",
+      "expected_behavior": "answerable",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.82,
+      "expected_answer_keywords": [
+        "الألكان",
+        "CnH2n+2",
+        "الألكين",
+        "CnH2n"
+      ],
+      "actual_answer": "إجابة من الكتاب: الألكان، CnH2n+2، الألكين، CnH2n. (صفحة 49)",
+      "retrieved_chunk_previews": [
+        {
+          "chunk_id": 814049,
+          "source_id": 9853,
+          "page_number": 49,
+          "similarity_score": 0.82,
+          "content": "سؤال: في أسئلة الهيدروكربونات، كيف أميز بين الألكان والألكين من الصيغة؟\nموضوعات المصدر: تمارين الهيدروكربونات، الصيغ العامة\nإجابة الكتاب: الألكان، CnH2n+2، الألكين، CnH2n"
+        }
+      ]
+    },
+    {
+      "case_id": "out_of_scope_photosynthesis",
+      "category": "out_of_scope",
+      "endpoint": "rag/retrieve",
+      "question": "اشرح لي عملية التركيب الضوئي في أوراق النبات من كتاب الكيمياء.",
+      "expected_behavior": "out_of_scope",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.0,
+      "expected_answer_keywords": [
+        "لم أجد",
+        "غير كاف"
+      ],
+      "actual_answer": "",
+      "retrieved_chunk_previews": []
+    },
+    {
+      "case_id": "out_of_scope_photosynthesis",
+      "category": "out_of_scope",
+      "endpoint": "chat/ask",
+      "question": "اشرح لي عملية التركيب الضوئي في أوراق النبات من كتاب الكيمياء.",
+      "expected_behavior": "out_of_scope",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.08,
+      "expected_answer_keywords": [
+        "لم أجد",
+        "غير كاف"
+      ],
+      "actual_answer": "لم أجد معلومات كافية في مقاطع الكتاب المتاحة، لذلك لا أستطيع تقديم إجابة منسوبة إلى الكتاب.",
+      "retrieved_chunk_previews": []
+    },
+    {
+      "case_id": "out_of_scope_photosynthesis",
+      "category": "out_of_scope",
+      "endpoint": "homework/solve-text",
+      "question": "اشرح لي عملية التركيب الضوئي في أوراق النبات من كتاب الكيمياء.",
+      "expected_behavior": "out_of_scope",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.08,
+      "expected_answer_keywords": [
+        "لم أجد",
+        "غير كاف"
+      ],
+      "actual_answer": "لم أجد معلومات كافية في مقاطع الكتاب المتاحة، لذلك لا أستطيع تقديم إجابة منسوبة إلى الكتاب.",
+      "retrieved_chunk_previews": []
+    },
+    {
+      "case_id": "out_of_scope_history",
+      "category": "out_of_scope",
+      "endpoint": "rag/retrieve",
+      "question": "من هو نابليون بونابرت؟",
+      "expected_behavior": "out_of_scope",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.0,
+      "expected_answer_keywords": [
+        "لم أجد",
+        "غير كاف"
+      ],
+      "actual_answer": "",
+      "retrieved_chunk_previews": []
+    },
+    {
+      "case_id": "out_of_scope_history",
+      "category": "out_of_scope",
+      "endpoint": "chat/ask",
+      "question": "من هو نابليون بونابرت؟",
+      "expected_behavior": "out_of_scope",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.08,
+      "expected_answer_keywords": [
+        "لم أجد",
+        "غير كاف"
+      ],
+      "actual_answer": "لم أجد معلومات كافية في مقاطع الكتاب المتاحة، لذلك لا أستطيع تقديم إجابة منسوبة إلى الكتاب.",
+      "retrieved_chunk_previews": []
+    },
+    {
+      "case_id": "out_of_scope_history",
+      "category": "out_of_scope",
+      "endpoint": "homework/solve-text",
+      "question": "من هو نابليون بونابرت؟",
+      "expected_behavior": "out_of_scope",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.08,
+      "expected_answer_keywords": [
+        "لم أجد",
+        "غير كاف"
+      ],
+      "actual_answer": "لم أجد معلومات كافية في مقاطع الكتاب المتاحة، لذلك لا أستطيع تقديم إجابة منسوبة إلى الكتاب.",
+      "retrieved_chunk_previews": []
+    },
+    {
+      "case_id": "out_of_scope_programming",
+      "category": "out_of_scope",
+      "endpoint": "rag/retrieve",
+      "question": "اكتب لي حلقة for بلغة بايثون.",
+      "expected_behavior": "out_of_scope",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.0,
+      "expected_answer_keywords": [
+        "لم أجد",
+        "غير كاف"
+      ],
+      "actual_answer": "",
+      "retrieved_chunk_previews": []
+    },
+    {
+      "case_id": "out_of_scope_programming",
+      "category": "out_of_scope",
+      "endpoint": "chat/ask",
+      "question": "اكتب لي حلقة for بلغة بايثون.",
+      "expected_behavior": "out_of_scope",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.08,
+      "expected_answer_keywords": [
+        "لم أجد",
+        "غير كاف"
+      ],
+      "actual_answer": "لم أجد معلومات كافية في مقاطع الكتاب المتاحة، لذلك لا أستطيع تقديم إجابة منسوبة إلى الكتاب.",
+      "retrieved_chunk_previews": []
+    },
+    {
+      "case_id": "out_of_scope_programming",
+      "category": "out_of_scope",
+      "endpoint": "homework/solve-text",
+      "question": "اكتب لي حلقة for بلغة بايثون.",
+      "expected_behavior": "out_of_scope",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.08,
+      "expected_answer_keywords": [
+        "لم أجد",
+        "غير كاف"
+      ],
+      "actual_answer": "لم أجد معلومات كافية في مقاطع الكتاب المتاحة، لذلك لا أستطيع تقديم إجابة منسوبة إلى الكتاب.",
+      "retrieved_chunk_previews": []
+    },
+    {
+      "case_id": "out_of_scope_sports",
+      "category": "out_of_scope",
+      "endpoint": "rag/retrieve",
+      "question": "ما نتيجة مباراة كرة القدم اليوم؟",
+      "expected_behavior": "out_of_scope",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.0,
+      "expected_answer_keywords": [
+        "لم أجد",
+        "غير كاف"
+      ],
+      "actual_answer": "",
+      "retrieved_chunk_previews": []
+    },
+    {
+      "case_id": "out_of_scope_sports",
+      "category": "out_of_scope",
+      "endpoint": "chat/ask",
+      "question": "ما نتيجة مباراة كرة القدم اليوم؟",
+      "expected_behavior": "out_of_scope",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.08,
+      "expected_answer_keywords": [
+        "لم أجد",
+        "غير كاف"
+      ],
+      "actual_answer": "لم أجد معلومات كافية في مقاطع الكتاب المتاحة، لذلك لا أستطيع تقديم إجابة منسوبة إلى الكتاب.",
+      "retrieved_chunk_previews": []
+    },
+    {
+      "case_id": "out_of_scope_sports",
+      "category": "out_of_scope",
+      "endpoint": "homework/solve-text",
+      "question": "ما نتيجة مباراة كرة القدم اليوم؟",
+      "expected_behavior": "out_of_scope",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.08,
+      "expected_answer_keywords": [
+        "لم أجد",
+        "غير كاف"
+      ],
+      "actual_answer": "لم أجد معلومات كافية في مقاطع الكتاب المتاحة، لذلك لا أستطيع تقديم إجابة منسوبة إلى الكتاب.",
+      "retrieved_chunk_previews": []
+    },
+    {
+      "case_id": "out_of_scope_astronomy",
+      "category": "out_of_scope",
+      "endpoint": "rag/retrieve",
+      "question": "كم يبعد القمر عن الأرض؟",
+      "expected_behavior": "out_of_scope",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.0,
+      "expected_answer_keywords": [
+        "لم أجد",
+        "غير كاف"
+      ],
+      "actual_answer": "",
+      "retrieved_chunk_previews": []
+    },
+    {
+      "case_id": "out_of_scope_astronomy",
+      "category": "out_of_scope",
+      "endpoint": "chat/ask",
+      "question": "كم يبعد القمر عن الأرض؟",
+      "expected_behavior": "out_of_scope",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.08,
+      "expected_answer_keywords": [
+        "لم أجد",
+        "غير كاف"
+      ],
+      "actual_answer": "لم أجد معلومات كافية في مقاطع الكتاب المتاحة، لذلك لا أستطيع تقديم إجابة منسوبة إلى الكتاب.",
+      "retrieved_chunk_previews": []
+    },
+    {
+      "case_id": "out_of_scope_astronomy",
+      "category": "out_of_scope",
+      "endpoint": "homework/solve-text",
+      "question": "كم يبعد القمر عن الأرض؟",
+      "expected_behavior": "out_of_scope",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.08,
+      "expected_answer_keywords": [
+        "لم أجد",
+        "غير كاف"
+      ],
+      "actual_answer": "لم أجد معلومات كافية في مقاطع الكتاب المتاحة، لذلك لا أستطيع تقديم إجابة منسوبة إلى الكتاب.",
+      "retrieved_chunk_previews": []
+    },
+    {
+      "case_id": "out_of_scope_poetry",
+      "category": "out_of_scope",
+      "endpoint": "rag/retrieve",
+      "question": "اكتب قصيدة عن البحر.",
+      "expected_behavior": "out_of_scope",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.0,
+      "expected_answer_keywords": [
+        "لم أجد",
+        "غير كاف"
+      ],
+      "actual_answer": "",
+      "retrieved_chunk_previews": []
+    },
+    {
+      "case_id": "out_of_scope_poetry",
+      "category": "out_of_scope",
+      "endpoint": "chat/ask",
+      "question": "اكتب قصيدة عن البحر.",
+      "expected_behavior": "out_of_scope",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.08,
+      "expected_answer_keywords": [
+        "لم أجد",
+        "غير كاف"
+      ],
+      "actual_answer": "لم أجد معلومات كافية في مقاطع الكتاب المتاحة، لذلك لا أستطيع تقديم إجابة منسوبة إلى الكتاب.",
+      "retrieved_chunk_previews": []
+    },
+    {
+      "case_id": "out_of_scope_poetry",
+      "category": "out_of_scope",
+      "endpoint": "homework/solve-text",
+      "question": "اكتب قصيدة عن البحر.",
+      "expected_behavior": "out_of_scope",
+      "passed": true,
+      "failures": [],
+      "confidence": 0.08,
+      "expected_answer_keywords": [
+        "لم أجد",
+        "غير كاف"
+      ],
+      "actual_answer": "لم أجد معلومات كافية في مقاطع الكتاب المتاحة، لذلك لا أستطيع تقديم إجابة منسوبة إلى الكتاب.",
+      "retrieved_chunk_previews": []
+    }
+  ]
+}

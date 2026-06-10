@@ -121,3 +121,159 @@ export interface BalanceResult {
   balanced: string;
   explanation: string[];
 }
+
+export type LessonQualityReport = {
+  lessonId: string;
+  status: 'ready' | 'needs_review' | 'blocked';
+  score: number;
+  checks: {
+    hasTitle: boolean;
+    hasSourcePages: boolean;
+    hasEnoughText: boolean;
+    hasObjectives: boolean;
+    hasKeyTerms: boolean;
+    hasDefinitions: boolean;
+    hasEquations: boolean;
+    hasExamples: boolean;
+    hasExercises: boolean;
+    hasValidRagChunks: boolean;
+    hasNoOcrGaps: boolean;
+  };
+  issues: string[];
+};
+
+export type LessonKnowledgeUnit = {
+  lessonId: string;
+  chapterId: string;
+  titleAr: string;
+  pageStart: number;
+  pageEnd: number;
+  objectives: string[];
+  keyTerms: {
+    term: string;
+    definition: string;
+    sourcePage: number;
+  }[];
+  definitions: {
+    concept: string;
+    explanation: string;
+    sourcePage: number;
+  }[];
+  equations: {
+    latex: string;
+    explanation: string;
+    variables: string[];
+    sourcePage: number;
+  }[];
+  examples: {
+    question: string;
+    solution: string;
+    sourcePage: number;
+  }[];
+  experiments: {
+    title: string;
+    materials: string[];
+    steps: string[];
+    conclusion: string;
+    sourcePage: number;
+  }[];
+  exercises: {
+    question: string;
+    answer?: string;
+    sourcePage: number;
+  }[];
+  ragChunkIds: string[];
+  qualityScore: number;
+};
+
+export type QuizGenerationConfig = {
+  mode:
+    | 'single_lesson'
+    | 'selected_lessons'
+    | 'chapter'
+    | 'weak_lessons'
+    | 'study_plan'
+    | 'exam_review';
+  lessonIds: string[];
+  chapterIds?: string[];
+  questionsPerLesson: number;
+  totalQuestions?: number;
+  difficulty: 'easy' | 'medium' | 'hard' | 'mixed';
+  questionTypes: Array<
+    | 'mcq'
+    | 'true_false'
+    | 'fill_blank'
+    | 'short_answer'
+    | 'calculation'
+    | 'equation_balancing'
+  >;
+  includeSourcePage: boolean;
+  requireExplanation: boolean;
+  avoidDuplicateQuestions: boolean;
+};
+
+export type GeneratedQuizQuestion = {
+  id: string;
+  lessonId: string;
+  chapterId: string;
+  questionType:
+    | 'mcq'
+    | 'true_false'
+    | 'fill_blank'
+    | 'short_answer'
+    | 'calculation'
+    | 'equation_balancing';
+  question: string;
+  options?: string[];
+  correctAnswer: string;
+  correctOptionIndex?: number;
+  explanation: string;
+  difficulty: 'easy' | 'medium' | 'hard';
+  sourcePage: number;
+  sourceChunkId?: string;
+};
+
+export type FlashcardGenerationConfig = {
+  mode:
+    | 'single_lesson'
+    | 'selected_lessons'
+    | 'chapter'
+    | 'weak_lessons'
+    | 'study_plan';
+  lessonIds: string[];
+  cardsPerLesson: number;
+  cardTypes: Array<
+    | 'definition'
+    | 'formula'
+    | 'term'
+    | 'reaction'
+    | 'comparison'
+    | 'experiment'
+    | 'common_mistake'
+  >;
+  difficulty: 'easy' | 'medium' | 'hard' | 'mixed';
+  includeSourcePage: boolean;
+  spacedRepetitionEnabled: boolean;
+};
+
+export type GeneratedFlashcard = {
+  id: string;
+  lessonId: string;
+  chapterId: string;
+  front: string;
+  back: string;
+  cardType:
+    | 'definition'
+    | 'formula'
+    | 'term'
+    | 'reaction'
+    | 'comparison'
+    | 'experiment'
+    | 'common_mistake';
+  difficulty: 'easy' | 'medium' | 'hard';
+  sourcePage: number;
+  sourceChunkId?: string;
+  reviewState: 'new' | 'learning' | 'known' | 'review';
+  nextReviewAt?: string;
+};
+

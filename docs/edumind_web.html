@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduMind — معلم الكيمياء الذكي</title>
+<style>
+/* ─── tokens ─── */
+:root{
+  --bg:#0A1628;--bg2:#0F1F38;--bg3:#162444;--bg4:#1E3050;--bg5:#243858;
+  --acc:#4E87F5;--teal:#00D4A8;--gold:#F5A623;--coral:#FF6B6B;--pur:#8B7FE8;
+  --t1:#F0F4FF;--t2:#7A90B5;--t3:#4A607D;
+  --r:10px;--rs:7px;--sidebar:220px;
+  --font:'Segoe UI',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font);background:var(--bg);color:var(--t1);font-size:14px;overflow-x:hidden}
+button{font-family:var(--font);cursor:pointer}
+input,textarea,select{font-family:var(--font)}
+a{text-decoration:none;color:inherit}
+
+/* ─── page management ─── */
+.page{display:none}
+.page.active{display:block}
+
+/* ─── app shell ─── */
+.shell{display:none;min-height:100vh}
+.shell.active{display:flex}
+
+/* ─── sidebar ─── */
+.sidebar{width:var(--sidebar);background:var(--bg2);border-left:1px solid var(--bg4);display:flex;flex-direction:column;position:fixed;top:0;right:0;height:100vh;z-index:100}
+.sb-logo{padding:20px 18px 16px;border-bottom:1px solid var(--bg4);display:flex;align-items:center;gap:10px}
+.sb-logo-mark{width:32px;height:32px;border-radius:8px;background:var(--acc);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;flex-shrink:0}
+.sb-logo-text{font-size:16px;font-weight:600;color:var(--t1)}
+.sb-logo-sub{font-size:10px;color:var(--t2);margin-top:1px}
+.sb-nav{flex:1;padding:12px 10px;overflow-y:auto}
+.sb-section{font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;padding:0 8px;margin:14px 0 5px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--rs);cursor:pointer;color:var(--t2);transition:all .12s;margin-bottom:2px;font-size:13px}
+.nav-item:hover{background:var(--bg3);color:var(--t1)}
+.nav-item.active{background:rgba(78,135,245,.15);color:var(--acc);font-weight:500}
+.nav-item.active .nav-icon{opacity:1}
+.nav-icon{font-size:16px;width:20px;text-align:center;opacity:.5;flex-shrink:0}
+.nav-item.active .nav-icon{opacity:1}
+.nav-badge{margin-right:auto;background:var(--coral);color:#fff;font-size:10px;font-weight:600;padding:2px 6px;border-radius:10px}
+.sb-bottom{padding:14px 10px;border-top:1px solid var(--bg4)}
+.sb-user{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--rs);cursor:pointer}
+.sb-user:hover{background:var(--bg3)}
+.sb-avatar{width:32px;height:32px;border-radius:50%;background:var(--acc);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#fff;flex-shrink:0}
+.sb-uname{font-size:12px;font-weight:500;color:var(--t1)}
+.sb-urole{font-size:10px;color:var(--t2)}
+
+/* ─── main content ─── */
+.main{margin-right:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{height:56px;background:var(--bg2);border-bottom:1px solid var(--bg4);display:flex;align-items:center;padding:0 24px;gap:14px;position:sticky;top:0;z-index:50}
+.topbar-title{font-size:16px;font-weight:600;color:var(--t1);flex:1}
+.topbar-search{display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--bg4);border-radius:var(--rs);padding:7px 12px;width:220px}
+.topbar-search input{background:none;border:none;outline:none;color:var(--t1);font-size:13px;width:100%}
+.topbar-search input::placeholder{color:var(--t3)}
+.topbar-actions{display:flex;align-items:center;gap:8px}
+.icon-btn{width:36px;height:36px;border-radius:var(--rs);border:1px solid var(--bg4);background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:background .12s;position:relative}
+.icon-btn:hover{background:var(--bg4)}
+.notif-dot{width:8px;height:8px;border-radius:50%;background:var(--coral);position:absolute;top:5px;right:5px;border:2px solid var(--bg2)}
+.content{padding:24px;flex:1}
+
+/* ─── cards / common ─── */
+.card{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--r);padding:18px}
+.card-sm{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--rs);padding:14px}
+.section-title{font-size:15px;font-weight:600;color:var(--t1);margin-bottom:4px}
+.section-sub{font-size:12px;color:var(--t2);margin-bottom:16px}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.row{display:flex;align-items:center;gap:12px}
+.flex{display:flex;align-items:center}
+.spacer{flex:1}
+.gap2{gap:8px}.gap3{gap:12px}.gap4{gap:16px}
+.bx{display:inline-flex;align-items:center;font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;gap:4px}
+.b-teal{background:rgba(0,212,168,.12);color:var(--teal)}
+.b-blue{background:rgba(78,135,245,.12);color:#85B7EB}
+.b-gold{background:rgba(245,166,35,.12);color:var(--gold)}
+.b-red{background:rgba(255,107,107,.12);color:var(--coral)}
+.b-pur{background:rgba(139,127,232,.12);color:#B0A8F5}
+.b-gray{background:var(--bg3);color:var(--t2)}
+
+/* ─── buttons ─── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:var(--rs);font-size:14px;font-weight:500;cursor:pointer;transition:all .12s;padding:10px 20px}
+.btn-primary{background:var(--acc);color:#fff}
+.btn-primary:hover{background:#3d77ea}
+.btn-secondary{background:rgba(78,135,245,.12);color:var(--acc);border:1px solid rgba(78,135,245,.25)}
+.btn-secondary:hover{background:rgba(78,135,245,.2)}
+.btn-ghost{background:transparent;color:var(--t2);border:1px solid var(--bg4)}
+.btn-ghost:hover{background:var(--bg3);color:var(--t1)}
+.btn-teal{background:var(--teal);color:#033A2E}
+.btn-teal:hover{background:#00bfa0}
+.btn-sm{padding:7px 14px;font-size:12px}
+.btn-full{width:100%}
+
+/* ─── progress bar ─── */
+.pb-track{background:var(--bg4);border-radius:4px;overflow:hidden}
+.pb-fill{border-radius:4px;transition:width .3s}
+.pb-h4{height:4px}.pb-h6{height:6px}.pb-h8{height:8px}
+
+/* ─── stat card ─── */
+.stat-card{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--r);padding:16px}
+.stat-val{font-size:26px;font-weight:700;line-height:1;margin-bottom:4px}
+.stat-label{font-size:12px;color:var(--t2)}
+.stat-delta{font-size:11px;margin-top:5px}
+.stat-delta.up{color:var(--teal)}.stat-delta.down{color:var(--coral)}
+
+/* ─── form elements ─── */
+.form-group{margin-bottom:16px}
+.form-label{font-size:12px;font-weight:500;color:var(--t2);margin-bottom:6px;display:block}
+.form-input{width:100%;background:var(--bg3);border:1px solid var(--bg4);border-radius:var(--rs);padding:10px 13px;font-size:14px;color:var(--t1);outline:none;transition:border .12s}
+.form-input:focus{border-color:var(--acc)}
+.form-input::placeholder{color:var(--t3)}
+.form-select{width:100%;background:var(--bg3);border:1px solid var(--bg4);border-radius:var(--rs);padding:10px 13px;font-size:14px;color:var(--t1);outline:none;appearance:none}
+
+/* ─── divider ─── */
+.divider{height:1px;background:var(--bg4);margin:16px 0}
+.divider-text{display:flex;align-items:center;gap:12px;margin:16px 0;font-size:12px;color:var(--t3)}
+.divider-text::before,.divider-text::after{content:'';flex:1;height:1px;background:var(--bg4)}
+
+/* ════════════════════════════════════════
+   LANDING PAGE
+════════════════════════════════════════ */
+#page-landing{background:var(--bg);min-height:100vh}
+.land-nav{display:flex;align-items:center;padding:18px 48px;border-bottom:1px solid var(--bg4);background:rgba(10,22,40,.9);backdrop-filter:blur(10px);position:sticky;top:0;z-index:100}
+.land-logo{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:700}
+.land-logo-mark{width:36px;height:36px;background:var(--acc);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff}
+.land-nav-links{display:flex;gap:28px;margin-right:auto;font-size:14px;color:var(--t2)}
+.land-nav-links a:hover{color:var(--t1)}
+.land-nav-btns{display:flex;gap:10px}
+
+/* Hero */
+.hero{position:relative;min-height:88vh;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden;padding:0 24px}
+canvas#mol{position:absolute;inset:0;width:100%;height:100%;opacity:.35}
+.hero-inner{position:relative;z-index:2;max-width:680px}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:7px;background:rgba(78,135,245,.1);border:1px solid rgba(78,135,245,.25);border-radius:20px;padding:5px 14px;font-size:12px;color:#85B7EB;margin-bottom:22px}
+.hero-eyebrow-dot{width:6px;height:6px;border-radius:50%;background:var(--acc);animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+.hero h1{font-size:52px;font-weight:800;line-height:1.1;color:var(--t1);margin-bottom:18px;letter-spacing:-.5px}
+.hero h1 .acc{background:linear-gradient(135deg,var(--acc),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:17px;color:var(--t2);line-height:1.65;margin-bottom:30px}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.hero-stats{display:flex;gap:32px;justify-content:center;margin-top:44px;padding-top:44px;border-top:1px solid var(--bg4)}
+.hs{text-align:center}
+.hs-num{font-size:28px;font-weight:700;color:var(--t1)}
+.hs-lbl{font-size:12px;color:var(--t2);margin-top:3px}
+
+/* Features section */
+.features{padding:80px 48px}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1100px;margin:0 auto}
+.feat-card{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--r);padding:24px;transition:border-color .2s}
+.feat-card:hover{border-color:rgba(78,135,245,.4)}
+.feat-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px}
+.feat-title{font-size:15px;font-weight:600;margin-bottom:7px}
+.feat-desc{font-size:13px;color:var(--t2);line-height:1.6}
+
+/* CTA section */
+.cta-section{padding:80px 48px;text-align:center}
+.cta-card{background:linear-gradient(135deg,var(--bg2),var(--bg3));border:1px solid var(--bg4);border-radius:16px;padding:56px;max-width:700px;margin:0 auto}
+.cta-card h2{font-size:34px;font-weight:700;margin-bottom:12px}
+.cta-card p{color:var(--t2);font-size:16px;margin-bottom:28px}
+
+/* Land footer */
+.land-footer{padding:28px 48px;border-top:1px solid var(--bg4);display:flex;align-items:center;justify-content:space-between;color:var(--t3);font-size:13px}
+
+/* ════════════════════════════════════════
+   AUTH PAGES (login / register)
+════════════════════════════════════════ */
+.auth-shell{min-height:100vh;display:grid;grid-template-columns:1fr 1fr}
+.auth-left{background:var(--bg2);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:48px;position:relative;overflow:hidden}
+.auth-left-deco{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(78,135,245,.08),transparent 60%)}
+.auth-left-inner{position:relative;z-index:2;max-width:360px;width:100%}
+.auth-logo{display:flex;align-items:center;gap:10px;margin-bottom:36px}
+.auth-logo-mark{width:40px;height:40px;background:var(--acc);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;font-weight:700}
+.auth-logo-text{font-size:20px;font-weight:700}
+.auth-h1{font-size:26px;font-weight:700;margin-bottom:6px}
+.auth-sub{font-size:14px;color:var(--t2);margin-bottom:28px;line-height:1.5}
+.auth-social{display:flex;gap:10px;margin-bottom:20px}
+.social-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;border-radius:var(--rs);border:1px solid var(--bg4);background:var(--bg3);font-size:13px;color:var(--t1);cursor:pointer;transition:background .12s}
+.social-btn:hover{background:var(--bg4)}
+.auth-switch{text-align:center;font-size:13px;color:var(--t2)}
+.auth-switch a{color:var(--acc);cursor:pointer}
+.auth-right{background:var(--bg);display:flex;align-items:center;justify-content:center;padding:48px;position:relative;overflow:hidden}
+.auth-right-content{text-align:center;max-width:400px}
+.auth-right-title{font-size:30px;font-weight:700;margin-bottom:14px;color:var(--t1)}
+.auth-right-desc{font-size:15px;color:var(--t2);line-height:1.7}
+.auth-preview-cards{display:flex;flex-direction:column;gap:10px;margin-top:32px;text-align:right}
+.apc{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--rs);padding:12px 14px;display:flex;align-items:center;gap:10px;font-size:13px}
+.apc-icon{font-size:18px;width:28px;text-align:center;flex-shrink:0}
+.apc-text{color:var(--t2)}
+.apc-text strong{color:var(--t1);display:block;font-size:13px;margin-bottom:1px}
+
+/* ════════════════════════════════════════
+   DASHBOARD
+════════════════════════════════════════ */
+.dash-hero{background:linear-gradient(135deg,rgba(78,135,245,.12),rgba(0,212,168,.06));border:1px solid rgba(78,135,245,.2);border-radius:var(--r);padding:22px 24px;margin-bottom:20px;display:flex;align-items:center;gap:20px}
+.dash-hero-text h2{font-size:20px;font-weight:700;margin-bottom:4px}
+.dash-hero-text p{font-size:13px;color:var(--t2)}
+.dash-hero-btn{margin-right:auto}
+.dash-mission{background:var(--acc);border-radius:var(--r);padding:18px 20px;display:flex;align-items:center;gap:16px;margin-bottom:20px}
+.dm-icon{font-size:28px;flex-shrink:0}
+.dm-label{font-size:11px;font-weight:600;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.dm-title{font-size:15px;font-weight:600;color:#fff;margin-bottom:2px}
+.dm-meta{font-size:12px;color:rgba(255,255,255,.7)}
+.progress-ring-wrap{display:flex;align-items:center;gap:6px;font-size:12px}
+
+/* Week strip */
+.week-strip{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--r);padding:16px;margin-bottom:20px}
+.ws-label{font-size:12px;font-weight:500;color:var(--t2);margin-bottom:12px;display:flex;justify-content:space-between}
+.ws-label a{color:var(--acc);cursor:pointer;font-size:12px}
+.ws-days{display:flex;gap:6px}
+.wd{flex:1;border-radius:8px;padding:8px 4px;text-align:center;cursor:pointer}
+.wd-n{font-size:10px;color:var(--t3)}.wd-d{font-size:13px;font-weight:500;color:var(--t2)}
+.wd-b{height:3px;border-radius:2px;margin:4px auto 0;width:70%}
+.wd.done{background:rgba(0,212,168,.08)}.wd.done .wd-d{color:var(--teal)}.wd.done .wd-b{background:var(--teal)}
+.wd.today{background:var(--acc)}.wd.today .wd-n{color:rgba(255,255,255,.6)}.wd.today .wd-d{color:#fff}.wd.today .wd-b{background:rgba(255,255,255,.5)}
+.wd.upcoming .wd-b{background:var(--bg4)}
+.wd.exam{background:rgba(245,166,35,.1)}.wd.exam .wd-d{color:var(--gold)}.wd.exam .wd-b{background:var(--gold)}
+
+/* Rec row */
+.rec-scroll{display:flex;gap:12px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.rec-scroll::-webkit-scrollbar{display:none}
+.rec-card{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--r);padding:14px;min-width:190px;flex-shrink:0;cursor:pointer;transition:border-color .12s}
+.rec-card:hover{border-color:rgba(78,135,245,.4)}
+.rc-tag{font-size:10px;font-weight:600;margin-bottom:6px}
+.rc-t{font-size:13px;font-weight:500;color:var(--t1);margin-bottom:3px}
+.rc-s{font-size:11px;color:var(--t2)}
+
+/* ════════════════════════════════════════
+   LESSONS
+════════════════════════════════════════ */
+.chapter-card{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--r);margin-bottom:12px;overflow:hidden}
+.ch-header{padding:16px 18px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.ch-header:hover{background:rgba(255,255,255,.02)}
+.ch-num{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.ch-info{flex:1}
+.ch-title{font-size:14px;font-weight:600;color:var(--t1);margin-bottom:2px}
+.ch-meta{font-size:12px;color:var(--t2)}
+.ch-pct{font-size:14px;font-weight:600}
+.ch-bar{height:3px;background:var(--bg4)}
+.ch-fill{height:100%;transition:width .3s}
+.lesson-row{padding:12px 18px;border-top:1px solid var(--bg4);display:flex;align-items:center;gap:12px;cursor:pointer;transition:background .12s}
+.lesson-row:hover{background:rgba(255,255,255,.02)}
+.lr-dot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
+.lr-done{background:rgba(0,212,168,.15);color:var(--teal)}
+.lr-today{background:var(--acc);color:#fff}
+.lr-hard{background:rgba(255,107,107,.12);color:var(--coral)}
+.lr-up{background:var(--bg4);color:var(--t3)}
+.lr-info{flex:1}
+.lr-title{font-size:13px;font-weight:500;color:var(--t1);margin-bottom:2px}
+.lr-meta{font-size:11px;color:var(--t2)}
+.lr-actions{display:flex;gap:6px}
+
+/* ════════════════════════════════════════
+   ASK AI / CHAT
+════════════════════════════════════════ */
+.chat-shell{display:flex;height:calc(100vh - 56px);gap:0}
+.chat-sidebar{width:240px;border-left:1px solid var(--bg4);background:var(--bg2);display:flex;flex-direction:column;flex-shrink:0}
+.cs-header{padding:14px;border-bottom:1px solid var(--bg4);display:flex;align-items:center;gap:8px}
+.cs-header h3{font-size:13px;font-weight:600;flex:1}
+.session-list{flex:1;overflow-y:auto;padding:10px}
+.session-item{padding:10px 11px;border-radius:var(--rs);cursor:pointer;margin-bottom:3px;transition:background .12s}
+.session-item:hover{background:var(--bg3)}
+.session-item.active{background:rgba(78,135,245,.12);border-left:3px solid var(--acc)}
+.si-title{font-size:12px;font-weight:500;color:var(--t1);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.si-date{font-size:11px;color:var(--t3)}
+.chat-main{flex:1;display:flex;flex-direction:column}
+.chat-header{padding:12px 18px;border-bottom:1px solid var(--bg4);background:var(--bg2);display:flex;align-items:center;gap:10px}
+.chat-avatar{width:34px;height:34px;border-radius:50%;background:var(--acc);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+.chat-info{flex:1}
+.chat-name{font-size:14px;font-weight:600;color:var(--t1)}
+.chat-status{font-size:11px;color:var(--teal);display:flex;align-items:center;gap:4px}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--teal)}
+.style-chip{background:var(--bg3);border:1px solid var(--bg5);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:500;color:var(--teal);cursor:pointer}
+.suggest-chips{display:flex;gap:7px;padding:10px 18px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--bg4);background:var(--bg)}
+.suggest-chips::-webkit-scrollbar{display:none}
+.suggest-chip{background:var(--bg3);border:1px solid var(--bg4);border-radius:20px;padding:6px 14px;font-size:12px;color:var(--t2);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .12s}
+.suggest-chip:hover{border-color:var(--acc);color:var(--acc)}
+.messages{flex:1;overflow-y:auto;padding:20px 18px;display:flex;flex-direction:column;gap:16px}
+.msg-ai{align-self:flex-start;max-width:72%}
+.msg-user{align-self:flex-end;max-width:68%}
+.bub-ai{background:var(--bg2);border:1px solid var(--bg4);border-radius:12px;border-bottom-right-radius:3px;padding:12px 14px;font-size:14px;color:var(--t1);line-height:1.65}
+.bub-user{background:var(--acc);border-radius:12px;border-bottom-left-radius:3px;padding:12px 14px;font-size:14px;color:#fff;line-height:1.6}
+.msg-time{font-size:11px;color:var(--t3);margin-top:5px}
+.msg-user .msg-time{text-align:left}
+.stag{display:inline-flex;align-items:center;font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px;background:rgba(0,212,168,.1);color:var(--teal);margin-bottom:7px}
+.fmt-row{display:flex;gap:5px;margin-top:8px}
+.fmt-btn{width:28px;height:28px;border-radius:6px;background:var(--bg3);border:1px solid var(--bg4);display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;transition:all .12s}
+.fmt-btn:hover{background:var(--bg4)}.fmt-btn.on{background:rgba(78,135,245,.15);border-color:var(--acc)}
+.fb-row{display:flex;gap:6px;margin-top:7px}
+.fb-btn{font-size:11px;padding:4px 10px;border-radius:6px;border:1px solid var(--bg4);background:none;color:var(--t2);cursor:pointer;font-family:var(--font)}
+.fb-btn:hover{background:var(--bg3)}
+.source-grid{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.src-card{background:var(--bg3);border:1px solid var(--bg4);border-radius:var(--rs);padding:8px 11px;font-size:11px;display:flex;align-items:center;gap:6px;cursor:pointer}
+.src-card:hover{border-color:var(--acc)}
+.src-num{font-size:14px;font-weight:700;color:var(--teal)}
+.src-info .si{font-weight:600;color:var(--t1)}
+.src-info .sp{color:var(--t2)}
+.typing{display:flex;gap:4px;align-items:center;padding:12px 14px;background:var(--bg2);border:1px solid var(--bg4);border-radius:12px;border-bottom-right-radius:3px;width:60px}
+.tdot{width:6px;height:6px;border-radius:50%;background:var(--t3);animation:td .9s ease-in-out infinite}
+.tdot:nth-child(2){animation-delay:.18s}.tdot:nth-child(3){animation-delay:.36s}
+@keyframes td{0%,100%{transform:translateY(0)}40%{transform:translateY(-5px)}}
+.chat-input-wrap{padding:14px 18px;border-top:1px solid var(--bg4);background:var(--bg2)}
+.chat-input-bar{display:flex;align-items:flex-end;gap:8px;background:var(--bg3);border:1px solid var(--bg4);border-radius:var(--r);padding:10px 14px;transition:border .12s}
+.chat-input-bar:focus-within{border-color:rgba(78,135,245,.5)}
+.chat-textarea{flex:1;background:none;border:none;outline:none;resize:none;font-size:14px;color:var(--t1);line-height:1.5;max-height:120px;font-family:var(--font)}
+.chat-textarea::placeholder{color:var(--t3)}
+.chat-send{width:36px;height:36px;border-radius:8px;background:var(--acc);border:none;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;cursor:pointer;flex-shrink:0;transition:background .12s}
+.chat-send:hover{background:#3d77ea}
+.chat-tools{display:flex;gap:6px;margin-top:10px;align-items:center}
+.ct-btn{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:6px;border:1px solid var(--bg4);background:none;font-size:12px;color:var(--t2);cursor:pointer;font-family:var(--font)}
+.ct-btn:hover{background:var(--bg3)}
+.confidence-bar{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--t2);padding:6px 14px;background:var(--bg3);border-radius:6px;margin-top:6px}
+
+/* ════════════════════════════════════════
+   STUDY PLAN
+════════════════════════════════════════ */
+.sp-form-card{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--r);padding:24px;margin-bottom:20px}
+.chapters-check-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+.ch-check{background:var(--bg3);border:1px solid var(--bg4);border-radius:var(--rs);padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .12s}
+.ch-check:hover{border-color:var(--acc)}
+.ch-check.selected{border-color:var(--acc);background:rgba(78,135,245,.08)}
+.ch-check-box{width:18px;height:18px;border-radius:4px;border:1.5px solid var(--bg5);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px}
+.ch-check.selected .ch-check-box{background:var(--acc);border-color:var(--acc);color:#fff}
+.ch-check-name{font-size:13px;font-weight:500;flex:1}
+.ch-check-diff{font-size:10px;padding:2px 7px;border-radius:10px}
+
+/* Plan timeline */
+.plan-timeline{display:flex;flex-direction:column;gap:8px}
+.pt-row{display:grid;grid-template-columns:100px 16px 1fr;gap:0 14px;align-items:start}
+.pt-date{font-size:12px;font-weight:500;color:var(--t2);text-align:right;padding-top:4px}
+.pt-spine{display:flex;flex-direction:column;align-items:center}
+.pt-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.pt-line{flex:1;width:2px;background:var(--bg4);margin-top:3px;min-height:28px}
+.pt-row:last-child .pt-line{display:none}
+.pt-content{padding:0 0 18px}
+.ptc-lesson{font-size:13px;font-weight:500;color:var(--t1);margin-bottom:2px}
+.ptc-meta{font-size:11px;color:var(--t2)}
+
+/* ════════════════════════════════════════
+   QUIZZES
+════════════════════════════════════════ */
+.quiz-question-card{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--r);padding:24px;margin-bottom:16px}
+.q-number{font-size:12px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.q-text{font-size:16px;font-weight:500;color:var(--t1);line-height:1.6;margin-bottom:18px}
+.q-options{display:flex;flex-direction:column;gap:10px}
+.q-opt{display:flex;align-items:center;gap:12px;padding:13px 16px;border-radius:var(--rs);border:1px solid var(--bg4);cursor:pointer;transition:all .12s;font-size:14px;color:var(--t1)}
+.q-opt:hover{border-color:rgba(78,135,245,.4);background:rgba(78,135,245,.05)}
+.q-opt.selected{border-color:var(--acc);background:rgba(78,135,245,.1)}
+.q-opt.correct{border-color:var(--teal);background:rgba(0,212,168,.08);color:var(--teal)}
+.q-opt.wrong{border-color:var(--coral);background:rgba(255,107,107,.08);color:var(--coral)}
+.q-opt-letter{width:28px;height:28px;border-radius:6px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.q-opt.selected .q-opt-letter{background:var(--acc);color:#fff}
+.q-opt.correct .q-opt-letter{background:var(--teal);color:#033A2E}
+.q-opt.wrong .q-opt-letter{background:var(--coral);color:#fff}
+
+/* Quiz progress header */
+.quiz-header{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--r);padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:16px}
+.qh-progress{flex:1}
+.qh-nums{font-size:13px;font-weight:500;margin-bottom:6px;display:flex;justify-content:space-between}
+
+/* ════════════════════════════════════════
+   FLASHCARDS
+════════════════════════════════════════ */
+.fc-wrap{display:flex;flex-direction:column;align-items:center;gap:24px}
+.fc-card-outer{perspective:1000px;width:560px;height:320px;cursor:pointer}
+.fc-card-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,0,.2,1)}
+.fc-card-outer.flipped .fc-card-inner{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.fc-front{background:var(--bg2);border:1px solid var(--bg4)}
+.fc-back{background:linear-gradient(135deg,rgba(78,135,245,.15),rgba(0,212,168,.08));border:1px solid rgba(78,135,245,.35);transform:rotateY(180deg)}
+.fc-face-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);margin-bottom:16px}
+.fc-term{font-size:22px;font-weight:700;text-align:center;line-height:1.3;color:var(--t1)}
+.fc-def{font-size:15px;text-align:center;line-height:1.7;color:var(--t2)}
+.fc-hint{font-size:12px;color:var(--t3);margin-top:14px}
+.fc-actions{display:flex;gap:14px}
+.fc-action{width:56px;height:56px;border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;transition:all .15s}
+.fc-known{background:rgba(0,212,168,.15);color:var(--teal)}.fc-known:hover{background:rgba(0,212,168,.25)}
+.fc-review{background:rgba(255,107,107,.12);color:var(--coral)}.fc-review:hover{background:rgba(255,107,107,.2)}
+.fc-skip{background:var(--bg3);color:var(--t2)}.fc-skip:hover{background:var(--bg4)}
+.fc-counter{font-size:13px;color:var(--t2);display:flex;gap:20px}
+.fc-counter span{font-weight:600;color:var(--t1)}
+
+/* ════════════════════════════════════════
+   PROFILE
+════════════════════════════════════════ */
+.profile-header-card{background:linear-gradient(135deg,var(--bg2),var(--bg3));border:1px solid var(--bg4);border-radius:var(--r);padding:28px;margin-bottom:20px;display:flex;align-items:center;gap:24px}
+.profile-avatar{width:80px;height:80px;border-radius:50%;border:3px solid var(--acc);background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:700;color:var(--acc);flex-shrink:0}
+.profile-info h2{font-size:22px;font-weight:700;margin-bottom:4px}
+.profile-info p{font-size:14px;color:var(--t2);margin-bottom:10px}
+.level-bar-wrap{width:200px}
+.level-lbl{font-size:12px;color:var(--t2);margin-top:4px;display:flex;justify-content:space-between}
+.badges-grid{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.badge-item{background:var(--bg3);border:1px solid var(--bg4);border-radius:var(--rs);padding:10px 14px;text-align:center;min-width:80px}
+.badge-icon{font-size:22px;margin-bottom:4px}
+.badge-name{font-size:11px;font-weight:600;color:var(--t1)}
+.badge-earned{font-size:10px;color:var(--t2)}
+.badge-item.locked{opacity:.4}
+.settings-section{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--r);overflow:hidden}
+.setting-row{display:flex;align-items:center;padding:14px 18px;border-bottom:1px solid var(--bg4);gap:12px}
+.setting-row:last-child{border-bottom:none}
+.sr-icon-wrap{width:32px;height:32px;border-radius:8px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.sr-label{flex:1;font-size:14px;font-weight:500}
+.sr-value{font-size:13px;color:var(--t2)}
+.sr-arrow{color:var(--t3);font-size:14px}
+.toggle{width:40px;height:22px;border-radius:11px;background:var(--acc);position:relative;cursor:pointer;flex-shrink:0}
+.toggle::after{content:'';width:18px;height:18px;border-radius:50%;background:#fff;position:absolute;top:2px;right:2px;transition:right .2s}
+.toggle.off{background:var(--bg4)}.toggle.off::after{right:20px}
+
+/* ════════════════════════════════════════
+   RAG SEARCH PAGE
+════════════════════════════════════════ */
+.rag-search-bar{display:flex;gap:10px;margin-bottom:20px}
+.rag-input{flex:1;background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--r);padding:13px 16px;font-size:15px;color:var(--t1);outline:none;transition:border .12s}
+.rag-input:focus{border-color:rgba(78,135,245,.5)}
+.rag-input::placeholder{color:var(--t3)}
+.rag-result-card{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--r);padding:18px;margin-bottom:12px;cursor:pointer;transition:border-color .12s}
+.rag-result-card:hover{border-color:rgba(78,135,245,.4)}
+.rag-result-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.rag-result-source{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--t2)}
+.rag-result-score{font-size:12px;font-weight:600;padding:3px 8px;border-radius:10px;background:rgba(0,212,168,.1);color:var(--teal)}
+.rag-result-content{font-size:14px;color:var(--t1);line-height:1.7;margin-bottom:10px}
+.rag-result-page{font-size:12px;color:var(--t3)}
+.rag-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.rf{padding:6px 14px;border-radius:20px;border:1px solid var(--bg4);background:none;font-size:12px;color:var(--t2);cursor:pointer;font-family:var(--font)}
+.rf.on{background:rgba(78,135,245,.12);border-color:var(--acc);color:var(--acc)}
+.rag-insights{background:rgba(78,135,245,.05);border:1px solid rgba(78,135,245,.15);border-radius:var(--rs);padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--t2);line-height:1.6}
+.rag-insights strong{color:var(--t1)}
+
+/* utility */
+.mt4{margin-top:16px}.mt3{margin-top:12px}.mt2{margin-top:8px}.mb4{margin-bottom:16px}.mb3{margin-bottom:12px}
+.text-sm{font-size:12px}.text-xs{font-size:11px}.text-muted{color:var(--t2)}.text-teal{color:var(--teal)}.text-acc{color:var(--acc)}.text-gold{color:var(--gold)}
+.fw6{font-weight:600}.fw7{font-weight:700}
+</style>
+</head>
+<body>
+
+<!-- ════════════ LANDING PAGE ════════════ -->
+<div class="page active" id="page-landing">
+  <div id="page-landing-inner">
+    <nav class="land-nav">
+      <div class="land-logo"><div class="land-logo-mark">⚗</div><span>EduMind</span></div>
+      <div class="land-nav-links" style="margin-right:auto;margin-left:48px">
+        <a href="#">المميزات</a><a href="#">كيف يعمل</a><a href="#">الأسعار</a><a href="#">من نحن</a>
+      </div>
+      <div class="land-nav-btns">
+        <button class="btn btn-ghost" onclick="showPage('login')">تسجيل الدخول</button>
+        <button class="btn btn-primary" onclick="showPage('register')">ابدأ مجاناً</button>
+      </div>
+    </nav>
+
+    <div class="hero">
+      <canvas id="mol"></canvas>
+      <div class="hero-inner">
+        <div class="hero-eyebrow"><div class="hero-eyebrow-dot"></div>مدعوم بالذكاء الاصطناعي · الصف التاسع</div>
+        <h1>تعلّم الكيمياء<br><span class="acc">بأسلوبك الخاص</span></h1>
+        <p>مدرّس كيمياء ذكي يفهم طريقة تعلّمك، يشرح بأمثلة من اهتماماتك، ويبني معك خطة دراسية تناسب موعد امتحانك.</p>
+        <div class="hero-btns">
+          <button class="btn btn-primary" style="padding:13px 28px;font-size:15px" onclick="showApp('dashboard')">ابدأ التعلم مجاناً ←</button>
+          <button class="btn btn-ghost" style="padding:13px 28px;font-size:15px">شاهد كيف يعمل ▶</button>
+        </div>
+        <div class="hero-stats">
+          <div class="hs"><div class="hs-num">2,400+</div><div class="hs-lbl">طالب نشط</div></div>
+          <div class="hs"><div class="hs-num">96</div><div class="hs-lbl">صفحة من الكتاب</div></div>
+          <div class="hs"><div class="hs-num">87%</div><div class="hs-lbl">متوسط درجات الاختبارات</div></div>
+          <div class="hs"><div class="hs-num">6</div><div class="hs-lbl">أساليب تعليمية</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="features">
+      <div style="text-align:center;max-width:600px;margin:0 auto 48px">
+        <div style="font-size:12px;font-weight:600;color:var(--acc);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">كل ما تحتاجه</div>
+        <h2 style="font-size:34px;font-weight:700;margin-bottom:12px">مميزات صُمِّمت للطالب السوري</h2>
+        <p style="font-size:15px;color:var(--t2);line-height:1.65">نظام كامل من الشرح الذكي إلى الاختبارات إلى خطة الدراسة — كل شيء في مكان واحد</p>
+      </div>
+      <div class="features-grid">
+        <div class="feat-card"><div class="feat-icon" style="background:rgba(78,135,245,.12)">🤖</div><div class="feat-title">محادثة AI ذكية</div><div class="feat-desc">اسأل أي سؤال كيميائي واحصل على إجابة مستندة إلى الكتاب المدرسي، بالأسلوب الذي تختاره أنت.</div></div>
+        <div class="feat-card"><div class="feat-icon" style="background:rgba(0,212,168,.1)">📖</div><div class="feat-title">RAG من الكتاب</div><div class="feat-desc">كل إجابة مستخرجة من كتاب كيمياء الصف التاسع مع ذكر الصفحة والمصدر بدقة.</div></div>
+        <div class="feat-card"><div class="feat-icon" style="background:rgba(245,166,35,.1)">📅</div><div class="feat-title">خطة دراسة ذكية</div><div class="feat-desc">أدخل تاريخ الامتحان وحدد الفصول — يبني الذكاء الاصطناعي جدولاً يومياً يناسبك.</div></div>
+        <div class="feat-card"><div class="feat-icon" style="background:rgba(255,107,107,.1)">📝</div><div class="feat-title">اختبارات تكيّفية</div><div class="feat-desc">أسئلة متنوعة تتكيّف مع ضعفك وتساعدك على تحسين نقاطك قبل الامتحان.</div></div>
+        <div class="feat-card"><div class="feat-icon" style="background:rgba(139,127,232,.1)">🃏</div><div class="feat-title">بطاقات تعليمية</div><div class="feat-desc">بطاقات ذكية تعتمد خوارزمية التكرار المتباعد لترسيخ المعلومات في الذاكرة.</div></div>
+        <div class="feat-card"><div class="feat-icon" style="background:rgba(78,135,245,.12)">📊</div><div class="feat-title">تتبع التقدم</div><div class="feat-desc">لوحة تحكم شاملة تُظهر تقدمك الأسبوعي، نقاط ضعفك، والتوصيات المخصصة لك.</div></div>
+      </div>
+    </div>
+
+    <div class="cta-section">
+      <div class="cta-card">
+        <div style="font-size:40px;margin-bottom:16px">⚗️</div>
+        <h2>ابدأ رحلتك مع الكيمياء اليوم</h2>
+        <p>انضم إلى آلاف الطلاب الذين يدرسون بشكل أذكى، لا أصعب.</p>
+        <button class="btn btn-teal" style="font-size:15px;padding:13px 32px" onclick="showPage('register')">إنشاء حساب مجاني ←</button>
+      </div>
+    </div>
+
+    <footer class="land-footer">
+      <div class="land-logo" style="font-size:15px"><div class="land-logo-mark" style="width:28px;height:28px;font-size:13px">⚗</div>EduMind</div>
+      <span>© 2025 EduMind · كيمياء الصف التاسع · المنهج السوري</span>
+      <div style="display:flex;gap:18px"><a style="color:var(--t3)">الخصوصية</a><a style="color:var(--t3)">الشروط</a></div>
+    </footer>
+  </div>
+</div>
+
+<!-- ════════════ LOGIN PAGE ════════════ -->
+<div class="page" id="page-login">
+  <div class="auth-shell">
+    <div class="auth-left">
+      <div class="auth-left-deco"></div>
+      <div class="auth-left-inner">
+        <div class="auth-logo"><div class="auth-logo-mark">⚗</div><div><div style="font-size:18px;font-weight:700">EduMind</div><div style="font-size:11px;color:var(--t2)">معلم الكيمياء الذكي</div></div></div>
+        <div class="auth-h1">مرحباً بعودتك 👋</div>
+        <div class="auth-sub">سجّل الدخول لمتابعة رحلتك التعليمية في الكيمياء</div>
+        <div class="auth-social">
+          <div class="social-btn">🔵 Google</div>
+          <div class="social-btn">🍎 Apple</div>
+        </div>
+        <div class="divider-text">أو بالبريد الإلكتروني</div>
+        <div class="form-group"><label class="form-label">البريد الإلكتروني</label><input class="form-input" type="email" placeholder="student@example.com" dir="ltr"></div>
+        <div class="form-group"><label class="form-label">كلمة المرور</label><input class="form-input" type="password" placeholder="••••••••" dir="ltr"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;font-size:13px">
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;color:var(--t2)"><input type="checkbox" style="accent-color:var(--acc)"> تذكّرني</label>
+          <a style="color:var(--acc);cursor:pointer">نسيت كلمة المرور؟</a>
+        </div>
+        <button class="btn btn-primary btn-full" style="padding:12px" onclick="showApp('dashboard')">تسجيل الدخول ←</button>
+        <div class="divider"></div>
+        <div class="auth-switch">ليس لديك حساب؟ <a onclick="showPage('register')">إنشاء حساب جديد</a> · <a onclick="showPage('landing')" style="color:var(--t3)">العودة للرئيسية</a></div>
+      </div>
+    </div>
+    <div class="auth-right">
+      <div class="auth-right-content">
+        <div style="font-size:48px;margin-bottom:16px">🧪</div>
+        <div class="auth-right-title">استمر من حيث توقّفت</div>
+        <div class="auth-right-desc">كل جلسة تعليمية محفوظة. تقدمك مستمر. امتحانك يقترب — نحن جاهزون معك.</div>
+        <div class="auth-preview-cards">
+          <div class="apc"><div class="apc-icon">🔥</div><div class="apc-text"><strong>سلسلة 7 أيام</strong>لا تكسر السلسلة — درست 7 أيام متتالية!</div></div>
+          <div class="apc"><div class="apc-icon">📊</div><div class="apc-text"><strong>36% من المنهج</strong>تقدّمت أكثر من 60% من زملائك هذا الأسبوع.</div></div>
+          <div class="apc"><div class="apc-icon">📅</div><div class="apc-text"><strong>الامتحان بعد 13 يوم</strong>خطتك الدراسية جاهزة ومنظّمة يوماً بيوم.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ REGISTER PAGE ════════════ -->
+<div class="page" id="page-register">
+  <div class="auth-shell">
+    <div class="auth-left">
+      <div class="auth-left-deco"></div>
+      <div class="auth-left-inner">
+        <div class="auth-logo"><div class="auth-logo-mark">⚗</div><div><div style="font-size:18px;font-weight:700">EduMind</div><div style="font-size:11px;color:var(--t2)">معلم الكيمياء الذكي</div></div></div>
+        <div style="display:flex;gap:6px;margin-bottom:24px">
+          <div style="flex:1;height:4px;border-radius:2px;background:var(--acc)"></div>
+          <div style="flex:1;height:4px;border-radius:2px;background:var(--acc)"></div>
+          <div style="flex:1;height:4px;border-radius:2px;background:var(--bg4)"></div>
+        </div>
+        <div class="auth-h1">إنشاء حسابك ✨</div>
+        <div class="auth-sub">خطوتان فقط ونبدأ رحلة التعلّم</div>
+        <div class="grid2" style="gap:10px;margin-bottom:14px">
+          <div class="form-group" style="margin:0"><label class="form-label">الاسم الأول</label><input class="form-input" placeholder="أحمد"></div>
+          <div class="form-group" style="margin:0"><label class="form-label">اسم العائلة</label><input class="form-input" placeholder="الرشيد"></div>
+        </div>
+        <div class="form-group"><label class="form-label">البريد الإلكتروني</label><input class="form-input" type="email" placeholder="student@example.com" dir="ltr"></div>
+        <div class="form-group"><label class="form-label">كلمة المرور</label><input class="form-input" type="password" placeholder="8 أحرف على الأقل" dir="ltr"></div>
+        <div class="form-group">
+          <label class="form-label">أسلوب التعلّم المفضّل</label>
+          <select class="form-select">
+            <option>شرح مبسّط جداً — مناسب للمبتدئ</option>
+            <option>شرح خطوة بخطوة</option>
+            <option>أمثلة من الحياة اليومية</option>
+            <option>شرح أكاديمي للامتحان</option>
+            <option>ملخص سريع</option>
+            <option>مرئي — صور ورسوم</option>
+          </select>
+        </div>
+        <button class="btn btn-primary btn-full" style="padding:12px" onclick="showApp('dashboard')">إنشاء الحساب والبدء ←</button>
+        <div class="divider"></div>
+        <div class="auth-switch">لديك حساب؟ <a onclick="showPage('login')">تسجيل الدخول</a> · <a onclick="showPage('landing')" style="color:var(--t3)">العودة</a></div>
+      </div>
+    </div>
+    <div class="auth-right">
+      <div class="auth-right-content">
+        <div style="font-size:48px;margin-bottom:16px">🎯</div>
+        <div class="auth-right-title">خُصِّص لك — تماماً</div>
+        <div class="auth-right-desc">نستخدم اهتماماتك وأسلوب تعلّمك لنجعل كل شرح يتحدث بلغتك الخاصة.</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:28px;text-align:right">
+          <div class="apc" style="flex-direction:column;align-items:flex-start;gap:5px"><div style="font-size:22px">⚽</div><div style="font-size:13px;font-weight:600;color:var(--t1)">كرة القدم</div><div style="font-size:11px;color:var(--t2)">روابط كيميائية = تمريرة</div></div>
+          <div class="apc" style="flex-direction:column;align-items:flex-start;gap:5px"><div style="font-size:22px">🍕</div><div style="font-size:13px;font-weight:600;color:var(--t1)">الطبخ</div><div style="font-size:11px;color:var(--t2)">التفاعلات = وصفة</div></div>
+          <div class="apc" style="flex-direction:column;align-items:flex-start;gap:5px"><div style="font-size:22px">🎮</div><div style="font-size:13px;font-weight:600;color:var(--t1)">الألعاب</div><div style="font-size:11px;color:var(--t2)">العناصر = شخصيات</div></div>
+          <div class="apc" style="flex-direction:column;align-items:flex-start;gap:5px"><div style="font-size:22px">🎵</div><div style="font-size:13px;font-weight:600;color:var(--t1)">الموسيقى</div><div style="font-size:11px;color:var(--t2)">الذرات = نوتة موسيقية</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ APP SHELL ════════════ -->
+<div class="shell" id="app-shell">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-mark">⚗</div>
+      <div><div class="sb-logo-text">EduMind</div><div style="font-size:10px;color:var(--t2)">الصف التاسع · كيمياء</div></div>
+    </div>
+    <div class="sb-nav">
+      <div class="sb-section">التعلّم</div>
+      <div class="nav-item active" id="nav-dashboard" onclick="showSection('dashboard')"><span class="nav-icon">🏠</span> الرئيسية</div>
+      <div class="nav-item" id="nav-lessons" onclick="showSection('lessons')"><span class="nav-icon">📚</span> الدروس</div>
+      <div class="nav-item" id="nav-studyplan" onclick="showSection('studyplan')"><span class="nav-icon">📅</span> خطة الدراسة</div>
+      <div class="sb-section">الأدوات</div>
+      <div class="nav-item" id="nav-askai" onclick="showSection('askai')"><span class="nav-icon">✨</span> اسأل الذكاء الاصطناعي<span class="nav-badge">3</span></div>
+      <div class="nav-item" id="nav-rag" onclick="showSection('rag')"><span class="nav-icon">🔍</span> البحث في الكتاب</div>
+      <div class="nav-item" id="nav-quizzes" onclick="showSection('quizzes')"><span class="nav-icon">📝</span> الاختبارات</div>
+      <div class="nav-item" id="nav-flashcards" onclick="showSection('flashcards')"><span class="nav-icon">🃏</span> البطاقات التعليمية</div>
+      <div class="sb-section">الحساب</div>
+      <div class="nav-item" id="nav-profile" onclick="showSection('profile')"><span class="nav-icon">👤</span> الملف الشخصي</div>
+      <div class="nav-item" onclick="showPage('landing')"><span class="nav-icon" style="opacity:.5">🔒</span> <span style="color:var(--t3)">تسجيل الخروج</span></div>
+    </div>
+    <div class="sb-bottom">
+      <div class="sb-user" onclick="showSection('profile')">
+        <div class="sb-avatar">أ</div>
+        <div><div class="sb-uname">أحمد الرشيد</div><div class="sb-urole">Scholar · 1,240 XP</div></div>
+        <span style="color:var(--t3);font-size:12px">⚙</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topbar-title">الرئيسية</div>
+      <div class="topbar-search"><span style="color:var(--t3)">🔍</span><input placeholder="ابحث في الدروس والمواضيع..."></div>
+      <div class="topbar-actions">
+        <div class="icon-btn">🔔<div class="notif-dot"></div></div>
+        <div class="icon-btn">❓</div>
+        <div class="sb-avatar" style="cursor:pointer" onclick="showSection('profile')">أ</div>
+      </div>
+    </div>
+
+    <div class="content" id="app-content">
+
+<!-- ─── DASHBOARD ─── -->
+<div id="section-dashboard">
+  <div class="dash-hero">
+    <div>
+      <div style="font-size:13px;color:var(--t2);margin-bottom:3px">صباح الخير،</div>
+      <h2>أحمد الرشيد 👋</h2>
+      <p>لديك درس مجدول اليوم والامتحان بعد 13 يوماً. هيّا نبدأ!</p>
+    </div>
+    <div class="dash-hero-btn"></div>
+    <div style="display:flex;gap:8px">
+      <div class="bx b-gold">🔥 سلسلة 7 أيام</div>
+      <div class="bx b-blue">Scholar · 1,240 XP</div>
+    </div>
+  </div>
+
+  <div class="dash-mission">
+    <div class="dm-icon">📖</div>
+    <div style="flex:1">
+      <div class="dm-label">مهمة اليوم</div>
+      <div class="dm-title">الروابط التساهمية مقابل الأيونية</div>
+      <div class="dm-meta">الفصل الثاني · متوسط · 25 دقيقة تقديراً</div>
+    </div>
+    <button class="btn btn-ghost" style="color:#fff;border-color:rgba(255,255,255,.25);flex-shrink:0" onclick="showSection('lessons')">ابدأ الآن ←</button>
+  </div>
+
+  <div class="grid4" style="margin-bottom:20px">
+    <div class="stat-card"><div class="stat-val" style="color:var(--teal)">36%</div><div class="stat-label">المنهج المنجز</div><div class="stat-delta up">↑ 8% هذا الأسبوع</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--gold)">13</div><div class="stat-label">يوماً للامتحان</div><div class="stat-delta up">أنت في المسار الصحيح</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--acc)">87%</div><div class="stat-label">متوسط الاختبارات</div><div class="stat-delta up">↑ 5% عن الأسبوع الماضي</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--pur)">46</div><div class="stat-label">بطاقة محفوظة</div><div class="stat-delta up">↑ 12 هذا الأسبوع</div></div>
+  </div>
+
+  <div class="week-strip">
+    <div class="ws-label">هذا الأسبوع <a onclick="showSection('studyplan')">الخطة الكاملة</a></div>
+    <div class="ws-days">
+      <div class="wd done"><div class="wd-n">إث</div><div class="wd-d">12</div><div class="wd-b"></div></div>
+      <div class="wd done"><div class="wd-n">ثل</div><div class="wd-d">13</div><div class="wd-b"></div></div>
+      <div class="wd today"><div class="wd-n">أرب</div><div class="wd-d">14</div><div class="wd-b"></div></div>
+      <div class="wd upcoming"><div class="wd-n">خم</div><div class="wd-d">15</div><div class="wd-b"></div></div>
+      <div class="wd upcoming"><div class="wd-n">جم</div><div class="wd-d">16</div><div class="wd-b"></div></div>
+      <div class="wd upcoming"><div class="wd-n">سب</div><div class="wd-d">17</div><div class="wd-b"></div></div>
+      <div class="wd exam"><div class="wd-n">امتح</div><div class="wd-d">27</div><div class="wd-b"></div></div>
+    </div>
+  </div>
+
+  <div class="row mb3"><div class="section-title" style="margin:0">توصيات الذكاء الاصطناعي</div><div class="spacer"></div><a class="text-acc text-sm" onclick="showSection('lessons')">عرض الكل</a></div>
+  <div class="rec-scroll mb4">
+    <div class="rec-card"><div class="rc-tag" style="color:var(--coral)">🎯 موضوع ضعيف</div><div class="rc-t">موازنة المعادلات الكيميائية</div><div class="rc-s">40% في آخر اختبار</div></div>
+    <div class="rec-card"><div class="rc-tag" style="color:var(--gold)">📅 مجدول غداً</div><div class="rc-t">أنواع التفاعلات الكيميائية</div><div class="rc-s">في خطتك الدراسية</div></div>
+    <div class="rec-card"><div class="rc-tag" style="color:var(--teal)">🎬 ريل جديد</div><div class="rc-t">ما هو الـ pH؟ — 45 ثانية</div><div class="rc-s">يناسب أسلوبك المرئي</div></div>
+    <div class="rec-card"><div class="rc-tag" style="color:var(--pur)">🃏 مراجعة</div><div class="rc-t">بطاقات: الجدول الدوري</div><div class="rc-s">7 بطاقات تستحق المراجعة</div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card"><div class="row mb3"><div class="section-title" style="margin:0;font-size:14px">تقدم الفصول</div></div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div><div class="row mb4" style="margin-bottom:5px"><span style="font-size:13px;color:var(--t2)">الفصل 1 · التركيب الذري</span><span class="text-sm text-teal fw6">100%</span></div><div class="pb-track pb-h6"><div class="pb-fill" style="width:100%;background:var(--teal)"></div></div></div>
+        <div><div class="row mb4" style="margin-bottom:5px"><span style="font-size:13px;color:var(--t2)">الفصل 2 · الروابط الكيميائية</span><span class="text-sm text-acc fw6">20%</span></div><div class="pb-track pb-h6"><div class="pb-fill" style="width:20%;background:var(--acc)"></div></div></div>
+        <div><div class="row mb4" style="margin-bottom:5px"><span style="font-size:13px;color:var(--t2)">الفصل 3 · التفاعلات الكيميائية</span><span class="text-sm fw6" style="color:var(--t3)">0%</span></div><div class="pb-track pb-h6"><div class="pb-fill" style="width:0%;background:var(--gold)"></div></div></div>
+        <div><div class="row mb4" style="margin-bottom:5px"><span style="font-size:13px;color:var(--t2)">الفصل 4 · الأحماض والقواعد</span><span class="text-sm fw6" style="color:var(--t3)">0%</span></div><div class="pb-track pb-h6"><div class="pb-fill" style="width:0%;background:var(--coral)"></div></div></div>
+      </div>
+    </div>
+    <div class="card"><div class="row mb3"><div class="section-title" style="margin:0;font-size:14px">نشاط هذا الأسبوع</div></div>
+      <div style="display:flex;align-items:flex-end;gap:6px;height:90px">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px"><div style="flex:1;min-height:8px;background:rgba(0,212,168,.3);border-radius:3px 3px 0 0;width:100%;max-height:70px" style="height:40%"></div><div class="text-xs" style="color:var(--t3)">إث</div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px"><div style="flex:1;min-height:8px;background:rgba(0,212,168,.5);border-radius:3px 3px 0 0;width:100%;max-height:55px" style="height:60%"></div><div class="text-xs" style="color:var(--t3)">ثل</div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px"><div style="flex:1;min-height:8px;background:var(--acc);border-radius:3px 3px 0 0;width:100%;max-height:80px" style="height:90%"></div><div class="text-xs" style="color:var(--acc)">اليوم</div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px"><div style="flex:1;min-height:8px;background:rgba(78,135,245,.2);border-radius:3px 3px 0 0;width:100%;max-height:20px" style="height:0%"></div><div class="text-xs" style="color:var(--t3)">خم</div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px"><div style="flex:1;min-height:8px;background:rgba(78,135,245,.2);border-radius:3px 3px 0 0;width:100%;max-height:20px" style="height:0%"></div><div class="text-xs" style="color:var(--t3)">جم</div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px"><div style="flex:1;min-height:8px;background:rgba(78,135,245,.2);border-radius:3px 3px 0 0;width:100%;max-height:20px" style="height:0%"></div><div class="text-xs" style="color:var(--t3)">سب</div></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px"><div style="flex:1;min-height:8px;background:rgba(78,135,245,.2);border-radius:3px 3px 0 0;width:100%;max-height:20px" style="height:0%"></div><div class="text-xs" style="color:var(--t3)">أح</div></div>
+      </div>
+      <div class="divider"></div>
+      <div class="grid3" style="gap:8px;text-align:center">
+        <div><div class="fw7 text-teal" style="font-size:18px">4</div><div class="text-xs text-muted">دروس هذا الأسبوع</div></div>
+        <div><div class="fw7" style="font-size:18px">87%</div><div class="text-xs text-muted">متوسط الاختبارات</div></div>
+        <div><div class="fw7 text-gold" style="font-size:18px">94'</div><div class="text-xs text-muted">دقيقة مدة الدراسة</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── LESSONS ─── -->
+<div id="section-lessons" style="display:none">
+  <div class="row mb4">
+    <div><div class="section-title">الدروس</div><div class="section-sub">الكيمياء للصف التاسع · 4 فصول · 18 درساً</div></div>
+    <div class="spacer"></div>
+    <div class="row gap2">
+      <button class="btn btn-ghost btn-sm">كل الفصول ↕</button>
+      <button class="btn btn-primary btn-sm" onclick="showSection('studyplan')">📅 خطة الدراسة</button>
+    </div>
+  </div>
+
+  <div class="card mb4">
+    <div class="row" style="margin-bottom:8px"><span class="text-sm text-muted">التقدم الإجمالي</span><span class="text-sm text-acc fw6">36%</span></div>
+    <div class="pb-track pb-h8"><div class="pb-fill" style="width:36%;background:var(--acc)"></div></div>
+    <div class="grid4 mt3" style="gap:8px">
+      <div style="background:var(--bg3);border-radius:var(--rs);padding:8px;text-align:center"><div class="text-xs text-muted mb4">ف1 · الذري</div><div class="pb-track pb-h4" style="margin-top:4px"><div class="pb-fill" style="width:100%;background:var(--teal)"></div></div></div>
+      <div style="background:var(--bg3);border-radius:var(--rs);padding:8px;text-align:center"><div class="text-xs text-muted mb4">ف2 · الروابط</div><div class="pb-track pb-h4" style="margin-top:4px"><div class="pb-fill" style="width:20%;background:var(--acc)"></div></div></div>
+      <div style="background:var(--bg3);border-radius:var(--rs);padding:8px;text-align:center"><div class="text-xs text-muted mb4">ف3 · التفاعلات</div><div class="pb-track pb-h4" style="margin-top:4px"><div class="pb-fill" style="width:0%;background:var(--gold)"></div></div></div>
+      <div style="background:var(--bg3);border-radius:var(--rs);padding:8px;text-align:center"><div class="text-xs text-muted mb4">ف4 · الأحماض</div><div class="pb-track pb-h4" style="margin-top:4px"><div class="pb-fill" style="width:0%;background:var(--coral)"></div></div></div>
+    </div>
+  </div>
+
+  <div class="chapter-card">
+    <div class="ch-header"><div class="ch-num" style="background:rgba(0,212,168,.12);color:var(--teal)">1</div><div class="ch-info"><div class="ch-title">التركيب الذري</div><div class="ch-meta">4 دروس · سهل · مكتمل</div></div><div class="ch-pct" style="color:var(--teal)">100%</div></div>
+    <div class="ch-bar"><div class="ch-fill" style="width:100%;background:var(--teal)"></div></div>
+    <div class="lesson-row"><div class="lr-dot lr-done">✓</div><div class="lr-info"><div class="lr-title">مقدمة إلى الذرة</div><div class="lr-meta">سهل · 15 دقيقة</div></div><div class="lr-actions"><button class="btn btn-ghost btn-sm" onclick="showSection('flashcards')">بطاقات</button><button class="btn btn-ghost btn-sm" onclick="showSection('quizzes')">اختبار</button></div></div>
+    <div class="lesson-row"><div class="lr-dot lr-done">✓</div><div class="lr-info"><div class="lr-title">البروتونات والنيوترونات والإلكترونات</div><div class="lr-meta">سهل · 20 دقيقة</div></div><div class="lr-actions"><button class="btn btn-ghost btn-sm" onclick="showSection('flashcards')">بطاقات</button></div></div>
+    <div class="lesson-row"><div class="lr-dot lr-done">✓</div><div class="lr-info"><div class="lr-title">طبقات الإلكترونات</div><div class="lr-meta">سهل · 18 دقيقة</div></div></div>
+    <div class="lesson-row"><div class="lr-dot lr-done">✓</div><div class="lr-info"><div class="lr-title">النظائر والكتلة الذرية</div><div class="lr-meta">متوسط · 22 دقيقة</div></div></div>
+  </div>
+
+  <div class="chapter-card">
+    <div class="ch-header"><div class="ch-num" style="background:rgba(78,135,245,.12);color:var(--acc)">2</div><div class="ch-info"><div class="ch-title">الروابط الكيميائية</div><div class="ch-meta">5 دروس · متوسط</div></div><div class="ch-pct" style="color:var(--acc)">20%</div></div>
+    <div class="ch-bar"><div class="ch-fill" style="width:20%;background:var(--acc)"></div></div>
+    <div class="lesson-row"><div class="lr-dot lr-done">✓</div><div class="lr-info"><div class="lr-title">ما هي الرابطة الكيميائية؟</div><div class="lr-meta">متوسط · 20 دقيقة</div></div></div>
+    <div class="lesson-row" style="background:rgba(78,135,245,.04)"><div class="lr-dot lr-today">→</div><div class="lr-info"><div class="lr-title" style="color:var(--acc)">الروابط التساهمية مقابل الأيونية</div><div class="lr-meta">اليوم · متوسط · 25 دقيقة</div></div><button class="btn btn-primary btn-sm">ابدأ ←</button></div>
+    <div class="lesson-row"><div class="lr-dot lr-up">3</div><div class="lr-info"><div class="lr-title">الروابط الفلزية</div><div class="lr-meta">متوسط · 18 دقيقة</div></div></div>
+    <div class="lesson-row"><div class="lr-dot lr-hard">!</div><div class="lr-info"><div class="lr-title">القطبية وكهرسلبية العناصر</div><div class="lr-meta" style="color:var(--coral)">صعب · 30 دقيقة</div></div></div>
+    <div class="lesson-row"><div class="lr-dot lr-hard">!</div><div class="lr-info"><div class="lr-title">قوى التجاذب بين الجزيئات</div><div class="lr-meta" style="color:var(--coral)">صعب · 32 دقيقة</div></div></div>
+  </div>
+
+  <div class="chapter-card">
+    <div class="ch-header"><div class="ch-num" style="background:rgba(245,166,35,.1);color:var(--gold)">3</div><div class="ch-info"><div class="ch-title">التفاعلات الكيميائية</div><div class="ch-meta">5 دروس · صعب</div></div><div class="ch-pct" style="color:var(--t3)">0%</div></div>
+    <div class="ch-bar"><div class="ch-fill" style="width:0%;background:var(--gold)"></div></div>
+    <div class="lesson-row"><div class="lr-dot lr-up">1</div><div class="lr-info"><div class="lr-title">أنواع التفاعلات الكيميائية</div><div class="lr-meta">متوسط · 22 دقيقة</div></div></div>
+    <div class="lesson-row"><div class="lr-dot lr-hard">!</div><div class="lr-info"><div class="lr-title">موازنة المعادلات الكيميائية</div><div class="lr-meta" style="color:var(--coral)">صعب · 35 دقيقة · 🎯 ضعيف</div></div></div>
+  </div>
+
+  <div class="chapter-card">
+    <div class="ch-header"><div class="ch-num" style="background:rgba(255,107,107,.1);color:var(--coral)">4</div><div class="ch-info"><div class="ch-title">الأحماض والقواعد والأملاح</div><div class="ch-meta">4 دروس · متوسط</div></div><div class="ch-pct" style="color:var(--t3)">0%</div></div>
+    <div class="ch-bar"><div class="ch-fill" style="width:0%;background:var(--coral)"></div></div>
+    <div class="lesson-row"><div class="lr-dot lr-up">1</div><div class="lr-info"><div class="lr-title">ما هي الأحماض والقواعد؟</div><div class="lr-meta">متوسط · 20 دقيقة</div></div></div>
+    <div class="lesson-row"><div class="lr-dot lr-up">2</div><div class="lr-info"><div class="lr-title">قياس الـ pH</div><div class="lr-meta">متوسط · 25 دقيقة</div></div></div>
+  </div>
+</div>
+
+<!-- ─── ASK AI ─── -->
+<div id="section-askai" style="display:none;margin:-24px;height:calc(100vh - 56px)">
+  <div class="chat-shell">
+    <div style="flex:1;display:flex;flex-direction:column">
+      <div class="chat-header">
+        <div class="chat-avatar">AI</div>
+        <div class="chat-info"><div class="chat-name">مدرّس الكيمياء الذكي</div><div class="chat-status"><div class="status-dot"></div>متصل · يبحث في الكتاب المدرسي</div></div>
+        <div class="style-chip">🟡 أمثلة من الحياة</div>
+        <div class="row gap2">
+          <button class="btn btn-ghost btn-sm">📋 الجلسات</button>
+          <button class="btn btn-ghost btn-sm">⚙ الإعدادات</button>
+        </div>
+      </div>
+      <div class="suggest-chips">
+        <div class="suggest-chip">ما هي الاملاح؟</div>
+        <div class="suggest-chip">اشرح الرابطة التساهمية</div>
+        <div class="suggest-chip">ما هو الجدول الدوري؟</div>
+        <div class="suggest-chip">ما هي الأحماض والقواعد؟</div>
+        <div class="suggest-chip">احسب الكتلة المولية لـ H₂O</div>
+      </div>
+      <div class="messages">
+        <div class="msg-ai">
+          <div class="bub-ai"><div class="stag">🟡 أمثلة من الحياة</div><br>أهلاً وسهلاً! أنا مدرّسك في الكيمياء. اسألني أي سؤال وسأشرح لك بأمثلة من الحياة اليومية — كرة القدم، الطبخ، أي شيء تحبه!</div>
+          <div class="msg-time">الآن</div>
+        </div>
+        <div class="msg-user">
+          <div class="bub-user">ما هي الاملاح؟</div>
+          <div class="msg-time" style="text-align:left">الآن</div>
+        </div>
+        <div class="msg-ai">
+          <div class="bub-ai">
+            <div class="stag">🟡 أمثلة من الحياة · صفحة 47</div><br>
+            <strong>الأملاح</strong> هي مركبات كيميائية تتكوّن عندما يتفاعل حمض مع قاعدة — تخيّل أنك خلطت شيئاً حامضاً كالليمون مع شيء قاعدي كالصودا، فتحصل على شيء جديد تماماً هو الملح.<br><br>
+            مثال يومي: ملح الطعام (NaCl) = حمض الهيدروكلوريك (HCl) + هيدروكسيد الصوديوم (NaOH)
+            <div class="confidence-bar">
+              <span>دقة الإجابة:</span>
+              <div class="pb-track pb-h4" style="width:80px"><div class="pb-fill" style="width:75%;background:var(--teal)"></div></div>
+              <span style="color:var(--teal)">75%</span>
+            </div>
+          </div>
+          <div class="source-grid">
+            <div class="src-card"><div style="font-size:13px;font-weight:700;color:var(--teal)">47</div><div><div style="font-size:11px;font-weight:600;color:var(--t1)">كتاب مدرسي</div><div style="font-size:10px;color:var(--t2)">تعريف · 75%</div></div></div>
+            <div class="src-card"><div style="font-size:13px;font-weight:700;color:var(--acc)">41</div><div><div style="font-size:11px;font-weight:600;color:var(--t1)">كتاب مدرسي</div><div style="font-size:10px;color:var(--t2)">تعريف · 68%</div></div></div>
+          </div>
+          <div class="fmt-row">
+            <div class="fmt-btn on" title="نص">💬</div>
+            <div class="fmt-btn" title="صورة">🖼️</div>
+            <div class="fmt-btn" title="صوت">🎙️</div>
+            <div class="fmt-btn" title="فيديو">🎬</div>
+          </div>
+          <div class="fb-row">
+            <button class="fb-btn">✓ فهمت</button>
+            <button class="fb-btn">↻ أعد الشرح</button>
+          </div>
+          <div class="msg-time">الآن</div>
+        </div>
+        <div class="msg-ai"><div class="typing"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div></div></div>
+      </div>
+      <div class="chat-input-wrap">
+        <div class="chat-input-bar">
+          <textarea class="chat-textarea" placeholder="اسأل أي سؤال كيميائي..." rows="1"></textarea>
+          <button class="chat-send">↑</button>
+        </div>
+        <div class="chat-tools">
+          <button class="ct-btn">🎙️ تسجيل صوتي</button>
+          <button class="ct-btn">🖼️ إرفاق صورة</button>
+          <button class="ct-btn">📄 من الدرس الحالي</button>
+          <div class="spacer"></div>
+          <span class="text-xs text-muted">مصدر: الكتاب المدرسي السوري · الصف 9</span>
+        </div>
+      </div>
+    </div>
+    <div class="chat-sidebar">
+      <div class="cs-header"><h3>المحادثات</h3><button class="btn btn-primary btn-sm">+ جديدة</button></div>
+      <div class="session-list">
+        <div class="session-item active"><div class="si-title">الأملاح والتفاعلات</div><div class="si-date">اليوم · 3 رسائل</div></div>
+        <div class="session-item"><div class="si-title">شرح التركيب الذري</div><div class="si-date">أمس · 12 رسالة</div></div>
+        <div class="session-item"><div class="si-title">الروابط الكيميائية</div><div class="si-date">الثلاثاء · 8 رسائل</div></div>
+        <div class="session-item"><div class="si-title">ما هو الجدول الدوري؟</div><div class="si-date">الاثنين · 5 رسائل</div></div>
+        <div class="session-item"><div class="si-title">أنواع التفاعلات</div><div class="si-date">الأحد · 14 رسالة</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── RAG SEARCH ─── -->
+<div id="section-rag" style="display:none">
+  <div class="row mb4"><div><div class="section-title">البحث في الكتاب</div><div class="section-sub">بحث دلالي ذكي في كتاب كيمياء الصف التاسع</div></div></div>
+  <div class="rag-search-bar">
+    <input class="rag-input" placeholder="ابحث عن أي مفهوم كيميائي... مثال: ما هي الأملاح؟" dir="rtl">
+    <button class="btn btn-primary" style="padding:12px 24px;font-size:14px">بحث ←</button>
+  </div>
+  <div class="rag-filters">
+    <button class="rf on">كل المصادر</button>
+    <button class="rf">الكتاب المدرسي</button>
+    <button class="rf">كتاب الحلول</button>
+    <button class="rf">تعريفات</button>
+    <button class="rf">معادلات</button>
+    <button class="rf">تمارين</button>
+  </div>
+  <div class="rag-insights">
+    <strong>إجابة الذكاء الاصطناعي:</strong> الأملاح هي مركبات كيميائية تتكوّن من تفاعل حمض مع قاعدة في ما يعرف بتفاعل التعادل. من أشهر الأملاح ملح الطعام (NaCl). — <span style="color:var(--teal)">بثقة 75% · الصفحة 47</span>
+  </div>
+  <div class="row mb3"><span class="text-sm text-muted">6 نتائج موجودة</span><div class="spacer"></div><span class="text-xs text-muted">وقت البحث: 340ms</span></div>
+  <div class="rag-result-card">
+    <div class="rag-result-header">
+      <div class="rag-result-source">📖 كتاب مدرسي · صفحة 47</div>
+      <div class="bx b-teal">تعريف</div>
+      <div class="rag-result-score">75% تطابق</div>
+    </div>
+    <div class="rag-result-content">الأملاح مركبات كيميائية تتكوّن من تفاعل حمض مع قاعدة. الصيغة العامة: حمض + قاعدة → ملح + ماء. تتميز الأملاح بأنها عادةً مواد صلبة عند درجة حرارة الغرفة، ومعظمها قابل للذوبان في الماء.</div>
+    <div class="rag-result-page">الفصل 4 · الأحماض والقواعد والأملاح</div>
+  </div>
+  <div class="rag-result-card">
+    <div class="rag-result-header">
+      <div class="rag-result-source">📖 كتاب مدرسي · صفحة 41</div>
+      <div class="bx b-blue">نص</div>
+      <div class="rag-result-score">68% تطابق</div>
+    </div>
+    <div class="rag-result-content">تعتبر الأملاح من المركبات الأيونية التي تتكوّن من أيونات موجبة وسالبة. مثال: كلوريد الصوديوم NaCl يتكوّن من أيون الصوديوم Na⁺ وأيون الكلوريد Cl⁻.</div>
+    <div class="rag-result-page">الفصل 4 · الروابط الأيونية</div>
+  </div>
+  <div class="rag-result-card">
+    <div class="rag-result-header">
+      <div class="rag-result-source">📗 كتاب الحلول · صفحة 23</div>
+      <div class="bx b-gold">حل</div>
+      <div class="rag-result-score">61% تطابق</div>
+    </div>
+    <div class="rag-result-content">مثال محلول: عند تفاعل HCl مع NaOH نحصل على: HCl + NaOH → NaCl + H₂O. الملح الناتج هو NaCl (ملح الطعام) وهو ملح متعادل.</div>
+    <div class="rag-result-page">الفصل 3 · تفاعلات التعادل</div>
+  </div>
+</div>
+
+<!-- ─── STUDY PLAN ─── -->
+<div id="section-studyplan" style="display:none">
+  <div class="row mb4"><div><div class="section-title">خطة الدراسة</div><div class="section-sub">أدخل تاريخ امتحانك وسنبني لك جدولاً يومياً ذكياً</div></div><button class="btn btn-ghost btn-sm">تعديل الخطة الحالية ✏️</button></div>
+
+  <div class="grid2" style="gap:20px;align-items:start">
+    <div>
+      <div class="sp-form-card">
+        <div class="section-title" style="font-size:14px;margin-bottom:16px">إعداد خطتك</div>
+        <div class="form-group"><label class="form-label">تاريخ الامتحان</label><input class="form-input" type="date" value="2025-06-27" dir="ltr"></div>
+        <div class="form-group"><label class="form-label">ساعات الدراسة اليومية</label><select class="form-select"><option>ساعة واحدة</option><option selected>ساعتان</option><option>3 ساعات</option></select></div>
+        <div class="form-group">
+          <label class="form-label">الفصول المراد تغطيتها</label>
+          <div class="chapters-check-grid mt2">
+            <div class="ch-check selected"><div class="ch-check-box">✓</div><div><div class="ch-check-name">التركيب الذري</div><div class="ch-check-diff b-teal" style="font-size:10px;padding:1px 6px;border-radius:10px">سهل</div></div></div>
+            <div class="ch-check selected"><div class="ch-check-box">✓</div><div><div class="ch-check-name">الروابط الكيميائية</div><div class="ch-check-diff b-gold" style="font-size:10px;padding:1px 6px;border-radius:10px">متوسط</div></div></div>
+            <div class="ch-check selected"><div class="ch-check-box">✓</div><div><div class="ch-check-name">التفاعلات الكيميائية</div><div class="ch-check-diff b-red" style="font-size:10px;padding:1px 6px;border-radius:10px">صعب</div></div></div>
+            <div class="ch-check"><div class="ch-check-box"></div><div><div class="ch-check-name">الأحماض والقواعد</div><div class="ch-check-diff b-gold" style="font-size:10px;padding:1px 6px;border-radius:10px">متوسط</div></div></div>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-full" style="padding:12px">⚡ اصنع خطتي بالذكاء الاصطناعي</button>
+      </div>
+
+      <div class="card">
+        <div class="section-title" style="font-size:14px;margin-bottom:12px">تلميحات الخطة الذكية</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div class="row gap2" style="font-size:13px"><span>🎯</span><span style="color:var(--t2)">الفصول الصعبة تأخذ يومين بدلاً من يوم واحد تلقائياً</span></div>
+          <div class="row gap2" style="font-size:13px"><span>😌</span><span style="color:var(--t2)">يوم راحة كل 5 أيام دراسة لتثبيت المعلومات</span></div>
+          <div class="row gap2" style="font-size:13px"><span>🔁</span><span style="color:var(--t2)">آخر يومان قبل الامتحان: مراجعة ونقاط الضعف فقط</span></div>
+          <div class="row gap2" style="font-size:13px"><span>📱</span><span style="color:var(--t2)">تذكيرات يومية بالوقت الذي تختاره</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="row mb4"><div class="section-title" style="font-size:14px;margin:0">الخطة المقترحة</div><div class="bx b-teal" style="margin-right:auto">13 يوماً</div></div>
+      <div class="grid3 mb4" style="gap:8px;text-align:center">
+        <div style="background:var(--bg3);border-radius:var(--rs);padding:8px"><div class="fw7 text-acc" style="font-size:18px">18</div><div class="text-xs text-muted">درساً</div></div>
+        <div style="background:var(--bg3);border-radius:var(--rs);padding:8px"><div class="fw7 text-teal" style="font-size:18px">4</div><div class="text-xs text-muted">فصول</div></div>
+        <div style="background:var(--bg3);border-radius:var(--rs);padding:8px"><div class="fw7 text-gold" style="font-size:18px">2</div><div class="text-xs text-muted">أيام راحة</div></div>
+      </div>
+      <div class="plan-timeline">
+        <div class="pt-row"><div class="pt-date">الأربعاء<br><small>14 يونيو</small></div><div class="pt-spine"><div class="pt-dot" style="background:var(--acc)"></div><div class="pt-line"></div></div><div class="pt-content"><div class="ptc-lesson">الروابط التساهمية مقابل الأيونية</div><div class="ptc-meta">الفصل 2 · متوسط · 25 دقيقة</div></div></div>
+        <div class="pt-row"><div class="pt-date">الخميس<br><small>15 يونيو</small></div><div class="pt-spine"><div class="pt-dot" style="background:var(--acc)"></div><div class="pt-line"></div></div><div class="pt-content"><div class="ptc-lesson">الروابط الفلزية</div><div class="ptc-meta">الفصل 2 · متوسط · 18 دقيقة</div></div></div>
+        <div class="pt-row"><div class="pt-date">الجمعة<br><small>16 يونيو</small></div><div class="pt-spine"><div class="pt-dot" style="background:var(--coral)"></div><div class="pt-line"></div></div><div class="pt-content"><div class="ptc-lesson">القطبية وكهرسلبية العناصر</div><div class="ptc-meta" style="color:var(--coral)">الفصل 2 · صعب · 30 دقيقة</div></div></div>
+        <div class="pt-row"><div class="pt-date">السبت<br><small>17 يونيو</small></div><div class="pt-spine"><div class="pt-dot" style="background:var(--coral)"></div><div class="pt-line"></div></div><div class="pt-content"><div class="ptc-lesson">قوى التجاذب بين الجزيئات</div><div class="ptc-meta" style="color:var(--coral)">الفصل 2 · صعب · يومان</div></div></div>
+        <div class="pt-row"><div class="pt-date">الأحد<br><small>18 يونيو</small></div><div class="pt-spine"><div class="pt-dot" style="background:var(--t3)"></div><div class="pt-line"></div></div><div class="pt-content"><div class="ptc-lesson" style="color:var(--t2)">😌 يوم راحة</div><div class="ptc-meta">مراجعة البطاقات فقط</div></div></div>
+        <div class="pt-row"><div class="pt-date">الاثنين<br><small>19 يونيو</small></div><div class="pt-spine"><div class="pt-dot" style="background:var(--gold)"></div><div class="pt-line"></div></div><div class="pt-content"><div class="ptc-lesson">أنواع التفاعلات الكيميائية</div><div class="ptc-meta">الفصل 3 · متوسط · 22 دقيقة</div></div></div>
+        <div class="pt-row"><div class="pt-date">25–26 يونيو</div><div class="pt-spine"><div class="pt-dot" style="background:var(--pur)"></div><div class="pt-line"></div></div><div class="pt-content"><div class="ptc-lesson">مراجعة شاملة ونقاط الضعف</div><div class="ptc-meta" style="color:var(--pur)">موازنة المعادلات · القطبية</div></div></div>
+        <div class="pt-row"><div class="pt-date" style="color:var(--gold);font-weight:700">27 يونيو</div><div class="pt-spine"><div class="pt-dot" style="background:var(--gold)"></div></div><div class="pt-content"><div class="ptc-lesson" style="color:var(--gold);font-weight:600">🎓 يوم الامتحان</div></div></div>
+      </div>
+      <div class="divider"></div>
+      <div class="row gap2">
+        <button class="btn btn-primary" style="flex:1;padding:10px">تأكيد الخطة ✓</button>
+        <button class="btn btn-ghost" style="padding:10px">تعديل</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── QUIZZES ─── -->
+<div id="section-quizzes" style="display:none">
+  <div class="row mb4"><div><div class="section-title">الاختبارات</div><div class="section-sub">اختبر نفسك وتتبع نقاط ضعفك</div></div><button class="btn btn-primary btn-sm">📝 اختبار جديد</button></div>
+
+  <div class="quiz-header">
+    <div style="font-size:22px">📝</div>
+    <div class="qh-progress">
+      <div class="qh-nums"><span>السؤال 2 من 5</span><span style="color:var(--gold)">⏱ 4:32</span></div>
+      <div class="pb-track pb-h6"><div class="pb-fill" style="width:40%;background:var(--acc)"></div></div>
+    </div>
+    <div style="display:flex;gap:10px;font-size:13px"><span class="bx b-teal">✓ 1 صحيح</span><span class="bx b-gray">الدرجة: 10/10</span></div>
+  </div>
+
+  <div class="quiz-question-card">
+    <div class="q-number">السؤال 2 من 5 · الروابط الكيميائية</div>
+    <div class="q-text">ما هو نوع الرابطة الكيميائية التي تتكوّن بين ذرتين من الهيدروجين H₂؟</div>
+    <div class="q-options">
+      <div class="q-opt"><div class="q-opt-letter">أ</div>رابطة أيونية</div>
+      <div class="q-opt selected"><div class="q-opt-letter" style="background:var(--acc);color:#fff">ب</div>رابطة تساهمية</div>
+      <div class="q-opt"><div class="q-opt-letter">ج</div>رابطة فلزية</div>
+      <div class="q-opt"><div class="q-opt-letter">د</div>قوى فان دير فالز</div>
+    </div>
+    <div class="row mt4 gap2">
+      <button class="btn btn-ghost">⏭ تخطي</button>
+      <div class="spacer"></div>
+      <button class="btn btn-primary">تأكيد الإجابة ←</button>
+    </div>
+  </div>
+
+  <div class="grid3 mt4">
+    <div class="card text-muted" style="font-size:13px"><div class="fw6 text-t1 mb3" style="color:var(--t1);margin-bottom:6px">آخر الاختبارات</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="row"><span>التركيب الذري</span><span class="bx b-teal">95%</span></div>
+        <div class="row"><span>الروابط الكيميائية</span><span class="bx b-gold">72%</span></div>
+        <div class="row"><span>موازنة المعادلات</span><span class="bx b-red">40% ⚠</span></div>
+      </div>
+    </div>
+    <div class="card"><div class="fw6 mb3" style="color:var(--t1);margin-bottom:6px;font-size:13px">نقاط الضعف</div>
+      <div style="display:flex;flex-direction:column;gap:7px;font-size:12px">
+        <div class="row"><span style="color:var(--t2)">موازنة المعادلات</span><span class="bx b-red">40%</span></div>
+        <div class="row"><span style="color:var(--t2)">القطبية</span><span class="bx b-gold">62%</span></div>
+        <div class="row"><span style="color:var(--t2)">قوى فان دير فالز</span><span class="bx b-gold">67%</span></div>
+      </div>
+    </div>
+    <div class="card"><div class="fw6 mb3" style="color:var(--t1);margin-bottom:8px;font-size:13px">اختبار سريع</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <button class="btn btn-secondary btn-full btn-sm" onclick="showSection('quizzes')">🎯 على نقاط ضعفي</button>
+        <button class="btn btn-ghost btn-full btn-sm">📚 على الفصل الحالي</button>
+        <button class="btn btn-ghost btn-full btn-sm">🎲 اختبار عشوائي</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── FLASHCARDS ─── -->
+<div id="section-flashcards" style="display:none">
+  <div class="row mb4"><div><div class="section-title">البطاقات التعليمية</div><div class="section-sub">7 بطاقات جاهزة للمراجعة اليوم</div></div><div class="row gap2"><span class="bx b-teal">✓ 3 محفوظة</span><span class="bx b-red">↻ 4 للمراجعة</span></div></div>
+
+  <div class="fc-wrap">
+    <div class="fc-counter"><span>البطاقة <span>2</span> من <span>7</span></span><span>محفوظة: <span>1</span></span><span>للمراجعة: <span>1</span></span></div>
+
+    <div class="fc-card-outer" id="fcCard" onclick="flipCard()">
+      <div class="fc-card-inner">
+        <div class="fc-face fc-front">
+          <div class="fc-face-label">المصطلح</div>
+          <div class="fc-term">الرابطة التساهمية</div>
+          <div class="fc-hint">انقر للكشف عن التعريف ↩</div>
+        </div>
+        <div class="fc-face fc-back">
+          <div class="fc-face-label">التعريف</div>
+          <div class="fc-term" style="font-size:17px">الرابطة التي تتكوّن عن طريق مشاركة إلكترونات بين ذرتين أو أكثر من اللافلزات</div>
+          <div class="fc-def">مثال: H₂O — تشارك ذرة الأكسجين إلكترونين مع ذرتَي الهيدروجين</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fc-actions">
+      <button class="fc-action fc-review" title="للمراجعة مرة أخرى" onclick="nextCard('review')">✗</button>
+      <button class="fc-action fc-skip" title="تخطي" onclick="nextCard('skip')">→</button>
+      <button class="fc-action fc-known" title="أعرفها" onclick="nextCard('know')">✓</button>
+    </div>
+    <div style="font-size:12px;color:var(--t2);text-align:center">✗ للمراجعة &nbsp;·&nbsp; → تخطي &nbsp;·&nbsp; ✓ محفوظة</div>
+
+    <div class="grid3" style="width:560px;gap:8px">
+      <div class="card-sm text-muted text-sm"><div class="fw6" style="color:var(--t1);font-size:12px;margin-bottom:4px">الفصل الحالي</div>الروابط الكيميائية</div>
+      <div class="card-sm text-muted text-sm"><div class="fw6" style="color:var(--t1);font-size:12px;margin-bottom:4px">نوع البطاقة</div>تعريف مصطلح</div>
+      <div class="card-sm text-sm" style="display:flex;gap:6px"><button class="btn btn-secondary btn-sm" style="flex:1;padding:6px" onclick="showSection('askai')">💬 اسأل AI</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── PROFILE ─── -->
+<div id="section-profile" style="display:none">
+  <div class="profile-header-card">
+    <div class="profile-avatar">أ</div>
+    <div class="profile-info">
+      <h2>أحمد الرشيد</h2>
+      <p>كيمياء الصف التاسع · المنهج السوري</p>
+      <div class="row gap2 mb3"><div class="bx b-blue">Scholar</div><div class="bx b-gold">🔥 سلسلة 7 أيام</div><div class="bx b-teal">Pro</div></div>
+      <div class="level-bar-wrap">
+        <div class="pb-track pb-h6"><div class="pb-fill" style="width:65%;background:var(--acc)"></div></div>
+        <div class="level-lbl"><span>Scholar</span><span>1,240 / 2,500 XP → Expert</span></div>
+      </div>
+    </div>
+    <button class="btn btn-ghost btn-sm" style="margin-right:auto">تعديل الملف ✏️</button>
+  </div>
+
+  <div class="grid4 mb4">
+    <div class="stat-card"><div class="stat-val" style="color:var(--teal)">7</div><div class="stat-label">أيام السلسلة</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--acc)">18</div><div class="stat-label">درس مكتمل</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--gold)">87%</div><div class="stat-label">متوسط الاختبارات</div></div>
+    <div class="stat-card"><div class="stat-val" style="color:var(--pur)">46</div><div class="stat-label">بطاقة محفوظة</div></div>
+  </div>
+
+  <div class="row mb3 gap3" style="align-items:flex-start">
+    <div style="flex:1">
+      <div class="section-title" style="font-size:14px;margin-bottom:10px">الإنجازات</div>
+      <div class="badges-grid mb4">
+        <div class="badge-item"><div class="badge-icon">🎯</div><div class="badge-name">الدرس الأول</div><div class="badge-earned">مكتسب</div></div>
+        <div class="badge-item"><div class="badge-icon">🔥</div><div class="badge-name">سلسلة 7 أيام</div><div class="badge-earned">اليوم!</div></div>
+        <div class="badge-item"><div class="badge-icon">🏆</div><div class="badge-name">الفصل الأول</div><div class="badge-earned">مكتسب</div></div>
+        <div class="badge-item"><div class="badge-icon">💎</div><div class="badge-name">اختبار مثالي</div><div class="badge-earned">مكتسب</div></div>
+        <div class="badge-item locked"><div class="badge-icon">🌟</div><div class="badge-name">الفصل الثاني</div><div class="badge-earned">محجوب</div></div>
+        <div class="badge-item locked"><div class="badge-icon">🏅</div><div class="badge-name">سلسلة 30 يوم</div><div class="badge-earned">محجوب</div></div>
+      </div>
+    </div>
+    <div style="flex:1">
+      <div class="section-title" style="font-size:14px;margin-bottom:10px">الإعدادات</div>
+      <div class="settings-section">
+        <div class="setting-row"><div class="sr-icon-wrap">🎨</div><div class="sr-label">أسلوب التعليم</div><div class="sr-value">أمثلة من الحياة</div><div class="sr-arrow">›</div></div>
+        <div class="setting-row"><div class="sr-icon-wrap">💬</div><div class="sr-label">تنسيق الإجابة</div><div class="sr-value">نص + صورة</div><div class="sr-arrow">›</div></div>
+        <div class="setting-row"><div class="sr-icon-wrap">🔔</div><div class="sr-label">الإشعارات</div><div class="toggle"></div></div>
+        <div class="setting-row"><div class="sr-icon-wrap">🌐</div><div class="sr-label">اللغة</div><div class="sr-value">العربية</div><div class="sr-arrow">›</div></div>
+        <div class="setting-row"><div class="sr-icon-wrap">💳</div><div class="sr-label">الاشتراك</div><div class="bx b-blue">Pro</div><div class="sr-arrow">›</div></div>
+        <div class="setting-row"><div class="sr-icon-wrap">🔒</div><div class="sr-label">الأمان والخصوصية</div><div class="sr-arrow">›</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /shell -->
+
+<script>
+// ─── PAGE NAV ───
+function showPage(p){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.shell').forEach(x=>x.classList.remove('active'));
+  var el=document.getElementById('page-'+p);
+  if(el) el.classList.add('active');
+}
+function showApp(sec){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.getElementById('app-shell').classList.add('active');
+  showSection(sec||'dashboard');
+}
+
+// ─── SECTION NAV ───
+var titles={dashboard:'الرئيسية',lessons:'الدروس',askai:'اسأل الذكاء الاصطناعي',rag:'البحث في الكتاب',studyplan:'خطة الدراسة',quizzes:'الاختبارات',flashcards:'البطاقات التعليمية',profile:'الملف الشخصي'};
+function showSection(sec){
+  document.querySelectorAll('[id^="section-"]').forEach(x=>x.style.display='none');
+  var el=document.getElementById('section-'+sec);
+  if(el) el.style.display='';
+  document.querySelectorAll('.nav-item[id^="nav-"]').forEach(x=>x.classList.remove('active'));
+  var nav=document.getElementById('nav-'+sec);
+  if(nav) nav.classList.add('active');
+  var tb=document.getElementById('topbar-title');
+  if(tb) tb.textContent=titles[sec]||sec;
+  // Chat needs special layout
+  var content=document.getElementById('app-content');
+  if(sec==='askai'){content.style.padding='0'}else{content.style.padding='24px'}
+  window.scrollTo(0,0);
+}
+
+// ─── MOLECULE CANVAS ───
+(function(){
+  var c=document.getElementById('mol');
+  if(!c)return;
+  var ctx=c.getContext('2d');
+  var nodes=[],edges=[];
+  function resize(){c.width=c.offsetWidth;c.height=c.offsetHeight;if(!nodes.length)init()}
+  function init(){
+    nodes=[];edges=[];
+    var n=28;
+    for(var i=0;i<n;i++)nodes.push({x:Math.random()*c.width,y:Math.random()*c.height,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,r:Math.random()*3+2});
+    for(var i=0;i<n;i++)for(var j=i+1;j<n;j++)if(Math.random()<.13)edges.push([i,j]);
+  }
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    // edges
+    edges.forEach(function(e){
+      var a=nodes[e[0]],b=nodes[e[1]];
+      var d=Math.hypot(a.x-b.x,a.y-b.y);
+      if(d<200){
+        ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
+        ctx.strokeStyle='rgba(78,135,245,'+(0.25*(1-d/200))+')';ctx.lineWidth=1;ctx.stroke();
+      }
+    });
+    // nodes
+    nodes.forEach(function(n){
+      ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(0,212,168,.7)';ctx.fill();
+    });
+    // move
+    nodes.forEach(function(n){
+      n.x+=n.vx;n.y+=n.vy;
+      if(n.x<0||n.x>c.width)n.vx*=-1;
+      if(n.y<0||n.y>c.height)n.vy*=-1;
+    });
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize',resize);
+  resize();
+  draw();
+})();
+
+// ─── FLASHCARD FLIP ───
+var fcFlipped=false;
+function flipCard(){var el=document.getElementById('fcCard');if(!el)return;fcFlipped=!fcFlipped;el.classList.toggle('flipped',fcFlipped)}
+function nextCard(a){fcFlipped=false;var el=document.getElementById('fcCard');if(el)el.classList.remove('flipped')}
+
+// ─── FORMAT BUTTONS ───
+document.querySelectorAll('.fmt-btn').forEach(function(b){
+  b.addEventListener('click',function(){
+    var row=this.closest('.fmt-row');
+    if(row)row.querySelectorAll('.fmt-btn').forEach(function(x){x.classList.remove('on')});
+    this.classList.add('on');
+  });
+});
+
+// ─── RAG FILTER BUTTONS ───
+document.querySelectorAll('.rf').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.rf').forEach(function(x){x.classList.remove('on')});
+    this.classList.add('on');
+  });
+});
+
+// ─── TOGGLE ───
+document.querySelectorAll('.toggle').forEach(function(t){
+  t.addEventListener('click',function(){this.classList.toggle('off')});
+});
+</script>
+</body>
+</html>

@@ -99,6 +99,11 @@ export const mockFlashcardDecks: FlashcardDeck[] = [
 ];
 
 export const mockAiAnswer = (request: AiAskRequest): AiAskResponse => {
+  const normalizedQuestion = request.question
+    .toLowerCase()
+    .replace(/[أإآ]/g, 'ا')
+    .replace(/ة/g, 'ه')
+    .replace(/[؟?!.،,]/g, ' ');
   const source = {
     title: 'كتاب الكيمياء - الصف التاسع',
     page: 11,
@@ -106,15 +111,66 @@ export const mockAiAnswer = (request: AiAskRequest): AiAskResponse => {
     quote: 'الحموض مواد تعطي عند انحلالها في الماء أيونات الهدروجين.',
     score: 0.78,
   };
-  const baseAnswer =
-    request.language === 'en'
-      ? 'According to the available textbook context, acids are substances that release hydrogen ions (H+) when dissolved in water.'
-      : 'بحسب مقاطع الكتاب المتاحة، الحموض هي مواد تعطي عند انحلالها في الماء أيونات الهدروجين H+. لذلك نميّزها في المحاليل المائية من خلال خواص مثل تغيير لون ورقة عباد الشمس إلى الأحمر.';
+  let baseAnswer =
+    'بحسب مقاطع الكتاب المتاحة، الحموض هي مواد تعطي عند انحلالها في الماء أيونات الهدروجين H+. لذلك نميّزها في المحاليل المائية من خلال خواص مثل تغيير لون ورقة عباد الشمس إلى الأحمر.';
+  let selectedSource = source;
+
+  if (normalizedQuestion.includes('ما هو الماء') || normalizedQuestion.includes('رمز الماء')) {
+    baseAnswer = 'الماء مركب كيميائي صيغته H₂O، ويتكون من ذرتي هيدروجين وذرة أكسجين. كتابة عادية: H2O.';
+    selectedSource = {
+      title: 'كتاب الكيمياء - الصف التاسع',
+      page: 30,
+      chunk_id: 'mock-water-30',
+      quote: 'صيغة الماء H2O.',
+      score: 0.82,
+    };
+  } else if (
+    normalizedQuestion.includes('نضيف الحمض الى الماء')
+    || normalizedQuestion.includes('وليس العكس')
+    || normalizedQuestion.includes('الماء الى الحمض')
+  ) {
+    baseAnswer = 'نضيف الحمض إلى الماء ببطء لأن امتزاج الحمض بالماء يطلق حرارة كبيرة. إذا أضفنا الماء إلى الحمض المركز فقد تسخن كمية الماء الصغيرة بسرعة، مما قد يسبب غلياناً مفاجئاً أو تطاير الحمض. لذلك القاعدة الآمنة هي: أضف الحمض إلى الماء وليس العكس.';
+    selectedSource = {
+      title: 'كتاب الكيمياء - الصف التاسع',
+      page: 7,
+      chunk_id: 'mock-safety-7',
+      quote: 'تحذير: أضف الحمض إلى الماء وليس العكس.',
+      score: 0.9,
+    };
+  } else if (normalizedQuestion.includes('تركيز') && normalizedQuestion.includes('hcl') && normalizedQuestion.includes('3.65')) {
+    baseAnswer = [
+      'نحل المسألة مباشرة من القيم المعطاة:',
+      '',
+      'المعطيات: m = 3.65 g، V = 0.1 L، M(HCl) = 36.5 g/mol.',
+      '',
+      'Cm = m / V = 3.65 / 0.1 = 36.5 g/L',
+      'n = m / M = 3.65 / 36.5 = 0.1 mol',
+      'C = n / V = 0.1 / 0.1 = 1 mol/L',
+    ].join('\n');
+    selectedSource = {
+      title: 'كتاب الكيمياء - الصف التاسع',
+      page: 4,
+      chunk_id: 'mock-concentration-4',
+      quote: 'قوانين التركيز الغرامي والمولي.',
+      score: 0.86,
+    };
+  } else if (normalizedQuestion.includes('التركيز المولي')) {
+    baseAnswer = 'التركيز المولي هو عدد مولات المادة المذابة في ليتر واحد من المحلول.\n\nC = n / V\n\nواحدته mol/L.';
+    selectedSource = {
+      title: 'كتاب الكيمياء - الصف التاسع',
+      page: 4,
+      chunk_id: 'mock-molarity-4',
+      quote: 'التركيز المولي C = n / V.',
+      score: 0.84,
+    };
+  } else if (request.language === 'en') {
+    baseAnswer = 'According to the available textbook context, acids are substances that release hydrogen ions (H+) when dissolved in water.';
+  }
 
   if (request.answer_format === 'audio') {
     return {
       answer: baseAnswer,
-      sources: [source],
+      sources: [selectedSource],
       confidence: 0.78,
       format: 'audio',
     };
@@ -122,16 +178,16 @@ export const mockAiAnswer = (request: AiAskRequest): AiAskResponse => {
   if (request.answer_format === 'image') {
     return {
       answer: baseAnswer,
-      sources: [source],
+      sources: [selectedSource],
       confidence: 0.78,
       format: 'image',
-      source_page_image_url: '/media/books/syria_grade_9_chemistry/page_images/page_011.png',
+      source_page_image_url: `/media/books/syria_grade_9_chemistry/page_images/page_${String(selectedSource.page).padStart(3, '0')}.png`,
     };
   }
   if (request.answer_format === 'video') {
     return {
       answer: baseAnswer,
-      sources: [source],
+      sources: [selectedSource],
       confidence: 0.78,
       format: 'video',
       video_title: 'No suitable video found yet. Try text or image explanation.',
@@ -140,7 +196,7 @@ export const mockAiAnswer = (request: AiAskRequest): AiAskResponse => {
   }
   return {
     answer: baseAnswer,
-    sources: [source],
+    sources: [selectedSource],
     confidence: 0.78,
     format: 'text',
   };

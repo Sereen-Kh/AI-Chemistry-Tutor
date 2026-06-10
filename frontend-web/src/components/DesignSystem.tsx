@@ -269,6 +269,29 @@ const LessonsIcon = () => (
   </svg>
 );
 
+const QuizIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M9 11h6M9 15h3" />
+    <path d="M8 3H6a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2" />
+    <path d="M9 3h6v4H9z" />
+  </svg>
+);
+
+const SearchBookIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="11" cy="11" r="7" />
+    <path d="m20 20-3.5-3.5" />
+    <path d="M8 8h5M8 11h3" />
+  </svg>
+);
+
+const CardsIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="4" y="5" width="12" height="14" rx="2" />
+    <path d="M8 5V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-2" />
+  </svg>
+);
+
 const AskAiIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
     <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
@@ -291,11 +314,31 @@ const ProfileIcon = () => (
 
 const navItems = [
   { to: '/dashboard', label: 'الرئيسية', icon: <HomeIcon /> },
-  { to: '/study-plan', label: 'الخطة', icon: <LessonsIcon /> },
+  { to: '/lessons', label: 'الدروس', icon: <LessonsIcon /> },
   { to: '/ask-ai', label: 'اسأل الذكاء', icon: <AskAiIcon /> },
+  { to: '/rag-search', label: 'بحث الكتاب', icon: <SearchBookIcon /> },
+  { to: '/quizzes', label: 'اختبار', icon: <QuizIcon /> },
+  { to: '/flashcards', label: 'بطاقات', icon: <CardsIcon /> },
+  { to: '/study-plan', label: 'الخطة', icon: <LessonsIcon /> },
   { to: '/lab/equation-balancer', label: 'المختبر', icon: <LabIcon /> },
   { to: '/profile', label: 'ملفي', icon: <ProfileIcon /> },
 ];
+
+const bottomNavItems = navItems.filter((item) =>
+  ['/dashboard', '/lessons', '/ask-ai', '/quizzes', '/profile'].includes(item.to),
+);
+
+const routeTitles: Record<string, { eyebrow: string; title: string }> = {
+  '/dashboard': { eyebrow: 'مختبر التعلم', title: 'الرئيسية' },
+  '/lessons': { eyebrow: 'منهج الكيمياء', title: 'الدروس' },
+  '/study-plan': { eyebrow: 'تنظيم المذاكرة', title: 'خطة الدراسة' },
+  '/ask-ai': { eyebrow: 'RAG Tutor', title: 'اسأل الذكاء الاصطناعي' },
+  '/rag-search': { eyebrow: 'مصادر الكتاب', title: 'البحث في الكتاب' },
+  '/quizzes': { eyebrow: 'تدريب امتحاني', title: 'الاختبارات' },
+  '/flashcards': { eyebrow: 'مراجعة ذكية', title: 'البطاقات التعليمية' },
+  '/lab/equation-balancer': { eyebrow: 'مختبر كيمياء', title: 'موازن المعادلات' },
+  '/profile': { eyebrow: 'التفضيلات', title: 'الملف الشخصي' },
+};
 
 const RouteTransitionOutlet = () => {
   const location = useLocation();
@@ -318,6 +361,8 @@ const RouteTransitionOutlet = () => {
 
 export const AppShell = ({ userName, onLogout }: { userName: string; onLogout: () => void }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const routeTitle = routeTitles[location.pathname] ?? routeTitles['/dashboard'];
 
   return (
     <div className="app-shell" dir="rtl">
@@ -357,8 +402,8 @@ export const AppShell = ({ userName, onLogout }: { userName: string; onLogout: (
       >
         <header className="shell-topbar">
           <div>
-            <p className="eyebrow">مختبر التعلم</p>
-            <strong>مرحباً، {userName}</strong>
+            <p className="eyebrow">{routeTitle.eyebrow}</p>
+            <strong>{routeTitle.title} · {userName}</strong>
           </div>
           <div className="shell-topbar-actions">
             <StatusPill tone="teal">RAG</StatusPill>
@@ -375,7 +420,7 @@ export const AppShell = ({ userName, onLogout }: { userName: string; onLogout: (
         animate={{ y: 0 }}
         transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
       >
-        {navItems.map((item) => (
+        {bottomNavItems.map((item) => (
           <NavLink key={item.to} to={item.to} className={({ isActive }) => (isActive ? 'active' : '')}>
             <span>{item.icon}</span>
             {item.label}

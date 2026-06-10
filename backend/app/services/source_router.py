@@ -10,9 +10,11 @@ import re
 from app.core.redis import get_redis_client
 
 ROUTE_TEXTBOOK = "textbook"
-ROUTE_SOLUTIONS = "solutions"
+ROUTE_SOLUTIONS = "solution_book"
 ROUTE_BOTH = "both"
-ROUTABLE_SOURCE_TYPES = {ROUTE_TEXTBOOK, ROUTE_SOLUTIONS}
+# Legacy alias so that any existing DB rows with source_type="solutions" still match
+_LEGACY_SOLUTIONS_ALIAS = "solutions"
+ROUTABLE_SOURCE_TYPES = {ROUTE_TEXTBOOK, ROUTE_SOLUTIONS, _LEGACY_SOLUTIONS_ALIAS}
 _CACHE_TTL_SECONDS = 600
 _CACHE_VERSION = "v1"
 

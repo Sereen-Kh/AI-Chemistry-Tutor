@@ -1,39 +1,56 @@
 name: ai_chemistry_tutor
 description: AI-powered chemistry tutoring app — Flutter frontend
-publish_to: none
+publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: ">=3.3.0 <4.0.0"
+  sdk: '>=3.3.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:      # ← move it here
+    sdk: flutter
+  # State management
+  get: ^4.6.6
 
-  # ── HTTP client — pick one when decided ──────────────────────────────────────
-  # dio: ^5.4.3
-  http: ^1.2.1
+  # Networking
+  dio: ^5.4.3
 
-  # ── Navigation ───────────────────────────────────────────────────────────────
-  go_router: ^13.2.1
-
-  # ── State management — TBD by team ───────────────────────────────────────────
-  # Chatbot currently uses Provider. Team will decide whether to keep or replace.
-  provider: ^6.1.2
-  # flutter_riverpod: ^2.5.1
-  # flutter_bloc: ^8.1.5
-  # get: ^4.6.6
-
-  # ── Utilities ────────────────────────────────────────────────────────────────
-  equatable: ^2.0.5
+  # Local storage
   shared_preferences: ^2.2.3
-  uuid: ^4.4.0
-  flutter_markdown: ^0.7.3
+
+  # Images
+  cached_network_image: ^3.3.1
+
+  # UI
+  shimmer: ^3.0.0
+  smooth_page_indicator: ^1.1.0
+  percent_indicator: ^4.2.3
+  flutter_animate: ^4.5.0
+  # Typography
+  google_fonts: ^6.2.1
+
+  # Utils
+  intl: ^0.20.2
+
+  cupertino_icons: ^1.0.6
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^4.0.0
 
+  flutter_lints: ^4.0.0
+  flutter_launcher_icons: ^0.14.0
+
+
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon.png"
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/icon.png

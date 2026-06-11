@@ -66,4 +66,8 @@ def onboarding(
         answer_format=request.answer_format,
         language=request.language,
         interest_ids=request.interest_ids,
+        teaching_level=request.teaching_level,
+        explanation_method=request.explanation_method,
+        learning_modes=[mode.value for mode in request.learning_modes],
+        student_interests=[interest.value for interest in request.student_interests],
     )

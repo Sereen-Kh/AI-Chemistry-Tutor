@@ -3,6 +3,7 @@ from fastapi import HTTPException
 from app.models.user import User
 from app.models.interest import InterestCategory, UserInterest
 from app.core.security import get_password_hash, verify_password, create_access_token
+from app.services.preference_mapping import apply_user_preference_updates
 
 
 def split_name(name: str | None, first_name: str | None, last_name: str | None) -> tuple[str, str]:
@@ -69,12 +70,25 @@ def update_user_onboarding(
     answer_format: str,
     language: str,
     interest_ids: list[int],
+    teaching_level: str | None = None,
+    explanation_method: str | None = None,
+    learning_modes: list[str] | None = None,
+    student_interests: list[str] | None = None,
 ) -> User:
     """Persist onboarding preferences and selected interests."""
     user = get_user_by_id(db, user_id)
     user.grade = grade
-    user.teaching_style = teaching_style
-    user.answer_format = answer_format
+    apply_user_preference_updates(
+        user,
+        {
+            "teaching_style": teaching_style,
+            "answer_format": answer_format,
+            "teaching_level": teaching_level,
+            "explanation_method": explanation_method,
+            "learning_modes": learning_modes,
+            "student_interests": student_interests,
+        },
+    )
     user.language = language
 
     db.query(UserInterest).filter(UserInterest.user_id == user_id).delete()

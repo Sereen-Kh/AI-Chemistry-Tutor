@@ -3,7 +3,9 @@
 from datetime import datetime
 from typing import Any
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
+
+from app.models.enums import ExplanationMethod, LearningMode, StudentInterest, TeachingLevel
 
 
 class SessionCreate(BaseModel):
@@ -47,18 +49,32 @@ class SendMessageRequest(BaseModel):
 class ChatAskRequest(BaseModel):
     conversation_id: str | None = None
     parent_message_id: str | None = None
-    question: str = Field(..., min_length=1)
+    question: str | None = Field(default=None, min_length=1)
+    message: str | None = Field(default=None, min_length=1)
     lesson_id: int | None = None
     topic_id: int | None = None
     source_types: list[str] | None = None
     preferred_answer_type: str = Field("text", pattern="^(auto|text|image|audio|video|mixed)$")
     answer_scope: str = Field("auto", pattern="^(auto|book_only|tutor_general)$")
     teaching_style: str | None = None
+    teaching_level: TeachingLevel | None = None
+    explanation_method: ExplanationMethod | None = None
+    learning_modes: list[LearningMode] | None = None
+    student_interests: list[StudentInterest] | None = None
     action: str | None = None
     previous_question: str | None = None
     previous_answer: str | None = None
     previous_sources: list[dict[str, Any]] = Field(default_factory=list)
     previous_selected_chunks: list[dict[str, Any]] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def require_question_or_message(self) -> "ChatAskRequest":
+        resolved = (self.question or self.message or "").strip()
+        if not resolved:
+            raise ValueError("question or message is required")
+        self.question = resolved
+        self.message = resolved
+        return self
 
 
 class ChatSourceResponse(BaseModel):
@@ -89,12 +105,19 @@ class AnswerSourceBlock(BaseModel):
 
 class ChatAnswerResponse(BaseModel):
     answer: str
+    answer_text: str = ""
     answer_type: str = "text"
     route: str = "textbook_rag"
     grounding: str = "book"
     answer_scope: str = "auto"
+    teaching_level: TeachingLevel = TeachingLevel.STANDARD
+    explanation_method: ExplanationMethod = ExplanationMethod.DIRECT
+    learning_modes: list[LearningMode] = Field(default_factory=lambda: [LearningMode.TEXT])
+    student_interests: list[StudentInterest] = Field(default_factory=list)
     blocks: list[AnswerBlock] = Field(default_factory=list)
     sources: list[ChatSourceResponse] = Field(default_factory=list)
+    citations: list[dict[str, Any]] = Field(default_factory=list)
+    media_blocks: list[AnswerBlock] = Field(default_factory=list)
     source_blocks: list[AnswerSourceBlock] = Field(default_factory=list)
     page_numbers: list[int] = Field(default_factory=list)
     confidence: float

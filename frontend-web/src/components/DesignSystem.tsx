@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import type { AiAskResponse, AnswerFormat, FlashcardItem, LessonItem, SourceCitation } from '../types';
+import type { AiAskResponse, AnswerFormat, FlashcardItem, LearningMode, LessonItem, SourceCitation } from '../types';
 import { ChemistryFlask } from './ChemistryFlask';
 import { AvatarGuide } from './AvatarGuide';
 
@@ -206,6 +206,17 @@ const formatOptions: Array<{ value: AnswerFormat; label: string; icon: string }>
   { value: 'video', label: 'Reel', icon: 'R' },
 ];
 
+const learningModeOptions: Array<{ value: LearningMode; label: string; icon: string }> = [
+  { value: 'text', label: 'نص', icon: 'T' },
+  { value: 'image', label: 'صورة', icon: 'I' },
+  { value: 'audio', label: 'صوت', icon: 'A' },
+  { value: 'video', label: 'فيديو', icon: 'V' },
+  { value: 'reel', label: 'Reel', icon: 'R' },
+  { value: 'interactive', label: 'تفاعلي', icon: 'X' },
+  { value: 'quiz', label: 'اختبار', icon: 'Q' },
+  { value: 'flashcards', label: 'بطاقات', icon: 'F' },
+];
+
 export const AnswerFormatSelector = ({
   value,
   onChange,
@@ -228,6 +239,40 @@ export const AnswerFormatSelector = ({
     ))}
   </div>
 );
+
+export const LearningModeSelector = ({
+  value,
+  onChange,
+}: {
+  value: LearningMode[];
+  onChange: (modes: LearningMode[]) => void;
+}) => {
+  const toggle = (mode: LearningMode) => {
+    if (mode === 'text') {
+      onChange(['text', ...value.filter((item) => item !== 'text')]);
+      return;
+    }
+    const next = value.includes(mode) ? value.filter((item) => item !== mode) : [...value, mode];
+    onChange(next.includes('text') ? next : ['text', ...next]);
+  };
+
+  return (
+    <div className="format-selector" aria-label="اختيار أنماط التعلم">
+      {learningModeOptions.map((option) => (
+        <button
+          key={option.value}
+          type="button"
+          className={value.includes(option.value) ? 'active' : ''}
+          onClick={() => toggle(option.value)}
+          aria-pressed={value.includes(option.value)}
+        >
+          <span>{option.icon}</span>
+          {option.label}
+        </button>
+      ))}
+    </div>
+  );
+};
 
 export const AuthLayout = ({ children, title, subtitle }: { children: ReactNode; title: string; subtitle: string }) => (
   <main className="auth-layout" dir="rtl">

@@ -1,11 +1,19 @@
+export type TeachingLevel = 'simple' | 'standard' | 'academic';
+export type ExplanationMethod = 'direct' | 'step_by_step' | 'hints_first' | 'exam_mode' | 'real_life_example';
+export type LearningMode = 'text' | 'image' | 'audio' | 'video' | 'reel' | 'interactive' | 'quiz' | 'flashcards';
+export type StudentInterest = 'football' | 'cars' | 'cooking' | 'gaming' | 'daily_life' | 'laboratory' | 'nature' | 'none';
 export type TeachingStyle = 'simple' | 'real_life' | 'visual' | 'exam';
-export type AnswerFormat = 'text' | 'audio' | 'image' | 'video';
+export type AnswerFormat = Extract<LearningMode, 'text' | 'audio' | 'image' | 'video'>;
 export type LessonStatus = 'completed' | 'current' | 'locked' | 'weak';
 
 export interface UserPreferences {
   interests: string[];
-  teachingStyle: TeachingStyle;
-  answerFormat: AnswerFormat;
+  teachingStyle?: TeachingStyle;
+  answerFormat?: AnswerFormat;
+  teachingLevel: TeachingLevel;
+  explanationMethod: ExplanationMethod;
+  learningModes: LearningMode[];
+  studentInterests: StudentInterest[];
   language: 'ar' | 'en';
   grade: string;
   subject: string;
@@ -21,6 +29,10 @@ export interface UserProfile {
   subject: string;
   teaching_style: string;
   answer_format: string;
+  teaching_level?: TeachingLevel;
+  explanation_method?: ExplanationMethod;
+  learning_modes?: LearningMode[];
+  student_interests?: StudentInterest[];
   language: string;
   xp: number;
   level: number;
@@ -50,8 +62,12 @@ export interface AiAskRequest {
   subject: string;
   grade: string;
   answer_format: AnswerFormat;
-  teaching_style: TeachingStyle;
-  interests: string[];
+  teaching_style?: TeachingStyle;
+  teaching_level?: TeachingLevel;
+  explanation_method?: ExplanationMethod;
+  learning_modes?: LearningMode[];
+  student_interests?: StudentInterest[];
+  interests?: string[];
   language: 'ar' | 'en';
   answer_scope?: 'auto' | 'book_only' | 'tutor_general';
   source_types?: string[];
@@ -64,9 +80,16 @@ export interface AiAskRequest {
 
 export interface AiAskResponse {
   answer: string;
+  answer_text?: string;
   sources: SourceCitation[];
+  citations?: SourceCitation[];
   confidence: number;
   format: AnswerFormat;
+  teaching_level?: TeachingLevel;
+  explanation_method?: ExplanationMethod;
+  learning_modes?: LearningMode[];
+  student_interests?: StudentInterest[];
+  media_blocks?: Array<Record<string, unknown>>;
   answer_type?: string;
   route?: string;
   diagnostics?: Record<string, unknown>;
@@ -276,4 +299,3 @@ export type GeneratedFlashcard = {
   reviewState: 'new' | 'learning' | 'known' | 'review';
   nextReviewAt?: string;
 };
-

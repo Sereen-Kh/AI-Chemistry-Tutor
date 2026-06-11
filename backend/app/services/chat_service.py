@@ -7,6 +7,7 @@ import json
 import logging
 import time
 import re
+from types import SimpleNamespace
 
 from fastapi import HTTPException
 from sqlalchemy import select
@@ -15,6 +16,7 @@ from sqlalchemy.orm import selectinload
 
 from app.core.config import BACKEND_DIR, PROJECT_DIR, settings
 from app.models.chat import ChatMessage, ChatSession
+from app.models.user import User
 from app.rag.answer_verifier import verify_answer
 from app.rag.arabic_normalizer import normalize_arabic
 from app.rag.book_knowledge import BookKnowledgeAnswer, answer_from_book_knowledge
@@ -32,6 +34,9 @@ from app.services.rag import (
 from app.services.safety_rules import answer_safety_rule, is_acid_to_water_safety_question
 from app.services.semantic_rag import semantic_retrieve_context
 from app.services.source_router import route_source
+from app.services.learning_mode_router import resolve_learning_modes
+from app.services.preference_mapping import TutorPreferences, preferences_from_user
+from app.services.tutor_prompt_builder import build_teaching_instruction
 
 logger = logging.getLogger(__name__)
 
@@ -402,6 +407,29 @@ def _select_answer_type(intent: str, preferred_answer_type: str | None = "auto")
     return "text"
 
 
+def _preferred_answer_type_from_learning_modes(preferred_answer_type: str, learning_modes: list[str]) -> str:
+    """Keep legacy answer_type useful while learning_modes becomes the source of truth."""
+    preferred = (preferred_answer_type or "auto").strip().lower()
+    if preferred != "auto":
+        return preferred
+    if "image" in learning_modes:
+        return "image"
+    if "audio" in learning_modes:
+        return "audio"
+    if "video" in learning_modes or "reel" in learning_modes:
+        return "video"
+    return "text"
+
+
+def _append_teaching_instruction(system_prompt: str, preferences: TutorPreferences) -> str:
+    instruction = build_teaching_instruction(
+        preferences.teaching_level,
+        preferences.explanation_method,
+        preferences.student_interests,
+    )
+    return f"{system_prompt}\n\n{instruction}"
+
+
 def _confidence_threshold_for_intent(intent: str) -> float:
     return max(_MIN_BOOK_GROUNDED_CONFIDENCE, _INTENT_BOOK_GROUNDED_THRESHOLDS.get(intent, _MIN_BOOK_GROUNDED_CONFIDENCE))
 
@@ -465,6 +493,80 @@ def _source_blocks(chunks: list[RetrievedChunk]) -> list[dict]:
         }
         for chunk in chunks
     ]
+
+
+def _citation_blocks(chunks: list[RetrievedChunk]) -> list[dict]:
+    """Return citation metadata for clients that use the new response shape."""
+    return [
+        {
+            "chunk_id": chunk.id,
+            "source_id": chunk.source_id,
+            "source": chunk.source or _SOURCE_SLUG,
+            "page_number": chunk.page_number,
+            "content_type": chunk.content_type,
+            "similarity_score": round(float(chunk.similarity_score), 4),
+        }
+        for chunk in chunks
+    ]
+
+
+def _media_blocks_for_modes(
+    *,
+    learning_modes: list[str],
+    blocks: list[dict],
+    chunks: list[RetrievedChunk],
+    diagnostics: dict,
+) -> list[dict]:
+    """Create media blocks requested by learning modes without treating them as citations."""
+    media_blocks: list[dict] = []
+    if "image" in learning_modes:
+        media_blocks.extend(block for block in blocks if block.get("type") in {"image", "source_page"})
+        if not media_blocks:
+            media_blocks.extend(_source_page_blocks(chunks))
+    if "audio" in learning_modes:
+        diagnostics["audio_requested_but_tts_unavailable"] = True
+        media_blocks.append(
+            {
+                "type": "audio",
+                "content": "الصوت غير متاح حالياً، لكن النص الموثق موجود دائماً.",
+                "url": None,
+                "page": None,
+                "image_url": None,
+                "metadata": {"tts_available": False},
+            }
+        )
+    if "video" in learning_modes or "reel" in learning_modes:
+        media_blocks.append(
+            {
+                "type": "video",
+                "content": "اقتراح فيديو أو Reel سيظهر هنا عند توفر مصدر مناسب.",
+                "url": None,
+                "page": None,
+                "image_url": None,
+                "metadata": {"available": False, "mode": "reel" if "reel" in learning_modes else "video"},
+            }
+        )
+    if "quiz" in learning_modes:
+        media_blocks.append(
+            {
+                "type": "quiz",
+                "content": "يمكن إنشاء تدريب قصير من نفس المقاطع المسترجعة.",
+                "page": None,
+                "image_url": None,
+                "metadata": {"generated": False},
+            }
+        )
+    if "flashcards" in learning_modes:
+        media_blocks.append(
+            {
+                "type": "flashcards",
+                "content": "يمكن تحويل الأفكار الأساسية إلى بطاقات مراجعة.",
+                "page": None,
+                "image_url": None,
+                "metadata": {"generated": False},
+            }
+        )
+    return media_blocks
 
 
 def _synthetic_source_blocks(entity: EntityDefinition, pages: tuple[int, ...] | list[int]) -> list[dict]:
@@ -1350,6 +1452,28 @@ def _finalize_answer(result: dict, question: str) -> dict:
     diagnostics["verification"] = verification.as_dict()
     if not verification.passed:
         diagnostics["verification_failed"] = True
+    preferences_payload = diagnostics.get("teaching_preferences") or {}
+    if preferences_payload:
+        confidence = float(result.get("confidence") or 0.0)
+        resolved_modes = resolve_learning_modes(
+            preferences_payload.get("requested_learning_modes"),
+            list(preferences_payload.get("learning_modes") or ["text"]),
+            question,
+            confidence,
+        )
+        result["answer_text"] = result.get("answer", "")
+        result["teaching_level"] = preferences_payload.get("teaching_level", "standard")
+        result["explanation_method"] = preferences_payload.get("explanation_method", "direct")
+        result["learning_modes"] = resolved_modes
+        result["student_interests"] = list(preferences_payload.get("student_interests") or [])
+        result["citations"] = _citation_blocks(result.get("sources") or [])
+        result["media_blocks"] = _media_blocks_for_modes(
+            learning_modes=resolved_modes,
+            blocks=result.get("blocks") or [],
+            chunks=result.get("sources") or [],
+            diagnostics=diagnostics,
+        )
+        diagnostics["resolved_learning_modes"] = resolved_modes
     return result
 
 
@@ -1865,6 +1989,10 @@ async def ask_question(
     conversation_id: str | None = None,
     parent_message_id: str | None = None,
     teaching_style: str | None = None,
+    teaching_level: str | None = None,
+    explanation_method: str | None = None,
+    learning_modes: list[str] | None = None,
+    student_interests: list[str] | None = None,
     action: str | None = None,
     previous_question: str | None = None,
     previous_answer: str | None = None,
@@ -1873,6 +2001,24 @@ async def ask_question(
 ) -> dict:
     """Answer a one-off question with RAG sources."""
     answer_scope = _normalize_answer_scope(answer_scope)
+    user = await db.get(User, user_id) if db is not None else None
+    if user is None:
+        user = SimpleNamespace(
+            teaching_style=teaching_style,
+            answer_format=preferred_answer_type,
+            teaching_level="standard",
+            explanation_method="direct",
+            learning_modes=["text"],
+            student_interests=[],
+        )
+    preferences = preferences_from_user(
+        user,
+        teaching_level=teaching_level,
+        explanation_method=explanation_method,
+        learning_modes=learning_modes,
+        student_interests=student_interests,
+    )
+    preferred_answer_type = _preferred_answer_type_from_learning_modes(preferred_answer_type, preferences.learning_modes)
 
     if _is_followup_rephrase(question, action=action):
         parent_question, parent_answer = await _context_from_parent_message(db, user_id, parent_message_id)
@@ -1887,6 +2033,7 @@ async def ask_question(
             "answer_scope": answer_scope,
             "preferred_answer_type": preferred_answer_type,
             "teaching_style": teaching_style,
+            "teaching_preferences": preferences.as_diagnostics(),
             "action": action,
             "intent": "followup_rephrase",
             "entity": None,
@@ -1927,6 +2074,7 @@ async def ask_question(
         "preferred_answer_type": preferred_answer_type,
         "answer_scope": answer_scope,
         "teaching_style": teaching_style,
+        "teaching_preferences": preferences.as_diagnostics(),
         "action": action,
         "explicit_book_requested": explicit_book,
         "dictionary_entry_id": dictionary_entry.id if dictionary_entry else None,
@@ -1980,6 +2128,7 @@ async def ask_question(
                 if _sol_context
                 else _SYSTEM_PROMPT_ASK_NO_CONTEXT
             )
+            _sol_system_prompt = _append_teaching_instruction(_sol_system_prompt, preferences)
             _sol_answer = await _answer_with_rag_fallback(
                 messages=[{"role": "user", "content": question}],
                 question=question,
@@ -2399,6 +2548,7 @@ async def ask_question(
         system_prompt = _SYSTEM_PROMPT_ASK_WITH_CONTEXT.format(context=context)
     else:
         system_prompt = _SYSTEM_PROMPT_ASK_NO_CONTEXT
+    system_prompt = _append_teaching_instruction(system_prompt, preferences)
 
     answer = await _answer_with_rag_fallback(
         messages=[{"role": "user", "content": question}],

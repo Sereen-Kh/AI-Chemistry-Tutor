@@ -7,6 +7,10 @@ export const userApi = {
     const { data } = await api.patch<UserProfile>('/users/me', {
       teaching_style: preferences.teachingStyle ? toBackendTeachingStyle(preferences.teachingStyle) : undefined,
       answer_format: preferences.answerFormat ? toBackendAnswerFormat(preferences.answerFormat) : undefined,
+      teaching_level: preferences.teachingLevel,
+      explanation_method: preferences.explanationMethod,
+      learning_modes: preferences.learningModes,
+      student_interests: preferences.studentInterests,
       language: preferences.language,
     });
     return data;

@@ -88,6 +88,10 @@ async def ask_chat(
         conversation_id=request.conversation_id,
         parent_message_id=request.parent_message_id,
         teaching_style=request.teaching_style,
+        teaching_level=request.teaching_level.value if request.teaching_level else None,
+        explanation_method=request.explanation_method.value if request.explanation_method else None,
+        learning_modes=[mode.value for mode in request.learning_modes] if request.learning_modes else None,
+        student_interests=[interest.value for interest in request.student_interests] if request.student_interests else None,
         action=request.action,
         previous_question=request.previous_question,
         previous_answer=request.previous_answer,
@@ -96,10 +100,15 @@ async def ask_chat(
     )
     return ChatAnswerResponse(
         answer=result["answer"],
+        answer_text=result.get("answer_text", result["answer"]),
         answer_type=result["answer_type"],
         route=result.get("route", "textbook_rag"),
         grounding=result.get("grounding", "book"),
         answer_scope=result.get("answer_scope", request.answer_scope),
+        teaching_level=result.get("teaching_level", "standard"),
+        explanation_method=result.get("explanation_method", "direct"),
+        learning_modes=result.get("learning_modes", ["text"]),
+        student_interests=result.get("student_interests", []),
         blocks=[AnswerBlock(**block) for block in result["blocks"]],
         sources=[
             ChatSourceResponse(
@@ -112,6 +121,8 @@ async def ask_chat(
             )
             for chunk in result["sources"]
         ],
+        citations=result.get("citations", []),
+        media_blocks=[AnswerBlock(**block) for block in result.get("media_blocks", [])],
         source_blocks=[AnswerSourceBlock(**block) for block in result.get("source_blocks", [])],
         page_numbers=result["page_numbers"],
         confidence=result["confidence"],

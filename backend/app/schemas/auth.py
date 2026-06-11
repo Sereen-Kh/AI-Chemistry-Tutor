@@ -4,7 +4,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, EmailStr, Field, model_validator
 
-from app.models.enums import LearningMode, TeachingStyle
+from app.models.enums import ExplanationMethod, LearningMode, StudentInterest, TeachingLevel, TeachingStyle
 
 
 class RegisterRequest(BaseModel):
@@ -52,8 +52,12 @@ class OnboardingRequest(BaseModel):
     grade: str = "grade_9"
     teaching_style: TeachingStyle = TeachingStyle.REAL_LIFE_EXAMPLES
     answer_format: LearningMode = LearningMode.TEXT
+    teaching_level: TeachingLevel = TeachingLevel.STANDARD
+    explanation_method: ExplanationMethod = ExplanationMethod.DIRECT
+    learning_modes: list[LearningMode] = Field(default_factory=lambda: [LearningMode.TEXT])
+    student_interests: list[StudentInterest] = Field(default_factory=list)
     language: str = "ar"
-    interest_ids: list[int] = []
+    interest_ids: list[int] = Field(default_factory=list)
 
 
 class UserResponse(BaseModel):
@@ -67,6 +71,10 @@ class UserResponse(BaseModel):
     subject: str
     teaching_style: TeachingStyle
     answer_format: LearningMode
+    teaching_level: TeachingLevel
+    explanation_method: ExplanationMethod
+    learning_modes: list[LearningMode]
+    student_interests: list[StudentInterest]
     language: str
     xp: int
     level: int

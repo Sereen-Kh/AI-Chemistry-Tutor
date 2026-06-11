@@ -12,13 +12,13 @@ import {
 import { ChemistryFlask } from './components/ChemistryFlask';
 import { MoleculeBackground } from './components/MoleculeBackground';
 import {
-  AnswerFormatSelector,
   AppShell,
   AuthLayout,
   Button,
   Card,
   ChatMessage,
   ErrorBanner,
+  LearningModeSelector,
   LessonCard,
   LoadingSkeleton,
   PageHeader,
@@ -38,9 +38,12 @@ import type {
   AiAskRequest,
   AnswerFormat,
   BalanceResult,
+  ExplanationMethod,
   InterestCategory,
+  LearningMode,
+  StudentInterest,
   StudyPlan,
-  TeachingStyle,
+  TeachingLevel,
   UserPreferences,
   UserProfile,
 } from './types';
@@ -53,24 +56,89 @@ interface AuthState {
   booting: boolean;
 }
 
-const styleLabels: Array<{ value: TeachingStyle; label: string }> = [
-  { value: 'real_life', label: 'من الحياة' },
-  { value: 'visual', label: 'بصري' },
-  { value: 'exam', label: 'امتحاني' },
+const teachingLevelLabels: Array<{ value: TeachingLevel; label: string }> = [
   { value: 'simple', label: 'مبسط' },
+  { value: 'standard', label: 'قياسي' },
+  { value: 'academic', label: 'أكاديمي' },
+];
+
+const explanationMethodLabels: Array<{ value: ExplanationMethod; label: string }> = [
+  { value: 'direct', label: 'مباشر' },
+  { value: 'step_by_step', label: 'خطوة بخطوة' },
+  { value: 'hints_first', label: 'تلميحات أولاً' },
+  { value: 'exam_mode', label: 'نمط امتحاني' },
+  { value: 'real_life_example', label: 'مثال من الحياة' },
+];
+
+const studentInterestOptions: Array<{ value: StudentInterest; label: string; icon: string }> = [
+  { value: 'football', label: 'كرة القدم', icon: 'FB' },
+  { value: 'cars', label: 'السيارات', icon: 'CAR' },
+  { value: 'cooking', label: 'الطبخ', icon: 'CK' },
+  { value: 'gaming', label: 'الألعاب', icon: 'GM' },
+  { value: 'daily_life', label: 'الحياة اليومية', icon: 'DL' },
+  { value: 'laboratory', label: 'المختبر', icon: 'LAB' },
+  { value: 'nature', label: 'الطبيعة', icon: 'NAT' },
 ];
 
 const preferenceLabel = (value: string): string =>
   ({
-    real_life: 'أمثلة من الحياة',
-    visual: 'شرح بصري',
-    exam: 'تدريب امتحاني',
-    simple: 'شرح مبسط',
+    simple: 'مبسط',
+    standard: 'قياسي',
+    academic: 'أكاديمي',
+    direct: 'مباشر',
+    step_by_step: 'خطوة بخطوة',
+    hints_first: 'تلميحات أولاً',
+    exam_mode: 'نمط امتحاني',
+    real_life_example: 'مثال من الحياة',
     text: 'نص',
     audio: 'صوت',
     image: 'صورة',
     video: 'Reel',
+    reel: 'Reel',
+    interactive: 'تفاعلي',
+    quiz: 'اختبار',
+    flashcards: 'بطاقات',
   })[value] ?? value;
+
+const primaryAnswerFormat = (modes: LearningMode[]): AnswerFormat => {
+  if (modes.includes('video') || modes.includes('reel')) return 'video';
+  if (modes.includes('image')) return 'image';
+  if (modes.includes('audio')) return 'audio';
+  return 'text';
+};
+
+const legacyTeachingStyle = (level: TeachingLevel, method: ExplanationMethod): UserPreferences['teachingStyle'] => {
+  if (method === 'real_life_example') return 'real_life';
+  if (method === 'exam_mode' || level === 'academic') return 'exam';
+  if (level === 'simple') return 'simple';
+  return 'real_life';
+};
+
+const normalizeModes = (modes: LearningMode[]): LearningMode[] => {
+  const unique = Array.from(new Set(modes));
+  return unique.includes('text') ? unique : ['text', ...unique];
+};
+
+const preferencesFromUser = (user: UserProfile, current: UserPreferences): UserPreferences => {
+  const teachingLevel = user.teaching_level ?? current.teachingLevel;
+  const explanationMethod = user.explanation_method ?? current.explanationMethod;
+  const learningModes = normalizeModes(user.learning_modes?.length ? user.learning_modes : current.learningModes);
+  const studentInterests = (user.student_interests?.filter((interest) => interest !== 'none') ?? current.studentInterests) as StudentInterest[];
+
+  return {
+    ...current,
+    grade: user.grade || current.grade,
+    subject: user.subject || current.subject,
+    language: user.language === 'en' ? 'en' : 'ar',
+    teachingLevel,
+    explanationMethod,
+    learningModes,
+    studentInterests,
+    interests: studentInterests,
+    teachingStyle: legacyTeachingStyle(teachingLevel, explanationMethod),
+    answerFormat: primaryAnswerFormat(learningModes),
+  };
+};
 
 const answerScopeLabels: Array<{ value: AnswerScope; label: string }> = [
   { value: 'auto', label: 'تلقائي' },
@@ -245,32 +313,38 @@ const OnboardingPage = ({
   onSave: (preferences: UserPreferences) => void;
 }) => {
   const navigate = useNavigate();
-  const [interests, setInterests] = useState<InterestCategory[]>([]);
-  const [selected, setSelected] = useState<string[]>(preferences.interests);
-  const [style, setStyle] = useState<TeachingStyle>(preferences.teachingStyle);
-  const [format, setFormat] = useState<AnswerFormat>(preferences.answerFormat);
+  const [backendInterests, setBackendInterests] = useState<InterestCategory[]>([]);
+  const [selected, setSelected] = useState<StudentInterest[]>(preferences.studentInterests);
+  const [teachingLevel, setTeachingLevel] = useState<TeachingLevel>(preferences.teachingLevel);
+  const [explanationMethod, setExplanationMethod] = useState<ExplanationMethod>(preferences.explanationMethod);
+  const [learningModes, setLearningModes] = useState<LearningMode[]>(preferences.learningModes);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    authApi.interests().then(setInterests);
+    authApi.interests().then(setBackendInterests);
   }, []);
 
-  const toggle = (key: string) => {
+  const toggle = (key: StudentInterest) => {
     setSelected((current) => (current.includes(key) ? current.filter((item) => item !== key) : [...current, key]));
   };
 
   const save = async () => {
+    const normalizedLearningModes = normalizeModes(learningModes);
     const next: UserPreferences = {
       ...preferences,
       interests: selected,
-      teachingStyle: style,
-      answerFormat: format,
+      studentInterests: selected,
+      teachingLevel,
+      explanationMethod,
+      learningModes: normalizedLearningModes,
+      teachingStyle: legacyTeachingStyle(teachingLevel, explanationMethod),
+      answerFormat: primaryAnswerFormat(normalizedLearningModes),
     };
     setLoading(true);
     setError('');
     try {
-      const ids = interests.filter((interest) => selected.includes(interest.key)).map((interest) => interest.id);
+      const ids = backendInterests.filter((interest) => selected.includes(interest.key as StudentInterest)).map((interest) => interest.id);
       await authApi.completeOnboarding(next, ids);
     } catch (err) {
       setError(toErrorMessage(err, 'تم الحفظ محلياً. تعذر الوصول إلى نقطة إعداد التفضيلات في الخلفية.'));
@@ -291,34 +365,35 @@ const OnboardingPage = ({
         />
         {error && <ErrorBanner message={error} />}
         <div className="interest-grid">
-          {interests.map((interest) => (
+          {studentInterestOptions.map((interest) => (
             <button
-              key={interest.key}
+              key={interest.value}
               type="button"
-              className={selected.includes(interest.key) ? 'interest active' : 'interest'}
-              onClick={() => toggle(interest.key)}
+              className={selected.includes(interest.value) ? 'interest active' : 'interest'}
+              onClick={() => toggle(interest.value)}
             >
-              <span>{interest.icon ?? interest.key.slice(0, 2).toUpperCase()}</span>
-              <strong>{interest.name_en ?? interest.name_ar}</strong>
+              <span>{interest.icon}</span>
+              <strong>{interest.label}</strong>
             </button>
           ))}
         </div>
         <div className="preference-row">
           <label>
-            طريقة الشرح
-            <select value={style} onChange={(event) => setStyle(event.target.value as TeachingStyle)}>
-              {styleLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+            مستوى الشرح
+            <select value={teachingLevel} onChange={(event) => setTeachingLevel(event.target.value as TeachingLevel)}>
+              {teachingLevelLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
             </select>
           </label>
           <label>
-            صيغة الإجابة المفضلة
-            <select value={format} onChange={(event) => setFormat(event.target.value as AnswerFormat)}>
-              <option value="text">نص</option>
-              <option value="audio">صوت</option>
-              <option value="image">صورة</option>
-              <option value="video">Reel</option>
+            طريقة الشرح
+            <select value={explanationMethod} onChange={(event) => setExplanationMethod(event.target.value as ExplanationMethod)}>
+              {explanationMethodLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
             </select>
           </label>
+        </div>
+        <div className="preference-stack">
+          <span>أنماط التعلم</span>
+          <LearningModeSelector value={learningModes} onChange={(modes) => setLearningModes(normalizeModes(modes))} />
         </div>
         <Button onClick={save} disabled={loading}>{loading ? 'جار الحفظ...' : 'المتابعة إلى الرئيسية'}</Button>
       </Card>
@@ -349,7 +424,7 @@ const DashboardPage = ({ user, preferences }: { user: UserProfile; preferences: 
 
       <StudyMissionCard
         title="اشرح الحموض من مصادر الكتاب"
-        meta={`18 دقيقة · حسب أسلوب ${preferenceLabel(preferences.teachingStyle)}`}
+        meta={`18 دقيقة · ${preferenceLabel(preferences.teachingLevel)} · ${preferenceLabel(preferences.explanationMethod)}`}
         to="/ask-ai"
       />
 
@@ -496,8 +571,9 @@ const AskAiPage = ({ preferences, setPreferences }: { preferences: UserPreferenc
   const location = useLocation();
   const initialQuestion = useMemo(() => new URLSearchParams(location.search).get('question') || '', [location.search]);
   const [question, setQuestion] = useState(initialQuestion);
-  const [format, setFormat] = useState<AnswerFormat>(preferences.answerFormat);
-  const [style, setStyle] = useState<TeachingStyle>(preferences.teachingStyle);
+  const [teachingLevel, setTeachingLevel] = useState<TeachingLevel>(preferences.teachingLevel);
+  const [explanationMethod, setExplanationMethod] = useState<ExplanationMethod>(preferences.explanationMethod);
+  const [learningModes, setLearningModes] = useState<LearningMode[]>(preferences.learningModes);
   const [answerScope, setAnswerScope] = useState<AnswerScope>('auto');
   const [conversationId] = useState(() => `web-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`);
   const [messages, setMessages] = useState<ChatItem[]>([
@@ -521,14 +597,19 @@ const AskAiPage = ({ preferences, setPreferences }: { preferences: UserPreferenc
     setLoading(true);
     setMessages((current) => [...current, { id: `user-${Date.now()}`, role: 'user', content: text }]);
     try {
+      const normalizedLearningModes = normalizeModes(learningModes);
       const response = await aiApi.ask({
         conversation_id: conversationId,
         parent_message_id: parentMessageId,
         question: text,
         subject: preferences.subject,
         grade: preferences.grade,
-        answer_format: format,
-        teaching_style: style,
+        answer_format: primaryAnswerFormat(normalizedLearningModes),
+        teaching_style: legacyTeachingStyle(teachingLevel, explanationMethod),
+        teaching_level: teachingLevel,
+        explanation_method: explanationMethod,
+        learning_modes: normalizedLearningModes,
+        student_interests: preferences.studentInterests,
         interests: preferences.interests,
         language: preferences.language,
         answer_scope: answerScope,
@@ -555,22 +636,61 @@ const AskAiPage = ({ preferences, setPreferences }: { preferences: UserPreferenc
     }
   };
 
-  const saveAnswerPreference = (nextFormat: AnswerFormat) => {
-    setFormat(nextFormat);
-    const next = { ...preferences, answerFormat: nextFormat };
+  const saveLearningModes = (nextModes: LearningMode[]) => {
+    const normalizedLearningModes = normalizeModes(nextModes);
+    setLearningModes(normalizedLearningModes);
+    const next = {
+      ...preferences,
+      learningModes: normalizedLearningModes,
+      answerFormat: primaryAnswerFormat(normalizedLearningModes),
+    };
     setPreferences(next);
     savePreferences(next);
   };
 
+  const saveTeachingLevel = (nextLevel: TeachingLevel) => {
+    setTeachingLevel(nextLevel);
+    const next = {
+      ...preferences,
+      teachingLevel: nextLevel,
+      teachingStyle: legacyTeachingStyle(nextLevel, explanationMethod),
+    };
+    setPreferences(next);
+    savePreferences(next);
+  };
+
+  const saveExplanationMethod = (nextMethod: ExplanationMethod) => {
+    setExplanationMethod(nextMethod);
+    const next = {
+      ...preferences,
+      explanationMethod: nextMethod,
+      teachingStyle: legacyTeachingStyle(teachingLevel, nextMethod),
+    };
+    setPreferences(next);
+    savePreferences(next);
+  };
+
+  const compactPreferenceLabel = [
+    preferenceLabel(teachingLevel),
+    preferenceLabel(explanationMethod),
+    learningModes.map(preferenceLabel).join(' + '),
+  ].join(' · ');
+
   return (
     <div className="ask-layout">
-      <PageHeader eyebrow="اسأل الذكاء" title="معلّم الكيمياء RAG" subtitle="إجابات موثقة بصفحات من كتاب الكيمياء." />
+      <PageHeader eyebrow="اسأل الذكاء" title="معلّم الكيمياء RAG" subtitle={`إجابات موثقة بصفحات من كتاب الكيمياء. ${compactPreferenceLabel}`} />
       <Card className="chat-panel">
         <div className="chat-toolbar">
           <label>
+            مستوى الشرح
+            <select value={teachingLevel} onChange={(event) => saveTeachingLevel(event.target.value as TeachingLevel)}>
+              {teachingLevelLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+            </select>
+          </label>
+          <label>
             طريقة الشرح
-            <select value={style} onChange={(event) => setStyle(event.target.value as TeachingStyle)}>
-              {styleLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+            <select value={explanationMethod} onChange={(event) => saveExplanationMethod(event.target.value as ExplanationMethod)}>
+              {explanationMethodLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
             </select>
           </label>
           <label>
@@ -579,7 +699,7 @@ const AskAiPage = ({ preferences, setPreferences }: { preferences: UserPreferenc
               {answerScopeLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
             </select>
           </label>
-          <AnswerFormatSelector value={format} onChange={saveAnswerPreference} />
+          <LearningModeSelector value={learningModes} onChange={saveLearningModes} />
         </div>
         <div className="chat-feed">
           {messages.map((message) => (
@@ -625,8 +745,7 @@ const ProfilePage = ({
 }) => {
   const [status, setStatus] = useState('');
 
-  const updatePreference = async (field: keyof UserPreferences, value: string) => {
-    const next = { ...preferences, [field]: value } as UserPreferences;
+  const updatePreferences = async (next: UserPreferences) => {
     setPreferences(next);
     savePreferences(next);
     try {
@@ -635,6 +754,47 @@ const ProfilePage = ({
     } catch {
       setStatus('تم حفظ التفضيلات محلياً. تعذر الوصول إلى الخلفية.');
     }
+  };
+
+  const updatePreference = async <K extends keyof UserPreferences>(field: K, value: UserPreferences[K]) => {
+    const next = { ...preferences, [field]: value } as UserPreferences;
+    await updatePreferences(next);
+  };
+
+  const updateTeachingLevel = async (value: TeachingLevel) => {
+    await updatePreferences({
+      ...preferences,
+      teachingLevel: value,
+      teachingStyle: legacyTeachingStyle(value, preferences.explanationMethod),
+    });
+  };
+
+  const updateExplanationMethod = async (value: ExplanationMethod) => {
+    await updatePreferences({
+      ...preferences,
+      explanationMethod: value,
+      teachingStyle: legacyTeachingStyle(preferences.teachingLevel, value),
+    });
+  };
+
+  const updateLearningModes = async (value: LearningMode[]) => {
+    const normalizedLearningModes = normalizeModes(value);
+    await updatePreferences({
+      ...preferences,
+      learningModes: normalizedLearningModes,
+      answerFormat: primaryAnswerFormat(normalizedLearningModes),
+    });
+  };
+
+  const toggleInterest = async (value: StudentInterest) => {
+    const nextInterests = preferences.studentInterests.includes(value)
+      ? preferences.studentInterests.filter((item) => item !== value)
+      : [...preferences.studentInterests, value];
+    await updatePreferences({
+      ...preferences,
+      studentInterests: nextInterests,
+      interests: nextInterests,
+    });
   };
 
   return (
@@ -650,23 +810,40 @@ const ProfilePage = ({
         {status && <StatusPill tone="teal">{status}</StatusPill>}
         <div className="settings-list">
           <label>
-            طريقة الشرح
-            <select value={preferences.teachingStyle} onChange={(event) => void updatePreference('teachingStyle', event.target.value)}>
-              {styleLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+            مستوى الشرح
+            <select value={preferences.teachingLevel} onChange={(event) => void updateTeachingLevel(event.target.value as TeachingLevel)}>
+              {teachingLevelLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
             </select>
           </label>
           <label>
-            صيغة الإجابة
-            <select value={preferences.answerFormat} onChange={(event) => void updatePreference('answerFormat', event.target.value)}>
-              <option value="text">نص</option>
-              <option value="audio">صوت</option>
-              <option value="image">صورة</option>
-              <option value="video">Reel</option>
+            طريقة الشرح
+            <select value={preferences.explanationMethod} onChange={(event) => void updateExplanationMethod(event.target.value as ExplanationMethod)}>
+              {explanationMethodLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
             </select>
           </label>
+          <div className="preference-stack">
+            <span>أنماط التعلم</span>
+            <LearningModeSelector value={preferences.learningModes} onChange={(modes) => void updateLearningModes(modes)} />
+          </div>
+          <div className="preference-stack">
+            <span>اهتمامات الطالب</span>
+            <div className="interest-grid compact">
+              {studentInterestOptions.map((interest) => (
+                <button
+                  key={interest.value}
+                  type="button"
+                  className={preferences.studentInterests.includes(interest.value) ? 'interest active' : 'interest'}
+                  onClick={() => void toggleInterest(interest.value)}
+                >
+                  <span>{interest.icon}</span>
+                  <strong>{interest.label}</strong>
+                </button>
+              ))}
+            </div>
+          </div>
           <label>
             اللغة
-            <select value={preferences.language} onChange={(event) => void updatePreference('language', event.target.value)}>
+            <select value={preferences.language} onChange={(event) => void updatePreference('language', event.target.value as UserPreferences['language'])}>
               <option value="ar">العربية</option>
               <option value="en">English</option>
             </select>
@@ -699,7 +876,11 @@ function App() {
     }
     try {
       const user = await authApi.me();
-      setAuth((current) => ({ ...current, user, booting: false }));
+      setAuth((current) => {
+        const preferences = preferencesFromUser(user, current.preferences);
+        savePreferences(preferences);
+        return { ...current, user, preferences, booting: false };
+      });
     } catch {
       clearToken();
       setAuth((current) => ({ ...current, user: null, booting: false }));
@@ -713,7 +894,11 @@ function App() {
       try {
         const user = await authApi.me();
         if (!cancelled) {
-          setAuth((current) => ({ ...current, user, booting: false }));
+          setAuth((current) => {
+            const preferences = preferencesFromUser(user, current.preferences);
+            savePreferences(preferences);
+            return { ...current, user, preferences, booting: false };
+          });
         }
       } catch {
         clearToken();

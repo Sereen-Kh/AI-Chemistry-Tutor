@@ -23,15 +23,15 @@ const toBackendTeachingStyle = (style: UserPreferences['teachingStyle']): string
     visual: 'visual',
     exam: 'academic',
     simple: 'beginner',
-  })[style];
+  })[style ?? 'real_life'];
 
 const toBackendAnswerFormat = (format: UserPreferences['answerFormat']): string =>
   ({
     text: 'text',
-    audio: 'text',
+    audio: 'audio',
     image: 'images',
     video: 'video',
-  })[format];
+  })[format ?? 'text'];
 
 export const authApi = {
   async login(email: string, password: string): Promise<string> {
@@ -69,6 +69,10 @@ export const authApi = {
       grade: preferences.grade,
       teaching_style: toBackendTeachingStyle(preferences.teachingStyle),
       answer_format: toBackendAnswerFormat(preferences.answerFormat),
+      teaching_level: preferences.teachingLevel,
+      explanation_method: preferences.explanationMethod,
+      learning_modes: preferences.learningModes,
+      student_interests: preferences.studentInterests,
       language: preferences.language,
       interest_ids: interestIds,
     });

@@ -1,13 +1,13 @@
 import type { AiAskRequest, AiAskResponse, BalanceResult, FlashcardDeck, InterestCategory, StudyPlan } from '../types';
 
 export const mockInterests: InterestCategory[] = [
-  { id: 1, key: 'football', name_ar: 'كرة القدم', name_en: 'Football', icon: '⚽' },
-  { id: 2, key: 'food', name_ar: 'الطعام', name_en: 'Food', icon: '🍱' },
-  { id: 3, key: 'real_life', name_ar: 'أمثلة من الحياة', name_en: 'Real-life examples', icon: '🌍' },
-  { id: 4, key: 'experiments', name_ar: 'التجارب', name_en: 'Experiments', icon: '⚗️' },
-  { id: 5, key: 'visual', name_ar: 'تعلم بصري', name_en: 'Visual learning', icon: '🧭' },
-  { id: 6, key: 'short_videos', name_ar: 'فيديوهات قصيرة', name_en: 'Short videos', icon: '🎬' },
-  { id: 7, key: 'exam_prep', name_ar: 'تحضير امتحان', name_en: 'Exam preparation', icon: '📝' },
+  { id: 1, key: 'football', name_ar: 'كرة القدم', name_en: 'Football', icon: 'FB' },
+  { id: 2, key: 'cars', name_ar: 'السيارات', name_en: 'Cars', icon: 'CAR' },
+  { id: 3, key: 'cooking', name_ar: 'الطبخ', name_en: 'Cooking', icon: 'CK' },
+  { id: 4, key: 'gaming', name_ar: 'الألعاب', name_en: 'Gaming', icon: 'GM' },
+  { id: 5, key: 'daily_life', name_ar: 'الحياة اليومية', name_en: 'Daily life', icon: 'DL' },
+  { id: 6, key: 'laboratory', name_ar: 'المختبر', name_en: 'Laboratory', icon: 'LAB' },
+  { id: 7, key: 'nature', name_ar: 'الطبيعة', name_en: 'Nature', icon: 'NAT' },
 ];
 
 export const mockStudyPlan: StudyPlan = {
@@ -170,35 +170,63 @@ export const mockAiAnswer = (request: AiAskRequest): AiAskResponse => {
   if (request.answer_format === 'audio') {
     return {
       answer: baseAnswer,
+      answer_text: baseAnswer,
       sources: [selectedSource],
+      citations: [selectedSource],
       confidence: 0.78,
       format: 'audio',
+      teaching_level: request.teaching_level,
+      explanation_method: request.explanation_method,
+      learning_modes: request.learning_modes,
+      student_interests: request.student_interests,
+      media_blocks: [{ type: 'audio', content: 'الصوت غير متاح في وضع الاختبار المحلي.' }],
     };
   }
   if (request.answer_format === 'image') {
     return {
       answer: baseAnswer,
+      answer_text: baseAnswer,
       sources: [selectedSource],
+      citations: [selectedSource],
       confidence: 0.78,
       format: 'image',
+      teaching_level: request.teaching_level,
+      explanation_method: request.explanation_method,
+      learning_modes: request.learning_modes,
+      student_interests: request.student_interests,
+      media_blocks: [{ type: 'source_image', content: 'صورة صفحة المصدر عند توفرها.' }],
       source_page_image_url: `/media/books/syria_grade_9_chemistry/page_images/page_${String(selectedSource.page).padStart(3, '0')}.png`,
     };
   }
   if (request.answer_format === 'video') {
     return {
       answer: baseAnswer,
+      answer_text: baseAnswer,
       sources: [selectedSource],
+      citations: [selectedSource],
       confidence: 0.78,
       format: 'video',
+      teaching_level: request.teaching_level,
+      explanation_method: request.explanation_method,
+      learning_modes: request.learning_modes,
+      student_interests: request.student_interests,
+      media_blocks: [{ type: 'video', content: 'اقتراح الفيديو غير متاح في وضع الاختبار المحلي.' }],
       video_title: 'No suitable video found yet. Try text or image explanation.',
       video_source: 'internal',
     };
   }
   return {
     answer: baseAnswer,
+    answer_text: baseAnswer,
     sources: [selectedSource],
+    citations: [selectedSource],
     confidence: 0.78,
     format: 'text',
+    teaching_level: request.teaching_level,
+    explanation_method: request.explanation_method,
+    learning_modes: request.learning_modes,
+    student_interests: request.student_interests,
+    media_blocks: [],
   };
 };
 

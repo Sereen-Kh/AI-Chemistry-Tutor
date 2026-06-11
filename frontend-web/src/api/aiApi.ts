@@ -13,15 +13,22 @@ interface BackendChatSource {
 
 interface BackendChatAnswer {
   answer: string;
+  answer_text?: string;
   answer_type: string;
   route: string;
   blocks?: Array<{ type: string; content: string; url?: string | null; image_url?: string | null; page?: number | null; metadata?: Record<string, unknown> }>;
   sources: BackendChatSource[];
+  citations?: BackendChatSource[];
+  media_blocks?: Array<{ type: string; content: string; url?: string | null; image_url?: string | null; page?: number | null; metadata?: Record<string, unknown> }>;
   source_blocks?: Array<Record<string, unknown>>;
   page_numbers: number[];
   confidence: number;
   diagnostics?: Record<string, unknown>;
   suggested_next_action?: string | null;
+  teaching_level?: AiAskResponse['teaching_level'];
+  explanation_method?: AiAskResponse['explanation_method'];
+  learning_modes?: AiAskResponse['learning_modes'];
+  student_interests?: AiAskResponse['student_interests'];
 }
 
 const origin = API_BASE_URL.startsWith('http') ? new URL(API_BASE_URL).origin : window.location.origin;
@@ -33,7 +40,8 @@ const mediaUrl = (value?: string): string | undefined => {
 };
 
 const mapBackendAnswer = (request: AiAskRequest, response: BackendChatAnswer): AiAskResponse => {
-  const citations: SourceCitation[] = response.sources.map((source) => ({
+  const backendSources = response.sources?.length ? response.sources : response.citations || [];
+  const citations: SourceCitation[] = backendSources.map((source) => ({
     title: source.source || 'كتاب الكيمياء - الصف التاسع',
     page: source.page_number ?? null,
     chunk_id: source.chunk_id,
@@ -42,17 +50,24 @@ const mapBackendAnswer = (request: AiAskRequest, response: BackendChatAnswer): A
   }));
 
   const result: AiAskResponse = {
-    answer: response.answer,
+    answer: response.answer_text || response.answer,
     sources: citations,
+    citations,
     confidence: response.confidence,
     format: request.answer_format,
     answer_type: response.answer_type,
     route: response.route,
     diagnostics: response.diagnostics,
+    teaching_level: response.teaching_level,
+    explanation_method: response.explanation_method,
+    learning_modes: response.learning_modes,
+    student_interests: response.student_interests,
+    media_blocks: response.media_blocks,
   };
 
-  const audioBlock = response.blocks?.find((block) => block.type === 'audio' && block.url);
-  const imageBlock = response.blocks?.find((block) => ['image', 'source_page'].includes(block.type) && (block.image_url || block.url));
+  const blocks = [...(response.blocks || []), ...(response.media_blocks || [])];
+  const audioBlock = blocks.find((block) => block.type === 'audio' && block.url);
+  const imageBlock = blocks.find((block) => ['image', 'source_page', 'source_image'].includes(block.type) && (block.image_url || block.url));
   if (audioBlock?.url) result.audio_url = mediaUrl(audioBlock.url);
   if (imageBlock?.image_url) result.source_page_image_url = mediaUrl(imageBlock.image_url);
   if (imageBlock?.url) result.source_page_image_url = mediaUrl(imageBlock.url);
@@ -79,10 +94,15 @@ export const aiApi = {
         conversation_id: request.conversation_id,
         parent_message_id: request.parent_message_id,
         question: request.question,
+        message: request.question,
         source_types: request.source_types,
         preferred_answer_type: request.answer_format,
         answer_scope: request.answer_scope ?? 'auto',
         teaching_style: request.teaching_style,
+        teaching_level: request.teaching_level,
+        explanation_method: request.explanation_method,
+        learning_modes: request.learning_modes,
+        student_interests: request.student_interests,
         action: request.action,
         previous_question: request.previous_question,
         previous_answer: request.previous_answer,

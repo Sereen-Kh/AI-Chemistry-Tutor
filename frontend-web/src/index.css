@@ -444,6 +444,11 @@ label {
   margin: 28px 0;
 }
 
+.interest-grid.compact {
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  margin: 10px 0 0;
+}
+
 .interest {
   min-height: 120px;
   display: flex;
@@ -461,6 +466,15 @@ label {
 
 .interest span { font-size: 2rem; transition: transform 0.3s; }
 .interest strong { font-size: 0.95rem; }
+
+.interest-grid.compact .interest {
+  min-height: 82px;
+  gap: 8px;
+}
+
+.interest-grid.compact .interest span {
+  font-size: 0.85rem;
+}
 
 .interest:hover {
   background: rgba(255, 255, 255, 0.04);
@@ -483,6 +497,18 @@ label {
   grid-template-columns: 1fr 1fr;
   gap: 18px;
   margin-bottom: 28px;
+}
+
+.preference-stack {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.preference-stack > span {
+  color: var(--t2);
+  font-size: 0.9rem;
+  font-weight: 800;
 }
 
 /* App Shell navigation & grid panels */

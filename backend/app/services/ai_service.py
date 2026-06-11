@@ -124,8 +124,35 @@ async def get_ai_response(
         )
         return response.text or ""
 
+    async def _call_with_retries() -> str:
+        attempts = max(3, settings.gemini_tutor_retry_attempts + 1)
+        last_exc = None
+        for attempt in range(attempts):
+            try:
+                return await asyncio.to_thread(_call)
+            except Exception as exc:
+                last_exc = exc
+                if is_gemini_auth_error(exc):
+                    break
+                if is_gemini_quota_error(exc) or _is_quota_error(exc):
+                    break
+                if _is_transient_generation_error(exc):
+                    logger.warning(
+                        "Gemini transient error on attempt %d/%d (will retry): %s",
+                        attempt + 1,
+                        attempts,
+                        exc,
+                    )
+                    if attempt < attempts - 1:
+                        await asyncio.sleep(0.5 * (attempt + 1))
+                        continue
+                break
+        if last_exc:
+            raise last_exc
+        raise AIServiceError("Gemini request failed.")
+
     try:
-        return await asyncio.to_thread(_call)
+        return await _call_with_retries()
     except Exception as exc:  # pragma: no cover - external API failure
         if is_gemini_auth_error(exc):
             _disable_generation_temporarily("auth_error")

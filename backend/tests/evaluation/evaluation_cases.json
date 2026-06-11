@@ -1,0 +1,454 @@
+{
+  "version": "1.0",
+  "description": "Golden test cases for the EduMind Chemistry Tutor Ask AI system",
+  "categories": {
+    "basic_element_lookup": [
+      {
+        "id": "elem_iron",
+        "question": "ما هو الحديد؟",
+        "expected_intent": "definition_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["الحديد", "Fe"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "elem_copper",
+        "question": "ما هو النحاس؟",
+        "expected_intent": "definition_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["النحاس", "Cu"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "elem_zinc",
+        "question": "ما هو الزنك؟",
+        "expected_intent": "definition_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["الزنك", "Zn"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "elem_magnesium",
+        "question": "ما هو المغنزيوم؟",
+        "expected_intent": "definition_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["المغنزيوم", "Mg"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "elem_aluminum",
+        "question": "ما هو الألمنيوم؟",
+        "expected_intent": "definition_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["الألمنيوم", "Al"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "elem_silver",
+        "question": "ما هي الفضة؟",
+        "expected_intent": "definition_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["الفضة", "Ag"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "elem_gold",
+        "question": "ما هو الذهب؟",
+        "expected_intent": "definition_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["الذهب", "Au"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "elem_carbon",
+        "question": "ما هو الكربون؟",
+        "expected_intent": "definition_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["الكربون", "C"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "elem_calcium",
+        "question": "ما هو الكالسيوم؟",
+        "expected_intent": "definition_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["الكالسيوم", "Ca"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "elem_sodium",
+        "question": "ما هو الصوديوم؟",
+        "expected_intent": "definition_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["الصوديوم", "Na"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "elem_potassium",
+        "question": "ما هو البوتاسيوم؟",
+        "expected_intent": "definition_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["البوتاسيوم", "K"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "elem_nitrogen",
+        "question": "ما هو الآزوت؟",
+        "expected_intent": "definition_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["الآزوت", "N"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "elem_sulfur",
+        "question": "ما هو الكبريت؟",
+        "expected_intent": "definition_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["الكبريت", "S"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "elem_chlorine",
+        "question": "ما هو الكلور؟",
+        "expected_intent": "definition_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["الكلور", "Cl"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "elem_lead",
+        "question": "ما هو الرصاص؟",
+        "expected_intent": "definition_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["الرصاص", "Pb"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      }
+    ],
+    "basic_compound_lookup": [
+      {
+        "id": "compound_water",
+        "question": "ما هو الماء؟",
+        "expected_intent": "definition_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["الماء", "H₂O"],
+        "forbidden_in_answer": ["الحموض", "لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "compound_co2",
+        "question": "ما هو ثاني أكسيد الكربون؟",
+        "expected_intent": "definition_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["ثاني أكسيد الكربون", "CO₂"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "compound_caco3",
+        "question": "ما هي كربونات الكالسيوم؟",
+        "expected_intent": "definition_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["كربونات الكالسيوم", "CaCO₃"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "compound_nacl",
+        "question": "ما هو كلوريد الصوديوم؟",
+        "expected_intent": "definition_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["كلوريد الصوديوم", "NaCl"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "compound_co",
+        "question": "ما هو أحادي أكسيد الكربون؟",
+        "expected_intent": "definition_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["أحادي أكسيد الكربون", "CO"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "compound_so2",
+        "question": "ما هو ثاني أكسيد الكبريت؟",
+        "expected_intent": "definition_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["ثاني أكسيد الكبريت", "SO₂"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "compound_ammonia",
+        "question": "ما هي الأمونيا؟",
+        "expected_intent": "definition_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["الأمونيا", "NH₃"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "compound_methane",
+        "question": "ما هو الميثان؟",
+        "expected_intent": "definition_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["الميثان", "CH₄"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      }
+    ],
+    "formula_symbol_lookup": [
+      {
+        "id": "formula_co2",
+        "question": "ما هو رمز ثاني أكسيد الكربون؟",
+        "expected_intent": "formula_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["CO₂"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "formula_iron",
+        "question": "ما هو رمز الحديد؟",
+        "expected_intent": "formula_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["Fe"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "formula_water",
+        "question": "ما صيغة الماء؟",
+        "expected_intent": "formula_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["H₂O"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "formula_hcl",
+        "question": "ما هو رمز حمض كلور الماء؟",
+        "expected_intent": "formula_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["HCl"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "formula_copper",
+        "question": "ما هو رمز النحاس؟",
+        "expected_intent": "formula_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["Cu"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "formula_calcium",
+        "question": "ما هو رمز الكالسيوم؟",
+        "expected_intent": "formula_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["Ca"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "formula_co",
+        "question": "ما صيغة أحادي أكسيد الكربون؟",
+        "expected_intent": "formula_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["CO"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "formula_methane",
+        "question": "ما صيغة الميثان؟",
+        "expected_intent": "formula_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["CH₄"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "formula_ammonia",
+        "question": "ما صيغة الأمونيا؟",
+        "expected_intent": "formula_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["NH₃"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      }
+    ],
+    "concept_definition": [
+      {
+        "id": "concept_acids",
+        "question": "ما هي الحموض؟",
+        "expected_intent": "definition_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["الحموض", "H"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "concept_bases",
+        "question": "ما هي الأسس؟",
+        "expected_intent": "definition_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["الأسس", "OH"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "concept_ion",
+        "question": "ما هو الأيون؟",
+        "expected_intent": "definition_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["الأيون"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "concept_mole",
+        "question": "ما هو المول؟",
+        "expected_intent": "definition_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["المول"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "concept_molar_concentration",
+        "question": "ما هو التركيز المولي؟",
+        "expected_intent": "definition_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["التركيز المولي"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "concept_chemical_reaction",
+        "question": "ما هو التفاعل الكيميائي؟",
+        "expected_intent": "reaction_query",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["التفاعل الكيميائي"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "concept_chemical_equation",
+        "question": "ما هي المعادلة الكيميائية؟",
+        "expected_intent": "equation_lookup",
+        "expected_route": "dictionary_first",
+        "required_in_answer": ["المعادلة الكيميائية"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      }
+    ],
+    "safety_questions": [
+      {
+        "id": "safety_acid_water",
+        "question": "لماذا نضيف الحمض إلى الماء وليس العكس؟",
+        "expected_intent": "safety_question",
+        "expected_route": "safety_rule",
+        "required_in_answer": ["الحمض", "الماء"],
+        "forbidden_in_answer": ["لم أجد", "تعريف الحموض"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "safety_acid_water_v2",
+        "question": "لماذا لا نضيف الماء إلى الحمض؟",
+        "expected_intent": "safety_question",
+        "expected_route": "safety_rule",
+        "required_in_answer": ["الحمض", "الماء"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      }
+    ],
+    "exercise_solving": [
+      {
+        "id": "exercise_hcl_concentration",
+        "question": "احسب تركيز محلول HCl إذا أذبنا 7.3 غ في 200 مل ماء",
+        "expected_intent": "exercise_solving",
+        "expected_route": "math_solver",
+        "required_in_answer": ["HCl", "mol/L"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.9
+      },
+      {
+        "id": "exercise_naoh_concentration",
+        "question": "احسب تركيز محلول NaOH إذا أذبنا 4 غ في 500 مل ماء",
+        "expected_intent": "exercise_solving",
+        "expected_route": "math_solver",
+        "required_in_answer": ["NaOH", "mol/L"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.9
+      }
+    ],
+    "reaction_queries": [
+      {
+        "id": "reaction_fe_hcl",
+        "question": "ماذا يحصل عند تفاعل الحديد مع حمض كلور الماء؟",
+        "expected_intent": "reaction_query",
+        "expected_route": "chemistry_rule",
+        "required_in_answer": ["Fe", "HCl"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "reaction_cu_hcl",
+        "question": "هل يتفاعل النحاس مع حمض كلور الماء؟",
+        "expected_intent": "reaction_query",
+        "expected_route": "chemistry_rule",
+        "required_in_answer": ["Cu", "لا يحدث تفاعل"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "reaction_zn_h2so4",
+        "question": "ماذا ينتج عن تفاعل الزنك مع حمض الكبريت الممدد؟",
+        "expected_intent": "reaction_query",
+        "expected_route": "chemistry_rule",
+        "required_in_answer": ["Zn"],
+        "forbidden_in_answer": ["لم أجد"],
+        "expected_confidence_min": 0.8
+      }
+    ],
+    "litmus_properties": [
+      {
+        "id": "litmus_acid",
+        "question": "ما لون ورقة عباد الشمس في المحاليل الحمضية؟",
+        "expected_intent": "property_lookup",
+        "expected_route": "chemistry_rule",
+        "required_in_answer": ["الأحمر"],
+        "forbidden_in_answer": ["لم أجد", "الأزرق"],
+        "expected_confidence_min": 0.8
+      },
+      {
+        "id": "litmus_base",
+        "question": "ما لون ورقة عباد الشمس في المحاليل الأساسية؟",
+        "expected_intent": "property_lookup",
+        "expected_route": "chemistry_rule",
+        "required_in_answer": ["الأزرق"],
+        "forbidden_in_answer": ["لم أجد", "الأحمر"],
+        "expected_confidence_min": 0.8
+      }
+    ]
+  }
+}

@@ -26,11 +26,11 @@ class Settings(BaseSettings):
     ai_request_timeout_seconds: int = 12
     gemini_tutor_generation_enabled: bool = True
     gemini_tutor_timeout_seconds: int = 12
-    gemini_tutor_retry_attempts: int = 1
+    gemini_tutor_retry_attempts: int = 3
     gemini_failure_cooldown_seconds: int = 300
     gemini_semantic_helpers_enabled: bool = False
     gemini_semantic_helper_timeout_seconds: int = 10
-    gemini_semantic_helper_retry_attempts: int = 1
+    gemini_semantic_helper_retry_attempts: int = 3
     gemini_document_model: str = "gemini-2.5-flash"
     gemini_document_fallback_model: str = "gemini-2.5-pro,gemini-2.5-flash-lite"
     gemini_embedding_model: str = "gemini-embedding-001"

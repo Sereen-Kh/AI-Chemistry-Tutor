@@ -1407,47 +1407,50 @@ def _compute_confidence(
 
 _ANSWER_QUALITY_PROMPT_RULES = (
     "قواعد جودة الإجابة:\n"
-    "- لا تكتب عنواناً فارغاً أو عنواناً لا يتبعه محتوى حقيقي من السياق مباشرة.\n"
-    "- إذا كان سياق الكتاب ضعيفاً أو غير كاف، قل بوضوح: لم أجد معلومات كافية في مقاطع الكتاب المتاحة.\n"
-    "- لا تستخدم معرفة عامة إلا إذا كان نطاق الإجابة يسمح بذلك. إذا استخدمتها، افصلها عن إجابة الكتاب واذكر أنها ليست من المصدر المسترجع.\n"
-    "Answer quality rules: never create empty headings; if book context is weak, say the available book context is insufficient; use general knowledge only when answer_scope allows it, and label it separately from retrieved textbook context.\n"
+    "- لا تكتب عنواناً فارغاً أو عنواناً لا يتبعه محتوى حقيقي.\n"
+    "- إذا كان السؤال عن مفهوم بسيط (مثل تعريف عنصر أو رمز كيميائي أو صيغة مركب) والمقاطع المسترجعة لا تحتوي على تعريف مباشر لهذا المفهوم، أجب عن السؤال مباشرة من معلوماتك الكيميائية العامة بأسلوب معلم كيمياء ودود. لا تجبر المقاطع غير المرتبطة على أن تكون الإجابة.\n"
+    "- بعد الإجابة المباشرة، إن أمكن اربط إجابتك بالمواضيع والتجارب الواردة في مقاطع الكتاب المتاحة واذكر أرقام الصفحات المرتبطة (مثال: 'رمز غاز ثاني أكسيد الكربون هو CO₂. وفي كتابك يذكر هذا الغاز كناتج في تفاعل احتراق البوتان في الصفحة 79').\n"
+    "- لا تخترع أرقام صفحات غير موجودة في المقاطع المتاحة.\n"
+    "- إذا كانت المقاطع تحتوي على معلومات عن مفهوم مختلف (مثل: سألت عن الماء فجاءت مقاطع عن الحموض) فلا تجب عن المفهوم الخاطئ — أجب عن السؤال الأصلي مباشرة.\n"
+    "Answer quality rules: never create empty headings. If the question asks about a basic chemistry concept (element, symbol, formula) and the retrieved passages do NOT contain a direct definition for it, answer from your general chemistry knowledge directly. Do NOT force unrelated passages to be the answer. If passages discuss a different topic than what was asked, answer the original question instead. Do not invent page numbers.\n"
 )
 
 _SYSTEM_PROMPT_WITH_CONTEXT = (
-    "أنت مدرس كيمياء للصف التاسع. أجب بالاعتماد حصرياً على المقاطع التالية من الكتاب.\n"
+    "أنت مدرس كيمياء للصف التاسع. أجب بالاعتماد على المقاطع التالية من الكتاب كمصدرك المرجعي الرئيسي.\n"
     "التعليمات:\n"
-    "1. استخدم فقط المعلومات الموجودة في المقاطع أدناه.\n"
-    "2. اذكر رقم الصفحة لكل معلومة تستخدمها بالشكل: (صفحة XX).\n"
-    "3. إذا لم تجد الإجابة في المقاطع، قل ذلك بوضوح.\n"
-    "4. لا تخترع معلومات أو مصادر غير موجودة في المقاطع.\n"
-    "5. رتب إجابتك: التعريف أولاً، ثم التفاصيل، ثم الأمثلة.\n"
-    "6. تنبيه هام جداً: لا تستخدم صيغة LaTeX أو لغة الرياضيات (مثل $...$ أو $$...$$ أو \\text) لكتابة الصيغ الكيميائية أو المعادلات. اكتب الصيغ الكيميائية دائماً كنص عادي باستخدام الرموز الكيميائية والأرقام السفلية (Subscripts) (مثل CO₂، H₂O، H₂SO₄)، واكتب المعادلات الكيميائية على سطر منفرد جديد كرموز نصية عادية مع السهم -> أو → (مثل: 2H2 + O2 -> 2H2O).\n"
+    "1. استخدم المعلومات الموجودة في المقاطع لربط الإجابة بالمنهج الدراسي والصفحات المذكورة. اذكر رقم الصفحة لكل معلومة مستقاة من الكتاب بالشكل: (صفحة XX).\n"
+    "2. إذا كان السؤال عن مفهوم أساسي أو عام في الكيمياء (مثل تعريف عنصر، رمز كيميائي، صيغة مركب، إلخ) ولم يكن مشروحاً بالتفصيل في المقاطع، استخدم معلوماتك الكيميائية العامة لتقديم إجابة واضحة وصحيحة ومبسطة كمعلم كيمياء للصف التاسع، ثم اربطها بالمواضيع أو التجارب الواردة في مقاطع الكتاب المتاحة واذكر صفحاتها.\n"
+    "3. لا تخترع أرقام صفحات أو معلومات غير موجودة في المقاطع.\n"
+    "4. رتب إجابتك: التعريف أولاً، ثم التفاصيل، ثم الأمثلة.\n"
+    "5. تنبيه هام جداً: لا تستخدم صيغة LaTeX أو لغة الرياضيات (مثل $...$ أو $$...$$ أو \\text) لكتابة الصيغ الكيميائية أو المعادلات. اكتب الصيغ الكيميائية دائماً كنص عادي باستخدام الرموز الكيميائية والأرقام السفلية (Subscripts) (مثل CO₂، H₂O، H₂SO₄)، واكتب المعادلات الكيميائية على سطر منفرد جديد كرموز نصية عادية مع السهم -> أو → (مثل: 2H2 + O2 -> 2H2O).\n"
     "CRITICAL: Never use LaTeX or math mode ($...$, $$...$$, \\text) for chemistry formulas or equations. Render formulas as normal text with subscript numbers (e.g., CO₂, H₂O, H₂SO₄) and equations as clean plain text on a new line (e.g., 2H2 + O2 -> 2H2O).\n\n"
     f"{_ANSWER_QUALITY_PROMPT_RULES}\n"
     "المقاطع:\n{context}"
 )
 
 _SYSTEM_PROMPT_NO_CONTEXT = (
-    "أنت مدرس كيمياء للصف التاسع. أجب بالعربية.\n"
-    "إذا لم تكن الإجابة موجودة في مصادر الكتاب أو الامتحانات المتاحة، "
-    "قل بوضوح إنك لم تجدها في المصادر المتاحة، ثم يمكنك تقديم شرح عام منفصل.\n"
+    "أنت مدرس كيمياء للصف التاسع. أجب عن أسئلة الطلاب بأسلوب تعليمي ودود وواضح باللغة العربية.\n"
+    "إذا كان السؤال خارج نطاق المنهج الدراسي أو لم تجد له مصدراً في الكتاب، أجب عنه مباشرة مستعيناً بمعلوماتك الكيميائية العامة بأسلوب مبسط ومناسب لطالب في الصف التاسع.\n"
     "تنبيه هام جداً: لا تستخدم صيغة LaTeX أو لغة الرياضيات (مثل $...$ أو $$...$$ أو \\text) لكتابة الصيغ الكيميائية أو المعادلات. اكتب الصيغ الكيميائية دائماً كنص عادي باستخدام الرموز الكيميائية والأرقام السفلية (Subscripts) (مثل CO₂، H₂O، H₂SO₄)، واكتب المعادلات الكيميائية على سطر منفرد جديد كرموز نصية عادية مع السهم -> أو → (مثل: 2H2 + O2 -> 2H2O).\n"
     "CRITICAL: Never use LaTeX or math mode ($...$, $$...$$, \\text) for chemistry formulas or equations. Render formulas as normal text with subscript numbers (e.g., CO₂, H₂O, H₂SO₄) and equations as clean plain text on a new line (e.g., 2H2 + O2 -> 2H2O).\n\n"
     f"{_ANSWER_QUALITY_PROMPT_RULES}"
 )
 
 _SYSTEM_PROMPT_ASK_WITH_CONTEXT = (
-    "أنت مدرس كيمياء للصف التاسع. أجب بالاعتماد على المصادر التالية.\n"
-    "اذكر رقم الصفحة عندما يكون متاحاً. لا تخترع مصادر.\n"
-    "تنبيه هام جداً: لا تستخدم صيغة LaTeX أو لغة الرياضيات (مثل $...$ أو $$...$$ أو \\text) لكتابة الصيغ الكيميائية أو المعادلات. اكتب الصيغ الكيميائية دائماً كنص عادي باستخدام الرموز الكيميائية والأرقام السفلية (Subscripts) (مثل CO₂، H₂O، H₂SO₄)، واكتب المعادلات الكيميائية على سطر منفرد جديد كرموز نصية عادية مع السهم -> أو → (مثل: 2H2 + O2 -> 2H2O).\n"
+    "أنت مدرس كيمياء للصف التاسع. أجب بالاعتماد على المقاطع التالية من الكتاب كمصدرك المرجعي الرئيسي.\n"
+    "التعليمات:\n"
+    "1. استخدم المعلومات الموجودة في المقاطع لربط الإجابة بالمنهج الدراسي والصفحات المذكورة. اذكر رقم الصفحة لكل معلومة مستقاة من الكتاب بالشكل: (صفحة XX).\n"
+    "2. إذا كان السؤال عن مفهوم أساسي أو عام في الكيمياء (مثل تعريف عنصر، رمز كيميائي، صيغة مركب، إلخ) ولم يكن مشروحاً بالتفصيل في المقاطع، استخدم معلوماتك الكيميائية العامة لتقديم إجابة واضحة وصحيحة ومبسطة كمعلم كيمياء للصف التاسع، ثم اربطها بالمواضيع أو التجارب الواردة في مقاطع الكتاب المتاحة واذكر صفحاتها.\n"
+    "3. لا تخترع أرقام صفحات أو معلومات غير موجودة في المقاطع.\n"
+    "4. تنبيه هام جداً: لا تستخدم صيغة LaTeX أو لغة الرياضيات (مثل $...$ أو $$...$$ أو \\text) لكتابة الصيغ الكيميائية أو المعادلات. اكتب الصيغ الكيميائية دائماً كنص عادي باستخدام الرموز الكيميائية والأرقام السفلية (Subscripts) (مثل CO₂، H₂O، H₂SO₄)، واكتب المعادلات الكيميائية على سطر منفرد جديد كرموز نصية عادية مع السهم -> أو → (مثل: 2H2 + O2 -> 2H2O).\n"
     "CRITICAL: Never use LaTeX or math mode ($...$, $$...$$, \\text) for chemistry formulas or equations. Render formulas as normal text with subscript numbers (e.g., CO₂, H₂O, H₂SO₄) and equations as clean plain text on a new line (e.g., 2H2 + O2 -> 2H2O).\n\n"
     f"{_ANSWER_QUALITY_PROMPT_RULES}\n"
     "المقاطع:\n{context}"
 )
 
 _SYSTEM_PROMPT_ASK_NO_CONTEXT = (
-    "أنت مدرس كيمياء للصف التاسع. أجب بالعربية.\n"
-    "اذكر بوضوح أن السياق المدرسي المتاح غير كاف إذا لم تجد مصدراً.\n"
+    "أنت مدرس كيمياء للصف التاسع. أجب عن أسئلة الطلاب بأسلوب تعليمي ودود وواضح باللغة العربية.\n"
+    "إذا كان السؤال خارج نطاق المنهج الدراسي أو لم تجد له مصدراً في الكتاب، أجب عنه مباشرة مستعيناً بمعلوماتك الكيميائية العامة بأسلوب مبسط ومناسب لطالب في الصف التاسع.\n"
     "تنبيه هام جداً: لا تستخدم صيغة LaTeX أو لغة الرياضيات (مثل $...$ أو $$...$$ أو \\text) لكتابة الصيغ الكيميائية أو المعادلات. اكتب الصيغ الكيميائية دائماً كنص عادي باستخدام الرموز الكيميائية والأرقام السفلية (Subscripts) (مثل CO₂، H₂O، H₂SO₄)، واكتب المعادلات الكيميائية على سطر منفرد جديد كرموز نصية عادية مع السهم -> أو → (مثل: 2H2 + O2 -> 2H2O).\n"
     "CRITICAL: Never use LaTeX or math mode ($...$, $$...$$, \\text) for chemistry formulas or equations. Render formulas as normal text with subscript numbers (e.g., CO₂, H₂O, H₂SO₄) and equations as clean plain text on a new line (e.g., 2H2 + O2 -> 2H2O).\n\n"
     f"{_ANSWER_QUALITY_PROMPT_RULES}"
@@ -2085,11 +2088,16 @@ async def ask_question(
     if litmus_rule and answer_scope != "book_only":
         return _finalize_answer(litmus_rule, question)
 
+    # Catch-all dictionary gate: if the question matches a known approved
+    # dictionary entity, return the dictionary answer directly — no RAG.
+    # This covers definition_lookup, formula_lookup, property_lookup AND
+    # general/reaction_query intents that happen to match a known entity.
+    _dictionary_eligible_intents = simple_dictionary_intents | {"general", "reaction_query"}
     if (
         dictionary_entry
         and answer_scope in {"auto", "tutor_general"}
         and not explicit_book
-        and (intent in simple_dictionary_intents or answer_scope == "tutor_general")
+        and (intent in _dictionary_eligible_intents or answer_scope == "tutor_general")
     ):
         return _finalize_answer(_dictionary_response(
             entry=dictionary_entry,
@@ -2382,35 +2390,9 @@ async def ask_question(
                 diagnostics=diagnostics,
                 chunks=chunks,
             ), question)
-        answer = (
-            "لم أجد ذلك بوضوح في مقاطع الكتاب المتاحة.\n\n"
-            "يمكنني الإجابة عندما تحدد الدرس أو تستخدم صياغة أوضح، "
-            "أما الآن فلا أريد أن أعطيك جواباً منسوباً للكتاب بثقة ضعيفة."
-        )
-        answer_type = "not_found"
-        diagnostics.update({"low_confidence": True, "confidence_threshold": confidence_threshold})
-        diagnostics["confidence_components"]["final_confidence"] = round(float(confidence), 4)
-        return _finalize_answer({
-            "answer": answer,
-            "answer_type": answer_type,
-            "route": "not_found",
-            "grounding": "book",
-            "answer_scope": answer_scope,
-            "blocks": _build_answer_blocks(
-                answer,
-                chunks,
-                answer_type=answer_type,
-                preferred_answer_type=preferred_answer_type,
-                page_numbers=page_numbers,
-                diagnostics=diagnostics,
-            ),
-            "sources": chunks,
-            "source_blocks": _source_blocks(chunks),
-            "page_numbers": page_numbers,
-            "confidence": round(float(confidence), 4),
-            "diagnostics": diagnostics,
-            "suggested_next_action": "جرّب تحديد الدرس أو اسأل عن صيغة/تعريف/معادلة محددة.",
-        }, question)
+        # Otherwise, for 'auto' and 'tutor_general' scopes, let the request proceed to
+        # Gemini. The revised system prompts instruct it to use general knowledge when
+        # book context is insufficient.
 
     context = format_context(chunks)
     if context:

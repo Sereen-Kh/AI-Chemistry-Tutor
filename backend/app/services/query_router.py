@@ -99,6 +99,189 @@ _CHEMISTRY_FACTS = [
         "pages": [11, 13, 17],
         "kind": "formula",
     },
+    {
+        "entity": "ثاني أكسيد الكربون",
+        "aliases": ["ثاني أكسيد الكربون", "ثاني اكسيد الكربون", "co2", "co₂"],
+        "formula": "CO₂",
+        "formula_ascii": "CO2",
+        "pages": [79],
+        "kind": "formula",
+    },
+    {
+        "entity": "أحادي أكسيد الكربون",
+        "aliases": ["أحادي أكسيد الكربون", "احادي اكسيد الكربون", "أول أكسيد الكربون", "اول اكسيد الكربون", "co"],
+        "formula": "CO",
+        "formula_ascii": "CO",
+        "pages": [],
+        "kind": "formula",
+    },
+    {
+        "entity": "كربونات الكالسيوم",
+        "aliases": ["كربونات الكالسيوم", "caco3", "caco₃"],
+        "formula": "CaCO₃",
+        "formula_ascii": "CaCO3",
+        "pages": [43],
+        "kind": "formula",
+    },
+    {
+        "entity": "ثاني أكسيد الكبريت",
+        "aliases": ["ثاني أكسيد الكبريت", "ثاني اكسيد الكبريت", "so2", "so₂"],
+        "formula": "SO₂",
+        "formula_ascii": "SO2",
+        "pages": [],
+        "kind": "formula",
+    },
+    {
+        "entity": "النشادر",
+        "aliases": ["النشادر", "الأمونيا", "الامونيا", "nh3", "nh₃"],
+        "formula": "NH₃",
+        "formula_ascii": "NH3",
+        "pages": [],
+        "kind": "formula",
+    },
+    {
+        "entity": "الميثان",
+        "aliases": ["الميثان", "ميثان", "ch4", "ch₄"],
+        "formula": "CH₄",
+        "formula_ascii": "CH4",
+        "pages": [],
+        "kind": "formula",
+    },
+    {
+        "entity": "الحديد",
+        "aliases": ["الحديد", "حديد", "fe"],
+        "formula": None,
+        "formula_ascii": None,
+        "symbol": "Fe",
+        "pages": [43, 45],
+        "kind": "element",
+    },
+    {
+        "entity": "النحاس",
+        "aliases": ["النحاس", "نحاس", "cu"],
+        "formula": None,
+        "formula_ascii": None,
+        "symbol": "Cu",
+        "pages": [43, 45],
+        "kind": "element",
+    },
+    {
+        "entity": "الزنك",
+        "aliases": ["الزنك", "زنك", "zn"],
+        "formula": None,
+        "formula_ascii": None,
+        "symbol": "Zn",
+        "pages": [43, 45],
+        "kind": "element",
+    },
+    {
+        "entity": "المغنزيوم",
+        "aliases": ["المغنزيوم", "مغنزيوم", "المغنيسيوم", "mg"],
+        "formula": None,
+        "formula_ascii": None,
+        "symbol": "Mg",
+        "pages": [43, 45],
+        "kind": "element",
+    },
+    {
+        "entity": "الألمنيوم",
+        "aliases": ["الألمنيوم", "الالمنيوم", "المنيوم", "al"],
+        "formula": None,
+        "formula_ascii": None,
+        "symbol": "Al",
+        "pages": [43, 45],
+        "kind": "element",
+    },
+    {
+        "entity": "الفضة",
+        "aliases": ["الفضة", "فضة", "ag"],
+        "formula": None,
+        "formula_ascii": None,
+        "symbol": "Ag",
+        "pages": [43, 45],
+        "kind": "element",
+    },
+    {
+        "entity": "الذهب",
+        "aliases": ["الذهب", "ذهب", "au"],
+        "formula": None,
+        "formula_ascii": None,
+        "symbol": "Au",
+        "pages": [],
+        "kind": "element",
+    },
+    {
+        "entity": "الكالسيوم",
+        "aliases": ["الكالسيوم", "كالسيوم", "ca"],
+        "formula": None,
+        "formula_ascii": None,
+        "symbol": "Ca",
+        "pages": [],
+        "kind": "element",
+    },
+    {
+        "entity": "الصوديوم",
+        "aliases": ["الصوديوم", "صوديوم", "na"],
+        "formula": None,
+        "formula_ascii": None,
+        "symbol": "Na",
+        "pages": [],
+        "kind": "element",
+    },
+    {
+        "entity": "البوتاسيوم",
+        "aliases": ["البوتاسيوم", "بوتاسيوم", "k"],
+        "formula": None,
+        "formula_ascii": None,
+        "symbol": "K",
+        "pages": [],
+        "kind": "element",
+    },
+    {
+        "entity": "الكربون",
+        "aliases": ["الكربون", "كربون", "c"],
+        "formula": None,
+        "formula_ascii": None,
+        "symbol": "C",
+        "pages": [60, 63],
+        "kind": "element",
+    },
+    {
+        "entity": "الآزوت",
+        "aliases": ["الآزوت", "الازوت", "النيتروجين", "نيتروجين", "n"],
+        "formula": None,
+        "formula_ascii": None,
+        "symbol": "N",
+        "pages": [],
+        "kind": "element",
+    },
+    {
+        "entity": "الكبريت",
+        "aliases": ["الكبريت", "كبريت", "s"],
+        "formula": None,
+        "formula_ascii": None,
+        "symbol": "S",
+        "pages": [9, 11],
+        "kind": "element",
+    },
+    {
+        "entity": "الكلور",
+        "aliases": ["الكلور", "كلور", "cl"],
+        "formula": None,
+        "formula_ascii": None,
+        "symbol": "Cl",
+        "pages": [5, 11, 17],
+        "kind": "element",
+    },
+    {
+        "entity": "الرصاص",
+        "aliases": ["الرصاص", "رصاص", "pb"],
+        "formula": None,
+        "formula_ascii": None,
+        "symbol": "Pb",
+        "pages": [],
+        "kind": "element",
+    },
 ]
 
 _WATER_DECOMPOSITION = {
@@ -138,11 +321,22 @@ def _contains_any(text: str, words: tuple[str, ...]) -> bool:
 
 def _find_fact(query: str) -> dict | None:
     normalized = normalize_query(query)
-    for fact in _CHEMISTRY_FACTS:
+    candidates: list[tuple[int, int, dict]] = []
+    for index, fact in enumerate(_CHEMISTRY_FACTS):
         for alias in fact["aliases"]:
-            if normalize_query(alias) in normalized:
-                return fact
-    return None
+            normalized_alias = normalize_query(alias)
+            if not normalized_alias:
+                continue
+            if re.fullmatch(r"[a-z0-9]+", normalized_alias):
+                pattern = rf"(?<![a-z0-9]){re.escape(normalized_alias)}(?![a-z0-9])"
+                matched = re.search(pattern, normalized) is not None
+            else:
+                matched = normalized_alias in normalized
+            if matched:
+                candidates.append((len(normalized_alias), -index, fact))
+    if not candidates:
+        return None
+    return max(candidates, key=lambda item: (item[0], item[1]))[2]
 
 
 def _answer_formula(query: str) -> RoutedAnswer | None:
@@ -152,6 +346,17 @@ def _answer_formula(query: str) -> RoutedAnswer | None:
     fact = _find_fact(query)
     if not fact:
         return None
+    kind = fact.get("kind", "formula")
+    if kind == "element":
+        symbol = fact.get("symbol", "")
+        answer = f"رمز عنصر {fact['entity']} هو: {symbol}."
+        return RoutedAnswer(
+            intent="formula_lookup",
+            answer=answer,
+            confidence=1.0,
+            page_numbers=list(fact["pages"]),
+            suggested_next_action="يمكنك أن تسأل عن خصائص هذا العنصر أو موقعه في سلسلة النشاط.",
+        )
     answer = (
         f"الصيغة الكيميائية لـ {fact['entity']} هي: {fact['formula']}.\n\n"
         f"كتابة عادية: {fact['formula_ascii']}."

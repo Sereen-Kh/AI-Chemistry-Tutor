@@ -163,9 +163,7 @@ class TestNoneVisionProvider(TestCase):
         import asyncio
         provider = NoneVisionProvider()
         with self.assertRaises(RuntimeError) as ctx:
-            asyncio.get_event_loop().run_until_complete(
-                provider.extract_page("fake.png", 1, "solution_book")
-            )
+            asyncio.run(provider.extract_page("fake.png", 1, "solution_book"))
         self.assertIn("none", str(ctx.exception).lower())
 
     def test_none_provider_extract_from_pdf_raises(self):
@@ -174,9 +172,7 @@ class TestNoneVisionProvider(TestCase):
         provider = NoneVisionProvider()
         doc = UploadedDocument(provider="none", name="test.pdf", uri="gs://fake/test.pdf")
         with self.assertRaises(RuntimeError):
-            asyncio.get_event_loop().run_until_complete(
-                provider.extract_page_from_pdf(doc, 1, "solution_book")
-            )
+            asyncio.run(provider.extract_page_from_pdf(doc, 1, "solution_book"))
 
     def test_ingestion_fast_fail_with_none_provider_and_ocr_required(self):
         """run_full_ingestion raises ValueError when ocr_provider='none' + ocr_required=True."""
@@ -184,7 +180,7 @@ class TestNoneVisionProvider(TestCase):
         from app.services.ingestion_pipeline import run_full_ingestion
 
         with self.assertRaises(ValueError) as ctx:
-            asyncio.get_event_loop().run_until_complete(
+            asyncio.run(
                 run_full_ingestion(
                     pdf_path="/nonexistent/test.pdf",
                     ocr_provider_name="none",

@@ -1,0 +1,260 @@
+{
+  "total_chunks": 39,
+  "chunks": 39,
+  "average_chunk_chars": 794.67,
+  "min_chunk_chars": 60,
+  "max_chunk_chars": 1328,
+  "average_chunk_length": 794.67,
+  "min_chunk_length": 60,
+  "max_chunk_length": 1328,
+  "chunks_by_type": {
+    "equation": 7,
+    "exercise_answer": 29,
+    "mixed": 3
+  },
+  "chunks_with_question_number": 15,
+  "chunks_with_equations": 32,
+  "duplicate_chunks": 0,
+  "duplicate_chunk_count": 0,
+  "bad_endings": [
+    {
+      "unit_id": "sol_unit_7c28dfb896928460",
+      "split_index": 0,
+      "reason": "no_sentence_terminal",
+      "preview": "في0.2L\n\nمن محلوله ذي الت\nركيز\n1\n73g.L\n−هو\n\na\n\n)\ng\n65\n.\n\n3\n\nb\n\n)\ng\n365\n\nc\n\n)\ng\n6\n.\n\n14\nd\n\n)\n14g\n\n2\n- \n:وحدة تركيز المحلول"
+    },
+    {
+      "unit_id": "sol_unit_c35c1fbad9b79fd8",
+      "split_index": 0,
+      "reason": "dangling_punctuation",
+      "preview": "ألي  ونات الز.\n\nنك في محلول دم اإلنسان\n\nعلماً أن:\nZn :65\n\n:الحل \n-\n1\n3\n3\n1\n10 10\n2 10 gL\n5\ngL\nm\nC\nV\n−\n−\n−\n−\n\n=\n=\n=\n\n\n-"
+    },
+    {
+      "unit_id": "sol_unit_5c0de970553209a6",
+      "split_index": 0,
+      "reason": "no_sentence_terminal",
+      "preview": "+ + 𝑁𝑂 −1\n3 3\n: 120 ةحفصلا\n: B ةمئاقلا نم بسانملا ضمحلاب A ةمئاقلا نم ةرابع لك لص : طاشن\n: 122 ةحفصلا\n52 |  |\n|  |  |  |"
+    },
+    {
+      "unit_id": "sol_unit_de0378c50cb2e61f",
+      "split_index": 0,
+      "reason": "no_sentence_terminal",
+      "preview": "حمض الفوسفور يحوي ثالثة\nأيونات هدر\nو\nجين فيه.\n\n:ًرابعا\n\nلديك\nفي الش كل المجاور\nمحاليل لحموض متساوية في الت ركيز:،المطلوب"
+    },
+    {
+      "unit_id": "sol_unit_65b7b7338757b35d",
+      "split_index": 0,
+      "reason": "no_sentence_terminal",
+      "preview": "+\n\n2\n-\n\n1\n1\n3 65\n36 5\n0 1\ngL\nm\n.\n\nC\n.\n\ngL\nV\n.\n\n−\n−\n=\n=\n=\n\n3\n-\n\n1\n1\n1\n36 5\n1\n36 5\ngL\nmolL\nC\n.\n\nC\nmol L\nM\n.\n\n−\n−\n−\n=\n=\n=\n"
+    },
+    {
+      "unit_id": "sol_unit_55b4a2a972247078",
+      "split_index": 0,
+      "reason": "no_sentence_terminal",
+      "preview": "ل حوض الخل.\n\n3\n-\n\nاحسب\nالت ركيز المولي ل\nمحلول حمض الخل.\n\n(H:1 , C:12 ,O:16)\n\n: الحل \n3\n3\nCH COOH\nCH COO\nH\n−\n+\n⎯⎯→\n+\n⎯⎯"
+    },
+    {
+      "unit_id": "sol_unit_3db2cdb8f658f7ad",
+      "split_index": 0,
+      "reason": "no_sentence_terminal",
+      "preview": "Fe(OH)\n\n..\n\n3\nFe\n3OH\n+\n−\n+\n...\n\n3\n...\n\nالصفحة127\n\n:\n\n.نشاط : اكتب معادلة تأين هيدروكسيد البوتاسيوم \n: الحل \n𝐾𝑂𝐻⟶𝐾+ + 𝑂𝐻−"
+    },
+    {
+      "unit_id": "sol_unit_2c631c2f7502b61f",
+      "split_index": 0,
+      "reason": "no_sentence_terminal",
+      "preview": "0\n\nو131\n\n:\n\n: أختبر نفسي\n\nأوالً: اختر:اإلجابة الص حيحة في كل  مم ا يأتي \n1\n-\n:عدد الوظائف األساسي ة في هدروكسيد الباريوم"
+    },
+    {
+      "unit_id": "sol_unit_2c575c5c0861fe80",
+      "split_index": 0,
+      "reason": "dangling_punctuation",
+      "preview": "دروكسيد البوتاسيوم في الماء المقط ر ونكمل حجم المحلول إلى\n1 L\n\n:المطلوب \n1\n-\n.اكتب معادلة تأي ن هدروكسيد البوتاسيوم \n2\n-"
+    },
+    {
+      "unit_id": "sol_unit_931a399d803cd951",
+      "split_index": 0,
+      "reason": "no_sentence_terminal",
+      "preview": "لكربون الذي يكسبها ط عماً مميزاً .\n\nاكتب معادلة التفاعل الحاصل\n.محدداً نوعه \n: الحل \n𝐶𝑂2 + 𝐻2O ⟶𝐻2𝐶𝑂3 \n.نوعه تفاعل اتحاد"
+    },
+    {
+      "unit_id": "sol_unit_2cacfc52a6d4374b",
+      "split_index": 0,
+      "reason": "no_sentence_terminal",
+      "preview": "\n\n.الذ هب مع حمض كلور الماء\nاليحدث \n4\n.\n\nالن حاس مع حمض الكبريت.الممد د اليحدث \n5\n.\n\nالكلور مع كلوريد الص وديوم.\n\nاليحدث"
+    },
+    {
+      "unit_id": "sol_unit_840e4723eca2b988",
+      "split_index": 0,
+      "reason": "no_sentence_terminal",
+      "preview": " الكالسيوم والمطلوب \n.اكتب معادلة التفاعل الحاصل ثم حدد نوعه \n: الحل \n𝐻2𝑆𝑂4 + CaC𝑂3 ⟶Ca𝑆𝑂4 + 𝐻2𝑂+ C𝑂2 \nتفاعل تبادل ثنائي"
+    },
+    {
+      "unit_id": "sol_unit_6c5ad5a3db519a43",
+      "split_index": 0,
+      "reason": "no_sentence_terminal",
+      "preview": "\n2KCl\n3O\n\n→\n+تفكك\n\nرابعاً: عند غمس شريط من الن حاس في محلول نترات الفض ة، يحدث الت فاعل وفق\nالش كل ال مجاور:، و المطلوب"
+    },
+    {
+      "unit_id": "sol_unit_3646e41b845cc61e",
+      "split_index": 0,
+      "reason": "no_sentence_terminal",
+      "preview": "المعادلة الكيميائي ة المعب رة عن الت فاعل الحاصل بالش كل الجزيئي  ،  ثم  بالش كل\n.األي وني ، ثم  حد د نوع الت فاعل\n\nالحل"
+    },
+    {
+      "unit_id": "sol_unit_0f399fb6c2785ed5",
+      "split_index": 0,
+      "reason": "no_sentence_terminal",
+      "preview": "عادلة الت فاعل الحاصل \n-2\n.احسبْ كتلة  كل ٍ من الحديد والنحاس في الس بيكة \n-3\n\nاحسبِ الن سبة المئوي ة لمكو .نات الس بيكة"
+    },
+    {
+      "unit_id": "sol_unit_0daeb961f9beb4e9",
+      "split_index": 0,
+      "reason": "no_sentence_terminal",
+      "preview": "( NH\n\nCl\n\n4\nNH\n\nكلوريد األمونيوم\n\n)\n-\n3\n+NO\n+\nAg\n)\n\n3\nAgNO\n\nنترات الفضة\n\n) -\n+ NO3\n+\n4\n( NH\n\nNO3\n\n4\nNH\n\nنترات األم\nونيوم"
+    },
+    {
+      "unit_id": "sol_unit_61966b7018ce28b9",
+      "split_index": 0,
+      "reason": "no_sentence_terminal",
+      "preview": "ع أي ونات\n+\n4\nNH\n: هي\n\n) -\n2\n4\n+ SO\n\n2+\n( Cu\n\n4\nCu SO\n\nكبريتات النحاسII\n\n) -\n2\n4\n+ SO\n\n2+\n( Fe\n\n4\nFeSO\n\nكبريتات الحديدII"
+    },
+    {
+      "unit_id": "sol_unit_9588c0620a95a567",
+      "split_index": 0,
+      "reason": "no_sentence_terminal",
+      "preview": "\n\nالحل \n1\n-\n\n2\n4\n2\n4\nH SO\nBaCl       \nSO  2HCl\n98g\n1mol\n2\nBa\n33g\nm\nn\n2.33g\n+\n+\n⎯⎯→\n\n2\n-\n2 33 98\n0 98\n233\n\n=\n=\n.\n\nm\n.\n\ng"
+    },
+    {
+      "unit_id": "sol_unit_f77985ecf7090b48",
+      "split_index": 0,
+      "reason": "dangling_punctuation",
+      "preview": "يتغي ر لون محلول كبريتات الن حاس من الل ون ا ألزرق إلى الل ون األخضر\nعند غمس مِسمار من الحديد  فيه لفترة من الز من.\n\n4\n-"
+    },
+    {
+      "unit_id": "sol_unit_f77985ecf7090b48",
+      "split_index": 1,
+      "reason": "dangling_punctuation",
+      "preview": " تفاعل إزاحة ليعطي ملح كبريتات الحديدII\n\n(\n\nالحديد أكثر نشاطا\nكيميائيا من النحاس \n.)\n\n4\n4\nCuSO\nFe     \nFe S\nCu\nO\n⎯⎯→\n+\n+"
+    },
+    {
+      "unit_id": "sol_unit_3e0c6edca7206f74",
+      "split_index": 0,
+      "reason": "no_sentence_terminal",
+      "preview": "كسيد\n\nلا\nمعدن \nحمض\n\nاساس ملح \nقوي ضعيف قوي ضعيف \nCaO\n\n2\nSO\n\nHCl\n\n3\nCH COOH\nNaOH\n\n4\nNH OH\n\nNaCl\n\n2\nNa O\n2\nNO\n\n3\n2\nBa(NO )"
+    },
+    {
+      "unit_id": "sol_unit_60b1f5d558a79c76",
+      "split_index": 0,
+      "reason": "no_sentence_terminal",
+      "preview": "برة عن هذا التفاعل \n•\n\n.احسب كتلة الر اسب المتكو  ن \n3\n- \n:نضيف القسم الث اني إلى كمي ة كافية من حمض كلور الماء، المطلوب"
+    },
+    {
+      "unit_id": "sol_unit_84f6604fee79c370",
+      "split_index": 0,
+      "reason": "no_sentence_terminal",
+      "preview": ": الكيمياء العضوية \nمدخل إلى الكيمياء العضوية\n\nالصفحة170\n\n: \n: أختبر نفسي\n\nأوالً : اختر اإلجابة: الص حيحة لكل  مم ا يأتي"
+    },
+    {
+      "unit_id": "sol_unit_f4c58d9e153b4e96",
+      "split_index": 0,
+      "reason": "no_sentence_terminal",
+      "preview": "     .a\n\n.b\n\n2\nH\n2\nC\n\n.c\n\n4\nH\n2\nC\n\n.d\n\n6\nH\n2\nC\n\nهدروكسيد األمونيوم.a\n\nحمض الخل     .b\n\nملح الطعام     .c\n\nالس ك ر     .d"
+    },
+    {
+      "unit_id": "sol_unit_66a94b5ab919fd37",
+      "split_index": 0,
+      "reason": "no_sentence_terminal",
+      "preview": "ون\nغلط \n: ، الصواب\n\nيحوي رابطة\nمشتركة أحادية )\n\n3\n- يس\nتخدم البوتان كوقو .د في المنازل (\n\nصح)\n\n:ثالثاً:أكمل الجدول اآلتي"
+    },
+    {
+      "unit_id": "sol_unit_6a9a03366ff23cc3",
+      "split_index": 0,
+      "reason": "no_sentence_terminal",
+      "preview": "\n\n.احسب عدد موالت2\nO\n.\n\nالمتفاعل \n3\n\n.احسب حجم غاز2\nCO\n\n.الن اتج مقاساً في الش رطين الن ظامي ين\n(H:1, C:12 , O:16)\n\nالحل"
+    },
+    {
+      "unit_id": "sol_unit_54968cc8a7a353d8",
+      "split_index": 0,
+      "reason": "no_sentence_terminal",
+      "preview": "\nd\nCH −\n3\n\n5\n-\n\nالص  يغة العام  : ة لأللكينات هي\n\na\nH\nC\nn\nn\n−\n2\n\nb\n-\n\nn\nn 2\nC H +\n\nC\n-\n2\n2 +\nn\nnH\nC\n\nd \n-  \nn\n2n 2\nC H\n−"
+    },
+    {
+      "unit_id": "sol_unit_97e20878997028af",
+      "split_index": 0,
+      "reason": "no_sentence_terminal",
+      "preview": "عدد موالت الماء الن .اتج \n3\n-\n\nاحسب كتلة األكسجين الال.زم لالحتراق\n\nًعلما\nأ  ن\n\nالكتل الذ  ر ي  ةH:1 , O:16 , C:12\n\nالحل"
+    },
+    {
+      "unit_id": "sol_unit_6ad37db21035d8f9",
+      "split_index": 0,
+      "reason": "no_sentence_terminal",
+      "preview": " V\n4.48L\n2\n5\n0.1\n3)n\n0.25mol\n2\n112\n0.1\n4)V\n5.6L\n2\nV\n5.6\n5\n28L\n36\n0.1\n5)m\n1.8g\n2\n+\n→\n+\n\n\n=\n=\n\n=\n=\n\n=\n=\n=\n\n=\n\n=\n="
+    },
+    {
+      "unit_id": "sol_unit_d670488d0656a38a",
+      "split_index": 0,
+      "reason": "dangling_punctuation",
+      "preview": "  ات ذر \n، الكربون في اإليتن\n\nروابط احادي(  .ة مشتركة فقط ، غلط : الصواب\nيوجد رابطة\n\nثنائية بين الكربون–\n\nكربون  \n)\n\n6\n-"
+    },
+    {
+      "unit_id": "sol_unit_16950ef2ad929bbe",
+      "split_index": 0,
+      "reason": "no_sentence_terminal",
+      "preview": "إليتان المتفاعل \n3\n\n–\n\nاحسب حجم غاز ثاني أكسيد الكربون الن  اتج م قاساً في الش رطين الن ظامي.ين  \n(H :1,C:12,O:16)\n\nالحل"
+    },
+    {
+      "unit_id": "sol_unit_60f6ed40a2931856",
+      "split_index": 0,
+      "reason": "no_sentence_terminal",
+      "preview": "تلة االلكترون.\n\n2\n)\n\nال تتأث أ ر شع  ة غاما بالحقل الكهربائي.\n\nألنها ال تملك شحنة كهربائية.\n\n3\n) ج سيم ألفا موجب الش.حنة"
+    },
+    {
+      "unit_id": "sol_unit_4f655e0df9615292",
+      "split_index": 0,
+      "reason": "no_sentence_terminal",
+      "preview": "رطيسية \nالشحنة شحنتين موجبتين شحنة سالبة\n\nغير\nمشحونة \nالنفوذية قليلة أكثر األكثر\n\nًخامسا: \n:أكمل خارطة المفاهيم الت الية"
+    }
+  ],
+  "content_type_counts": {
+    "equation": 7,
+    "exercise_answer": 29,
+    "mixed": 3
+  },
+  "warnings": [
+    "chunk may end mid-sentence: unit=sol_unit_7c28dfb896928460 split=0",
+    "chunk may end mid-sentence: unit=sol_unit_c35c1fbad9b79fd8 split=0",
+    "chunk may end mid-sentence: unit=sol_unit_5c0de970553209a6 split=0",
+    "chunk may end mid-sentence: unit=sol_unit_de0378c50cb2e61f split=0",
+    "chunk may end mid-sentence: unit=sol_unit_65b7b7338757b35d split=0",
+    "chunk may end mid-sentence: unit=sol_unit_55b4a2a972247078 split=0",
+    "chunk may end mid-sentence: unit=sol_unit_3db2cdb8f658f7ad split=0",
+    "chunk may end mid-sentence: unit=sol_unit_2c631c2f7502b61f split=0",
+    "chunk may end mid-sentence: unit=sol_unit_2c575c5c0861fe80 split=0",
+    "chunk may end mid-sentence: unit=sol_unit_931a399d803cd951 split=0",
+    "chunk may end mid-sentence: unit=sol_unit_2cacfc52a6d4374b split=0",
+    "chunk may end mid-sentence: unit=sol_unit_840e4723eca2b988 split=0",
+    "chunk may end mid-sentence: unit=sol_unit_6c5ad5a3db519a43 split=0",
+    "chunk may end mid-sentence: unit=sol_unit_3646e41b845cc61e split=0",
+    "chunk may end mid-sentence: unit=sol_unit_0f399fb6c2785ed5 split=0",
+    "chunk may end mid-sentence: unit=sol_unit_0daeb961f9beb4e9 split=0",
+    "chunk may end mid-sentence: unit=sol_unit_61966b7018ce28b9 split=0",
+    "chunk may end mid-sentence: unit=sol_unit_9588c0620a95a567 split=0",
+    "chunk may end mid-sentence: unit=sol_unit_f77985ecf7090b48 split=0",
+    "chunk may end mid-sentence: unit=sol_unit_f77985ecf7090b48 split=1",
+    "chunk may end mid-sentence: unit=sol_unit_3e0c6edca7206f74 split=0",
+    "chunk may end mid-sentence: unit=sol_unit_60b1f5d558a79c76 split=0",
+    "chunk may end mid-sentence: unit=sol_unit_84f6604fee79c370 split=0",
+    "chunk may end mid-sentence: unit=sol_unit_f4c58d9e153b4e96 split=0",
+    "chunk may end mid-sentence: unit=sol_unit_66a94b5ab919fd37 split=0",
+    "chunk may end mid-sentence: unit=sol_unit_6a9a03366ff23cc3 split=0",
+    "chunk may end mid-sentence: unit=sol_unit_54968cc8a7a353d8 split=0",
+    "chunk may end mid-sentence: unit=sol_unit_97e20878997028af split=0",
+    "chunk may end mid-sentence: unit=sol_unit_6ad37db21035d8f9 split=0",
+    "chunk may end mid-sentence: unit=sol_unit_d670488d0656a38a split=0",
+    "chunk may end mid-sentence: unit=sol_unit_16950ef2ad929bbe split=0",
+    "chunk may end mid-sentence: unit=sol_unit_60f6ed40a2931856 split=0",
+    "chunk may end mid-sentence: unit=sol_unit_4f655e0df9615292 split=0"
+  ],
+  "chunks_jsonl": "/Users/sereenkh/Github-Projects/AI-Chemistry-Tutor/data/processed/solution_book/chunks.jsonl"
+}

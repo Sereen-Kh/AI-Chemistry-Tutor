@@ -1,0 +1,22 @@
+{
+  "pdf_path": "/Users/sereenkh/Github-Projects/AI-Chemistry-Tutor/data/textbooks/solution-book/Chemistry_Solution_Book.pdf",
+  "source_file_hash": "2b8ed4051308d3f52d8fb1c33ffc8da50f539db882624ef318a9b68dedd9b1c0",
+  "total_pages": 35,
+  "pages_processed": 35,
+  "digital_text_pages": 35,
+  "ocr_pages": 0,
+  "vision_pages": 0,
+  "mixed_pages": 0,
+  "pages_extracted_digitally": 35,
+  "pages_needing_ocr": [],
+  "pages_needing_vision": [],
+  "blocked_pages": 0,
+  "blocked_page_numbers": [],
+  "low_quality_pages": [],
+  "average_quality_score": 0.9888,
+  "provider_used": "gemini_document",
+  "provider_configured": true,
+  "warnings": [],
+  "errors": [],
+  "pages_jsonl": "/Users/sereenkh/Github-Projects/AI-Chemistry-Tutor/data/processed/solution_book/pages.jsonl"
+}

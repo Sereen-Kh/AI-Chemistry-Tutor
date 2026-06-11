@@ -59,3 +59,7 @@ Thumbs.db
 # Textbook PDFs and binary datasets
 data/**/*.pdf
 data/textbooks/syria_grade_9/
+
+# Documentation / markdown files
+*.md
+**/*.md

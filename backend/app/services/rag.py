@@ -756,6 +756,8 @@ async def retrieve_context(
     related_document_id: str | None = None,
     lesson_no: int | None = None,
     source_pdf: str | None = None,
+    page_start: int | None = None,
+    page_end: int | None = None,
 ) -> list[RetrievedChunk]:
     """Retrieve relevant source chunks for a query.
 
@@ -778,7 +780,7 @@ async def retrieve_context(
     cache_key_raw = (
         f"{query}|{user_id}|{chapter_id}|{lesson_id}|{topic_id}|"
         f"{source_types}|{content_types}|{top_k}|{min_similarity}|{intent}|"
-        f"{document_type}|{document_id}|{lesson_no}"
+        f"{document_type}|{document_id}|{lesson_no}|{page_start}|{page_end}"
     )
     cache_key = f"rag_cache:{_CACHE_VERSION}:" + hashlib.md5(cache_key_raw.encode()).hexdigest()
 
@@ -827,6 +829,10 @@ async def retrieve_context(
         stmt = stmt.where(RagChunk.source_type.in_(source_types))
     if content_types:
         stmt = stmt.where(RagChunk.content_type.in_(content_types))
+    if page_start is not None:
+        stmt = stmt.where(RagChunk.page_number >= page_start)
+    if page_end is not None:
+        stmt = stmt.where(RagChunk.page_number <= page_end)
     # Solution book extended SQL filters (stored in source_type column for index performance)
     if document_type is not None and not source_types:
         stmt = stmt.where(RagChunk.source_type == document_type)

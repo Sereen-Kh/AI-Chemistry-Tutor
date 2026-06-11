@@ -119,6 +119,48 @@ class IngestionStartResponse(BaseModel):
     status: str
 
 
+class SolutionBookIngestRequest(BaseModel):
+    file_path: str = "data/textbooks/solution-book/Chemistry_Solution_Book.pdf"
+    mode: str = Field(default="dry_run", pattern="^(dry_run|production)$")
+    force_reingest: bool = False
+    use_ocr: bool = True
+    use_vision: bool = True
+    allow_partial: bool = False
+    max_pages: int | None = Field(default=None, ge=1)
+    ocr_provider: str | None = Field(default=None, pattern="^(gemini|gemini_document|gemini_vision|none)$")
+    document_id: str = "chemistry_grade9_solution_book"
+    title: str = "Chemistry Solution Book - Grade 9"
+    output_dir: str = "data/processed/solution_book"
+
+
+class SolutionBookIngestResponse(BaseModel):
+    status: str
+    mode: str
+    document_id: str
+    source_type: str
+    source_id: int | None = None
+    pdf_path: str
+    output_dir: str
+    source_file_hash: str
+    pages_total: int
+    pages_extracted_digitally: int
+    pages_needing_ocr: int
+    pages_needing_vision: int
+    blocked_pages: list[int] = Field(default_factory=list)
+    solution_units: int
+    chunks: int
+    chunks_inserted: int
+    chunks_skipped_duplicate: int
+    duplicate_chunk_count: int
+    warnings: list[str] = Field(default_factory=list)
+    errors: list[str] = Field(default_factory=list)
+    reports: dict[str, str] = Field(default_factory=dict)
+
+
+class SolutionBookReportResponse(BaseModel):
+    report: dict
+
+
 class IngestionStatusResponse(BaseModel):
     task_id: str
     status: str

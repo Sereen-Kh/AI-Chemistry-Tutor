@@ -26,6 +26,9 @@ from app.schemas.ingestion import (
     IngestionTestQueryRequest,
     IngestionTestQueryResponse,
     QuestionReviewRequest,
+    SolutionBookIngestRequest,
+    SolutionBookIngestResponse,
+    SolutionBookReportResponse,
     SourceDeleteResponse,
     SourceRegisterRequest,
     SourceResponse,
@@ -34,8 +37,10 @@ from app.schemas.ingestion import (
 from app.services.ingestion_pipeline import run_full_ingestion
 from app.services.rag import retrieve_context
 from app.services.rag_rebuild import rebuild_rag_chunks_from_cached_pages
+from app.services.solution_book_ingestion import ingest_solution_book, latest_solution_book_report
 
 router = APIRouter(prefix="/admin/ingestion", tags=["admin-ingestion"])
+alias_router = APIRouter(prefix="/admin/ingest", tags=["admin-ingestion"])
 
 _TASKS: dict[str, dict] = {}
 
@@ -223,6 +228,56 @@ async def rebuild_from_cache(
         clear_existing=request.clear_existing,
     )
     return IngestionRebuildCacheResponse(**result.to_dict())
+
+
+@router.post("/solution-book", response_model=SolutionBookIngestResponse)
+@alias_router.post("/solution-book", response_model=SolutionBookIngestResponse)
+async def ingest_solution_book_endpoint(
+    request: SolutionBookIngestRequest,
+    _admin=Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    """Ingest the Chemistry solution book as ``source_type=solution_book``.
+
+    This endpoint is synchronous by design for local/admin Swagger use. Use
+    ``mode=dry_run`` first to generate processed JSONL artifacts without DB
+    writes, then ``mode=production`` when blocked OCR/Vision pages are resolved.
+    """
+    try:
+        result = await ingest_solution_book(
+            file_path=request.file_path,
+            mode=request.mode,
+            force_reingest=request.force_reingest,
+            use_ocr=request.use_ocr,
+            use_vision=request.use_vision,
+            max_pages=request.max_pages,
+            ocr_provider_name=request.ocr_provider,
+            allow_partial=request.allow_partial,
+            document_id=request.document_id,
+            title=request.title,
+            output_dir=request.output_dir,
+            db=db,
+        )
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    return SolutionBookIngestResponse(**result.to_dict())
+
+
+@router.get("/solution-book/report", response_model=SolutionBookReportResponse)
+@alias_router.get("/solution-book/report", response_model=SolutionBookReportResponse)
+def get_solution_book_report(
+    output_dir: str = "data/processed/solution_book",
+    _admin=Depends(require_admin),
+):
+    try:
+        report = latest_solution_book_report(output_dir)
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    return SolutionBookReportResponse(report=report)
 
 
 @router.get("/sources", response_model=list[SourceResponse])

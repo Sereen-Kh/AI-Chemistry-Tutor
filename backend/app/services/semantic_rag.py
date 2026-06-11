@@ -132,6 +132,22 @@ class SemanticRagResult:
     diagnostics: dict[str, Any]
 
 
+@dataclass(frozen=True)
+class SemanticSearchResult:
+    chunk_id: int
+    source_type: str
+    score: float
+    content: str
+    page_start: int | None
+    page_end: int | None
+    chapter_title: str | None
+    lesson_title: str | None
+    chunk_type: str
+    exercise_number: str | None
+    question_number: str | None
+    metadata: dict[str, Any]
+
+
 def _safe_json_loads(raw: str) -> Any:
     cleaned = (raw or "").strip()
     if cleaned.startswith("```"):
@@ -670,3 +686,108 @@ async def semantic_retrieve_context(
         _RESULT_CACHE_TTL_SECONDS,
     )
     return SemanticRagResult(chunks=final_chunks, diagnostics=diagnostics)
+
+
+def _source_types_for_mode(mode: str, requested: list[str] | None) -> list[str] | None:
+    if requested:
+        return requested
+    normalized = (mode or "balanced").strip().lower()
+    if normalized == "solution_only":
+        return ["solution_book"]
+    if normalized == "textbook_only":
+        return ["textbook"]
+    return ["textbook", "solution_book"]
+
+
+def _intent_for_search(query: str, mode: str, intent: str | None) -> str:
+    if intent and intent != "general":
+        return intent
+    normalized = _normalize_relevance_text(query)
+    if mode in {"solution_first", "solution_only"}:
+        return "exercise_solving"
+    if any(term in normalized for term in ("حل", "احسب", "مساله", "تمرين", "جواب", "سؤال")):
+        return "exercise_solving"
+    if any(term in normalized for term in ("تعريف", "ما هو", "ما هي", "اشرح")):
+        return "definition_lookup"
+    return "general"
+
+
+def _metadata_dict(raw: Any) -> dict[str, Any]:
+    return raw if isinstance(raw, dict) else {}
+
+
+async def semantic_search(
+    db: AsyncSession,
+    *,
+    query: str,
+    source_types: list[str] | None = None,
+    top_k: int = 8,
+    filters: dict[str, Any] | None = None,
+    mode: str = "balanced",
+    user_id: int | None = None,
+    intent: str = "general",
+    min_similarity: float = 0.45,
+) -> tuple[list[SemanticSearchResult], dict[str, Any]]:
+    """Search textbook and/or solution-book chunks with consistent metadata.
+
+    This is a thin API-oriented wrapper over the existing embedding + hybrid
+    retrieval stack. It adds source-mode routing and normalizes solution-book
+    metadata into a stable result object for mobile and Swagger callers.
+    """
+    filters = filters or {}
+    resolved_source_types = _source_types_for_mode(mode, source_types)
+    resolved_intent = _intent_for_search(query, mode, intent)
+    content_types = filters.get("content_types") or filters.get("chunk_types")
+    if isinstance(content_types, str):
+        content_types = [content_types]
+    chunks = await retrieve_context(
+        db,
+        query=query,
+        user_id=user_id,
+        chapter_id=filters.get("chapter_id"),
+        lesson_id=filters.get("lesson_id"),
+        topic_id=filters.get("topic_id"),
+        source_types=resolved_source_types,
+        content_types=content_types,
+        top_k=top_k,
+        min_similarity=min_similarity,
+        intent=resolved_intent,
+        page_start=filters.get("page_start"),
+        page_end=filters.get("page_end"),
+    )
+    if mode == "solution_first":
+        chunks.sort(key=lambda item: (item.source_type != "solution_book", -item.similarity_score))
+    elif mode == "textbook_first":
+        chunks.sort(key=lambda item: (item.source_type != "textbook", -item.similarity_score))
+
+    results: list[SemanticSearchResult] = []
+    for chunk in chunks[:top_k]:
+        meta = _metadata_dict(chunk.metadata_json)
+        page_start = meta.get("page_start") if meta.get("page_start") is not None else chunk.page_number
+        page_end = meta.get("page_end") if meta.get("page_end") is not None else chunk.page_number
+        results.append(
+            SemanticSearchResult(
+                chunk_id=chunk.id,
+                source_type=chunk.source_type,
+                score=chunk.similarity_score,
+                content=chunk.content,
+                page_start=page_start,
+                page_end=page_end,
+                chapter_title=meta.get("chapter_title"),
+                lesson_title=meta.get("lesson_title"),
+                chunk_type=chunk.content_type,
+                exercise_number=meta.get("exercise_number"),
+                question_number=meta.get("question_number"),
+                metadata=meta,
+            )
+        )
+
+    diagnostics = {
+        "pipeline": "semantic_search_pgvector",
+        "mode": mode,
+        "intent": resolved_intent,
+        "source_types": resolved_source_types,
+        "filters": filters,
+        "result_count": len(results),
+    }
+    return results, diagnostics

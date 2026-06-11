@@ -32,6 +32,16 @@ class RagSemanticRetrieveRequest(BaseModel):
     intent: str = "general"
 
 
+class RagSearchRequest(BaseModel):
+    query: str = Field(..., min_length=1)
+    source_types: list[str] | None = None
+    top_k: int = Field(default=8, ge=1, le=30)
+    mode: str = Field(default="balanced", pattern="^(textbook_first|solution_first|balanced|solution_only|textbook_only)$")
+    filters: dict | None = None
+    intent: str = "general"
+    min_similarity: float = Field(DEFAULT_RAG_MIN_SIMILARITY, ge=0.0, le=1.0)
+
+
 class RetrievedChunkResponse(BaseModel):
     id: int
     source_id: int
@@ -60,3 +70,36 @@ class RagSemanticRetrieveResponse(BaseModel):
     chunks: list[RetrievedChunkResponse]
     diagnostics: dict
     quality_gate: dict | None = None
+
+
+class RagSearchResultResponse(BaseModel):
+    chunk_id: int
+    source_type: str
+    score: float
+    content: str
+    page_start: int | None = None
+    page_end: int | None = None
+    chapter_title: str | None = None
+    lesson_title: str | None = None
+    chunk_type: str
+    exercise_number: str | None = None
+    question_number: str | None = None
+    metadata: dict | list | None = None
+
+
+class RagSearchResponse(BaseModel):
+    query: str
+    mode: str
+    results: list[RagSearchResultResponse]
+    diagnostics: dict = Field(default_factory=dict)
+
+
+class RagAnswerRequest(RagSearchRequest):
+    answer_scope: str = Field(default="auto", pattern="^(auto|book_only|tutor_general)$")
+
+
+class RagAnswerResponse(BaseModel):
+    answer: str
+    sources: list[RagSearchResultResponse]
+    confidence: float
+    diagnostics: dict = Field(default_factory=dict)

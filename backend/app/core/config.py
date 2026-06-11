@@ -44,6 +44,7 @@ class Settings(BaseSettings):
     ocr_provider: str = "gemini"
     ocr_required_for_vision: bool = True
     allow_partial_ingestion: bool = False
+    allow_partial_solution_book_ingestion: bool = False
     ingestion_mode: str = "production"
     admin_token: str = ""
     admin_emails: List[str] = []

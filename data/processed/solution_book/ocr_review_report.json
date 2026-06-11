@@ -1,0 +1,13 @@
+{
+  "ocr_available": true,
+  "vision_available": true,
+  "provider_used": "gemini_document",
+  "reviewed_pages": [],
+  "ocr_pages": [],
+  "vision_pages": [],
+  "mixed_pages": [],
+  "blocked_pages": [],
+  "missing_requirements": [],
+  "warnings": [],
+  "errors": []
+}

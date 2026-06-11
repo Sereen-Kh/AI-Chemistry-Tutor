@@ -9,6 +9,7 @@ from app.api.exams import router as exams_router
 from app.api.flashcards import router as flashcards_router
 from app.api.health import router as health_router
 from app.api.homework import router as homework_router
+from app.api.ingestion.routes import alias_router as ingestion_alias_router
 from app.api.ingestion.routes import router as ingestion_router
 from app.api.lessons import router as lessons_router
 from app.api.topics import router as topics_router
@@ -32,6 +33,7 @@ api_router.include_router(study_plans_router)
 api_router.include_router(chat_router)
 api_router.include_router(rag_router)
 api_router.include_router(ingestion_router)
+api_router.include_router(ingestion_alias_router)
 api_router.include_router(quizzes_router)
 api_router.include_router(exams_router)
 api_router.include_router(homework_router)

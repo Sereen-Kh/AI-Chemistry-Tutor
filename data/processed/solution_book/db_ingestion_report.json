@@ -1,0 +1,16 @@
+{
+  "mode": "production",
+  "source_type": "solution_book",
+  "db_table": "rag_chunks",
+  "vector_store": "sqlite_json_embedding_dev",
+  "inserted_documents": 0,
+  "updated_documents": 1,
+  "inserted_chunks": 39,
+  "updated_chunks": 0,
+  "skipped_chunks": 0,
+  "inserted_embeddings": 39,
+  "skipped_embeddings": 0,
+  "failed_chunks": [],
+  "errors": [],
+  "source_id": 2
+}

@@ -14,22 +14,29 @@ Covers all 9 verification items from the implementation plan:
 
 from __future__ import annotations
 
+# ruff: noqa: E402
+
 import sys
+import re
 from pathlib import Path
+from unittest import TestCase
 
 BACKEND_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BACKEND_DIR))
-
-import json
-import re
-from unittest import TestCase
-from unittest.mock import MagicMock, patch
 
 from app.services.chunking import split_solution_book_text
 from app.services.ingestion_pipeline import detect_ocr_needed, OcrDetectionResult
 from app.services.ocr import NoneVisionProvider, get_vision_provider
 from app.services.ocr.normalization import normalize_formula, normalize_arabic_for_search, normalize_text
-from app.services.source_router import ROUTE_SOLUTIONS, ROUTE_TEXTBOOK, route_source_sync
+from app.services.solution_book_ingestion import (
+    ExtractedSolutionPage,
+    PageExtractionQuality,
+    build_solution_book_chunks,
+    evaluate_page_text_quality,
+    ingest_solution_book,
+    parse_solution_units,
+)
+from app.services.source_router import ROUTE_SOLUTIONS, route_source_sync
 
 
 # ---------------------------------------------------------------------------
@@ -142,6 +149,27 @@ class TestOcrDetection(TestCase):
         d = result.as_dict()
         self.assertIn("needs_ocr", d)
         self.assertIn("reasons", d)
+
+
+class TestSolutionBookQualityDetector(TestCase):
+    """Solution-book quality detector returns page-level OCR/Vision signals."""
+
+    def test_short_text_needs_ocr(self):
+        quality = evaluate_page_text_quality("HCl", page_number=1)
+        self.assertTrue(quality.needs_ocr)
+        self.assertIn("low_text_length", " ".join(quality.issues))
+
+    def test_table_page_needs_vision(self):
+        text = "محلول حمض كلور الماء " * 20
+        quality = evaluate_page_text_quality(text, page_number=2, visual_info={"table_count": 1})
+        self.assertTrue(quality.needs_vision)
+        self.assertIn("table_detected", quality.issues)
+
+    def test_good_arabic_text_has_high_confidence(self):
+        text = "الحل: نحسب التركيز المولي من العلاقة C = n / V. " * 10
+        quality = evaluate_page_text_quality(text, page_number=3)
+        self.assertGreaterEqual(quality.confidence, 0.7)
+        self.assertGreater(quality.arabic_ratio, 0.5)
 
 
 # ---------------------------------------------------------------------------
@@ -288,6 +316,102 @@ C = n / V = 2 / 2 = 1 mol/L
     def test_empty_text_returns_no_chunks(self):
         self.assertEqual(split_solution_book_text(""), [])
         self.assertEqual(split_solution_book_text("   \n  "), [])
+
+
+class TestSolutionBookUnitPipeline(TestCase):
+    """Solution-unit parsing and chunk metadata are stable and source-aware."""
+
+    def _page(self) -> ExtractedSolutionPage:
+        text = """
+الدرس الثالث: التركيز
+السؤال 1: ذوب 73 g من HCl في 2 L ماء. احسب التركيز المولي.
+الحل:
+الخطوة 1: n = m / M = 73 / 36.5 = 2 mol
+الخطوة 2: C = n / V = 2 / 2 = 1 mol/L
+الجواب النهائي: C = 1 mol/L
+"""
+        return ExtractedSolutionPage(
+            document_id="chemistry_grade9_solution_book",
+            source_type="solution_book",
+            page_number=7,
+            text=text,
+            normalized_text=normalize_text(text),
+            extraction_method="digital_text",
+            quality=PageExtractionQuality(
+                page_number=7,
+                text_length=len(text),
+                arabic_ratio=0.75,
+                weird_char_ratio=0.0,
+                line_count=6,
+                has_equation_like_text=True,
+                has_images=False,
+                has_tables=False,
+                needs_ocr=False,
+                needs_vision=False,
+                confidence=0.95,
+                issues=[],
+            ),
+            images=[],
+            metadata={"source_file_path": "fake.pdf"},
+            status="extracted",
+        )
+
+    def test_parse_solution_units_keeps_question_and_solution(self):
+        from tempfile import TemporaryDirectory
+        with TemporaryDirectory() as tmp:
+            units = parse_solution_units(
+                [self._page()],
+                document_id="chemistry_grade9_solution_book",
+                output_dir=Path(tmp),
+            )
+        self.assertEqual(len(units), 1)
+        self.assertIn("ذوب", units[0].question_text or "")
+        self.assertIn("C = n / V", units[0].solution_text)
+        self.assertEqual(units[0].page_number, 7)
+
+    def test_build_solution_chunks_includes_solution_metadata(self):
+        from tempfile import TemporaryDirectory
+        with TemporaryDirectory() as tmp:
+            units = parse_solution_units(
+                [self._page()],
+                document_id="chemistry_grade9_solution_book",
+                output_dir=Path(tmp),
+            )
+            chunks, report = build_solution_book_chunks(
+                units,
+                document_id="chemistry_grade9_solution_book",
+                source_pdf="Chemistry_Solution_Book.pdf",
+                output_dir=Path(tmp),
+            )
+        self.assertGreater(len(chunks), 0)
+        first = chunks[0]
+        self.assertEqual(first.source_type, "solution_book")
+        self.assertEqual(first.page_start, 7)
+        self.assertEqual(first.metadata["document_type"], "solution_book")
+        self.assertIn(first.chunk_type, {"solution", "exercise_answer", "calculation", "equation", "mixed"})
+        self.assertEqual(report["chunks"], len(chunks))
+
+    def test_dry_run_ingestion_writes_artifacts_for_one_page(self):
+        import asyncio
+        from tempfile import TemporaryDirectory
+        pdf_path = BACKEND_DIR.parent / "data" / "textbooks" / "solution-book" / "Chemistry_Solution_Book.pdf"
+        if not pdf_path.exists():
+            self.skipTest("Solution book PDF is not available in this checkout")
+        with TemporaryDirectory() as tmp:
+            result = asyncio.run(
+                ingest_solution_book(
+                    file_path=pdf_path,
+                    mode="dry_run",
+                    use_ocr=False,
+                    use_vision=False,
+                    max_pages=1,
+                    output_dir=Path(tmp),
+                )
+            )
+            self.assertTrue(Path(result.reports["pages"]).exists())
+            self.assertTrue(Path(result.reports["chunks"]).exists())
+            self.assertTrue(Path(result.reports["ingestion_report"]).exists())
+            self.assertEqual(result.chunks_inserted, 0)
 
 
 # ---------------------------------------------------------------------------
@@ -499,3 +623,30 @@ class TestSolutionBookSourcePageBlock(TestCase):
     def test_image_url_none_when_page_number_missing(self):
         block = self._make_source_block({"document_id": "chemistry_solution_book"})
         self.assertIsNone(block["image_url"])
+
+
+class TestSolutionBookApiSurface(TestCase):
+    """Swagger/OpenAPI exposes the solution-book ingestion and RAG search contracts."""
+
+    @classmethod
+    def setUpClass(cls):
+        from app.main import app
+        cls.openapi = app.openapi()
+
+    def test_admin_ingestion_alias_paths_exist(self):
+        paths = self.openapi["paths"]
+        self.assertIn("/api/v1/admin/ingestion/solution-book", paths)
+        self.assertIn("/api/v1/admin/ingest/solution-book", paths)
+        self.assertIn("/api/v1/admin/ingest/solution-book/report", paths)
+
+    def test_rag_search_post_and_answer_paths_exist(self):
+        paths = self.openapi["paths"]
+        self.assertIn("/api/v1/rag/search", paths)
+        self.assertIn("post", paths["/api/v1/rag/search"])
+        self.assertIn("/api/v1/rag/answer", paths)
+
+    def test_rag_search_get_supports_requested_query_params(self):
+        get_search = self.openapi["paths"]["/api/v1/rag/search"]["get"]
+        param_names = {param["name"] for param in get_search.get("parameters", [])}
+        for name in {"q", "query", "source_types", "top_k", "chapter", "lesson", "page_start", "page_end", "chunk_type"}:
+            self.assertIn(name, param_names)

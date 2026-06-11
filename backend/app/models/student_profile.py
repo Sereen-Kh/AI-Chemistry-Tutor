@@ -6,7 +6,7 @@ from sqlalchemy import Date, ForeignKey, Integer, JSON, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
-from app.models.enums import TeachingStyle
+from app.models.enums import ExplanationMethod, LearningMode, TeachingLevel, TeachingStyle
 from app.models.mixins import TimestampMixin
 
 
@@ -20,6 +20,10 @@ class StudentProfile(Base, TimestampMixin):
     grade: Mapped[str] = mapped_column(String(50), default="grade_9", nullable=False)
     subject: Mapped[str] = mapped_column(String(80), default="chemistry", nullable=False)
     learning_style: Mapped[str] = mapped_column(String(80), default=TeachingStyle.REAL_LIFE_EXAMPLES, nullable=False)
+    teaching_level: Mapped[str] = mapped_column(String(30), default=TeachingLevel.STANDARD.value, nullable=False)
+    explanation_method: Mapped[str] = mapped_column(String(40), default=ExplanationMethod.DIRECT.value, nullable=False)
+    learning_modes: Mapped[list[str]] = mapped_column(JSON, default=lambda: [LearningMode.TEXT.value], nullable=False)
+    student_interests: Mapped[list[str]] = mapped_column(JSON, default=list, nullable=False)
     preferred_language: Mapped[str] = mapped_column(String(8), default="ar", nullable=False)
     goals: Mapped[str | None] = mapped_column(Text, nullable=True)
     target_exam_date: Mapped[date | None] = mapped_column(Date, nullable=True)

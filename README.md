@@ -4,7 +4,7 @@ An AI-powered chemistry tutor app built with **Flutter** (frontend) and **FastAP
 
 ## Features
 
-- 🧪 Interactive chemistry Q&A powered by OpenAI GPT
+- 🧪 Interactive chemistry Q&A powered by Google Gemini
 - 💬 Chat interface with full conversation history
 - 📝 Markdown rendering for formatted responses (equations, lists, code)
 - ✨ Animated typing indicator while the AI responds
@@ -17,13 +17,13 @@ An AI-powered chemistry tutor app built with **Flutter** (frontend) and **FastAP
 |-------|-----------|
 | Frontend | Flutter + Provider (state management) |
 | Backend | Python + FastAPI |
-| AI | OpenAI GPT (gpt-4o-mini by default) |
+| AI | Google Gemini (gemini-2.0-flash by default) |
 
 ## Project Structure
 
 ```
 AI-Chemistry-Tutor/
-├── backend/          # Python FastAPI app (OpenAI integration)
+├── backend/          # Python FastAPI app (Gemini integration)
 └── frontend/         # Flutter app (cross-platform UI)
 ```
 
@@ -34,7 +34,7 @@ AI-Chemistry-Tutor/
 cd backend
 python -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env   # add your OPENAI_API_KEY
+cp .env.example .env   # add your GEMINI_API_KEY
 uvicorn app.main:app --reload
 ```
 

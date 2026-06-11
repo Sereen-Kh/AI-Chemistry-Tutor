@@ -3,11 +3,11 @@
 from datetime import date
 from typing import Optional
 
-from sqlalchemy import Boolean, Date, Integer, String
+from sqlalchemy import Boolean, Date, Integer, JSON, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
-from app.models.enums import LearningMode, TeachingStyle
+from app.models.enums import ExplanationMethod, LearningMode, TeachingLevel, TeachingStyle
 from app.models.mixins import TimestampMixin
 
 
@@ -28,6 +28,10 @@ class User(Base, TimestampMixin):
     subject: Mapped[str] = mapped_column(String(50), default="chemistry", nullable=False)
     teaching_style: Mapped[str] = mapped_column(String(50), default=TeachingStyle.REAL_LIFE_EXAMPLES, nullable=False)
     answer_format: Mapped[str] = mapped_column(String(50), default=LearningMode.TEXT, nullable=False)
+    teaching_level: Mapped[str] = mapped_column(String(30), default=TeachingLevel.STANDARD.value, nullable=False)
+    explanation_method: Mapped[str] = mapped_column(String(40), default=ExplanationMethod.DIRECT.value, nullable=False)
+    learning_modes: Mapped[list[str]] = mapped_column(JSON, default=lambda: [LearningMode.TEXT.value], nullable=False)
+    student_interests: Mapped[list[str]] = mapped_column(JSON, default=list, nullable=False)
     language: Mapped[str] = mapped_column(String(8), default="ar", nullable=False)
 
     xp: Mapped[int] = mapped_column(Integer, default=0, nullable=False)

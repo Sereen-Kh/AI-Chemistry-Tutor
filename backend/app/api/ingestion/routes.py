@@ -37,6 +37,7 @@ from app.schemas.ingestion import (
 from app.services.ingestion_pipeline import run_full_ingestion
 from app.services.rag import retrieve_context
 from app.services.rag_rebuild import rebuild_rag_chunks_from_cached_pages
+from app.services.rag_cache import invalidate_rag_caches
 from app.services.solution_book_ingestion import ingest_solution_book, latest_solution_book_report
 
 router = APIRouter(prefix="/admin/ingestion", tags=["admin-ingestion"])
@@ -227,6 +228,7 @@ async def rebuild_from_cache(
         topic_id=request.topic_id,
         clear_existing=request.clear_existing,
     )
+    await invalidate_rag_caches()
     return IngestionRebuildCacheResponse(**result.to_dict())
 
 

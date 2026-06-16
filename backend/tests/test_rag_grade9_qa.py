@@ -10,13 +10,13 @@ from typing import Any
 BACKEND_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BACKEND_DIR))
 
-import pytest
-from fastapi.testclient import TestClient
+import pytest  # noqa: E402
+from fastapi.testclient import TestClient  # noqa: E402
 
-from app.core.dependencies import get_current_user_id
-from app.main import app
-from app.services.rag import clean_query, rewrite_query
-from scripts.rag_qa_harness import (
+from app.core.dependencies import get_current_user_id  # noqa: E402
+from app.main import app  # noqa: E402
+from app.services.rag import clean_query, rewrite_query  # noqa: E402
+from scripts.rag_qa_harness import (  # noqa: E402
     chunk_previews,
     contains_term,
     install_deterministic_api_overrides,

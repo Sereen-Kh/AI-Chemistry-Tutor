@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Response
+from fastapi import APIRouter, Depends, Query, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_async_db
 from app.schemas.topics import TopicCreate, TopicResponse, TopicUpdate
@@ -11,10 +11,11 @@ router = APIRouter(prefix="/topics", tags=["topics"])
 async def list_topics(
     skip: int = 0,
     limit: int = 100,
+    lesson_id: int | None = Query(default=None),
     db: AsyncSession = Depends(get_async_db),
     user=Depends(get_current_user),
 ):
-    return await topic_service.get_topics(db, skip=skip, limit=limit)
+    return await topic_service.get_topics(db, skip=skip, limit=limit, lesson_id=lesson_id)
 
 @router.get("/{topic_id}", response_model=TopicResponse)
 async def get_topic(

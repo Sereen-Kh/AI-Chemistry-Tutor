@@ -1,6 +1,13 @@
 import { api, API_BASE_URL } from './http';
-import { mockAiAnswer } from './mockData';
-import type { AiAskRequest, AiAskResponse, SourceCitation } from '../types';
+import type {
+  AiAskRequest,
+  AiAskResponse,
+  ChatMessageResponse,
+  ChatSessionCreateRequest,
+  ChatSessionResponse,
+  SendSessionMessageRequest,
+  SourceCitation,
+} from '../types';
 
 interface BackendChatSource {
   chunk_id: number;
@@ -38,6 +45,22 @@ const mediaUrl = (value?: string): string | undefined => {
   if (value.startsWith('http://') || value.startsWith('https://')) return value;
   return `${origin}${value}`;
 };
+
+const asNumber = (value: unknown): number | undefined => (
+  typeof value === 'number' && Number.isFinite(value) ? value : undefined
+);
+
+const asString = (value: unknown): string | undefined => (
+  typeof value === 'string' ? value : undefined
+);
+
+const mapSourceRecord = (source: Record<string, unknown>): SourceCitation => ({
+  title: asString(source.source) || asString(source.title) || 'كتاب الكيمياء - الصف التاسع',
+  page: asNumber(source.page_number) ?? asNumber(source.page) ?? null,
+  chunk_id: asNumber(source.chunk_id) ?? asString(source.chunk_id) ?? 'unknown',
+  quote: asString(source.content_type) || asString(source.quote),
+  score: asNumber(source.similarity_score) ?? asNumber(source.score),
+});
 
 const mapBackendAnswer = (request: AiAskRequest, response: BackendChatAnswer): AiAskResponse => {
   const backendSources = response.sources?.length ? response.sources : response.citations || [];
@@ -87,7 +110,90 @@ const mapBackendAnswer = (request: AiAskRequest, response: BackendChatAnswer): A
   return result;
 };
 
+export const messageResponseToAskResponse = (
+  message: ChatMessageResponse,
+  format: AiAskRequest['answer_format'] = 'text',
+): AiAskResponse => {
+  const sourceRecords = (
+    message.sources?.length
+      ? message.sources
+      : message.citations?.length
+        ? message.citations
+        : []
+  ) as Record<string, unknown>[];
+  const citations = sourceRecords.map(mapSourceRecord);
+  const mediaBlocks = message.media_blocks || [];
+  const blocks = [...(message.blocks || []), ...mediaBlocks] as Record<string, unknown>[];
+  const audioBlock = blocks.find((block) => block.type === 'audio' && block.url);
+  const imageBlock = blocks.find((block) => (
+    ['image', 'source_page', 'source_image'].includes(String(block.type)) && (block.image_url || block.url)
+  ));
+  const response: AiAskResponse = {
+    answer: message.answer_text || message.content,
+    answer_text: message.answer_text || message.content,
+    sources: citations,
+    citations,
+    confidence: message.confidence ?? 0,
+    format,
+    answer_type: message.answer_type || undefined,
+    route: message.route || undefined,
+    diagnostics: message.diagnostics,
+    media_blocks: mediaBlocks,
+  };
+
+  const audioUrl = asString(audioBlock?.url);
+  const imageUrl = asString(imageBlock?.image_url) || asString(imageBlock?.url);
+  if (audioUrl) response.audio_url = mediaUrl(audioUrl);
+  if (imageUrl) response.source_page_image_url = mediaUrl(imageUrl);
+  if (format === 'image' && !response.source_page_image_url) {
+    const firstPage = message.page_numbers?.[0] ?? citations[0]?.page;
+    if (firstPage) {
+      response.source_page_image_url = mediaUrl(`/media/books/syria_grade_9_chemistry/page_images/page_${String(firstPage).padStart(3, '0')}.png`);
+    }
+  }
+  if (format === 'video') {
+    response.video_title = 'No suitable video found yet. Try text or image explanation.';
+    response.video_source = 'internal';
+  }
+  return response;
+};
+
 export const aiApi = {
+  async listSessions(): Promise<ChatSessionResponse[]> {
+    const { data } = await api.get<ChatSessionResponse[]>('/chat/sessions');
+    return data;
+  },
+
+  async createSession(request: ChatSessionCreateRequest = {}): Promise<ChatSessionResponse> {
+    const { data } = await api.post<ChatSessionResponse>('/chat/sessions', request);
+    return data;
+  },
+
+  async getSession(sessionId: number): Promise<ChatSessionResponse> {
+    const { data } = await api.get<ChatSessionResponse>(`/chat/sessions/${sessionId}`);
+    return data;
+  },
+
+  async sendSessionMessage(sessionId: number, request: SendSessionMessageRequest): Promise<ChatMessageResponse> {
+    const { data } = await api.post<ChatMessageResponse>(`/chat/sessions/${sessionId}/messages`, {
+      content: request.content,
+      format: request.format ?? 'text',
+      answer_scope: request.answer_scope ?? 'auto',
+      source_types: request.source_types,
+      teaching_style: request.teaching_style,
+      teaching_level: request.teaching_level,
+      explanation_method: request.explanation_method,
+      learning_modes: request.learning_modes,
+      student_interests: request.student_interests,
+      action: request.action,
+    });
+    return data;
+  },
+
+  async deleteSession(sessionId: number): Promise<void> {
+    await api.delete(`/chat/sessions/${sessionId}`);
+  },
+
   async ask(request: AiAskRequest): Promise<AiAskResponse> {
     try {
       const { data } = await api.post<BackendChatAnswer>('/chat/ask', {
@@ -110,8 +216,9 @@ export const aiApi = {
         previous_selected_chunks: request.previous_selected_chunks,
       });
       return mapBackendAnswer(request, data);
-    } catch {
-      return mockAiAnswer(request);
+    } catch (error) {
+      console.warn('Ask AI request failed', error);
+      throw new Error('تعذر الوصول إلى معلّم الذكاء حالياً. تأكد أن الخادم يعمل ثم أعد المحاولة.', { cause: error });
     }
   },
 };

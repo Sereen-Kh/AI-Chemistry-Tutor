@@ -5,6 +5,10 @@ import { flashcardsApi } from '../api/flashcardsApi';
 import { Card, PageHeader, Button, ProgressBar, StatusPill, LoadingSkeleton, ErrorBanner } from '../components/DesignSystem';
 import type { FlashcardGenerationConfig, GeneratedFlashcard, LessonKnowledgeUnit } from '../types';
 
+type FlashcardMode = FlashcardGenerationConfig['mode'];
+type FlashcardDifficulty = FlashcardGenerationConfig['difficulty'];
+type FlashcardType = FlashcardGenerationConfig['cardTypes'][number];
+
 export const FlashcardsPage = () => {
   const location = useLocation();
 
@@ -14,11 +18,11 @@ export const FlashcardsPage = () => {
   const paramAuto = queryParams.get('auto') === 'true';
 
   // Config UI State
-  const [mode, setMode] = useState<FlashcardGenerationConfig['mode']>('single_lesson');
-  const [selectedLessonIds, setSelectedLessonIds] = useState<string[]>([]);
+  const [mode, setMode] = useState<FlashcardMode>(paramLessonId ? 'single_lesson' : 'single_lesson');
+  const [selectedLessonIds, setSelectedLessonIds] = useState<string[]>(paramLessonId ? [paramLessonId] : []);
   const [selectedChapterId, setSelectedChapterId] = useState<string>('chapter_1');
   const [cardsPerLesson, setCardsPerLesson] = useState<number>(4);
-  const [difficulty, setDifficulty] = useState<FlashcardGenerationConfig['difficulty']>('mixed');
+  const [difficulty, setDifficulty] = useState<FlashcardDifficulty>('mixed');
   const [cardTypes, setCardTypes] = useState<FlashcardGenerationConfig['cardTypes']>(['term', 'definition', 'formula', 'experiment']);
   const [spacedRepetition, setSpacedRepetition] = useState(true);
 
@@ -36,43 +40,6 @@ export const FlashcardsPage = () => {
   // Filter States (studying mode)
   const [filterType, setFilterType] = useState<string>('all');
   const [filterDifficulty, setFilterDifficulty] = useState<string>('all');
-
-  // Prepopulate config if parameters exist
-  useEffect(() => {
-    if (paramLessonId) {
-      setMode('single_lesson');
-      setSelectedLessonIds([paramLessonId]);
-    }
-  }, [paramLessonId]);
-
-  // Auto-generate if specified
-  useEffect(() => {
-    if (paramAuto && paramLessonId) {
-      const cCount = Number(queryParams.get('cards') || '4');
-      const cDiff = (queryParams.get('difficulty') || 'mixed') as FlashcardGenerationConfig['difficulty'];
-      const cTypes = (queryParams.get('types') || 'term').split(',') as FlashcardGenerationConfig['cardTypes'];
-      
-      const config: FlashcardGenerationConfig = {
-        mode: 'single_lesson',
-        lessonIds: [paramLessonId],
-        cardsPerLesson: cCount,
-        difficulty: cDiff,
-        cardTypes: cTypes,
-        includeSourcePage: true,
-        spacedRepetitionEnabled: true
-      };
-
-      const lesson = mockLessons.find(l => l.lessonId === paramLessonId);
-      if (lesson) {
-        const report = getLessonQualityReport(lesson);
-        if (report.status !== 'blocked') {
-          handleGenerateFlashcards(config);
-        } else {
-          setError(`تعذر التوليد التلقائي للبطاقات: درس "${lesson.titleAr}" محظور بسبب جودة المحتوى.`);
-        }
-      }
-    }
-  }, [paramAuto, paramLessonId, queryParams]);
 
   // Compute selected lessons
   const currentSelectedLessons = useMemo<LessonKnowledgeUnit[]>(() => {
@@ -162,11 +129,11 @@ export const FlashcardsPage = () => {
     );
   };
 
-  const handleToggleCardType = (type: string) => {
+  const handleToggleCardType = (type: FlashcardType) => {
     setCardTypes(prev => 
-      prev.includes(type as any) 
-        ? prev.filter(t => t !== type) as any
-        : [...prev, type as any]
+      prev.includes(type)
+        ? prev.filter(t => t !== type)
+        : [...prev, type]
     );
   };
 
@@ -177,6 +144,14 @@ export const FlashcardsPage = () => {
     setReviewCount(0);
     setGameState('studying');
   };
+
+  const filteredCards = cards.filter(card => {
+    if (filterType !== 'all' && card.cardType !== filterType) return false;
+    if (filterDifficulty !== 'all' && card.difficulty !== filterDifficulty) return false;
+    return true;
+  });
+
+  const activeCard = filteredCards[currentIndex];
 
   const handleCardAction = async (action: 'known' | 'review' | 'skip') => {
     const currentCard = filteredCards[currentIndex];
@@ -201,16 +176,32 @@ export const FlashcardsPage = () => {
     }, 200);
   };
 
-  // Filtered Cards logic during study
-  const filteredCards = useMemo(() => {
-    return cards.filter(card => {
-      if (filterType !== 'all' && card.cardType !== filterType) return false;
-      if (filterDifficulty !== 'all' && card.difficulty !== filterDifficulty) return false;
-      return true;
-    });
-  }, [cards, filterType, filterDifficulty]);
+  useEffect(() => {
+    if (!paramAuto || !paramLessonId) return;
+    const cCount = Number(queryParams.get('cards') || '4');
+    const cDiff = (queryParams.get('difficulty') || 'mixed') as FlashcardDifficulty;
+    const cTypes = (queryParams.get('types') || 'term').split(',') as FlashcardType[];
 
-  const activeCard = filteredCards[currentIndex];
+    const config: FlashcardGenerationConfig = {
+      mode: 'single_lesson',
+      lessonIds: [paramLessonId],
+      cardsPerLesson: cCount,
+      difficulty: cDiff,
+      cardTypes: cTypes,
+      includeSourcePage: true,
+      spacedRepetitionEnabled: true
+    };
+
+    const lesson = mockLessons.find(l => l.lessonId === paramLessonId);
+    if (!lesson) return;
+    const report = getLessonQualityReport(lesson);
+    if (report.status !== 'blocked') {
+      queueMicrotask(() => void handleGenerateFlashcards(config));
+    } else {
+      queueMicrotask(() => setError(`تعذر التوليد التلقائي للبطاقات: درس "${lesson.titleAr}" محظور بسبب جودة المحتوى.`));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paramAuto, paramLessonId, queryParams]);
 
   const getCardTypeLabel = (type: string) => {
     const labels: Record<string, string> = {
@@ -348,7 +339,7 @@ export const FlashcardsPage = () => {
 
             <div className="form-group">
               <label>نمط توليد البطاقات:</label>
-              <select value={mode} onChange={(e) => { setMode(e.target.value as any); setSelectedLessonIds([]); }}>
+              <select value={mode} onChange={(e) => { setMode(e.target.value as FlashcardMode); setSelectedLessonIds([]); }}>
                 <option value="single_lesson">درس واحد محدد</option>
                 <option value="selected_lessons">مجموعة دروس محددة</option>
                 <option value="chapter">الوحدة الكندية الكاملة (Chapter)</option>
@@ -416,7 +407,7 @@ export const FlashcardsPage = () => {
               </div>
               <div className="form-group">
                 <label>الصعوبة المفضلة:</label>
-                <select value={difficulty} onChange={(e) => setDifficulty(e.target.value as any)}>
+                <select value={difficulty} onChange={(e) => setDifficulty(e.target.value as FlashcardDifficulty)}>
                   <option value="mixed">مختلط</option>
                   <option value="easy">سهل</option>
                   <option value="medium">متوسط</option>

@@ -1,6 +1,8 @@
 """Chat session and message models."""
 
-from sqlalchemy import ForeignKey, Integer, String, Text
+from typing import Any
+
+from sqlalchemy import Float, ForeignKey, Integer, JSON, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
@@ -44,5 +46,49 @@ class ChatMessage(Base, TimestampMixin):
     feedback: Mapped[str | None] = mapped_column(String(30), nullable=True)
     media_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
     latency_ms: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    confidence: Mapped[float | None] = mapped_column(Float, nullable=True)
+    answer_type: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    route: Mapped[str | None] = mapped_column(String(80), nullable=True)
+    grounding: Mapped[str | None] = mapped_column(String(80), nullable=True)
+    sources_json: Mapped[list[dict[str, Any]] | None] = mapped_column(JSON, nullable=True)
+    citations_json: Mapped[list[dict[str, Any]] | None] = mapped_column(JSON, nullable=True)
+    blocks_json: Mapped[list[dict[str, Any]] | None] = mapped_column(JSON, nullable=True)
+    media_blocks_json: Mapped[list[dict[str, Any]] | None] = mapped_column(JSON, nullable=True)
+    source_blocks_json: Mapped[list[dict[str, Any]] | None] = mapped_column(JSON, nullable=True)
+    page_numbers_json: Mapped[list[int] | None] = mapped_column(JSON, nullable=True)
+    diagnostics_json: Mapped[dict[str, Any] | None] = mapped_column(JSON, nullable=True)
+    suggested_next_action: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
     session = relationship("ChatSession", back_populates="messages")
+
+    @property
+    def sources(self) -> list[dict[str, Any]]:
+        return self.sources_json or []
+
+    @property
+    def citations(self) -> list[dict[str, Any]]:
+        return self.citations_json or []
+
+    @property
+    def blocks(self) -> list[dict[str, Any]]:
+        return self.blocks_json or []
+
+    @property
+    def media_blocks(self) -> list[dict[str, Any]]:
+        return self.media_blocks_json or []
+
+    @property
+    def source_blocks(self) -> list[dict[str, Any]]:
+        return self.source_blocks_json or []
+
+    @property
+    def page_numbers(self) -> list[int]:
+        return self.page_numbers_json or []
+
+    @property
+    def diagnostics(self) -> dict[str, Any]:
+        return self.diagnostics_json or {}
+
+    @property
+    def answer_text(self) -> str:
+        return self.content

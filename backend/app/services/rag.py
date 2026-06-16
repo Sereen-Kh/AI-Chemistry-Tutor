@@ -19,6 +19,7 @@ from app.models.textbook import ContentSource, RagChunk
 from app.services.chunking import extract_formula_terms, normalize_formula
 from app.services.embeddings import embed_query
 from app.services.rag_diagnostics import CandidateInfo, RetrievalDiagnostics
+from app.services.rag_logging import log_rag_retrieval
 from app.services.safety_rules import ACID_TO_WATER_REWRITE
 
 logger = logging.getLogger(__name__)
@@ -389,6 +390,7 @@ class RetrievedChunk:
     source_type: str
     content_type: str
     page_number: int | None
+    unit_id: int | None
     chapter_id: int | None
     lesson_id: int | None
     topic_id: int | None
@@ -729,6 +731,7 @@ def _retrieved_from_chunk(chunk: RagChunk, score: float) -> RetrievedChunk:
         source_type=chunk.source_type,
         content_type=chunk.content_type,
         page_number=chunk.page_number,
+        unit_id=chunk.unit_id,
         chapter_id=chunk.chapter_id,
         lesson_id=chunk.lesson_id,
         topic_id=chunk.topic_id,
@@ -741,6 +744,7 @@ async def retrieve_context(
     db: AsyncSession,
     query: str,
     user_id: int | None = None,
+    unit_id: int | None = None,
     chapter_id: int | None = None,
     lesson_id: int | None = None,
     topic_id: int | None = None,
@@ -758,6 +762,9 @@ async def retrieve_context(
     source_pdf: str | None = None,
     page_start: int | None = None,
     page_end: int | None = None,
+    log_retrieval: bool = True,
+    route: str = "raw_retrieve",
+    source_mode: str | None = None,
 ) -> list[RetrievedChunk]:
     """Retrieve relevant source chunks for a query.
 
@@ -778,7 +785,7 @@ async def retrieve_context(
     diag.query_terms = sorted(terms)
 
     cache_key_raw = (
-        f"{query}|{user_id}|{chapter_id}|{lesson_id}|{topic_id}|"
+        f"{query}|{user_id}|{unit_id}|{chapter_id}|{lesson_id}|{topic_id}|"
         f"{source_types}|{content_types}|{top_k}|{min_similarity}|{intent}|"
         f"{document_type}|{document_id}|{lesson_no}|{page_start}|{page_end}"
     )
@@ -789,12 +796,40 @@ async def retrieve_context(
         cached = await redis.get(cache_key)
         if cached:
             chunks_dict = json.loads(cached)
+            for item in chunks_dict:
+                if isinstance(item, dict):
+                    item.setdefault("unit_id", None)
+            cached_chunks = [RetrievedChunk(**c) for c in chunks_dict]
             diag.cache_hit = True
             diag.final_confidence = max((c.get("similarity_score", 0) for c in chunks_dict), default=0)
             if diagnostics_callback:
                 diagnostics_callback(diag.as_payload())
             diag.emit()
-            return [RetrievedChunk(**c) for c in chunks_dict]
+            if log_retrieval:
+                await log_rag_retrieval(
+                    user_id=user_id,
+                    query_text=query,
+                    normalized_query=cleaned,
+                    route=route,
+                    source_mode=source_mode or ",".join(source_types or []) or document_type,
+                    top_k=top_k,
+                    min_similarity=min_similarity,
+                    chunks=cached_chunks,
+                    retrieval_latency_ms=diag.retrieval_time_ms,
+                    metadata_json={
+                        "cache_hit": True,
+                        "intent": intent,
+                        "rewritten_query": rewritten,
+                        "unit_id": unit_id,
+                        "chapter_id": chapter_id,
+                        "lesson_id": lesson_id,
+                        "topic_id": topic_id,
+                        "content_types": content_types,
+                        "page_start": page_start,
+                        "page_end": page_end,
+                    },
+                )
+            return cached_chunks
     except Exception:
         pass
     finally:
@@ -819,6 +854,8 @@ async def retrieve_context(
         )
     )
 
+    if unit_id is not None:
+        stmt = stmt.where(RagChunk.unit_id == unit_id)
     if chapter_id is not None:
         stmt = stmt.where(RagChunk.chapter_id == chapter_id)
     if lesson_id is not None:
@@ -951,6 +988,32 @@ async def retrieve_context(
             await redis.aclose()
         except Exception:
             pass
+
+    if log_retrieval:
+        await log_rag_retrieval(
+            user_id=user_id,
+            query_text=query,
+            normalized_query=cleaned,
+            route=route,
+            source_mode=source_mode or ",".join(source_types or []) or document_type,
+            top_k=top_k,
+            min_similarity=min_similarity,
+            chunks=scored,
+            retrieval_latency_ms=diag.retrieval_time_ms,
+            metadata_json={
+                "cache_hit": False,
+                "intent": intent,
+                "rewritten_query": rewritten,
+                "unit_id": unit_id,
+                "chapter_id": chapter_id,
+                "lesson_id": lesson_id,
+                "topic_id": topic_id,
+                "content_types": content_types,
+                "page_start": page_start,
+                "page_end": page_end,
+                "total_candidates_scanned": diag.total_candidates_scanned,
+            },
+        )
 
     return scored
 

@@ -2,7 +2,9 @@
 
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+
+from app.schemas.topics import TopicResponse
 
 
 class LessonResponse(BaseModel):
@@ -14,6 +16,9 @@ class LessonResponse(BaseModel):
     order: int
     difficulty: int
     duration_min: int
+    page_start: int | None = None
+    page_end: int | None = None
+    topics: list[TopicResponse] = Field(default_factory=list)
     created_at: datetime
     updated_at: datetime
 
@@ -28,6 +33,8 @@ class LessonCreateRequest(BaseModel):
     order: int = 0
     difficulty: int = 1
     duration_min: int = 10
+    page_start: int | None = None
+    page_end: int | None = None
 
 
 class LessonUpdateRequest(BaseModel):
@@ -37,3 +44,5 @@ class LessonUpdateRequest(BaseModel):
     order: int | None = None
     difficulty: int | None = None
     duration_min: int | None = None
+    page_start: int | None = None
+    page_end: int | None = None

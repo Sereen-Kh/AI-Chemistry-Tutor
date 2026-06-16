@@ -2,12 +2,21 @@
 
 from datetime import datetime
 
-from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, Text
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String, Table, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 
 from app.database import Base
 from app.models.mixins import TimestampMixin
+
+
+lesson_topics = Table(
+    "lesson_topics",
+    Base.metadata,
+    Column("lesson_id", ForeignKey("lessons.id", ondelete="CASCADE"), primary_key=True),
+    Column("topic_id", ForeignKey("topics.id", ondelete="CASCADE"), primary_key=True),
+    Column("order", Integer, nullable=False, default=0),
+)
 
 
 class Element(Base):
@@ -26,12 +35,34 @@ class Element(Base):
     electron_configuration: Mapped[str | None] = mapped_column(Text, nullable=True)
 
 
+class Unit(Base, TimestampMixin):
+    """Top-level textbook unit (وحدة) containing ordered chapters."""
+
+    __tablename__ = "units"
+    __table_args__ = (UniqueConstraint("unit_number", name="uq_units_unit_number"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    unit_number: Mapped[int] = mapped_column(Integer, index=True, nullable=False)
+    semester: Mapped[int] = mapped_column(Integer, index=True, nullable=False)
+    title_ar: Mapped[str] = mapped_column(String(255), nullable=False)
+    title_en: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    description_ar: Mapped[str | None] = mapped_column(Text, nullable=True)
+    order: Mapped[int] = mapped_column(Integer, default=0, index=True, nullable=False)
+    icon: Mapped[str | None] = mapped_column(String(80), nullable=True)
+
+    chapters = relationship("Chapter", back_populates="unit", order_by="Chapter.order")
+    rag_chunks = relationship("RagChunk", back_populates="unit")
+
+
 class Chapter(Base, TimestampMixin):
     """Ordered curriculum chapter."""
 
     __tablename__ = "chapters"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    unit_id: Mapped[int | None] = mapped_column(
+        ForeignKey("units.id", ondelete="SET NULL"), nullable=True, index=True
+    )
     title_ar: Mapped[str] = mapped_column(String(255), nullable=False)
     title_en: Mapped[str | None] = mapped_column(String(255), nullable=True)
     description_ar: Mapped[str | None] = mapped_column(Text, nullable=True)
@@ -39,7 +70,13 @@ class Chapter(Base, TimestampMixin):
     difficulty: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
     icon: Mapped[str | None] = mapped_column(String(80), nullable=True)
 
-    lessons = relationship("Lesson", back_populates="chapter", cascade="all, delete-orphan")
+    unit = relationship("Unit", back_populates="chapters")
+    lessons = relationship(
+        "Lesson",
+        back_populates="chapter",
+        cascade="all, delete-orphan",
+        order_by="Lesson.order",
+    )
     textbook_chunks = relationship("TextbookChunk", back_populates="chapter")
     rag_chunks = relationship("RagChunk", back_populates="chapter")
 
@@ -57,8 +94,16 @@ class Lesson(Base, TimestampMixin):
     order: Mapped[int] = mapped_column(Integer, default=0, index=True, nullable=False)
     difficulty: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
     duration_min: Mapped[int] = mapped_column(Integer, default=10, nullable=False)
+    page_start: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    page_end: Mapped[int | None] = mapped_column(Integer, nullable=True)
 
     chapter = relationship("Chapter", back_populates="lessons")
+    topics = relationship(
+        "Topic",
+        secondary=lesson_topics,
+        back_populates="lessons",
+        order_by="Topic.order",
+    )
     progress_records = relationship("LessonProgress", back_populates="lesson", cascade="all, delete-orphan")
     reels = relationship("Reel", back_populates="lesson", cascade="all, delete-orphan")
     rag_chunks = relationship("RagChunk", back_populates="lesson")

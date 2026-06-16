@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from collections import Counter
 from dataclasses import asdict, dataclass, field
+from datetime import datetime, timezone
 from pathlib import Path
 
 from sqlalchemy.orm import Session
@@ -13,7 +14,7 @@ from app.core.config import PROJECT_DIR
 from app.models.ingestion import IngestionPage
 from app.models.textbook import ContentSource, ExtractedQuestion, RagChunk
 from app.services.chunking import build_page_chunk_records, normalize_arabic
-from app.services.embeddings import embed_batch, embedding_provider_status
+from app.services.embeddings import current_embedding_model_name, embed_batch, embedding_provider_status
 
 
 @dataclass
@@ -292,10 +293,13 @@ async def rebuild_rag_chunks_from_cached_pages(
                     extraction_method=str(payload.get("extraction_method") or "+".join(payload.get("extraction_methods") or [])),
                     language=str(payload.get("detected_language") or "ar")[:8],
                     embedding=embedding,
+                    embedding_model=current_embedding_model_name(),
+                    embedding_updated_at=datetime.now(timezone.utc),
                     metadata_json={
                         **record.metadata,
                         "cache_path": str(page_file),
                         "cache_rebuild": True,
+                        "embedding_model": current_embedding_model_name(),
                         "extraction_methods": payload.get("extraction_methods") or [],
                         "warnings": payload.get("warnings") or [],
                     },

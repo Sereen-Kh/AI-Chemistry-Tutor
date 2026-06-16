@@ -35,6 +35,9 @@ app = FastAPI(
         {"name": "auth", "description": "Authentication and onboarding"},
         {"name": "users", "description": "Current user profile"},
         {"name": "student-profile", "description": "Student personalization profile"},
+        {"name": "dashboard", "description": "Student dashboard aggregate"},
+        {"name": "devices", "description": "Device tokens for push notifications"},
+        {"name": "notifications", "description": "Reminder notification history and preferences"},
         {"name": "chapters", "description": "Chemistry chapters"},
         {"name": "lessons", "description": "Chemistry lessons"},
         {"name": "chat", "description": "RAG-backed tutor chat"},
@@ -62,6 +65,11 @@ app.mount(
     "/media/books",
     StaticFiles(directory=str(PROJECT_DIR / "data" / "textbooks"), check_dir=False),
     name="book_media",
+)
+app.mount(
+    "/media/uploads",
+    StaticFiles(directory=str(PROJECT_DIR / "data" / "uploads"), check_dir=False),
+    name="uploaded_media",
 )
 
 app.include_router(api_router, prefix="/api/v1")

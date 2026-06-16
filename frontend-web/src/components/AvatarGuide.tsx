@@ -41,7 +41,7 @@ const defaultMessages: Record<AvatarExpression, string> = {
   pointing: 'انتبه إلى المصادر والصفحات قبل اعتماد الإجابة.',
   speaking: 'سأشرح بالعربية مع أمثلة مناسبة للصف التاسع.',
   celebrating: 'إنجاز جيد. تابع إلى السؤال التالي.',
-  video: 'صيغة Reel جاهزة في الواجهة عند طلب شرح بصري قصير.',
+  video: 'صيغة الفيديو القصير جاهزة في الواجهة عند طلب شرح بصري سريع.',
 };
 
 const routeGuide = (path: string): { expression: AvatarExpression; message: string; waypoint: AvatarWaypoint } => {

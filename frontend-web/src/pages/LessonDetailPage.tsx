@@ -1,17 +1,34 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { curriculumApi, fallbackCurriculumUnits } from '../api';
 import { mockLessons, getLessonQualityReport } from '../api/mockChemistryData';
 import { Card, PageHeader, Button, ProgressBar, StatusPill } from '../components/DesignSystem';
-import type { LessonKnowledgeUnit, LessonQualityReport } from '../types';
+import type { LessonCatalogItem, LessonQualityReport } from '../types';
+
+const findFallbackLesson = (id: number): LessonCatalogItem | null => {
+  for (const unit of fallbackCurriculumUnits) {
+    for (const chapter of unit.chapters) {
+      const lesson = chapter.lessons.find((item) => item.id === id);
+      if (lesson) return lesson;
+    }
+  }
+  return null;
+};
+
+const formatPages = (start?: number | null, end?: number | null) => {
+  if (!start) return 'غير محددة بعد';
+  return end && end !== start ? `${start} - ${end}` : `${start}`;
+};
 
 export const LessonDetailPage = () => {
   const { lessonId } = useParams<{ lessonId: string }>();
   const navigate = useNavigate();
-  const [lesson, setLesson] = useState<LessonKnowledgeUnit | null>(null);
-  const [report, setReport] = useState<LessonQualityReport | null>(null);
   const [showQuizModal, setShowQuizModal] = useState(false);
   const [showFlashcardModal, setShowFlashcardModal] = useState(false);
+  const [catalogLesson, setCatalogLesson] = useState<LessonCatalogItem | null>(null);
+  const [catalogLoading, setCatalogLoading] = useState(false);
+  const [catalogError, setCatalogError] = useState('');
 
   // Quiz configuration state
   const [questionsPerLesson, setQuestionsPerLesson] = useState(3);
@@ -24,21 +41,94 @@ export const LessonDetailPage = () => {
   const [cardTypes, setCardTypes] = useState<string[]>(['term', 'definition', 'formula', 'experiment']);
   const [spacedRepetition, setSpacedRepetition] = useState(true);
 
+  const lesson = mockLessons.find((l) => l.lessonId === lessonId) ?? null;
+  const report = lesson ? getLessonQualityReport(lesson) : null;
+
   useEffect(() => {
-    const found = mockLessons.find((l) => l.lessonId === lessonId);
-    if (found) {
-      setLesson(found);
-      setReport(getLessonQualityReport(found));
-    } else {
-      setLesson(null);
-      setReport(null);
-    }
-  }, [lessonId]);
+    const numericId = Number(lessonId);
+    if (lesson || !Number.isFinite(numericId)) return;
+    let cancelled = false;
+    queueMicrotask(() => {
+      if (cancelled) return;
+      setCatalogLoading(true);
+      setCatalogError('');
+    });
+    curriculumApi.getLesson(numericId)
+      .then((data) => {
+        if (!cancelled) setCatalogLesson(data);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        const fallback = findFallbackLesson(numericId);
+        setCatalogLesson(fallback);
+        if (!fallback) setCatalogError('تعذر تحميل هذا الدرس من الخادم.');
+      })
+      .finally(() => {
+        if (!cancelled) setCatalogLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [lesson, lessonId]);
 
   if (!lesson || !report) {
+    if (catalogLoading) {
+      return (
+        <div className="page-stack lesson-detail-page">
+          <PageHeader eyebrow="تفاصيل الدرس" title="جار تحميل الدرس..." subtitle="نقرأ بيانات الدرس من بنية الكتاب." />
+        </div>
+      );
+    }
+
+    if (catalogLesson) {
+      return (
+        <div className="page-stack lesson-detail-page">
+          <PageHeader
+            eyebrow="تفاصيل الدرس"
+            title={catalogLesson.title_ar}
+            subtitle={`الصفحات: ${formatPages(catalogLesson.page_start, catalogLesson.page_end)} · ${catalogLesson.duration_min} دقيقة`}
+            action={<Link className="ed-btn ed-btn-ghost" to="/lessons">← العودة للدروس</Link>}
+          />
+          <div className="lesson-grid">
+            <Card className="content-section-card">
+              <div className="section-title">
+                <h2>مفاهيم الدرس</h2>
+                <StatusPill tone={catalogLesson.difficulty >= 3 ? 'gold' : 'teal'}>
+                  مستوى {catalogLesson.difficulty}
+                </StatusPill>
+              </div>
+              {catalogLesson.topics.length > 0 ? (
+                <div className="topic-chip-row">
+                  {catalogLesson.topics.map((topic) => (
+                    <span className="topic-chip" key={topic.id}>{topic.title_ar}</span>
+                  ))}
+                </div>
+              ) : (
+                <p className="muted-text">لم تُربط مفاهيم بهذا الدرس بعد.</p>
+              )}
+            </Card>
+            <Card className="content-section-card">
+              <h3>إجراءات سريعة</h3>
+              <div className="action-buttons-row">
+                <Link className="ed-btn ed-btn-ghost" to={`/ask-ai?question=${encodeURIComponent(`اشرح لي درس: ${catalogLesson.title_ar}`)}`}>
+                  اسأل الذكاء عن الدرس
+                </Link>
+                <Link className="ed-btn ed-btn-primary" to={`/quizzes?lessonId=${catalogLesson.id}`}>
+                  توليد اختبار
+                </Link>
+                <Link className="ed-btn ed-btn-secondary" to={`/flashcards?lessonId=${catalogLesson.id}`}>
+                  بطاقات مراجعة
+                </Link>
+              </div>
+            </Card>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="page-stack error-page">
-        <PageHeader eyebrow="خطأ 404" title="الدرس غير موجود" subtitle="لم نتمكن من العثور على الدرس المطلوب." />
+        <PageHeader eyebrow="خطأ 404" title="الدرس غير موجود" subtitle={catalogError || 'لم نتمكن من العثور على الدرس المطلوب.'} />
         <Link className="ed-btn ed-btn-primary" to="/lessons">العودة للدروس</Link>
       </div>
     );
@@ -182,7 +272,7 @@ export const LessonDetailPage = () => {
               onClick={() => setShowQuizModal(true)}
               className="w-full mb-2"
             >
-              {report.status === 'blocked' ? 'توليد اختبار (مغلق)' : 'توليد اختبار مخصص (Quiz)'}
+              {report.status === 'blocked' ? 'توليد اختبار (مغلق)' : 'توليد اختبار مخصص'}
             </Button>
             <Button 
               variant={report.status === 'blocked' ? 'ghost' : 'secondary'}
@@ -190,7 +280,7 @@ export const LessonDetailPage = () => {
               onClick={() => setShowFlashcardModal(true)}
               className="w-full"
             >
-              {report.status === 'blocked' ? 'توليد بطاقات (مغلق)' : 'توليد بطاقات مراجعة (Flashcards)'}
+              {report.status === 'blocked' ? 'توليد بطاقات (مغلق)' : 'توليد بطاقات مراجعة'}
             </Button>
           </div>
         </Card>

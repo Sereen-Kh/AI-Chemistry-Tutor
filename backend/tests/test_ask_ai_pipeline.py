@@ -16,15 +16,13 @@ from pathlib import Path
 BACKEND_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BACKEND_DIR))
 
-import pytest
-
-from app.rag.arabic_normalizer import normalize_arabic
-from app.rag.answer_verifier import verify_answer
-from app.rag.book_knowledge import answer_from_book_knowledge
-from app.rag.chemistry_dictionary import answer_from_dictionary, find_entity
-from app.services.chemistry_rules import answer_metal_dilute_acid_reaction
-from app.services.query_router import route_direct_answer
-from app.services.safety_rules import answer_safety_rule, is_acid_to_water_safety_question
+from app.rag.arabic_normalizer import normalize_arabic  # noqa: E402
+from app.rag.answer_verifier import verify_answer  # noqa: E402
+from app.rag.book_knowledge import answer_from_book_knowledge  # noqa: E402
+from app.rag.chemistry_dictionary import answer_from_dictionary, find_entity  # noqa: E402
+from app.services.chemistry_rules import answer_metal_dilute_acid_reaction  # noqa: E402
+from app.services.query_router import route_direct_answer  # noqa: E402
+from app.services.safety_rules import answer_safety_rule, is_acid_to_water_safety_question  # noqa: E402
 
 
 # ---------------------------------------------------------------------------

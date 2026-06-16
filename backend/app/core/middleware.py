@@ -2,10 +2,14 @@ import time
 from fastapi import Request, Response
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
+from app.core.config import settings
 from app.core.redis import get_redis_client
 
 class RateLimitMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next) -> Response:
+        if not settings.rate_limit_enabled:
+            return await call_next(request)
+
         # Skip rate limiting for static/health endpoints if needed
         if request.url.path == "/health":
             return await call_next(request)

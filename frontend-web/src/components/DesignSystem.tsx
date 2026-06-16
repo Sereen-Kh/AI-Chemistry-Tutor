@@ -1,9 +1,12 @@
+import { useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import type { AiAskResponse, AnswerFormat, FlashcardItem, LearningMode, LessonItem, SourceCitation } from '../types';
 import { ChemistryFlask } from './ChemistryFlask';
 import { AvatarGuide } from './AvatarGuide';
+import { notificationsApi } from '../api';
+
 
 interface ButtonProps {
   children: ReactNode;
@@ -12,20 +15,22 @@ interface ButtonProps {
   disabled?: boolean;
   onClick?: () => void;
   className?: string;
+  style?: React.CSSProperties;
+  ariaLabel?: string;
 }
 
-export const Button = ({ children, type = 'button', variant = 'primary', disabled, onClick, className = '' }: ButtonProps) => (
-  <button type={type} disabled={disabled} onClick={onClick} className={`ed-btn ed-btn-${variant} ${className}`}>
+export const Button = ({ children, type = 'button', variant = 'primary', disabled, onClick, className = '', style, ariaLabel }: ButtonProps) => (
+  <button type={type} disabled={disabled} onClick={onClick} className={`ed-btn ed-btn-${variant} ${className}`} style={style} aria-label={ariaLabel}>
     {children}
   </button>
 );
 
-export const Card = ({ children, className = '' }: { children: ReactNode; className?: string }) => (
-  <section className={`ed-card ${className}`}>{children}</section>
+export const Card = ({ children, className = '', style }: { children: ReactNode; className?: string; style?: React.CSSProperties }) => (
+  <section className={`ed-card ${className}`} style={style}>{children}</section>
 );
 
 export const ProgressBar = ({ value, tone = 'blue' }: { value: number; tone?: string }) => (
-  <div className="progress-track" aria-label={`Progress ${value}%`}>
+  <div className="progress-track" role="progressbar" aria-label={`نسبة التقدم ${value}%`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.max(0, Math.min(value, 100))}>
     <span className={`progress-fill tone-${tone}`} style={{ width: `${Math.max(0, Math.min(value, 100))}%` }} />
   </div>
 );
@@ -78,15 +83,39 @@ const sourceQuality = (score?: number): { label: string; tone: string } | null =
   return null;
 };
 
+const formulaPattern = /(C1\s*[×x*]\s*V1\s*=\s*C2\s*[×x*]\s*V2|C_?m\s*=\s*m\s*\/\s*V|Cg\s*=\s*m\s*\/\s*V|C\s*=\s*n\s*\/\s*V|n\s*=\s*m\s*\/\s*M|H₂O|H2O|H₂SO₄|H2SO4|HCl|NaOH|CaCO₃|CaCO3|CO₂|CO2|NH₃|NH3|CH₄|CH4|OH-|H\+|\d+(?:[.,]\d+)?\s*(?:mol\/L|g\/L|g\/mol|mL|L|mol|g)\b)/g;
+const isFormulaLike = (part: string): boolean => new RegExp(formulaPattern.source).test(part);
+
+export const FormattedText = ({ text }: { text: string }) => {
+  const parts = text.split(formulaPattern).filter(Boolean);
+  return (
+    <>
+      {parts.map((part, index) => (
+        isFormulaLike(part) ? (
+          <span key={`${part}-${index}`} className="formula">{part}</span>
+        ) : (
+          <span key={`${part}-${index}`}>{part}</span>
+        )
+      ))}
+    </>
+  );
+};
+
 export const SourceCard = ({ source }: { source: SourceCitation }) => {
   const quality = sourceQuality(source.score);
+  const sourceTypeLabel = source.title.includes('الحلول')
+    ? 'من كتاب الحلول'
+    : source.title.includes('عام')
+      ? 'شرح عام'
+      : 'من كتاب الكيمياء';
   return (
     <article className="source-card">
       <div>
-        <strong>{source.title}</strong>
+        <strong>{sourceTypeLabel}</strong>
         <span>صفحة {source.page ?? '-'}</span>
       </div>
-      {source.quote && <p>{source.quote}</p>}
+      <small>{source.title}</small>
+      {source.quote && <p><FormattedText text={source.quote} /></p>}
       {quality && <StatusPill tone={quality.tone}>{quality.label}</StatusPill>}
     </article>
   );
@@ -164,13 +193,27 @@ export const ChatMessage = ({
   role,
   content,
   response,
+  actions,
 }: {
   role: 'user' | 'assistant';
   content: string;
   response?: AiAskResponse;
+  actions?: ReactNode;
 }) => (
   <article className={`chat-bubble ${role}`}>
-    <p>{content}</p>
+    {role === 'assistant' && response && (
+      <div className="answer-evidence-bar">
+        <StatusPill tone={response.sources.length ? 'teal' : 'gold'}>
+          {response.sources.length ? 'إجابة مدعومة بمصادر' : 'لم أجد دليلاً كافياً في المصادر'}
+        </StatusPill>
+        <span>
+          {typeof response.confidence === 'number'
+            ? `ثقة المصدر ${Math.round(response.confidence * 100)}%`
+            : 'ثقة المصدر غير متاحة'}
+        </span>
+      </div>
+    )}
+    <p><FormattedText text={content} /></p>
     {response?.format === 'audio' && !response.audio_url && <StatusPill tone="gold">توليد الصوت قيد المعالجة.</StatusPill>}
     {response?.audio_url && <audio controls src={response.audio_url} />}
     {response?.source_page_image_url && (
@@ -187,15 +230,22 @@ export const ChatMessage = ({
     )}
     {response?.format === 'video' && (
       <div className="video-card">
-        <strong>{response.video_title || 'اقتراح Reel قصير سيظهر هنا عند توفره.'}</strong>
-        <span>{response.video_source || 'EduMind'}</span>
+        <strong>{response.video_title || 'اقتراح فيديو قصير سيظهر هنا عند توفره.'}</strong>
+        <span>{response.video_source || 'وسائط داعمة'}</span>
       </div>
     )}
     {response?.sources.length ? (
-      <div className="source-grid">
+      <div className="source-evidence-panel">
+        <div className="source-evidence-head">
+          <strong>لوحة الأدلة</strong>
+          <span>مصادر الإجابة من الكتاب أو كتاب الحلول</span>
+        </div>
+        <div className="source-grid">
         {response.sources.map((source) => <SourceCard key={`${source.chunk_id}-${source.page}`} source={source} />)}
+        </div>
       </div>
     ) : null}
+    {actions && <div className="answer-action-row">{actions}</div>}
   </article>
 );
 
@@ -203,7 +253,7 @@ const formatOptions: Array<{ value: AnswerFormat; label: string; icon: string }>
   { value: 'text', label: 'نص', icon: 'T' },
   { value: 'audio', label: 'صوت', icon: 'A' },
   { value: 'image', label: 'صورة', icon: 'I' },
-  { value: 'video', label: 'Reel', icon: 'R' },
+  { value: 'video', label: 'فيديو قصير', icon: 'V' },
 ];
 
 const learningModeOptions: Array<{ value: LearningMode; label: string; icon: string }> = [
@@ -211,7 +261,7 @@ const learningModeOptions: Array<{ value: LearningMode; label: string; icon: str
   { value: 'image', label: 'صورة', icon: 'I' },
   { value: 'audio', label: 'صوت', icon: 'A' },
   { value: 'video', label: 'فيديو', icon: 'V' },
-  { value: 'reel', label: 'Reel', icon: 'R' },
+  { value: 'reel', label: 'فيديو قصير', icon: 'R' },
   { value: 'interactive', label: 'تفاعلي', icon: 'X' },
   { value: 'quiz', label: 'اختبار', icon: 'Q' },
   { value: 'flashcards', label: 'بطاقات', icon: 'F' },
@@ -232,6 +282,7 @@ export const AnswerFormatSelector = ({
         className={value === option.value ? 'active' : ''}
         onClick={() => onChange(option.value)}
         aria-pressed={value === option.value}
+        aria-label={`صيغة الإجابة: ${option.label}${value === option.value ? '، محددة' : ''}`}
       >
         <span>{option.icon}</span>
         {option.label}
@@ -265,6 +316,7 @@ export const LearningModeSelector = ({
           className={value.includes(option.value) ? 'active' : ''}
           onClick={() => toggle(option.value)}
           aria-pressed={value.includes(option.value)}
+          aria-label={`نمط التعلم: ${option.label}${value.includes(option.value) ? '، محدد' : ''}`}
         >
           <span>{option.icon}</span>
           {option.label}
@@ -350,6 +402,20 @@ const LabIcon = () => (
   </svg>
 );
 
+const HomeworkIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4 4h16v16H4z" />
+    <path d="M8 8h8M8 12h6M8 16h4" />
+  </svg>
+);
+
+const AdminIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 3 4 6v6c0 5 3.4 8.5 8 9 4.6-.5 8-4 8-9V6l-8-3Z" />
+    <path d="M9 12h6M12 9v6" />
+  </svg>
+);
+
 const ProfileIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
@@ -357,32 +423,51 @@ const ProfileIcon = () => (
   </svg>
 );
 
+const BellIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+    <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+  </svg>
+);
+
 const navItems = [
-  { to: '/dashboard', label: 'الرئيسية', icon: <HomeIcon /> },
-  { to: '/lessons', label: 'الدروس', icon: <LessonsIcon /> },
-  { to: '/ask-ai', label: 'اسأل الذكاء', icon: <AskAiIcon /> },
-  { to: '/rag-search', label: 'بحث الكتاب', icon: <SearchBookIcon /> },
-  { to: '/quizzes', label: 'اختبار', icon: <QuizIcon /> },
-  { to: '/flashcards', label: 'بطاقات', icon: <CardsIcon /> },
-  { to: '/study-plan', label: 'الخطة', icon: <LessonsIcon /> },
-  { to: '/lab/equation-balancer', label: 'المختبر', icon: <LabIcon /> },
-  { to: '/profile', label: 'ملفي', icon: <ProfileIcon /> },
+  { to: '/dashboard', label: 'الرئيسية', icon: <HomeIcon />, tone: 'teal' },
+  { to: '/lessons', label: 'الدروس', icon: <LessonsIcon />, tone: 'green' },
+  { to: '/ask-ai', label: 'اسأل الذكاء', icon: <AskAiIcon />, tone: 'purple' },
+  { to: '/rag-search', label: 'بحث الكتاب', icon: <SearchBookIcon />, tone: 'cyan' },
+  { to: '/quizzes', label: 'اختبار', icon: <QuizIcon />, tone: 'gold' },
+  { to: '/flashcards', label: 'بطاقات', icon: <CardsIcon />, tone: 'coral' },
+  { to: '/study-plan', label: 'الخطة', icon: <LessonsIcon />, tone: 'blue' },
+  { to: '/notifications', label: 'الإشعارات', icon: <BellIcon />, tone: 'gold' },
+  { to: '/lab', label: 'المختبر', icon: <LabIcon />, tone: 'teal' },
+  { to: '/homework', label: 'الواجبات', icon: <HomeworkIcon />, tone: 'blue' },
+  { to: '/admin/rag', label: 'إدارة RAG', icon: <AdminIcon />, tone: 'slate' },
+  { to: '/profile', label: 'ملفي', icon: <ProfileIcon />, tone: 'slate' },
 ];
 
 const bottomNavItems = navItems.filter((item) =>
-  ['/dashboard', '/lessons', '/ask-ai', '/quizzes', '/profile'].includes(item.to),
+  ['/dashboard', '/lessons', '/ask-ai', '/notifications', '/profile'].includes(item.to),
 );
 
 const routeTitles: Record<string, { eyebrow: string; title: string }> = {
   '/dashboard': { eyebrow: 'مختبر التعلم', title: 'الرئيسية' },
   '/lessons': { eyebrow: 'منهج الكيمياء', title: 'الدروس' },
   '/study-plan': { eyebrow: 'تنظيم المذاكرة', title: 'خطة الدراسة' },
-  '/ask-ai': { eyebrow: 'RAG Tutor', title: 'اسأل الذكاء الاصطناعي' },
+  '/ask-ai': { eyebrow: 'معلّم RAG', title: 'اسأل الذكاء الاصطناعي' },
   '/rag-search': { eyebrow: 'مصادر الكتاب', title: 'البحث في الكتاب' },
   '/quizzes': { eyebrow: 'تدريب امتحاني', title: 'الاختبارات' },
   '/flashcards': { eyebrow: 'مراجعة ذكية', title: 'البطاقات التعليمية' },
+  '/lab': { eyebrow: 'مختبر كيمياء', title: 'المختبر' },
+  '/guided-lab': { eyebrow: 'مختبر تفاعلي', title: 'حل المسائل الموجه' },
   '/lab/equation-balancer': { eyebrow: 'مختبر كيمياء', title: 'موازن المعادلات' },
+  '/homework': { eyebrow: 'حل الواجبات', title: 'مساعد الواجبات' },
+  '/admin/rag': { eyebrow: 'إدارة RAG', title: 'لوحة RAG' },
+  '/admin/rag/reembed': { eyebrow: 'إدارة RAG', title: 'إعادة التضمين' },
+  '/admin/rag/evaluation': { eyebrow: 'إدارة RAG', title: 'تقييم RAG' },
+  '/admin/rag/query-logs': { eyebrow: 'إدارة RAG', title: 'سجلات الاستعلام' },
+  '/admin/sources': { eyebrow: 'إدارة المصادر', title: 'مصادر RAG' },
   '/profile': { eyebrow: 'التفضيلات', title: 'الملف الشخصي' },
+  '/notifications': { eyebrow: 'تنبيهات النظام', title: 'الإشعارات' },
 };
 
 const RouteTransitionOutlet = () => {
@@ -407,7 +492,30 @@ const RouteTransitionOutlet = () => {
 export const AppShell = ({ userName, onLogout }: { userName: string; onLogout: () => void }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const routeTitle = routeTitles[location.pathname] ?? routeTitles['/dashboard'];
+  const dynamicRouteTitle = location.pathname.startsWith('/guided-lab/session')
+    ? { eyebrow: 'مختبر تفاعلي', title: 'جلسة حل موجهة' }
+    : undefined;
+  const routeTitle = routeTitles[location.pathname] ?? dynamicRouteTitle ?? routeTitles['/dashboard'];
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    const fetchUnread = async () => {
+      try {
+        const list = await notificationsApi.getNotifications();
+        const unread = list.filter(n => n.status === 'unread').length;
+        setUnreadCount(unread);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    void fetchUnread();
+
+    const handleUpdate = () => void fetchUnread();
+    window.addEventListener('notifications-updated', handleUpdate);
+    return () => {
+      window.removeEventListener('notifications-updated', handleUpdate);
+    };
+  }, []);
 
   return (
     <div className="app-shell" dir="rtl">
@@ -426,9 +534,25 @@ export const AppShell = ({ userName, onLogout }: { userName: string; onLogout: (
         </button>
         <nav aria-label="التنقل الرئيسي">
           {navItems.map((item) => (
-            <NavLink key={item.to} to={item.to} className={({ isActive }) => (isActive ? 'active' : '')}>
+            <NavLink key={item.to} to={item.to} data-tone={item.tone} className={({ isActive }) => (isActive ? 'active' : '')}>
               <span>{item.icon}</span>
               {item.label}
+              {item.to === '/notifications' && unreadCount > 0 && (
+                <span style={{
+                  background: 'var(--coral)',
+                  color: '#fff',
+                  fontSize: '10px',
+                  fontWeight: 'bold',
+                  width: '18px',
+                  height: '18px',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginRight: 'auto',
+                  border: '1px solid var(--bg2)'
+                }}>{unreadCount}</span>
+              )}
             </NavLink>
           ))}
         </nav>
@@ -450,9 +574,13 @@ export const AppShell = ({ userName, onLogout }: { userName: string; onLogout: (
             <p className="eyebrow">{routeTitle.eyebrow}</p>
             <strong>{routeTitle.title} · {userName}</strong>
           </div>
-          <div className="shell-topbar-actions">
+          <div className="shell-topbar-actions" style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <Link to="/notifications" className="topbar-bell-btn" aria-label="الإشعارات" title="الإشعارات">
+              <span style={{ fontSize: '16px' }}>🔔</span>
+              {unreadCount > 0 && <span className="topbar-bell-badge">{unreadCount}</span>}
+            </Link>
             <StatusPill tone="teal">RAG</StatusPill>
-            <StatusPill tone="purple">Reel</StatusPill>
+            <StatusPill tone="purple">فيديو قصير</StatusPill>
             <StatusPill tone="coral">تجارب</StatusPill>
           </div>
         </header>
@@ -466,8 +594,13 @@ export const AppShell = ({ userName, onLogout }: { userName: string; onLogout: (
         transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
       >
         {bottomNavItems.map((item) => (
-          <NavLink key={item.to} to={item.to} className={({ isActive }) => (isActive ? 'active' : '')}>
-            <span>{item.icon}</span>
+          <NavLink key={item.to} to={item.to} data-tone={item.tone} className={({ isActive }) => (isActive ? 'active' : '')}>
+            <span style={{ position: 'relative', display: 'inline-flex' }}>
+              {item.icon}
+              {item.to === '/notifications' && unreadCount > 0 && (
+                <span className="bottom-nav-badge">{unreadCount}</span>
+              )}
+            </span>
             {item.label}
           </NavLink>
         ))}

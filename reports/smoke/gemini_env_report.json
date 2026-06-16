@@ -1,0 +1,29 @@
+{
+  "generated_at": "2026-06-16T11:50:32.317371+00:00",
+  "gemini_api_key_present": true,
+  "gemini_api_key_redacted": "***present***",
+  "gemini_embedding_model": "gemini-embedding-001",
+  "generation_model": "gemini-2.5-flash",
+  "document_model": "gemini-2.5-flash",
+  "embedding_provider": "gemini",
+  "embedding_dimension": 768,
+  "allow_hash_embeddings": false,
+  "allow_local_embeddings": false,
+  "provider_status": {
+    "provider": "gemini",
+    "gemini_model": "gemini-embedding-001",
+    "local_model": "intfloat/multilingual-e5-base",
+    "embedding_dimension": 768,
+    "allow_hash_embeddings": false,
+    "allow_local_embeddings": false,
+    "gemini_disabled": false,
+    "gemini_disabled_reason": null
+  },
+  "live_api_call_requested": true,
+  "live_api_call_result": "passed",
+  "embedding_dimension_returned": 768,
+  "errors": [],
+  "result": "passed",
+  "mode": "live",
+  "ci_safe": false
+}

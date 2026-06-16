@@ -1,6 +1,9 @@
 """Pydantic schemas for retrieval responses."""
 
-from pydantic import BaseModel, Field
+from datetime import datetime
+from typing import Any
+
+from pydantic import BaseModel, ConfigDict, Field
 
 
 DEFAULT_RAG_MIN_SIMILARITY = 0.45
@@ -8,6 +11,7 @@ DEFAULT_RAG_MIN_SIMILARITY = 0.45
 
 class RagRetrieveRequest(BaseModel):
     query: str
+    unit_id: int | None = None
     chapter_id: int | None = None
     lesson_id: int | None = None
     topic_id: int | None = None
@@ -24,6 +28,7 @@ class RagRetrieveDebugRequest(RagRetrieveRequest):
 
 class RagSemanticRetrieveRequest(BaseModel):
     query: str
+    unit_id: int | None = None
     chapter_id: int | None = None
     lesson_id: int | None = None
     topic_id: int | None = None
@@ -50,6 +55,7 @@ class RetrievedChunkResponse(BaseModel):
     source_type: str
     content_type: str
     page_number: int | None = None
+    unit_id: int | None = None
     chapter_id: int | None = None
     lesson_id: int | None = None
     topic_id: int | None = None
@@ -103,3 +109,95 @@ class RagAnswerResponse(BaseModel):
     sources: list[RagSearchResultResponse]
     confidence: float
     diagnostics: dict = Field(default_factory=dict)
+
+
+class RagReembedRequest(BaseModel):
+    source_id: int | None = None
+    source_type: str | None = None
+    batch_size: int = Field(default=50, ge=1, le=500)
+    dry_run: bool = False
+    force: bool = True
+    resume_failed: bool = False
+
+
+class RagReembedResponse(BaseModel):
+    job_id: str
+    status: str
+    message: str
+
+
+class RagReembedStatusResponse(BaseModel):
+    job_id: str
+    status: str
+    progress: int = 0
+    total_chunks: int = 0
+    total_candidates: int = 0
+    processed: int = 0
+    updated: int = 0
+    skipped: int = 0
+    failed: int = 0
+    embedding_model: str | None = None
+    dry_run: bool = False
+    source_id: int | None = None
+    source_type: str | None = None
+    result: dict[str, Any] | None = None
+    error: str | None = None
+
+
+class RagEvaluationRequest(BaseModel):
+    fail_on_threshold: bool = False
+    dataset_path: str = "data/eval/rag_gold_questions.json"
+    report_dir: str = "data/eval/reports"
+    top_k: int = Field(default=5, ge=1, le=20)
+
+
+class RagEvaluationResponse(BaseModel):
+    status: str
+    passed: bool
+    report_json_path: str
+    report_markdown_path: str
+    metrics: dict[str, Any]
+    threshold_failures: list[str] = Field(default_factory=list)
+
+
+class RetrievedChunkLogResponse(BaseModel):
+    id: int
+    rag_query_log_id: int
+    chunk_id: int | None = None
+    source_id: int | None = None
+    source_type: str | None = None
+    page_number: int | None = None
+    content_type: str | None = None
+    rank: int
+    similarity_score: float | None = None
+    hybrid_score: float | None = None
+    rerank_score: float | None = None
+    used_in_answer: bool = False
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class RagQueryLogResponse(BaseModel):
+    id: int
+    user_id: int | None = None
+    query_text: str
+    normalized_query: str | None = None
+    route: str
+    source_mode: str | None = None
+    top_k: int
+    min_similarity: float
+    embedding_model: str | None = None
+    retrieval_latency_ms: int | None = None
+    generation_latency_ms: int | None = None
+    total_latency_ms: int | None = None
+    result_count: int
+    max_similarity: float | None = None
+    avg_similarity: float | None = None
+    low_confidence: bool
+    answer_confidence: float | None = None
+    metadata_json: dict | list | None = None
+    created_at: datetime
+    retrieved_chunks: list[RetrievedChunkLogResponse] = Field(default_factory=list)
+
+    model_config = ConfigDict(from_attributes=True)

@@ -1,0 +1,2061 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>EduMind Frontend-Web UI/UX Audit — Visual Reader</title>
+<style>
+:root{
+ --bg:#07111f;--panel:#0e1b31;--panel2:#12223d;--line:#213553;--text:#eef4ff;--muted:#8ea2c4;--soft:#5f7598;
+ --blue:#4e87f5;--teal:#00d4a8;--gold:#f5a623;--coral:#ff6b6b;--purple:#8b7fe8;--green:#21c184;
+ --radius:18px;--radius2:12px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(140deg,#07111f 0%,#091a32 50%,#0a1220 100%);color:var(--text);font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Arial, sans-serif;line-height:1.6}
+a{color:#9fc0ff;text-decoration:none}
+code{background:#081426;border:1px solid #243a5e;border-radius:7px;padding:2px 6px;color:#bcd2ff;font-size:.92em}
+pre{background:#071325;border:1px solid #223957;border-radius:14px;padding:16px;overflow:auto;color:#d7e7ff}
+.layout{display:grid;grid-template-columns:290px minmax(0,1fr);gap:24px;max-width:1500px;margin:0 auto;padding:24px}
+.sidebar{position:sticky;top:20px;height:calc(100vh - 40px);overflow:auto;background:rgba(14,27,49,.88);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:0 20px 80px rgba(0,0,0,.25)}
+.logo{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.logo-mark{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,var(--blue),var(--teal));display:grid;place-items:center;font-size:22px}
+.logo h1{font-size:15px;line-height:1.2;margin:0}
+.logo small{color:var(--muted)}
+.search{width:100%;padding:10px 12px;background:#081426;border:1px solid #243a5e;border-radius:12px;color:var(--text);outline:none;margin:10px 0 14px}
+.nav a{display:block;padding:7px 8px;border-radius:9px;color:#b8c9e8;font-size:13px}
+.nav a:hover{background:#142743;color:#fff}
+.nav-l1{font-weight:700;color:#fff!important}
+.nav-l2{padding-left:14px!important}
+.main{min-width:0}
+.hero{background:radial-gradient(circle at top right,rgba(78,135,245,.28),transparent 34%),radial-gradient(circle at bottom left,rgba(0,212,168,.16),transparent 30%),rgba(14,27,49,.86);border:1px solid var(--line);border-radius:26px;padding:28px;box-shadow:0 24px 90px rgba(0,0,0,.28)}
+.hero h1{font-size:34px;line-height:1.08;margin:0 0 10px}
+.hero p{color:#b6c7e4;max-width:900px;margin:0}
+.meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.meta{border:1px solid #284267;background:#0b1830;border-radius:999px;padding:7px 12px;color:#c4d4ee;font-size:13px}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0}
+.stat{background:rgba(18,34,61,.9);border:1px solid var(--line);border-radius:18px;padding:16px}
+.stat span{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+.stat strong{display:block;font-size:28px;margin-top:3px}
+.section{background:rgba(14,27,49,.82);border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin:18px 0}
+.section h2{margin:0 0 12px;font-size:22px}
+.maturity-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.maturity-card{background:#0b1830;border:1px solid #24405f;border-radius:16px;padding:15px}
+.maturity-card span{display:block;color:var(--muted);font-size:12px}
+.maturity-card strong{display:block;font-size:20px;margin:3px 0 4px}
+.maturity-card p{margin:0;color:#b7c9e8;font-size:13px}
+.pipeline{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;align-items:stretch;margin:18px 0}
+.step{background:#0b1830;border:1px solid #254264;border-radius:16px;padding:14px;text-align:center;position:relative}
+.step:not(:last-child)::after{content:'→';position:absolute;right:-13px;top:40%;color:#80a7e6;font-weight:bold}
+.step strong{display:block;margin-bottom:5px}
+.step small{color:var(--muted)}
+.score-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.score-card{background:#0b1830;border:1px solid #24405f;border-radius:16px;padding:14px}
+.score-top{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.score-top strong{color:#fff}
+.bar{height:8px;background:#071325;border-radius:999px;overflow:hidden;margin:10px 0}
+.bar div{height:100%;background:linear-gradient(90deg,var(--blue),var(--teal));border-radius:999px}
+.score-card p{margin:0 0 6px;color:#c1d0ea}
+.score-card small{color:var(--muted)}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px;background:#081426}
+table{width:100%;border-collapse:collapse;min-width:760px}
+th,td{padding:11px 12px;border-bottom:1px solid #203756;text-align:left;vertical-align:top}
+th{background:#10223d;color:#dce9ff;position:sticky;top:0;z-index:1}
+td{color:#c5d4ec}
+.pill{display:inline-block;border-radius:999px;padding:3px 9px;font-weight:700;font-size:12px}
+.pill.p0{background:rgba(255,107,107,.14);color:#ff9a9a;border:1px solid rgba(255,107,107,.35)}
+.pill.p1{background:rgba(245,166,35,.14);color:#ffd18b;border:1px solid rgba(245,166,35,.35)}
+.pill.p2{background:rgba(78,135,245,.14);color:#a9c6ff;border:1px solid rgba(78,135,245,.35)}
+.tabs{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.tab{background:#081426;border:1px solid #284267;color:#c5d5ef;border-radius:999px;padding:8px 12px;cursor:pointer}
+.tab.active{background:var(--blue);color:white;border-color:var(--blue)}
+.markdown{background:rgba(14,27,49,.82);border:1px solid var(--line);border-radius:var(--radius);padding:24px;margin-top:18px}
+.markdown h1,.markdown h2,.markdown h3{scroll-margin-top:24px}
+.markdown h1{font-size:30px}
+.markdown h2{border-top:1px solid #243a5c;padding-top:22px;margin-top:28px;color:#fff}
+.markdown h3{color:#d7e6ff}
+.markdown p,.markdown li{color:#c4d3eb}
+.markdown table{margin:14px 0}
+.reading-guide{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}
+.guide{background:#0b1830;border:1px solid #254264;border-radius:16px;padding:14px}
+.guide b{display:block;margin-bottom:6px}
+.guide span{color:var(--muted);font-size:13px}
+.filterInput{width:100%;padding:10px 12px;background:#081426;border:1px solid #243a5e;border-radius:12px;color:var(--text);outline:none;margin:0 0 12px}
+@media(max-width:1050px){.layout{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.stat-grid,.maturity-grid,.reading-guide{grid-template-columns:repeat(2,1fr)}.pipeline{grid-template-columns:repeat(2,1fr)}.step:not(:last-child)::after{display:none}}
+@media(max-width:700px){.layout{padding:12px}.hero h1{font-size:26px}.stat-grid,.maturity-grid,.score-grid,.reading-guide{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+  <div class="logo"><div class="logo-mark">🧠</div><div><h1>EduMind UI/UX Audit</h1><small>Visual reader · 2026-06-13</small></div></div>
+  <input class="search" id="navSearch" placeholder="Filter sections…" oninput="filterNav()" />
+  <div class="nav" id="nav"><a class="nav-l1" href="#edumind-frontend-web-ui-ux-audit-for-ai-tutor-system">EduMind Frontend-Web UI/UX Audit for AI Tutor System</a><a class="nav-l2" href="#1-executive-summary">1. Executive Summary</a><a class="nav-l2" href="#2-current-frontend-architecture">2. Current Frontend Architecture</a><a class="nav-l2" href="#3-existing-routes-and-pages">3. Existing Routes and Pages</a><a class="nav-l2" href="#4-existing-components-and-design-system">4. Existing Components and Design System</a><a class="nav-l2" href="#5-api-contract-audit">5. API Contract Audit</a><a class="nav-l2" href="#6-ai-tutor-ux-evaluation-scorecard">6. AI Tutor UX Evaluation Scorecard</a><a class="nav-l2" href="#7-page-by-page-ux-review">7. Page-by-Page UX Review</a><a class="nav-l2" href="#8-guided-problem-solver-design-recommendation">8. Guided Problem Solver Design Recommendation</a><a class="nav-l2" href="#9-ask-ai-rag-ux-recommendation">9. Ask AI / RAG UX Recommendation</a><a class="nav-l2" href="#10-the-lab-ux-recommendation">10. The Lab UX Recommendation</a><a class="nav-l2" href="#11-arabic-rtl-accessibility-findings">11. Arabic / RTL / Accessibility Findings</a><a class="nav-l2" href="#12-missing-frontend-features">12. Missing Frontend Features</a><a class="nav-l2" href="#13-frontend-web-api-needs">13. Frontend-Web API Needs</a><a class="nav-l2" href="#14-recommended-design-system-improvements">14. Recommended Design System Improvements</a><a class="nav-l2" href="#15-prioritized-implementation-plan">15. Prioritized Implementation Plan</a><a class="nav-l2" href="#16-exact-files-to-modify-or-create">16. Exact Files to Modify or Create</a><a class="nav-l2" href="#17-final-recommendation">17. Final Recommendation</a></div>
+</aside>
+<main class="main">
+  <section class="hero">
+    <h1>Frontend-Web UI/UX Audit for an AI Tutor System</h1>
+    <p>A readable dashboard version of the markdown report. Start with the executive summary, then review the scorecard, API contract audit, Guided Solver design, and implementation plan.</p>
+    <div class="meta-row">
+      <span class="meta">Active workspace: edumind-team-06/src</span>
+      <span class="meta">Frontend: frontend-web</span>
+      <span class="meta">Framework: React + Vite + TypeScript</span>
+      <span class="meta">Theme: Dark science / Arabic RTL</span>
+    </div>
+  </section>
+
+  <div class="stat-grid">
+    <div class="stat"><span>Existing routes</span><strong>14</strong></div>
+    <div class="stat"><span>UX average</span><strong>6.1/10</strong></div>
+    <div class="stat"><span>P0 missing features</span><strong>5</strong></div>
+    <div class="stat"><span>Admin UI gaps</span><strong>6</strong></div>
+  </div>
+
+  <section class="section">
+    <h2>How to read this report</h2>
+    <div class="reading-guide">
+      <div class="guide"><b>1. Current state</b><span>Read the maturity cards and routes to understand what exists.</span></div>
+      <div class="guide"><b>2. UX quality</b><span>Use the scorecard to see weak spots quickly.</span></div>
+      <div class="guide"><b>3. API gaps</b><span>Review API contract tables before implementation.</span></div>
+      <div class="guide"><b>4. Next work</b><span>Follow P0/P1/P2 plan and exact file list.</span></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Executive summary cards</h2>
+    <div class="maturity-grid"><div class="maturity-card"><span>Framework maturity</span><strong>Good</strong><p>React + TypeScript + Vite + Router + Axios + Framer Motion</p></div><div class="maturity-card"><span>AI tutor UX</span><strong>Partial</strong><p>Ask AI works but still feels like one-shot chat</p></div><div class="maturity-card"><span>Guided Solver</span><strong>Promising</strong><p>Feature exists with mock fallback and clean split</p></div><div class="maturity-card"><span>RAG transparency</span><strong>Partial</strong><p>Source cards exist; trust signals need improvement</p></div><div class="maturity-card"><span>Arabic/RTL</span><strong>Good base</strong><p>Global RTL; some labels remain English</p></div><div class="maturity-card"><span>Admin/RAG UI</span><strong>Missing</strong><p>Backend APIs exist but no admin dashboard</p></div></div>
+  </section>
+
+  <section class="section">
+    <h2>AI tutor learning flow target</h2>
+    <div class="pipeline">
+      <div class="step"><strong>Learn</strong><small>Lessons + sources</small></div>
+      <div class="step"><strong>Ask</strong><small>AI with citations</small></div>
+      <div class="step"><strong>Solve</strong><small>Guided steps</small></div>
+      <div class="step"><strong>Correct</strong><small>Feedback + hints</small></div>
+      <div class="step"><strong>Practice</strong><small>Quiz + weak topics</small></div>
+      <div class="step"><strong>Review</strong><small>Flashcards + reminders</small></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>UX scorecard</h2>
+    <div class="score-grid">
+<div class="score-card" data-score="8.0">
+  <div class="score-top"><span>Visual identity</span><strong>8.0/10</strong></div>
+  <div class="bar"><div style="width:80.0%"></div></div>
+  <p>Strong dark science visual language in `index.css` and `DesignSystem.tsx`.</p>
+  <small>Consolidate old `App.css`; localize remaining English feature labels.</small>
+</div>
+<div class="score-card" data-score="7.0">
+  <div class="score-top"><span>Navigation clarity</span><strong>7.0/10</strong></div>
+  <div class="bar"><div style="width:70.0%"></div></div>
+  <p>Sidebar/topbar/bottom nav are coherent; key pages exist.</p>
+  <small>Add clearer hierarchy for Lab vs Guided Solver vs Homework.</small>
+</div>
+<div class="score-card" data-score="6.0">
+  <div class="score-top"><span>AI tutor usability</span><strong>6.0/10</strong></div>
+  <div class="bar"><div style="width:60.0%"></div></div>
+  <p>Ask AI has source cards, modes, styles, suggestions.</p>
+  <small>Add source-quality panel, explicit fallback states, and stronger follow-up actions.</small>
+</div>
+<div class="score-card" data-score="7.0">
+  <div class="score-top"><span>Guided learning flow</span><strong>7.0/10</strong></div>
+  <div class="bar"><div style="width:70.0%"></div></div>
+  <p>Guided Lab MVP exists with step, feedback, formula pad, final summary.</p>
+  <small>Localize labels, add session resume/history, align finish response.</small>
+</div>
+<div class="score-card" data-score="5.0">
+  <div class="score-top"><span>RAG/source transparency</span><strong>5.0/10</strong></div>
+  <div class="bar"><div style="width:50.0%"></div></div>
+  <p>Source cards exist, but answer scope and fallback are unclear.</p>
+  <small>Show source type, confidence, page image, and “not enough book evidence” states.</small>
+</div>
+<div class="score-card" data-score="7.0">
+  <div class="score-top"><span>Arabic/RTL readiness</span><strong>7.0/10</strong></div>
+  <div class="bar"><div style="width:70.0%"></div></div>
+  <p>Global RTL is set and much UI is Arabic.</p>
+  <small>Translate Guided Lab/Lab English labels and test formula display in RTL.</small>
+</div>
+<div class="score-card" data-score="6.0">
+  <div class="score-top"><span>Accessibility</span><strong>6.0/10</strong></div>
+  <div class="bar"><div style="width:60.0%"></div></div>
+  <p>Focus styles and reusable components exist.</p>
+  <small>Audit live regions, icon labels, clickable cards, and keyboard paths.</small>
+</div>
+<div class="score-card" data-score="7.0">
+  <div class="score-top"><span>Mobile responsiveness</span><strong>7.0/10</strong></div>
+  <div class="bar"><div style="width:70.0%"></div></div>
+  <p>Responsive shell and bottom nav exist.</p>
+  <small>Test long Arabic chat, source cards, solver page, and study plan lesson selector.</small>
+</div>
+<div class="score-card" data-score="6.0">
+  <div class="score-top"><span>Feedback/error states</span><strong>6.0/10</strong></div>
+  <div class="bar"><div style="width:60.0%"></div></div>
+  <p>Loading skeletons and errors exist in several pages.</p>
+  <small>Remove silent mock fallbacks; show clear offline/backend unavailable states.</small>
+</div>
+<div class="score-card" data-score="6.0">
+  <div class="score-top"><span>Motivation/gamification</span><strong>6.0/10</strong></div>
+  <div class="bar"><div style="width:60.0%"></div></div>
+  <p>XP, streak, dashboard stats, flashcards, quiz results exist.</p>
+  <small>Use real backend data and weak-topic recommendations.</small>
+</div>
+<div class="score-card" data-score="2.0">
+  <div class="score-top"><span>Admin/debug readiness</span><strong>2.0/10</strong></div>
+  <div class="bar"><div style="width:20.0%"></div></div>
+  <p>Backend has admin RAG APIs, frontend has no admin UI.</p>
+  <small>Add admin RAG dashboard, eval results, query logs, re-embed monitor.</small>
+</div></div>
+  </section>
+
+  <section class="section">
+    <h2>Existing routes and pages</h2>
+    <input class="filterInput" placeholder="Search routes/pages…" oninput="filterTable(this,'routesTable')" />
+    <div class="table-wrap"><table id="routesTable"><thead><tr><th>Route</th><th>Page / component</th><th>Student-facing</th><th>Status</th></tr></thead><tbody>
+<tr>
+ <td><code>`/dashboard`</code></td>
+ <td>Inline `DashboardPage` in `App.tsx`</td>
+ <td>Yes</td>
+ <td>Partial; mostly static data.</td>
+</tr>
+<tr>
+ <td><code>`/lessons`</code></td>
+ <td>`LessonsPage` in `pages/LearningPages.tsx`</td>
+ <td>Yes</td>
+ <td>Partial; uses mock lesson data.</td>
+</tr>
+<tr>
+ <td><code>`/lessons/:lessonId`</code></td>
+ <td>`LessonDetailPage`</td>
+ <td>Yes</td>
+ <td>Partial; good layout but mock-heavy.</td>
+</tr>
+<tr>
+ <td><code>`/ask-ai`</code></td>
+ <td>Inline `AskAiPage` in `App.tsx`</td>
+ <td>Yes</td>
+ <td>Implemented, needs trust/UX hardening.</td>
+</tr>
+<tr>
+ <td><code>`/rag-search`</code></td>
+ <td>`RagSearchPage`</td>
+ <td>Student/dev hybrid</td>
+ <td>Partial; uses Ask AI rather than direct semantic retrieve.</td>
+</tr>
+<tr>
+ <td><code>`/lab`</code></td>
+ <td>`LabPage`</td>
+ <td>Yes</td>
+ <td>Partial; includes Guided Solver card.</td>
+</tr>
+<tr>
+ <td><code>`/guided-lab`</code></td>
+ <td>`GuidedLabPage`</td>
+ <td>Yes</td>
+ <td>Implemented MVP.</td>
+</tr>
+<tr>
+ <td><code>`/guided-lab/session/:sessionId`</code></td>
+ <td>`SolverSessionPage`</td>
+ <td>Yes</td>
+ <td>Implemented MVP with mock fallback.</td>
+</tr>
+<tr>
+ <td><code>`/quizzes`</code></td>
+ <td>`QuizzesPage`</td>
+ <td>Yes</td>
+ <td>Partial; backend contract mismatch likely.</td>
+</tr>
+<tr>
+ <td><code>`/flashcards`</code></td>
+ <td>`FlashcardsPage`</td>
+ <td>Yes</td>
+ <td>Partial; generation/due APIs missing in backend.</td>
+</tr>
+<tr>
+ <td><code>`/study-plan`</code></td>
+ <td>`StudyPlanPage`</td>
+ <td>Yes</td>
+ <td>Rich UI, but several API calls are fallback/mock-backed.</td>
+</tr>
+<tr>
+ <td><code>`/notifications`</code></td>
+ <td>`NotificationsPage`</td>
+ <td>Yes</td>
+ <td>Implemented; backend route alignment mostly good.</td>
+</tr>
+<tr>
+ <td><code>`/profile`</code></td>
+ <td>Inline `ProfilePage` in `App.tsx`</td>
+ <td>Yes</td>
+ <td>Implemented; preferences and notification settings exist.</td>
+</tr>
+<tr>
+ <td><code>`/login`, `/register`</code></td>
+ <td>Inline auth pages in `App.tsx`</td>
+ <td>Public</td>
+ <td>Implemented.</td>
+</tr></tbody></table></div>
+  </section>
+
+  <section class="section">
+    <h2>Missing frontend features</h2>
+    <div class="tabs">
+      <button class="tab active" onclick="filterPriority('all',this)">All</button>
+      <button class="tab" onclick="filterPriority('P0',this)">P0</button>
+      <button class="tab" onclick="filterPriority('P1',this)">P1</button>
+      <button class="tab" onclick="filterPriority('P2',this)">P2</button>
+    </div>
+    <div class="table-wrap"><table id="missingTable"><thead><tr><th>Priority</th><th>Feature</th><th>Why needed</th><th>Backend dependency</th><th>Route</th></tr></thead><tbody>
+<tr data-priority="P0">
+  <td><span class="pill p0">P0</span></td>
+  <td><strong>Homework Solver page</strong></td>
+  <td>Core student workflow</td>
+  <td><code>`/api/v1/homework/*` plus upload</code></td>
+  <td><code>`/homework`</code></td>
+</tr>
+<tr data-priority="P0">
+  <td><span class="pill p0">P0</span></td>
+  <td><strong>Better Ask AI source panel</strong></td>
+  <td>Trust and learning quality</td>
+  <td><code>`/chat/ask`, source citations</code></td>
+  <td><code>`/ask-ai`</code></td>
+</tr>
+<tr data-priority="P0">
+  <td><span class="pill p0">P0</span></td>
+  <td><strong>API mismatch cleanup</strong></td>
+  <td>Avoid broken UI behavior</td>
+  <td><code>Existing backend routes</code></td>
+  <td><code>N/A</code></td>
+</tr>
+<tr data-priority="P0">
+  <td><span class="pill p0">P0</span></td>
+  <td><strong>Guided Solver localization/resume</strong></td>
+  <td>Flagship feature quality</td>
+  <td><code>Interactive solver list endpoint</code></td>
+  <td><code>`/guided-lab`</code></td>
+</tr>
+<tr data-priority="P0">
+  <td><span class="pill p0">P0</span></td>
+  <td><strong>Notification center polish</strong></td>
+  <td>Reminders are student-facing</td>
+  <td><code>Existing notification APIs</code></td>
+  <td><code>`/notifications`</code></td>
+</tr>
+<tr data-priority="P1">
+  <td><span class="pill p1">P1</span></td>
+  <td><strong>Quiz lifecycle pages</strong></td>
+  <td>Practice workflow</td>
+  <td><code>Quiz lifecycle APIs</code></td>
+  <td><code>`/quizzes/:id`</code></td>
+</tr>
+<tr data-priority="P1">
+  <td><span class="pill p1">P1</span></td>
+  <td><strong>Flashcards due page</strong></td>
+  <td>Retention workflow</td>
+  <td><code>`/flashcards/due`</code></td>
+  <td><code>`/flashcards/due`</code></td>
+</tr>
+<tr data-priority="P1">
+  <td><span class="pill p1">P1</span></td>
+  <td><strong>RAG Admin Dashboard</strong></td>
+  <td>Debug retrieval quality</td>
+  <td><code>Admin RAG APIs</code></td>
+  <td><code>`/admin/rag`</code></td>
+</tr>
+<tr data-priority="P1">
+  <td><span class="pill p1">P1</span></td>
+  <td><strong>Re-embedding Monitor</strong></td>
+  <td>Operational safety</td>
+  <td><code>`/admin/rag/reembed`</code></td>
+  <td><code>`/admin/rag/reembed`</code></td>
+</tr>
+<tr data-priority="P1">
+  <td><span class="pill p1">P1</span></td>
+  <td><strong>RAG Debug Retrieval Page</strong></td>
+  <td>Diagnose wrong answers</td>
+  <td><code>`/rag/retrieve-debug`</code></td>
+  <td><code>`/admin/rag/debug`</code></td>
+</tr>
+<tr data-priority="P1">
+  <td><span class="pill p1">P1</span></td>
+  <td><strong>Source Manager</strong></td>
+  <td>Manage textbook/solution sources</td>
+  <td><code>Ingestion/admin APIs</code></td>
+  <td><code>`/admin/sources`</code></td>
+</tr>
+<tr data-priority="P2">
+  <td><span class="pill p2">P2</span></td>
+  <td><strong>Multimedia media center</strong></td>
+  <td>Audio/video/reel support</td>
+  <td><code>Future media APIs</code></td>
+  <td><code>`/media`</code></td>
+</tr></tbody></table></div>
+  </section>
+
+  <section class="section">
+    <h2>Student frontend-web API needs</h2>
+    <input class="filterInput" placeholder="Search student APIs…" oninput="filterTable(this,'studentApiTable')" />
+    <div class="table-wrap"><table id="studentApiTable"><thead><tr><th>Page</th><th>API needed</th><th>Backend status</th><th>Frontend status</th><th>Action</th></tr></thead><tbody>
+<tr>
+ <td>Dashboard</td>
+ <td><code>`GET /api/v1/dashboard`</code></td>
+ <td>Missing</td>
+ <td>Static/hardcoded</td>
+ <td>Add backend aggregate or compose client-side temporarily.</td>
+</tr>
+<tr>
+ <td>Lessons</td>
+ <td><code>`GET /api/v1/chapters`, `GET /api/v1/lessons`</code></td>
+ <td>Exists</td>
+ <td>Partially mock-backed</td>
+ <td>Replace mock data where possible.</td>
+</tr>
+<tr>
+ <td>Lesson detail</td>
+ <td><code>`GET /api/v1/lessons/{id}`</code></td>
+ <td>Exists</td>
+ <td>Mock-heavy</td>
+ <td>Use real lesson detail.</td>
+</tr>
+<tr>
+ <td>Ask AI</td>
+ <td><code>`POST /api/v1/chat/ask`</code></td>
+ <td>Exists/partial</td>
+ <td>Implemented</td>
+ <td>Remove silent mock fallback.</td>
+</tr>
+<tr>
+ <td>Chat history</td>
+ <td><code>`/api/v1/chat/sessions/*`</code></td>
+ <td>Exists</td>
+ <td>Not fully used by Ask AI</td>
+ <td>Prefer persisted session flow.</td>
+</tr>
+<tr>
+ <td>RAG search</td>
+ <td><code>`POST /api/v1/rag/semantic-retrieve`</code></td>
+ <td>Exists</td>
+ <td>Not directly used</td>
+ <td>Add direct semantic search API adapter.</td>
+</tr>
+<tr>
+ <td>Guided Solver</td>
+ <td><code>`/api/v1/interactive-solver/*`</code></td>
+ <td>Exists MVP</td>
+ <td>Implemented with mock fallback</td>
+ <td>Align finish response and add resume later.</td>
+</tr>
+<tr>
+ <td>Notifications</td>
+ <td><code>`/api/v1/notifications/*`</code></td>
+ <td>Exists</td>
+ <td>Implemented</td>
+ <td>Polish accessibility and actions.</td>
+</tr>
+<tr>
+ <td>Homework</td>
+ <td><code>`/api/v1/homework/*`</code></td>
+ <td>Exists partial</td>
+ <td>Missing frontend</td>
+ <td>Add page and API adapter.</td>
+</tr>
+<tr>
+ <td>Quizzes</td>
+ <td><code>`/api/v1/quizzes/*`</code></td>
+ <td>Partial</td>
+ <td>Mismatched</td>
+ <td>Align endpoints.</td>
+</tr>
+<tr>
+ <td>Flashcards</td>
+ <td><code>`/api/v1/flashcards/*`</code></td>
+ <td>Partial</td>
+ <td>Mismatched</td>
+ <td>Add generate/due or update frontend.</td>
+</tr>
+<tr>
+ <td>Study Plan</td>
+ <td><code>`/api/v1/study-plans/*`</code></td>
+ <td>CRUD exists</td>
+ <td>Generation routes missing</td>
+ <td>Align generation/update/complete routes.</td>
+</tr></tbody></table></div>
+  </section>
+
+  <section class="section">
+    <h2>Admin frontend-web API needs</h2>
+    <input class="filterInput" placeholder="Search admin APIs…" oninput="filterTable(this,'adminApiTable')" />
+    <div class="table-wrap"><table id="adminApiTable"><thead><tr><th>Admin page</th><th>API needed</th><th>Backend status</th><th>Frontend status</th><th>Action</th></tr></thead><tbody>
+<tr>
+ <td>RAG Dashboard</td>
+ <td><code>`GET /api/v1/admin/rag/query-logs`</code></td>
+ <td>Exists</td>
+ <td>Missing</td>
+ <td>Create admin page.</td>
+</tr>
+<tr>
+ <td>Query Log Detail</td>
+ <td><code>`GET /api/v1/admin/rag/query-logs/{id}`</code></td>
+ <td>Exists</td>
+ <td>Missing</td>
+ <td>Create detail drawer/page.</td>
+</tr>
+<tr>
+ <td>RAG Evaluation</td>
+ <td><code>`POST /api/v1/admin/rag/evaluate`, `GET /api/v1/admin/rag/evaluation/latest`</code></td>
+ <td>Exists</td>
+ <td>Missing</td>
+ <td>Create eval report UI.</td>
+</tr>
+<tr>
+ <td>Re-embed Monitor</td>
+ <td><code>`POST /api/v1/admin/rag/reembed`, `GET /api/v1/admin/rag/reembed/status/{job_id}`</code></td>
+ <td>Exists</td>
+ <td>Missing</td>
+ <td>Create job launcher/status UI.</td>
+</tr>
+<tr>
+ <td>Retrieval Debug</td>
+ <td><code>`POST /api/v1/rag/retrieve-debug`</code></td>
+ <td>Exists</td>
+ <td>Missing</td>
+ <td>Create developer-only debug page.</td>
+</tr>
+<tr>
+ <td>Source Manager</td>
+ <td><code>Admin ingestion APIs</code></td>
+ <td>Exists/partial</td>
+ <td>Missing</td>
+ <td>Create source list/status UI.</td>
+</tr></tbody></table></div>
+  </section>
+
+  <section class="markdown" id="full-report">
+    <h1 id="edumind-frontend-web-ui-ux-audit-for-ai-tutor-system">EduMind Frontend-Web UI/UX Audit for AI Tutor System</h1>
+<p>Date: 2026-06-13</p>
+<p>Repository inspected:</p>
+<pre><code class="language-text">/Users/sereenkh/Github-Projects/edumind-team-06/src
+</code></pre>
+<p>Frontend inspected:</p>
+<pre><code class="language-text">frontend-web/
+</code></pre>
+<p>This report is for the active <code>edumind-team-06/src</code> workspace, not the older <code>AI-Chemistry-Tutor</code> workspace.</p>
+<h2 id="1-executive-summary">1. Executive Summary</h2>
+<p>The <code>frontend-web</code> app is already a real React/Vite/TypeScript application with routing, a dark EduMind visual system, Arabic RTL setup, AI chat, lessons, study plan, notifications, quizzes, flashcards, and a Guided Lab MVP.</p>
+<p>Current maturity:</p>
+<ul>
+<li>Framework maturity: good. The app uses React, TypeScript, Vite, React Router, Axios, and Framer Motion.</li>
+<li>AI tutor UX maturity: partial. The Ask AI page works, but it is still closer to a one-shot chat than a full learning workflow.</li>
+<li>Guided Problem Solver maturity: promising. The feature exists under <code>src/features/guided-lab</code>, with mock fallback and a clean component split.</li>
+<li>RAG transparency maturity: partial. Source cards exist, but source quality, answer scope, and AI fallback behavior need clearer student-facing design.</li>
+<li>Backend alignment: partial. Many API calls align with <code>/api/v1</code>, but quiz, flashcard, study-plan generation, homework upload, and admin RAG endpoints are missing or mismatched.</li>
+<li>Arabic/RTL readiness: good foundation. <code>dir=&quot;rtl&quot;</code> and Arabic labels exist, but many Guided Lab and Lab labels are still English.</li>
+<li>Accessibility: moderate. There are semantic components and focus styles, but some interactive cards, live regions, and icon buttons need cleanup.</li>
+</ul>
+<p>Main blockers for a strong AI Tutor experience:</p>
+<ol>
+<li>The home dashboard is mostly static and does not use a backend aggregate endpoint.</li>
+<li>Ask AI silently falls back to mock answers on API failure, which can harm trust.</li>
+<li>Chat citations are displayed but not integrated into a persistent source panel or learning actions.</li>
+<li>The Lab needs stronger tool taxonomy and Arabic copy.</li>
+<li>Guided Lab is the best differentiator, but it needs full localization, resume/list states, and tighter backend response alignment.</li>
+<li>Homework solver UI is missing.</li>
+<li>Admin/RAG monitoring UI is missing despite backend admin RAG APIs existing.</li>
+</ol>
+<h2 id="2-current-frontend-architecture">2. Current Frontend Architecture</h2>
+<h3 id="framework-and-build">Framework And Build</h3>
+<p>Verified in <code>frontend-web/package.json</code>:</p>
+<ul>
+<li>React <code>19.2.6</code></li>
+<li>TypeScript <code>6.0.2</code></li>
+<li>Vite <code>8.0.12</code></li>
+<li>React Router <code>7.16.0</code></li>
+<li>Axios</li>
+<li>Framer Motion</li>
+<li>Vitest</li>
+</ul>
+<h3 id="app-entry">App Entry</h3>
+<p>File: <code>frontend-web/src/main.tsx</code></p>
+<ul>
+<li>Uses <code>BrowserRouter</code>.</li>
+<li>Sets Arabic language and RTL direction:</li>
+</ul>
+<pre><code class="language-text">frontend-web/src/main.tsx:7-8
+</code></pre>
+<h3 id="routing">Routing</h3>
+<p>File: <code>frontend-web/src/App.tsx</code></p>
+<p>Routes are defined around:</p>
+<pre><code class="language-text">frontend-web/src/App.tsx:963-995
+</code></pre>
+<p>Current routes:</p>
+<pre><code class="language-text">/login
+/register
+/onboarding/interests
+/dashboard
+/lessons
+/lessons/:lessonId
+/rag-search
+/quizzes
+/study-plan
+/notifications
+/flashcards
+/lab
+/guided-lab
+/guided-lab/session/:sessionId
+/lab/equation-balancer
+/ask-ai
+/profile
+</code></pre>
+<h3 id="api-client">API Client</h3>
+<p>File: <code>frontend-web/src/api/http.ts</code></p>
+<ul>
+<li>Axios base URL defaults to:</li>
+</ul>
+<pre><code class="language-text">http://127.0.0.1:8000/api/v1
+</code></pre>
+<ul>
+<li>Bearer token is attached through an interceptor.</li>
+<li>Error extraction is centralized in <code>toErrorMessage</code>.</li>
+</ul>
+<p>Key locations:</p>
+<pre><code class="language-text">frontend-web/src/api/http.ts:4
+frontend-web/src/api/http.ts:14-20
+frontend-web/src/api/http.ts:22-33
+</code></pre>
+<h3 id="state-management">State Management</h3>
+<p>No global state library was found. State is mostly:</p>
+<ul>
+<li>React local state</li>
+<li>React Router state/navigation</li>
+<li>localStorage via <code>frontend-web/src/lib/storage.ts</code></li>
+<li>API fallbacks in specific API modules</li>
+</ul>
+<h3 id="preference-storage">Preference Storage</h3>
+<p>File: <code>frontend-web/src/lib/storage.ts</code></p>
+<p>Default tutor preferences:</p>
+<pre><code class="language-text">frontend-web/src/lib/storage.ts:6-17
+</code></pre>
+<p>Legacy preference mapping:</p>
+<pre><code class="language-text">frontend-web/src/lib/storage.ts:29-61
+</code></pre>
+<p>Current preference model already matches the newer clean model:</p>
+<pre><code class="language-ts">{
+  teaching_level: &quot;simple&quot; | &quot;standard&quot; | &quot;academic&quot;;
+  explanation_method:
+    | &quot;direct&quot;
+    | &quot;step_by_step&quot;
+    | &quot;hints_first&quot;
+    | &quot;exam_mode&quot;
+    | &quot;real_life_example&quot;;
+  learning_modes: (
+    | &quot;text&quot;
+    | &quot;image&quot;
+    | &quot;audio&quot;
+    | &quot;video&quot;
+    | &quot;reel&quot;
+    | &quot;interactive&quot;
+    | &quot;quiz&quot;
+    | &quot;flashcards&quot;
+  )[];
+  student_interests: (
+    | &quot;football&quot;
+    | &quot;cars&quot;
+    | &quot;cooking&quot;
+    | &quot;gaming&quot;
+    | &quot;daily_life&quot;
+    | &quot;laboratory&quot;
+    | &quot;nature&quot;
+  )[];
+}
+</code></pre>
+<h2 id="3-existing-routes-and-pages">3. Existing Routes and Pages</h2>
+<table>
+<thead>
+<tr>
+  <th>Route</th>
+  <th>Page / Component</th>
+  <th style="text-align:right">Student-facing</th>
+  <th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>/dashboard</code></td>
+  <td>Inline <code>DashboardPage</code> in <code>App.tsx</code></td>
+  <td style="text-align:right">Yes</td>
+  <td>Partial; mostly static data.</td>
+</tr>
+<tr>
+  <td><code>/lessons</code></td>
+  <td><code>LessonsPage</code> in <code>pages/LearningPages.tsx</code></td>
+  <td style="text-align:right">Yes</td>
+  <td>Partial; uses mock lesson data.</td>
+</tr>
+<tr>
+  <td><code>/lessons/:lessonId</code></td>
+  <td><code>LessonDetailPage</code></td>
+  <td style="text-align:right">Yes</td>
+  <td>Partial; good layout but mock-heavy.</td>
+</tr>
+<tr>
+  <td><code>/ask-ai</code></td>
+  <td>Inline <code>AskAiPage</code> in <code>App.tsx</code></td>
+  <td style="text-align:right">Yes</td>
+  <td>Implemented, needs trust/UX hardening.</td>
+</tr>
+<tr>
+  <td><code>/rag-search</code></td>
+  <td><code>RagSearchPage</code></td>
+  <td style="text-align:right">Student/dev hybrid</td>
+  <td>Partial; uses Ask AI rather than direct semantic retrieve.</td>
+</tr>
+<tr>
+  <td><code>/lab</code></td>
+  <td><code>LabPage</code></td>
+  <td style="text-align:right">Yes</td>
+  <td>Partial; includes Guided Solver card.</td>
+</tr>
+<tr>
+  <td><code>/guided-lab</code></td>
+  <td><code>GuidedLabPage</code></td>
+  <td style="text-align:right">Yes</td>
+  <td>Implemented MVP.</td>
+</tr>
+<tr>
+  <td><code>/guided-lab/session/:sessionId</code></td>
+  <td><code>SolverSessionPage</code></td>
+  <td style="text-align:right">Yes</td>
+  <td>Implemented MVP with mock fallback.</td>
+</tr>
+<tr>
+  <td><code>/quizzes</code></td>
+  <td><code>QuizzesPage</code></td>
+  <td style="text-align:right">Yes</td>
+  <td>Partial; backend contract mismatch likely.</td>
+</tr>
+<tr>
+  <td><code>/flashcards</code></td>
+  <td><code>FlashcardsPage</code></td>
+  <td style="text-align:right">Yes</td>
+  <td>Partial; generation/due APIs missing in backend.</td>
+</tr>
+<tr>
+  <td><code>/study-plan</code></td>
+  <td><code>StudyPlanPage</code></td>
+  <td style="text-align:right">Yes</td>
+  <td>Rich UI, but several API calls are fallback/mock-backed.</td>
+</tr>
+<tr>
+  <td><code>/notifications</code></td>
+  <td><code>NotificationsPage</code></td>
+  <td style="text-align:right">Yes</td>
+  <td>Implemented; backend route alignment mostly good.</td>
+</tr>
+<tr>
+  <td><code>/profile</code></td>
+  <td>Inline <code>ProfilePage</code> in <code>App.tsx</code></td>
+  <td style="text-align:right">Yes</td>
+  <td>Implemented; preferences and notification settings exist.</td>
+</tr>
+<tr>
+  <td><code>/login</code>, <code>/register</code></td>
+  <td>Inline auth pages in <code>App.tsx</code></td>
+  <td style="text-align:right">Public</td>
+  <td>Implemented.</td>
+</tr>
+</tbody>
+</table>
+<p>Missing high-value routes:</p>
+<ul>
+<li><code>/homework</code></li>
+<li><code>/homework/:id</code></li>
+<li><code>/admin/rag</code></li>
+<li><code>/admin/rag/reembed</code></li>
+<li><code>/admin/rag/evaluation</code></li>
+<li><code>/admin/rag/query-logs</code></li>
+<li><code>/sources</code></li>
+</ul>
+<h2 id="4-existing-components-and-design-system">4. Existing Components and Design System</h2>
+<p>Main design system file:</p>
+<pre><code class="language-text">frontend-web/src/components/DesignSystem.tsx
+</code></pre>
+<p>Important components:</p>
+<table>
+<thead>
+<tr>
+  <th>Component</th>
+  <th style="text-align:right">File lines</th>
+  <th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>Button</code></td>
+  <td style="text-align:right"><code>DesignSystem.tsx:21-25</code></td>
+  <td>Basic reusable button.</td>
+</tr>
+<tr>
+  <td><code>Card</code></td>
+  <td style="text-align:right"><code>DesignSystem.tsx:27-29</code></td>
+  <td>Base surface.</td>
+</tr>
+<tr>
+  <td><code>ProgressBar</code></td>
+  <td style="text-align:right"><code>DesignSystem.tsx:31-35</code></td>
+  <td>Used for progress display.</td>
+</tr>
+<tr>
+  <td><code>StatusPill</code></td>
+  <td style="text-align:right"><code>DesignSystem.tsx:37-39</code></td>
+  <td>Useful for source quality/status.</td>
+</tr>
+<tr>
+  <td><code>ErrorBanner</code></td>
+  <td style="text-align:right"><code>DesignSystem.tsx:41-46</code></td>
+  <td>Reusable error state.</td>
+</tr>
+<tr>
+  <td><code>LoadingSkeleton</code></td>
+  <td style="text-align:right"><code>DesignSystem.tsx:48-54</code></td>
+  <td>Basic skeleton state.</td>
+</tr>
+<tr>
+  <td><code>PageHeader</code></td>
+  <td style="text-align:right"><code>DesignSystem.tsx:56-75</code></td>
+  <td>Page title/actions layout.</td>
+</tr>
+<tr>
+  <td><code>SourceCard</code></td>
+  <td style="text-align:right"><code>DesignSystem.tsx:85-97</code></td>
+  <td>RAG citation display.</td>
+</tr>
+<tr>
+  <td><code>ChatMessage</code></td>
+  <td style="text-align:right"><code>DesignSystem.tsx:167-204</code></td>
+  <td>Chat bubble and media/source rendering.</td>
+</tr>
+<tr>
+  <td><code>LearningModeSelector</code></td>
+  <td style="text-align:right"><code>DesignSystem.tsx:247-279</code></td>
+  <td>Mode selector for text/image/audio/video.</td>
+</tr>
+<tr>
+  <td><code>AppShell</code></td>
+  <td style="text-align:right"><code>DesignSystem.tsx:422-540</code></td>
+  <td>Sidebar/topbar/bottom nav shell.</td>
+</tr>
+</tbody>
+</table>
+<p>Navigation items are declared around:</p>
+<pre><code class="language-text">frontend-web/src/components/DesignSystem.tsx:371-381
+</code></pre>
+<p>Mobile bottom navigation uses a filtered set:</p>
+<pre><code class="language-text">frontend-web/src/components/DesignSystem.tsx:384-386
+</code></pre>
+<p>Current bottom nav includes:</p>
+<pre><code class="language-text">dashboard, lessons, ask-ai, notifications, profile
+</code></pre>
+<p>This is a good choice. The Lab is still accessible from dashboard/cards and desktop sidebar.</p>
+<h3 id="styling">Styling</h3>
+<p>Main CSS file:</p>
+<pre><code class="language-text">frontend-web/src/index.css
+</code></pre>
+<p>Key areas:</p>
+<ul>
+<li>Design tokens: <code>index.css:3-35</code></li>
+<li>Global RTL and base styles: <code>index.css:43-45</code></li>
+<li>Form/focus styles: <code>index.css:83-100</code></li>
+<li>Card/button styles: <code>index.css:111-200</code></li>
+<li>Sidebar and shell styles: <code>index.css:521-680</code></li>
+<li>Chat styles: <code>index.css:1107-1198</code></li>
+<li>Responsive breakpoints: <code>index.css:1480-1558</code></li>
+<li>Guided Lab styles: <code>index.css:1586-1995</code></li>
+<li>Notification styles: around <code>index.css:2054+</code></li>
+</ul>
+<p>Cleanup note:</p>
+<ul>
+<li><code>frontend-web/src/App.css</code> exists but <code>main.tsx</code> imports <code>index.css</code>, not <code>App.css</code>.</li>
+<li><code>App.css</code> appears to contain older scaffold-style CSS and should be reviewed for removal or consolidation.</li>
+</ul>
+<h2 id="5-api-contract-audit">5. API Contract Audit</h2>
+<h3 id="core-api-client">Core API Client</h3>
+<p><code>frontend-web/src/api/http.ts</code> is aligned with backend <code>/api/v1</code> by default.</p>
+<h3 id="auth">Auth</h3>
+<p>File: <code>frontend-web/src/api/authApi.ts</code></p>
+<table>
+<thead>
+<tr>
+  <th>Frontend call</th>
+  <th>Backend status</th>
+  <th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>POST /auth/login</code></td>
+  <td>Aligned</td>
+  <td>Backend has auth login.</td>
+</tr>
+<tr>
+  <td><code>POST /auth/register</code></td>
+  <td>Aligned</td>
+  <td>Backend has auth register.</td>
+</tr>
+<tr>
+  <td><code>GET /auth/me</code></td>
+  <td>Aligned</td>
+  <td>Backend has auth me.</td>
+</tr>
+<tr>
+  <td><code>GET /auth/interests</code></td>
+  <td>Aligned or fallback</td>
+  <td>Has mock fallback.</td>
+</tr>
+<tr>
+  <td><code>PATCH /auth/onboarding</code></td>
+  <td>Aligned or partial</td>
+  <td>Depends backend implementation details.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ask-ai">Ask AI</h3>
+<p>File: <code>frontend-web/src/api/aiApi.ts</code></p>
+<table>
+<thead>
+<tr>
+  <th>Frontend call</th>
+  <th>Backend status</th>
+  <th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>POST /chat/ask</code></td>
+  <td>Implemented/partial</td>
+  <td>Backend has one-shot Ask endpoint.</td>
+</tr>
+</tbody>
+</table>
+<p>Issue:</p>
+<ul>
+<li>On any error, <code>aiApi.ask</code> returns <code>mockAiAnswer(request)</code>.</li>
+<li>This should be changed to a transparent fallback, not silent mock behavior.</li>
+</ul>
+<p>Relevant lines:</p>
+<pre><code class="language-text">frontend-web/src/api/aiApi.ts:91-115
+</code></pre>
+<h3 id="quizzes">Quizzes</h3>
+<p>File: <code>frontend-web/src/api/quizzesApi.ts</code></p>
+<table>
+<thead>
+<tr>
+  <th>Frontend call</th>
+  <th>Backend status</th>
+  <th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>POST /quizzes/generate</code></td>
+  <td>Partial</td>
+  <td>Backend has generation, but shape may differ.</td>
+</tr>
+<tr>
+  <td><code>GET /quizzes</code></td>
+  <td>Missing or unknown</td>
+  <td>Backend report did not verify this exact route.</td>
+</tr>
+<tr>
+  <td><code>GET /quizzes/{id}</code></td>
+  <td>Missing or unknown</td>
+  <td>Needs alignment.</td>
+</tr>
+<tr>
+  <td><code>POST /quizzes/{id}/submit</code></td>
+  <td>Likely mismatched</td>
+  <td>Backend has <code>POST /quizzes/submit</code>.</td>
+</tr>
+<tr>
+  <td><code>POST /quizzes/{id}/result</code></td>
+  <td>Missing</td>
+  <td>Frontend-specific route not verified.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="flashcards">Flashcards</h3>
+<p>File: <code>frontend-web/src/api/flashcardsApi.ts</code></p>
+<table>
+<thead>
+<tr>
+  <th>Frontend call</th>
+  <th>Backend status</th>
+  <th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>GET /flashcards</code></td>
+  <td>Aligned</td>
+  <td>Backend has list.</td>
+</tr>
+<tr>
+  <td><code>POST /flashcards/generate</code></td>
+  <td>Missing</td>
+  <td>Needed for lesson/problem-based cards.</td>
+</tr>
+<tr>
+  <td><code>PATCH /flashcards/{id}/review</code></td>
+  <td>Mismatched</td>
+  <td>Backend report says <code>POST /flashcards/{flashcard_id}/review</code>.</td>
+</tr>
+<tr>
+  <td><code>GET /flashcards/due</code></td>
+  <td>Missing</td>
+  <td>Needed for spaced repetition UX.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="study-plan">Study Plan</h3>
+<p>File: <code>frontend-web/src/api/studyPlanApi.ts</code></p>
+<table>
+<thead>
+<tr>
+  <th>Frontend call</th>
+  <th>Backend status</th>
+  <th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>GET /chapters</code></td>
+  <td>Aligned</td>
+  <td>Used to compose study plan data.</td>
+</tr>
+<tr>
+  <td><code>GET /lessons</code></td>
+  <td>Aligned</td>
+  <td>Used to compose study plan data.</td>
+</tr>
+<tr>
+  <td><code>POST /study-plans/generate</code></td>
+  <td>Missing</td>
+  <td>Backend has CRUD, not generation route.</td>
+</tr>
+<tr>
+  <td><code>PATCH /study-plans/{id}</code></td>
+  <td>Mismatched</td>
+  <td>Backend report says <code>PUT /study-plans/{id}</code>.</td>
+</tr>
+<tr>
+  <td><code>POST /study-plans/{id}/lessons/{lessonId}/complete</code></td>
+  <td>Missing</td>
+  <td>Needed for lesson completion inside plan.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="notifications">Notifications</h3>
+<p>File: <code>frontend-web/src/api/notificationsApi.ts</code></p>
+<p>Mostly aligned.</p>
+<table>
+<thead>
+<tr>
+  <th>Frontend call</th>
+  <th>Backend status</th>
+  <th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>GET /notifications</code></td>
+  <td>Aligned</td>
+  <td>Implemented.</td>
+</tr>
+<tr>
+  <td><code>GET /notifications/unread-count</code></td>
+  <td>Aligned</td>
+  <td>Implemented.</td>
+</tr>
+<tr>
+  <td><code>PATCH /notifications/{id}/read</code></td>
+  <td>Aligned</td>
+  <td>Implemented.</td>
+</tr>
+<tr>
+  <td><code>PATCH /notifications/mark-all-read</code></td>
+  <td>Aligned</td>
+  <td>Implemented.</td>
+</tr>
+<tr>
+  <td><code>DELETE /notifications/{id}</code></td>
+  <td>Aligned</td>
+  <td>Implemented.</td>
+</tr>
+<tr>
+  <td><code>GET /notification-preferences</code></td>
+  <td>Aligned</td>
+  <td>Implemented.</td>
+</tr>
+<tr>
+  <td><code>PATCH /notification-preferences</code></td>
+  <td>Aligned</td>
+  <td>Implemented.</td>
+</tr>
+<tr>
+  <td><code>POST /reminders/rebuild</code></td>
+  <td>Aligned</td>
+  <td>Implemented optional/admin-ish user route.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="guided-interactive-solver">Guided Interactive Solver</h3>
+<p>File:</p>
+<pre><code class="language-text">frontend-web/src/features/guided-lab/api/interactiveSolverApi.ts
+</code></pre>
+<table>
+<thead>
+<tr>
+  <th>Frontend call</th>
+  <th>Backend status</th>
+  <th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>POST /interactive-solver/sessions</code></td>
+  <td>Aligned</td>
+  <td>Implemented backend MVP.</td>
+</tr>
+<tr>
+  <td><code>GET /interactive-solver/sessions/{id}</code></td>
+  <td>Aligned</td>
+  <td>Implemented.</td>
+</tr>
+<tr>
+  <td><code>POST /interactive-solver/sessions/{id}/answer</code></td>
+  <td>Aligned</td>
+  <td>Implemented.</td>
+</tr>
+<tr>
+  <td><code>POST /interactive-solver/sessions/{id}/hint</code></td>
+  <td>Aligned</td>
+  <td>Implemented.</td>
+</tr>
+<tr>
+  <td><code>POST /interactive-solver/sessions/{id}/finish</code></td>
+  <td>Partial alignment</td>
+  <td>Response mapping should be verified.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rag-admin">RAG Admin</h3>
+<p>No frontend files were found for:</p>
+<pre><code class="language-text">/admin/rag/reembed
+/admin/rag/evaluate
+/admin/rag/query-logs
+/rag/retrieve-debug
+/rag/semantic-retrieve
+</code></pre>
+<p>Frontend gap:</p>
+<ul>
+<li>There is no admin RAG dashboard even though backend support exists.</li>
+</ul>
+<h2 id="6-ai-tutor-ux-evaluation-scorecard">6. AI Tutor UX Evaluation Scorecard</h2>
+<table>
+<thead>
+<tr>
+  <th>Area</th>
+  <th style="text-align:right">Score 1-10</th>
+  <th>Findings</th>
+  <th>Recommended improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Visual identity</td>
+  <td style="text-align:right">8</td>
+  <td>Strong dark science visual language in <code>index.css</code> and <code>DesignSystem.tsx</code>.</td>
+  <td>Consolidate old <code>App.css</code>; localize remaining English feature labels.</td>
+</tr>
+<tr>
+  <td>Navigation clarity</td>
+  <td style="text-align:right">7</td>
+  <td>Sidebar/topbar/bottom nav are coherent; key pages exist.</td>
+  <td>Add clearer hierarchy for Lab vs Guided Solver vs Homework.</td>
+</tr>
+<tr>
+  <td>AI tutor usability</td>
+  <td style="text-align:right">6</td>
+  <td>Ask AI has source cards, modes, styles, suggestions.</td>
+  <td>Add source-quality panel, explicit fallback states, and stronger follow-up actions.</td>
+</tr>
+<tr>
+  <td>Guided learning flow</td>
+  <td style="text-align:right">7</td>
+  <td>Guided Lab MVP exists with step, feedback, formula pad, final summary.</td>
+  <td>Localize labels, add session resume/history, align finish response.</td>
+</tr>
+<tr>
+  <td>RAG/source transparency</td>
+  <td style="text-align:right">5</td>
+  <td>Source cards exist, but answer scope and fallback are unclear.</td>
+  <td>Show source type, confidence, page image, and “not enough book evidence” states.</td>
+</tr>
+<tr>
+  <td>Arabic/RTL readiness</td>
+  <td style="text-align:right">7</td>
+  <td>Global RTL is set and much UI is Arabic.</td>
+  <td>Translate Guided Lab/Lab English labels and test formula display in RTL.</td>
+</tr>
+<tr>
+  <td>Accessibility</td>
+  <td style="text-align:right">6</td>
+  <td>Focus styles and reusable components exist.</td>
+  <td>Audit live regions, icon labels, clickable cards, and keyboard paths.</td>
+</tr>
+<tr>
+  <td>Mobile responsiveness</td>
+  <td style="text-align:right">7</td>
+  <td>Responsive shell and bottom nav exist.</td>
+  <td>Test long Arabic chat, source cards, solver page, and study plan lesson selector.</td>
+</tr>
+<tr>
+  <td>Feedback/error states</td>
+  <td style="text-align:right">6</td>
+  <td>Loading skeletons and errors exist in several pages.</td>
+  <td>Remove silent mock fallbacks; show clear offline/backend unavailable states.</td>
+</tr>
+<tr>
+  <td>Motivation/gamification</td>
+  <td style="text-align:right">6</td>
+  <td>XP, streak, dashboard stats, flashcards, quiz results exist.</td>
+  <td>Use real backend data and weak-topic recommendations.</td>
+</tr>
+<tr>
+  <td>Admin/debug readiness</td>
+  <td style="text-align:right">2</td>
+  <td>Backend has admin RAG APIs, frontend has no admin UI.</td>
+  <td>Add admin RAG dashboard, eval results, query logs, re-embed monitor.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="7-page-by-page-ux-review">7. Page-by-Page UX Review</h2>
+<h3 id="home-dashboard">Home / Dashboard</h3>
+<p>File:</p>
+<pre><code class="language-text">frontend-web/src/App.tsx:407-466
+</code></pre>
+<p>Findings:</p>
+<ul>
+<li>Shows quick actions, stats, and AI recommendations.</li>
+<li>Data is hardcoded.</li>
+<li>Does not use a <code>/dashboard</code> aggregate API.</li>
+</ul>
+<p>Recommendation:</p>
+<ul>
+<li>Add backend-backed dashboard payload when available.</li>
+<li>Keep local fallback only as an empty/demo state.</li>
+<li>Prioritize next action, weak topic, due flashcards, and exam countdown.</li>
+</ul>
+<p>Recommended dashboard layout:</p>
+<ol>
+<li>Hero mission card</li>
+<li>Next best action card</li>
+<li>Weak topics card</li>
+<li>Study plan card</li>
+<li>Reminder card</li>
+<li>Quick tools row</li>
+</ol>
+<h3 id="ask-ai-tutor">Ask AI Tutor</h3>
+<p>File:</p>
+<pre><code class="language-text">frontend-web/src/App.tsx:534-699
+</code></pre>
+<p>Strengths:</p>
+<ul>
+<li>Supports teaching level, explanation method, answer scope, and learning modes.</li>
+<li>Shows suggested questions.</li>
+<li>Supports re-explain action.</li>
+<li>Renders source cards through the shared chat component.</li>
+</ul>
+<p>Issues:</p>
+<ul>
+<li><code>aiApi.ask</code> silently returns mock answers if backend fails.</li>
+<li>Preferences in the toolbar are saved immediately, rather than clearly separating temporary request settings from profile defaults.</li>
+<li>The input is a single-line text field style and may not be ideal for long Arabic questions.</li>
+<li>Diagnostics are hidden, which is correct for students, but no developer toggle exists.</li>
+</ul>
+<p>Recommendations:</p>
+<ul>
+<li>Add a visible, student-safe backend unavailable state.</li>
+<li>Add “From textbook”, “From solution book”, or “General explanation” source labels.</li>
+<li>Add clear source confidence labels that do not overstate quality.</li>
+<li>Add CTAs after answers:<ul>
+<li>Explain differently</li>
+<li>Start guided solving</li>
+<li>Generate quiz</li>
+<li>Generate flashcards</li>
+<li>Show source page</li>
+</ul>
+</li>
+</ul>
+<h3 id="lessons">Lessons</h3>
+<p>Files:</p>
+<pre><code class="language-text">frontend-web/src/pages/LearningPages.tsx
+frontend-web/src/pages/LessonDetailPage.tsx
+</code></pre>
+<p>Strengths:</p>
+<ul>
+<li>Lessons have quality report cards.</li>
+<li>Lesson detail has actions for Ask AI, RAG search, quiz, and flashcards.</li>
+</ul>
+<p>Issues:</p>
+<ul>
+<li>Heavy use of <code>mockLessons</code>.</li>
+<li>Quality diagnostics are useful but feel more like admin/debug content than student content.</li>
+</ul>
+<p>Recommendations:</p>
+<ul>
+<li>Keep student version focused on lesson progress and next actions.</li>
+<li>Move extraction-quality details into an admin/source debug screen.</li>
+<li>Add “Ask AI about this lesson” and “Start guided solver for this lesson” as primary actions.</li>
+</ul>
+<h3 id="the-lab">The Lab</h3>
+<p>File:</p>
+<pre><code class="language-text">frontend-web/src/pages/LabPage.tsx
+</code></pre>
+<p>Strengths:</p>
+<ul>
+<li>Guided Problem Solver is present.</li>
+<li>Equation balancer and assistant experiment cards are present.</li>
+</ul>
+<p>Issues:</p>
+<ul>
+<li>Several card titles are English.</li>
+<li>Lab taxonomy is not complete enough for a chemistry learning workspace.</li>
+</ul>
+<p>Recommendations:</p>
+<p>Add or prepare cards for:</p>
+<ul>
+<li>Guided Problem Solver</li>
+<li>Equation Balancer</li>
+<li>Periodic Table</li>
+<li>pH Simulator</li>
+<li>Atom Builder</li>
+<li>Formula Helper</li>
+</ul>
+<p>Each card should show:</p>
+<ul>
+<li>Use case</li>
+<li>Difficulty/level</li>
+<li>CTA</li>
+<li>Link to Ask AI / Quiz / Flashcards where relevant</li>
+</ul>
+<h3 id="guided-problem-solver">Guided Problem Solver</h3>
+<p>Folder:</p>
+<pre><code class="language-text">frontend-web/src/features/guided-lab/
+</code></pre>
+<p>Strengths:</p>
+<ul>
+<li>Clean feature folder.</li>
+<li>API adapter isolated.</li>
+<li>Mock data isolated.</li>
+<li>Components are reasonably separated.</li>
+<li>Solver page has step card, progress, formula pad, feedback, source panel, and final summary.</li>
+</ul>
+<p>Issues:</p>
+<ul>
+<li>Many labels are English.</li>
+<li>Finish response mapping should be verified against backend.</li>
+<li>No list/resume session page.</li>
+<li>Final summary CTAs navigate to generic quiz/flashcard pages rather than prefilled actions.</li>
+</ul>
+<p>Recommendations:</p>
+<ul>
+<li>Make it the flagship Lab feature.</li>
+<li>Translate visible labels to Arabic-first bilingual labels.</li>
+<li>Add “resume active session” support when backend adds list endpoint.</li>
+<li>Add lesson/topic context where possible.</li>
+</ul>
+<h3 id="quiz">Quiz</h3>
+<p>File:</p>
+<pre><code class="language-text">frontend-web/src/pages/QuizzesPage.tsx
+</code></pre>
+<p>Strengths:</p>
+<ul>
+<li>Strong setup UI.</li>
+<li>Supports lesson selection, difficulty, count, source mode, and quiz answer flow.</li>
+</ul>
+<p>Issues:</p>
+<ul>
+<li>API routes are not fully aligned with backend.</li>
+<li>Uses mock lessons and fallback behavior.</li>
+</ul>
+<p>Recommendations:</p>
+<ul>
+<li>Align backend/FE quiz lifecycle:<ul>
+<li>Create quiz</li>
+<li>Get quiz</li>
+<li>Submit answer(s)</li>
+<li>Result summary</li>
+<li>Weak-topic recommendations</li>
+</ul>
+</li>
+</ul>
+<h3 id="flashcards-2">Flashcards</h3>
+<p>File:</p>
+<pre><code class="language-text">frontend-web/src/pages/FlashcardsPage.tsx
+</code></pre>
+<p>Strengths:</p>
+<ul>
+<li>Supports generation configuration.</li>
+<li>Supports review state.</li>
+<li>Has due/review concepts.</li>
+</ul>
+<p>Issues:</p>
+<ul>
+<li>Generation and due APIs are not implemented in backend.</li>
+<li>Some styles are inline in the page.</li>
+</ul>
+<p>Recommendations:</p>
+<ul>
+<li>Add backend <code>/flashcards/generate</code> and <code>/flashcards/due</code>.</li>
+<li>Move inline page CSS into the shared stylesheet or component classes.</li>
+<li>Use spaced repetition as a first-class UX.</li>
+</ul>
+<h3 id="homework-solver">Homework Solver</h3>
+<p>No dedicated frontend page or API adapter was found.</p>
+<p>Recommendation:</p>
+<p>Create:</p>
+<pre><code class="language-text">/homework
+/homework/:homeworkId
+</code></pre>
+<p>MVP:</p>
+<ul>
+<li>Typed problem input</li>
+<li>Extracted text preview for future image upload</li>
+<li>Solve with sources</li>
+<li>Convert to guided solver session</li>
+<li>Save to history</li>
+</ul>
+<p>Future:</p>
+<ul>
+<li>Camera/image upload via multipart</li>
+<li>OCR preview</li>
+<li>Cropping and retake flow</li>
+</ul>
+<h3 id="notifications-2">Notifications</h3>
+<p>Files:</p>
+<pre><code class="language-text">frontend-web/src/pages/NotificationsPage.tsx
+frontend-web/src/api/notificationsApi.ts
+</code></pre>
+<p>Strengths:</p>
+<ul>
+<li>Notification page exists.</li>
+<li>Filters, unread count, grouped sections, mark read, mark all, delete, empty/loading/error states exist.</li>
+<li>Backend alignment is mostly good.</li>
+</ul>
+<p>Issues:</p>
+<ul>
+<li><code>role=&quot;status&quot;</code> and <code>aria-live=&quot;polite&quot;</code> on every notification card may be noisy for screen readers.</li>
+</ul>
+<p>Recommendation:</p>
+<ul>
+<li>Keep one page-level live region for load/update announcements.</li>
+<li>Keep individual notification cards as normal article/list items.</li>
+</ul>
+<h2 id="8-guided-problem-solver-design-recommendation">8. Guided Problem Solver Design Recommendation</h2>
+<p>Guided Problem Solver should be positioned as a flagship feature, not a secondary tool.</p>
+<p>Recommended MVP routes:</p>
+<pre><code class="language-text">/guided-lab
+/guided-lab/session/:sessionId
+</code></pre>
+<p>Keep final summary as a component inside the session page.</p>
+<p>Required components already exist:</p>
+<pre><code class="language-text">ProblemInputCard
+ExampleProblemCards
+SolverStepCard
+StepProgressBar
+SolverFeedbackCard
+SourceCitationPanel
+FormulaPad
+FinalSummaryCard
+</code></pre>
+<p>Recommended flow:</p>
+<ol>
+<li>User opens The Lab.</li>
+<li>Clicks Guided Problem Solver.</li>
+<li>Enters or selects a problem.</li>
+<li>Starts guided session.</li>
+<li>Solves one step at a time.</li>
+<li>Gets correctness feedback.</li>
+<li>Requests hints only when needed.</li>
+<li>Completes final summary.</li>
+<li>Converts weak steps into quiz/flashcards.</li>
+</ol>
+<p>Recommended UX additions:</p>
+<ul>
+<li>Arabic-first labels.</li>
+<li>Clear step status chips.</li>
+<li>“Why was this wrong?” feedback mode.</li>
+<li>“Show related source” button.</li>
+<li>“Practice this weak step” CTA.</li>
+<li>Session resume card on <code>/guided-lab</code>.</li>
+</ul>
+<h2 id="9-ask-ai-rag-ux-recommendation">9. Ask AI / RAG UX Recommendation</h2>
+<p>Ask AI should not behave like a generic chatbot. It should behave like an AI learning workspace.</p>
+<p>Recommended answer structure:</p>
+<ol>
+<li>Direct answer</li>
+<li>Short explanation</li>
+<li>Source evidence</li>
+<li>Next learning action</li>
+</ol>
+<p>Student-facing source labels:</p>
+<ul>
+<li><code>من كتاب الكيمياء</code></li>
+<li><code>من كتاب الحلول</code></li>
+<li><code>شرح عام</code></li>
+<li><code>لم أجد دليلاً كافياً في المصادر</code></li>
+</ul>
+<p>Source card should show:</p>
+<ul>
+<li>Source title</li>
+<li>Page number</li>
+<li>Source type</li>
+<li>Content type</li>
+<li>Quality label</li>
+<li>Optional page image button</li>
+</ul>
+<p>Avoid:</p>
+<ul>
+<li>Showing raw Gemini quota/backend errors.</li>
+<li>Saying “high match” when the score is missing or weak.</li>
+<li>Silently returning mock/generated answers without user-visible context.</li>
+</ul>
+<p>Add answer actions:</p>
+<ul>
+<li><code>اشرح بطريقة أبسط</code></li>
+<li><code>ابدأ الحل خطوة بخطوة</code></li>
+<li><code>أنشئ اختباراً قصيراً</code></li>
+<li><code>أنشئ بطاقات مراجعة</code></li>
+<li><code>اعرض صفحة المصدر</code></li>
+</ul>
+<h2 id="10-the-lab-ux-recommendation">10. The Lab UX Recommendation</h2>
+<p>The Lab should become the interactive science workspace.</p>
+<p>Recommended tools:</p>
+<table>
+<thead>
+<tr>
+  <th>Tool</th>
+  <th>Purpose</th>
+  <th>Backend dependency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Guided Problem Solver</td>
+  <td>Step-by-step problem solving</td>
+  <td>Exists MVP</td>
+</tr>
+<tr>
+  <td>Equation Balancer</td>
+  <td>Balance chemical equations</td>
+  <td>Frontend/local or backend</td>
+</tr>
+<tr>
+  <td>Periodic Table</td>
+  <td>Element lookup</td>
+  <td>Existing elements API</td>
+</tr>
+<tr>
+  <td>pH Simulator</td>
+  <td>Acid/base intuition</td>
+  <td>Future/local</td>
+</tr>
+<tr>
+  <td>Atom Builder</td>
+  <td>Structure intuition</td>
+  <td>Future/local</td>
+</tr>
+<tr>
+  <td>Formula Helper</td>
+  <td>Chemistry formulas</td>
+  <td>Can be local + RAG</td>
+</tr>
+</tbody>
+</table>
+<p>Each tool card should include:</p>
+<ul>
+<li>Arabic title</li>
+<li>One-line use case</li>
+<li>Difficulty</li>
+<li>Estimated time</li>
+<li>CTA</li>
+<li>Related lesson/topic if known</li>
+</ul>
+<h2 id="11-arabic-rtl-accessibility-findings">11. Arabic / RTL / Accessibility Findings</h2>
+<h3 id="arabic-rtl">Arabic / RTL</h3>
+<p>Strengths:</p>
+<ul>
+<li>Global <code>lang=&quot;ar&quot;</code> and <code>dir=&quot;rtl&quot;</code> are set.</li>
+<li>Main app shell and many screens are Arabic-first.</li>
+<li>Chat supports Arabic text.</li>
+</ul>
+<p>Issues:</p>
+<ul>
+<li>Guided Lab and Lab still contain English labels.</li>
+<li>Chemistry formulas inside Arabic sentences need consistent bidi handling.</li>
+</ul>
+<p>Recommendations:</p>
+<ul>
+<li>Wrap formulas in <code>&lt;span dir=&quot;ltr&quot;&gt;...&lt;/span&gt;</code> or a formula class.</li>
+<li>Use <code>unicode-bidi: isolate</code> for formula snippets.</li>
+<li>Test long Arabic questions in chat bubbles and solver cards.</li>
+</ul>
+<h3 id="accessibility">Accessibility</h3>
+<p>Strengths:</p>
+<ul>
+<li>Buttons and inputs are generally semantic.</li>
+<li>Focus styles exist in CSS.</li>
+<li>Loading and error states exist.</li>
+</ul>
+<p>Issues:</p>
+<ul>
+<li>Some card interactions should be buttons or links.</li>
+<li>Some icon controls need clearer labels.</li>
+<li>Notification live regions may be too noisy.</li>
+</ul>
+<p>Recommendations:</p>
+<ul>
+<li>Ensure all interactive cards are keyboard reachable.</li>
+<li>Add <code>aria-label</code> to icon-only controls.</li>
+<li>Use one <code>aria-live</code> region per page for updates.</li>
+<li>Do not rely only on color for correct/incorrect state.</li>
+</ul>
+<h3 id="responsive-behavior">Responsive Behavior</h3>
+<p>Strengths:</p>
+<ul>
+<li>App shell has desktop sidebar and mobile bottom navigation.</li>
+<li>Guided Lab CSS has responsive sections.</li>
+</ul>
+<p>Recommendations:</p>
+<ul>
+<li>Manually test:<ul>
+<li>360px mobile</li>
+<li>tablet</li>
+<li>desktop</li>
+<li>long Arabic prompts</li>
+<li>large source cards</li>
+<li>solver sidebar stacked under main content</li>
+</ul>
+</li>
+</ul>
+<h2 id="12-missing-frontend-features">12. Missing Frontend Features</h2>
+<table>
+<thead>
+<tr>
+  <th style="text-align:right">Priority</th>
+  <th>Missing frontend feature</th>
+  <th>Why needed</th>
+  <th>Backend dependency</th>
+  <th>Suggested route</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td style="text-align:right">P0</td>
+  <td>Homework Solver page</td>
+  <td>Core student workflow</td>
+  <td><code>/api/v1/homework/*</code> plus upload</td>
+  <td><code>/homework</code></td>
+</tr>
+<tr>
+  <td style="text-align:right">P0</td>
+  <td>Better Ask AI source panel</td>
+  <td>Trust and learning quality</td>
+  <td><code>/chat/ask</code>, source citations</td>
+  <td><code>/ask-ai</code></td>
+</tr>
+<tr>
+  <td style="text-align:right">P0</td>
+  <td>API mismatch cleanup</td>
+  <td>Avoid broken UI behavior</td>
+  <td>Existing backend routes</td>
+  <td>N/A</td>
+</tr>
+<tr>
+  <td style="text-align:right">P0</td>
+  <td>Guided Solver localization/resume</td>
+  <td>Flagship feature quality</td>
+  <td>Interactive solver list endpoint</td>
+  <td><code>/guided-lab</code></td>
+</tr>
+<tr>
+  <td style="text-align:right">P0</td>
+  <td>Notification center polish</td>
+  <td>Reminders are student-facing</td>
+  <td>Existing notification APIs</td>
+  <td><code>/notifications</code></td>
+</tr>
+<tr>
+  <td style="text-align:right">P1</td>
+  <td>Quiz lifecycle pages</td>
+  <td>Practice workflow</td>
+  <td>Quiz lifecycle APIs</td>
+  <td><code>/quizzes/:id</code></td>
+</tr>
+<tr>
+  <td style="text-align:right">P1</td>
+  <td>Flashcards due page</td>
+  <td>Retention workflow</td>
+  <td><code>/flashcards/due</code></td>
+  <td><code>/flashcards/due</code></td>
+</tr>
+<tr>
+  <td style="text-align:right">P1</td>
+  <td>RAG Admin Dashboard</td>
+  <td>Debug retrieval quality</td>
+  <td>Admin RAG APIs</td>
+  <td><code>/admin/rag</code></td>
+</tr>
+<tr>
+  <td style="text-align:right">P1</td>
+  <td>Re-embedding Monitor</td>
+  <td>Operational safety</td>
+  <td><code>/admin/rag/reembed</code></td>
+  <td><code>/admin/rag/reembed</code></td>
+</tr>
+<tr>
+  <td style="text-align:right">P1</td>
+  <td>RAG Debug Retrieval Page</td>
+  <td>Diagnose wrong answers</td>
+  <td><code>/rag/retrieve-debug</code></td>
+  <td><code>/admin/rag/debug</code></td>
+</tr>
+<tr>
+  <td style="text-align:right">P1</td>
+  <td>Source Manager</td>
+  <td>Manage textbook/solution sources</td>
+  <td>Ingestion/admin APIs</td>
+  <td><code>/admin/sources</code></td>
+</tr>
+<tr>
+  <td style="text-align:right">P2</td>
+  <td>Multimedia media center</td>
+  <td>Audio/video/reel support</td>
+  <td>Future media APIs</td>
+  <td><code>/media</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="13-frontend-web-api-needs">13. Frontend-Web API Needs</h2>
+<h3 id="student-frontend-web-api-needs">Student Frontend-Web API Needs</h3>
+<table>
+<thead>
+<tr>
+  <th>Page</th>
+  <th>API needed</th>
+  <th>Current backend status</th>
+  <th>Frontend status</th>
+  <th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Dashboard</td>
+  <td><code>GET /api/v1/dashboard</code></td>
+  <td>Missing</td>
+  <td>Static/hardcoded</td>
+  <td>Add backend aggregate or compose client-side temporarily.</td>
+</tr>
+<tr>
+  <td>Lessons</td>
+  <td><code>GET /api/v1/chapters</code>, <code>GET /api/v1/lessons</code></td>
+  <td>Exists</td>
+  <td>Partially mock-backed</td>
+  <td>Replace mock data where possible.</td>
+</tr>
+<tr>
+  <td>Lesson detail</td>
+  <td><code>GET /api/v1/lessons/{id}</code></td>
+  <td>Exists</td>
+  <td>Mock-heavy</td>
+  <td>Use real lesson detail.</td>
+</tr>
+<tr>
+  <td>Ask AI</td>
+  <td><code>POST /api/v1/chat/ask</code></td>
+  <td>Exists/partial</td>
+  <td>Implemented</td>
+  <td>Remove silent mock fallback.</td>
+</tr>
+<tr>
+  <td>Chat history</td>
+  <td><code>/api/v1/chat/sessions/*</code></td>
+  <td>Exists</td>
+  <td>Not fully used by Ask AI</td>
+  <td>Prefer persisted session flow.</td>
+</tr>
+<tr>
+  <td>RAG search</td>
+  <td><code>POST /api/v1/rag/semantic-retrieve</code></td>
+  <td>Exists</td>
+  <td>Not directly used</td>
+  <td>Add direct semantic search API adapter.</td>
+</tr>
+<tr>
+  <td>Guided Solver</td>
+  <td><code>/api/v1/interactive-solver/*</code></td>
+  <td>Exists MVP</td>
+  <td>Implemented with mock fallback</td>
+  <td>Align finish response and add resume later.</td>
+</tr>
+<tr>
+  <td>Notifications</td>
+  <td><code>/api/v1/notifications/*</code></td>
+  <td>Exists</td>
+  <td>Implemented</td>
+  <td>Polish accessibility and actions.</td>
+</tr>
+<tr>
+  <td>Homework</td>
+  <td><code>/api/v1/homework/*</code></td>
+  <td>Exists partial</td>
+  <td>Missing frontend</td>
+  <td>Add page and API adapter.</td>
+</tr>
+<tr>
+  <td>Quizzes</td>
+  <td><code>/api/v1/quizzes/*</code></td>
+  <td>Partial</td>
+  <td>Mismatched</td>
+  <td>Align endpoints.</td>
+</tr>
+<tr>
+  <td>Flashcards</td>
+  <td><code>/api/v1/flashcards/*</code></td>
+  <td>Partial</td>
+  <td>Mismatched</td>
+  <td>Add generate/due or update frontend.</td>
+</tr>
+<tr>
+  <td>Study Plan</td>
+  <td><code>/api/v1/study-plans/*</code></td>
+  <td>CRUD exists</td>
+  <td>Generation routes missing</td>
+  <td>Align generation/update/complete routes.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="admin-frontend-web-api-needs">Admin Frontend-Web API Needs</h3>
+<table>
+<thead>
+<tr>
+  <th>Admin page</th>
+  <th>API needed</th>
+  <th>Current backend status</th>
+  <th>Frontend status</th>
+  <th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>RAG Dashboard</td>
+  <td><code>GET /api/v1/admin/rag/query-logs</code></td>
+  <td>Exists</td>
+  <td>Missing</td>
+  <td>Create admin page.</td>
+</tr>
+<tr>
+  <td>Query Log Detail</td>
+  <td><code>GET /api/v1/admin/rag/query-logs/{id}</code></td>
+  <td>Exists</td>
+  <td>Missing</td>
+  <td>Create detail drawer/page.</td>
+</tr>
+<tr>
+  <td>RAG Evaluation</td>
+  <td><code>POST /api/v1/admin/rag/evaluate</code>, <code>GET /api/v1/admin/rag/evaluation/latest</code></td>
+  <td>Exists</td>
+  <td>Missing</td>
+  <td>Create eval report UI.</td>
+</tr>
+<tr>
+  <td>Re-embed Monitor</td>
+  <td><code>POST /api/v1/admin/rag/reembed</code>, <code>GET /api/v1/admin/rag/reembed/status/{job_id}</code></td>
+  <td>Exists</td>
+  <td>Missing</td>
+  <td>Create job launcher/status UI.</td>
+</tr>
+<tr>
+  <td>Retrieval Debug</td>
+  <td><code>POST /api/v1/rag/retrieve-debug</code></td>
+  <td>Exists</td>
+  <td>Missing</td>
+  <td>Create developer-only debug page.</td>
+</tr>
+<tr>
+  <td>Source Manager</td>
+  <td>Admin ingestion APIs</td>
+  <td>Exists/partial</td>
+  <td>Missing</td>
+  <td>Create source list/status UI.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="14-recommended-design-system-improvements">14. Recommended Design System Improvements</h2>
+<ol>
+<li>Add formula text utility:</li>
+</ol>
+<pre><code class="language-css">.formula {
+  direction: ltr;
+  unicode-bidi: isolate;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+</code></pre>
+<ol start="2">
+<li>Standardize source quality labels:</li>
+</ol>
+<pre><code class="language-text">مطابقة عالية
+مطابقة جيدة
+مطابقة متوسطة
+غير كافية
+</code></pre>
+<ol start="3">
+<li>Add reusable AI answer components:</li>
+</ol>
+<pre><code class="language-text">AnswerSourcePanel
+AnswerActions
+ConfidenceIndicator
+MediaBlockRenderer
+BookEvidenceNotice
+</code></pre>
+<ol start="4">
+<li>Add reusable page states:</li>
+</ol>
+<pre><code class="language-text">PageLoadingState
+PageEmptyState
+PageErrorState
+OfflineBanner
+BackendUnavailableNotice
+</code></pre>
+<ol start="5">
+<li>Split large inline pages:</li>
+</ol>
+<ul>
+<li><code>AskAiPage</code> out of <code>App.tsx</code></li>
+<li><code>DashboardPage</code> out of <code>App.tsx</code></li>
+<li><code>ProfilePage</code> out of <code>App.tsx</code></li>
+</ul>
+<ol start="6">
+<li>Consolidate CSS:</li>
+</ol>
+<ul>
+<li>Review whether <code>App.css</code> is obsolete.</li>
+<li>Move large page-specific inline style blocks into CSS modules or shared classes.</li>
+</ul>
+<h2 id="15-prioritized-implementation-plan">15. Prioritized Implementation Plan</h2>
+<h3 id="p0-must-improve-first">P0 — Must Improve First</h3>
+<ol>
+<li>Fix frontend/backend API mismatches for quiz, flashcards, and study plan.</li>
+<li>Remove silent mock fallback in <code>aiApi.ask</code>; show a clear backend unavailable state.</li>
+<li>Improve Ask AI source/citation display.</li>
+<li>Localize Guided Lab and Lab labels to Arabic-first text.</li>
+<li>Add Homework Solver frontend page.</li>
+<li>Add loading/error/empty states consistently where missing.</li>
+<li>Audit mobile rendering for chat, sources, and guided solver.</li>
+</ol>
+<h3 id="p1-ai-tutor-quality">P1 — AI Tutor Quality</h3>
+<ol>
+<li>Add source panel and answer action system to Ask AI.</li>
+<li>Add weak-topic cards and recommendations on dashboard.</li>
+<li>Add quiz/flashcard CTAs from answers, lessons, and guided solver final summary.</li>
+<li>Add homework-to-guided-solver flow.</li>
+<li>Add RAG Admin Dashboard.</li>
+<li>Add re-embedding monitor.</li>
+<li>Add direct semantic RAG search adapter.</li>
+</ol>
+<h3 id="p2-polish">P2 — Polish</h3>
+<ol>
+<li>Add motion to Guided Lab step transitions and source cards.</li>
+<li>Add richer lab visuals.</li>
+<li>Improve badges, streaks, and XP feedback.</li>
+<li>Add personalization copy based on teaching preferences.</li>
+<li>Run an accessibility pass against WCAG 2.2 principles.</li>
+</ol>
+<h2 id="16-exact-files-to-modify-or-create">16. Exact Files to Modify or Create</h2>
+<h3 id="refactor-improve-existing-files">Refactor / Improve Existing Files</h3>
+<pre><code class="language-text">frontend-web/src/App.tsx
+frontend-web/src/api/aiApi.ts
+frontend-web/src/api/quizzesApi.ts
+frontend-web/src/api/flashcardsApi.ts
+frontend-web/src/api/studyPlanApi.ts
+frontend-web/src/pages/LabPage.tsx
+frontend-web/src/pages/LearningPages.tsx
+frontend-web/src/pages/LessonDetailPage.tsx
+frontend-web/src/pages/QuizzesPage.tsx
+frontend-web/src/pages/FlashcardsPage.tsx
+frontend-web/src/pages/StudyPlanPage.tsx
+frontend-web/src/pages/NotificationsPage.tsx
+frontend-web/src/components/DesignSystem.tsx
+frontend-web/src/index.css
+</code></pre>
+<h3 id="guided-lab-improvements">Guided Lab Improvements</h3>
+<pre><code class="language-text">frontend-web/src/features/guided-lab/api/interactiveSolverApi.ts
+frontend-web/src/features/guided-lab/components/ProblemInputCard.tsx
+frontend-web/src/features/guided-lab/components/SolverStepCard.tsx
+frontend-web/src/features/guided-lab/components/SolverFeedbackCard.tsx
+frontend-web/src/features/guided-lab/components/SourceCitationPanel.tsx
+frontend-web/src/features/guided-lab/components/FinalSummaryCard.tsx
+frontend-web/src/features/guided-lab/pages/GuidedLabPage.tsx
+frontend-web/src/features/guided-lab/pages/SolverSessionPage.tsx
+</code></pre>
+<h3 id="new-suggested-files">New Suggested Files</h3>
+<pre><code class="language-text">frontend-web/src/pages/HomeworkPage.tsx
+frontend-web/src/pages/HomeworkDetailPage.tsx
+frontend-web/src/api/homeworkApi.ts
+frontend-web/src/pages/admin/RagAdminPage.tsx
+frontend-web/src/pages/admin/RagEvaluationPage.tsx
+frontend-web/src/pages/admin/RagReembedPage.tsx
+frontend-web/src/pages/admin/RagQueryLogsPage.tsx
+frontend-web/src/api/adminRagApi.ts
+frontend-web/src/components/ai/AnswerSourcePanel.tsx
+frontend-web/src/components/ai/AnswerActions.tsx
+frontend-web/src/components/ai/MediaBlockRenderer.tsx
+frontend-web/src/components/ui/PageState.tsx
+</code></pre>
+<h2 id="17-final-recommendation">17. Final Recommendation</h2>
+<p>The frontend is beyond a prototype: it already has a strong shell, a coherent dark science theme, several real feature pages, and a promising Guided Problem Solver MVP.</p>
+<p>The next step is not a visual redesign from scratch. The right move is to harden the learning experience:</p>
+<ol>
+<li>Make Ask AI trustworthy with clear source evidence and no silent mock fallback.</li>
+<li>Promote Guided Problem Solver as the flagship interactive feature.</li>
+<li>Add Homework Solver as the missing student workflow.</li>
+<li>Align quiz, flashcard, and study-plan API contracts with the backend.</li>
+<li>Add admin RAG monitoring screens for debugging retrieval quality.</li>
+<li>Improve Arabic localization, formula rendering, and accessibility.</li>
+</ol>
+<p>If these are implemented in order, EduMind will feel less like a chatbot and more like a complete chemistry learning system:</p>
+<pre><code class="language-text">Learn → Ask → Solve step by step → Get corrected → Practice weak topics → Review with flashcards → Prepare for exams
+</code></pre>
+
+  </section>
+</main>
+</div>
+<script>
+function filterNav(){
+  const q=document.getElementById('navSearch').value.toLowerCase();
+  document.querySelectorAll('#nav a').forEach(a=>{a.style.display=a.textContent.toLowerCase().includes(q)?'block':'none'})
+}
+function filterTable(input,id){
+  const q=input.value.toLowerCase();
+  document.querySelectorAll('#'+id+' tbody tr').forEach(tr=>{tr.style.display=tr.textContent.toLowerCase().includes(q)?'':'none'})
+}
+function filterPriority(p,btn){
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+  document.querySelectorAll('#missingTable tbody tr').forEach(tr=>{
+    tr.style.display = (p==='all' || tr.dataset.priority.includes(p)) ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>

@@ -6,11 +6,14 @@
 #   redis          → Redis 7 (Celery broker + cache)
 #   backend        → FastAPI API server (uvicorn) — Swagger at :8000/docs
 #   celery-worker  → Celery background worker (PDF ingestion)
+#   celery-beat    → Celery scheduler for reminder/notification tasks
+#   frontend-web   → React/Vite web client at :5173
 #
 # Usage:
 #   docker compose up -d                                    # start all services
 #   docker compose up -d postgres redis                     # infra only (local dev)
 #   docker compose logs -f backend                          # tail API logs
+#   docker compose logs -f celery-beat                       # tail scheduled task logs
 #   docker compose exec backend ./entrypoint.sh migrate     # run migrations
 #   docker compose exec backend ./entrypoint.sh seed        # seed data
 #   docker compose exec backend python scripts/seed_interests.py  # seed directly
@@ -129,7 +132,68 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
+  # ---------------------------------------------------------------------------
+  # Celery Beat — Scheduler for reminders and notification delivery
+  # Sends periodic tasks to Redis; celery-worker consumes and executes them.
+  # ---------------------------------------------------------------------------
+  celery-beat:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: edumind-celery-beat
+    # Bypass entrypoint.sh because its "celery" mode starts a worker.
+    entrypoint: ["celery", "-A", "app.workers.celery_app:celery_app"]
+    command: ["beat", "--loglevel=info"]
+    env_file:
+      - ./backend/.env
+    environment:
+      DATABASE_URL: postgresql://edumind:edumind@postgres:5432/edumind
+      ASYNC_DATABASE_URL: postgresql+asyncpg://edumind:edumind@postgres:5432/edumind
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/1
+    volumes:
+      # Same data mounts as backend/worker for consistent app runtime context.
+      - ./data:/app/data
+      - edumind_textbook_cache:/app/data/textbooks
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # React/Vite Frontend — http://localhost:5173
+  # Uses a stock Node image so the repo does not need a separate frontend
+  # Dockerfile for local smoke testing.
+  # ---------------------------------------------------------------------------
+  frontend-web:
+    image: node:22-alpine
+    container_name: edumind-frontend-web
+    working_dir: /app
+    command: ["sh", "-lc", "npm ci && npm run dev -- --host 0.0.0.0"]
+    environment:
+      VITE_API_URL: http://127.0.0.1:8000
+      VITE_API_PREFIX: /api/v1
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend-web:/app
+      - edumind_frontend_node_modules:/app/node_modules
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:5173/ >/dev/null 2>&1 || exit 1"]
+      interval: 15s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+    restart: unless-stopped
+
 volumes:
   edumind_postgres_data:
   edumind_redis_data:
   edumind_textbook_cache:
+  edumind_frontend_node_modules:

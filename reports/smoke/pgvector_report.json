@@ -1,0 +1,15 @@
+{
+  "generated_at": "2026-06-16T11:49:52.759480+00:00",
+  "database_url": "postgresql://***:***@127.0.0.1:55433/edumind_migration_test",
+  "postgres_reachable": true,
+  "pgvector_extension_installed": true,
+  "pgvector_extension_version": "0.8.2",
+  "rag_chunks_table_exists": true,
+  "embedding_column_exists": true,
+  "embedding_column_type": "vector(768)",
+  "embedding_dimension_768": true,
+  "embedding_index_exists": true,
+  "similarity_operator_works": true,
+  "errors": [],
+  "result": "passed"
+}

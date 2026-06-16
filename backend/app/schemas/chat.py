@@ -19,10 +19,23 @@ class MessageResponse(BaseModel):
     session_id: int
     role: str
     content: str
+    answer_text: str | None = None
     format: str
     feedback: str | None = None
     media_url: str | None = None
     latency_ms: int | None = None
+    confidence: float | None = None
+    answer_type: str | None = None
+    route: str | None = None
+    grounding: str | None = None
+    sources: list[dict[str, Any]] = Field(default_factory=list)
+    citations: list[dict[str, Any]] = Field(default_factory=list)
+    blocks: list[dict[str, Any]] = Field(default_factory=list)
+    media_blocks: list[dict[str, Any]] = Field(default_factory=list)
+    source_blocks: list[dict[str, Any]] = Field(default_factory=list)
+    page_numbers: list[int] = Field(default_factory=list)
+    diagnostics: dict[str, Any] = Field(default_factory=dict)
+    suggested_next_action: str | None = None
     created_at: datetime
 
     model_config = {"from_attributes": True}
@@ -44,6 +57,14 @@ class SessionResponse(BaseModel):
 class SendMessageRequest(BaseModel):
     content: str = Field(..., min_length=1)
     format: str = "text"
+    answer_scope: str = Field("auto", pattern="^(auto|book_only|tutor_general)$")
+    source_types: list[str] | None = None
+    teaching_style: str | None = None
+    teaching_level: TeachingLevel | None = None
+    explanation_method: ExplanationMethod | None = None
+    learning_modes: list[LearningMode] | None = None
+    student_interests: list[StudentInterest] | None = None
+    action: str | None = None
 
 
 class ChatAskRequest(BaseModel):

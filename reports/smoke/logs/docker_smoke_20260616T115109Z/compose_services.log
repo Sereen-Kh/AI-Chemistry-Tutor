@@ -1,0 +1,690 @@
+edumind-celery-worker  | ╔══════════════════════════════════════════════════════╗
+edumind-celery-worker  | ║  EduMind Backend — Starting...                      ║
+edumind-celery-worker  | ╚══════════════════════════════════════════════════════╝
+edumind-celery-worker  | ⏳ Waiting for PostgreSQL...
+edumind-celery-worker  | ✅ PostgreSQL is ready
+edumind-celery-worker  | 🔧 Starting Celery worker...
+edumind-celery-worker  |  
+edumind-celery-worker  |  -------------- celery@771b0c640241 v5.4.0 (opalescent)
+edumind-celery-worker  | --- ***** ----- 
+edumind-celery-worker  | -- ******* ---- Linux-6.12.76-linuxkit-aarch64-with-glibc2.41 2026-06-16 11:56:49
+edumind-celery-worker  | - *** --- * --- 
+edumind-celery-worker  | - ** ---------- [config]
+edumind-celery-worker  | - ** ---------- .> app:         edumind:0xffff9e22f4d0
+edumind-celery-worker  | - ** ---------- .> transport:   redis://redis:6379/0
+edumind-celery-worker  | - ** ---------- .> results:     redis://redis:6379/1
+edumind-celery-worker  | - *** --- * --- .> concurrency: 2 (prefork)
+edumind-celery-worker  | -- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+edumind-celery-worker  | --- ***** ----- 
+edumind-celery-worker  |  -------------- [queues]
+edumind-celery-worker  |                 .> default          exchange=default(direct) key=default
+edumind-celery-worker  |                 .> ingestion        exchange=ingestion(direct) key=ingestion
+edumind-celery-worker  | 
+edumind-celery-worker  | [tasks]
+edumind-celery-worker  |   . app.workers.health_tasks.ping
+edumind-celery-worker  |   . app.workers.notification_tasks.check_pending_reminders
+edumind-celery-worker  |   . ingest_pdf
+edumind-celery-worker  |   . reembed_rag_chunks
+edumind-celery-worker  | 
+edumind-celery-worker  | [2026-06-16 11:56:50,068: WARNING/MainProcess] /usr/local/lib/python3.11/site-packages/celery/worker/consumer/consumer.py:508: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
+edumind-celery-worker  | whether broker connection retries are made during startup in Celery 6.0 and above.
+edumind-celery-worker  | If you wish to retain the existing behavior for retrying connections on startup,
+edumind-celery-worker  | you should set broker_connection_retry_on_startup to True.
+edumind-celery-worker  |   warnings.warn(
+edumind-celery-worker  | 
+edumind-celery-worker  | [2026-06-16 11:56:50,122: INFO/MainProcess] Connected to redis://redis:6379/0
+edumind-celery-worker  | [2026-06-16 11:56:50,124: WARNING/MainProcess] /usr/local/lib/python3.11/site-packages/celery/worker/consumer/consumer.py:508: CPendingDeprecationWarning: The broker_connection_retry configuration setting will no longer determine
+edumind-celery-worker  | whether broker connection retries are made during startup in Celery 6.0 and above.
+edumind-celery-worker  | If you wish to retain the existing behavior for retrying connections on startup,
+edumind-celery-worker  | you should set broker_connection_retry_on_startup to True.
+edumind-celery-worker  |   warnings.warn(
+edumind-celery-worker  | 
+edumind-celery-worker  | [2026-06-16 11:56:50,127: INFO/MainProcess] mingle: searching for neighbors
+edumind-celery-worker  | [2026-06-16 11:56:51,149: INFO/MainProcess] mingle: all alone
+edumind-celery-worker  | [2026-06-16 11:56:51,175: INFO/MainProcess] celery@771b0c640241 ready.
+edumind-celery-worker  | [2026-06-16 11:57:47,946: INFO/MainProcess] Task app.workers.notification_tasks.check_pending_reminders[1b1e7ea3-c156-4fa3-975c-74d07b3ee542] received
+edumind-celery-worker  | [2026-06-16 11:57:48,164: INFO/ForkPoolWorker-2] Task app.workers.notification_tasks.check_pending_reminders[1b1e7ea3-c156-4fa3-975c-74d07b3ee542] succeeded in 0.20712724999975762s: 'Processed reminders. Sent: 0, Skipped: 0, Failed: 0'
+edumind-celery-worker  | [2026-06-16 11:58:47,903: INFO/MainProcess] Task app.workers.notification_tasks.check_pending_reminders[ab2db917-52ac-4cef-bdaf-cbfb9dbc46fc] received
+edumind-celery-worker  | [2026-06-16 11:58:47,949: INFO/ForkPoolWorker-2] Task app.workers.notification_tasks.check_pending_reminders[ab2db917-52ac-4cef-bdaf-cbfb9dbc46fc] succeeded in 0.03761537499985934s: 'Processed reminders. Sent: 0, Skipped: 0, Failed: 0'
+edumind-frontend-web   | npm error code EUSAGE
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error `npm ci` can only install packages when your package.json and package-lock.json or npm-shrinkwrap.json are in sync. Please update your lock file with `npm install` before continuing.
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Missing: @emnapi/core@1.11.1 from lock file
+edumind-frontend-web   | npm error Missing: @emnapi/runtime@1.11.1 from lock file
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Clean install a project
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Usage:
+edumind-frontend-web   | npm error npm ci
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Options:
+edumind-frontend-web   | npm error [--install-strategy <hoisted|nested|shallow|linked>] [--legacy-bundling]
+edumind-frontend-web   | npm error [--global-style] [--omit <dev|optional|peer> [--omit <dev|optional|peer> ...]]
+edumind-frontend-web   | npm error [--include <prod|dev|optional|peer> [--include <prod|dev|optional|peer> ...]]
+edumind-frontend-web   | npm error [--strict-peer-deps] [--foreground-scripts] [--ignore-scripts] [--no-audit]
+edumind-frontend-web   | npm error [--no-bin-links] [--no-fund] [--dry-run]
+edumind-frontend-web   | npm error [-w|--workspace <workspace-name> [-w|--workspace <workspace-name> ...]]
+edumind-frontend-web   | npm error [-ws|--workspaces] [--include-workspace-root] [--install-links]
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error aliases: clean-install, ic, install-clean, isntall-clean
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Run "npm help ci" for more info
+edumind-frontend-web   | npm error A complete log of this run can be found in: /root/.npm/_logs/2026-06-16T11_56_56_666Z-debug-0.log
+edumind-frontend-web   | npm error code EUSAGE
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error `npm ci` can only install packages when your package.json and package-lock.json or npm-shrinkwrap.json are in sync. Please update your lock file with `npm install` before continuing.
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Missing: @emnapi/core@1.11.1 from lock file
+edumind-frontend-web   | npm error Missing: @emnapi/runtime@1.11.1 from lock file
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Clean install a project
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Usage:
+edumind-frontend-web   | npm error npm ci
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Options:
+edumind-frontend-web   | npm error [--install-strategy <hoisted|nested|shallow|linked>] [--legacy-bundling]
+edumind-frontend-web   | npm error [--global-style] [--omit <dev|optional|peer> [--omit <dev|optional|peer> ...]]
+edumind-frontend-web   | npm error [--include <prod|dev|optional|peer> [--include <prod|dev|optional|peer> ...]]
+edumind-frontend-web   | npm error [--strict-peer-deps] [--foreground-scripts] [--ignore-scripts] [--no-audit]
+edumind-frontend-web   | npm error [--no-bin-links] [--no-fund] [--dry-run]
+edumind-frontend-web   | npm error [-w|--workspace <workspace-name> [-w|--workspace <workspace-name> ...]]
+edumind-frontend-web   | npm error [-ws|--workspaces] [--include-workspace-root] [--install-links]
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error aliases: clean-install, ic, install-clean, isntall-clean
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Run "npm help ci" for more info
+edumind-frontend-web   | npm error A complete log of this run can be found in: /root/.npm/_logs/2026-06-16T11_56_59_253Z-debug-0.log
+edumind-frontend-web   | npm error code EUSAGE
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error `npm ci` can only install packages when your package.json and package-lock.json or npm-shrinkwrap.json are in sync. Please update your lock file with `npm install` before continuing.
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Missing: @emnapi/core@1.11.1 from lock file
+edumind-frontend-web   | npm error Missing: @emnapi/runtime@1.11.1 from lock file
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Clean install a project
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Usage:
+edumind-frontend-web   | npm error npm ci
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Options:
+edumind-frontend-web   | npm error [--install-strategy <hoisted|nested|shallow|linked>] [--legacy-bundling]
+edumind-frontend-web   | npm error [--global-style] [--omit <dev|optional|peer> [--omit <dev|optional|peer> ...]]
+edumind-frontend-web   | npm error [--include <prod|dev|optional|peer> [--include <prod|dev|optional|peer> ...]]
+edumind-frontend-web   | npm error [--strict-peer-deps] [--foreground-scripts] [--ignore-scripts] [--no-audit]
+edumind-frontend-web   | npm error [--no-bin-links] [--no-fund] [--dry-run]
+edumind-frontend-web   | npm error [-w|--workspace <workspace-name> [-w|--workspace <workspace-name> ...]]
+edumind-frontend-web   | npm error [-ws|--workspaces] [--include-workspace-root] [--install-links]
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error aliases: clean-install, ic, install-clean, isntall-clean
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Run "npm help ci" for more info
+edumind-frontend-web   | npm error A complete log of this run can be found in: /root/.npm/_logs/2026-06-16T11_57_00_157Z-debug-0.log
+edumind-frontend-web   | npm error code EUSAGE
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error `npm ci` can only install packages when your package.json and package-lock.json or npm-shrinkwrap.json are in sync. Please update your lock file with `npm install` before continuing.
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Missing: @emnapi/core@1.11.1 from lock file
+edumind-frontend-web   | npm error Missing: @emnapi/runtime@1.11.1 from lock file
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Clean install a project
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Usage:
+edumind-frontend-web   | npm error npm ci
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Options:
+edumind-frontend-web   | npm error [--install-strategy <hoisted|nested|shallow|linked>] [--legacy-bundling]
+edumind-frontend-web   | npm error [--global-style] [--omit <dev|optional|peer> [--omit <dev|optional|peer> ...]]
+edumind-frontend-web   | npm error [--include <prod|dev|optional|peer> [--include <prod|dev|optional|peer> ...]]
+edumind-frontend-web   | npm error [--strict-peer-deps] [--foreground-scripts] [--ignore-scripts] [--no-audit]
+edumind-frontend-web   | npm error [--no-bin-links] [--no-fund] [--dry-run]
+edumind-frontend-web   | npm error [-w|--workspace <workspace-name> [-w|--workspace <workspace-name> ...]]
+edumind-frontend-web   | npm error [-ws|--workspaces] [--include-workspace-root] [--install-links]
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error aliases: clean-install, ic, install-clean, isntall-clean
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Run "npm help ci" for more info
+edumind-frontend-web   | npm error A complete log of this run can be found in: /root/.npm/_logs/2026-06-16T11_57_01_347Z-debug-0.log
+edumind-frontend-web   | npm error code EUSAGE
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error `npm ci` can only install packages when your package.json and package-lock.json or npm-shrinkwrap.json are in sync. Please update your lock file with `npm install` before continuing.
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Missing: @emnapi/core@1.11.1 from lock file
+edumind-frontend-web   | npm error Missing: @emnapi/runtime@1.11.1 from lock file
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Clean install a project
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Usage:
+edumind-frontend-web   | npm error npm ci
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Options:
+edumind-frontend-web   | npm error [--install-strategy <hoisted|nested|shallow|linked>] [--legacy-bundling]
+edumind-frontend-web   | npm error [--global-style] [--omit <dev|optional|peer> [--omit <dev|optional|peer> ...]]
+edumind-frontend-web   | npm error [--include <prod|dev|optional|peer> [--include <prod|dev|optional|peer> ...]]
+edumind-frontend-web   | npm error [--strict-peer-deps] [--foreground-scripts] [--ignore-scripts] [--no-audit]
+edumind-frontend-web   | npm error [--no-bin-links] [--no-fund] [--dry-run]
+edumind-frontend-web   | npm error [-w|--workspace <workspace-name> [-w|--workspace <workspace-name> ...]]
+edumind-frontend-web   | npm error [-ws|--workspaces] [--include-workspace-root] [--install-links]
+edumind-frontend-web   | npm error
+edumind-celery-beat    | celery beat v5.4.0 (opalescent) is starting.
+edumind-celery-beat    | __    -    ... __   -        _
+edumind-celery-beat    | LocalTime -> 2026-06-16 11:56:47
+edumind-celery-beat    | Configuration ->
+edumind-celery-beat    |     . broker -> redis://redis:6379/0
+edumind-celery-beat    |     . loader -> celery.loaders.app.AppLoader
+edumind-celery-beat    |     . scheduler -> celery.beat.PersistentScheduler
+edumind-celery-beat    |     . db -> celerybeat-schedule
+edumind-celery-beat    |     . logfile -> [stderr]@%INFO
+edumind-celery-beat    |     . maxinterval -> 5.00 minutes (300s)
+edumind-celery-beat    | [2026-06-16 11:56:47,848: INFO/MainProcess] beat: Starting...
+edumind-celery-beat    | [2026-06-16 11:57:47,914: INFO/MainProcess] Scheduler: Sending due task check-pending-reminders-every-minute (app.workers.notification_tasks.check_pending_reminders)
+edumind-celery-beat    | [2026-06-16 11:58:47,885: INFO/MainProcess] Scheduler: Sending due task check-pending-reminders-every-minute (app.workers.notification_tasks.check_pending_reminders)
+edumind-frontend-web   | npm error aliases: clean-install, ic, install-clean, isntall-clean
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Run "npm help ci" for more info
+edumind-frontend-web   | npm error A complete log of this run can be found in: /root/.npm/_logs/2026-06-16T11_57_03_044Z-debug-0.log
+edumind-frontend-web   | npm error code EUSAGE
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error `npm ci` can only install packages when your package.json and package-lock.json or npm-shrinkwrap.json are in sync. Please update your lock file with `npm install` before continuing.
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Missing: @emnapi/core@1.11.1 from lock file
+edumind-frontend-web   | npm error Missing: @emnapi/runtime@1.11.1 from lock file
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Clean install a project
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Usage:
+edumind-frontend-web   | npm error npm ci
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Options:
+edumind-frontend-web   | npm error [--install-strategy <hoisted|nested|shallow|linked>] [--legacy-bundling]
+edumind-frontend-web   | npm error [--global-style] [--omit <dev|optional|peer> [--omit <dev|optional|peer> ...]]
+edumind-frontend-web   | npm error [--include <prod|dev|optional|peer> [--include <prod|dev|optional|peer> ...]]
+edumind-frontend-web   | npm error [--strict-peer-deps] [--foreground-scripts] [--ignore-scripts] [--no-audit]
+edumind-frontend-web   | npm error [--no-bin-links] [--no-fund] [--dry-run]
+edumind-frontend-web   | npm error [-w|--workspace <workspace-name> [-w|--workspace <workspace-name> ...]]
+edumind-frontend-web   | npm error [-ws|--workspaces] [--include-workspace-root] [--install-links]
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error aliases: clean-install, ic, install-clean, isntall-clean
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Run "npm help ci" for more info
+edumind-frontend-web   | npm error A complete log of this run can be found in: /root/.npm/_logs/2026-06-16T11_57_05_669Z-debug-0.log
+edumind-frontend-web   | npm error code EUSAGE
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error `npm ci` can only install packages when your package.json and package-lock.json or npm-shrinkwrap.json are in sync. Please update your lock file with `npm install` before continuing.
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Missing: @emnapi/core@1.11.1 from lock file
+edumind-frontend-web   | npm error Missing: @emnapi/runtime@1.11.1 from lock file
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Clean install a project
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Usage:
+edumind-frontend-web   | npm error npm ci
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Options:
+edumind-frontend-web   | npm error [--install-strategy <hoisted|nested|shallow|linked>] [--legacy-bundling]
+edumind-frontend-web   | npm error [--global-style] [--omit <dev|optional|peer> [--omit <dev|optional|peer> ...]]
+edumind-frontend-web   | npm error [--include <prod|dev|optional|peer> [--include <prod|dev|optional|peer> ...]]
+edumind-frontend-web   | npm error [--strict-peer-deps] [--foreground-scripts] [--ignore-scripts] [--no-audit]
+edumind-frontend-web   | npm error [--no-bin-links] [--no-fund] [--dry-run]
+edumind-frontend-web   | npm error [-w|--workspace <workspace-name> [-w|--workspace <workspace-name> ...]]
+edumind-frontend-web   | npm error [-ws|--workspaces] [--include-workspace-root] [--install-links]
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error aliases: clean-install, ic, install-clean, isntall-clean
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Run "npm help ci" for more info
+edumind-frontend-web   | npm error A complete log of this run can be found in: /root/.npm/_logs/2026-06-16T11_57_09_787Z-debug-0.log
+edumind-frontend-web   | npm error code EUSAGE
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error `npm ci` can only install packages when your package.json and package-lock.json or npm-shrinkwrap.json are in sync. Please update your lock file with `npm install` before continuing.
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Missing: @emnapi/core@1.11.1 from lock file
+edumind-frontend-web   | npm error Missing: @emnapi/runtime@1.11.1 from lock file
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Clean install a project
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Usage:
+edumind-frontend-web   | npm error npm ci
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Options:
+edumind-frontend-web   | npm error [--install-strategy <hoisted|nested|shallow|linked>] [--legacy-bundling]
+edumind-frontend-web   | npm error [--global-style] [--omit <dev|optional|peer> [--omit <dev|optional|peer> ...]]
+edumind-frontend-web   | npm error [--include <prod|dev|optional|peer> [--include <prod|dev|optional|peer> ...]]
+edumind-frontend-web   | npm error [--strict-peer-deps] [--foreground-scripts] [--ignore-scripts] [--no-audit]
+edumind-frontend-web   | npm error [--no-bin-links] [--no-fund] [--dry-run]
+edumind-frontend-web   | npm error [-w|--workspace <workspace-name> [-w|--workspace <workspace-name> ...]]
+edumind-frontend-web   | npm error [-ws|--workspaces] [--include-workspace-root] [--install-links]
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error aliases: clean-install, ic, install-clean, isntall-clean
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Run "npm help ci" for more info
+edumind-frontend-web   | npm error A complete log of this run can be found in: /root/.npm/_logs/2026-06-16T11_57_17_077Z-debug-0.log
+edumind-frontend-web   | npm error code EUSAGE
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error `npm ci` can only install packages when your package.json and package-lock.json or npm-shrinkwrap.json are in sync. Please update your lock file with `npm install` before continuing.
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Missing: @emnapi/core@1.11.1 from lock file
+edumind-frontend-web   | npm error Missing: @emnapi/runtime@1.11.1 from lock file
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Clean install a project
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Usage:
+edumind-frontend-web   | npm error npm ci
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Options:
+edumind-frontend-web   | npm error [--install-strategy <hoisted|nested|shallow|linked>] [--legacy-bundling]
+edumind-frontend-web   | npm error [--global-style] [--omit <dev|optional|peer> [--omit <dev|optional|peer> ...]]
+edumind-frontend-web   | npm error [--include <prod|dev|optional|peer> [--include <prod|dev|optional|peer> ...]]
+edumind-frontend-web   | npm error [--strict-peer-deps] [--foreground-scripts] [--ignore-scripts] [--no-audit]
+edumind-frontend-web   | npm error [--no-bin-links] [--no-fund] [--dry-run]
+edumind-frontend-web   | npm error [-w|--workspace <workspace-name> [-w|--workspace <workspace-name> ...]]
+edumind-frontend-web   | npm error [-ws|--workspaces] [--include-workspace-root] [--install-links]
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error aliases: clean-install, ic, install-clean, isntall-clean
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Run "npm help ci" for more info
+edumind-frontend-web   | npm error A complete log of this run can be found in: /root/.npm/_logs/2026-06-16T11_57_30_697Z-debug-0.log
+edumind-frontend-web   | npm error code EUSAGE
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error `npm ci` can only install packages when your package.json and package-lock.json or npm-shrinkwrap.json are in sync. Please update your lock file with `npm install` before continuing.
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Missing: @emnapi/core@1.11.1 from lock file
+edumind-frontend-web   | npm error Missing: @emnapi/runtime@1.11.1 from lock file
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Clean install a project
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Usage:
+edumind-frontend-web   | npm error npm ci
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Options:
+edumind-frontend-web   | npm error [--install-strategy <hoisted|nested|shallow|linked>] [--legacy-bundling]
+edumind-frontend-web   | npm error [--global-style] [--omit <dev|optional|peer> [--omit <dev|optional|peer> ...]]
+edumind-frontend-web   | npm error [--include <prod|dev|optional|peer> [--include <prod|dev|optional|peer> ...]]
+edumind-frontend-web   | npm error [--strict-peer-deps] [--foreground-scripts] [--ignore-scripts] [--no-audit]
+edumind-frontend-web   | npm error [--no-bin-links] [--no-fund] [--dry-run]
+edumind-frontend-web   | npm error [-w|--workspace <workspace-name> [-w|--workspace <workspace-name> ...]]
+edumind-frontend-web   | npm error [-ws|--workspaces] [--include-workspace-root] [--install-links]
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error aliases: clean-install, ic, install-clean, isntall-clean
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Run "npm help ci" for more info
+edumind-frontend-web   | npm error A complete log of this run can be found in: /root/.npm/_logs/2026-06-16T11_57_57_127Z-debug-0.log
+edumind-frontend-web   | npm error code EUSAGE
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error `npm ci` can only install packages when your package.json and package-lock.json or npm-shrinkwrap.json are in sync. Please update your lock file with `npm install` before continuing.
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Missing: @emnapi/core@1.11.1 from lock file
+edumind-frontend-web   | npm error Missing: @emnapi/runtime@1.11.1 from lock file
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Clean install a project
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Usage:
+edumind-frontend-web   | npm error npm ci
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Options:
+edumind-frontend-web   | npm error [--install-strategy <hoisted|nested|shallow|linked>] [--legacy-bundling]
+edumind-frontend-web   | npm error [--global-style] [--omit <dev|optional|peer> [--omit <dev|optional|peer> ...]]
+edumind-frontend-web   | npm error [--include <prod|dev|optional|peer> [--include <prod|dev|optional|peer> ...]]
+edumind-frontend-web   | npm error [--strict-peer-deps] [--foreground-scripts] [--ignore-scripts] [--no-audit]
+edumind-frontend-web   | npm error [--no-bin-links] [--no-fund] [--dry-run]
+edumind-frontend-web   | npm error [-w|--workspace <workspace-name> [-w|--workspace <workspace-name> ...]]
+edumind-frontend-web   | npm error [-ws|--workspaces] [--include-workspace-root] [--install-links]
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error aliases: clean-install, ic, install-clean, isntall-clean
+edumind-frontend-web   | npm error
+edumind-frontend-web   | npm error Run "npm help ci" for more info
+edumind-frontend-web   | npm error A complete log of this run can be found in: /root/.npm/_logs/2026-06-16T11_58_49_212Z-debug-0.log
+edumind-backend        | ╔══════════════════════════════════════════════════════╗
+edumind-backend        | ║  EduMind Backend — Starting...                      ║
+edumind-backend        | ╚══════════════════════════════════════════════════════╝
+edumind-backend        | ⏳ Waiting for PostgreSQL...
+edumind-backend        | ✅ PostgreSQL is ready
+edumind-backend        | 🔄 Running Alembic migrations...
+edumind-backend        | INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+edumind-backend        | INFO  [alembic.runtime.migration] Will assume transactional DDL.
+edumind-backend        | INFO  [alembic.runtime.migration] Running upgrade  -> 0001_initial_schema, Initial EduMind schema.
+edumind-backend        | INFO  [alembic.runtime.migration] Running upgrade 0001_initial_schema -> 0002_preference_dimensions, Add multi-dimensional tutor preferences.
+edumind-backend        | INFO  [alembic.runtime.migration] Running upgrade 0002_preference_dimensions -> 0003_notifications, Add reminder notification system.
+edumind-backend        | INFO  [alembic.runtime.migration] Running upgrade 0003_notifications -> 0004_rag_hardening, Add RAG embedding metadata and retrieval logs.
+edumind-backend        | INFO  [alembic.runtime.migration] Running upgrade 0004_rag_hardening -> 0005_interactive_solver, Add guided interactive chemistry solver tables.
+edumind-backend        | INFO  [alembic.runtime.migration] Running upgrade 0005_interactive_solver -> 0006_rag_embedding_status, Add RAG embedding status columns.
+edumind-backend        | INFO  [alembic.runtime.migration] Running upgrade 0006_rag_embedding_status -> 0007_chat_message_rich_metadata, Add rich chat message metadata columns.
+edumind-backend        | ✅ Migrations complete
+edumind-backend        | 🚀 Starting FastAPI server...
+edumind-backend        | INFO:     Started server process [1]
+edumind-backend        | INFO:     Waiting for application startup.
+edumind-backend        | INFO:app.main:Starting EduMind API...
+edumind-backend        | INFO:     Application startup complete.
+edumind-backend        | INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+edumind-backend        | INFO:app.main:GET /health - 200 - 0.0979s
+edumind-backend        | INFO:     127.0.0.1:55476 - "GET /health HTTP/1.1" 200 OK
+edumind-backend        | INFO:app.main:GET /health - 200 - 0.0039s
+edumind-backend        | INFO:     192.168.65.1:52775 - "GET /health HTTP/1.1" 200 OK
+edumind-backend        | INFO:app.main:GET /health - 200 - 0.0213s
+edumind-backend        | INFO:     127.0.0.1:51706 - "GET /health HTTP/1.1" 200 OK
+edumind-backend        | INFO:app.main:GET /health - 200 - 0.0192s
+edumind-backend        | INFO:     127.0.0.1:60636 - "GET /health HTTP/1.1" 200 OK
+edumind-backend        | INFO:app.main:GET /health - 200 - 0.0139s
+edumind-backend        | INFO:     127.0.0.1:59780 - "GET /health HTTP/1.1" 200 OK
+edumind-postgres       | The files belonging to this database system will be owned by user "postgres".
+edumind-postgres       | This user must also own the server process.
+edumind-postgres       | 
+edumind-postgres       | The database cluster will be initialized with locale "en_US.utf8".
+edumind-postgres       | The default database encoding has accordingly been set to "UTF8".
+edumind-postgres       | The default text search configuration will be set to "english".
+edumind-postgres       | 
+edumind-postgres       | Data page checksums are disabled.
+edumind-postgres       | 
+edumind-postgres       | fixing permissions on existing directory /var/lib/postgresql/data ... ok
+edumind-postgres       | creating subdirectories ... ok
+edumind-postgres       | selecting dynamic shared memory implementation ... posix
+edumind-postgres       | selecting default max_connections ... 100
+edumind-postgres       | selecting default shared_buffers ... 128MB
+edumind-postgres       | selecting default time zone ... Etc/UTC
+edumind-postgres       | creating configuration files ... ok
+edumind-postgres       | running bootstrap script ... ok
+edumind-postgres       | performing post-bootstrap initialization ... ok
+edumind-postgres       | initdb: warning: enabling "trust" authentication for local connections
+edumind-postgres       | initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+edumind-postgres       | syncing data to disk ... ok
+edumind-postgres       | 
+edumind-postgres       | 
+edumind-postgres       | Success. You can now start the database server using:
+edumind-postgres       | 
+edumind-postgres       |     pg_ctl -D /var/lib/postgresql/data -l logfile start
+edumind-postgres       | 
+edumind-postgres       | waiting for server to start....2026-06-12 19:03:09.973 UTC [48] LOG:  starting PostgreSQL 16.14 (Debian 16.14-1.pgdg12+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
+edumind-postgres       | 2026-06-12 19:03:09.974 UTC [48] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+edumind-postgres       | 2026-06-12 19:03:09.976 UTC [51] LOG:  database system was shut down at 2026-06-12 19:03:09 UTC
+edumind-postgres       | 2026-06-12 19:03:09.980 UTC [48] LOG:  database system is ready to accept connections
+edumind-postgres       |  done
+edumind-postgres       | server started
+edumind-postgres       | CREATE DATABASE
+edumind-postgres       | 
+edumind-postgres       | 
+edumind-postgres       | /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+edumind-postgres       | 
+edumind-postgres       | waiting for server to shut down....2026-06-12 19:03:10.163 UTC [48] LOG:  received fast shutdown request
+edumind-postgres       | 2026-06-12 19:03:10.164 UTC [48] LOG:  aborting any active transactions
+edumind-postgres       | 2026-06-12 19:03:10.166 UTC [48] LOG:  background worker "logical replication launcher" (PID 54) exited with exit code 1
+edumind-postgres       | 2026-06-12 19:03:10.166 UTC [49] LOG:  shutting down
+edumind-postgres       | 2026-06-12 19:03:10.167 UTC [49] LOG:  checkpoint starting: shutdown immediate
+edumind-postgres       | 2026-06-12 19:03:10.203 UTC [49] LOG:  checkpoint complete: wrote 922 buffers (5.6%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.012 s, sync=0.023 s, total=0.038 s; sync files=301, longest=0.006 s, average=0.001 s; distance=4255 kB, estimate=4255 kB; lsn=0/1912080, redo lsn=0/1912080
+edumind-postgres       | 2026-06-12 19:03:10.207 UTC [48] LOG:  database system is shut down
+edumind-postgres       |  done
+edumind-postgres       | server stopped
+edumind-postgres       | 
+edumind-postgres       | PostgreSQL init process complete; ready for start up.
+edumind-postgres       | 
+edumind-postgres       | 2026-06-12 19:03:10.286 UTC [1] LOG:  starting PostgreSQL 16.14 (Debian 16.14-1.pgdg12+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
+edumind-postgres       | 2026-06-12 19:03:10.287 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+edumind-postgres       | 2026-06-12 19:03:10.287 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+edumind-postgres       | 2026-06-12 19:03:10.289 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+edumind-postgres       | 2026-06-12 19:03:10.291 UTC [64] LOG:  database system was shut down at 2026-06-12 19:03:10 UTC
+edumind-postgres       | 2026-06-12 19:03:10.295 UTC [1] LOG:  database system is ready to accept connections
+edumind-postgres       | 2026-06-12 19:08:10.295 UTC [62] LOG:  checkpoint starting: time
+edumind-postgres       | 2026-06-12 19:08:14.671 UTC [62] LOG:  checkpoint complete: wrote 45 buffers (0.3%); 0 WAL file(s) added, 0 removed, 0 recycled; write=4.357 s, sync=0.005 s, total=4.378 s; sync files=12, longest=0.003 s, average=0.001 s; distance=261 kB, estimate=261 kB; lsn=0/19534D8, redo lsn=0/19534A0
+edumind-postgres       | 
+edumind-postgres       | PostgreSQL Database directory appears to contain a database; Skipping initialization
+edumind-postgres       | 
+edumind-postgres       | 2026-06-13 07:56:57.708 UTC [1] LOG:  starting PostgreSQL 16.14 (Debian 16.14-1.pgdg12+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
+edumind-postgres       | 2026-06-13 07:56:57.709 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+edumind-postgres       | 2026-06-13 07:56:57.709 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+edumind-postgres       | 2026-06-13 07:56:57.715 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+edumind-postgres       | 2026-06-13 07:56:57.725 UTC [29] LOG:  database system was interrupted; last known up at 2026-06-12 19:08:14 UTC
+edumind-postgres       | 2026-06-13 07:56:58.042 UTC [29] LOG:  database system was not properly shut down; automatic recovery in progress
+edumind-postgres       | 2026-06-13 07:56:58.045 UTC [29] LOG:  redo starts at 0/19534A0
+edumind-postgres       | 2026-06-13 07:56:58.045 UTC [29] LOG:  invalid record length at 0/1953588: expected at least 24, got 0
+edumind-postgres       | 2026-06-13 07:56:58.045 UTC [29] LOG:  redo done at 0/1953550 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+edumind-postgres       | 2026-06-13 07:56:58.050 UTC [27] LOG:  checkpoint starting: end-of-recovery immediate wait
+edumind-postgres       | 2026-06-13 07:56:58.058 UTC [27] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.003 s, sync=0.001 s, total=0.010 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/1953588, redo lsn=0/1953588
+edumind-postgres       | 2026-06-13 07:56:58.106 UTC [1] LOG:  database system is ready to accept connections
+edumind-postgres       | 2026-06-13 20:00:04.612 UTC [1] LOG:  received fast shutdown request
+edumind-postgres       | 2026-06-13 20:00:04.678 UTC [1] LOG:  aborting any active transactions
+edumind-postgres       | 2026-06-13 20:00:04.719 UTC [1] LOG:  background worker "logical replication launcher" (PID 32) exited with exit code 1
+edumind-postgres       | 2026-06-13 20:00:04.725 UTC [27] LOG:  shutting down
+edumind-postgres       | 2026-06-13 20:00:04.737 UTC [27] LOG:  checkpoint starting: shutdown immediate
+edumind-postgres       | 2026-06-13 20:00:04.790 UTC [27] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.030 s, sync=0.001 s, total=0.064 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=0 kB; lsn=0/1953638, redo lsn=0/1953638
+edumind-postgres       | 2026-06-13 20:00:04.804 UTC [1] LOG:  database system is shut down
+edumind-postgres       | 
+edumind-postgres       | PostgreSQL Database directory appears to contain a database; Skipping initialization
+edumind-postgres       | 
+edumind-postgres       | 2026-06-14 19:50:51.598 UTC [1] LOG:  starting PostgreSQL 16.14 (Debian 16.14-1.pgdg12+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
+edumind-postgres       | 2026-06-14 19:50:51.599 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+edumind-postgres       | 2026-06-14 19:50:51.599 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+edumind-postgres       | 2026-06-14 19:50:51.609 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+edumind-postgres       | 2026-06-14 19:50:51.625 UTC [29] LOG:  database system was shut down at 2026-06-13 20:00:04 UTC
+edumind-postgres       | 2026-06-14 19:50:51.671 UTC [1] LOG:  database system is ready to accept connections
+edumind-postgres       | 2026-06-14 19:55:51.740 UTC [27] LOG:  checkpoint starting: time
+edumind-postgres       | 2026-06-14 19:55:51.751 UTC [27] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.003 s, sync=0.002 s, total=0.011 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/1953720, redo lsn=0/19536E8
+edumind-postgres       | 2026-06-14 22:15:54.642 UTC [1] LOG:  received fast shutdown request
+edumind-postgres       | 2026-06-14 22:15:54.644 UTC [1] LOG:  aborting any active transactions
+edumind-postgres       | 2026-06-14 22:15:54.647 UTC [1] LOG:  background worker "logical replication launcher" (PID 32) exited with exit code 1
+edumind-postgres       | 2026-06-14 22:15:54.647 UTC [27] LOG:  shutting down
+edumind-postgres       | 2026-06-14 22:15:54.649 UTC [27] LOG:  checkpoint starting: shutdown immediate
+edumind-postgres       | 2026-06-14 22:15:54.652 UTC [27] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.001 s, sync=0.001 s, total=0.006 s; sync files=0, longest=0.000 s, average=0.000 s; distance=0 kB, estimate=0 kB; lsn=0/19537D0, redo lsn=0/19537D0
+edumind-postgres       | 2026-06-14 22:15:54.655 UTC [1] LOG:  database system is shut down
+edumind-postgres       | 
+edumind-postgres       | PostgreSQL Database directory appears to contain a database; Skipping initialization
+edumind-postgres       | 
+edumind-postgres       | 2026-06-15 04:38:46.109 UTC [1] LOG:  starting PostgreSQL 16.14 (Debian 16.14-1.pgdg12+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
+edumind-postgres       | 2026-06-15 04:38:46.111 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+edumind-postgres       | 2026-06-15 04:38:46.111 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+edumind-postgres       | 2026-06-15 04:38:46.115 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+edumind-postgres       | 2026-06-15 04:38:46.125 UTC [29] LOG:  database system was shut down at 2026-06-14 22:15:54 UTC
+edumind-postgres       | 2026-06-15 04:38:46.187 UTC [1] LOG:  database system is ready to accept connections
+edumind-postgres       | 2026-06-15 04:38:54.949 UTC [1] LOG:  received fast shutdown request
+edumind-postgres       | 2026-06-15 04:38:54.954 UTC [1] LOG:  aborting any active transactions
+edumind-postgres       | 2026-06-15 04:38:54.956 UTC [1] LOG:  background worker "logical replication launcher" (PID 32) exited with exit code 1
+edumind-postgres       | 2026-06-15 04:38:54.957 UTC [27] LOG:  shutting down
+edumind-postgres       | 2026-06-15 04:38:54.957 UTC [27] LOG:  checkpoint starting: shutdown immediate
+edumind-postgres       | 2026-06-15 04:38:54.965 UTC [27] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.003 s, sync=0.001 s, total=0.009 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/1953848, redo lsn=0/1953848
+edumind-postgres       | 2026-06-15 04:38:54.968 UTC [1] LOG:  database system is shut down
+edumind-postgres       | 
+edumind-postgres       | PostgreSQL Database directory appears to contain a database; Skipping initialization
+edumind-postgres       | 
+edumind-postgres       | 2026-06-16 10:38:09.961 UTC [1] LOG:  starting PostgreSQL 16.14 (Debian 16.14-1.pgdg12+1) on aarch64-unknown-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
+edumind-postgres       | 2026-06-16 10:38:09.969 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+edumind-postgres       | 2026-06-16 10:38:09.969 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+edumind-postgres       | 2026-06-16 10:38:10.001 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+edumind-postgres       | 2026-06-16 10:38:10.009 UTC [28] LOG:  database system was shut down at 2026-06-15 04:38:54 UTC
+edumind-postgres       | 2026-06-16 10:38:10.036 UTC [1] LOG:  database system is ready to accept connections
+edumind-postgres       | 2026-06-16 10:43:10.089 UTC [26] LOG:  checkpoint starting: time
+edumind-postgres       | 2026-06-16 10:43:10.102 UTC [26] LOG:  checkpoint complete: wrote 3 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.003 s, sync=0.002 s, total=0.016 s; sync files=2, longest=0.001 s, average=0.001 s; distance=0 kB, estimate=0 kB; lsn=0/1953930, redo lsn=0/19538F8
+edumind-postgres       | 2026-06-16 11:57:21.526 UTC [26] LOG:  checkpoint starting: time
+edumind-postgres       | 2026-06-16 11:58:16.542 UTC [26] LOG:  checkpoint complete: wrote 526 buffers (3.2%); 1 WAL file(s) added, 0 removed, 0 recycled; write=54.881 s, sync=0.033 s, total=55.016 s; sync files=433, longest=0.002 s, average=0.001 s; distance=2890 kB, estimate=2890 kB; lsn=0/1C915B0, redo lsn=0/1C26250
+edumind-redis          | 1:C 12 Jun 2026 19:03:08.953 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+edumind-redis          | 1:C 12 Jun 2026 19:03:08.953 * Redis version=7.4.9, bits=64, commit=00000000, modified=0, pid=1, just started
+edumind-redis          | 1:C 12 Jun 2026 19:03:08.953 * Configuration loaded
+edumind-redis          | 1:M 12 Jun 2026 19:03:08.954 * monotonic clock: POSIX clock_gettime
+edumind-redis          | 1:M 12 Jun 2026 19:03:08.958 * Running mode=standalone, port=6379.
+edumind-redis          | 1:M 12 Jun 2026 19:03:08.959 * Server initialized
+edumind-redis          | 1:M 12 Jun 2026 19:03:08.964 * Creating AOF base file appendonly.aof.1.base.rdb on server start
+edumind-redis          | 1:M 12 Jun 2026 19:03:08.970 * Creating AOF incr file appendonly.aof.1.incr.aof on server start
+edumind-redis          | 1:M 12 Jun 2026 19:03:08.970 * Ready to accept connections tcp
+edumind-redis          | 1:M 12 Jun 2026 19:19:43.224 * 100 changes in 300 seconds. Saving...
+edumind-redis          | 1:M 12 Jun 2026 19:19:43.241 * Background saving started by pid 605
+edumind-redis          | 605:C 12 Jun 2026 19:19:43.259 * DB saved on disk
+edumind-redis          | 605:C 12 Jun 2026 19:19:43.260 * Fork CoW for RDB: current 0 MB, peak 0 MB, average 0 MB
+edumind-redis          | 1:M 12 Jun 2026 19:19:43.352 * Background saving terminated with success
+edumind-redis          | 1:M 12 Jun 2026 20:08:04.014 * 100 changes in 300 seconds. Saving...
+edumind-redis          | 1:M 12 Jun 2026 20:08:04.021 * Background saving started by pid 1819
+edumind-redis          | 1819:C 12 Jun 2026 20:08:04.030 * DB saved on disk
+edumind-redis          | 1819:C 12 Jun 2026 20:08:04.030 * Fork CoW for RDB: current 0 MB, peak 0 MB, average 0 MB
+edumind-redis          | 1:M 12 Jun 2026 20:08:04.125 * Background saving terminated with success
+edumind-redis          | 1:M 12 Jun 2026 20:52:13.349 * 100 changes in 300 seconds. Saving...
+edumind-redis          | 1:M 12 Jun 2026 20:52:13.354 * Background saving started by pid 3294
+edumind-redis          | 3294:C 12 Jun 2026 20:52:13.361 * DB saved on disk
+edumind-redis          | 3294:C 12 Jun 2026 20:52:13.362 * Fork CoW for RDB: current 0 MB, peak 0 MB, average 0 MB
+edumind-redis          | 1:M 12 Jun 2026 20:52:13.467 * Background saving terminated with success
+edumind-redis          | 1:M 12 Jun 2026 21:30:54.104 * 100 changes in 300 seconds. Saving...
+edumind-redis          | 1:M 12 Jun 2026 21:30:54.105 * Background saving started by pid 4677
+edumind-redis          | 4677:C 12 Jun 2026 21:30:54.111 * DB saved on disk
+edumind-redis          | 4677:C 12 Jun 2026 21:30:54.111 * Fork CoW for RDB: current 0 MB, peak 0 MB, average 0 MB
+edumind-redis          | 1:M 12 Jun 2026 21:30:54.210 * Background saving terminated with success
+edumind-redis          | 1:M 12 Jun 2026 22:12:35.005 * 100 changes in 300 seconds. Saving...
+edumind-redis          | 1:M 12 Jun 2026 22:12:35.008 * Background saving started by pid 6174
+edumind-redis          | 6174:C 12 Jun 2026 22:12:35.015 * DB saved on disk
+edumind-redis          | 6174:C 12 Jun 2026 22:12:35.015 * Fork CoW for RDB: current 0 MB, peak 0 MB, average 0 MB
+edumind-redis          | 1:M 12 Jun 2026 22:12:35.117 * Background saving terminated with success
+edumind-redis          | 1:M 12 Jun 2026 23:12:36.072 * 1 changes in 3600 seconds. Saving...
+edumind-redis          | 1:M 12 Jun 2026 23:12:36.074 * Background saving started by pid 7056
+edumind-redis          | 7056:C 12 Jun 2026 23:12:36.080 * DB saved on disk
+edumind-redis          | 7056:C 12 Jun 2026 23:12:36.080 * Fork CoW for RDB: current 0 MB, peak 0 MB, average 0 MB
+edumind-redis          | 1:M 12 Jun 2026 23:12:36.186 * Background saving terminated with success
+edumind-redis          | 1:M 13 Jun 2026 00:36:53.566 * 1 changes in 3600 seconds. Saving...
+edumind-redis          | 1:M 13 Jun 2026 00:36:53.567 * Background saving started by pid 7063
+edumind-redis          | 7063:C 13 Jun 2026 00:36:53.574 * DB saved on disk
+edumind-redis          | 7063:C 13 Jun 2026 00:36:53.575 * Fork CoW for RDB: current 0 MB, peak 0 MB, average 0 MB
+edumind-redis          | 1:M 13 Jun 2026 00:36:53.679 * Background saving terminated with success
+edumind-redis          | 1:M 13 Jun 2026 01:38:11.693 * 1 changes in 3600 seconds. Saving...
+edumind-redis          | 1:M 13 Jun 2026 01:38:11.694 * Background saving started by pid 7933
+edumind-redis          | 7933:C 13 Jun 2026 01:38:11.703 * DB saved on disk
+edumind-redis          | 7933:C 13 Jun 2026 01:38:11.704 * Fork CoW for RDB: current 0 MB, peak 0 MB, average 0 MB
+edumind-redis          | 1:M 13 Jun 2026 01:38:11.806 * Background saving terminated with success
+edumind-redis          | 1:M 13 Jun 2026 02:38:49.988 * 1 changes in 3600 seconds. Saving...
+edumind-redis          | 1:M 13 Jun 2026 02:38:49.991 * Background saving started by pid 8113
+edumind-redis          | 8113:C 13 Jun 2026 02:38:49.999 * DB saved on disk
+edumind-redis          | 8113:C 13 Jun 2026 02:38:50.000 * Fork CoW for RDB: current 0 MB, peak 0 MB, average 0 MB
+edumind-redis          | 1:M 13 Jun 2026 02:38:50.101 * Background saving terminated with success
+edumind-redis          | 1:M 13 Jun 2026 03:40:09.700 * 1 changes in 3600 seconds. Saving...
+edumind-redis          | 1:M 13 Jun 2026 03:40:09.701 * Background saving started by pid 8258
+edumind-redis          | 8258:C 13 Jun 2026 03:40:09.707 * DB saved on disk
+edumind-redis          | 8258:C 13 Jun 2026 03:40:09.708 * Fork CoW for RDB: current 0 MB, peak 0 MB, average 0 MB
+edumind-redis          | 1:M 13 Jun 2026 03:40:09.807 * Background saving terminated with success
+edumind-redis          | 1:M 13 Jun 2026 04:40:58.515 * 1 changes in 3600 seconds. Saving...
+edumind-redis          | 1:M 13 Jun 2026 04:40:58.517 * Background saving started by pid 8421
+edumind-redis          | 8421:C 13 Jun 2026 04:40:58.526 * DB saved on disk
+edumind-redis          | 8421:C 13 Jun 2026 04:40:58.526 * Fork CoW for RDB: current 0 MB, peak 0 MB, average 0 MB
+edumind-redis          | 1:M 13 Jun 2026 04:40:58.630 * Background saving terminated with success
+edumind-redis          | 1:M 13 Jun 2026 05:42:00.851 * 1 changes in 3600 seconds. Saving...
+edumind-redis          | 1:M 13 Jun 2026 05:42:00.853 * Background saving started by pid 8542
+edumind-redis          | 8542:C 13 Jun 2026 05:42:00.863 * DB saved on disk
+edumind-redis          | 8542:C 13 Jun 2026 05:42:00.864 * Fork CoW for RDB: current 0 MB, peak 0 MB, average 0 MB
+edumind-redis          | 1:M 13 Jun 2026 05:42:00.961 * Background saving terminated with success
+edumind-redis          | 1:M 13 Jun 2026 06:42:23.761 * 1 changes in 3600 seconds. Saving...
+edumind-redis          | 1:M 13 Jun 2026 06:42:23.762 * Background saving started by pid 8669
+edumind-redis          | 8669:C 13 Jun 2026 06:42:23.766 * DB saved on disk
+edumind-redis          | 8669:C 13 Jun 2026 06:42:23.766 * Fork CoW for RDB: current 0 MB, peak 0 MB, average 0 MB
+edumind-redis          | 1:M 13 Jun 2026 06:42:23.875 * Background saving terminated with success
+edumind-redis          | 1:M 13 Jun 2026 07:43:10.958 * 1 changes in 3600 seconds. Saving...
+edumind-redis          | 1:M 13 Jun 2026 07:43:10.963 * Background saving started by pid 8778
+edumind-redis          | 8778:C 13 Jun 2026 07:43:10.975 * DB saved on disk
+edumind-redis          | 8778:C 13 Jun 2026 07:43:10.975 * Fork CoW for RDB: current 0 MB, peak 0 MB, average 0 MB
+edumind-redis          | 1:M 13 Jun 2026 07:43:11.076 * Background saving terminated with success
+edumind-redis          | 1:C 13 Jun 2026 07:56:56.320 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+edumind-redis          | 1:C 13 Jun 2026 07:56:56.321 * Redis version=7.4.9, bits=64, commit=00000000, modified=0, pid=1, just started
+edumind-redis          | 1:C 13 Jun 2026 07:56:56.321 * Configuration loaded
+edumind-redis          | 1:M 13 Jun 2026 07:56:56.321 * monotonic clock: POSIX clock_gettime
+edumind-redis          | 1:M 13 Jun 2026 07:56:56.324 * Running mode=standalone, port=6379.
+edumind-redis          | 1:M 13 Jun 2026 07:56:56.325 * Server initialized
+edumind-redis          | 1:M 13 Jun 2026 07:56:56.327 * Reading RDB base file on AOF loading...
+edumind-redis          | 1:M 13 Jun 2026 07:56:56.327 * Loading RDB produced by version 7.4.9
+edumind-redis          | 1:M 13 Jun 2026 07:56:56.327 * RDB age 46428 seconds
+edumind-redis          | 1:M 13 Jun 2026 07:56:56.327 * RDB memory usage when created 0.94 Mb
+edumind-redis          | 1:M 13 Jun 2026 07:56:56.327 * RDB is base AOF
+edumind-redis          | 1:M 13 Jun 2026 07:56:56.327 * Done loading RDB, keys loaded: 0, keys expired: 0.
+edumind-redis          | 1:M 13 Jun 2026 07:56:56.328 * DB loaded from base file appendonly.aof.1.base.rdb: 0.001 seconds
+edumind-redis          | 1:M 13 Jun 2026 07:56:56.340 * DB loaded from incr file appendonly.aof.1.incr.aof: 0.012 seconds
+edumind-redis          | 1:M 13 Jun 2026 07:56:56.340 * DB loaded from append only file: 0.014 seconds
+edumind-redis          | 1:M 13 Jun 2026 07:56:56.340 * Opening AOF incr file appendonly.aof.1.incr.aof on server start
+edumind-redis          | 1:M 13 Jun 2026 07:56:56.340 * Ready to accept connections tcp
+edumind-redis          | 1:M 13 Jun 2026 08:01:57.101 * 100 changes in 300 seconds. Saving...
+edumind-redis          | 1:M 13 Jun 2026 08:01:57.102 * Background saving started by pid 191
+edumind-redis          | 191:C 13 Jun 2026 08:01:57.113 * DB saved on disk
+edumind-redis          | 191:C 13 Jun 2026 08:01:57.113 * Fork CoW for RDB: current 0 MB, peak 0 MB, average 0 MB
+edumind-redis          | 1:M 13 Jun 2026 08:01:57.210 * Background saving terminated with success
+edumind-redis          | 1:M 13 Jun 2026 11:56:00.764 * 1 changes in 3600 seconds. Saving...
+edumind-redis          | 1:M 13 Jun 2026 11:56:00.768 * Background saving started by pid 8348
+edumind-redis          | 8348:C 13 Jun 2026 11:56:00.777 * DB saved on disk
+edumind-redis          | 8348:C 13 Jun 2026 11:56:00.777 * Fork CoW for RDB: current 0 MB, peak 0 MB, average 0 MB
+edumind-redis          | 1:M 13 Jun 2026 11:56:00.878 * Background saving terminated with success
+edumind-redis          | 1:M 13 Jun 2026 12:56:01.013 * 1 changes in 3600 seconds. Saving...
+edumind-redis          | 1:M 13 Jun 2026 12:56:01.017 * Background saving started by pid 10484
+edumind-redis          | 10484:C 13 Jun 2026 12:56:01.027 * DB saved on disk
+edumind-redis          | 10484:C 13 Jun 2026 12:56:01.028 * Fork CoW for RDB: current 0 MB, peak 0 MB, average 0 MB
+edumind-redis          | 1:M 13 Jun 2026 12:56:01.119 * Background saving terminated with success
+edumind-redis          | 1:signal-handler (1781380804) Received SIGTERM scheduling shutdown...
+edumind-redis          | 1:M 13 Jun 2026 20:00:04.650 * User requested shutdown...
+edumind-redis          | 1:M 13 Jun 2026 20:00:04.651 * Calling fsync() on the AOF file.
+edumind-redis          | 1:M 13 Jun 2026 20:00:04.675 * Saving the final RDB snapshot before exiting.
+edumind-redis          | 1:M 13 Jun 2026 20:00:04.726 * DB saved on disk
+edumind-redis          | 1:M 13 Jun 2026 20:00:04.727 # Redis is now ready to exit, bye bye...
+edumind-redis          | 1:C 14 Jun 2026 19:50:49.609 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+edumind-redis          | 1:C 14 Jun 2026 19:50:49.610 * Redis version=7.4.9, bits=64, commit=00000000, modified=0, pid=1, just started
+edumind-redis          | 1:C 14 Jun 2026 19:50:49.610 * Configuration loaded
+edumind-redis          | 1:M 14 Jun 2026 19:50:49.611 * monotonic clock: POSIX clock_gettime
+edumind-redis          | 1:M 14 Jun 2026 19:50:49.615 * Running mode=standalone, port=6379.
+edumind-redis          | 1:M 14 Jun 2026 19:50:49.615 * Server initialized
+edumind-redis          | 1:M 14 Jun 2026 19:50:49.618 * Reading RDB base file on AOF loading...
+edumind-redis          | 1:M 14 Jun 2026 19:50:49.618 * Loading RDB produced by version 7.4.9
+edumind-redis          | 1:M 14 Jun 2026 19:50:49.618 * RDB age 175661 seconds
+edumind-redis          | 1:M 14 Jun 2026 19:50:49.618 * RDB memory usage when created 0.94 Mb
+edumind-redis          | 1:M 14 Jun 2026 19:50:49.618 * RDB is base AOF
+edumind-redis          | 1:M 14 Jun 2026 19:50:49.618 * Done loading RDB, keys loaded: 0, keys expired: 0.
+edumind-redis          | 1:M 14 Jun 2026 19:50:49.620 * DB loaded from base file appendonly.aof.1.base.rdb: 0.002 seconds
+edumind-redis          | 1:M 14 Jun 2026 19:50:49.628 * DB loaded from incr file appendonly.aof.1.incr.aof: 0.008 seconds
+edumind-redis          | 1:M 14 Jun 2026 19:50:49.628 * DB loaded from append only file: 0.011 seconds
+edumind-redis          | 1:M 14 Jun 2026 19:50:49.628 * Opening AOF incr file appendonly.aof.1.incr.aof on server start
+edumind-redis          | 1:M 14 Jun 2026 19:50:49.628 * Ready to accept connections tcp
+edumind-redis          | 1:M 14 Jun 2026 19:55:50.104 * 100 changes in 300 seconds. Saving...
+edumind-redis          | 1:M 14 Jun 2026 19:55:50.105 * Background saving started by pid 191
+edumind-redis          | 191:C 14 Jun 2026 19:55:50.109 * DB saved on disk
+edumind-redis          | 191:C 14 Jun 2026 19:55:50.109 * Fork CoW for RDB: current 0 MB, peak 0 MB, average 0 MB
+edumind-redis          | 1:M 14 Jun 2026 19:55:50.212 * Background saving terminated with success
+edumind-redis          | 1:signal-handler (1781475354) Received SIGTERM scheduling shutdown...
+edumind-redis          | 1:M 14 Jun 2026 22:15:54.693 * User requested shutdown...
+edumind-redis          | 1:M 14 Jun 2026 22:15:54.693 * Calling fsync() on the AOF file.
+edumind-redis          | 1:M 14 Jun 2026 22:15:54.693 * Saving the final RDB snapshot before exiting.
+edumind-redis          | 1:M 14 Jun 2026 22:15:54.696 * DB saved on disk
+edumind-redis          | 1:M 14 Jun 2026 22:15:54.696 # Redis is now ready to exit, bye bye...
+edumind-redis          | 1:C 15 Jun 2026 04:38:45.121 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+edumind-redis          | 1:C 15 Jun 2026 04:38:45.122 * Redis version=7.4.9, bits=64, commit=00000000, modified=0, pid=1, just started
+edumind-redis          | 1:C 15 Jun 2026 04:38:45.122 * Configuration loaded
+edumind-redis          | 1:M 15 Jun 2026 04:38:45.123 * monotonic clock: POSIX clock_gettime
+edumind-redis          | 1:M 15 Jun 2026 04:38:45.128 * Running mode=standalone, port=6379.
+edumind-redis          | 1:M 15 Jun 2026 04:38:45.129 * Server initialized
+edumind-redis          | 1:M 15 Jun 2026 04:38:45.154 * Reading RDB base file on AOF loading...
+edumind-redis          | 1:M 15 Jun 2026 04:38:45.154 * Loading RDB produced by version 7.4.9
+edumind-redis          | 1:M 15 Jun 2026 04:38:45.154 * RDB age 207337 seconds
+edumind-redis          | 1:M 15 Jun 2026 04:38:45.154 * RDB memory usage when created 0.94 Mb
+edumind-redis          | 1:M 15 Jun 2026 04:38:45.154 * RDB is base AOF
+edumind-redis          | 1:M 15 Jun 2026 04:38:45.154 * Done loading RDB, keys loaded: 0, keys expired: 0.
+edumind-redis          | 1:M 15 Jun 2026 04:38:45.158 * DB loaded from base file appendonly.aof.1.base.rdb: 0.015 seconds
+edumind-redis          | 1:M 15 Jun 2026 04:38:45.207 * DB loaded from incr file appendonly.aof.1.incr.aof: 0.049 seconds
+edumind-redis          | 1:M 15 Jun 2026 04:38:45.207 * DB loaded from append only file: 0.075 seconds
+edumind-redis          | 1:M 15 Jun 2026 04:38:45.207 * Opening AOF incr file appendonly.aof.1.incr.aof on server start
+edumind-redis          | 1:M 15 Jun 2026 04:38:45.207 * Ready to accept connections tcp
+edumind-redis          | 1:signal-handler (1781498334) Received SIGTERM scheduling shutdown...
+edumind-redis          | 1:M 15 Jun 2026 04:38:55.018 * User requested shutdown...
+edumind-redis          | 1:M 15 Jun 2026 04:38:55.018 * Calling fsync() on the AOF file.
+edumind-redis          | 1:M 15 Jun 2026 04:38:55.018 * Saving the final RDB snapshot before exiting.
+edumind-redis          | 1:M 15 Jun 2026 04:38:55.021 * DB saved on disk
+edumind-redis          | 1:M 15 Jun 2026 04:38:55.021 # Redis is now ready to exit, bye bye...
+edumind-redis          | 1:C 16 Jun 2026 10:38:09.492 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+edumind-redis          | 1:C 16 Jun 2026 10:38:09.494 * Redis version=7.4.9, bits=64, commit=00000000, modified=0, pid=1, just started
+edumind-redis          | 1:C 16 Jun 2026 10:38:09.494 * Configuration loaded
+edumind-redis          | 1:M 16 Jun 2026 10:38:09.495 * monotonic clock: POSIX clock_gettime
+edumind-redis          | 1:M 16 Jun 2026 10:38:09.504 * Running mode=standalone, port=6379.
+edumind-redis          | 1:M 16 Jun 2026 10:38:09.504 * Server initialized
+edumind-redis          | 1:M 16 Jun 2026 10:38:09.518 * Reading RDB base file on AOF loading...
+edumind-redis          | 1:M 16 Jun 2026 10:38:09.518 * Loading RDB produced by version 7.4.9
+edumind-redis          | 1:M 16 Jun 2026 10:38:09.518 * RDB age 315301 seconds
+edumind-redis          | 1:M 16 Jun 2026 10:38:09.518 * RDB memory usage when created 0.94 Mb
+edumind-redis          | 1:M 16 Jun 2026 10:38:09.518 * RDB is base AOF
+edumind-redis          | 1:M 16 Jun 2026 10:38:09.518 * Done loading RDB, keys loaded: 0, keys expired: 0.
+edumind-redis          | 1:M 16 Jun 2026 10:38:09.525 * DB loaded from base file appendonly.aof.1.base.rdb: 0.012 seconds
+edumind-redis          | 1:M 16 Jun 2026 10:38:09.542 * DB loaded from incr file appendonly.aof.1.incr.aof: 0.018 seconds
+edumind-redis          | 1:M 16 Jun 2026 10:38:09.542 * DB loaded from append only file: 0.035 seconds
+edumind-redis          | 1:M 16 Jun 2026 10:38:09.542 * Opening AOF incr file appendonly.aof.1.incr.aof on server start
+edumind-redis          | 1:M 16 Jun 2026 10:38:09.542 * Ready to accept connections tcp
+edumind-redis          | 1:M 16 Jun 2026 10:43:10.086 * 100 changes in 300 seconds. Saving...
+edumind-redis          | 1:M 16 Jun 2026 10:43:10.089 * Background saving started by pid 191
+edumind-redis          | 191:C 16 Jun 2026 10:43:10.095 * DB saved on disk
+edumind-redis          | 191:C 16 Jun 2026 10:43:10.095 * Fork CoW for RDB: current 0 MB, peak 0 MB, average 0 MB
+edumind-redis          | 1:M 16 Jun 2026 10:43:10.193 * Background saving terminated with success
+edumind-redis          | 1:M 16 Jun 2026 11:56:50.209 * 1 changes in 3600 seconds. Saving...
+edumind-redis          | 1:M 16 Jun 2026 11:56:50.210 * Background saving started by pid 1423
+edumind-redis          | 1423:C 16 Jun 2026 11:56:50.216 * DB saved on disk
+edumind-redis          | 1423:C 16 Jun 2026 11:56:50.216 * Fork CoW for RDB: current 0 MB, peak 0 MB, average 0 MB
+edumind-redis          | 1:M 16 Jun 2026 11:56:50.312 * Background saving terminated with success

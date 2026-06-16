@@ -1,20 +1,38 @@
-# AI Chemistry Tutor — Backend
+# EduMind Backend
 
-FastAPI backend that powers the AI Chemistry Tutor with OpenAI GPT.
+FastAPI backend for the EduMind Grade 9 Chemistry Tutor.
 
-## Requirements
-- Python 3.10+
-- OpenAI API key
+The backend uses:
+
+- FastAPI
+- PostgreSQL with pgvector for production RAG
+- SQLite fallback for local development
+- Redis and Celery for background work
+- Google GenAI / Gemini for tutoring, document extraction, and embeddings
 
 ## Setup
 
 ```bash
-cd backend
-python -m venv venv
-source venv/bin/activate        # Windows: venv\Scripts\activate
+cd src/backend
+python -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env            # then fill in your OPENAI_API_KEY
+cp .env.example .env
 ```
+
+Fill in at least:
+
+```env
+GEMINI_API_KEY=...
+GEMINI_EMBEDDING_MODEL=gemini-embedding-001
+EMBEDDING_DIMENSION=768
+EMBEDDING_PROVIDER=gemini
+ALLOW_HASH_EMBEDDINGS=false
+ALLOW_LOCAL_EMBEDDINGS=false
+RAG_QUERY_LOGGING_ENABLED=true
+```
+
+Hash embeddings are for deterministic tests only. Production ingestion and re-embedding should fail clearly if Gemini embeddings are unavailable.
 
 ## Run
 
@@ -22,19 +40,36 @@ cp .env.example .env            # then fill in your OPENAI_API_KEY
 uvicorn app.main:app --reload
 ```
 
-API docs available at `http://localhost:8000/docs`.
+Swagger is available at:
 
-## API
+```text
+http://localhost:8000/docs
+```
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | `/api/v1/chat` | Send a message, receive AI response |
-| GET | `/health` | Health check |
+Main API prefix:
 
-### Chat request body
-```json
-{
-  "message": "What is the atomic number of carbon?",
-  "conversation_history": []
-}
+```text
+/api/v1
+```
+
+## RAG Maintenance
+
+Re-embed all chunks through Swagger:
+
+```text
+POST /api/v1/admin/rag/reembed
+GET  /api/v1/admin/rag/reembed/status/{job_id}
+```
+
+Run retrieval evaluation from the CLI:
+
+```bash
+python scripts/evaluate_rag.py --fail-on-threshold
+```
+
+Reports are written to:
+
+```text
+data/eval/reports/rag_eval_latest.json
+data/eval/reports/rag_eval_latest.md
 ```

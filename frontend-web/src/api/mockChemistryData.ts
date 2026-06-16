@@ -461,6 +461,16 @@ export function getLessonQualityReport(lesson: LessonKnowledgeUnit): LessonQuali
   };
 }
 
+const normalizeQuizDifficulty = (
+  difficulty: QuizGenerationConfig['difficulty'],
+  fallback: GeneratedQuizQuestion['difficulty'],
+): GeneratedQuizQuestion['difficulty'] => (difficulty === 'mixed' ? fallback : difficulty);
+
+const normalizeFlashcardDifficulty = (
+  difficulty: FlashcardGenerationConfig['difficulty'],
+  fallback: GeneratedFlashcard['difficulty'],
+): GeneratedFlashcard['difficulty'] => (difficulty === 'mixed' ? fallback : difficulty);
+
 export function mockGenerateQuiz(config: QuizGenerationConfig): GeneratedQuizQuestion[] {
   const questions: GeneratedQuizQuestion[] = [];
   const validLessons = mockLessons.filter(
@@ -498,7 +508,7 @@ export function mockGenerateQuiz(config: QuizGenerationConfig): GeneratedQuizQue
           correctAnswer: def.explanation,
           correctOptionIndex: correctIndex,
           explanation: `بحسب كتاب الكيمياء، صفحة ${def.sourcePage}: ${def.concept} هو ${def.explanation}`,
-          difficulty: config.difficulty === 'mixed' ? 'medium' : config.difficulty as any,
+          difficulty: normalizeQuizDifficulty(config.difficulty, 'medium'),
           sourcePage: def.sourcePage,
           sourceChunkId: lesson.ragChunkIds[0],
         });
@@ -511,13 +521,13 @@ export function mockGenerateQuiz(config: QuizGenerationConfig): GeneratedQuizQue
       if (count >= questionsPer) break;
       
       if (config.questionTypes.includes('equation_balancing') || config.questionTypes.includes('mcq')) {
-        const type = config.questionTypes.includes('equation_balancing') ? 'equation_balancing' : 'mcq';
+        const type: GeneratedQuizQuestion['questionType'] = config.questionTypes.includes('equation_balancing') ? 'equation_balancing' : 'mcq';
         
         questions.push({
           id: `q-${qId++}`,
           lessonId: lesson.lessonId,
           chapterId: lesson.chapterId,
-          questionType: type as any,
+          questionType: type,
           question: `أكمل أو وازن الصيغة الكيميائية التالية للتفاعل: "${eq.explanation}"`,
           options: type === 'mcq' ? [eq.latex, 'NaOH + HCl -> H2O', 'H2 + O2 -> H2O', 'None'].sort(() => 0.5 - Math.random()) : undefined,
           correctAnswer: eq.latex,
@@ -535,12 +545,12 @@ export function mockGenerateQuiz(config: QuizGenerationConfig): GeneratedQuizQue
     for (const ex of lesson.examples) {
       if (count >= questionsPer) break;
       if (config.questionTypes.includes('calculation') || config.questionTypes.includes('short_answer')) {
-        const type = config.questionTypes.includes('calculation') ? 'calculation' : 'short_answer';
+        const type: GeneratedQuizQuestion['questionType'] = config.questionTypes.includes('calculation') ? 'calculation' : 'short_answer';
         questions.push({
           id: `q-${qId++}`,
           lessonId: lesson.lessonId,
           chapterId: lesson.chapterId,
-          questionType: type as any,
+          questionType: type,
           question: ex.question,
           correctAnswer: ex.solution,
           explanation: `طريقة الحل المفصلة في الصفحة ${ex.sourcePage}: ${ex.solution}`,
@@ -556,13 +566,13 @@ export function mockGenerateQuiz(config: QuizGenerationConfig): GeneratedQuizQue
     for (const exe of lesson.exercises) {
       if (count >= questionsPer) break;
       if (config.questionTypes.includes('short_answer') || config.questionTypes.includes('true_false')) {
-        const type = config.questionTypes.includes('true_false') && exe.question.includes('هل') ? 'true_false' : 'short_answer';
+        const type: GeneratedQuizQuestion['questionType'] = config.questionTypes.includes('true_false') && exe.question.includes('هل') ? 'true_false' : 'short_answer';
         
         questions.push({
           id: `q-${qId++}`,
           lessonId: lesson.lessonId,
           chapterId: lesson.chapterId,
-          questionType: type as any,
+          questionType: type,
           question: exe.question,
           options: type === 'true_false' ? ['صح', 'خطأ'] : undefined,
           correctAnswer: exe.answer || 'نعم',
@@ -605,7 +615,7 @@ export function mockGenerateFlashcards(config: FlashcardGenerationConfig): Gener
           front: `ما معنى المصطلح الكيميائي: "${kt.term}"؟`,
           back: kt.definition,
           cardType: 'term',
-          difficulty: config.difficulty === 'mixed' ? 'easy' : config.difficulty as any,
+          difficulty: normalizeFlashcardDifficulty(config.difficulty, 'easy'),
           sourcePage: kt.sourcePage,
           reviewState: 'new',
         });
@@ -635,7 +645,7 @@ export function mockGenerateFlashcards(config: FlashcardGenerationConfig): Gener
     // 3. equations (formula/reaction cards)
     for (const eq of lesson.equations) {
       if (count >= cardsPer) break;
-      const type = config.cardTypes.includes('formula') ? 'formula' : config.cardTypes.includes('reaction') ? 'reaction' : null;
+      const type: GeneratedFlashcard['cardType'] | null = config.cardTypes.includes('formula') ? 'formula' : config.cardTypes.includes('reaction') ? 'reaction' : null;
       if (type) {
         cards.push({
           id: `card-${cId++}`,
@@ -643,7 +653,7 @@ export function mockGenerateFlashcards(config: FlashcardGenerationConfig): Gener
           chapterId: lesson.chapterId,
           front: `ما هي معادلة أو قانون: "${eq.explanation}"؟`,
           back: eq.latex,
-          cardType: type as any,
+          cardType: type,
           difficulty: 'hard',
           sourcePage: eq.sourcePage,
           reviewState: 'new',

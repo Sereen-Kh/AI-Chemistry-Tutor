@@ -6,6 +6,7 @@ import json
 import re
 from collections.abc import Callable
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
 from pathlib import Path
 
 from sqlalchemy.orm import Session
@@ -14,8 +15,8 @@ from app.core.config import PROJECT_DIR, settings
 from app.database import SessionLocal
 from app.models.textbook import ContentSource, ExtractedQuestion, RagChunk
 from app.services.chunking import build_page_chunk_records, deduplicate_sections, normalize_arabic, section_text
-from app.services.embeddings import embed_batch
-from app.services.ocr import NoneVisionProvider, UploadedDocument, VisionExtractionProvider, get_vision_provider
+from app.services.embeddings import current_embedding_model_name, embed_batch
+from app.services.ocr import UploadedDocument, VisionExtractionProvider, get_vision_provider
 from app.services.pdf_processor import (
     classify_pages,
     extract_selectable_text_page,
@@ -603,9 +604,12 @@ async def _store_page_chunks(
                 extraction_method=extraction_method,
                 language=page_payload.get("detected_language") or "ar",
                 embedding=embedding,
+                embedding_model=current_embedding_model_name(),
+                embedding_updated_at=datetime.now(timezone.utc),
                 metadata_json={
                     **record.metadata,
                     **extra_meta,
+                    "embedding_model": current_embedding_model_name(),
                     "extraction_methods": page_payload.get("extraction_methods") or [],
                     "warnings": page_payload.get("warnings") or [],
                 },

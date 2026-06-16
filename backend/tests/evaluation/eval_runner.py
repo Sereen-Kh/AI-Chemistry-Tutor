@@ -19,7 +19,7 @@ from pathlib import Path
 BACKEND_DIR = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(BACKEND_DIR))
 
-from dotenv import load_dotenv
+from dotenv import load_dotenv  # noqa: E402
 
 load_dotenv(BACKEND_DIR / ".env")
 
@@ -245,7 +245,7 @@ def main():
     args = parser.parse_args()
 
     print(f"\n{'='*60}")
-    print(f"EduMind Chemistry Tutor - Evaluation Runner")
+    print("EduMind Chemistry Tutor - Evaluation Runner")
     print(f"Mode: {args.mode}")
     print(f"{'='*60}\n")
 

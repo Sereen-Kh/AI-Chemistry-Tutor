@@ -1,0 +1,306 @@
+{
+  "version": "1.0",
+  "description": "Starter RAG gold questions for EduMind Grade 9 Chemistry retrieval evaluation.",
+  "cases": [
+    {
+      "id": "acid_definition_001",
+      "query": "ما تعريف الحمض؟",
+      "expected_source_types": ["textbook"],
+      "expected_pages": [11, 13, 15],
+      "expected_keywords": ["أيون", "H+"],
+      "expected_answer_type": "definition_lookup",
+      "min_top1_similarity": 0.65,
+      "min_any_expected_page_rank": 5
+    },
+    {
+      "id": "base_definition_001",
+      "query": "ما تعريف الأساس؟",
+      "expected_source_types": ["textbook"],
+      "expected_pages": [18, 19, 20],
+      "expected_keywords": ["هيدروكسيد", "OH"],
+      "expected_answer_type": "definition_lookup",
+      "min_top1_similarity": 0.6,
+      "min_any_expected_page_rank": 5
+    },
+    {
+      "id": "acid_safety_001",
+      "query": "لماذا نضيف الحمض إلى الماء وليس العكس؟",
+      "expected_source_types": ["textbook"],
+      "expected_pages": [10, 14, 15],
+      "expected_keywords": ["الماء", "الحمض"],
+      "expected_answer_type": "safety_question",
+      "min_top1_similarity": 0.55,
+      "min_any_expected_page_rank": 5
+    },
+    {
+      "id": "litmus_acid_001",
+      "query": "ما تأثير الحموض على ورقة عباد الشمس؟",
+      "expected_source_types": ["textbook"],
+      "expected_pages": [11, 12, 13],
+      "expected_keywords": ["عباد الشمس", "الأحمر"],
+      "expected_answer_type": "property_lookup",
+      "min_top1_similarity": 0.55,
+      "min_any_expected_page_rank": 5
+    },
+    {
+      "id": "litmus_base_001",
+      "query": "ما تأثير الأسس على ورقة عباد الشمس؟",
+      "expected_source_types": ["textbook"],
+      "expected_pages": [18, 19, 20],
+      "expected_keywords": ["عباد الشمس", "الأزرق"],
+      "expected_answer_type": "property_lookup",
+      "min_top1_similarity": 0.55,
+      "min_any_expected_page_rank": 5
+    },
+    {
+      "id": "molar_concentration_definition_001",
+      "query": "ما هو التركيز المولي؟",
+      "expected_source_types": ["textbook"],
+      "expected_pages": [4, 7, 53],
+      "expected_keywords": ["n", "V"],
+      "expected_answer_type": "definition_lookup",
+      "min_top1_similarity": 0.55,
+      "min_any_expected_page_rank": 5
+    },
+    {
+      "id": "mass_concentration_definition_001",
+      "query": "ما هو التركيز الغرامي؟",
+      "expected_source_types": ["textbook"],
+      "expected_pages": [4, 5, 6],
+      "expected_keywords": ["m", "V"],
+      "expected_answer_type": "definition_lookup",
+      "min_top1_similarity": 0.55,
+      "min_any_expected_page_rank": 5
+    },
+    {
+      "id": "dilution_001",
+      "query": "كيف يتم تمديد المحاليل؟",
+      "expected_source_types": ["textbook"],
+      "expected_pages": [7, 8, 9],
+      "expected_keywords": ["تمديد", "محلول"],
+      "expected_answer_type": "book_grounded",
+      "min_top1_similarity": 0.5,
+      "min_any_expected_page_rank": 5
+    },
+    {
+      "id": "hcl_calculation_001",
+      "query": "محلول HCl حجمه 100 mL ويحتوي 3.65 g احسب التركيز الغرامي والمولي",
+      "expected_source_types": ["solution_book", "textbook"],
+      "expected_pages": [4, 7, 53],
+      "expected_keywords": ["HCl", "100", "3.65"],
+      "expected_answer_type": "exercise_solving",
+      "min_top1_similarity": 0.45,
+      "min_any_expected_page_rank": 5
+    },
+    {
+      "id": "water_formula_001",
+      "query": "ما صيغة الماء؟",
+      "expected_source_types": ["textbook"],
+      "expected_pages": [2, 3, 4],
+      "expected_keywords": ["H2O"],
+      "expected_answer_type": "formula_lookup",
+      "min_top1_similarity": 0.45,
+      "min_any_expected_page_rank": 5
+    },
+    {
+      "id": "acid_formula_hcl_001",
+      "query": "ما صيغة حمض كلور الماء؟",
+      "expected_source_types": ["textbook"],
+      "expected_pages": [11, 13, 15],
+      "expected_keywords": ["HCl"],
+      "expected_answer_type": "formula_lookup",
+      "min_top1_similarity": 0.5,
+      "min_any_expected_page_rank": 5
+    },
+    {
+      "id": "sulfuric_acid_formula_001",
+      "query": "ما صيغة حمض الكبريت؟",
+      "expected_source_types": ["textbook"],
+      "expected_pages": [11, 13, 15],
+      "expected_keywords": ["H2SO4"],
+      "expected_answer_type": "formula_lookup",
+      "min_top1_similarity": 0.5,
+      "min_any_expected_page_rank": 5
+    },
+    {
+      "id": "sodium_hydroxide_formula_001",
+      "query": "ما صيغة هيدروكسيد الصوديوم؟",
+      "expected_source_types": ["textbook"],
+      "expected_pages": [18, 19, 20],
+      "expected_keywords": ["NaOH"],
+      "expected_answer_type": "formula_lookup",
+      "min_top1_similarity": 0.5,
+      "min_any_expected_page_rank": 5
+    },
+    {
+      "id": "neutralization_001",
+      "query": "ما هو تفاعل التعديل بين حمض وأساس؟",
+      "expected_source_types": ["textbook"],
+      "expected_pages": [22, 23, 24],
+      "expected_keywords": ["ملح", "ماء"],
+      "expected_answer_type": "reaction_query",
+      "min_top1_similarity": 0.5,
+      "min_any_expected_page_rank": 5
+    },
+    {
+      "id": "salts_definition_001",
+      "query": "ما هي الأملاح؟",
+      "expected_source_types": ["textbook"],
+      "expected_pages": [22, 23, 24, 25],
+      "expected_keywords": ["أيونات", "ملح"],
+      "expected_answer_type": "definition_lookup",
+      "min_top1_similarity": 0.5,
+      "min_any_expected_page_rank": 5
+    },
+    {
+      "id": "salt_preparation_001",
+      "query": "اذكر طرائق تحضير الأملاح",
+      "expected_source_types": ["textbook"],
+      "expected_pages": [23, 24, 25, 26],
+      "expected_keywords": ["حمض", "ملح"],
+      "expected_answer_type": "book_grounded",
+      "min_top1_similarity": 0.45,
+      "min_any_expected_page_rank": 5
+    },
+    {
+      "id": "zinc_hcl_reaction_001",
+      "query": "ما ناتج تفاعل الزنك مع حمض كلور الماء؟",
+      "expected_source_types": ["textbook", "solution_book"],
+      "expected_pages": [28, 29, 30],
+      "expected_keywords": ["زنك", "هدروجين"],
+      "expected_answer_type": "reaction_query",
+      "min_top1_similarity": 0.45,
+      "min_any_expected_page_rank": 5
+    },
+    {
+      "id": "copper_sulfuric_acid_001",
+      "query": "هل يتفاعل النحاس مع حمض الكبريت الممدد؟",
+      "expected_source_types": ["textbook", "solution_book"],
+      "expected_pages": [28, 29, 30],
+      "expected_keywords": ["النحاس", "لا يحدث"],
+      "expected_answer_type": "reaction_query",
+      "min_top1_similarity": 0.45,
+      "min_any_expected_page_rank": 5
+    },
+    {
+      "id": "activity_series_001",
+      "query": "ما فائدة سلسلة النشاط الكيميائي؟",
+      "expected_source_types": ["textbook"],
+      "expected_pages": [28, 29, 30],
+      "expected_keywords": ["النشاط", "يزيح"],
+      "expected_answer_type": "definition_lookup",
+      "min_top1_similarity": 0.45,
+      "min_any_expected_page_rank": 5
+    },
+    {
+      "id": "oxidation_reduction_001",
+      "query": "ما الفرق بين الأكسدة والإرجاع؟",
+      "expected_source_types": ["textbook"],
+      "expected_pages": [35, 36, 37],
+      "expected_keywords": ["أكسدة", "إرجاع"],
+      "expected_answer_type": "definition_lookup",
+      "min_top1_similarity": 0.45,
+      "min_any_expected_page_rank": 5
+    },
+    {
+      "id": "atom_structure_001",
+      "query": "ما مكونات الذرة؟",
+      "expected_source_types": ["textbook"],
+      "expected_pages": [40, 41, 42],
+      "expected_keywords": ["بروتون", "إلكترون"],
+      "expected_answer_type": "definition_lookup",
+      "min_top1_similarity": 0.45,
+      "min_any_expected_page_rank": 5
+    },
+    {
+      "id": "ion_definition_001",
+      "query": "ما هو الأيون؟",
+      "expected_source_types": ["textbook"],
+      "expected_pages": [42, 43, 44],
+      "expected_keywords": ["شحنة", "أيون"],
+      "expected_answer_type": "definition_lookup",
+      "min_top1_similarity": 0.45,
+      "min_any_expected_page_rank": 5
+    },
+    {
+      "id": "organic_chemistry_001",
+      "query": "ما المقصود بالكيمياء العضوية؟",
+      "expected_source_types": ["textbook"],
+      "expected_pages": [59, 60, 61],
+      "expected_keywords": ["الكربون", "عضوية"],
+      "expected_answer_type": "definition_lookup",
+      "min_top1_similarity": 0.45,
+      "min_any_expected_page_rank": 5
+    },
+    {
+      "id": "carbon_bonds_001",
+      "query": "ما أنواع الروابط بين ذرات الكربون؟",
+      "expected_source_types": ["textbook"],
+      "expected_pages": [60, 61],
+      "expected_keywords": ["أحادية", "ثنائية"],
+      "expected_answer_type": "table_lookup",
+      "min_top1_similarity": 0.45,
+      "min_any_expected_page_rank": 5
+    },
+    {
+      "id": "hydrocarbons_001",
+      "query": "ما هي الهيدروكربونات؟",
+      "expected_source_types": ["textbook"],
+      "expected_pages": [64, 65, 66],
+      "expected_keywords": ["كربون", "هدروجين"],
+      "expected_answer_type": "definition_lookup",
+      "min_top1_similarity": 0.45,
+      "min_any_expected_page_rank": 5
+    },
+    {
+      "id": "alkanes_formula_001",
+      "query": "ما الصيغة العامة للألكانات؟",
+      "expected_source_types": ["textbook"],
+      "expected_pages": [66, 67, 68],
+      "expected_keywords": ["CnH2n+2"],
+      "expected_answer_type": "formula_lookup",
+      "min_top1_similarity": 0.45,
+      "min_any_expected_page_rank": 5
+    },
+    {
+      "id": "alkenes_formula_001",
+      "query": "ما الصيغة العامة للألكنات؟",
+      "expected_source_types": ["textbook"],
+      "expected_pages": [72, 73, 77],
+      "expected_keywords": ["CnH2n"],
+      "expected_answer_type": "formula_lookup",
+      "min_top1_similarity": 0.45,
+      "min_any_expected_page_rank": 5
+    },
+    {
+      "id": "alkynes_formula_001",
+      "query": "ما الصيغة العامة للألكينات؟",
+      "expected_source_types": ["textbook"],
+      "expected_pages": [74, 75, 77],
+      "expected_keywords": ["CnH2n-2"],
+      "expected_answer_type": "formula_lookup",
+      "min_top1_similarity": 0.45,
+      "min_any_expected_page_rank": 5
+    },
+    {
+      "id": "methane_001",
+      "query": "ما صيغة الميثان؟",
+      "expected_source_types": ["textbook"],
+      "expected_pages": [66, 67, 68],
+      "expected_keywords": ["CH4"],
+      "expected_answer_type": "formula_lookup",
+      "min_top1_similarity": 0.45,
+      "min_any_expected_page_rank": 5
+    },
+    {
+      "id": "exam_hydrocarbon_question_001",
+      "query": "حل سؤال عن صيغة الإيتن في الاختبارات",
+      "expected_source_types": ["solution_book", "textbook"],
+      "expected_pages": [77],
+      "expected_keywords": ["C2H4"],
+      "expected_answer_type": "exercise_solving",
+      "min_top1_similarity": 0.4,
+      "min_any_expected_page_rank": 5
+    }
+  ]
+}

@@ -1,0 +1,623 @@
+
+<h2 class="sr-only">EduMind full architecture audit: backend, frontend, RAG, integration gaps, and prioritised fix plan</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);font-size:13px;color:var(--color-text-primary)}
+.tnav{display:flex;gap:2px;flex-wrap:wrap;border-bottom:.5px solid var(--color-border-tertiary);margin-bottom:16px}
+.tb{padding:7px 11px;font-size:11px;cursor:pointer;border:.5px solid transparent;border-radius:6px 6px 0 0;color:var(--color-text-secondary);background:none;margin-bottom:-.5px;font-family:inherit;white-space:nowrap}
+.tb:hover{color:var(--color-text-primary);background:var(--color-background-secondary)}
+.tb.on{color:var(--color-text-primary);background:var(--color-background-primary);border-color:var(--color-border-tertiary);border-bottom-color:var(--color-background-primary);font-weight:500}
+.pn{display:none}.pn.on{display:block}
+.sec{font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.6px;margin:18px 0 8px}
+.card{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:13px 15px;margin-bottom:9px}
+.card-t{font-size:13px;font-weight:500;margin-bottom:5px}
+.card-b{font-size:12px;color:var(--color-text-secondary);line-height:1.7}
+.bx{display:inline-block;font-size:10px;font-weight:500;padding:2px 7px;border-radius:4px;margin:2px 2px 2px 0}
+.b-ok{background:#EAF3DE;color:#3B6D11}
+.b-warn{background:#FAEEDA;color:#854F0B}
+.b-err{background:#FAECE7;color:#993C1D}
+.b-info{background:#E6F1FB;color:#185FA5}
+.b-pur{background:#EEEDFE;color:#534AB7}
+.b-gray{background:var(--color-background-secondary);color:var(--color-text-secondary)}
+.b-miss{background:#0A1628;color:#85B7EB;border:.5px solid #1E3050}
+
+/* score cards */
+.score-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}
+.sc{border-radius:var(--border-radius-lg);padding:14px;text-align:center;border:.5px solid var(--color-border-tertiary)}
+.sc-val{font-size:26px;font-weight:700;line-height:1;margin-bottom:3px}
+.sc-lbl{font-size:10px;color:var(--color-text-secondary)}
+.sc-bar{height:4px;border-radius:2px;margin-top:7px;background:var(--color-background-secondary)}
+.sc-fill{height:100%;border-radius:2px}
+
+/* layer cards */
+.layer{border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:10px;overflow:hidden}
+.layer-hd{padding:12px 15px;display:flex;align-items:center;gap:10px;cursor:pointer;background:var(--color-background-secondary)}
+.layer-hd:hover{background:var(--color-background-primary)}
+.layer-ic{font-size:18px;flex-shrink:0}
+.layer-info{flex:1}
+.layer-title{font-size:13px;font-weight:500;margin-bottom:2px}
+.layer-sub{font-size:11px;color:var(--color-text-secondary)}
+.layer-score{font-size:14px;font-weight:700;flex-shrink:0}
+.layer-arrow{font-size:10px;color:var(--color-text-tertiary);transition:transform .15s}
+.layer-arrow.op{transform:rotate(90deg)}
+.layer-body{display:none;border-top:.5px solid var(--color-border-tertiary)}
+.layer-body.op{display:block}
+
+/* gap rows */
+.gap-row{display:flex;align-items:flex-start;gap:10px;padding:8px 15px;border-bottom:.5px solid var(--color-border-tertiary)}
+.gap-row:last-child{border-bottom:none}
+.gap-sev{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.gap-b{flex:1}
+.gap-t{font-size:12px;font-weight:500;margin-bottom:2px}
+.gap-d{font-size:11px;color:var(--color-text-secondary);line-height:1.55}
+.gap-fix{font-size:11px;color:var(--color-text-success);font-family:var(--font-mono);margin-top:3px}
+.gap-impact{font-size:10px;color:var(--color-text-tertiary);margin-top:3px}
+
+/* priority table */
+.ptable{width:100%;border-collapse:collapse;font-size:12px}
+.ptable th{text-align:left;font-size:10px;font-weight:600;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.5px;padding:6px 10px;border-bottom:.5px solid var(--color-border-tertiary);background:var(--color-background-secondary)}
+.ptable td{padding:9px 10px;border-bottom:.5px solid var(--color-border-tertiary);vertical-align:top;line-height:1.5}
+.ptable tr:last-child td{border-bottom:none}
+.ptable tr:hover td{background:var(--color-background-secondary)}
+
+/* code */
+.code{font-family:var(--font-mono);font-size:11px;line-height:1.75;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:11px 13px;border:.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);white-space:pre-wrap;word-break:break-all;margin-bottom:9px;position:relative}
+.code .kw{color:var(--color-text-info)}.code .str{color:var(--color-text-success)}.code .cm{color:var(--color-text-tertiary)}
+.copy-btn{position:absolute;top:6px;right:6px;font-size:10px;padding:2px 7px;border-radius:4px;border:.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-secondary);cursor:pointer;font-family:inherit}
+
+/* flow diagram */
+.flow-row{display:flex;align-items:center;gap:0;margin-bottom:8px;flex-wrap:wrap}
+.flow-box{border-radius:8px;padding:8px 13px;font-size:12px;font-weight:500;border:.5px solid transparent;text-align:center;min-width:110px}
+.flow-arrow{font-size:16px;color:var(--color-text-tertiary);padding:0 6px;flex-shrink:0}
+.flow-missing{background:#FAECE7;border-color:#F5BCBC;color:#993C1D}
+.flow-partial{background:#FAEEDA;border-color:#F5D9A0;color:#854F0B}
+.flow-ok{background:#EAF3DE;border-color:#B7D9A0;color:#3B6D11}
+
+/* radar / summary */
+.radar-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.rg-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:.5px solid var(--color-border-tertiary)}
+.rg-row:last-child{border-bottom:none}
+.rg-label{font-size:12px;color:var(--color-text-secondary);min-width:140px}
+.rg-track{flex:1;background:var(--color-background-secondary);border-radius:3px;height:6px;overflow:hidden}
+.rg-fill{height:100%;border-radius:3px}
+.rg-pct{font-size:11px;font-weight:600;min-width:32px;text-align:right}
+</style>
+
+<div style="margin-bottom:14px">
+  <div style="font-size:18px;font-weight:500;margin-bottom:3px">EduMind Architecture — full audit (3 files)</div>
+  <div style="font-size:12px;color:var(--color-text-secondary)">Backend report · Codebase analysis · Frontend UI/UX audit · June 2026</div>
+</div>
+
+<!-- HEALTH SCORES -->
+<div class="score-grid">
+  <div class="sc" style="background:var(--color-background-secondary)">
+    <div class="sc-val" style="color:#E89A3C">64%</div>
+    <div class="sc-lbl">Backend maturity</div>
+    <div class="sc-bar"><div class="sc-fill" style="width:64%;background:#E89A3C"></div></div>
+  </div>
+  <div class="sc" style="background:var(--color-background-secondary)">
+    <div class="sc-val" style="color:#E89A3C">58%</div>
+    <div class="sc-lbl">Frontend maturity</div>
+    <div class="sc-bar"><div class="sc-fill" style="width:58%;background:#E89A3C"></div></div>
+  </div>
+  <div class="sc" style="background:var(--color-background-secondary)">
+    <div class="sc-val" style="color:#E24B4A">41%</div>
+    <div class="sc-lbl">BE ↔ FE alignment</div>
+    <div class="sc-bar"><div class="sc-fill" style="width:41%;background:#E24B4A"></div></div>
+  </div>
+  <div class="sc" style="background:var(--color-background-secondary)">
+    <div class="sc-val" style="color:#1D9E75">78%</div>
+    <div class="sc-lbl">RAG pipeline</div>
+    <div class="sc-bar"><div class="sc-fill" style="width:78%;background:#1D9E75"></div></div>
+  </div>
+  <div class="sc" style="background:var(--color-background-secondary)">
+    <div class="sc-val" style="color:#E24B4A">22%</div>
+    <div class="sc-lbl">Multimedia</div>
+    <div class="sc-bar"><div class="sc-fill" style="width:22%;background:#E24B4A"></div></div>
+  </div>
+</div>
+
+<div class="tnav">
+  <button class="tb on" onclick="tab(this,'overview')">Overview</button>
+  <button class="tb" onclick="tab(this,'backend')">Backend gaps</button>
+  <button class="tb" onclick="tab(this,'frontend')">Frontend gaps</button>
+  <button class="tb" onclick="tab(this,'rag')">RAG & AI</button>
+  <button class="tb" onclick="tab(this,'integration')">Integration</button>
+  <button class="tb" onclick="tab(this,'plan')">Fix plan</button>
+  <button class="tb" onclick="tab(this,'arch')">Architecture</button>
+</div>
+
+<!-- ══ OVERVIEW ══ -->
+<div class="pn on" id="pn-overview">
+
+<div class="sec">What all three files agree on — the real picture</div>
+<div class="card">
+  <div class="card-t">✅ What is genuinely working and solid</div>
+  <div class="card-b">
+    <span class="bx b-ok">Backend</span> Real FastAPI app with 35+ SQLAlchemy models, Alembic, PostgreSQL + pgvector (Vector 768), Redis, Celery workers, full auth system<br>
+    <span class="bx b-ok">RAG pipeline</span> Semantic RAG, hybrid retrieval, HyDE, multi-query, re-ranking, re-embedding, evaluation runner — this is genuinely production-oriented<br>
+    <span class="bx b-ok">OCR / ingestion</span> Gemini-based document extraction, solution-book ingestion, page classification, chunk pipeline — strong foundation<br>
+    <span class="bx b-ok">Interactive Solver</span> Models + service + router for guided step-by-step problem solving already exist (concentration problems) — the best differentiator in the whole product<br>
+    <span class="bx b-ok">Frontend shell</span> React 19 + TS 6 + Vite 8 + React Router 7 — real app, dark theme, Arabic RTL, Guided Lab MVP<br>
+    <span class="bx b-ok">Notification models</span> Full notification + preference + reminder event models with Celery tasks
+  </div>
+</div>
+
+<div class="card" style="border-color:var(--color-border-danger)">
+  <div class="card-t">🔴 The 5 most critical problems right now</div>
+  <div class="card-b">
+    <strong>1. No Celery Beat in Docker</strong> — Notification reminders are fully modelled and scheduled, but they will NEVER fire because Beat is not in `docker-compose.yml`. All the notification work is dead unless this is added.<br><br>
+    <strong>2. `/chat/ask` does not persist</strong> — The one-shot endpoint used by the frontend chat does not save messages or citations. Students think they have a history, but the backend stores nothing from this endpoint.<br><br>
+    <strong>3. Silent mock fallback in frontend chat</strong> — When the AI API fails, the frontend silently returns a fake mock answer. Students receive fabricated chemistry answers with no indication they are not real. This is a trust and safety issue.<br><br>
+    <strong>4. Frontend and backend are misaligned on 5 domains</strong> — Quiz, flashcards, study-plan generation, homework upload, and dashboard all have either missing backend routes or mismatched schemas. These pages are broken or mock-backed.<br><br>
+    <strong>5. No `/dashboard` aggregate endpoint</strong> — The dashboard (the first thing every student sees) shows static hardcoded data. Nothing is real: progress, streak, recommendations, XP — all fake.
+  </div>
+</div>
+
+<div class="sec">Component health by layer</div>
+<div class="radar-grid">
+  <div>
+    <div class="rg-row"><span class="rg-label">Auth + JWT</span><div class="rg-track"><div class="rg-fill" style="width:90%;background:#1D9E75"></div></div><span class="rg-pct" style="color:#1D9E75">90%</span></div>
+    <div class="rg-row"><span class="rg-label">Database models</span><div class="rg-track"><div class="rg-fill" style="width:85%;background:#1D9E75"></div></div><span class="rg-pct" style="color:#1D9E75">85%</span></div>
+    <div class="rg-row"><span class="rg-label">RAG retrieval</span><div class="rg-track"><div class="rg-fill" style="width:78%;background:#1D9E75"></div></div><span class="rg-pct" style="color:#1D9E75">78%</span></div>
+    <div class="rg-row"><span class="rg-label">OCR / ingestion</span><div class="rg-track"><div class="rg-fill" style="width:75%;background:#E89A3C"></div></div><span class="rg-pct" style="color:#E89A3C">75%</span></div>
+    <div class="rg-row"><span class="rg-label">Interactive solver</span><div class="rg-track"><div class="rg-fill" style="width:65%;background:#E89A3C"></div></div><span class="rg-pct" style="color:#E89A3C">65%</span></div>
+    <div class="rg-row"><span class="rg-label">Notifications</span><div class="rg-track"><div class="rg-fill" style="width:50%;background:#E89A3C"></div></div><span class="rg-pct" style="color:#E89A3C">50%</span></div>
+  </div>
+  <div>
+    <div class="rg-row"><span class="rg-label">Chat history</span><div class="rg-track"><div class="rg-fill" style="width:45%;background:#E89A3C"></div></div><span class="rg-pct" style="color:#E89A3C">45%</span></div>
+    <div class="rg-row"><span class="rg-label">Quiz / flashcards</span><div class="rg-track"><div class="rg-fill" style="width:40%;background:#E24B4A"></div></div><span class="rg-pct" style="color:#E24B4A">40%</span></div>
+    <div class="rg-row"><span class="rg-label">Dashboard data</span><div class="rg-track"><div class="rg-fill" style="width:10%;background:#E24B4A"></div></div><span class="rg-pct" style="color:#E24B4A">10%</span></div>
+    <div class="rg-row"><span class="rg-label">Homework upload</span><div class="rg-track"><div class="rg-fill" style="width:30%;background:#E24B4A"></div></div><span class="rg-pct" style="color:#E24B4A">30%</span></div>
+    <div class="rg-row"><span class="rg-label">Multimedia (TTS/video)</span><div class="rg-track"><div class="rg-fill" style="width:15%;background:#E24B4A"></div></div><span class="rg-pct" style="color:#E24B4A">15%</span></div>
+    <div class="rg-row"><span class="rg-label">Push notifications</span><div class="rg-track"><div class="rg-fill" style="width:20%;background:#E24B4A"></div></div><span class="rg-pct" style="color:#E24B4A">20%</span></div>
+  </div>
+</div>
+</div>
+
+<!-- ══ BACKEND GAPS ══ -->
+<div class="pn" id="pn-backend">
+<div class="sec">🔴 Critical — production-blocking</div>
+<div class="layer">
+  <div class="layer-hd" onclick="tog(this)">
+    <span class="layer-ic">🔥</span>
+    <div class="layer-info"><div class="layer-title">No Celery Beat container in docker-compose.yml</div><div class="layer-sub">All scheduled reminders, study-plan nudges, and notification tasks will never fire</div></div>
+    <span class="bx b-err">Critical</span><span class="layer-arrow">▶</span>
+  </div>
+  <div class="layer-body">
+    <div class="gap-row"><div class="gap-sev" style="background:#E24B4A"></div><div class="gap-b"><div class="gap-t">Celery Beat missing from docker-compose.yml</div><div class="gap-d">The notification_tasks.py and reminder_service.py are fully implemented. But without Beat running, no periodic task ever executes. Students never receive study reminders, streak alerts, exam countdowns, or weekly summaries — even though all the code exists.</div><div class="gap-fix">ADD to docker-compose.yml:
+  celery-beat:
+    command: celery -A app.workers.celery_app beat --loglevel=info
+    depends_on: [postgres, redis]</div></div></div>
+  </div>
+</div>
+
+<div class="layer">
+  <div class="layer-hd" onclick="tog(this)">
+    <span class="layer-ic">💬</span>
+    <div class="layer-info"><div class="layer-title">/chat/ask is one-shot — no persistence, no citations stored</div><div class="layer-sub">Students use this endpoint but nothing is saved to the database</div></div>
+    <span class="bx b-err">Critical</span><span class="layer-arrow">▶</span>
+  </div>
+  <div class="layer-body">
+    <div class="gap-row"><div class="gap-sev" style="background:#E24B4A"></div><div class="gap-b"><div class="gap-t">Chat messages not persisted from /chat/ask</div><div class="gap-d">The frontend uses /chat/ask for the main chat flow. But this endpoint does not create a ChatSession or save ChatMessages. Session endpoints exist and DO persist — but the frontend isn't using them. The student thinks they have history, but the backend has nothing. Also: ChatMessage has no structured citations column — source chunk references are returned in the response but never stored.</div><div class="gap-fix">Fix A: Make /chat/ask accept optional session_id and persist messages
+Fix B: Add citations JSONB column to ChatMessage model + Alembic migration
+Fix C: Align frontend to use /chat/sessions flow</div></div></div>
+  </div>
+</div>
+
+<div class="layer">
+  <div class="layer-hd" onclick="tog(this)">
+    <span class="layer-ic">📊</span>
+    <div class="layer-info"><div class="layer-title">No /dashboard aggregate endpoint</div><div class="layer-sub">The most important page for retention shows 100% static fake data</div></div>
+    <span class="bx b-err">Critical</span><span class="layer-arrow">▶</span>
+  </div>
+  <div class="layer-body">
+    <div class="gap-row"><div class="gap-sev" style="background:#E24B4A"></div><div class="gap-b"><div class="gap-t">Dashboard endpoint missing — all data hardcoded in frontend</div><div class="gap-d">The frontend dashboard shows streak, XP, progress %, today's lesson, recommendations, weak topics, exam countdown. All of these come from hardcoded values in the component. The backend has all the data (UserProgress, Achievement, StudyPlan, QuizAttempt, LessonProgress) but no single GET /dashboard endpoint that aggregates it.</div><div class="gap-fix">Create: GET /api/v1/dashboard
+Returns: { streak_days, xp, level, today_lesson, overall_pct,
+chapters_progress[], weak_topics[], recommendations[],
+exam_days_remaining }
+Cache in Redis per user, TTL=5min</div></div></div>
+  </div>
+</div>
+
+<div class="layer">
+  <div class="layer-hd" onclick="tog(this)">
+    <span class="layer-ic">📸</span>
+    <div class="layer-info"><div class="layer-title">Homework image upload — image_path only, no multipart</div><div class="layer-sub">Mobile/web users cannot upload a photo of their homework</div></div>
+    <span class="bx b-err">Critical</span><span class="layer-arrow">▶</span>
+  </div>
+  <div class="layer-body">
+    <div class="gap-row"><div class="gap-sev" style="background:#E24B4A"></div><div class="gap-b"><div class="gap-t">Homework solver accepts image_path string, not a real file</div><div class="gap-d">The homework schema takes an image_path field — a server-side path string. No web or mobile client can use this. It only works if files are already on the server disk. Need a standard multipart/form-data upload endpoint that accepts the image, stores it in S3/R2, and returns a URL that the homework solver can then process.</div><div class="gap-fix">Add: POST /api/v1/homework/upload (multipart/form-data)
+Returns: { image_url: str, homework_id: int }
+Backend: store in Cloudflare R2, pass URL to Gemini vision</div></div></div>
+  </div>
+</div>
+
+<div class="sec">🟡 High — blocking features</div>
+<div class="layer">
+  <div class="layer-hd" onclick="tog(this)">
+    <span class="layer-ic">📱</span>
+    <div class="layer-info"><div class="layer-title">DeviceToken model exists — zero API endpoints</div><div class="layer-sub">Push notifications structurally impossible without device registration</div></div>
+    <span class="bx b-warn">High</span><span class="layer-arrow">▶</span>
+  </div>
+  <div class="layer-body">
+    <div class="gap-row"><div class="gap-sev" style="background:#E89A3C"></div><div class="gap-b"><div class="gap-t">No POST/DELETE /device-tokens API</div><div class="gap-d">DeviceToken model in device.py has user_id, token, platform. But no router was found for registering or deleting device tokens. Without this, the mobile app and web frontend cannot register for FCM push notifications. Even if Celery Beat is fixed, push notifications will never reach anyone.</div><div class="gap-fix">Add router: /api/v1/devices
+POST /api/v1/devices/register → save FCM token
+DELETE /api/v1/devices/{token} → remove on logout
+GET /api/v1/devices → list user's registered devices</div></div></div>
+  </div>
+</div>
+
+<div class="layer">
+  <div class="layer-hd" onclick="tog(this)">
+    <span class="layer-ic">♻️</span>
+    <div class="layer-info"><div class="layer-title">RAG cache not invalidated after re-embedding</div><div class="layer-sub">After a re-embed job, students get stale cached results for hours</div></div>
+    <span class="bx b-warn">High</span><span class="layer-arrow">▶</span>
+  </div>
+  <div class="layer-body">
+    <div class="gap-row"><div class="gap-sev" style="background:#E89A3C"></div><div class="gap-b"><div class="gap-t">Redis RAG cache never invalidated after ingestion/re-embedding</div><div class="gap-d">rag.py uses Redis to cache retrieval results. But when rag_reembed.py finishes re-embedding chunks with a new model, the Redis cache still holds the old results from the previous embeddings. Students will get stale answers for up to the cache TTL (likely 1 hour) after an ingestion update.</div><div class="gap-fix">In rag_tasks.py, after re-embed completes:
+  await redis_client.delete_pattern("rag:*")
+  or flush only affected source keys</div></div></div>
+  </div>
+</div>
+
+<div class="layer">
+  <div class="layer-hd" onclick="tog(this)">
+    <span class="layer-ic">💼</span>
+    <div class="layer-info"><div class="layer-title">chat_service.py is 1800+ lines — unmaintainable monolith</div><div class="layer-sub">Mixes routing, retrieval, prompts, media routing, and local fallback in one file</div></div>
+    <span class="bx b-warn">High</span><span class="layer-arrow">▶</span>
+  </div>
+  <div class="layer-body">
+    <div class="gap-row"><div class="gap-sev" style="background:#E89A3C"></div><div class="gap-b"><div class="gap-t">chat_service.py mixes 5 different concerns in one file</div><div class="gap-d">The file contains: answer routing logic, RAG retrieval calls, prompt building, media format routing, dictionary-based fallback logic, and local mock responses. This means a bug in prompt building can accidentally break media routing, and a change to RAG retrieval breaks dictionary lookup. Any engineer touching this file risks breaking everything else.</div><div class="gap-fix">Split into:
+  tutor_prompt_builder.py (already exists — use it)
+  answer_router.py (media/format routing)
+  chat_history_service.py (session persistence)
+  chat_service.py (thin orchestrator only)</div></div></div>
+  </div>
+</div>
+
+<div class="layer">
+  <div class="layer-hd" onclick="tog(this)">
+    <span class="layer-ic">🔄</span>
+    <div class="layer-info"><div class="layer-title">Ingestion jobs not durable — lost on server restart</div><div class="layer-sub">In-memory _TASKS dict means any restart wipes all job status</div></div>
+    <span class="bx b-warn">High</span><span class="layer-arrow">▶</span>
+  </div>
+  <div class="layer-body">
+    <div class="gap-row"><div class="gap-sev" style="background:#E89A3C"></div><div class="gap-b"><div class="gap-t">Ingestion progress tracked in memory, not DB</div><div class="gap-d">/admin/ingestion/start uses FastAPI BackgroundTasks + in-memory _TASKS dict for progress. If the backend restarts (crash, deploy, OOM) during a 96-page ingestion job, all progress is lost and the admin doesn't know which pages were processed. IngestionJob and IngestionPage models exist in DB — they should be the source of truth.</div><div class="gap-fix">Move ingestion to Celery task (not BackgroundTasks)
+Update IngestionJob.status in DB after each page
+Remove in-memory _TASKS dict entirely</div></div></div>
+  </div>
+</div>
+</div>
+
+<!-- ══ FRONTEND GAPS ══ -->
+<div class="pn" id="pn-frontend">
+<div class="sec">🔴 Critical — trust and data integrity</div>
+<div class="layer">
+  <div class="layer-hd" onclick="tog(this)">
+    <span class="layer-ic">🤥</span>
+    <div class="layer-info"><div class="layer-title">Silent mock fallback in aiApi.ask — students get fake chemistry answers</div><div class="layer-sub">When API fails, frontend silently returns fabricated AI responses</div></div>
+    <span class="bx b-err">Critical</span><span class="layer-arrow">▶</span>
+  </div>
+  <div class="layer-body">
+    <div class="gap-row"><div class="gap-sev" style="background:#E24B4A"></div><div class="gap-b"><div class="gap-t">aiApi.ts catches API errors and returns mock chemistry answers</div><div class="gap-d">When the backend AI endpoint fails (network error, Gemini quota, backend crash), the frontend catches the error and returns a pre-written fake answer about water molecules or chemical bonds. The student sees a confident-looking AI answer with no indication it is fake. For a chemistry tutor, this is a serious accuracy and trust problem — a student could learn wrong chemistry from a mock response.</div><div class="gap-fix">Remove mock fallback entirely from aiApi.ask
+Replace with: show ErrorBanner "المساعد غير متاح الآن، يرجى المحاولة لاحقاً"
+Never show fake AI content to students</div></div></div>
+  </div>
+</div>
+
+<div class="layer">
+  <div class="layer-hd" onclick="tog(this)">
+    <span class="layer-ic">🏠</span>
+    <div class="layer-info"><div class="layer-title">Dashboard shows 100% static data — no backend calls at all</div><div class="layer-sub">Streak, XP, progress, lessons — all hardcoded in the component</div></div>
+    <span class="bx b-err">Critical</span><span class="layer-arrow">▶</span>
+  </div>
+  <div class="layer-body">
+    <div class="gap-row"><div class="gap-sev" style="background:#E24B4A"></div><div class="gap-b"><div class="gap-t">DashboardPage in App.tsx contains hardcoded numbers</div><div class="gap-d">The most important page for student motivation (first screen every day) shows: "36% progress", "7 day streak", "87% quiz average", "today's lesson: Covalent bonds". None of these are real. They are hardcoded JSX values. This means every student sees the same dashboard regardless of what they've actually done.</div><div class="gap-fix">1. Create GET /api/v1/dashboard backend endpoint first
+2. Create dashboardApi.ts adapter
+3. Replace hardcoded values with useEffect + API call
+4. Add LoadingSkeleton + ErrorBanner states</div></div></div>
+  </div>
+</div>
+
+<div class="sec">🟡 High — blocking student workflows</div>
+<div class="layer">
+  <div class="layer-hd" onclick="tog(this)">
+    <span class="layer-ic">📋</span>
+    <div class="layer-info"><div class="layer-title">No global state management — everything in localStorage</div><div class="layer-sub">No Zustand, no Redux, no React Query — server state is not managed</div></div>
+    <span class="bx b-warn">High</span><span class="layer-arrow">▶</span>
+  </div>
+  <div class="layer-body">
+    <div class="gap-row"><div class="gap-sev" style="background:#E89A3C"></div><div class="gap-b"><div class="gap-t">State management gap across the entire frontend</div><div class="gap-d">The frontend stores auth tokens and preferences in localStorage via storage.ts. There is no global state library (Zustand, Redux, React Query). This means: API data is re-fetched on every render, loading states are inconsistent across pages, user XP/streak changes in one page don't update in the sidebar, and there is no single source of truth for auth state. As features grow, this will become a serious bug surface.</div><div class="gap-fix">Add React Query v5 for server state (lessons, chat, progress)
+Add Zustand for client state (auth, preferences, active session)
+Migrate auth from localStorage to Zustand with persistence middleware</div></div></div>
+  </div>
+</div>
+
+<div class="layer">
+  <div class="layer-hd" onclick="tog(this)">
+    <span class="layer-ic">📝</span>
+    <div class="layer-info"><div class="layer-title">Homework solver UI completely missing</div><div class="layer-sub">/homework route doesn't exist — key student workflow has no frontend</div></div>
+    <span class="bx b-warn">High</span><span class="layer-arrow">▶</span>
+  </div>
+  <div class="layer-body">
+    <div class="gap-row"><div class="gap-sev" style="background:#E89A3C"></div><div class="gap-b"><div class="gap-t">No HomeworkPage, HomeworkDetailPage, or homeworkApi.ts</div><div class="gap-d">The backend has /api/v1/homework/* endpoints (partial) and the Homework model. But there is no frontend page, no route, no API adapter. The student cannot submit a homework problem (by photo or text) and receive a step-by-step solution. This is a core education feature that has zero frontend implementation.</div><div class="gap-fix">Create: src/pages/HomeworkPage.tsx
+Create: src/pages/HomeworkDetailPage.tsx
+Create: src/api/homeworkApi.ts
+Add route: /homework → HomeworkPage
+Add route: /homework/:id → HomeworkDetailPage</div></div></div>
+  </div>
+</div>
+
+<div class="layer">
+  <div class="layer-hd" onclick="tog(this)">
+    <span class="layer-ic">🏛️</span>
+    <div class="layer-info"><div class="layer-title">Admin RAG UI completely missing — backend APIs exist but no frontend</div><div class="layer-sub">No way to monitor retrieval quality, run evaluations, or debug wrong answers</div></div>
+    <span class="bx b-warn">High</span><span class="layer-arrow">▶</span>
+  </div>
+  <div class="layer-body">
+    <div class="gap-row"><div class="gap-sev" style="background:#E89A3C"></div><div class="gap-b"><div class="gap-t">5 admin backend routes have zero frontend</div><div class="gap-d">The backend has: GET /admin/rag/query-logs, GET /admin/rag/evaluation/latest, POST /admin/rag/evaluate, POST /admin/rag/reembed, POST /rag/retrieve-debug. These are how you diagnose why the RAG is returning wrong chemistry answers. Without a frontend for these, the development team is flying blind when students report bad answers.</div><div class="gap-fix">Create: src/pages/admin/RagAdminPage.tsx (query logs + scores)
+Create: src/pages/admin/RagEvaluationPage.tsx
+Create: src/pages/admin/RagReembedPage.tsx (job launcher)
+Create: src/api/adminRagApi.ts</div></div></div>
+  </div>
+</div>
+
+<div class="layer">
+  <div class="layer-hd" onclick="tog(this)">
+    <span class="layer-ic">🌐</span>
+    <div class="layer-info"><div class="layer-title">Guided Lab — English labels, no resume, finish response mismatch</div><div class="layer-sub">The flagship differentiating feature needs localization and stability work</div></div>
+    <span class="bx b-warn">High</span><span class="layer-arrow">▶</span>
+  </div>
+  <div class="layer-body">
+    <div class="gap-row"><div class="gap-sev" style="background:#E89A3C"></div><div class="gap-b"><div class="gap-t">Three problems with the Guided Lab MVP</div><div class="gap-d">Problem 1: Many Lab and Guided Lab labels are still English in a product that is Arabic-first. Problem 2: There is no "resume session" flow — if a student closes the browser mid-problem, they cannot continue. Problem 3: The frontend finish response shape doesn't match what the backend /finish endpoint returns, causing a crash on completion. This is the BEST feature in the product and it has bugs on completion.</div><div class="gap-fix">1. Full Arabic i18n pass on all Guided Lab components
+2. Add GET /api/v1/interactive-solver/sessions (list for resume)
+3. Fix finish response shape: align SolverSessionPage to backend schema
+4. Add mock fallback ONLY for dev, never in production builds</div></div></div>
+  </div>
+</div>
+</div>
+
+<!-- ══ RAG & AI ══ -->
+<div class="pn" id="pn-rag">
+<div class="sec">RAG pipeline — what works, what doesn't</div>
+<div class="card">
+  <div class="card-t">✅ What's genuinely production-ready in RAG</div>
+  <div class="card-b">
+    <span class="bx b-ok">Vector store</span> RagChunk.embedding = pgvector Vector(768) with ivfflat index<br>
+    <span class="bx b-ok">Semantic RAG</span> HyDE, multi-query, query rewriting, re-ranking all implemented<br>
+    <span class="bx b-ok">Hybrid retrieval</span> Vector + lexical blending with scoring weights<br>
+    <span class="bx b-ok">Dual source</span> Textbook + solution book ingestion both implemented<br>
+    <span class="bx b-ok">RAG logging</span> RagQueryLog + RetrievedChunkLog models exist for analytics<br>
+    <span class="bx b-ok">Evaluation</span> evaluate_rag.py script exists with scoring thresholds<br>
+    <span class="bx b-ok">Re-embedding</span> rag_reembed.py service with Celery task
+  </div>
+</div>
+
+<div class="sec">🔴 RAG gaps</div>
+<div class="layer">
+  <div class="layer-hd" onclick="tog(this)">
+    <span class="layer-ic">🔢</span>
+    <div class="layer-info"><div class="layer-title">Embedding model inconsistency — gemini-embedding-001 vs text-embedding-004</div><div class="layer-sub">Different dimensions would corrupt the vector index silently</div></div>
+    <span class="bx b-err">Critical</span><span class="layer-arrow">▶</span>
+  </div>
+  <div class="layer-body">
+    <div class="gap-row"><div class="gap-sev" style="background:#E24B4A"></div><div class="gap-b"><div class="gap-t">Two embedding models referenced across the codebase</div><div class="gap-d">The backend report says gemini-embedding-001 is current. The codebase analysis says both gemini-embedding-001 and text-embedding-004 are referenced in different places. These models produce DIFFERENT vector dimensions (gemini-embedding-001 = 768, text-embedding-004 = 768 too — but they are semantically different models). If chunks are embedded with one model and queries use another, similarity scores will be meaningless. Also: local sentence-transformers fallback is commented out, so clean installs silently fall back to hash embeddings.</div><div class="gap-fix">1. Pick ONE model: gemini-embedding-001 (current production)
+2. Remove all references to text-embedding-004
+3. Add startup check: if embedding_model != active model → block
+4. Remove hash fallback from production code entirely
+5. Update .env.example and README to remove OpenAI references</div></div></div>
+  </div>
+</div>
+
+<div class="layer">
+  <div class="layer-hd" onclick="tog(this)">
+    <span class="layer-ic">📉</span>
+    <div class="layer-info"><div class="layer-title">Scoring weights still at 0.35 vector / 0.65 lexical (from screenshots)</div><div class="layer-sub">Arabic morphology breaks lexical matching — students get 28-44% similarity scores</div></div>
+    <span class="bx b-err">Critical</span><span class="layer-arrow">▶</span>
+  </div>
+  <div class="layer-body">
+    <div class="gap-row"><div class="gap-sev" style="background:#E24B4A"></div><div class="gap-b"><div class="gap-t">Hybrid scoring weights need to be flipped for Arabic</div><div class="gap-d">Based on the screenshots from previous analysis: students see similarity scores of 28-44%. This is caused by the 0.65 lexical weight — Arabic morphology means "الأملاح" doesn't match "أملاح" in keyword matching, collapsing the lexical score to near zero and dragging the hybrid score down. All the advanced RAG features (HyDE, multi-query, reranking) are undermined by this one weight misconfiguration.</div><div class="gap-fix">In rag.py:
+  VECTOR_WEIGHT  = 0.75  # was 0.35
+  LEXICAL_WEIGHT = 0.25  # was 0.65
+  MIN_SIMILARITY = 0.55  # was 0.25</div></div></div>
+  </div>
+</div>
+
+<div class="layer">
+  <div class="layer-hd" onclick="tog(this)">
+    <span class="layer-ic">📊</span>
+    <div class="layer-info"><div class="layer-title">RAG evaluation not in CI — no quality gate for deploys</div><div class="layer-sub">A bad re-embedding could ship to production without detection</div></div>
+    <span class="bx b-warn">High</span><span class="layer-arrow">▶</span>
+  </div>
+  <div class="layer-body">
+    <div class="gap-row"><div class="gap-sev" style="background:#E89A3C"></div><div class="gap-b"><div class="gap-t">evaluate_rag.py exists but is not wired into CI/CD pipeline</div><div class="gap-d">The evaluation runner exists and can produce a score. But it is not run as part of GitHub Actions or any deploy pipeline. This means a bad re-embedding job (wrong model, wrong dimension, corrupted chunks) can be deployed to production and students will get worse answers for days before anyone notices.</div><div class="gap-fix">Add to .github/workflows/ci.yml:
+  - name: RAG quality gate
+    run: python scripts/evaluate_rag.py --threshold 0.65 --fail-below
+    # Fail CI if RAG score drops below 65%</div></div></div>
+  </div>
+</div>
+
+<div class="sec">What's architecturally missing in AI</div>
+<div class="card">
+  <div class="card-b">
+    <span class="bx b-miss">Missing</span> <strong>TTS audio generation</strong> — Audio format is selected by students but no TTS pipeline exists. Only structured placeholder.<br>
+    <span class="bx b-miss">Missing</span> <strong>DALL-E / image generation</strong> — Image format selected by students but no generation pipeline. Page image references exist, but AI-generated diagrams don't.<br>
+    <span class="bx b-miss">Missing</span> <strong>Video / reel pipeline</strong> — Reel model exists, but no generation. Script → TTS → visual cues flow not implemented.<br>
+    <span class="bx b-miss">Missing</span> <strong>Preflight endpoint</strong> — No way to verify Gemini API key / model availability on startup. Errors only surface when a student first asks a question.<br>
+    <span class="bx b-miss">Missing</span> <strong>Source-type routing tests</strong> — No regression tests for textbook vs solution-book routing. A code change could silently send all questions to the wrong source.
+  </div>
+</div>
+</div>
+
+<!-- ══ INTEGRATION ══ -->
+<div class="pn" id="pn-integration">
+<div class="sec">Backend ↔ Frontend mismatches — 6 broken domains</div>
+<table class="ptable">
+  <thead><tr><th>Domain</th><th>Expected by frontend</th><th>Backend reality</th><th>Severity</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Dashboard</strong></td><td>GET /api/v1/dashboard returns aggregate</td><td>Endpoint does not exist</td><td><span class="bx b-err">Broken</span></td></tr>
+    <tr><td><strong>Chat history</strong></td><td>/chat/ask persists + returns citations</td><td>One-shot, no persistence, no citation storage</td><td><span class="bx b-err">Broken</span></td></tr>
+    <tr><td><strong>Quizzes</strong></td><td>Generate, submit, get results endpoints</td><td>Partial — schema mismatch on response</td><td><span class="bx b-warn">Partial</span></td></tr>
+    <tr><td><strong>Flashcards</strong></td><td>POST /flashcards/generate, GET /flashcards/due</td><td>Endpoints missing or mismatched in backend</td><td><span class="bx b-warn">Partial</span></td></tr>
+    <tr><td><strong>Study plan</strong></td><td>Generation + update + complete routes</td><td>CRUD exists but generation routes missing</td><td><span class="bx b-warn">Partial</span></td></tr>
+    <tr><td><strong>Homework</strong></td><td>/homework page + multipart upload</td><td>Backend partial (image_path only), zero frontend</td><td><span class="bx b-err">Broken</span></td></tr>
+    <tr><td><strong>Device tokens</strong></td><td>Register FCM token for push</td><td>Model exists, zero API routes</td><td><span class="bx b-err">Broken</span></td></tr>
+    <tr><td><strong>RAG search</strong></td><td>Direct semantic-retrieve in RAG search page</td><td>Endpoint exists but frontend calls /chat/ask instead</td><td><span class="bx b-warn">Wiring wrong</span></td></tr>
+    <tr><td><strong>Guided solver</strong></td><td>Session list for resume + correct finish shape</td><td>List endpoint missing, finish response shape mismatch</td><td><span class="bx b-warn">Partial</span></td></tr>
+    <tr><td><strong>Admin RAG</strong></td><td>5 admin pages with query logs, eval, reembed</td><td>All 5 backend routes exist, zero frontend pages</td><td><span class="bx b-err">Missing FE</span></td></tr>
+  </tbody>
+</table>
+
+<div class="sec">Student learning flow — what works end-to-end right now</div>
+<div style="overflow-x:auto;padding-bottom:8px">
+  <div class="flow-row">
+    <div class="flow-box flow-ok">Register / Login</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box flow-partial">Dashboard (static)</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box flow-partial">Lessons (partial)</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box flow-partial">Ask AI (no persist)</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box flow-missing">Homework (missing)</div>
+  </div>
+  <div class="flow-row" style="margin-top:6px">
+    <div class="flow-box flow-partial">Study plan (partial)</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box flow-partial">Quizzes (mismatch)</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box flow-partial">Flashcards (partial)</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box flow-ok">Guided Lab (MVP)</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box flow-missing">Notifications (no Beat)</div>
+  </div>
+  <div style="margin-top:8px;display:flex;gap:12px;font-size:11px;color:var(--color-text-secondary)">
+    <span style="display:flex;align-items:center;gap:5px"><span style="width:12px;height:12px;border-radius:3px;background:#EAF3DE;border:.5px solid #B7D9A0;flex-shrink:0"></span>Works</span>
+    <span style="display:flex;align-items:center;gap:5px"><span style="width:12px;height:12px;border-radius:3px;background:#FAEEDA;border:.5px solid #F5D9A0;flex-shrink:0"></span>Partial / mocked</span>
+    <span style="display:flex;align-items:center;gap:5px"><span style="width:12px;height:12px;border-radius:3px;background:#FAECE7;border:.5px solid #F5BCBC;flex-shrink:0"></span>Missing / broken</span>
+  </div>
+</div>
+</div>
+
+<!-- ══ FIX PLAN ══ -->
+<div class="pn" id="pn-plan">
+<div class="sec">P0 — Fix this week (product is broken without these)</div>
+<table class="ptable">
+  <thead><tr><th>#</th><th>Fix</th><th>File(s)</th><th>Effort</th></tr></thead>
+  <tbody>
+    <tr><td><span class="bx b-err">P0.1</span></td><td>Add Celery Beat to docker-compose.yml</td><td>src/docker-compose.yml</td><td>30 min</td></tr>
+    <tr><td><span class="bx b-err">P0.2</span></td><td>Remove silent mock fallback from aiApi.ask — show error state instead</td><td>frontend-web/src/api/aiApi.ts</td><td>1 hr</td></tr>
+    <tr><td><span class="bx b-err">P0.3</span></td><td>Fix embedding model to ONE model — remove all text-embedding-004 references</td><td>app/core/config.py, .env.example, README</td><td>2 hr</td></tr>
+    <tr><td><span class="bx b-err">P0.4</span></td><td>Fix RAG hybrid weights: 0.75 vector / 0.25 lexical, min_similarity=0.55</td><td>app/services/rag.py</td><td>30 min</td></tr>
+    <tr><td><span class="bx b-err">P0.5</span></td><td>Make /chat/ask persist ChatSession + ChatMessage + citations</td><td>app/api/chat/routes.py, app/services/chat_service.py</td><td>1 day</td></tr>
+    <tr><td><span class="bx b-err">P0.6</span></td><td>Add citations JSONB column to ChatMessage + Alembic migration</td><td>app/models/chat.py, alembic/versions/</td><td>2 hr</td></tr>
+  </tbody>
+</table>
+
+<div class="sec">P1 — Fix this sprint (features are broken without these)</div>
+<table class="ptable">
+  <thead><tr><th>#</th><th>Fix</th><th>File(s)</th><th>Effort</th></tr></thead>
+  <tbody>
+    <tr><td><span class="bx b-warn">P1.1</span></td><td>Create GET /api/v1/dashboard aggregate endpoint</td><td>app/api/dashboard/ (new), app/api/router.py</td><td>1 day</td></tr>
+    <tr><td><span class="bx b-warn">P1.2</span></td><td>Wire frontend dashboard to real API (replace all hardcoded values)</td><td>frontend-web/src/App.tsx (DashboardPage)</td><td>1 day</td></tr>
+    <tr><td><span class="bx b-warn">P1.3</span></td><td>Add multipart upload endpoint for homework images</td><td>app/api/homework/routes.py</td><td>3 hr</td></tr>
+    <tr><td><span class="bx b-warn">P1.4</span></td><td>Create HomeworkPage + HomeworkDetailPage + homeworkApi.ts</td><td>frontend-web/src/pages/ (2 new files)</td><td>2 days</td></tr>
+    <tr><td><span class="bx b-warn">P1.5</span></td><td>Add device token API: POST/DELETE /api/v1/devices/register</td><td>app/api/devices/ (new router)</td><td>3 hr</td></tr>
+    <tr><td><span class="bx b-warn">P1.6</span></td><td>Add RAG cache invalidation after re-embedding completes</td><td>app/workers/rag_tasks.py</td><td>1 hr</td></tr>
+    <tr><td><span class="bx b-warn">P1.7</span></td><td>Fix quiz/flashcard/study-plan API contracts frontend ↔ backend</td><td>frontend-web/src/api/ (3 files)</td><td>2 days</td></tr>
+    <tr><td><span class="bx b-warn">P1.8</span></td><td>Fix Guided Lab: Arabic labels + finish response shape + resume flow</td><td>frontend-web/src/features/guided-lab/</td><td>2 days</td></tr>
+    <tr><td><span class="bx b-warn">P1.9</span></td><td>Add Zustand (auth state) + React Query (server state) to frontend</td><td>frontend-web/src/store/ (new), package.json</td><td>1 day</td></tr>
+    <tr><td><span class="bx b-warn">P1.10</span></td><td>Add RAG Admin UI (query logs, evaluation, reembed monitor)</td><td>frontend-web/src/pages/admin/ (4 new files)</td><td>2 days</td></tr>
+  </tbody>
+</table>
+
+<div class="sec">P2 — Next cycle (make it great)</div>
+<div class="card">
+  <div class="card-b">
+    <span class="bx b-info">P2.1</span> TTS audio generation pipeline (Gemini TTS or ElevenLabs)<br>
+    <span class="bx b-info">P2.2</span> AI-generated diagram images for chemistry concepts (Gemini Imagen)<br>
+    <span class="bx b-info">P2.3</span> Expand Interactive Solver beyond concentration → all chemistry problem types<br>
+    <span class="bx b-info">P2.4</span> Reel / short video generation pipeline<br>
+    <span class="bx b-info">P2.5</span> Offline sync endpoints (changed-since, sync queue) for mobile<br>
+    <span class="bx b-info">P2.6</span> Split chat_service.py into 4 focused files<br>
+    <span class="bx b-info">P2.7</span> RAG evaluation CI gate in GitHub Actions<br>
+    <span class="bx b-info">P2.8</span> Blocked page review + selective retry in ingestion admin UI<br>
+    <span class="bx b-info">P2.9</span> Accessibility pass (WCAG 2.2) on all frontend pages<br>
+    <span class="bx b-info">P2.10</span> Arabic formula rendering fix: wrap all chemical formulas in dir="ltr" span
+  </div>
+</div>
+</div>
+
+<!-- ══ ARCHITECTURE ══ -->
+<div class="pn" id="pn-arch">
+<div class="sec">Current architecture — what is actually there</div>
+<div class="code"><span class="cm"># The real EduMind architecture (June 2026)</span>
+
+<span class="kw">BACKEND</span> (FastAPI · PostgreSQL 16 + pgvector · Redis · Celery)
+├── 35+ SQLAlchemy models — comprehensive domain coverage
+├── Alembic migrations — schema versioned
+├── Gemini integration — google-genai SDK (NOT OpenAI)
+├── RAG pipeline — semantic, hybrid, HyDE, multi-query, reranking
+├── OCR ingestion — Gemini direct PDF extraction, solution book support
+├── Interactive Solver MVP — concentration problems, step-by-step guidance
+├── Notifications — modelled + Celery tasks (NO Beat = never fires)
+└── ❌ MISSING: /dashboard, multipart upload, device tokens, Celery Beat
+
+<span class="kw">FRONTEND</span> (React 19 · TypeScript 6 · Vite 8 · React Router 7)
+├── Dark Arabic RTL design — solid foundation
+├── Ask AI page — works but no persistence, has mock fallback
+├── Guided Lab — best feature, needs localization + stability
+├── Lessons + Study Plan — partial, mock-backed
+├── ❌ MISSING: global state, HomeworkPage, Admin RAG pages
+└── ❌ BROKEN: Dashboard (static), Quiz/Flashcard contracts
+
+<span class="kw">RAG PIPELINE</span>
+├── pgvector Vector(768) — gemini-embedding-001
+├── Hybrid retrieval — weights NEED FIXING (0.35/0.65 → 0.75/0.25)
+├── Semantic RAG — HyDE, multi-query, re-ranking implemented
+├── Dual source — textbook + solution book both ingested
+├── RAG logging — query logs + chunk logs in DB
+├── Evaluation — exists but not in CI
+└── ❌ MISSING: cache invalidation, CI quality gate, model consistency
+
+<span class="kw">MISSING ACROSS ALL LAYERS</span>
+├── TTS / audio generation (placeholder only)
+├── Image generation pipeline (placeholder only)
+├── Video / reel pipeline (model only, no generation)
+├── Celery Beat (scheduled jobs never fire)
+├── /dashboard aggregate endpoint
+└── Multipart homework upload</div>
+
+<div class="sec">What makes EduMind architecturally strong already</div>
+<div class="card">
+  <div class="card-b">
+    <strong>The Interactive Solver is the real differentiator.</strong> Most AI tutors are RAG chatbots. EduMind already has a step-by-step guided solver that validates numeric chemistry, tracks misconceptions (MisconceptionEvent model), updates skill mastery (SkillMastery model), and could generate quizzes from weak topics. This is architecturally ahead of 90% of AI tutoring products. The priority is to get it working reliably, localized, and expanded beyond concentration problems.<br><br>
+    <strong>The RAG pipeline is genuinely sophisticated.</strong> HyDE + multi-query + re-ranking in a single pipeline, with a dual-source textbook + solution book, is a strong technical foundation. The main issues are configuration (weights, model consistency) not design.<br><br>
+    <strong>The data model is comprehensive.</strong> 35+ models covering every educational domain: curriculum, progress, gamification, interactive solving, misconceptions, billing, devices, notifications. The schema design is sound. The gaps are in the API surface, not the data model.
+  </div>
+</div>
+
+<div class="sec">The one sentence summary</div>
+<div class="card" style="background:var(--color-background-secondary);border-color:var(--color-border-secondary)">
+  <div style="font-size:14px;color:var(--color-text-primary);line-height:1.7;font-weight:500">
+    EduMind has a strong architecture and the right ideas — the database is comprehensive, the RAG pipeline is sophisticated, and the Interactive Solver is genuinely differentiated — but it is being held back by 6 critical configuration bugs (Celery Beat missing, mock fallback, wrong RAG weights, no /dashboard, no chat persistence, embedding model inconsistency) that must be fixed before any new features are added.
+  </div>
+</div>
+</div>
+
+<script>
+function tab(btn,id){
+  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.pn').forEach(p=>p.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('pn-'+id).classList.add('on');
+}
+function tog(hd){
+  const body=hd.nextElementSibling;
+  const arrow=hd.querySelector('.layer-arrow');
+  const op=body.classList.toggle('op');
+  if(arrow) arrow.classList.toggle('op',op);
+}
+</script>

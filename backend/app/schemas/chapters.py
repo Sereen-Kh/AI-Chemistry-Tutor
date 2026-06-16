@@ -7,6 +7,7 @@ from pydantic import BaseModel
 
 class ChapterResponse(BaseModel):
     id: int
+    unit_id: int | None = None
     title_ar: str
     title_en: str | None = None
     description_ar: str | None = None
@@ -20,6 +21,7 @@ class ChapterResponse(BaseModel):
 
 
 class ChapterCreateRequest(BaseModel):
+    unit_id: int | None = None
     title_ar: str
     title_en: str | None = None
     description_ar: str | None = None
@@ -29,6 +31,7 @@ class ChapterCreateRequest(BaseModel):
 
 
 class ChapterUpdateRequest(BaseModel):
+    unit_id: int | None = None
     title_ar: str | None = None
     title_en: str | None = None
     description_ar: str | None = None

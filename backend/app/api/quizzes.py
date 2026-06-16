@@ -32,6 +32,8 @@ async def generate_quiz(request: QuizGenerateRequest, db: AsyncSession = Depends
                 page_number=question.page_number,
                 source_id=question.source_id,
                 difficulty=question.difficulty,
+                correct_answer=question.correct_answer,
+                explanation=question.explanation,
             )
             for question in questions
         ]
@@ -50,6 +52,7 @@ async def submit_quiz(
         score=attempt.score,
         total=attempt.total,
         weak_topics=attempt.weak_topics,
+        percentage=round((attempt.score / attempt.total) * 100, 2) if attempt.total else 0.0,
     )
 
 
@@ -61,4 +64,3 @@ async def quiz_history(user_id: int = Depends(get_current_user_id), db: AsyncSes
 @router.get("/recommendations", response_model=list[QuizRecommendationResponse])
 async def quiz_recommendations(db: AsyncSession = Depends(get_async_db)):
     return await quiz_service.recommendations(db)
-

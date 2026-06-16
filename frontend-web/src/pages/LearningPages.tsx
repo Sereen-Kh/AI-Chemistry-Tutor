@@ -1,7 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { aiApi } from '../api';
-import { mockLessons, getLessonQualityReport } from '../api/mockChemistryData';
+import { aiApi, curriculumApi, fallbackCurriculumUnits } from '../api';
 import {
   AnswerFormatSelector,
   Button,
@@ -13,101 +12,165 @@ import {
   StatusPill,
 } from '../components/DesignSystem';
 import type { AiAskResponse, AnswerFormat } from '../types';
+import type { UnitCatalogItem } from '../types';
 
-const chapterNames: Record<string, { title: string; subtitle: string; color: 'blue' | 'teal' | 'gold' | 'coral' | 'purple' }> = {
-  chapter_1: { title: 'المحاليل المائية', subtitle: 'الوحدة الأولى · 4 دروس أساسية', color: 'blue' },
-  chapter_2: { title: 'المحاليل الحمضية', subtitle: 'الوحدة الثانية · 3 دروس أساسية', color: 'teal' },
-  chapter_3: { title: 'المحاليل الأساسية', subtitle: 'الوحدة الثالثة · درسان', color: 'purple' },
-  chapter_4: { title: 'أنواع التفاعلات الكيميائية', subtitle: 'الوحدة الرابعة · 4 تفاعلات رئيسية', color: 'gold' },
-  chapter_5: { title: 'الأملاح', subtitle: 'الوحدة الخامسة · درسان', color: 'coral' },
+const SEMESTER_STORAGE_KEY = 'edumind.activeSemester';
+const chapterColors: Array<'blue' | 'teal' | 'gold' | 'coral' | 'purple'> = ['blue', 'teal', 'purple', 'gold', 'coral'];
+
+const filterUnitsBySemester = (units: UnitCatalogItem[], semester: number) =>
+  units.filter((unit) => unit.semester === semester);
+
+const formatPages = (start?: number | null, end?: number | null) => {
+  if (!start) return 'غير محددة بعد';
+  return end && end !== start ? `${start} - ${end}` : `${start}`;
+};
+
+const difficultyLabel = (difficulty: number) => {
+  if (difficulty <= 1) return 'سهل';
+  if (difficulty === 2) return 'متوسط';
+  return 'متقدم';
 };
 
 export const LessonsPage = () => {
-  // Group lessons by chapter
-  const chapters = useMemo(() => {
-    const map: Record<string, typeof mockLessons> = {};
-    mockLessons.forEach((lesson) => {
-      if (!map[lesson.chapterId]) {
-        map[lesson.chapterId] = [];
-      }
-      map[lesson.chapterId].push(lesson);
+  const [activeSemester, setActiveSemester] = useState(() => {
+    const saved = Number(localStorage.getItem(SEMESTER_STORAGE_KEY));
+    return saved === 2 ? 2 : 1;
+  });
+  const [units, setUnits] = useState<UnitCatalogItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [usingFallback, setUsingFallback] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem(SEMESTER_STORAGE_KEY, String(activeSemester));
+    let cancelled = false;
+    queueMicrotask(() => {
+      if (cancelled) return;
+      setLoading(true);
+      setError('');
+      setUsingFallback(false);
     });
-    return Object.entries(chapterNames).map(([id, info]) => ({
-      id,
-      ...info,
-      lessons: map[id] || [],
-    }));
-  }, []);
+    curriculumApi.getUnits(activeSemester)
+      .then((data) => {
+        if (cancelled) return;
+        setUnits(data.length ? data : filterUnitsBySemester(fallbackCurriculumUnits, activeSemester));
+        setUsingFallback(data.length === 0);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setUnits(filterUnitsBySemester(fallbackCurriculumUnits, activeSemester));
+        setUsingFallback(true);
+        setError('تعذر تحميل بنية الكتاب من الخادم. تُعرض بنية مطابقة للكتاب للتجربة فقط.');
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [activeSemester]);
 
-  const getStatusTone = (status: 'ready' | 'needs_review' | 'blocked') => {
-    if (status === 'ready') return 'teal';
-    if (status === 'needs_review') return 'gold';
-    return 'coral';
-  };
-
-  const getStatusLabel = (status: 'ready' | 'needs_review' | 'blocked') => {
-    if (status === 'ready') return 'جاهز للتوليد';
-    if (status === 'needs_review') return 'مراجعة (مسودة)';
-    return 'محظور (جودة منخفضة)';
-  };
+  const lessonCount = useMemo(
+    () => units.reduce((total, unit) => total + unit.chapters.reduce((sum, chapter) => sum + chapter.lessons.length, 0), 0),
+    [units],
+  );
 
   return (
     <div className="page-stack lessons-page">
       <PageHeader
         eyebrow="الدروس"
         title="منهج الكيمياء للصف التاسع"
-        subtitle="تنقل بين الوحدات، تابع نتائج فحص جودة الدروس، وابدأ الاختبارات والمراجعات."
+        subtitle="تصفح المنهج حسب بنية الكتاب الحقيقية: وحدة، فصل، درس، ومفاهيم مرتبطة."
         action={<Link className="ed-btn ed-btn-secondary" to="/study-plan">الخطة الأسبوعية</Link>}
       />
 
+      <Card className="curriculum-toolbar">
+        <div>
+          <strong>الفصل الدراسي</strong>
+          <span>{lessonCount} درساً من بنية الكتاب</span>
+        </div>
+        <div className="semester-switch" role="tablist" aria-label="اختيار الفصل الدراسي">
+          {[1, 2].map((semester) => (
+            <button
+              key={semester}
+              type="button"
+              className={activeSemester === semester ? 'active' : ''}
+              onClick={() => setActiveSemester(semester)}
+              role="tab"
+              aria-selected={activeSemester === semester}
+            >
+              الفصل {semester}
+            </button>
+          ))}
+        </div>
+      </Card>
+
+      {error && <ErrorBanner message={error} />}
+      {usingFallback && !error && <ErrorBanner message="لا توجد وحدات من الخادم لهذا الفصل حالياً. تُعرض بنية تجريبية مطابقة للكتاب." />}
+      {loading && <LoadingSkeleton rows={5} />}
+
       <div className="chapter-list">
-        {chapters.map((chapter, index) => (
-          <Card key={chapter.id} className="chapter-card lesson-chapter-card">
+        {!loading && units.map((unit) => (
+          <Card key={unit.id} className="chapter-card lesson-unit-card">
             <div className="chapter-head">
               <div>
-                <StatusPill tone={chapter.color}>الوحدة {index + 1}</StatusPill>
-                <h2>{chapter.title}</h2>
-                <p>{chapter.subtitle}</p>
+                <StatusPill tone={activeSemester === 1 ? 'blue' : 'purple'}>الوحدة {unit.unit_number}</StatusPill>
+                <h2>{unit.title_ar}</h2>
+                <p>{unit.description_ar || unit.title_en}</p>
               </div>
             </div>
-            <div className="lesson-list mt-4">
-              {chapter.lessons.map((lesson) => {
-                const report = getLessonQualityReport(lesson);
-                return (
-                  <div className="lesson-row-with-actions" key={lesson.lessonId}>
-                    <div className="lesson-info-box">
-                      <strong className="lesson-title">{lesson.titleAr}</strong>
-                      <span className="lesson-pages">الصفحات: {lesson.pageStart} - {lesson.pageEnd}</span>
-                    </div>
-                    
-                    <div className="lesson-quality-badge-row">
-                      <span className="quality-label">جودة المحتوى:</span>
-                      <StatusPill tone={getStatusTone(report.status)}>
-                        {report.score}/100 ({getStatusLabel(report.status)})
-                      </StatusPill>
-                    </div>
 
-                    <div className="lesson-actions">
-                      <Link to={`/lessons/${lesson.lessonId}`} className="ed-btn ed-btn-secondary ed-btn-xs">
-                        عرض المحتوى
-                      </Link>
-                      {report.status !== 'blocked' ? (
-                        <>
-                          <Link to={`/quizzes?lessonId=${lesson.lessonId}`} className="ed-btn ed-btn-primary ed-btn-xs">
-                            توليد اختبار
-                          </Link>
-                          <Link to={`/flashcards?lessonId=${lesson.lessonId}`} className="ed-btn ed-btn-ghost ed-btn-xs">
-                            بطاقات مراجعة
-                          </Link>
-                        </>
-                      ) : (
-                        <span className="blocked-action-pill">التوليد معطل ⚠</span>
-                      )}
-                    </div>
+            {unit.chapters.map((chapter, chapterIndex) => (
+              <section className="lesson-chapter-section" key={chapter.id}>
+                <div className="section-title">
+                  <div>
+                    <StatusPill tone={chapterColors[chapterIndex % chapterColors.length]}>
+                      الفصل {chapter.order}
+                    </StatusPill>
+                    <h3>{chapter.title_ar}</h3>
                   </div>
-                );
-              })}
-            </div>
+                  <span className="muted-text">{chapter.lessons.length} دروس</span>
+                </div>
+
+                <div className="lesson-list mt-4">
+                  {chapter.lessons.map((lesson) => (
+                    <div className="lesson-row-with-actions" key={lesson.id}>
+                      <div className="lesson-info-box">
+                        <strong className="lesson-title">{lesson.order}. {lesson.title_ar}</strong>
+                        <span className="lesson-pages">الصفحات: {formatPages(lesson.page_start, lesson.page_end)}</span>
+                        {lesson.topics.length > 0 && (
+                          <div className="topic-chip-row" aria-label="مفاهيم الدرس">
+                            {lesson.topics.slice(0, 5).map((topic) => (
+                              <span className="topic-chip" key={topic.id}>{topic.title_ar}</span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="lesson-quality-badge-row">
+                        <span className="quality-label">المدة:</span>
+                        <StatusPill tone="teal">{lesson.duration_min} دقيقة</StatusPill>
+                        <StatusPill tone={lesson.difficulty >= 3 ? 'gold' : 'blue'}>
+                          {difficultyLabel(lesson.difficulty)}
+                        </StatusPill>
+                      </div>
+
+                      <div className="lesson-actions">
+                        <Link to={`/lessons/${lesson.id}`} className="ed-btn ed-btn-secondary ed-btn-xs">
+                          عرض المحتوى
+                        </Link>
+                        <Link to={`/quizzes?lessonId=${lesson.id}`} className="ed-btn ed-btn-primary ed-btn-xs">
+                          توليد اختبار
+                        </Link>
+                        <Link to={`/flashcards?lessonId=${lesson.id}`} className="ed-btn ed-btn-ghost ed-btn-xs">
+                          بطاقات مراجعة
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            ))}
           </Card>
         ))}
       </div>
@@ -152,7 +215,7 @@ export const RagSearchPage = () => {
       });
       setResult(answer);
     } catch {
-      setError('تعذر البحث في مصادر الكتاب حالياً. تأكد من تشغيل backend.');
+      setError('تعذر البحث في مصادر الكتاب حالياً. تأكد من تشغيل الخادم.');
     } finally {
       setLoading(false);
     }

@@ -1,0 +1,32 @@
+{
+  "generated_at": "2026-06-16T12:30:30.825597+00:00",
+  "broker_url": "redis://localhost:6379/0",
+  "redis_url": "redis://localhost:6379/0",
+  "redis_reachable": true,
+  "workers_online": [
+    "celery@879aaafa60ac"
+  ],
+  "registered_tasks": [
+    "app.workers.health_tasks.ping",
+    "app.workers.notification_tasks.check_pending_reminders",
+    "ingest_pdf",
+    "reembed_rag_chunks"
+  ],
+  "required_tasks_present": [
+    "app.workers.health_tasks.ping",
+    "app.workers.notification_tasks.check_pending_reminders",
+    "reembed_rag_chunks"
+  ],
+  "required_tasks_missing": [],
+  "beat_schedule_entries": [
+    "check-pending-reminders-every-minute"
+  ],
+  "reminder_schedule_present": true,
+  "test_task_id": "93d10cb9-db3d-4c6a-b5fd-49f9427359ff",
+  "test_task_result": {
+    "ok": true,
+    "message": "p0-smoke"
+  },
+  "errors": [],
+  "result": "passed"
+}

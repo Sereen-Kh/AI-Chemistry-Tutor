@@ -1,0 +1,123 @@
+ Image src-backend Building 
+ Image src-celery-worker Building 
+ Image src-celery-beat Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.56kB done
+#1 DONE 0.0s
+
+#2 [celery-beat internal] load build definition from Dockerfile
+#2 transferring dockerfile: 2.48kB 0.0s done
+#2 DONE 0.0s
+
+#3 [backend internal] load metadata for docker.io/library/python:3.11-slim
+#3 DONE 1.5s
+
+#4 [backend internal] load .dockerignore
+#4 transferring context: 663B 0.0s done
+#4 DONE 0.0s
+
+#5 [celery-beat base 1/2] FROM docker.io/library/python:3.11-slim@sha256:ae52c5bef62a6bdd42cd1e8dffef86b9cd284bde9427da79839de7a4b983e7ca
+#5 resolve docker.io/library/python:3.11-slim@sha256:ae52c5bef62a6bdd42cd1e8dffef86b9cd284bde9427da79839de7a4b983e7ca 0.0s done
+#5 DONE 0.0s
+
+#6 [celery-beat internal] load build context
+#6 transferring context: 46.73kB 0.0s done
+#6 DONE 0.0s
+
+#7 [celery-worker deps 2/3] COPY requirements.txt .
+#7 CACHED
+
+#8 [celery-worker deps 3/3] RUN pip install --no-cache-dir --upgrade pip     && pip install --no-cache-dir -r requirements.txt
+#8 CACHED
+
+#9 [celery-worker base 2/2] RUN apt-get update && apt-get install -y --no-install-recommends     poppler-utils     libpq-dev     build-essential     libffi-dev     curl     && rm -rf /var/lib/apt/lists/*
+#9 CACHED
+
+#10 [celery-worker deps 1/3] WORKDIR /app
+#10 CACHED
+
+#11 [celery-worker runtime 1/4] WORKDIR /app
+#11 CACHED
+
+#12 [celery-worker runtime 2/4] COPY . .
+#12 DONE 0.4s
+
+#13 [celery-beat runtime 3/4] RUN chmod +x entrypoint.sh
+#13 DONE 0.6s
+
+#14 [celery-beat runtime 4/4] RUN groupadd -r edumind && useradd -r -g edumind -d /app -s /sbin/nologin edumind     && mkdir -p /app/data/textbooks     && chown -R edumind:edumind /app
+#14 DONE 0.9s
+
+#15 [celery-beat] exporting to image
+#15 exporting layers
+#15 exporting layers 0.7s done
+#15 exporting manifest sha256:e44da950911d7657ecd76392405c55402530b636761f28828798c7fadf5907fc 0.0s done
+#15 exporting config sha256:f818c01f5fce85dfb85bb30c7782451642058460f00c8c2b86dc6d195207d0f1 0.0s done
+#15 exporting attestation manifest sha256:92e86f02a2213a6c55641b4d25c04e3977ca8776d6939b15b329c61714e4d86e 0.1s done
+#15 exporting manifest list sha256:02bdc0396e031c0ec17964626c0fcbd927dd470027b9df0f16daba136c576c0c
+#15 exporting manifest list sha256:02bdc0396e031c0ec17964626c0fcbd927dd470027b9df0f16daba136c576c0c 0.0s done
+#15 naming to docker.io/library/src-celery-beat:latest 0.0s done
+#15 unpacking to docker.io/library/src-celery-beat:latest
+#15 unpacking to docker.io/library/src-celery-beat:latest 1.6s done
+#15 DONE 2.7s
+
+#16 [backend] exporting to image
+#16 exporting layers 0.7s done
+#16 exporting manifest sha256:59d3a22d388b9d9fe33089bb858e5efa4de1fe8e3e703103fc74d064a02a9d1b 0.0s done
+#16 exporting config sha256:6b0a2f35d13e9c08ee56b7d9356ed41620d40911cfbba5c7eca54eb2a3379ce3 0.0s done
+#16 exporting attestation manifest sha256:1d0bcc2d68cc69c7c54fc5f9d3a3ed1f7b64515d81a57850b5b2245eb1a79c69 0.1s done
+#16 exporting manifest list sha256:57865d3b5dedbd2bee2a24a53bd6d4a91ab50c1579037341b097c39774512afc 0.0s done
+#16 naming to docker.io/library/src-backend:latest done
+#16 unpacking to docker.io/library/src-backend:latest 1.6s done
+#16 DONE 2.7s
+
+#17 [celery-worker] exporting to image
+#17 exporting layers 0.7s done
+#17 exporting manifest sha256:4bbac1d0177c57aaca5415b6898a664975e4b2cf7727410e0d0b14bc6df18be6 0.0s done
+#17 exporting config sha256:f02ec8dd833a0e6797a3bbb1968692a0d1ea8f8d39ba4ad813aa50dd4c4f08ed 0.0s done
+#17 exporting attestation manifest sha256:550573d11bb5f2f059e87455a6f0a7d959d1f05c61009af9ceff0abd21f0ca10 0.1s done
+#17 exporting manifest list sha256:b9a5ba0901c24be2cd5ed9087a80ba532fd9bad1e3dbe92f8e3369aec700eef4 0.0s done
+#17 naming to docker.io/library/src-celery-worker:latest done
+#17 unpacking to docker.io/library/src-celery-worker:latest 1.7s done
+#17 DONE 2.7s
+
+#18 [backend] resolving provenance for metadata file
+#18 DONE 0.1s
+
+#19 [celery-worker] resolving provenance for metadata file
+#19 DONE 0.1s
+
+#20 [celery-beat] resolving provenance for metadata file
+#20 DONE 0.0s
+ Image src-backend Built 
+ Image src-celery-beat Built 
+ Image src-celery-worker Built 
+ Container edumind-redis Running 
+ Container edumind-postgres Running 
+ Container edumind-backend Recreate 
+ Container edumind-celery-worker Recreate 
+ Container edumind-celery-beat Recreate 
+ Container edumind-celery-beat Recreated 
+ Container edumind-backend Recreated 
+ Container edumind-frontend-web Running 
+ Container edumind-celery-worker Recreated 
+ Container edumind-postgres Waiting 
+ Container edumind-redis Waiting 
+ Container edumind-postgres Waiting 
+ Container edumind-redis Waiting 
+ Container edumind-redis Waiting 
+ Container edumind-postgres Waiting 
+ Container edumind-postgres Healthy 
+ Container edumind-postgres Healthy 
+ Container edumind-redis Healthy 
+ Container edumind-redis Healthy 
+ Container edumind-redis Healthy 
+ Container edumind-postgres Healthy 
+ Container edumind-celery-beat Starting 
+ Container edumind-celery-worker Starting 
+ Container edumind-backend Starting 
+ Container edumind-celery-worker Started 
+ Container edumind-backend Started 
+ Container edumind-backend Waiting 
+ Container edumind-celery-beat Started 
+ Container edumind-backend Healthy 

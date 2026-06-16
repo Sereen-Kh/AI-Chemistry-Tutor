@@ -5,6 +5,10 @@ import { quizzesApi } from '../api/quizzesApi';
 import { Card, PageHeader, Button, ProgressBar, StatusPill, LoadingSkeleton, ErrorBanner } from '../components/DesignSystem';
 import type { QuizGenerationConfig, GeneratedQuizQuestion, LessonKnowledgeUnit } from '../types';
 
+type QuizMode = QuizGenerationConfig['mode'];
+type QuizDifficulty = QuizGenerationConfig['difficulty'];
+type QuizQuestionType = QuizGenerationConfig['questionTypes'][number];
+
 export const QuizzesPage = () => {
   const location = useLocation();
 
@@ -14,11 +18,11 @@ export const QuizzesPage = () => {
   const paramAuto = queryParams.get('auto') === 'true';
 
   // Config UI State
-  const [mode, setMode] = useState<QuizGenerationConfig['mode']>('single_lesson');
-  const [selectedLessonIds, setSelectedLessonIds] = useState<string[]>([]);
+  const [mode, setMode] = useState<QuizMode>(paramLessonId ? 'single_lesson' : 'single_lesson');
+  const [selectedLessonIds, setSelectedLessonIds] = useState<string[]>(paramLessonId ? [paramLessonId] : []);
   const [selectedChapterId, setSelectedChapterId] = useState<string>('chapter_1');
   const [questionsPerLesson, setQuestionsPerLesson] = useState<number>(3);
-  const [difficulty, setDifficulty] = useState<QuizGenerationConfig['difficulty']>('mixed');
+  const [difficulty, setDifficulty] = useState<QuizDifficulty>('mixed');
   const [questionTypes, setQuestionTypes] = useState<QuizGenerationConfig['questionTypes']>(['mcq', 'true_false', 'short_answer', 'calculation', 'equation_balancing']);
   
   // Game Play State
@@ -31,45 +35,6 @@ export const QuizzesPage = () => {
   const [isCurrentCorrect, setIsCurrentCorrect] = useState(false);
   const [score, setScore] = useState(0);
   const [error, setError] = useState('');
-
-  // Prepopulate config if parameters exist
-  useEffect(() => {
-    if (paramLessonId) {
-      setMode('single_lesson');
-      setSelectedLessonIds([paramLessonId]);
-    }
-  }, [paramLessonId]);
-
-  // Auto-generate if specified
-  useEffect(() => {
-    if (paramAuto && paramLessonId) {
-      const qCount = Number(queryParams.get('questions') || '3');
-      const qDiff = (queryParams.get('difficulty') || 'mixed') as QuizGenerationConfig['difficulty'];
-      const qTypes = (queryParams.get('types') || 'mcq').split(',') as QuizGenerationConfig['questionTypes'];
-      
-      const config: QuizGenerationConfig = {
-        mode: 'single_lesson',
-        lessonIds: [paramLessonId],
-        questionsPerLesson: qCount,
-        difficulty: qDiff,
-        questionTypes: qTypes,
-        includeSourcePage: true,
-        requireExplanation: true,
-        avoidDuplicateQuestions: true
-      };
-
-      // Check quality before auto-generating
-      const lesson = mockLessons.find(l => l.lessonId === paramLessonId);
-      if (lesson) {
-        const report = getLessonQualityReport(lesson);
-        if (report.status !== 'blocked') {
-          handleGenerateQuiz(config);
-        } else {
-          setError(`تعذر التوليد التلقائي: درس "${lesson.titleAr}" محظور بسبب جودة المحتوى.`);
-        }
-      }
-    }
-  }, [paramAuto, paramLessonId, queryParams]);
 
   // Compute selected lessons based on mode
   const currentSelectedLessons = useMemo<LessonKnowledgeUnit[]>(() => {
@@ -167,11 +132,11 @@ export const QuizzesPage = () => {
     );
   };
 
-  const handleToggleType = (type: string) => {
+  const handleToggleType = (type: QuizQuestionType) => {
     setQuestionTypes(prev => 
-      prev.includes(type as any) 
-        ? prev.filter(t => t !== type) as any
-        : [...prev, type as any]
+      prev.includes(type)
+        ? prev.filter(t => t !== type)
+        : [...prev, type]
     );
   };
 
@@ -179,7 +144,7 @@ export const QuizzesPage = () => {
     if (submitted) return;
 
     const currentQ = questions[currentIndex];
-    let correct = false;
+    let correct: boolean;
 
     if (currentQ.questionType === 'mcq' || currentQ.questionType === 'true_false') {
       if (selectedOptionIndex === null) return;
@@ -229,6 +194,36 @@ export const QuizzesPage = () => {
 
   const currentQuestion = questions[currentIndex];
 
+  // Auto-generate if specified in route params. Kept after generator declaration
+  // so React Compiler and ESLint can track the function binding correctly.
+  useEffect(() => {
+    if (!paramAuto || !paramLessonId) return;
+    const qCount = Number(queryParams.get('questions') || '3');
+    const qDiff = (queryParams.get('difficulty') || 'mixed') as QuizDifficulty;
+    const qTypes = (queryParams.get('types') || 'mcq').split(',') as QuizQuestionType[];
+
+    const config: QuizGenerationConfig = {
+      mode: 'single_lesson',
+      lessonIds: [paramLessonId],
+      questionsPerLesson: qCount,
+      difficulty: qDiff,
+      questionTypes: qTypes,
+      includeSourcePage: true,
+      requireExplanation: true,
+      avoidDuplicateQuestions: true
+    };
+
+    const lesson = mockLessons.find(l => l.lessonId === paramLessonId);
+    if (!lesson) return;
+    const report = getLessonQualityReport(lesson);
+    if (report.status !== 'blocked') {
+      queueMicrotask(() => void handleGenerateQuiz(config));
+    } else {
+      queueMicrotask(() => setError(`تعذر التوليد التلقائي: درس "${lesson.titleAr}" محظور بسبب جودة المحتوى.`));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paramAuto, paramLessonId, queryParams]);
+
   return (
     <div className="page-stack quizzes-page">
       <PageHeader
@@ -250,7 +245,7 @@ export const QuizzesPage = () => {
 
             <div className="form-group">
               <label>نمط توليد الاختبار:</label>
-              <select value={mode} onChange={(e) => { setMode(e.target.value as any); setSelectedLessonIds([]); }}>
+              <select value={mode} onChange={(e) => { setMode(e.target.value as QuizMode); setSelectedLessonIds([]); }}>
                 <option value="single_lesson">درس واحد محدد</option>
                 <option value="selected_lessons">مجموعة دروس محددة</option>
                 <option value="chapter">وحدة كاملة (Chapter)</option>
@@ -320,7 +315,7 @@ export const QuizzesPage = () => {
               </div>
               <div className="form-group">
                 <label>مستوى الصعوبة:</label>
-                <select value={difficulty} onChange={(e) => setDifficulty(e.target.value as any)}>
+                <select value={difficulty} onChange={(e) => setDifficulty(e.target.value as QuizDifficulty)}>
                   <option value="mixed">مختلط</option>
                   <option value="easy">سهل</option>
                   <option value="medium">متوسط</option>

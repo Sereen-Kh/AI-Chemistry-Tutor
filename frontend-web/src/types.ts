@@ -5,6 +5,62 @@ export type StudentInterest = 'football' | 'cars' | 'cooking' | 'gaming' | 'dail
 export type TeachingStyle = 'simple' | 'real_life' | 'visual' | 'exam';
 export type AnswerFormat = Extract<LearningMode, 'text' | 'audio' | 'image' | 'video'>;
 export type LessonStatus = 'completed' | 'current' | 'locked' | 'weak';
+export type CurriculumEntityId = string | number;
+
+export interface TopicCatalogItem {
+  id: number;
+  title_ar: string;
+  title_en?: string | null;
+  description_ar?: string | null;
+  category?: string | null;
+  difficulty: number;
+  icon?: string | null;
+  order: number;
+}
+
+export interface LessonCatalogItem {
+  id: number;
+  chapter_id: number;
+  title_ar: string;
+  title_en?: string | null;
+  content_ar: string;
+  order: number;
+  difficulty: number;
+  duration_min: number;
+  page_start?: number | null;
+  page_end?: number | null;
+  topics: TopicCatalogItem[];
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface ChapterCatalogItem {
+  id: number;
+  unit_id?: number | null;
+  title_ar: string;
+  title_en?: string | null;
+  description_ar?: string | null;
+  order: number;
+  difficulty: number;
+  icon?: string | null;
+  lessons: LessonCatalogItem[];
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface UnitCatalogItem {
+  id: number;
+  unit_number: number;
+  semester: number;
+  title_ar: string;
+  title_en?: string | null;
+  description_ar?: string | null;
+  order: number;
+  icon?: string | null;
+  chapters: ChapterCatalogItem[];
+  created_at?: string;
+  updated_at?: string;
+}
 
 export interface UserPreferences {
   interests: string[];
@@ -101,6 +157,61 @@ export interface AiAskResponse {
   video_source?: 'internal' | 'youtube' | 'instagram';
 }
 
+export interface ChatMessageResponse {
+  id: number;
+  session_id: number;
+  role: 'user' | 'assistant';
+  content: string;
+  answer_text?: string | null;
+  format: AnswerFormat | string;
+  feedback?: string | null;
+  media_url?: string | null;
+  latency_ms?: number | null;
+  confidence?: number | null;
+  answer_type?: string | null;
+  route?: string | null;
+  grounding?: string | null;
+  sources?: Array<Record<string, unknown>>;
+  citations?: Array<Record<string, unknown>>;
+  blocks?: Array<Record<string, unknown>>;
+  media_blocks?: Array<Record<string, unknown>>;
+  source_blocks?: Array<Record<string, unknown>>;
+  page_numbers?: number[];
+  diagnostics?: Record<string, unknown>;
+  suggested_next_action?: string | null;
+  created_at: string;
+}
+
+export interface ChatSessionResponse {
+  id: number;
+  user_id: number;
+  lesson_id?: number | null;
+  title?: string | null;
+  style?: string | null;
+  created_at: string;
+  updated_at: string;
+  messages: ChatMessageResponse[];
+}
+
+export interface ChatSessionCreateRequest {
+  title?: string | null;
+  lesson_id?: number | null;
+  style?: string | null;
+}
+
+export interface SendSessionMessageRequest {
+  content: string;
+  format?: AnswerFormat;
+  answer_scope?: AiAskRequest['answer_scope'];
+  source_types?: string[];
+  teaching_style?: TeachingStyle;
+  teaching_level?: TeachingLevel;
+  explanation_method?: ExplanationMethod;
+  learning_modes?: LearningMode[];
+  student_interests?: StudentInterest[];
+  action?: AiAskRequest['action'];
+}
+
 export interface LessonItem {
   id: number;
   title: string;
@@ -118,9 +229,18 @@ export interface ChapterPlan {
 }
 
 export interface StudyPlan {
+  id?: string;
   chapters: ChapterPlan[];
   weakTopics: string[];
   currentLesson: LessonItem;
+  config?: {
+    title?: string;
+    examDate?: string;
+    startDate?: string;
+    endDate?: string;
+    lessonIds?: Array<string | number>;
+    [key: string]: unknown;
+  };
 }
 
 export interface FlashcardDeck {
@@ -217,7 +337,7 @@ export type QuizGenerationConfig = {
     | 'weak_lessons'
     | 'study_plan'
     | 'exam_review';
-  lessonIds: string[];
+  lessonIds: CurriculumEntityId[];
   chapterIds?: string[];
   questionsPerLesson: number;
   totalQuestions?: number;
@@ -263,7 +383,7 @@ export type FlashcardGenerationConfig = {
     | 'chapter'
     | 'weak_lessons'
     | 'study_plan';
-  lessonIds: string[];
+  lessonIds: CurriculumEntityId[];
   cardsPerLesson: number;
   cardTypes: Array<
     | 'definition'
@@ -299,3 +419,34 @@ export type GeneratedFlashcard = {
   reviewState: 'new' | 'learning' | 'known' | 'review';
   nextReviewAt?: string;
 };
+
+export interface NotificationItem {
+  id: string;
+  title: string;
+  message: string;
+  type: 'exam' | 'lesson' | 'quiz' | 'system';
+  priority: 'low' | 'normal' | 'high' | 'urgent';
+  status: 'read' | 'unread';
+  scheduled_at: string;
+  related_entity_type?: 'lesson' | 'quiz' | 'flashcard' | 'plan';
+  related_entity_id?: string;
+  action_label?: string;
+  action_url?: string;
+}
+
+export interface SemesterPlanConfig {
+  startDate: string;
+  endDate: string;
+  studyDays: string[];
+  lessonDuration: string;
+  weeklyRest: string;
+  lessonIds: CurriculumEntityId[];
+}
+
+export interface ExamPlanConfig {
+  title: string;
+  examDate: string;
+  dailyStudyHours: string;
+  priority: string;
+  lessonIds: CurriculumEntityId[];
+}

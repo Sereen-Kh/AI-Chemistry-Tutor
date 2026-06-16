@@ -1,6 +1,8 @@
 """Content source and RAG chunk storage."""
 
-from sqlalchemy import ForeignKey, Index, Integer, JSON, String, Text
+from datetime import datetime
+
+from sqlalchemy import DateTime, ForeignKey, Index, Integer, JSON, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.config import settings
@@ -66,6 +68,7 @@ class RagChunk(Base, TimestampMixin):
     __tablename__ = "rag_chunks"
     __table_args__ = (
         Index("rag_chunks_source_id_idx", "source_id"),
+        Index("rag_chunks_unit_id_idx", "unit_id"),
         Index("rag_chunks_chapter_id_idx", "chapter_id"),
         Index("rag_chunks_lesson_id_idx", "lesson_id"),
         Index("rag_chunks_topic_id_idx", "topic_id"),
@@ -85,6 +88,9 @@ class RagChunk(Base, TimestampMixin):
     source_id: Mapped[int] = mapped_column(
         ForeignKey("content_sources.id", ondelete="CASCADE"), nullable=False
     )
+    unit_id: Mapped[int | None] = mapped_column(
+        ForeignKey("units.id", ondelete="SET NULL"), nullable=True
+    )
     chapter_id: Mapped[int | None] = mapped_column(
         ForeignKey("chapters.id", ondelete="SET NULL"), nullable=True
     )
@@ -103,9 +109,14 @@ class RagChunk(Base, TimestampMixin):
     extraction_method: Mapped[str] = mapped_column(String(80), default="pdf_text", nullable=False)
     language: Mapped[str] = mapped_column(String(8), default="ar", nullable=False)
     embedding: Mapped[list[float] | None] = mapped_column(_embedding_type(), nullable=True)
+    embedding_model: Mapped[str | None] = mapped_column(String(120), nullable=True, index=True)
+    embedding_status: Mapped[str] = mapped_column(String(40), default="pending", nullable=False, index=True)
+    embedding_updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    embedding_error: Mapped[str | None] = mapped_column(Text, nullable=True)
     metadata_json: Mapped[dict | list | None] = mapped_column(JSON, nullable=True)
 
     source = relationship("ContentSource", back_populates="chunks")
+    unit = relationship("Unit", back_populates="rag_chunks")
     chapter = relationship("Chapter", back_populates="rag_chunks")
     lesson = relationship("Lesson", back_populates="rag_chunks")
     topic = relationship("Topic", back_populates="rag_chunks")

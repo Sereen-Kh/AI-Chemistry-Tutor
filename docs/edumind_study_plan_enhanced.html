@@ -1,0 +1,1031 @@
+
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8">
+<style>
+:root{
+  --bg:#0A1628;--bg2:#0F1F38;--bg3:#162444;--bg4:#1E3050;--bg5:#243858;
+  --acc:#4E87F5;--teal:#00D4A8;--gold:#F5A623;--coral:#FF6B6B;--pur:#8B7FE8;
+  --t1:#F0F4FF;--t2:#7A90B5;--t3:#4A607D;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--t1);font-size:13px;min-height:100vh}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit}
+
+/* ── layout ── */
+.shell{display:flex;min-height:100vh}
+.sidebar{width:200px;background:var(--bg2);border-left:1px solid var(--bg4);padding:14px 10px;flex-shrink:0;display:flex;flex-direction:column}
+.sb-logo{display:flex;align-items:center;gap:8px;padding:4px 6px;margin-bottom:16px}
+.sb-mark{width:30px;height:30px;border-radius:7px;background:var(--acc);display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff;font-weight:700;flex-shrink:0}
+.sb-name{font-size:14px;font-weight:700}
+.sb-sec{font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;padding:0 6px;margin:12px 0 4px}
+.nav-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:7px;cursor:pointer;color:var(--t2);margin-bottom:2px;font-size:12px;transition:all .12s}
+.nav-item:hover{background:var(--bg3);color:var(--t1)}
+.nav-item.on{background:rgba(78,135,245,.15);color:var(--acc);font-weight:500}
+.nav-ic{font-size:14px;width:18px;text-align:center;flex-shrink:0}
+
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{height:50px;background:var(--bg2);border-bottom:1px solid var(--bg4);display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0}
+.topbar-title{font-size:15px;font-weight:600;flex:1}
+.content{flex:1;padding:20px;overflow-y:auto}
+
+/* ── shared ── */
+.card{background:var(--bg2);border:1px solid var(--bg4);border-radius:10px;padding:16px}
+.card-sm{background:var(--bg2);border:1px solid var(--bg4);border-radius:8px;padding:12px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:none;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;padding:9px 18px;transition:all .12s}
+.btn-p{background:var(--acc);color:#fff}.btn-p:hover{background:#3d77ea}
+.btn-s{background:rgba(78,135,245,.12);color:#85B7EB;border:1px solid rgba(78,135,245,.25)}.btn-s:hover{background:rgba(78,135,245,.2)}
+.btn-teal{background:var(--teal);color:#033A2E}.btn-teal:hover{background:#00bfa0}
+.btn-g{background:transparent;color:var(--t2);border:1px solid var(--bg4)}.btn-g:hover{background:var(--bg3);color:var(--t1)}
+.btn-gold{background:rgba(245,166,35,.15);color:var(--gold);border:1px solid rgba(245,166,35,.25)}
+.btn-sm{padding:6px 12px;font-size:11px}
+.btn-full{width:100%}
+.bx{display:inline-flex;align-items:center;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;gap:4px}
+.b-t{background:rgba(0,212,168,.1);color:var(--teal)}
+.b-b{background:rgba(78,135,245,.1);color:#85B7EB}
+.b-g{background:rgba(245,166,35,.1);color:var(--gold)}
+.b-r{background:rgba(255,107,107,.1);color:var(--coral)}
+.b-p{background:rgba(139,127,232,.1);color:var(--pur)}
+.b-gray{background:var(--bg3);color:var(--t2)}
+.row{display:flex;align-items:center}
+.gap2{gap:8px}.gap3{gap:12px}
+.spacer{flex:1}
+.sec-t{font-size:15px;font-weight:600;margin-bottom:3px}
+.sec-s{font-size:12px;color:var(--t2);margin-bottom:14px}
+.pb-track{background:var(--bg4);border-radius:4px;overflow:hidden}
+.pb-fill{border-radius:4px;transition:width .3s}
+.divider{height:1px;background:var(--bg4);margin:14px 0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.form-label{font-size:11px;font-weight:500;color:var(--t2);display:block;margin-bottom:5px}
+.form-input{width:100%;background:var(--bg3);border:1px solid var(--bg4);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--t1);outline:none;transition:border .12s}
+.form-input:focus{border-color:var(--acc)}
+.form-input::placeholder{color:var(--t3)}
+.form-select{width:100%;background:var(--bg3);border:1px solid var(--bg4);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--t1);outline:none;appearance:none}
+.form-group{margin-bottom:14px}
+
+/* ── type picker ── */
+.type-picker{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.tp-card{border:1.5px solid var(--bg4);border-radius:10px;padding:16px;cursor:pointer;transition:all .15s;position:relative}
+.tp-card:hover{border-color:var(--bg5)}
+.tp-card.on{border-color:var(--acc);background:rgba(78,135,245,.06)}
+.tp-icon{font-size:26px;margin-bottom:9px}
+.tp-title{font-size:14px;font-weight:600;margin-bottom:4px}
+.tp-desc{font-size:11px;color:var(--t2);line-height:1.5}
+.tp-check{position:absolute;top:10px;left:10px;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--bg5);display:flex;align-items:center;justify-content:center;font-size:9px;transition:all .15s}
+.tp-card.on .tp-check{background:var(--acc);border-color:var(--acc);color:#fff}
+
+/* ── lesson checker ── */
+.chapter-section{background:var(--bg2);border:1px solid var(--bg4);border-radius:10px;margin-bottom:8px;overflow:hidden}
+.ch-hd{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;transition:background .12s}
+.ch-hd:hover{background:rgba(255,255,255,.02)}
+.ch-num{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.ch-info{flex:1}
+.ch-title{font-size:13px;font-weight:600;margin-bottom:1px}
+.ch-meta{font-size:11px;color:var(--t2)}
+.ch-toggle{font-size:11px;color:var(--t3);transition:transform .2s}
+.ch-toggle.open{transform:rotate(90deg)}
+.ch-body{display:none;border-top:1px solid var(--bg4)}
+.ch-body.open{display:block}
+.lesson-check-row{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid var(--bg4);cursor:pointer;transition:background .12s}
+.lesson-check-row:last-child{border-bottom:none}
+.lesson-check-row:hover{background:rgba(255,255,255,.02)}
+.check-box{width:17px;height:17px;border-radius:4px;border:1.5px solid var(--bg5);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;transition:all .12s}
+.check-box.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.check-box.partial{background:rgba(78,135,245,.3);border-color:var(--acc)}
+.lesson-info{flex:1}
+.lesson-title{font-size:12px;font-weight:500;color:var(--t1)}
+.lesson-meta{font-size:10px;color:var(--t2);display:flex;align-items:center;gap:6px;margin-top:2px}
+.diff-dot{width:5px;height:5px;border-radius:50%}
+.status-pill{font-size:9px;padding:1px 6px;border-radius:10px;font-weight:500}
+
+/* ── plan timeline ── */
+.plan-view{display:flex;flex-direction:column;gap:0}
+.pv-row{display:grid;grid-template-columns:90px 16px 1fr;gap:0 12px;align-items:start;min-height:52px}
+.pv-date{font-size:11px;color:var(--t2);text-align:right;padding-top:4px;line-height:1.4}
+.pv-spine{display:flex;flex-direction:column;align-items:center}
+.pv-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.pv-line{width:2px;flex:1;min-height:20px;margin-top:3px}
+.pv-row:last-child .pv-line{background:transparent!important}
+.pv-content{padding:2px 0 16px}
+.pvc-lesson{font-size:12px;font-weight:500;color:var(--t1);margin-bottom:2px}
+.pvc-meta{font-size:10px;color:var(--t2);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.pv-card{background:var(--bg3);border:1px solid var(--bg4);border-radius:8px;padding:9px 12px;margin-bottom:3px;cursor:pointer;transition:border-color .12s;display:flex;align-items:center;gap:8px}
+.pv-card:hover{border-color:var(--bg5)}
+.pv-card.today{border-color:var(--acc);background:rgba(78,135,245,.06)}
+.pv-card.rest{opacity:.65}
+.pv-card.exam{border-color:var(--gold);background:rgba(245,166,35,.06)}
+.pvc-icon{font-size:14px;flex-shrink:0}
+.pvc-right{margin-right:auto}
+
+/* ── week view ── */
+.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.wday{border-radius:8px;padding:6px 3px;text-align:center;cursor:pointer;border:1px solid transparent;transition:all .12s}
+.wday:hover{border-color:var(--bg5)}
+.wday.has-lesson{background:rgba(78,135,245,.08);border-color:rgba(78,135,245,.2)}
+.wday.today{background:var(--acc)!important;border-color:var(--acc)!important}
+.wday.rest{background:var(--bg3)}
+.wday.exam{background:rgba(245,166,35,.1);border-color:rgba(245,166,35,.25)}
+.wday.done{background:rgba(0,212,168,.08);border-color:rgba(0,212,168,.2)}
+.wd-name{font-size:9px;color:var(--t3)}
+.wday.today .wd-name{color:rgba(255,255,255,.65)}
+.wd-num{font-size:12px;font-weight:500}
+.wday.today .wd-num{color:#fff;font-weight:700}
+.wd-dots{display:flex;gap:2px;justify-content:center;margin-top:3px}
+.wd-dot{width:4px;height:4px;border-radius:50%}
+
+/* ── summary cards ── */
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.sum-card{background:var(--bg2);border:1px solid var(--bg4);border-radius:9px;padding:13px;text-align:center}
+.sum-val{font-size:22px;font-weight:700;line-height:1;margin-bottom:3px}
+.sum-lbl{font-size:10px;color:var(--t2)}
+
+/* ── tabs ── */
+.tabs{display:flex;gap:0;background:var(--bg3);border-radius:9px;padding:3px;margin-bottom:16px}
+.tab{flex:1;padding:7px;border-radius:7px;font-size:12px;font-weight:500;color:var(--t2);border:none;background:none;cursor:pointer;transition:all .15s;font-family:inherit}
+.tab.on{background:var(--bg2);color:var(--t1);box-shadow:0 1px 3px rgba(0,0,0,.2)}
+
+/* ── step indicator ── */
+.steps{display:flex;align-items:center;gap:0;margin-bottom:20px}
+.step-item{display:flex;align-items:center;flex:1}
+.step-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;border:2px solid var(--bg4);color:var(--t3);background:var(--bg3);transition:all .2s}
+.step-dot.done{background:var(--teal);border-color:var(--teal);color:#033A2E}
+.step-dot.active{background:var(--acc);border-color:var(--acc);color:#fff}
+.step-line{flex:1;height:2px;background:var(--bg4);margin:0 4px}
+.step-line.done{background:var(--teal)}
+.step-label{font-size:10px;color:var(--t3);text-align:center;margin-top:4px;white-space:nowrap}
+
+/* ── ai generating ── */
+.gen-overlay{background:var(--bg2);border:1px solid var(--bg4);border-radius:10px;padding:28px;text-align:center}
+.gen-spinner{width:52px;height:52px;border:3px solid var(--bg4);border-top-color:var(--acc);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.gen-steps{display:flex;flex-direction:column;gap:8px;text-align:right;margin-top:16px}
+.gen-step{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg3);border-radius:7px;font-size:12px;color:var(--t2)}
+.gen-step .gs-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.gs-done-dot{background:var(--teal)}
+.gs-active-dot{background:var(--acc);animation:pulse 1s ease-in-out infinite}
+.gs-wait-dot{background:var(--bg5)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.gen-step.done{color:var(--teal)}
+
+/* ── lesson progress in plan view ── */
+.lesson-prog-check{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--bg5);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer;transition:all .12s}
+.lesson-prog-check.done{background:var(--teal);border-color:var(--teal);color:#033A2E}
+.lesson-prog-check.today{background:var(--acc);border-color:var(--acc);color:#fff}
+
+/* ── highlight banner ── */
+.info-banner{border-radius:8px;padding:10px 13px;font-size:12px;line-height:1.6;margin-bottom:12px;display:flex;align-items:flex-start;gap:8px}
+.ib-icon{font-size:15px;flex-shrink:0;margin-top:1px}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sb-logo"><div class="sb-mark">⚗</div><div><div class="sb-name">EduMind</div><div style="font-size:10px;color:var(--t2)">كيمياء الصف التاسع</div></div></div>
+  <div class="sb-sec">التعلّم</div>
+  <div class="nav-item" onclick=""><span class="nav-ic">🏠</span>الرئيسية</div>
+  <div class="nav-item" onclick=""><span class="nav-ic">📚</span>الدروس</div>
+  <div class="nav-item on"><span class="nav-ic">📅</span>خطة الدراسة</div>
+  <div class="sb-sec">الأدوات</div>
+  <div class="nav-item"><span class="nav-ic">✨</span>اسأل الذكاء الاصطناعي</div>
+  <div class="nav-item"><span class="nav-ic">🔍</span>البحث في الكتاب</div>
+  <div class="nav-item"><span class="nav-ic">📝</span>الاختبارات</div>
+  <div class="nav-item"><span class="nav-ic">🃏</span>البطاقات</div>
+  <div class="sb-sec">الحساب</div>
+  <div class="nav-item"><span class="nav-ic">👤</span>ملفي الشخصي</div>
+  <div style="flex:1"></div>
+  <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:7px;cursor:pointer" onclick="">
+    <div style="width:28px;height:28px;border-radius:50%;background:var(--acc);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff">أ</div>
+    <div><div style="font-size:11px;font-weight:500">أحمد الرشيد</div><div style="font-size:10px;color:var(--t2)">Scholar · 1,240 XP</div></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="topbarTitle">خطة الدراسة</div>
+    <div style="display:flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--bg4);border-radius:8px;padding:6px 12px;width:200px">
+      <span style="color:var(--t3);font-size:12px">🔍</span>
+      <input style="background:none;border:none;outline:none;font-size:12px;color:var(--t1);width:100%" placeholder="ابحث في الدروس...">
+    </div>
+    <div style="width:32px;height:32px;border-radius:7px;border:1px solid var(--bg4);background:var(--bg3);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative">🔔<div style="width:7px;height:7px;border-radius:50%;background:var(--coral);position:absolute;top:4px;right:4px;border:2px solid var(--bg2)"></div></div>
+    <div style="width:28px;height:28px;border-radius:50%;background:var(--acc);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff;cursor:pointer">أ</div>
+  </div>
+
+  <div class="content" id="mainContent">
+
+  <!-- ══════════════ HOME VIEW ══════════════ -->
+  <div id="view-home">
+    <!-- Header -->
+    <div class="row gap3" style="margin-bottom:18px;align-items:flex-start">
+      <div>
+        <div class="sec-t">خطة الدراسة</div>
+        <div class="sec-s">أنشئ خطة مخصصة للفصل الدراسي أو للامتحان القادم</div>
+      </div>
+      <div class="spacer"></div>
+    </div>
+
+    <!-- Existing plans -->
+    <div class="info-banner" style="background:rgba(78,135,245,.07);border:1px solid rgba(78,135,245,.2)">
+      <div class="ib-icon">💡</div>
+      <div style="color:var(--t2)">لديك خطة فصل دراسي نشطة تنتهي في يونيو 2025. يمكنك إضافة خطة امتحان منفصلة للاختبار القادم.</div>
+    </div>
+
+    <!-- Current plans overview -->
+    <div class="grid2" style="margin-bottom:20px">
+      <div class="card" style="border-color:rgba(0,212,168,.3);background:rgba(0,212,168,.04)">
+        <div class="row gap2" style="margin-bottom:10px">
+          <span style="font-size:20px">📘</span>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:600">خطة الفصل الدراسي</div>
+            <div class="bx b-t" style="margin-top:3px">نشطة</div>
+          </div>
+          <button class="btn btn-sm btn-s" onclick="showView('semester-view')">عرض ←</button>
+        </div>
+        <div style="font-size:12px;color:var(--t2);margin-bottom:8px">سبتمبر 2024 — يونيو 2025 · 4 فصول · 18 درساً</div>
+        <div class="row gap2" style="margin-bottom:5px"><span style="font-size:11px;color:var(--t2)">التقدم</span><span style="font-size:11px;font-weight:600;color:var(--teal)">36%</span></div>
+        <div class="pb-track" style="height:6px"><div class="pb-fill" style="width:36%;background:var(--teal)"></div></div>
+      </div>
+      <div class="card" style="border-color:rgba(245,166,35,.3);background:rgba(245,166,35,.04)">
+        <div class="row gap2" style="margin-bottom:10px">
+          <span style="font-size:20px">🎯</span>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:600">خطة الامتحان</div>
+            <div class="bx b-g" style="margin-top:3px">الامتحان بعد 13 يوم</div>
+          </div>
+          <button class="btn btn-sm btn-gold" onclick="showView('exam-view')">عرض ←</button>
+        </div>
+        <div style="font-size:12px;color:var(--t2);margin-bottom:8px">27 يونيو 2025 · الفصلان 2 و 3</div>
+        <div class="row gap2" style="margin-bottom:5px"><span style="font-size:11px;color:var(--t2)">الدروس المراجَعة</span><span style="font-size:11px;font-weight:600;color:var(--gold)">3/9</span></div>
+        <div class="pb-track" style="height:6px"><div class="pb-fill" style="width:33%;background:var(--gold)"></div></div>
+      </div>
+    </div>
+
+    <!-- Create new section -->
+    <div style="font-size:14px;font-weight:600;margin-bottom:12px">إنشاء خطة جديدة</div>
+    <div class="type-picker">
+      <div class="tp-card" id="type-semester" onclick="selectType('semester')">
+        <div class="tp-check" id="tc-semester">✓</div>
+        <div class="tp-icon">📘</div>
+        <div class="tp-title">خطة الفصل الدراسي</div>
+        <div class="tp-desc">تغطية كاملة للمنهج على مدار الفصل. توزيع متوازن يومي وأسبوعي يشمل جميع الفصول.</div>
+        <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap">
+          <span class="bx b-t">منهج كامل</span>
+          <span class="bx b-b">توزيع أسبوعي</span>
+          <span class="bx b-gray">مرن</span>
+        </div>
+      </div>
+      <div class="tp-card" id="type-exam" onclick="selectType('exam')">
+        <div class="tp-check" id="tc-exam">✓</div>
+        <div class="tp-icon">🎯</div>
+        <div class="tp-title">خطة الامتحان</div>
+        <div class="tp-desc">مكثّفة ومركّزة على الامتحان القادم. تختار الدروس المتاحة والذكاء الاصطناعي يبني الجدول الأمثل.</div>
+        <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap">
+          <span class="bx b-g">مكثّفة</span>
+          <span class="bx b-r">تاريخ الامتحان</span>
+          <span class="bx b-p">ذكي</span>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-p" id="createBtn" onclick="startCreate()" style="width:100%;padding:11px">⚡ ابدأ إنشاء الخطة ←</button>
+  </div>
+
+  <!-- ══════════════ SEMESTER CREATE ══════════════ -->
+  <div id="view-semester-create" style="display:none">
+    <div class="row gap2" style="margin-bottom:16px">
+      <button class="btn btn-g btn-sm" onclick="showView('home')">← رجوع</button>
+      <div style="font-size:15px;font-weight:600">إنشاء خطة الفصل الدراسي</div>
+    </div>
+
+    <!-- Steps -->
+    <div class="steps" style="max-width:420px">
+      <div class="step-item" style="flex-direction:column;align-items:center;flex:0 0 auto">
+        <div class="step-dot active" id="s1dot">1</div>
+        <div class="step-label">الإعدادات</div>
+      </div>
+      <div class="step-line" id="sl1"></div>
+      <div class="step-item" style="flex-direction:column;align-items:center;flex:0 0 auto">
+        <div class="step-dot" id="s2dot">2</div>
+        <div class="step-label">الدروس</div>
+      </div>
+      <div class="step-line" id="sl2"></div>
+      <div class="step-item" style="flex-direction:column;align-items:center;flex:0 0 auto">
+        <div class="step-dot" id="s3dot">3</div>
+        <div class="step-label">المراجعة</div>
+      </div>
+    </div>
+    <div class="divider"></div>
+
+    <!-- Step 1: Settings -->
+    <div id="sem-step1">
+      <div class="grid2" style="align-items:start;gap:16px">
+        <div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:12px">إعدادات الفصل</div>
+          <div class="form-group">
+            <label class="form-label">تاريخ بداية الفصل</label>
+            <input class="form-input" type="date" value="2024-09-01" dir="ltr">
+          </div>
+          <div class="form-group">
+            <label class="form-label">تاريخ نهاية الفصل</label>
+            <input class="form-input" type="date" value="2025-06-15" dir="ltr">
+          </div>
+          <div class="form-group">
+            <label class="form-label">أيام الدراسة في الأسبوع</label>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:5px" id="daysPicker">
+              <button onclick="toggleDay(this,'ن')" class="btn btn-sm on" style="background:rgba(78,135,245,.15);color:var(--acc);border:1px solid rgba(78,135,245,.3)">ن</button>
+              <button onclick="toggleDay(this,'ث')" class="btn btn-sm on" style="background:rgba(78,135,245,.15);color:var(--acc);border:1px solid rgba(78,135,245,.3)">ث</button>
+              <button onclick="toggleDay(this,'ر')" class="btn btn-sm on" style="background:rgba(78,135,245,.15);color:var(--acc);border:1px solid rgba(78,135,245,.3)">ر</button>
+              <button onclick="toggleDay(this,'خ')" class="btn btn-sm on" style="background:rgba(78,135,245,.15);color:var(--acc);border:1px solid rgba(78,135,245,.3)">خ</button>
+              <button onclick="toggleDay(this,'ج')" class="btn btn-sm on" style="background:rgba(78,135,245,.15);color:var(--acc);border:1px solid rgba(78,135,245,.3)">ج</button>
+              <button onclick="toggleDay(this,'س')" class="btn btn-sm" style="background:var(--bg3);color:var(--t2);border:1px solid var(--bg4)">س</button>
+              <button onclick="toggleDay(this,'ح')" class="btn btn-sm" style="background:var(--bg3);color:var(--t2);border:1px solid var(--bg4)">ح</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">مدة الدرس الواحد</label>
+            <select class="form-select">
+              <option>30 دقيقة</option>
+              <option selected>45 دقيقة</option>
+              <option>60 دقيقة</option>
+              <option>90 دقيقة</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">راحة أسبوعية</label>
+            <select class="form-select">
+              <option>بدون راحة مجدولة</option>
+              <option selected>يوم راحة كل 5 دروس</option>
+              <option>يوم راحة كل أسبوع</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:12px">معاينة الفصل</div>
+          <div class="card-sm" style="margin-bottom:10px">
+            <div class="grid3" style="gap:8px;text-align:center">
+              <div><div style="font-size:18px;font-weight:700;color:var(--acc)">9</div><div style="font-size:10px;color:var(--t2)">أشهر</div></div>
+              <div><div style="font-size:18px;font-weight:700;color:var(--teal)">36</div><div style="font-size:10px;color:var(--t2)">أسبوع</div></div>
+              <div><div style="font-size:18px;font-weight:700;color:var(--gold)">180</div><div style="font-size:10px;color:var(--t2)">يوم دراسي</div></div>
+            </div>
+          </div>
+          <div class="info-banner" style="background:rgba(0,212,168,.07);border:1px solid rgba(0,212,168,.2)">
+            <div class="ib-icon">✅</div>
+            <div style="color:var(--t2)">180 يوم دراسي يكفي لتغطية المنهج كاملاً مع راحة كافية وإمكانية المراجعة قبل الامتحانات.</div>
+          </div>
+          <div class="card-sm" style="margin-top:10px">
+            <div style="font-size:12px;font-weight:600;margin-bottom:8px">توزيع الفصول المقترح</div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div class="row gap2"><span style="font-size:11px;color:var(--t2);flex:1">التركيب الذري</span><span class="bx b-t">سبتمبر</span></div>
+              <div class="row gap2"><span style="font-size:11px;color:var(--t2);flex:1">الروابط الكيميائية</span><span class="bx b-b">نوفمبر</span></div>
+              <div class="row gap2"><span style="font-size:11px;color:var(--t2);flex:1">التفاعلات الكيميائية</span><span class="bx b-g">يناير</span></div>
+              <div class="row gap2"><span style="font-size:11px;color:var(--t2);flex:1">الأحماض والقواعد</span><span class="bx b-r">مارس</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="row gap2"><div class="spacer"></div><button class="btn btn-g" onclick="showView('home')">إلغاء</button><button class="btn btn-p" onclick="semStep(2)">التالي: اختر الدروس ←</button></div>
+    </div>
+
+    <!-- Step 2: Lesson selector -->
+    <div id="sem-step2" style="display:none">
+      <div class="info-banner" style="background:rgba(78,135,245,.07);border:1px solid rgba(78,135,245,.2);margin-bottom:14px">
+        <div class="ib-icon">ℹ️</div>
+        <div style="color:var(--t2)">اختر الدروس التي تريد تضمينها في الخطة. يمكنك تحديد فصل كامل أو دروس محددة. الدروس المحددة: <strong style="color:var(--t1)" id="semSelCount">18 من 18</strong></div>
+      </div>
+      <div class="row gap2" style="margin-bottom:12px">
+        <button class="btn btn-sm btn-teal" onclick="selectAllLessons()">تحديد الكل</button>
+        <button class="btn btn-sm btn-g" onclick="clearAllLessons()">إلغاء الكل</button>
+        <div class="spacer"></div>
+        <div style="font-size:12px;color:var(--t2)">مدة إجمالية: <strong style="color:var(--t1)" id="semTotalTime">390 دقيقة</strong></div>
+      </div>
+
+      <div id="lessonCheckerSem">
+        <!-- Chapter 1 -->
+        <div class="chapter-section">
+          <div class="ch-hd" onclick="toggleChapter(this)">
+            <div class="check-box on" onclick="event.stopPropagation();toggleChapterCheck(this,'ch1')" id="ch1-cb">✓</div>
+            <div class="ch-num" style="background:rgba(0,212,168,.12);color:var(--teal)">1</div>
+            <div class="ch-info"><div class="ch-title">التركيب الذري</div><div class="ch-meta">4 دروس · 75 دقيقة · سهل</div></div>
+            <span class="bx b-t">100% مكتمل</span>
+            <span class="ch-toggle">▶</span>
+          </div>
+          <div class="ch-body" id="ch1-body">
+            <div class="lesson-check-row" onclick="toggleLesson(this,'sem')"><div class="check-box on" id="l1">✓</div><div class="lesson-info"><div class="lesson-title">مقدمة إلى الذرة</div><div class="lesson-meta"><span class="diff-dot" style="background:var(--teal)"></span><span>سهل</span><span>·</span><span>15 د</span><span class="status-pill b-t">مكتمل</span></div></div></div>
+            <div class="lesson-check-row" onclick="toggleLesson(this,'sem')"><div class="check-box on" id="l2">✓</div><div class="lesson-info"><div class="lesson-title">البروتونات والنيوترونات والإلكترونات</div><div class="lesson-meta"><span class="diff-dot" style="background:var(--teal)"></span><span>سهل</span><span>·</span><span>20 د</span><span class="status-pill b-t">مكتمل</span></div></div></div>
+            <div class="lesson-check-row" onclick="toggleLesson(this,'sem')"><div class="check-box on" id="l3">✓</div><div class="lesson-info"><div class="lesson-title">طبقات الإلكترونات</div><div class="lesson-meta"><span class="diff-dot" style="background:var(--teal)"></span><span>سهل</span><span>·</span><span>18 د</span><span class="status-pill b-t">مكتمل</span></div></div></div>
+            <div class="lesson-check-row" onclick="toggleLesson(this,'sem')"><div class="check-box on" id="l4">✓</div><div class="lesson-info"><div class="lesson-title">النظائر والكتلة الذرية</div><div class="lesson-meta"><span class="diff-dot" style="background:var(--gold)"></span><span>متوسط</span><span>·</span><span>22 د</span><span class="status-pill b-t">مكتمل</span></div></div></div>
+          </div>
+        </div>
+        <!-- Chapter 2 -->
+        <div class="chapter-section">
+          <div class="ch-hd" onclick="toggleChapter(this)">
+            <div class="check-box on" onclick="event.stopPropagation();toggleChapterCheck(this,'ch2')" id="ch2-cb">✓</div>
+            <div class="ch-num" style="background:rgba(78,135,245,.12);color:var(--acc)">2</div>
+            <div class="ch-info"><div class="ch-title">الروابط الكيميائية</div><div class="ch-meta">5 دروس · 120 دقيقة · متوسط</div></div>
+            <span class="bx b-b">20% مكتمل</span>
+            <span class="ch-toggle">▶</span>
+          </div>
+          <div class="ch-body" id="ch2-body">
+            <div class="lesson-check-row" onclick="toggleLesson(this,'sem')"><div class="check-box on">✓</div><div class="lesson-info"><div class="lesson-title">ما هي الرابطة الكيميائية؟</div><div class="lesson-meta"><span class="diff-dot" style="background:var(--gold)"></span><span>متوسط</span><span>·</span><span>20 د</span><span class="status-pill b-t">مكتمل</span></div></div></div>
+            <div class="lesson-check-row" onclick="toggleLesson(this,'sem')" style="background:rgba(78,135,245,.04)"><div class="check-box on" style="background:var(--acc);border-color:var(--acc);color:#fff">✓</div><div class="lesson-info"><div class="lesson-title" style="color:var(--acc)">الروابط التساهمية والأيونية</div><div class="lesson-meta"><span class="diff-dot" style="background:var(--gold)"></span><span>متوسط</span><span>·</span><span>25 د</span><span class="status-pill b-b">اليوم</span></div></div></div>
+            <div class="lesson-check-row" onclick="toggleLesson(this,'sem')"><div class="check-box on">✓</div><div class="lesson-info"><div class="lesson-title">الروابط الفلزية</div><div class="lesson-meta"><span class="diff-dot" style="background:var(--gold)"></span><span>متوسط</span><span>·</span><span>18 د</span></div></div></div>
+            <div class="lesson-check-row" onclick="toggleLesson(this,'sem')"><div class="check-box on">✓</div><div class="lesson-info"><div class="lesson-title">القطبية وكهرسلبية العناصر</div><div class="lesson-meta"><span class="diff-dot" style="background:var(--coral)"></span><span>صعب</span><span>·</span><span>30 د</span></div></div></div>
+            <div class="lesson-check-row" onclick="toggleLesson(this,'sem')"><div class="check-box on">✓</div><div class="lesson-info"><div class="lesson-title">قوى فان دير فالز</div><div class="lesson-meta"><span class="diff-dot" style="background:var(--coral)"></span><span>صعب</span><span>·</span><span>32 د</span></div></div></div>
+          </div>
+        </div>
+        <!-- Chapter 3 -->
+        <div class="chapter-section">
+          <div class="ch-hd" onclick="toggleChapter(this)">
+            <div class="check-box on" onclick="event.stopPropagation();toggleChapterCheck(this,'ch3')" id="ch3-cb">✓</div>
+            <div class="ch-num" style="background:rgba(245,166,35,.1);color:var(--gold)">3</div>
+            <div class="ch-info"><div class="ch-title">التفاعلات الكيميائية</div><div class="ch-meta">5 دروس · 115 دقيقة · صعب</div></div>
+            <span class="bx b-gray">لم يبدأ</span>
+            <span class="ch-toggle">▶</span>
+          </div>
+          <div class="ch-body" id="ch3-body">
+            <div class="lesson-check-row" onclick="toggleLesson(this,'sem')"><div class="check-box on">✓</div><div class="lesson-info"><div class="lesson-title">أنواع التفاعلات الكيميائية</div><div class="lesson-meta"><span class="diff-dot" style="background:var(--gold)"></span><span>متوسط</span><span>·</span><span>22 د</span></div></div></div>
+            <div class="lesson-check-row" onclick="toggleLesson(this,'sem')"><div class="check-box on">✓</div><div class="lesson-info"><div class="lesson-title">موازنة المعادلات الكيميائية</div><div class="lesson-meta"><span class="diff-dot" style="background:var(--coral)"></span><span>صعب</span><span>·</span><span>35 د</span></div></div></div>
+            <div class="lesson-check-row" onclick="toggleLesson(this,'sem')"><div class="check-box on">✓</div><div class="lesson-info"><div class="lesson-title">حسابات الكيمياء الكمية</div><div class="lesson-meta"><span class="diff-dot" style="background:var(--coral)"></span><span>صعب</span><span>·</span><span>35 د</span></div></div></div>
+            <div class="lesson-check-row" onclick="toggleLesson(this,'sem')"><div class="check-box on">✓</div><div class="lesson-info"><div class="lesson-title">سرعة التفاعل والعوامل المؤثرة</div><div class="lesson-meta"><span class="diff-dot" style="background:var(--gold)"></span><span>متوسط</span><span>·</span><span>23 د</span></div></div></div>
+          </div>
+        </div>
+        <!-- Chapter 4 -->
+        <div class="chapter-section">
+          <div class="ch-hd" onclick="toggleChapter(this)">
+            <div class="check-box on" onclick="event.stopPropagation();toggleChapterCheck(this,'ch4')" id="ch4-cb">✓</div>
+            <div class="ch-num" style="background:rgba(255,107,107,.1);color:var(--coral)">4</div>
+            <div class="ch-info"><div class="ch-title">الأحماض والقواعد والأملاح</div><div class="ch-meta">4 دروس · 80 دقيقة · متوسط</div></div>
+            <span class="bx b-gray">لم يبدأ</span>
+            <span class="ch-toggle">▶</span>
+          </div>
+          <div class="ch-body" id="ch4-body">
+            <div class="lesson-check-row" onclick="toggleLesson(this,'sem')"><div class="check-box on">✓</div><div class="lesson-info"><div class="lesson-title">ما هي الأحماض والقواعد؟</div><div class="lesson-meta"><span class="diff-dot" style="background:var(--gold)"></span><span>متوسط</span><span>·</span><span>20 د</span></div></div></div>
+            <div class="lesson-check-row" onclick="toggleLesson(this,'sem')"><div class="check-box on">✓</div><div class="lesson-info"><div class="lesson-title">قياس الـ pH والمؤشرات</div><div class="lesson-meta"><span class="diff-dot" style="background:var(--gold)"></span><span>متوسط</span><span>·</span><span>25 د</span></div></div></div>
+            <div class="lesson-check-row" onclick="toggleLesson(this,'sem')"><div class="check-box on">✓</div><div class="lesson-info"><div class="lesson-title">تفاعلات التعادل والأملاح</div><div class="lesson-meta"><span class="diff-dot" style="background:var(--gold)"></span><span>متوسط</span><span>·</span><span>22 د</span></div></div></div>
+            <div class="lesson-check-row" onclick="toggleLesson(this,'sem')"><div class="check-box on">✓</div><div class="lesson-info"><div class="lesson-title">الهيدروليز والأملاح المتعادلة</div><div class="lesson-meta"><span class="diff-dot" style="background:var(--coral)"></span><span>صعب</span><span>·</span><span>28 د</span></div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="row gap2"><button class="btn btn-g" onclick="semStep(1)">← السابق</button><div class="spacer"></div><button class="btn btn-p" onclick="semStep(3)">التالي: مراجعة وتأكيد ←</button></div>
+    </div>
+
+    <!-- Step 3: Review + Generate -->
+    <div id="sem-step3" style="display:none">
+      <div class="grid2" style="gap:16px;align-items:start">
+        <div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:12px">ملخص الخطة</div>
+          <div class="card-sm" style="margin-bottom:10px">
+            <div style="display:flex;flex-direction:column;gap:8px;font-size:12px">
+              <div class="row gap2"><span style="color:var(--t2)">نوع الخطة</span><span class="bx b-b">فصل دراسي كامل</span></div>
+              <div class="row gap2"><span style="color:var(--t2)">المدة</span><span style="font-weight:500">سبتمبر 2024 — يونيو 2025</span></div>
+              <div class="row gap2"><span style="color:var(--t2)">أيام الدراسة</span><span style="font-weight:500">الاثنين ← الجمعة</span></div>
+              <div class="row gap2"><span style="color:var(--t2)">مدة الدرس</span><span style="font-weight:500">45 دقيقة</span></div>
+              <div class="row gap2"><span style="color:var(--t2)">إجمالي الدروس</span><span class="bx b-t">18 درساً</span></div>
+              <div class="row gap2"><span style="color:var(--t2)">أيام الدراسة التقديرية</span><span style="font-weight:500">~36 يوماً</span></div>
+            </div>
+          </div>
+          <div style="font-size:12px;font-weight:600;margin-bottom:8px">توزيع الصعوبة</div>
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div class="row gap2"><span class="diff-dot" style="background:var(--teal)"></span><span style="font-size:11px;color:var(--t2);flex:1">سهل (5 دروس)</span><span class="bx b-t">1 يوم/درس</span></div>
+            <div class="row gap2"><span class="diff-dot" style="background:var(--gold)"></span><span style="font-size:11px;color:var(--t2);flex:1">متوسط (9 دروس)</span><span class="bx b-g">1.5 يوم/درس</span></div>
+            <div class="row gap2"><span class="diff-dot" style="background:var(--coral)"></span><span style="font-size:11px;color:var(--t2);flex:1">صعب (4 دروس)</span><span class="bx b-r">2 يوم/درس</span></div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:12px">جدول أسبوعي مقترح</div>
+          <div class="card-sm">
+            <div style="display:flex;flex-direction:column;gap:7px;font-size:12px">
+              <div class="row gap2"><span style="color:var(--t2);min-width:40px">الاثنين</span><span style="flex:1;font-weight:500">درس جديد</span><span class="bx b-b">45 دقيقة</span></div>
+              <div class="row gap2"><span style="color:var(--t2);min-width:40px">الثلاثاء</span><span style="flex:1;font-weight:500">درس جديد</span><span class="bx b-b">45 دقيقة</span></div>
+              <div class="row gap2"><span style="color:var(--t2);min-width:40px">الأربعاء</span><span style="flex:1;color:var(--teal)">مراجعة + بطاقات</span><span class="bx b-t">30 دقيقة</span></div>
+              <div class="row gap2"><span style="color:var(--t2);min-width:40px">الخميس</span><span style="flex:1;font-weight:500">درس جديد</span><span class="bx b-b">45 دقيقة</span></div>
+              <div class="row gap2"><span style="color:var(--t2);min-width:40px">الجمعة</span><span style="flex:1;color:var(--pur)">اختبار أسبوعي</span><span class="bx b-p">20 دقيقة</span></div>
+              <div class="row gap2"><span style="color:var(--t2);min-width:40px">السبت</span><span style="flex:1;color:var(--t3)">راحة</span><span class="bx b-gray">اختياري</span></div>
+            </div>
+          </div>
+          <div class="info-banner" style="background:rgba(0,212,168,.07);border:1px solid rgba(0,212,168,.2);margin-top:10px">
+            <div class="ib-icon">✨</div>
+            <div style="color:var(--t2)">الذكاء الاصطناعي سيضع درسَي الفصول الصعبة في أيام متتالية تلقائياً لضمان الاستيعاب الكامل.</div>
+          </div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="row gap2">
+        <button class="btn btn-g" onclick="semStep(2)">← السابق</button>
+        <div class="spacer"></div>
+        <button class="btn btn-g" onclick="showView('home')">إلغاء</button>
+        <button class="btn btn-teal" style="padding:10px 24px" onclick="generatePlan('semester')">⚡ إنشاء الخطة بالذكاء الاصطناعي</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ EXAM CREATE ══════════════ -->
+  <div id="view-exam-create" style="display:none">
+    <div class="row gap2" style="margin-bottom:16px">
+      <button class="btn btn-g btn-sm" onclick="showView('home')">← رجوع</button>
+      <div style="font-size:15px;font-weight:600">إنشاء خطة الامتحان</div>
+    </div>
+
+    <div class="steps" style="max-width:420px">
+      <div class="step-item" style="flex-direction:column;align-items:center;flex:0 0 auto">
+        <div class="step-dot active" id="es1dot">1</div>
+        <div class="step-label">الامتحان</div>
+      </div>
+      <div class="step-line" id="esl1"></div>
+      <div class="step-item" style="flex-direction:column;align-items:center;flex:0 0 auto">
+        <div class="step-dot" id="es2dot">2</div>
+        <div class="step-label">الدروس المتاحة</div>
+      </div>
+      <div class="step-line" id="esl2"></div>
+      <div class="step-item" style="flex-direction:column;align-items:center;flex:0 0 auto">
+        <div class="step-dot" id="es3dot">3</div>
+        <div class="step-label">الخطة</div>
+      </div>
+    </div>
+    <div class="divider"></div>
+
+    <!-- Step 1: Exam settings -->
+    <div id="exam-step1">
+      <div class="grid2" style="gap:16px;align-items:start">
+        <div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:12px">معلومات الامتحان</div>
+          <div class="form-group">
+            <label class="form-label">اسم الامتحان</label>
+            <input class="form-input" placeholder="مثال: امتحان نصف الفصل الثاني" value="امتحان الكيمياء — الفصل الثاني">
+          </div>
+          <div class="form-group">
+            <label class="form-label">تاريخ الامتحان</label>
+            <input class="form-input" type="date" value="2025-06-27" dir="ltr">
+          </div>
+          <div class="form-group">
+            <label class="form-label">ساعات الدراسة اليومية</label>
+            <select class="form-select">
+              <option>ساعة واحدة</option>
+              <option selected>ساعتان</option>
+              <option>3 ساعات أو أكثر</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">أولوية الخطة</label>
+            <div style="display:flex;gap:6px;margin-top:4px">
+              <button class="btn btn-sm on" style="flex:1;background:rgba(78,135,245,.15);color:var(--acc);border:1px solid rgba(78,135,245,.3)" onclick="setPriority(this,'balanced')">متوازنة</button>
+              <button class="btn btn-sm btn-g" style="flex:1" onclick="setPriority(this,'weak')">نقاط الضعف أولاً</button>
+              <button class="btn btn-sm btn-g" style="flex:1" onclick="setPriority(this,'quick')">تغطية سريعة</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:12px">معلومات تلقائية</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div class="card-sm" style="background:rgba(245,166,35,.05);border-color:rgba(245,166,35,.25)">
+              <div class="row gap2 gap3"><span style="font-size:18px">📅</span><div><div style="font-size:13px;font-weight:600;color:var(--gold)">13 يوماً متبقية</div><div style="font-size:11px;color:var(--t2)">من اليوم حتى 27 يونيو</div></div></div>
+            </div>
+            <div class="card-sm">
+              <div style="font-size:11px;color:var(--t2);margin-bottom:7px">نقاط الضعف المكتشفة</div>
+              <div style="display:flex;flex-direction:column;gap:5px">
+                <div class="row gap2"><span style="font-size:11px;flex:1">موازنة المعادلات</span><span class="bx b-r">40%</span></div>
+                <div class="row gap2"><span style="font-size:11px;flex:1">القطبية</span><span class="bx" style="background:rgba(245,166,35,.1);color:var(--gold)">62%</span></div>
+                <div class="row gap2"><span style="font-size:11px;flex:1">قوى فان دير فالز</span><span class="bx" style="background:rgba(245,166,35,.1);color:var(--gold)">67%</span></div>
+              </div>
+              <div style="font-size:10px;color:var(--teal);margin-top:7px">✓ ستحصل هذه المواضيع على وقت إضافي في الخطة</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="row gap2"><div class="spacer"></div><button class="btn btn-g" onclick="showView('home')">إلغاء</button><button class="btn btn-p" onclick="examStep(2)">التالي: اختر الدروس المتاحة ←</button></div>
+    </div>
+
+    <!-- Step 2: Available lessons -->
+    <div id="exam-step2" style="display:none">
+      <div class="info-banner" style="background:rgba(245,166,35,.07);border:1px solid rgba(245,166,35,.2);margin-bottom:14px">
+        <div class="ib-icon">🎯</div>
+        <div style="color:var(--t2)">حدّد الدروس المتاحة للمراجعة قبل الامتحان. الدروس المكتملة (✓) محددة مسبقاً. يمكنك إزالة دروس لا تريد مراجعتها أو إضافة دروس جديدة.<br><strong style="color:var(--t1)">الدروس المحددة: <span id="examSelCount">9</span> · الوقت الإجمالي: <span id="examTotalTime">237 دقيقة</span></strong></div>
+      </div>
+
+      <div class="row gap2" style="margin-bottom:10px">
+        <button class="btn btn-sm" style="background:rgba(0,212,168,.12);color:var(--teal);border:1px solid rgba(0,212,168,.2)" onclick="selectCompleted()">✓ المكتملة فقط</button>
+        <button class="btn btn-sm btn-teal" onclick="selectAllExam()">تحديد الكل</button>
+        <button class="btn btn-sm btn-g" onclick="clearAllExam()">إلغاء الكل</button>
+        <div class="spacer"></div>
+        <div class="row gap2 gap2" style="font-size:11px;color:var(--t2)">
+          <span class="diff-dot" style="background:var(--teal)"></span>مكتمل
+          <span class="diff-dot" style="background:var(--acc)"></span>اليوم
+          <span class="diff-dot" style="background:var(--bg5)"></span>لم يبدأ
+        </div>
+      </div>
+
+      <!-- Only chapters 2 + 3 for exam -->
+      <div class="card-sm" style="margin-bottom:10px;background:rgba(78,135,245,.05);border-color:rgba(78,135,245,.2)">
+        <div style="font-size:12px;color:var(--t2)">💡 الخطة ستركز على الفصلين 2 و 3 بناءً على نطاق الامتحان المحدد</div>
+      </div>
+
+      <div id="lessonCheckerExam">
+        <div class="chapter-section">
+          <div class="ch-hd" onclick="toggleChapter(this)">
+            <div class="check-box partial" onclick="event.stopPropagation()" id="ech2-cb">—</div>
+            <div class="ch-num" style="background:rgba(78,135,245,.12);color:var(--acc)">2</div>
+            <div class="ch-info"><div class="ch-title">الروابط الكيميائية</div><div class="ch-meta">5 دروس · 2 مكتملة · 3 لم تبدأ</div></div>
+            <span class="bx b-b">20% مكتمل</span>
+            <span class="ch-toggle open">▶</span>
+          </div>
+          <div class="ch-body open" id="ech2-body">
+            <div class="lesson-check-row" onclick="toggleLesson(this,'exam')"><div class="check-box on">✓</div><div class="lesson-info"><div class="lesson-title">ما هي الرابطة الكيميائية؟</div><div class="lesson-meta"><span class="diff-dot" style="background:var(--teal)"></span><span>مكتمل</span><span>·</span><span>20 د</span></div></div><span class="bx b-t" style="flex-shrink:0">مراجعة</span></div>
+            <div class="lesson-check-row" onclick="toggleLesson(this,'exam')" style="background:rgba(78,135,245,.04)"><div class="check-box on" style="background:var(--acc);border-color:var(--acc);color:#fff">✓</div><div class="lesson-info"><div class="lesson-title" style="color:var(--acc)">الروابط التساهمية والأيونية</div><div class="lesson-meta"><span class="diff-dot" style="background:var(--acc)"></span><span style="color:var(--acc)">اليوم</span><span>·</span><span>25 د</span></div></div><span class="bx b-b" style="flex-shrink:0">تعلّم</span></div>
+            <div class="lesson-check-row" onclick="toggleLesson(this,'exam')"><div class="check-box on">✓</div><div class="lesson-info"><div class="lesson-title">الروابط الفلزية</div><div class="lesson-meta"><span class="diff-dot" style="background:var(--bg5)"></span><span style="color:var(--t3)">لم يبدأ</span><span>·</span><span>18 د</span></div></div><span class="bx b-b" style="flex-shrink:0">تعلّم</span></div>
+            <div class="lesson-check-row" onclick="toggleLesson(this,'exam')"><div class="check-box on">✓</div><div class="lesson-info"><div class="lesson-title">القطبية وكهرسلبية العناصر</div><div class="lesson-meta"><span class="diff-dot" style="background:var(--coral)"></span><span>صعب</span><span>·</span><span>30 د</span><span class="status-pill b-r">⚠ ضعيف</span></div></div><span class="bx b-r" style="flex-shrink:0">+وقت</span></div>
+            <div class="lesson-check-row" onclick="toggleLesson(this,'exam')"><div class="check-box on">✓</div><div class="lesson-info"><div class="lesson-title">قوى فان دير فالز</div><div class="lesson-meta"><span class="diff-dot" style="background:var(--coral)"></span><span>صعب</span><span>·</span><span>32 د</span><span class="status-pill b-r">⚠ ضعيف</span></div></div><span class="bx b-r" style="flex-shrink:0">+وقت</span></div>
+          </div>
+        </div>
+        <div class="chapter-section">
+          <div class="ch-hd" onclick="toggleChapter(this)">
+            <div class="check-box on" onclick="event.stopPropagation()" id="ech3-cb">✓</div>
+            <div class="ch-num" style="background:rgba(245,166,35,.1);color:var(--gold)">3</div>
+            <div class="ch-info"><div class="ch-title">التفاعلات الكيميائية</div><div class="ch-meta">4 دروس · كلها جديدة</div></div>
+            <span class="bx b-gray">لم يبدأ</span>
+            <span class="ch-toggle">▶</span>
+          </div>
+          <div class="ch-body" id="ech3-body">
+            <div class="lesson-check-row" onclick="toggleLesson(this,'exam')"><div class="check-box on">✓</div><div class="lesson-info"><div class="lesson-title">أنواع التفاعلات الكيميائية</div><div class="lesson-meta"><span class="diff-dot" style="background:var(--gold)"></span><span>متوسط</span><span>·</span><span>22 د</span></div></div></div>
+            <div class="lesson-check-row" onclick="toggleLesson(this,'exam')"><div class="check-box on">✓</div><div class="lesson-info"><div class="lesson-title">موازنة المعادلات الكيميائية</div><div class="lesson-meta"><span class="diff-dot" style="background:var(--coral)"></span><span>صعب</span><span>·</span><span>35 د</span><span class="status-pill b-r">⚠ ضعيف 40%</span></div></div></div>
+            <div class="lesson-check-row" onclick="toggleLesson(this,'exam')"><div class="check-box on">✓</div><div class="lesson-info"><div class="lesson-title">حسابات الكيمياء الكمية</div><div class="lesson-meta"><span class="diff-dot" style="background:var(--coral)"></span><span>صعب</span><span>·</span><span>35 د</span></div></div></div>
+            <div class="lesson-check-row" onclick="toggleLesson(this,'exam')"><div class="check-box on">✓</div><div class="lesson-info"><div class="lesson-title">سرعة التفاعل</div><div class="lesson-meta"><span class="diff-dot" style="background:var(--gold)"></span><span>متوسط</span><span>·</span><span>23 د</span></div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="row gap2"><button class="btn btn-g" onclick="examStep(1)">← السابق</button><div class="spacer"></div><button class="btn btn-p" onclick="generatePlan('exam')">⚡ إنشاء الخطة بالذكاء الاصطناعي ←</button></div>
+    </div>
+  </div>
+
+  <!-- ══════════════ GENERATING ══════════════ -->
+  <div id="view-generating" style="display:none">
+    <div class="gen-overlay" style="max-width:500px;margin:40px auto">
+      <div class="gen-spinner"></div>
+      <div style="font-size:16px;font-weight:600;margin-bottom:5px" id="genTitle">الذكاء الاصطناعي يبني خطتك...</div>
+      <div style="font-size:12px;color:var(--t2)" id="genSub">يحسب التوزيع الأمثل للدروس</div>
+      <div class="gen-steps" id="genSteps"></div>
+      <div style="margin-top:16px;font-size:11px;color:var(--t3)">عادةً يستغرق هذا بضع ثوانٍ...</div>
+    </div>
+  </div>
+
+  <!-- ══════════════ SEMESTER VIEW ══════════════ -->
+  <div id="view-semester-view" style="display:none">
+    <div class="row gap2" style="margin-bottom:14px">
+      <button class="btn btn-g btn-sm" onclick="showView('home')">← رجوع</button>
+      <div style="font-size:15px;font-weight:600">خطة الفصل الدراسي 📘</div>
+      <div class="spacer"></div>
+      <div class="bx b-t">نشطة</div>
+      <button class="btn btn-sm btn-s">تعديل الخطة ✏️</button>
+      <button class="btn btn-sm btn-g">تصدير PDF</button>
+    </div>
+
+    <div class="summary-grid">
+      <div class="sum-card"><div class="sum-val" style="color:var(--teal)">36%</div><div class="sum-lbl">التقدم الإجمالي</div></div>
+      <div class="sum-card"><div class="sum-val" style="color:var(--acc)">7</div><div class="sum-lbl">دروس منجزة</div></div>
+      <div class="sum-card"><div class="sum-val" style="color:var(--gold)">13</div><div class="sum-lbl">يوم للامتحان</div></div>
+      <div class="sum-card"><div class="sum-val" style="color:var(--pur)">11</div><div class="sum-lbl">درس متبقي</div></div>
+    </div>
+
+    <div class="tabs" style="max-width:360px">
+      <button class="tab on" onclick="switchViewTab(this,'timeline')">جدول زمني</button>
+      <button class="tab" onclick="switchViewTab(this,'weekly')">عرض أسبوعي</button>
+      <button class="tab" onclick="switchViewTab(this,'chapters')">بالفصول</button>
+    </div>
+
+    <div id="vtab-timeline">
+      <div style="font-size:12px;color:var(--t2);margin-bottom:12px">الأسبوع الحالي — 14–20 يونيو 2025</div>
+      <div class="plan-view">
+        <div class="pv-row">
+          <div class="pv-date">الاثنين<br>12 يونيو</div>
+          <div class="pv-spine"><div class="pv-dot" style="background:var(--teal)"></div><div class="pv-line" style="background:var(--bg4)"></div></div>
+          <div class="pv-content">
+            <div class="pv-card done">
+              <div class="pvc-icon">✅</div>
+              <div style="flex:1"><div class="pvc-lesson">ما هي الرابطة الكيميائية؟</div><div class="pvc-meta"><span class="bx b-t">مكتمل</span><span>الفصل 2</span><span>20 د</span></div></div>
+              <div class="lesson-prog-check done">✓</div>
+            </div>
+          </div>
+        </div>
+        <div class="pv-row">
+          <div class="pv-date">الثلاثاء<br>13 يونيو</div>
+          <div class="pv-spine"><div class="pv-dot" style="background:var(--teal)"></div><div class="pv-line" style="background:var(--bg4)"></div></div>
+          <div class="pv-content">
+            <div class="pv-card done">
+              <div class="pvc-icon">✅</div>
+              <div style="flex:1"><div class="pvc-lesson">الروابط التساهمية والأيونية — ج1</div><div class="pvc-meta"><span class="bx b-t">مكتمل</span><span>الفصل 2</span><span>25 د</span></div></div>
+              <div class="lesson-prog-check done">✓</div>
+            </div>
+          </div>
+        </div>
+        <div class="pv-row">
+          <div class="pv-date" style="color:var(--acc);font-weight:600">اليوم<br>14 يونيو</div>
+          <div class="pv-spine"><div class="pv-dot" style="background:var(--acc)"></div><div class="pv-line" style="background:var(--bg4)"></div></div>
+          <div class="pv-content">
+            <div class="pv-card today">
+              <div class="pvc-icon">📖</div>
+              <div style="flex:1"><div class="pvc-lesson" style="color:var(--acc)">الروابط التساهمية والأيونية — ج2</div><div class="pvc-meta"><span class="bx b-b">اليوم</span><span>الفصل 2</span><span>25 د</span></div></div>
+              <button class="btn btn-sm btn-p">ابدأ ←</button>
+            </div>
+          </div>
+        </div>
+        <div class="pv-row">
+          <div class="pv-date">الخميس<br>15 يونيو</div>
+          <div class="pv-spine"><div class="pv-dot" style="background:var(--bg5)"></div><div class="pv-line" style="background:var(--bg4)"></div></div>
+          <div class="pv-content">
+            <div class="pv-card">
+              <div class="pvc-icon">📚</div>
+              <div style="flex:1"><div class="pvc-lesson">الروابط الفلزية</div><div class="pvc-meta"><span class="bx b-gray">قادم</span><span>الفصل 2</span><span>18 د</span></div></div>
+              <div class="lesson-prog-check" onclick="markDone(this)"></div>
+            </div>
+          </div>
+        </div>
+        <div class="pv-row">
+          <div class="pv-date">الجمعة<br>16 يونيو</div>
+          <div class="pv-spine"><div class="pv-dot" style="background:var(--bg5)"></div><div class="pv-line" style="background:var(--bg4)"></div></div>
+          <div class="pv-content">
+            <div class="pv-card">
+              <div class="pvc-icon">📚</div>
+              <div style="flex:1"><div class="pvc-lesson">القطبية وكهرسلبية العناصر</div><div class="pvc-meta"><span class="bx b-r">صعب</span><span class="bx b-r">⚠ ضعيف</span><span>الفصل 2</span><span>30 د</span></div></div>
+              <div class="lesson-prog-check" onclick="markDone(this)"></div>
+            </div>
+          </div>
+        </div>
+        <div class="pv-row">
+          <div class="pv-date">السبت<br>17 يونيو</div>
+          <div class="pv-spine"><div class="pv-dot" style="background:var(--t3)"></div><div class="pv-line" style="background:var(--bg4)"></div></div>
+          <div class="pv-content">
+            <div class="pv-card rest">
+              <div class="pvc-icon">😌</div>
+              <div><div class="pvc-lesson" style="color:var(--t2)">يوم راحة</div><div class="pvc-meta"><span class="bx b-gray">مراجعة البطاقات فقط</span></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="pv-row">
+          <div class="pv-date" style="color:var(--gold);font-weight:600">الامتحان<br>27 يونيو</div>
+          <div class="pv-spine"><div class="pv-dot" style="background:var(--gold)"></div></div>
+          <div class="pv-content">
+            <div class="pv-card exam">
+              <div class="pvc-icon">🎓</div>
+              <div><div class="pvc-lesson" style="color:var(--gold);font-weight:600">امتحان الكيمياء الفصل الثاني</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="vtab-weekly" style="display:none">
+      <div class="row gap2" style="margin-bottom:10px">
+        <button class="btn btn-sm btn-g">‹ الأسبوع السابق</button>
+        <span style="font-size:13px;font-weight:500;flex:1;text-align:center">الأسبوع 38 · 14–20 يونيو</span>
+        <button class="btn btn-sm btn-g">الأسبوع التالي ›</button>
+      </div>
+      <div class="week-grid" style="margin-bottom:12px">
+        <div class="wday done"><div class="wd-name">إث</div><div class="wd-num">12</div><div class="wd-dots"><div class="wd-dot" style="background:var(--teal)"></div></div></div>
+        <div class="wday done"><div class="wd-name">ثل</div><div class="wd-num">13</div><div class="wd-dots"><div class="wd-dot" style="background:var(--teal)"></div></div></div>
+        <div class="wday today has-lesson"><div class="wd-name">أرب</div><div class="wd-num">14</div><div class="wd-dots"><div class="wd-dot" style="background:#fff"></div></div></div>
+        <div class="wday has-lesson"><div class="wd-name">خم</div><div class="wd-num">15</div><div class="wd-dots"><div class="wd-dot" style="background:var(--acc)"></div></div></div>
+        <div class="wday has-lesson"><div class="wd-name">جم</div><div class="wd-num">16</div><div class="wd-dots"><div class="wd-dot" style="background:var(--coral)"></div></div></div>
+        <div class="wday rest"><div class="wd-name">سب</div><div class="wd-num">17</div><div class="wd-dots"><div class="wd-dot" style="background:var(--t3)"></div></div></div>
+        <div class="wday"><div class="wd-name">أح</div><div class="wd-num">18</div><div class="wd-dots"></div></div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--bg4);border-radius:8px;padding:12px;font-size:12px;color:var(--t2)">
+        <div style="color:var(--t1);font-weight:600;margin-bottom:8px">اليوم — الأربعاء 14 يونيو</div>
+        <div class="pv-card today" style="margin-bottom:0"><div class="pvc-icon">📖</div><div style="flex:1"><div class="pvc-lesson" style="color:var(--acc)">الروابط التساهمية والأيونية</div><div class="pvc-meta"><span>25 دقيقة</span><span>الفصل 2</span></div></div><button class="btn btn-sm btn-p">ابدأ</button></div>
+      </div>
+    </div>
+    <div id="vtab-chapters" style="display:none">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="card-sm row gap3"><div class="ch-num" style="background:rgba(0,212,168,.12);color:var(--teal);width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">1</div><div style="flex:1"><div style="font-size:13px;font-weight:500">التركيب الذري</div><div style="font-size:11px;color:var(--teal);margin-top:2px">4/4 دروس مكتملة</div><div class="pb-track" style="height:4px;margin-top:5px"><div class="pb-fill" style="width:100%;background:var(--teal)"></div></div></div><span class="bx b-t">مكتمل ✓</span></div>
+        <div class="card-sm row gap3"><div class="ch-num" style="background:rgba(78,135,245,.12);color:var(--acc);width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">2</div><div style="flex:1"><div style="font-size:13px;font-weight:500">الروابط الكيميائية</div><div style="font-size:11px;color:var(--acc);margin-top:2px">1/5 دروس مكتملة · 4 متبقية</div><div class="pb-track" style="height:4px;margin-top:5px"><div class="pb-fill" style="width:20%;background:var(--acc)"></div></div></div><span class="bx b-b">20%</span></div>
+        <div class="card-sm row gap3"><div class="ch-num" style="background:rgba(245,166,35,.1);color:var(--gold);width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">3</div><div style="flex:1"><div style="font-size:13px;font-weight:500">التفاعلات الكيميائية</div><div style="font-size:11px;color:var(--t3);margin-top:2px">0/5 لم يبدأ</div><div class="pb-track" style="height:4px;margin-top:5px"><div class="pb-fill" style="width:0%"></div></div></div><span class="bx b-gray">لم يبدأ</span></div>
+        <div class="card-sm row gap3"><div class="ch-num" style="background:rgba(255,107,107,.1);color:var(--coral);width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">4</div><div style="flex:1"><div style="font-size:13px;font-weight:500">الأحماض والقواعد والأملاح</div><div style="font-size:11px;color:var(--t3);margin-top:2px">0/4 لم يبدأ</div><div class="pb-track" style="height:4px;margin-top:5px"><div class="pb-fill" style="width:0%"></div></div></div><span class="bx b-gray">لم يبدأ</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ EXAM VIEW ══════════════ -->
+  <div id="view-exam-view" style="display:none">
+    <div class="row gap2" style="margin-bottom:14px">
+      <button class="btn btn-g btn-sm" onclick="showView('home')">← رجوع</button>
+      <div style="font-size:15px;font-weight:600">خطة الامتحان 🎯</div>
+      <div class="spacer"></div>
+      <div class="bx b-g">الامتحان بعد 13 يوم</div>
+      <button class="btn btn-sm btn-s">تعديل ✏️</button>
+    </div>
+
+    <div style="background:linear-gradient(135deg,rgba(245,166,35,.1),rgba(78,135,245,.06));border:1px solid rgba(245,166,35,.25);border-radius:10px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:14px">
+      <div style="font-size:26px">🎓</div>
+      <div style="flex:1"><div style="font-size:14px;font-weight:600;margin-bottom:2px">امتحان الكيمياء — الفصل الثاني</div><div style="font-size:12px;color:var(--t2)">27 يونيو 2025 · 9 دروس للمراجعة · 13 يوماً متبقية</div></div>
+      <div style="text-align:center"><div style="font-size:28px;font-weight:700;color:var(--gold)">13</div><div style="font-size:10px;color:var(--t2)">يوم متبقي</div></div>
+    </div>
+
+    <div class="summary-grid" style="grid-template-columns:repeat(3,1fr)">
+      <div class="sum-card"><div class="sum-val" style="color:var(--gold)">3/9</div><div class="sum-lbl">دروس مراجَعة</div></div>
+      <div class="sum-card"><div class="sum-val" style="color:var(--coral)">3</div><div class="sum-lbl">نقاط ضعف</div></div>
+      <div class="sum-card"><div class="sum-val" style="color:var(--teal)">6</div><div class="sum-lbl">دروس متبقية</div></div>
+    </div>
+
+    <div class="info-banner" style="background:rgba(255,107,107,.06);border:1px solid rgba(255,107,107,.2)">
+      <div class="ib-icon">⚠️</div>
+      <div style="color:var(--t2)"><strong style="color:var(--coral)">تنبيه الذكاء الاصطناعي:</strong> موازنة المعادلات (40%) وقوى فان دير فالز (67%) تحتاج وقتاً إضافياً. الخطة خصصت لها يومين بدلاً من يوم واحد.</div>
+    </div>
+
+    <div class="plan-view" style="margin-top:14px">
+      <div class="pv-row"><div class="pv-date" style="color:var(--acc);font-weight:600">اليوم<br>14 يونيو</div><div class="pv-spine"><div class="pv-dot" style="background:var(--acc)"></div><div class="pv-line" style="background:var(--bg4)"></div></div><div class="pv-content"><div class="pv-card today"><div class="pvc-icon">📖</div><div style="flex:1"><div class="pvc-lesson" style="color:var(--acc)">الروابط التساهمية والأيونية</div><div class="pvc-meta"><span class="bx b-b">تعلّم جديد</span><span>25 د</span></div></div><button class="btn btn-sm btn-p">ابدأ ←</button></div></div></div>
+      <div class="pv-row"><div class="pv-date">الخميس<br>15 يونيو</div><div class="pv-spine"><div class="pv-dot" style="background:var(--bg5)"></div><div class="pv-line" style="background:var(--bg4)"></div></div><div class="pv-content"><div class="pv-card"><div class="pvc-icon">📚</div><div style="flex:1"><div class="pvc-lesson">الروابط الفلزية</div><div class="pvc-meta"><span class="bx b-gray">قادم</span><span>18 د</span></div></div><div class="lesson-prog-check" onclick="markDone(this)"></div></div></div></div>
+      <div class="pv-row"><div class="pv-date">الجمعة<br>16 يونيو</div><div class="pv-spine"><div class="pv-dot" style="background:var(--coral)"></div><div class="pv-line" style="background:var(--bg4)"></div></div><div class="pv-content"><div class="pv-card"><div class="pvc-icon">⚠️</div><div style="flex:1"><div class="pvc-lesson">القطبية وكهرسلبية العناصر</div><div class="pvc-meta"><span class="bx b-r">صعب</span><span class="bx b-r">ضعيف</span><span>30 د + مراجعة</span></div></div><div class="lesson-prog-check" onclick="markDone(this)"></div></div></div></div>
+      <div class="pv-row"><div class="pv-date">السبت<br>17 يونيو</div><div class="pv-spine"><div class="pv-dot" style="background:var(--coral)"></div><div class="pv-line" style="background:var(--bg4)"></div></div><div class="pv-content"><div class="pv-card"><div class="pvc-icon">⚠️</div><div style="flex:1"><div class="pvc-lesson">قوى فان دير فالز — يوم 2</div><div class="pvc-meta"><span class="bx b-r">تعمّق إضافي</span><span>32 د</span></div></div><div class="lesson-prog-check" onclick="markDone(this)"></div></div></div></div>
+      <div class="pv-row"><div class="pv-date">الأحد<br>18 يونيو</div><div class="pv-spine"><div class="pv-dot" style="background:var(--gold)"></div><div class="pv-line" style="background:var(--bg4)"></div></div><div class="pv-content"><div class="pv-card"><div class="pvc-icon">📚</div><div style="flex:1"><div class="pvc-lesson">أنواع التفاعلات الكيميائية</div><div class="pvc-meta"><span class="bx b-g">فصل جديد</span><span>22 د</span></div></div><div class="lesson-prog-check" onclick="markDone(this)"></div></div></div></div>
+      <div class="pv-row"><div class="pv-date">الاثنين<br>19 يونيو</div><div class="pv-spine"><div class="pv-dot" style="background:var(--coral)"></div><div class="pv-line" style="background:var(--bg4)"></div></div><div class="pv-content"><div class="pv-card"><div class="pvc-icon">⚠️</div><div style="flex:1"><div class="pvc-lesson">موازنة المعادلات — يوم 1</div><div class="pvc-meta"><span class="bx b-r">ضعيف 40%</span><span>35 د</span></div></div><div class="lesson-prog-check" onclick="markDone(this)"></div></div></div></div>
+      <div class="pv-row"><div class="pv-date">الثلاثاء<br>20 يونيو</div><div class="pv-spine"><div class="pv-dot" style="background:var(--coral)"></div><div class="pv-line" style="background:var(--bg4)"></div></div><div class="pv-content"><div class="pv-card"><div class="pvc-icon">⚠️</div><div style="flex:1"><div class="pvc-lesson">موازنة المعادلات — يوم 2</div><div class="pvc-meta"><span class="bx b-r">تدريب مكثّف</span><span>35 د</span></div></div><div class="lesson-prog-check" onclick="markDone(this)"></div></div></div></div>
+      <div class="pv-row"><div class="pv-date">25–26 يونيو</div><div class="pv-spine"><div class="pv-dot" style="background:var(--pur)"></div><div class="pv-line" style="background:var(--bg4)"></div></div><div class="pv-content"><div class="pv-card" style="border-color:rgba(139,127,232,.3);background:rgba(139,127,232,.05)"><div class="pvc-icon">🔁</div><div><div class="pvc-lesson" style="color:var(--pur)">مراجعة شاملة للنقاط الضعيفة</div><div class="pvc-meta"><span class="bx b-p">آخر يومين</span></div></div></div></div></div>
+      <div class="pv-row"><div class="pv-date" style="color:var(--gold);font-weight:700">27 يونيو</div><div class="pv-spine"><div class="pv-dot" style="background:var(--gold)"></div></div><div class="pv-content"><div class="pv-card exam"><div class="pvc-icon">🎓</div><div><div class="pvc-lesson" style="color:var(--gold);font-weight:600">امتحان الكيمياء</div></div></div></div></div>
+    </div>
+  </div>
+
+  </div><!-- /mainContent -->
+</div><!-- /main -->
+</div><!-- /shell -->
+
+<script>
+var currentType='semester', semCurrentStep=1, examCurrentStep=1;
+
+function showView(v){
+  document.querySelectorAll('[id^="view-"]').forEach(el=>el.style.display='none');
+  document.getElementById('view-'+v).style.display='';
+  var titles={'home':'خطة الدراسة','semester-create':'خطة الفصل الدراسي — إنشاء','exam-create':'خطة الامتحان — إنشاء','generating':'جاري الإنشاء...','semester-view':'خطة الفصل الدراسي','exam-view':'خطة الامتحان'};
+  document.getElementById('topbarTitle').textContent=titles[v]||'خطة الدراسة';
+}
+
+function selectType(t){
+  currentType=t;
+  document.querySelectorAll('.tp-card').forEach(el=>el.classList.remove('on'));
+  document.getElementById('type-'+t).classList.add('on');
+}
+
+function startCreate(){
+  if(currentType==='semester') showView('semester-create');
+  else showView('exam-create');
+}
+
+function toggleDay(btn){
+  btn.classList.toggle('on');
+  if(btn.classList.contains('on')){btn.style.background='rgba(78,135,245,.15)';btn.style.color='var(--acc)';btn.style.borderColor='rgba(78,135,245,.3)';}
+  else{btn.style.background='var(--bg3)';btn.style.color='var(--t2)';btn.style.borderColor='var(--bg4)';}
+}
+
+function setPriority(btn){
+  btn.parentElement.querySelectorAll('.btn').forEach(b=>{b.className='btn btn-sm btn-g';b.style.flex='1';});
+  btn.style.background='rgba(78,135,245,.15)';btn.style.color='var(--acc)';btn.style.border='1px solid rgba(78,135,245,.3)';
+}
+
+function semStep(n){
+  semCurrentStep=n;
+  ['sem-step1','sem-step2','sem-step3'].forEach((id,i)=>{document.getElementById(id).style.display=i+1===n?'':'none';});
+  for(var i=1;i<=3;i++){
+    var d=document.getElementById('s'+i+'dot');
+    if(!d) continue;
+    if(i<n){d.className='step-dot done';d.textContent='✓';}
+    else if(i===n){d.className='step-dot active';d.textContent=i;}
+    else{d.className='step-dot';d.textContent=i;}
+    var l=document.getElementById('sl'+(i-1));
+    if(l) l.className='step-line'+(i<=n?' done':'');
+  }
+}
+
+function examStep(n){
+  examCurrentStep=n;
+  ['exam-step1','exam-step2'].forEach((id,i)=>{document.getElementById(id).style.display=i+1===n?'':'none';});
+  for(var i=1;i<=3;i++){
+    var d=document.getElementById('es'+i+'dot');
+    if(!d) continue;
+    if(i<n){d.className='step-dot done';d.textContent='✓';}
+    else if(i===n){d.className='step-dot active';d.textContent=i;}
+    else{d.className='step-dot';d.textContent=i;}
+    var l=document.getElementById('esl'+(i-1));
+    if(l) l.className='step-line'+(i<=n?' done':'');
+  }
+}
+
+function toggleChapter(hd){
+  var body=hd.nextElementSibling;
+  var arrow=hd.querySelector('.ch-toggle');
+  if(!body) return;
+  var open=body.classList.toggle('open');
+  if(arrow) arrow.classList.toggle('open',open);
+}
+
+function toggleChapterCheck(cb, chId){
+  cb.classList.toggle('on');
+  var isOn=cb.classList.contains('on');
+  cb.textContent=isOn?'✓':'';
+  var body=document.getElementById(chId+'-body');
+  if(body) body.querySelectorAll('.lesson-check-row .check-box').forEach(c=>{
+    c.classList.toggle('on',isOn);
+    c.textContent=isOn?'✓':'';
+  });
+  updateCounts();
+}
+
+function toggleLesson(row, type){
+  var cb=row.querySelector('.check-box');
+  if(!cb) return;
+  cb.classList.toggle('on');
+  cb.textContent=cb.classList.contains('on')?'✓':'';
+  updateCounts();
+}
+
+function updateCounts(){
+  var semChecked=document.querySelectorAll('#lessonCheckerSem .lesson-check-row .check-box.on').length;
+  var el=document.getElementById('semSelCount');
+  if(el) el.textContent=semChecked+' من 18';
+  var time=document.getElementById('semTotalTime');
+  if(time) time.textContent=(semChecked*22)+' دقيقة';
+  var examChecked=document.querySelectorAll('#lessonCheckerExam .lesson-check-row .check-box.on').length;
+  var ec=document.getElementById('examSelCount');
+  if(ec) ec.textContent=examChecked;
+  var et=document.getElementById('examTotalTime');
+  if(et) et.textContent=(examChecked*26)+' دقيقة';
+}
+
+function selectAllLessons(){
+  document.querySelectorAll('#lessonCheckerSem .check-box').forEach(c=>{c.classList.add('on');c.textContent='✓';});
+  updateCounts();
+}
+function clearAllLessons(){
+  document.querySelectorAll('#lessonCheckerSem .check-box').forEach(c=>{c.classList.remove('on');c.textContent='';});
+  updateCounts();
+}
+function selectAllExam(){
+  document.querySelectorAll('#lessonCheckerExam .check-box').forEach(c=>{c.classList.add('on');c.textContent='✓';});
+  updateCounts();
+}
+function clearAllExam(){
+  document.querySelectorAll('#lessonCheckerExam .check-box').forEach(c=>{c.classList.remove('on');c.textContent='';});
+  updateCounts();
+}
+function selectCompleted(){
+  document.querySelectorAll('#lessonCheckerExam .lesson-check-row').forEach(row=>{
+    var isCompleted=row.querySelector('.status-pill')&&(row.querySelector('.status-pill').classList.contains('b-t'));
+    var cb=row.querySelector('.check-box');
+    if(!cb) return;
+    cb.classList.toggle('on',isCompleted);
+    cb.textContent=isCompleted?'✓':'';
+  });
+  updateCounts();
+}
+
+function generatePlan(type){
+  showView('generating');
+  var isSem=type==='semester';
+  document.getElementById('genTitle').textContent=isSem?'الذكاء الاصطناعي يبني خطة الفصل...':'الذكاء الاصطناعي يبني خطة الامتحان...';
+  var sem_steps=['حساب الأيام الدراسية (180 يوم)...','توزيع الدروس على الأسابيع...','تحديد الفصول الصعبة (يومين/درس)...','إضافة أيام المراجعة الأسبوعية...','جاهزة! 36 يوماً دراسياً مجدولاً'];
+  var exam_steps=['حساب الأيام المتبقية (13 يوم)...','تحليل نقاط الضعف المكتشفة...','مضاعفة وقت الدروس الصعبة...','توزيع 9 دروس على 13 يوم...','جاهزة! الخطة الأمثل للامتحان'];
+  var steps=isSem?sem_steps:exam_steps;
+  var container=document.getElementById('genSteps');
+  container.innerHTML='';
+  steps.forEach(function(s){
+    var div=document.createElement('div');
+    div.className='gen-step';
+    div.innerHTML='<div class="gs-dot gs-wait-dot"></div>'+s;
+    container.appendChild(div);
+  });
+  var i=0;
+  function tick(){
+    if(i<steps.length){
+      var rows=container.querySelectorAll('.gen-step');
+      if(i>0){rows[i-1].className='gen-step done';rows[i-1].querySelector('.gs-dot').className='gs-dot gs-done-dot';}
+      rows[i].querySelector('.gs-dot').className='gs-dot gs-active-dot';
+      i++;
+      setTimeout(tick,700);
+    } else {
+      setTimeout(function(){showView(isSem?'semester-view':'exam-view');},500);
+    }
+  }
+  setTimeout(tick,400);
+}
+
+function switchViewTab(btn,tab){
+  btn.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  ['timeline','weekly','chapters'].forEach(id=>{var el=document.getElementById('vtab-'+id);if(el)el.style.display=id===tab?'':'none';});
+}
+
+function markDone(btn){
+  btn.classList.toggle('done');
+  btn.classList.toggle('today');
+  btn.textContent=btn.classList.contains('done')?'✓':'';
+}
+
+// init
+showView('home');
+selectType('semester');
+</script>
+</body>
+</html>

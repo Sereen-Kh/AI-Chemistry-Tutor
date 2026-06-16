@@ -33,6 +33,7 @@ from app.services.rag import (
     retrieve_context,
     rewrite_query,
 )
+from app.services.rag_logging import log_rag_retrieval
 from app.services.source_router import SourceRoute, route_source
 
 logger = logging.getLogger(__name__)
@@ -205,6 +206,7 @@ def _chunk_to_dict(chunk: RetrievedChunk) -> dict[str, Any]:
         "source_type": chunk.source_type,
         "content_type": chunk.content_type,
         "page_number": chunk.page_number,
+        "unit_id": chunk.unit_id,
         "chapter_id": chunk.chapter_id,
         "lesson_id": chunk.lesson_id,
         "topic_id": chunk.topic_id,
@@ -214,6 +216,7 @@ def _chunk_to_dict(chunk: RetrievedChunk) -> dict[str, Any]:
 
 
 def _chunk_from_dict(payload: dict[str, Any]) -> RetrievedChunk:
+    payload.setdefault("unit_id", None)
     return RetrievedChunk(**payload)
 
 
@@ -333,6 +336,7 @@ async def _retrieve_variant(
     query: str,
     user_id: int | None,
     source_types: list[str],
+    unit_id: int | None,
     chapter_id: int | None,
     lesson_id: int | None,
     topic_id: int | None,
@@ -349,6 +353,7 @@ async def _retrieve_variant(
             variant_db,
             query,
             user_id=user_id,
+            unit_id=unit_id,
             chapter_id=chapter_id,
             lesson_id=lesson_id,
             topic_id=topic_id,
@@ -358,6 +363,7 @@ async def _retrieve_variant(
             intent=intent,
             diagnostics_callback=diagnostics.update,
             document_type=document_type,
+            log_retrieval=False,
         )
     return label, chunks, diagnostics
 
@@ -600,6 +606,7 @@ async def semantic_retrieve_context(
     *,
     user_id: int | None = None,
     source_types: list[str] | None = None,
+    unit_id: int | None = None,
     chapter_id: int | None = None,
     lesson_id: int | None = None,
     topic_id: int | None = None,
@@ -612,13 +619,25 @@ async def semantic_retrieve_context(
     source_route: SourceRoute = await route_source(query, source_types)
     resolved_source_types = source_route.source_types
     cache_key = "semantic_rag:result:" + _CACHE_VERSION + ":" + _hash_payload(
-        query, resolved_source_types, chapter_id, lesson_id, topic_id, top_k, intent
+        query, resolved_source_types, unit_id, chapter_id, lesson_id, topic_id, top_k, intent
     )
     cached = await _redis_get_json(cache_key)
     if isinstance(cached, dict) and isinstance(cached.get("chunks"), list):
         chunks = [_chunk_from_dict(item) for item in cached["chunks"]]
         diagnostics = dict(cached.get("diagnostics") or {})
         diagnostics["cache_hit"] = True
+        await log_rag_retrieval(
+            user_id=user_id,
+            query_text=query,
+            normalized_query=clean_query(query),
+            route="semantic_retrieve",
+            source_mode=",".join(resolved_source_types or []),
+            top_k=top_k,
+            min_similarity=_minimum_score_for_intent(intent),
+            chunks=chunks,
+            retrieval_latency_ms=diagnostics.get("retrieval_time_ms"),
+            metadata_json={"cache_hit": True, "intent": intent, "diagnostics": diagnostics},
+        )
         return SemanticRagResult(chunks=chunks, diagnostics=diagnostics)
 
     rewritten_query, hyde, multi_queries = await asyncio.gather(
@@ -651,6 +670,7 @@ async def semantic_retrieve_context(
                 query=variant_query,
                 user_id=user_id,
                 source_types=resolved_source_types,
+                unit_id=unit_id,
                 chapter_id=chapter_id,
                 lesson_id=lesson_id,
                 topic_id=topic_id,
@@ -684,6 +704,18 @@ async def semantic_retrieve_context(
         cache_key,
         {"chunks": [_chunk_to_dict(chunk) for chunk in final_chunks], "diagnostics": diagnostics},
         _RESULT_CACHE_TTL_SECONDS,
+    )
+    await log_rag_retrieval(
+        user_id=user_id,
+        query_text=query,
+        normalized_query=clean_query(query),
+        route="semantic_retrieve",
+        source_mode=",".join(resolved_source_types or []),
+        top_k=top_k,
+        min_similarity=_minimum_score_for_intent(intent),
+        chunks=final_chunks,
+        retrieval_latency_ms=diagnostics.get("retrieval_time_ms"),
+        metadata_json={"cache_hit": False, "intent": intent, "diagnostics": diagnostics},
     )
     return SemanticRagResult(chunks=final_chunks, diagnostics=diagnostics)
 
@@ -744,6 +776,7 @@ async def semantic_search(
         db,
         query=query,
         user_id=user_id,
+        unit_id=filters.get("unit_id"),
         chapter_id=filters.get("chapter_id"),
         lesson_id=filters.get("lesson_id"),
         topic_id=filters.get("topic_id"),
@@ -754,6 +787,7 @@ async def semantic_search(
         intent=resolved_intent,
         page_start=filters.get("page_start"),
         page_end=filters.get("page_end"),
+        log_retrieval=False,
     )
     if mode == "solution_first":
         chunks.sort(key=lambda item: (item.source_type != "solution_book", -item.similarity_score))
@@ -790,4 +824,16 @@ async def semantic_search(
         "filters": filters,
         "result_count": len(results),
     }
+    await log_rag_retrieval(
+        user_id=user_id,
+        query_text=query,
+        normalized_query=clean_query(query),
+        route="semantic_search",
+        source_mode=mode,
+        top_k=top_k,
+        min_similarity=min_similarity,
+        chunks=chunks[:top_k],
+        retrieval_latency_ms=None,
+        metadata_json=diagnostics,
+    )
     return results, diagnostics

@@ -1,6 +1,6 @@
 """Chapter API routes."""
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.dependencies import require_admin
@@ -12,8 +12,12 @@ router = APIRouter(prefix="/chapters", tags=["chapters"])
 
 
 @router.get("", response_model=list[ChapterResponse])
-async def list_chapters(db: AsyncSession = Depends(get_async_db)):
-    return await curriculum_service.list_chapters(db)
+async def list_chapters(
+    semester: int | None = Query(default=None, ge=1, le=2),
+    unit_id: int | None = Query(default=None),
+    db: AsyncSession = Depends(get_async_db),
+):
+    return await curriculum_service.list_chapters(db, semester=semester, unit_id=unit_id)
 
 
 @router.get("/{chapter_id}", response_model=ChapterResponse)

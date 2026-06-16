@@ -1,0 +1,11 @@
+{
+  "result": "failed",
+  "mode": "empty_index",
+  "reason": "rag_chunks table has zero indexed chunks",
+  "allow_empty_index_in_ci": false,
+  "thresholds": {
+    "RAG_EVAL_MIN_HIT_RATE": "0.80",
+    "RAG_EVAL_MIN_TOP_SCORE": "0.50",
+    "RAG_EVAL_REQUIRED_SOURCE_METADATA": "true"
+  }
+}

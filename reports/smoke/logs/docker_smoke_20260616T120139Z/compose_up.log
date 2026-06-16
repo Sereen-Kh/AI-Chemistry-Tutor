@@ -1,0 +1,121 @@
+ Image src-backend Building 
+ Image src-celery-worker Building 
+ Image src-celery-beat Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.56kB done
+#1 DONE 0.0s
+
+#2 [backend internal] load build definition from Dockerfile
+#2 transferring dockerfile: 2.48kB done
+#2 DONE 0.0s
+
+#3 [celery-beat internal] load metadata for docker.io/library/python:3.11-slim
+#3 DONE 1.2s
+
+#4 [celery-worker internal] load .dockerignore
+#4 transferring context: 663B done
+#4 DONE 0.0s
+
+#5 [backend base 1/2] FROM docker.io/library/python:3.11-slim@sha256:ae52c5bef62a6bdd42cd1e8dffef86b9cd284bde9427da79839de7a4b983e7ca
+#5 resolve docker.io/library/python:3.11-slim@sha256:ae52c5bef62a6bdd42cd1e8dffef86b9cd284bde9427da79839de7a4b983e7ca 0.0s done
+#5 DONE 0.0s
+
+#6 [celery-beat internal] load build context
+#6 transferring context: 28.75kB 0.0s done
+#6 DONE 0.0s
+
+#7 [backend base 2/2] RUN apt-get update && apt-get install -y --no-install-recommends     poppler-utils     libpq-dev     build-essential     libffi-dev     curl     && rm -rf /var/lib/apt/lists/*
+#7 CACHED
+
+#8 [backend deps 1/3] WORKDIR /app
+#8 CACHED
+
+#9 [backend runtime 3/4] RUN chmod +x entrypoint.sh
+#9 CACHED
+
+#10 [backend runtime 1/4] WORKDIR /app
+#10 CACHED
+
+#11 [backend runtime 2/4] COPY . .
+#11 CACHED
+
+#12 [backend deps 2/3] COPY requirements.txt .
+#12 CACHED
+
+#13 [backend deps 3/3] RUN pip install --no-cache-dir --upgrade pip     && pip install --no-cache-dir -r requirements.txt
+#13 CACHED
+
+#14 [backend runtime 4/4] RUN groupadd -r edumind && useradd -r -g edumind -d /app -s /sbin/nologin edumind     && mkdir -p /app/data/textbooks     && chown -R edumind:edumind /app
+#14 CACHED
+
+#15 [celery-worker] exporting to image
+#15 exporting layers done
+#15 exporting manifest sha256:55624ef212805bae498bed42b26c76dd8a6e7ab876561b8df8bd3830ba714a66 done
+#15 exporting config sha256:3785667f480a46dceb43011f48ac8fe6a5b7e937c108c3ea815396a5c217af85 done
+#15 exporting attestation manifest sha256:aab5e616ec0eb4195be793d8a014cd8e7fd14c11e3666cbb3daea150f74cfbc2
+#15 exporting attestation manifest sha256:aab5e616ec0eb4195be793d8a014cd8e7fd14c11e3666cbb3daea150f74cfbc2 0.0s done
+#15 exporting manifest list sha256:4567cff39b43d660cfedaf7dedf924c718f027f1ad41d8fe96467a3ffdbcc660 0.0s done
+#15 naming to docker.io/library/src-celery-worker:latest done
+#15 unpacking to docker.io/library/src-celery-worker:latest 0.0s done
+#15 DONE 0.1s
+
+#16 [backend] exporting to image
+#16 exporting layers done
+#16 exporting manifest sha256:8f217cbbd3f3ee9934949f7a4d070bc8fa32caf5fc25a9c50cccc9b5bfd4c761 done
+#16 exporting config sha256:520c8c202cb28a4f4751e82fb14978c0d501e56d4478359f5db3f8cb60f3f1e8 done
+#16 exporting attestation manifest sha256:815d652a128f0ebc983aefe7289b31a90637ff000d564815ad28585ded44b299 0.0s done
+#16 exporting manifest list sha256:4d8c3d8bd432cba7d44c16a2d8bba3eae3ac0aa9c387e5b95908be12ef8f87cf 0.0s done
+#16 naming to docker.io/library/src-backend:latest done
+#16 unpacking to docker.io/library/src-backend:latest 0.0s done
+#16 DONE 0.1s
+
+#17 [celery-beat] exporting to image
+#17 exporting layers done
+#17 exporting manifest sha256:0d77d9311fd664261e6f86705eafff8fdb666eedeba86eec1d8732299814407a done
+#17 exporting config sha256:b2823927e2bbe628acfefe35d23a08552647ada814524478ca9ae071aa8a2055 done
+#17 exporting attestation manifest sha256:c5795c8318f70c0769e0e74664693b91da7d4863c5494c161a19235b42d047c2 0.0s done
+#17 exporting manifest list sha256:1388289a737a83f8ca225d584fa960d422ac7f714482d88a245472ee17d8518d 0.0s done
+#17 naming to docker.io/library/src-celery-beat:latest done
+#17 unpacking to docker.io/library/src-celery-beat:latest done
+#17 DONE 0.1s
+
+#18 [celery-worker] resolving provenance for metadata file
+#18 DONE 0.0s
+
+#19 [backend] resolving provenance for metadata file
+#19 DONE 0.0s
+
+#20 [celery-beat] resolving provenance for metadata file
+#20 DONE 0.0s
+ Image src-celery-beat Built 
+ Image src-celery-worker Built 
+ Image src-backend Built 
+ Container edumind-redis Running 
+ Container edumind-postgres Running 
+ Container edumind-backend Recreate 
+ Container edumind-celery-worker Recreate 
+ Container edumind-celery-beat Recreate 
+ Container edumind-celery-beat Recreated 
+ Container edumind-backend Recreated 
+ Container edumind-frontend-web Running 
+ Container edumind-celery-worker Recreated 
+ Container edumind-redis Waiting 
+ Container edumind-postgres Waiting 
+ Container edumind-redis Waiting 
+ Container edumind-postgres Waiting 
+ Container edumind-redis Waiting 
+ Container edumind-postgres Waiting 
+ Container edumind-redis Healthy 
+ Container edumind-postgres Healthy 
+ Container edumind-redis Healthy 
+ Container edumind-backend Starting 
+ Container edumind-postgres Healthy 
+ Container edumind-redis Healthy 
+ Container edumind-celery-worker Starting 
+ Container edumind-postgres Healthy 
+ Container edumind-celery-beat Starting 
+ Container edumind-celery-beat Started 
+ Container edumind-backend Started 
+ Container edumind-backend Waiting 
+ Container edumind-celery-worker Started 
+ Container edumind-backend Healthy 

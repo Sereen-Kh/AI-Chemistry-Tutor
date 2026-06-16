@@ -8,7 +8,45 @@ interface BackendFlashcard {
   topic_id: number;
   front_ar: string;
   back_ar: string;
+  created_at?: string;
+  updated_at?: string;
 }
+
+interface BackendFlashcardProgress {
+  mastered: boolean;
+  review_count: number;
+  ease_factor: number;
+  interval_days: number;
+  next_review_at?: string | null;
+}
+
+interface BackendDueFlashcard extends BackendFlashcard {
+  mastered: boolean;
+  review_count: number;
+  ease_factor: number;
+  interval_days: number;
+  next_review_at?: string | null;
+  last_reviewed?: string | null;
+}
+
+const mapBackendCard = (card: BackendFlashcard): GeneratedFlashcard => ({
+  id: String(card.id),
+  lessonId: `topic_${card.topic_id}`,
+  chapterId: 'backend',
+  front: card.front_ar,
+  back: card.back_ar,
+  cardType: 'definition',
+  difficulty: 'medium',
+  sourcePage: 0,
+  reviewState: 'new',
+});
+
+const reviewQuality = (reviewState: 'new' | 'learning' | 'known' | 'review'): number => {
+  if (reviewState === 'known') return 5;
+  if (reviewState === 'review') return 2;
+  if (reviewState === 'learning') return 3;
+  return 0;
+};
 
 export const flashcardsApi = {
   async getDecks(): Promise<FlashcardDeck[]> {
@@ -36,19 +74,25 @@ export const flashcardsApi = {
 
   async generateFlashcards(config: FlashcardGenerationConfig): Promise<GeneratedFlashcard[]> {
     try {
-      const { data } = await api.post<GeneratedFlashcard[]>('/flashcards/generate', config);
-      return data;
-    } catch {
-      // Fallback to local mock generator
+      const { data } = await api.post<BackendFlashcard[]>('/flashcards/generate', {
+        topic_id: undefined,
+        lesson_id: Number(config.lessonIds[0]) || undefined,
+        limit: config.cardsPerLesson || 8,
+        created_by: 'generated',
+      });
+      return data.map(mapBackendCard);
+    } catch (error) {
+      console.warn('Flashcard generation backend unavailable, using local generator', error);
       return mockGenerateFlashcards(config);
     }
   },
 
   async getFlashcards(): Promise<GeneratedFlashcard[]> {
     try {
-      const { data } = await api.get<GeneratedFlashcard[]>('/flashcards');
-      return data;
-    } catch {
+      const { data } = await api.get<BackendFlashcard[]>('/flashcards');
+      return data.map(mapBackendCard);
+    } catch (error) {
+      console.warn('Flashcards backend unavailable, using local generated cards', error);
       // Fallback: generate some mock cards from lesson_1_1 as a default deck
       return mockGenerateFlashcards({
         mode: 'single_lesson',
@@ -64,19 +108,25 @@ export const flashcardsApi = {
 
   async updateFlashcardReviewState(id: string, reviewState: 'new' | 'learning' | 'known' | 'review'): Promise<{ success: boolean }> {
     try {
-      const { data } = await api.patch<{ success: boolean }>(`/flashcards/${id}/review`, { reviewState });
-      return data;
-    } catch {
+      await api.post<BackendFlashcardProgress>(`/flashcards/${id}/review`, {
+        quality: reviewQuality(reviewState),
+      });
+      return { success: true };
+    } catch (error) {
+      console.warn('Flashcard review sync failed; keeping local state', error);
       return { success: true };
     }
   },
 
   async getDueFlashcards(): Promise<GeneratedFlashcard[]> {
     try {
-      const { data } = await api.get<GeneratedFlashcard[]>('/flashcards/due');
-      return data;
-    } catch {
-      // Fallback: return cards that might be due (we filter the default cards)
+      const { data } = await api.get<BackendDueFlashcard[]>('/flashcards/due');
+      return data.map((card) => ({
+        ...mapBackendCard(card),
+        reviewState: card.mastered ? 'known' : card.review_count > 0 ? 'review' : 'new',
+      }));
+    } catch (error) {
+      console.warn('Due flashcards backend unavailable, using local due cards', error);
       const allCards = await this.getFlashcards();
       return allCards.filter(c => c.reviewState !== 'known');
     }

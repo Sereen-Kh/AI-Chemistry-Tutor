@@ -1,0 +1,1 @@
+scripts/smoke/clean_db_migration_test.sh: line 58: python: command not found

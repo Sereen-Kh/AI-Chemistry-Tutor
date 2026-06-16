@@ -26,5 +26,6 @@ class Topic(Base, TimestampMixin):
     flashcards = relationship("Flashcard", back_populates="topic", cascade="all, delete-orphan")
     user_progress = relationship("UserProgress", back_populates="topic", cascade="all, delete-orphan")
     homework_items = relationship("Homework", back_populates="topic")
+    lessons = relationship("Lesson", secondary="lesson_topics", back_populates="topics", order_by="Lesson.order")
     rag_chunks = relationship("RagChunk", back_populates="topic")
     extracted_questions = relationship("ExtractedQuestion", back_populates="topic")

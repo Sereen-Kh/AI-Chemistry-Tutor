@@ -1,11 +1,13 @@
-import { useEffect, useMemo, useState, lazy, Suspense } from 'react';
+import { useEffect, useMemo, useRef, useState, lazy, Suspense } from 'react';
 import type { FormEvent, ReactElement } from 'react';
 import { Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import {
   aiApi,
   authApi,
+  dashboardApi,
   labApi,
-  studyPlanApi,
+  messageResponseToAskResponse,
+  notificationsApi,
   toErrorMessage,
   userApi,
 } from './api';
@@ -19,7 +21,6 @@ import {
   ChatMessage,
   ErrorBanner,
   LearningModeSelector,
-  LessonCard,
   LoadingSkeleton,
   PageHeader,
   ProgressBar,
@@ -33,16 +34,28 @@ import { LessonsPage, RagSearchPage } from './pages/LearningPages';
 const QuizzesPage = lazy(() => import('./pages/QuizzesPage').then(module => ({ default: module.QuizzesPage })));
 const FlashcardsPage = lazy(() => import('./pages/FlashcardsPage').then(module => ({ default: module.FlashcardsPage })));
 const LessonDetailPage = lazy(() => import('./pages/LessonDetailPage').then(module => ({ default: module.LessonDetailPage })));
+const StudyPlanPage = lazy(() => import('./pages/StudyPlanPage').then(module => ({ default: module.StudyPlanPage })));
+const NotificationsPage = lazy(() => import('./pages/NotificationsPage').then(module => ({ default: module.NotificationsPage })));
+const LabPage = lazy(() => import('./pages/LabPage').then(module => ({ default: module.LabPage })));
+const HomeworkPage = lazy(() => import('./pages/HomeworkPage').then(module => ({ default: module.HomeworkPage })));
+const GuidedLabPage = lazy(() => import('./features/guided-lab/pages/GuidedLabPage').then(module => ({ default: module.GuidedLabPage })));
+const SolverSessionPage = lazy(() => import('./features/guided-lab/pages/SolverSessionPage').then(module => ({ default: module.SolverSessionPage })));
+const RagAdminPage = lazy(() => import('./pages/admin/RagAdminPage').then(module => ({ default: module.RagAdminPage })));
+const RagReembedPage = lazy(() => import('./pages/admin/RagReembedPage').then(module => ({ default: module.RagReembedPage })));
+const RagEvaluationPage = lazy(() => import('./pages/admin/RagEvaluationPage').then(module => ({ default: module.RagEvaluationPage })));
+const RagQueryLogsPage = lazy(() => import('./pages/admin/RagQueryLogsPage').then(module => ({ default: module.RagQueryLogsPage })));
+const SourcesPage = lazy(() => import('./pages/admin/SourcesPage').then(module => ({ default: module.SourcesPage })));
 import type {
   AiAskResponse,
   AiAskRequest,
   AnswerFormat,
   BalanceResult,
+  ChatMessageResponse,
+  ChatSessionResponse,
   ExplanationMethod,
   InterestCategory,
   LearningMode,
   StudentInterest,
-  StudyPlan,
   TeachingLevel,
   UserPreferences,
   UserProfile,
@@ -93,8 +106,8 @@ const preferenceLabel = (value: string): string =>
     text: 'نص',
     audio: 'صوت',
     image: 'صورة',
-    video: 'Reel',
-    reel: 'Reel',
+    video: 'فيديو قصير',
+    reel: 'فيديو قصير',
     interactive: 'تفاعلي',
     quiz: 'اختبار',
     flashcards: 'بطاقات',
@@ -402,56 +415,142 @@ const OnboardingPage = ({
 };
 
 const DashboardPage = ({ user, preferences }: { user: UserProfile; preferences: UserPreferences }) => {
+  const [dashboard, setDashboard] = useState<Awaited<ReturnType<typeof dashboardApi.getDashboard>> | null>(null);
+  const [dashboardError, setDashboardError] = useState('');
+
+  useEffect(() => {
+    let cancelled = false;
+    dashboardApi.getDashboard()
+      .then((data) => {
+        if (!cancelled) {
+          setDashboard(data);
+          setDashboardError('');
+        }
+      })
+      .catch((error) => {
+        if (!cancelled) {
+          setDashboardError(toErrorMessage(error, 'تعذر تحميل بيانات لوحة التعلم، لذلك نعرض قيماً تجريبية مؤقتاً.'));
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const continueLesson = {
+    title: dashboard?.continue_lesson?.title_ar || 'الحموض والأسس في المحاليل المائية',
+    progress: dashboard?.continue_lesson?.progress ?? 62,
+    duration: dashboard?.continue_lesson?.duration_min ?? 18,
+  };
+  const weakTopics = dashboard?.weak_topics.length
+    ? dashboard.weak_topics.map((topic) => topic.title_ar)
+    : ['الحموض الضعيفة', 'تحويل mL إلى L', 'موازنة المعادلات'];
+  const dueFlashcards = dashboard?.due_flashcards.due_count ?? 14;
+  const nextQuiz = dashboard?.next_quiz?.title ?? 'اختبار قصير: التركيز المولي';
+  const examDaysLeft = dashboard?.study_plan?.days_to_exam ?? 9;
+  const unreadCount = dashboard?.notifications.unread_count ?? 0;
+  const mission = dashboard?.today_mission || 'أكمل درساً قصيراً، حل مسألة تركيز خطوة بخطوة، ثم راجع البطاقات المستحقة.';
   const quickActions = [
-    { to: '/ask-ai', label: 'اسأل', tone: 'blue' },
-    { to: '/quizzes', label: 'اختبار', tone: 'gold' },
-    { to: '/ask-ai', label: 'Reel', tone: 'purple' },
-    { to: '/flashcards', label: 'بطاقات', tone: 'teal' },
-    { to: '/lab/equation-balancer', label: 'موازنة', tone: 'coral' },
+    { to: '/ask-ai', label: 'اسأل الذكاء', icon: 'ذك', tone: 'blue' },
+    { to: '/guided-lab', label: 'حل موجه', icon: 'حل', tone: 'purple' },
+    { to: '/quizzes', label: 'اختبار', icon: 'اخ', tone: 'gold' },
+    { to: '/flashcards', label: 'بطاقات', icon: 'بط', tone: 'teal' },
+    { to: '/homework', label: 'حل واجب', icon: 'وا', tone: 'coral' },
   ];
 
   return (
     <div className="dashboard-grid">
       <section className="hero-card">
-        <p className="eyebrow">مختبر اليوم</p>
-        <h1>{user.first_name || user.name || 'كيميائي'}</h1>
+        <p className="eyebrow">مركز تعلم اليوم</p>
+        <h1>أهلاً {dashboard?.student_name || user.first_name || user.name || 'كيميائي'}</h1>
+        <p className="dashboard-hero-copy">
+          هدف اليوم: {mission}
+        </p>
         <div className="badge-row">
-          <StatusPill tone="gold">{user.streak_days || 5} أيام متتالية</StatusPill>
-          <StatusPill tone="blue">{user.xp || 1240} XP</StatusPill>
-          <StatusPill tone="teal">المستوى {user.level || 4}</StatusPill>
+          <StatusPill tone="gold">{dashboard?.streak_days ?? user.streak_days ?? 5} أيام متتالية</StatusPill>
+          <StatusPill tone="blue">{dashboard?.xp ?? user.xp ?? 1240} XP</StatusPill>
+          <StatusPill tone="teal">المستوى {dashboard?.level ?? user.level ?? 4}</StatusPill>
+          {dashboardError && <StatusPill tone="purple">بيانات تجريبية عند غياب API</StatusPill>}
         </div>
+        {dashboardError && <ErrorBanner message={dashboardError} />}
       </section>
 
       <StudyMissionCard
-        title="اشرح الحموض من مصادر الكتاب"
-        meta={`18 دقيقة · ${preferenceLabel(preferences.teachingLevel)} · ${preferenceLabel(preferences.explanationMethod)}`}
-        to="/ask-ai"
+        title="احسب تركيز HCl خطوة بخطوة"
+        meta={`${continueLesson.duration} دقيقة · ${preferenceLabel(preferences.teachingLevel)} · ${preferenceLabel(preferences.explanationMethod)}`}
+        to="/guided-lab"
       />
 
       <div className="stats-row">
-        <Card><strong>62%</strong><span>خطة الدراسة</span></Card>
-        <Card><strong>14</strong><span>بطاقة للمراجعة</span></Card>
-        <Card><strong>9 أيام</strong><span>حتى الاختبار</span></Card>
+        <Card><strong>{continueLesson.progress}%</strong><span>درس مستمر</span></Card>
+        <Card><strong>{dueFlashcards}</strong><span>بطاقة مستحقة</span></Card>
+        <Card><strong>{examDaysLeft}</strong><span>أيام حتى الاختبار</span></Card>
       </div>
 
-      <Card className="wide-card">
+      <Card className="dashboard-command-card">
         <div className="section-title">
-          <h2>توصيات الذكاء</h2>
+          <h2>متابعة الدرس</h2>
+          <Link to="/lessons">عرض الدروس</Link>
+        </div>
+        <div className="continue-lesson-card">
+          <div>
+            <StatusPill tone="blue">الدرس الحالي</StatusPill>
+            <h3>{continueLesson.title}</h3>
+            <p>ابدأ من مصدر الدرس، ثم انتقل إلى اختبار قصير أو حل موجه حسب حاجتك.</p>
+          </div>
+          <ProgressBar value={continueLesson.progress} tone="teal" />
+          <div className="guided-card-actions">
+            <Link className="ed-btn ed-btn-primary" to="/lessons">تابع الدرس</Link>
+            <Link className="ed-btn ed-btn-secondary" to="/ask-ai?question=اشرح درس الحموض والأسس من الكتاب">اسأل عن الدرس</Link>
+          </div>
+        </div>
+      </Card>
+
+      <Card className="dashboard-command-card">
+        <div className="section-title">
+          <h2>نقاط ضعف تحتاج تدريباً</h2>
           <Link to="/study-plan">عرض الخطة</Link>
         </div>
         <div className="recommendation-grid">
-          <RecommendationCard tone="coral" label="نقطة ضعف" title="راجع الحموض الضعيفة" description="اطلب جدول مقارنة بسيطاً." />
-          <RecommendationCard tone="teal" label="تدريب" title="وازن 3 معادلات" description="استخدم المختبر قبل الاختبار." />
-          <RecommendationCard tone="purple" label="مراجعة" title="اقلب بطاقات الحموض والأسس" description="جلسة تكرار قصيرة." />
+          {weakTopics.map((topic, index) => (
+            <RecommendationCard
+              key={topic}
+              tone={index === 0 ? 'coral' : index === 1 ? 'gold' : 'purple'}
+              label="موضوع ضعيف"
+              title={topic}
+              description="حوّله إلى اختبار قصير أو بطاقات مراجعة."
+            />
+          ))}
+        </div>
+      </Card>
+
+      <Card className="dashboard-command-card">
+        <div className="section-title"><h2>المراجعة والتنبيهات</h2><Link to="/notifications">الإشعارات</Link></div>
+        <div className="dashboard-mini-grid">
+          <article>
+            <StatusPill tone="teal">بطاقات</StatusPill>
+            <strong>{dueFlashcards} بطاقة للمراجعة اليوم</strong>
+            <Link to="/flashcards">راجع الآن</Link>
+          </article>
+          <article>
+            <StatusPill tone="gold">اختبار</StatusPill>
+            <strong>{nextQuiz}</strong>
+            <Link to="/quizzes">ابدأ الاختبار</Link>
+          </article>
+          <article>
+            <StatusPill tone={unreadCount ? 'coral' : 'blue'}>إشعارات</StatusPill>
+            <strong>{unreadCount ? `${unreadCount} تنبيهات غير مقروءة` : 'لا توجد تنبيهات عاجلة'}</strong>
+            <Link to="/notifications">افتح المركز</Link>
+          </article>
         </div>
       </Card>
 
       <Card className="wide-card">
-        <div className="section-title"><h2>إجراءات سريعة</h2></div>
+        <div className="section-title"><h2>أدوات سريعة</h2><span>انتقل مباشرة إلى طريقة التعلم المناسبة.</span></div>
         <div className="quick-grid">
           {quickActions.map((action) => (
             <Link key={action.label} to={action.to} className={`quick-action tone-${action.tone}`}>
-              <span>{action.label.slice(0, 2)}</span>
+              <span>{action.icon}</span>
               {action.label}
             </Link>
           ))}
@@ -461,47 +560,7 @@ const DashboardPage = ({ user, preferences }: { user: UserProfile; preferences: 
   );
 };
 
-const StudyPlanPage = () => {
-  const [plan, setPlan] = useState<StudyPlan | null>(null);
-
-  useEffect(() => {
-    studyPlanApi.getStudyPlan().then(setPlan);
-  }, []);
-
-  if (!plan) {
-    return <LoadingSkeleton rows={6} />;
-  }
-
-  return (
-    <div className="page-stack">
-      <PageHeader
-        eyebrow="خطة الدراسة"
-        title="خارطة كيمياء الصف التاسع"
-        subtitle={`الدرس الحالي: ${plan.currentLesson.title}`}
-      />
-      <Card>
-        <div className="section-title"><h2>موضوعات تحتاج مراجعة</h2></div>
-        <div className="badge-row">
-          {plan.weakTopics.map((topic) => <StatusPill key={topic} tone="coral">{topic}</StatusPill>)}
-        </div>
-      </Card>
-      <div className="chapter-list">
-        {plan.chapters.map((chapter) => (
-          <Card key={chapter.id} className="chapter-card">
-            <div className="chapter-head">
-              <div><h2>{chapter.title}</h2><p>{chapter.subtitle}</p></div>
-              <StatusPill tone={chapter.color}>{chapter.progress}%</StatusPill>
-            </div>
-            <ProgressBar value={chapter.progress} tone={chapter.color} />
-            <div className="lesson-list">
-              {chapter.lessons.map((lesson) => <LessonCard key={lesson.id} lesson={lesson} />)}
-            </div>
-          </Card>
-        ))}
-      </div>
-    </div>
-  );
-};
+// Refactored StudyPlanPage imported from src/pages/StudyPlanPage
 
 const EquationBalancerPage = () => {
   const [input, setInput] = useState('H2 + O2 -> H2O');
@@ -530,7 +589,7 @@ const EquationBalancerPage = () => {
         <Card className="lab-tool">
           <label>
             المعادلة
-            <input value={input} onChange={(event) => setInput(event.target.value)} dir="ltr" aria-label="Equation input" />
+            <input value={input} onChange={(event) => setInput(event.target.value)} dir="ltr" aria-label="إدخال معادلة كيميائية" />
           </label>
           <div className="button-row">
             <Button onClick={balance} disabled={loading}>{loading ? 'جار الموازنة...' : 'وازن'}</Button>
@@ -567,7 +626,53 @@ interface ChatItem {
   question?: string;
 }
 
-const AskAiPage = ({ preferences, setPreferences }: { preferences: UserPreferences; setPreferences: (preferences: UserPreferences) => void }) => {
+const isAnswerFormat = (value: string): value is AnswerFormat => (
+  value === 'text' || value === 'audio' || value === 'image' || value === 'video'
+);
+
+const sessionTitleFromQuestion = (text: string): string => {
+  const cleaned = text.trim().replace(/\s+/g, ' ');
+  return cleaned ? cleaned.slice(0, 40) : 'محادثة جديدة';
+};
+
+const formatSessionTimestamp = (value: string): string => {
+  const timestamp = new Date(value).getTime();
+  if (!Number.isFinite(timestamp)) return '';
+  const diffMinutes = Math.max(0, Math.round((Date.now() - timestamp) / 60000));
+  if (diffMinutes < 1) return 'الآن';
+  if (diffMinutes < 60) return `منذ ${diffMinutes} د`;
+  const diffHours = Math.round(diffMinutes / 60);
+  if (diffHours < 24) return `منذ ${diffHours} س`;
+  const diffDays = Math.round(diffHours / 24);
+  return `منذ ${diffDays} يوم`;
+};
+
+const sessionMessageToChatItem = (message: ChatMessageResponse, question?: string): ChatItem => {
+  const format = isAnswerFormat(message.format) ? message.format : 'text';
+  const response = message.role === 'assistant'
+    ? messageResponseToAskResponse(message, format)
+    : undefined;
+  return {
+    id: String(message.id),
+    role: message.role,
+    content: message.content,
+    response,
+    question,
+  };
+};
+
+const sessionMessagesToChatItems = (messages: ChatMessageResponse[]): ChatItem[] => {
+  let latestUserQuestion = '';
+  return messages.map((message) => {
+    if (message.role === 'user') {
+      latestUserQuestion = message.content;
+      return sessionMessageToChatItem(message);
+    }
+    return sessionMessageToChatItem(message, latestUserQuestion);
+  });
+};
+
+export const AskAiPage = ({ preferences, setPreferences }: { preferences: UserPreferences; setPreferences: (preferences: UserPreferences) => void }) => {
   const location = useLocation();
   const initialQuestion = useMemo(() => new URLSearchParams(location.search).get('question') || '', [location.search]);
   const [question, setQuestion] = useState(initialQuestion);
@@ -575,7 +680,11 @@ const AskAiPage = ({ preferences, setPreferences }: { preferences: UserPreferenc
   const [explanationMethod, setExplanationMethod] = useState<ExplanationMethod>(preferences.explanationMethod);
   const [learningModes, setLearningModes] = useState<LearningMode[]>(preferences.learningModes);
   const [answerScope, setAnswerScope] = useState<AnswerScope>('auto');
-  const [conversationId] = useState(() => `web-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`);
+  const [sessions, setSessions] = useState<ChatSessionResponse[]>([]);
+  const [activeSessionId, setActiveSessionId] = useState<number | null>(null);
+  const [sessionLoading, setSessionLoading] = useState(true);
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const messageIdRef = useRef(0);
   const [messages, setMessages] = useState<ChatItem[]>([
     {
       id: 'welcome',
@@ -586,49 +695,151 @@ const AskAiPage = ({ preferences, setPreferences }: { preferences: UserPreferenc
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const welcomeMessages = (): ChatItem[] => [
+    {
+      id: 'welcome',
+      role: 'assistant',
+      content: 'اسألني من كتاب الكيمياء للصف التاسع. سأعرض المصادر والصفحات عندما يجدها نظام RAG.',
+    },
+  ];
+
+  const upsertSession = (session: ChatSessionResponse) => {
+    setSessions((current) => {
+      const next = [session, ...current.filter((item) => item.id !== session.id)];
+      return next.sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
+    });
+  };
+
+  const loadSession = async (sessionId: number) => {
+    setSessionLoading(true);
+    setError('');
+    try {
+      const session = await aiApi.getSession(sessionId);
+      setActiveSessionId(session.id);
+      upsertSession(session);
+      setMessages(session.messages.length ? sessionMessagesToChatItems(session.messages) : welcomeMessages());
+      setHistoryOpen(false);
+    } catch (err) {
+      setError(toErrorMessage(err, 'تعذر تحميل المحادثة. تأكد أن الخادم يعمل ثم أعد المحاولة.'));
+    } finally {
+      setSessionLoading(false);
+    }
+  };
+
+  const loadSessions = async () => {
+    setSessionLoading(true);
+    setError('');
+    try {
+      const loaded = await aiApi.listSessions();
+      const sorted = [...loaded].sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
+      setSessions(sorted);
+      if (sorted[0]) {
+        setActiveSessionId(sorted[0].id);
+        setMessages(sorted[0].messages.length ? sessionMessagesToChatItems(sorted[0].messages) : welcomeMessages());
+      } else {
+        setActiveSessionId(null);
+        setMessages(welcomeMessages());
+      }
+    } catch (err) {
+      setError(toErrorMessage(err, 'تعذر تحميل سجل المحادثات. تأكد أن backend يعمل على /api/v1.'));
+    } finally {
+      setSessionLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      void loadSessions();
+    }, 0);
+    return () => window.clearTimeout(timeoutId);
+    // Load once when the Ask AI workspace mounts.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const startNewChat = async (title = 'محادثة جديدة'): Promise<ChatSessionResponse | null> => {
+    setSessionLoading(true);
+    setError('');
+    try {
+      const session = await aiApi.createSession({ title });
+      upsertSession(session);
+      setActiveSessionId(session.id);
+      setMessages(welcomeMessages());
+      setHistoryOpen(false);
+      return session;
+    } catch (err) {
+      setError(toErrorMessage(err, 'تعذر إنشاء محادثة جديدة.'));
+      return null;
+    } finally {
+      setSessionLoading(false);
+    }
+  };
+
+  const deleteSession = async (sessionId: number) => {
+    const confirmed = window.confirm('هل تريد حذف هذه المحادثة؟');
+    if (!confirmed) return;
+    setError('');
+    try {
+      await aiApi.deleteSession(sessionId);
+      const remaining = sessions.filter((item) => item.id !== sessionId);
+      setSessions(remaining);
+      if (activeSessionId === sessionId) {
+        if (remaining[0]) {
+          await loadSession(remaining[0].id);
+        } else {
+          setActiveSessionId(null);
+          setMessages(welcomeMessages());
+        }
+      }
+    } catch (err) {
+      setError(toErrorMessage(err, 'تعذر حذف المحادثة.'));
+    }
+  };
+
   const ask = async (override?: string, action?: AiAskRequest['action']) => {
     const text = (override ?? question).trim();
     if (!text || loading) return;
-    const previousAssistant = [...messages].reverse().find((item) => item.role === 'assistant' && item.response);
-    const previousUser = [...messages].reverse().find((item) => item.role === 'user');
-    const parentMessageId = action ? previousAssistant?.id : undefined;
     setQuestion('');
     setError('');
     setLoading(true);
-    setMessages((current) => [...current, { id: `user-${Date.now()}`, role: 'user', content: text }]);
+    messageIdRef.current += 1;
+    const optimisticUserId = `user-${messageIdRef.current}`;
+    setMessages((current) => [...current, { id: optimisticUserId, role: 'user', content: text }]);
     try {
+      let sessionId = activeSessionId;
+      if (!sessionId) {
+        const created = await startNewChat(sessionTitleFromQuestion(text));
+        if (!created) return;
+        sessionId = created.id;
+        setMessages((current) => [...current.filter((item) => item.id !== 'welcome'), { id: optimisticUserId, role: 'user', content: text }]);
+      }
       const normalizedLearningModes = normalizeModes(learningModes);
-      const response = await aiApi.ask({
-        conversation_id: conversationId,
-        parent_message_id: parentMessageId,
-        question: text,
-        subject: preferences.subject,
-        grade: preferences.grade,
-        answer_format: primaryAnswerFormat(normalizedLearningModes),
+      const answerFormat = primaryAnswerFormat(normalizedLearningModes);
+      const assistantMessage = await aiApi.sendSessionMessage(sessionId, {
+        content: text,
+        format: answerFormat,
+        answer_scope: answerScope,
+        source_types: undefined,
         teaching_style: legacyTeachingStyle(teachingLevel, explanationMethod),
         teaching_level: teachingLevel,
         explanation_method: explanationMethod,
         learning_modes: normalizedLearningModes,
         student_interests: preferences.studentInterests,
-        interests: preferences.interests,
-        language: preferences.language,
-        answer_scope: answerScope,
         action,
-        previous_question: previousAssistant?.question || previousUser?.content,
-        previous_answer: previousAssistant?.response?.answer,
-        previous_sources: previousAssistant?.response?.sources,
-        previous_selected_chunks: previousAssistant?.response?.diagnostics?.selected_context as Record<string, unknown>[] | undefined,
       });
+      const response = messageResponseToAskResponse(assistantMessage, answerFormat);
       setMessages((current) => [
         ...current,
         {
-          id: `assistant-${Date.now()}`,
+          id: String(assistantMessage.id),
           role: 'assistant',
           content: response.answer,
           response,
           question: text,
         },
       ]);
+      const refreshed = await aiApi.getSession(sessionId);
+      upsertSession(refreshed);
+      setMessages(refreshed.messages.length ? sessionMessagesToChatItems(refreshed.messages) : welcomeMessages());
     } catch (err) {
       setError(toErrorMessage(err, 'تعذر إرسال السؤال إلى خدمة الذكاء.'));
     } finally {
@@ -675,11 +886,125 @@ const AskAiPage = ({ preferences, setPreferences }: { preferences: UserPreferenc
     preferenceLabel(explanationMethod),
     learningModes.map(preferenceLabel).join(' + '),
   ].join(' · ');
+  const activeSession = sessions.find((session) => session.id === activeSessionId);
+
+  const renderAnswerActions = (message: ChatItem) => {
+    if (!message.response) return null;
+    const encodedQuestion = encodeURIComponent(message.question || message.content);
+    const sourceUrl = message.response.source_page_image_url || message.response.image_url;
+    return (
+      <>
+        <Button
+          variant="secondary"
+          onClick={() => ask('اشرح الإجابة السابقة بطريقة أبسط وبمثال قصير.', 'simplify_previous')}
+          disabled={loading}
+        >
+          اشرح بطريقة أبسط
+        </Button>
+        {sourceUrl ? (
+          <a className="ed-btn ed-btn-ghost" href={sourceUrl} target="_blank" rel="noreferrer">
+            اعرض صفحة المصدر
+          </a>
+        ) : (
+          <Button variant="ghost" onClick={() => setError('لا توجد صورة مصدر متاحة لهذه الإجابة حالياً.')}>
+            اعرض صفحة المصدر
+          </Button>
+        )}
+        <Link className="ed-btn ed-btn-secondary" to={`/guided-lab?problem=${encodedQuestion}`}>
+          ابدأ الحل خطوة بخطوة
+        </Link>
+        <Link className="ed-btn ed-btn-ghost" to="/quizzes">
+          أنشئ اختباراً قصيراً
+        </Link>
+        <Link className="ed-btn ed-btn-ghost" to="/flashcards">
+          أنشئ بطاقات مراجعة
+        </Link>
+      </>
+    );
+  };
 
   return (
     <div className="ask-layout">
-      <PageHeader eyebrow="اسأل الذكاء" title="معلّم الكيمياء RAG" subtitle={`إجابات موثقة بصفحات من كتاب الكيمياء. ${compactPreferenceLabel}`} />
+      <PageHeader
+        eyebrow="اسأل الذكاء"
+        title="معلّم الكيمياء RAG"
+        subtitle={`محادثات محفوظة بذاكرة جلسة. ${compactPreferenceLabel}`}
+        action={(
+          <div className="chat-header-actions">
+            <Button variant="secondary" onClick={() => setHistoryOpen((open) => !open)}>
+              سجل المحادثات
+            </Button>
+            <Button onClick={() => void startNewChat()}>
+              محادثة جديدة
+            </Button>
+          </div>
+        )}
+      />
+      <div className={historyOpen ? 'chat-session-workspace history-open' : 'chat-session-workspace'}>
+        <aside className="chat-history-sidebar" aria-label="سجل محادثات الذكاء">
+          <div className="chat-history-head">
+            <div>
+              <strong>المحادثات</strong>
+              <span>{sessions.length ? `${sessions.length} جلسة محفوظة` : 'لا توجد جلسات بعد'}</span>
+            </div>
+            <Button variant="ghost" onClick={() => void loadSessions()} disabled={sessionLoading}>
+              تحديث
+            </Button>
+          </div>
+          {sessionLoading && !sessions.length ? (
+            <LoadingSkeleton rows={4} />
+          ) : sessions.length ? (
+            <div className="chat-session-list">
+              {sessions.map((session) => {
+                const lastMessage = [...(session.messages || [])].reverse().find((item) => item.content);
+                return (
+                  <button
+                    type="button"
+                    key={session.id}
+                    className={session.id === activeSessionId ? 'chat-session-item active' : 'chat-session-item'}
+                    onClick={() => void loadSession(session.id)}
+                  >
+                    <span>
+                      <strong>{session.title || 'محادثة كيمياء'}</strong>
+                      <small>{lastMessage?.content || 'ابدأ بسؤال جديد'}</small>
+                    </span>
+                    <em>{formatSessionTimestamp(session.updated_at)}</em>
+                    <span
+                      role="button"
+                      tabIndex={0}
+                      className="chat-session-delete"
+                      aria-label={`حذف ${session.title || 'المحادثة'}`}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        void deleteSession(session.id);
+                      }}
+                      onKeyDown={(event) => {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                          event.preventDefault();
+                          event.stopPropagation();
+                          void deleteSession(session.id);
+                        }
+                      }}
+                    >
+                      حذف
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="chat-session-empty">
+              <strong>ابدأ أول محادثة</strong>
+              <p>سيتم حفظ الأسئلة والإجابات هنا لتستطيع الرجوع إليها لاحقاً.</p>
+            </div>
+          )}
+        </aside>
       <Card className="chat-panel">
+        <div className="active-session-strip">
+          <span>الجلسة الحالية</span>
+          <strong>{activeSession?.title || 'محادثة جديدة'}</strong>
+          <small>{activeSession ? `آخر تحديث ${formatSessionTimestamp(activeSession.updated_at)}` : 'سيتم إنشاء جلسة عند إرسال أول سؤال'}</small>
+        </div>
         <div className="chat-toolbar">
           <label>
             مستوى الشرح
@@ -702,10 +1027,20 @@ const AskAiPage = ({ preferences, setPreferences }: { preferences: UserPreferenc
           <LearningModeSelector value={learningModes} onChange={saveLearningModes} />
         </div>
         <div className="chat-feed">
-          {messages.map((message) => (
-            <ChatMessage key={message.id} role={message.role} content={message.content} response={message.response} />
-          ))}
-          {loading && <div className="typing-dots" aria-label="AI is typing"><span /><span /><span /></div>}
+          {sessionLoading ? (
+            <LoadingSkeleton rows={5} />
+          ) : (
+            messages.map((message) => (
+              <ChatMessage
+                key={message.id}
+                role={message.role}
+                content={message.content}
+                response={message.response}
+                actions={message.role === 'assistant' ? renderAnswerActions(message) : undefined}
+              />
+            ))
+          )}
+          {loading && <div className="typing-dots" aria-label="الذكاء يكتب الإجابة" role="status"><span /><span /><span /></div>}
         </div>
         <div className="suggestion-row chat-suggestions" aria-label="أسئلة مقترحة">
           {suggestedChemistryQuestions.map((item) => (
@@ -730,6 +1065,7 @@ const AskAiPage = ({ preferences, setPreferences }: { preferences: UserPreferenc
           <Button type="submit" disabled={loading || !question.trim()}>{loading ? '...' : 'إرسال'}</Button>
         </form>
       </Card>
+      </div>
     </div>
   );
 };
@@ -744,6 +1080,30 @@ const ProfilePage = ({
   setPreferences: (preferences: UserPreferences) => void;
 }) => {
   const [status, setStatus] = useState('');
+  const [notifPrefs, setNotifPrefs] = useState({
+    exam_reminders_enabled: true,
+    lesson_reminders_enabled: true,
+    reminder_time_local: '08:00',
+  });
+
+  useEffect(() => {
+    notificationsApi.getPreferences().then(setNotifPrefs).catch(() => {});
+  }, []);
+
+  const saveNotifPref = async (updates: Partial<typeof notifPrefs>) => {
+    try {
+      const updated = await notificationsApi.updatePreferences(updates);
+      setNotifPrefs(updated);
+      setStatus('تم تحديث إعدادات الإشعارات.');
+      setTimeout(() => setStatus(''), 3000);
+      
+      // Auto-rebuild user reminders on preference change so they use the new time/switches
+      await notificationsApi.rebuildReminders();
+    } catch {
+      setStatus('فشل في مزامنة إعدادات الإشعارات مع الخادم.');
+      setTimeout(() => setStatus(''), 3000);
+    }
+  };
 
   const updatePreferences = async (next: UserPreferences) => {
     setPreferences(next);
@@ -848,6 +1208,50 @@ const ProfilePage = ({
               <option value="en">English</option>
             </select>
           </label>
+
+          {/* User notifications preferences */}
+          <div className="preference-stack" style={{ marginTop: '20px', borderTop: '1px solid var(--bg4)', paddingTop: '20px' }}>
+            <span style={{ fontWeight: 'bold', fontSize: '0.9rem', marginBottom: '12px', display: 'block' }}>تفضيلات التنبيهات وإشعارات المذاكرة</span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', fontSize: '0.85rem' }}>
+                <input
+                  type="checkbox"
+                  checked={notifPrefs.exam_reminders_enabled}
+                  onChange={(e) => void saveNotifPref({ exam_reminders_enabled: e.target.checked })}
+                  style={{ width: '16px', height: '16px' }}
+                />
+                تنبيهات مواعيد الامتحانات (7 أيام، 3 أيام، يوم، ساعتان قبل الامتحان)
+              </label>
+              
+              <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', fontSize: '0.85rem' }}>
+                <input
+                  type="checkbox"
+                  checked={notifPrefs.lesson_reminders_enabled}
+                  onChange={(e) => void saveNotifPref({ lesson_reminders_enabled: e.target.checked })}
+                  style={{ width: '16px', height: '16px' }}
+                />
+                تنبيهات خطة الدروس والواجبات اليومية (يوم قبل الدرس، 30 دقيقة قبل المذاكرة)
+              </label>
+
+              <label style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '0.85rem', marginTop: '6px' }}>
+                وقت التنبيه اليومي المفضل
+                <select
+                  value={notifPrefs.reminder_time_local}
+                  onChange={(e) => void saveNotifPref({ reminder_time_local: e.target.value })}
+                  style={{ width: '130px', padding: '6px', borderRadius: '6px', background: 'var(--bg3)', border: '1px solid var(--bg5)', color: 'var(--t1)' }}
+                >
+                  {Array.from({ length: 24 }).map((_, h) => {
+                    const timeStr = `${String(h).padStart(2, '0')}:00`;
+                    return (
+                      <option key={timeStr} value={timeStr}>
+                        {timeStr}
+                      </option>
+                    );
+                  })}
+                </select>
+              </label>
+            </div>
+          </div>
         </div>
       </Card>
       <Card className="wide-card">
@@ -949,8 +1353,18 @@ function App() {
             <Route path="/rag-search" element={<RagSearchPage />} />
             <Route path="/quizzes" element={<QuizzesPage />} />
             <Route path="/study-plan" element={<StudyPlanPage />} />
+            <Route path="/notifications" element={<NotificationsPage />} />
             <Route path="/flashcards" element={<FlashcardsPage />} />
+            <Route path="/lab" element={<LabPage />} />
+            <Route path="/homework" element={<HomeworkPage />} />
+            <Route path="/guided-lab" element={<GuidedLabPage />} />
+            <Route path="/guided-lab/session/:sessionId" element={<SolverSessionPage />} />
             <Route path="/lab/equation-balancer" element={<EquationBalancerPage />} />
+            <Route path="/admin/rag" element={<RagAdminPage />} />
+            <Route path="/admin/rag/reembed" element={<RagReembedPage />} />
+            <Route path="/admin/rag/evaluation" element={<RagEvaluationPage />} />
+            <Route path="/admin/rag/query-logs" element={<RagQueryLogsPage />} />
+            <Route path="/admin/sources" element={<SourcesPage />} />
             <Route path="/ask-ai" element={<AskAiPage preferences={auth.preferences} setPreferences={updatePreferences} />} />
             <Route path="/profile" element={auth.user && <ProfilePage user={auth.user} preferences={auth.preferences} setPreferences={updatePreferences} />} />
           </Route>

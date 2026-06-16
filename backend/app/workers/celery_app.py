@@ -33,8 +33,22 @@ celery_app.conf.update(
     task_default_queue="default",
     task_routes={
         "ingest_pdf": {"queue": "ingestion"},
+        "reembed_rag_chunks": {"queue": "ingestion"},
     },
 
     # --- Auto-discovery ---
-    include=["app.workers.ingestion_tasks"],
+    include=[
+        "app.workers.ingestion_tasks",
+        "app.workers.notification_tasks",
+        "app.workers.rag_tasks",
+        "app.workers.health_tasks",
+    ],
 )
+
+# --- Scheduler (Celery Beat) ---
+celery_app.conf.beat_schedule = {
+    "check-pending-reminders-every-minute": {
+        "task": "app.workers.notification_tasks.check_pending_reminders",
+        "schedule": 60.0,  # Run every 60 seconds
+    }
+}

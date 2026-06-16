@@ -1,0 +1,289 @@
+name: src
+services:
+  backend:
+    build:
+      context: /Users/sereenkh/Github-Projects/edumind-team-06/src/backend
+      dockerfile: Dockerfile
+    container_name: edumind-backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+        required: true
+      redis:
+        condition: service_healthy
+        required: true
+    environment:
+      ACCESS_TOKEN_EXPIRE_MINUTES: "30"
+      ADMIN_EMAILS: '[]'
+      ADMIN_TOKEN: ""
+      AI_REQUEST_TIMEOUT_SECONDS: "12"
+      ALLOW_PARTIAL_INGESTION: "false"
+      ALLOWED_ORIGINS: '["http://localhost:3000","http://localhost:8080","http://localhost:5173","http://localhost:5174","http://127.0.0.1:5173","http://127.0.0.1:5174","http://localhost:5175","http://127.0.0.1:5175"]'
+      ASYNC_DATABASE_URL: ***redacted***
+      CELERY_BROKER_URL: ***redacted***
+      CELERY_RESULT_BACKEND: ***redacted***
+      DATABASE_URL: ***redacted***
+      DEBUG: "false"
+      GEMINI_API_KEY: ***redacted***
+      GEMINI_DOCUMENT_FALLBACK_MODEL: gemini-2.5-pro,gemini-2.5-flash-lite
+      GEMINI_DOCUMENT_MODEL: gemini-2.5-flash
+      GEMINI_EMBEDDING_MODEL: gemini-embedding-001
+      GEMINI_MIN_COMPLETENESS_SCORE: "0.5"
+      GEMINI_MIN_PAGE_CHARS: "40"
+      INGESTION_MODE: production
+      MODEL_NAME: gemini-2.5-flash
+      OCR_PROVIDER: gemini
+      OCR_REQUIRED_FOR_VISION: "true"
+      PDF_DIRECT_EXTRACTION_ENABLED: "true"
+      PDF_IMAGE_FALLBACK_ENABLED: "true"
+      REDIS_URL: ***redacted***
+      SECRET_KEY: ***redacted***
+      UVICORN_WORKERS: "1"
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - -f
+        - http://localhost:8000/health
+      timeout: 10s
+      interval: 30s
+      retries: 3
+      start_period: 30s
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 8000
+        published: "8000"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /Users/sereenkh/Github-Projects/edumind-team-06/src/data
+        target: /app/data
+        bind: {}
+      - type: volume
+        source: edumind_textbook_cache
+        target: /app/data/textbooks
+        volume: {}
+  celery-beat:
+    build:
+      context: /Users/sereenkh/Github-Projects/edumind-team-06/src/backend
+      dockerfile: Dockerfile
+    command:
+      - beat
+      - --loglevel=info
+    container_name: edumind-celery-beat
+    depends_on:
+      postgres:
+        condition: service_healthy
+        required: true
+      redis:
+        condition: service_healthy
+        required: true
+    entrypoint:
+      - celery
+      - -A
+      - app.workers.celery_app:celery_app
+    environment:
+      ACCESS_TOKEN_EXPIRE_MINUTES: "30"
+      ADMIN_EMAILS: '[]'
+      ADMIN_TOKEN: ""
+      AI_REQUEST_TIMEOUT_SECONDS: "12"
+      ALLOW_PARTIAL_INGESTION: "false"
+      ALLOWED_ORIGINS: '["http://localhost:3000","http://localhost:8080","http://localhost:5173","http://localhost:5174","http://127.0.0.1:5173","http://127.0.0.1:5174","http://localhost:5175","http://127.0.0.1:5175"]'
+      ASYNC_DATABASE_URL: ***redacted***
+      CELERY_BROKER_URL: ***redacted***
+      CELERY_RESULT_BACKEND: ***redacted***
+      DATABASE_URL: ***redacted***
+      DEBUG: "false"
+      GEMINI_API_KEY: ***redacted***
+      GEMINI_DOCUMENT_FALLBACK_MODEL: gemini-2.5-pro,gemini-2.5-flash-lite
+      GEMINI_DOCUMENT_MODEL: gemini-2.5-flash
+      GEMINI_EMBEDDING_MODEL: gemini-embedding-001
+      GEMINI_MIN_COMPLETENESS_SCORE: "0.5"
+      GEMINI_MIN_PAGE_CHARS: "40"
+      INGESTION_MODE: production
+      MODEL_NAME: gemini-2.5-flash
+      OCR_PROVIDER: gemini
+      OCR_REQUIRED_FOR_VISION: "true"
+      PDF_DIRECT_EXTRACTION_ENABLED: "true"
+      PDF_IMAGE_FALLBACK_ENABLED: "true"
+      REDIS_URL: ***redacted***
+      SECRET_KEY: ***redacted***
+    networks:
+      default: null
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /Users/sereenkh/Github-Projects/edumind-team-06/src/data
+        target: /app/data
+        bind: {}
+      - type: volume
+        source: edumind_textbook_cache
+        target: /app/data/textbooks
+        volume: {}
+  celery-worker:
+    build:
+      context: /Users/sereenkh/Github-Projects/edumind-team-06/src/backend
+      dockerfile: Dockerfile
+    command:
+      - celery
+    container_name: edumind-celery-worker
+    depends_on:
+      postgres:
+        condition: service_healthy
+        required: true
+      redis:
+        condition: service_healthy
+        required: true
+    environment:
+      ACCESS_TOKEN_EXPIRE_MINUTES: "30"
+      ADMIN_EMAILS: '[]'
+      ADMIN_TOKEN: ""
+      AI_REQUEST_TIMEOUT_SECONDS: "12"
+      ALLOW_PARTIAL_INGESTION: "false"
+      ALLOWED_ORIGINS: '["http://localhost:3000","http://localhost:8080","http://localhost:5173","http://localhost:5174","http://127.0.0.1:5173","http://127.0.0.1:5174","http://localhost:5175","http://127.0.0.1:5175"]'
+      ASYNC_DATABASE_URL: ***redacted***
+      CELERY_BROKER_URL: ***redacted***
+      CELERY_CONCURRENCY: "2"
+      CELERY_RESULT_BACKEND: ***redacted***
+      DATABASE_URL: ***redacted***
+      DEBUG: "false"
+      GEMINI_API_KEY: ***redacted***
+      GEMINI_DOCUMENT_FALLBACK_MODEL: gemini-2.5-pro,gemini-2.5-flash-lite
+      GEMINI_DOCUMENT_MODEL: gemini-2.5-flash
+      GEMINI_EMBEDDING_MODEL: gemini-embedding-001
+      GEMINI_MIN_COMPLETENESS_SCORE: "0.5"
+      GEMINI_MIN_PAGE_CHARS: "40"
+      INGESTION_MODE: production
+      MODEL_NAME: gemini-2.5-flash
+      OCR_PROVIDER: gemini
+      OCR_REQUIRED_FOR_VISION: "true"
+      PDF_DIRECT_EXTRACTION_ENABLED: "true"
+      PDF_IMAGE_FALLBACK_ENABLED: "true"
+      REDIS_URL: ***redacted***
+      SECRET_KEY: ***redacted***
+    networks:
+      default: null
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /Users/sereenkh/Github-Projects/edumind-team-06/src/data
+        target: /app/data
+        bind: {}
+      - type: volume
+        source: edumind_textbook_cache
+        target: /app/data/textbooks
+        volume: {}
+  frontend-web:
+    command:
+      - sh
+      - -lc
+      - npm ci && npm run dev -- --host 0.0.0.0
+    container_name: edumind-frontend-web
+    depends_on:
+      backend:
+        condition: service_healthy
+        required: true
+    environment:
+      VITE_API_PREFIX: /api/v1
+      VITE_API_URL: http://127.0.0.1:8000
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - wget -qO- http://localhost:5173/ >/dev/null 2>&1 || exit 1
+      timeout: 5s
+      interval: 15s
+      retries: 5
+      start_period: 30s
+    image: node:22-alpine
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 5173
+        published: "5173"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /Users/sereenkh/Github-Projects/edumind-team-06/src/frontend-web
+        target: /app
+        bind: {}
+      - type: volume
+        source: edumind_frontend_node_modules
+        target: /app/node_modules
+        volume: {}
+    working_dir: /app
+  postgres:
+    container_name: edumind-postgres
+    environment:
+      POSTGRES_DB: edumind
+      POSTGRES_PASSWORD: ***redacted***
+      POSTGRES_USER: edumind
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U edumind -d edumind
+      timeout: 5s
+      interval: 10s
+      retries: 5
+    image: pgvector/pgvector:pg16
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 5432
+        published: "5432"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: volume
+        source: edumind_postgres_data
+        target: /var/lib/postgresql/data
+        volume: {}
+  redis:
+    command:
+      - redis-server
+      - --appendonly
+      - "yes"
+      - --maxmemory
+      - 256mb
+      - --maxmemory-policy
+      - allkeys-lru
+    container_name: edumind-redis
+    healthcheck:
+      test:
+        - CMD
+        - redis-cli
+        - ping
+      timeout: 5s
+      interval: 10s
+      retries: 5
+    image: redis:7-alpine
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 6379
+        published: "6379"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: volume
+        source: edumind_redis_data
+        target: /data
+        volume: {}
+networks:
+  default:
+    name: src_default
+volumes:
+  edumind_frontend_node_modules:
+    name: src_edumind_frontend_node_modules
+  edumind_postgres_data:
+    name: src_edumind_postgres_data
+  edumind_redis_data:
+    name: src_edumind_redis_data
+  edumind_textbook_cache:
+    name: src_edumind_textbook_cache

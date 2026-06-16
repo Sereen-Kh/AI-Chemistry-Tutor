@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime
 import json
 import logging
 import time
@@ -10,7 +11,7 @@ import re
 from types import SimpleNamespace
 
 from fastapi import HTTPException
-from sqlalchemy import select
+from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -1844,14 +1845,19 @@ async def create_session(
     session = ChatSession(user_id=user_id, title=title, lesson_id=lesson_id, style=style)
     db.add(session)
     await db.commit()
-    await db.refresh(session)
-    return session
+    result = await db.execute(
+        select(ChatSession)
+        .options(selectinload(ChatSession.messages))
+        .where(ChatSession.id == session.id)
+    )
+    return result.scalars().one()
 
 
 async def get_user_sessions(db: AsyncSession, user_id: int) -> list[ChatSession]:
     """Return all chat sessions for a user."""
     result = await db.execute(
         select(ChatSession)
+        .options(selectinload(ChatSession.messages))
         .where(ChatSession.user_id == user_id)
         .order_by(ChatSession.updated_at.desc())
     )
@@ -1877,9 +1883,37 @@ async def send_message(
     user_id: int,
     content: str,
     message_format: str = "text",
+    answer_scope: str = "auto",
+    source_types: list[str] | None = None,
+    teaching_style: str | None = None,
+    teaching_level: str | None = None,
+    explanation_method: str | None = None,
+    learning_modes: list[str] | None = None,
+    student_interests: list[str] | None = None,
+    action: str | None = None,
 ) -> ChatMessage:
     """Save a user message, retrieve RAG context, generate and save an AI reply."""
     session = await get_owned_session(db, session_id, user_id)
+    answer_scope = _normalize_answer_scope(answer_scope)
+    user = await db.get(User, user_id)
+    if user is None:
+        user = SimpleNamespace(
+            teaching_style=teaching_style,
+            answer_format=message_format,
+            teaching_level="standard",
+            explanation_method="direct",
+            learning_modes=["text"],
+            student_interests=[],
+        )
+    preferences = preferences_from_user(
+        user,
+        teaching_level=teaching_level,
+        explanation_method=explanation_method,
+        learning_modes=learning_modes,
+        student_interests=student_interests,
+    )
+    preferred_answer_type = _preferred_answer_type_from_learning_modes(message_format, preferences.learning_modes)
+
     user_message = ChatMessage(
         session_id=session.id,
         role="user",
@@ -1891,6 +1925,7 @@ async def send_message(
 
     intent = _classify_intent(content)
     logger.info("Chat intent classified: %s for query: %s", intent, content[:80])
+    source_route = await route_source(content, source_types)
 
     semantic_result = await semantic_retrieve_context(
         db,
@@ -1898,14 +1933,69 @@ async def send_message(
         user_id=user_id,
         top_k=6,
         intent=intent,
+        source_types=source_route.source_types,
     )
     chunks = semantic_result.chunks
+    page_numbers = sorted({chunk.page_number for chunk in chunks if chunk.page_number is not None})
+    confidence = _compute_confidence(content, chunks)
+    diagnostics = {
+        "original_query": content,
+        "original_question": content,
+        "resolved_question": content,
+        "is_followup": bool(action),
+        "conversation_id": str(session.id),
+        "parent_message_id": None,
+        "normalized_query": clean_query(content),
+        "normalized_question": normalize_arabic(content),
+        "intent": intent,
+        "preferred_answer_type": preferred_answer_type,
+        "answer_scope": answer_scope,
+        "teaching_style": teaching_style,
+        "teaching_preferences": preferences.as_diagnostics(),
+        "action": action,
+        "source_route": {
+            "route": source_route.route,
+            "source_types": source_route.source_types,
+            "reason": source_route.reason,
+            "confidence": source_route.confidence,
+            "matched_terms": source_route.matched_terms,
+            "cache_hit": source_route.cache_hit,
+        },
+        "semantic_rag": {
+            "pipeline": semantic_result.diagnostics.get("pipeline"),
+            "cache_hit": semantic_result.diagnostics.get("cache_hit"),
+            "quality_gate": semantic_result.diagnostics.get("quality_gate"),
+        },
+        "retrieved_chunk_ids": [chunk.id for chunk in chunks],
+        "retrieved_pages": page_numbers,
+        "top_score": max((chunk.similarity_score for chunk in chunks), default=0.0),
+        "selected_context": [
+            {
+                "chunk_id": chunk.id,
+                "page": chunk.page_number,
+                "score": round(float(chunk.similarity_score), 4),
+                "preview": _chunk_preview(chunk),
+            }
+            for chunk in chunks
+        ],
+        "gemini_available": bool(settings.effective_gemini_api_key),
+    }
+    diagnostics.update(
+        _retrieval_diagnostics(
+            question=content,
+            intent=intent,
+            entity=None,
+            chunks=chunks,
+            confidence=confidence,
+        )
+    )
     context = format_context(chunks)
 
     if context:
         system_prompt = _SYSTEM_PROMPT_WITH_CONTEXT.format(context=context)
     else:
         system_prompt = _SYSTEM_PROMPT_NO_CONTEXT
+    system_prompt = _append_teaching_instruction(system_prompt, preferences)
 
     history = [
         {"role": message.role, "content": message.content}
@@ -1921,16 +2011,66 @@ async def send_message(
         question=content,
         chunks=chunks,
         system_prompt=system_prompt,
+        diagnostics=diagnostics,
     )
     latency_ms = int((time.time() - start) * 1000)
+    answer_type = _select_answer_type(intent, preferred_answer_type)
+    diagnostics.update(
+        {
+            "low_confidence": confidence < _confidence_threshold_for_intent(intent),
+            "fallback_used": diagnostics.get("fallback_used"),
+            "route": "textbook_rag",
+            "grounding": "book" if chunks else "general_tutor",
+        }
+    )
+    diagnostics["confidence_components"]["final_confidence"] = round(float(confidence), 4)
+    rich_answer = _finalize_answer(
+        {
+            "answer": answer,
+            "answer_type": answer_type,
+            "route": "textbook_rag",
+            "grounding": "book" if chunks else "general_tutor",
+            "answer_scope": answer_scope,
+            "blocks": _build_answer_blocks(
+                answer,
+                chunks,
+                answer_type=answer_type,
+                preferred_answer_type=preferred_answer_type,
+                page_numbers=page_numbers,
+                diagnostics=diagnostics,
+            ),
+            "sources": chunks,
+            "source_blocks": _source_blocks(chunks),
+            "page_numbers": page_numbers,
+            "confidence": round(float(confidence), 4),
+            "diagnostics": diagnostics,
+            "suggested_next_action": "جرّب سؤالاً تدريبياً مرتبطاً بالمصدر." if chunks else "أعد صياغة السؤال أو حدد الدرس.",
+        },
+        content,
+    )
+    source_payload = _citation_blocks(chunks)
 
     assistant_message = ChatMessage(
         session_id=session.id,
         role="assistant",
-        content=answer,
+        content=rich_answer.get("answer_text") or rich_answer.get("answer") or answer,
+        format=message_format,
         latency_ms=latency_ms,
+        confidence=rich_answer.get("confidence"),
+        answer_type=rich_answer.get("answer_type"),
+        route=rich_answer.get("route"),
+        grounding=rich_answer.get("grounding"),
+        sources_json=source_payload,
+        citations_json=rich_answer.get("citations") or source_payload,
+        blocks_json=rich_answer.get("blocks") or [],
+        media_blocks_json=rich_answer.get("media_blocks") or [],
+        source_blocks_json=rich_answer.get("source_blocks") or [],
+        page_numbers_json=rich_answer.get("page_numbers") or [],
+        diagnostics_json=rich_answer.get("diagnostics") or {},
+        suggested_next_action=rich_answer.get("suggested_next_action"),
     )
     db.add(assistant_message)
+    session.updated_at = datetime.now()
     await db.commit()
     await db.refresh(assistant_message)
     return assistant_message
@@ -2609,5 +2749,6 @@ async def update_message_feedback(db: AsyncSession, message_id: int, user_id: in
 async def delete_session(db: AsyncSession, session_id: int, user_id: int) -> None:
     """Delete a chat session owned by the current user."""
     session = await get_owned_session(db, session_id, user_id)
+    await db.execute(delete(ChatMessage).where(ChatMessage.session_id == session.id))
     await db.delete(session)
     await db.commit()

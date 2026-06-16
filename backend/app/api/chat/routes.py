@@ -67,6 +67,14 @@ async def send_chat_message(
         user_id=user_id,
         content=request.content,
         message_format=request.format,
+        answer_scope=request.answer_scope,
+        source_types=request.source_types,
+        teaching_style=request.teaching_style,
+        teaching_level=request.teaching_level.value if request.teaching_level else None,
+        explanation_method=request.explanation_method.value if request.explanation_method else None,
+        learning_modes=[mode.value for mode in request.learning_modes] if request.learning_modes else None,
+        student_interests=[interest.value for interest in request.student_interests] if request.student_interests else None,
+        action=request.action,
     )
 
 

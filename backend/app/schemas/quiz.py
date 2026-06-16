@@ -20,6 +20,8 @@ class QuizQuestionResponse(BaseModel):
     page_number: int | None = None
     source_id: int | None = None
     difficulty: int | None = None
+    correct_answer: str | None = None
+    explanation: str | None = None
 
 
 class QuizGenerateResponse(BaseModel):
@@ -36,6 +38,7 @@ class QuizSubmitResponse(BaseModel):
     score: int
     total: int
     weak_topics: dict | list | None = None
+    percentage: float = 0.0
 
 
 class QuizAttemptResponse(BaseModel):

@@ -27,7 +27,7 @@ from app.core.config import PROJECT_DIR, settings
 from app.database import SessionLocal
 from app.models.textbook import ContentSource, RagChunk
 from app.services.chunking import ChunkRecord, extract_formula_terms, split_solution_book_text
-from app.services.embeddings import EMBEDDING_DIM, embed_batch, embedding_provider_status
+from app.services.embeddings import EMBEDDING_DIM, current_embedding_model_name, embed_batch, embedding_provider_status
 from app.services.ocr import get_vision_provider
 from app.services.ocr.normalization import normalize_text
 from app.services.pdf_processor import detect_visual_content, extract_text_page, render_page_to_image
@@ -1026,12 +1026,15 @@ async def store_solution_book_chunks(
                     extraction_method=str(chunk.metadata.get("extraction_method") or "solution_book_pipeline"),
                     language="ar",
                     embedding=embedding,
+                    embedding_model=current_embedding_model_name(),
+                    embedding_updated_at=datetime.now(timezone.utc),
                     metadata_json={
                         **chunk.metadata,
                         "document_id": chunk.document_id,
                         "document_type": SOURCE_TYPE,
                         "source_file_hash": source_file_hash,
-                        "embedding_model": embedding_provider_status(),
+                        "embedding_model": current_embedding_model_name(),
+                        "embedding_provider": embedding_provider_status(),
                         "embedding_dimension": EMBEDDING_DIM,
                         "created_at": datetime.now(timezone.utc).isoformat(),
                     },

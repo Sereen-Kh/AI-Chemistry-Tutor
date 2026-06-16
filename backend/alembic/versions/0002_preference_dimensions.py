@@ -16,20 +16,48 @@ branch_labels = None
 depends_on = None
 
 
+def _has_table(table_name: str) -> bool:
+    bind = op.get_bind()
+    return sa.inspect(bind).has_table(table_name)
+
+
+def _has_column(table_name: str, column_name: str) -> bool:
+    bind = op.get_bind()
+    if not sa.inspect(bind).has_table(table_name):
+        return False
+    return any(column["name"] == column_name for column in sa.inspect(bind).get_columns(table_name))
+
+
 def _add_preference_columns(table_name: str) -> None:
+    if not _has_table(table_name):
+        return
+    columns = [
+        ("teaching_level", sa.String(length=30)),
+        ("explanation_method", sa.String(length=40)),
+        ("learning_modes", sa.JSON()),
+        ("student_interests", sa.JSON()),
+    ]
+    missing = [(name, column_type) for name, column_type in columns if not _has_column(table_name, name)]
+    if not missing:
+        return
     with op.batch_alter_table(table_name) as batch_op:
-        batch_op.add_column(sa.Column("teaching_level", sa.String(length=30), nullable=True))
-        batch_op.add_column(sa.Column("explanation_method", sa.String(length=40), nullable=True))
-        batch_op.add_column(sa.Column("learning_modes", sa.JSON(), nullable=True))
-        batch_op.add_column(sa.Column("student_interests", sa.JSON(), nullable=True))
+        for name, column_type in missing:
+            batch_op.add_column(sa.Column(name, column_type, nullable=True))
 
 
 def _drop_preference_columns(table_name: str) -> None:
+    if not _has_table(table_name):
+        return
+    existing = [
+        column
+        for column in ("student_interests", "learning_modes", "explanation_method", "teaching_level")
+        if _has_column(table_name, column)
+    ]
+    if not existing:
+        return
     with op.batch_alter_table(table_name) as batch_op:
-        batch_op.drop_column("student_interests")
-        batch_op.drop_column("learning_modes")
-        batch_op.drop_column("explanation_method")
-        batch_op.drop_column("teaching_level")
+        for column in existing:
+            batch_op.drop_column(column)
 
 
 def upgrade() -> None:

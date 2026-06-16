@@ -12,8 +12,12 @@ router = APIRouter(prefix="/lessons", tags=["lessons"])
 
 
 @router.get("", response_model=list[LessonResponse])
-async def list_lessons(chapter_id: int | None = Query(default=None), db: AsyncSession = Depends(get_async_db)):
-    return await curriculum_service.list_lessons(db, chapter_id=chapter_id)
+async def list_lessons(
+    chapter_id: int | None = Query(default=None),
+    semester: int | None = Query(default=None, ge=1, le=2),
+    db: AsyncSession = Depends(get_async_db),
+):
+    return await curriculum_service.list_lessons(db, chapter_id=chapter_id, semester=semester)
 
 
 @router.get("/{lesson_id}", response_model=LessonResponse)

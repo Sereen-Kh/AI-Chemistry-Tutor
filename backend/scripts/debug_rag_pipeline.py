@@ -13,7 +13,6 @@ Traces:
 """
 
 import asyncio
-import json
 import logging
 import sys
 
@@ -37,26 +36,26 @@ async def main():
 
     # ── Step 1: Query Cleanup ──
     cleaned = clean_query(query)
-    print(f"\n📝 STEP 1 — QUERY CLEANUP")
+    print("\n📝 STEP 1 — QUERY CLEANUP")
     print(f"   Original : {query}")
     print(f"   Cleaned  : {cleaned}")
 
     # ── Step 2: Intent Classification ──
     intent = _classify_intent(query)
-    print(f"\n🎯 STEP 2 — INTENT CLASSIFICATION")
+    print("\n🎯 STEP 2 — INTENT CLASSIFICATION")
     print(f"   Intent   : {intent}")
 
     # ── Step 3: Query Rewriting ──
     rewritten = rewrite_query(cleaned)
     terms = sorted(_query_terms(cleaned))
-    print(f"\n🔄 STEP 3 — QUERY REWRITING")
+    print("\n🔄 STEP 3 — QUERY REWRITING")
     print(f"   Rewritten: {rewritten}")
     print(f"   Terms ({len(terms)}): {', '.join(terms)}")
 
     # ── Step 4: Hybrid Search + Diagnostics ──
-    print(f"\n🔎 STEP 4 — HYBRID SEARCH (with DB)")
+    print("\n🔎 STEP 4 — HYBRID SEARCH (with DB)")
 
-    from app.database import async_engine, AsyncSessionLocal
+    from app.database import AsyncSessionLocal
     from app.services.rag import retrieve_context
 
     async with AsyncSessionLocal() as db:
@@ -73,14 +72,14 @@ async def main():
     # ── Step 5: Confidence Scoring ──
     confidence = _compute_confidence(query, chunks)
     raw_max = max((c.similarity_score for c in chunks), default=0.0)
-    print(f"\n📊 STEP 5 — CONFIDENCE SCORING")
+    print("\n📊 STEP 5 — CONFIDENCE SCORING")
     print(f"   Raw max hybrid score : {raw_max:.4f}")
     print(f"   Computed confidence  : {confidence:.4f}")
-    print(f"   Threshold (min)      : 0.25")
+    print("   Threshold (min)      : 0.25")
     print(f"   Would pass?          : {'✅ YES' if confidence >= 0.25 else '❌ NO'}")
 
     # ── Step 6: Lexical Breakdown ──
-    print(f"\n📋 STEP 6 — LEXICAL SCORES PER CHUNK")
+    print("\n📋 STEP 6 — LEXICAL SCORES PER CHUNK")
     for i, chunk in enumerate(chunks):
         lex = lexical_relevance_score(cleaned, chunk.content)
         print(f"   [{i+1}] lexical={lex:.4f} hybrid={chunk.similarity_score:.4f} page={chunk.page_number}")
@@ -88,7 +87,7 @@ async def main():
     # ── Step 7: Answer Prompt Preview ──
     from app.services.rag import format_context
     context = format_context(chunks)
-    print(f"\n💬 STEP 7 — SYSTEM PROMPT (first 500 chars)")
+    print("\n💬 STEP 7 — SYSTEM PROMPT (first 500 chars)")
     prompt_template = (
         "أنت مدرس كيمياء للصف التاسع. أجب بالاعتماد حصرياً على المقاطع التالية من الكتاب.\n"
         "التعليمات:\n"
@@ -102,7 +101,7 @@ async def main():
     print(f"   {prompt_template[:500]}...")
 
     print(f"\n{'=' * 70}")
-    print(f"✅ PIPELINE DEBUG COMPLETE")
+    print("✅ PIPELINE DEBUG COMPLETE")
     print(f"{'=' * 70}")
 
 

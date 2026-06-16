@@ -55,6 +55,13 @@ class User(Base, TimestampMixin):
     achievements = relationship("Achievement", back_populates="user", cascade="all, delete-orphan")
     subscriptions = relationship("Subscription", back_populates="user", cascade="all, delete-orphan")
     device_tokens = relationship("DeviceToken", back_populates="user", cascade="all, delete-orphan")
+    notifications = relationship("Notification", back_populates="user", cascade="all, delete-orphan")
+    notification_preference = relationship("NotificationPreference", back_populates="user", cascade="all, delete-orphan", uselist=False)
+    reminder_events = relationship("ReminderEvent", back_populates="user", cascade="all, delete-orphan")
+    interactive_sessions = relationship("InteractiveSession", back_populates="user", cascade="all, delete-orphan")
+    interactive_step_answers = relationship("StudentStepAnswer", back_populates="user", cascade="all, delete-orphan")
+    misconception_events = relationship("MisconceptionEvent", back_populates="user", cascade="all, delete-orphan")
+    skill_mastery = relationship("SkillMastery", back_populates="user", cascade="all, delete-orphan")
 
     @property
     def name(self) -> str:

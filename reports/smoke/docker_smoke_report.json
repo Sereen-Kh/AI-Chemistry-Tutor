@@ -1,0 +1,22 @@
+{
+  "result": "passed",
+  "compose_config_result": "passed",
+  "compose_up_result": "passed",
+  "backend_health_result": "passed",
+  "frontend_reachability_result": "passed",
+  "db_check_result": "passed",
+  "redis_check_result": "passed",
+  "celery_worker_check_result": "passed",
+  "celery_beat_check_result": "passed",
+  "generated_at": "2026-06-16T12:29:35.721325+00:00",
+  "services": [
+    "postgres",
+    "redis",
+    "backend",
+    "celery-worker",
+    "celery-beat",
+    "frontend-web"
+  ],
+  "failed_logs_path": null,
+  "errors": []
+}

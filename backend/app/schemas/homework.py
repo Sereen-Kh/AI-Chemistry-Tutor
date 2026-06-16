@@ -29,3 +29,11 @@ class HomeworkResponse(BaseModel):
     updated_at: datetime
 
     model_config = {"from_attributes": True}
+
+
+class HomeworkUploadResponse(BaseModel):
+    homework_id: int
+    image_url: str
+    image_path: str
+    filename: str
+    content_type: str | None = None

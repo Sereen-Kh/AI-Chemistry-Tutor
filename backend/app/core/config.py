@@ -35,8 +35,12 @@ class Settings(BaseSettings):
     gemini_document_fallback_model: str = "gemini-2.5-pro,gemini-2.5-flash-lite"
     gemini_embedding_model: str = "gemini-embedding-001"
     gemini_reranker_model: str = "gemini-2.0-flash"
-    embedding_provider: str = "auto"
+    embedding_provider: str = "gemini"
+    embedding_dimension: int = 768
+    allow_hash_embeddings: bool = False
+    allow_local_embeddings: bool = False
     local_embedding_model: str = "intfloat/multilingual-e5-base"
+    rag_query_logging_enabled: bool = True
     gemini_min_page_chars: int = 40
     gemini_min_completeness_score: float = 0.5
     pdf_direct_extraction_enabled: bool = True
@@ -51,6 +55,7 @@ class Settings(BaseSettings):
     redis_url: str = "redis://localhost:6379/0"
     celery_broker_url: str = "redis://localhost:6379/0"
     celery_result_backend: str = "redis://localhost:6379/1"
+    rate_limit_enabled: bool = True
     allowed_origins: List[str] = [
         "http://localhost:3000",
         "http://127.0.0.1:3000",
@@ -118,11 +123,19 @@ class Settings(BaseSettings):
     @field_validator("embedding_provider", mode="before")
     @classmethod
     def validate_embedding_provider(cls, value):
-        normalized = str(value or "auto").strip().lower()
+        normalized = str(value or "gemini").strip().lower()
         allowed = {"auto", "gemini", "local_multilingual", "local_hash"}
         if normalized not in allowed:
             raise ValueError(f"EMBEDDING_PROVIDER must be one of: {', '.join(sorted(allowed))}")
         return normalized
+
+    @field_validator("embedding_dimension", mode="before")
+    @classmethod
+    def validate_embedding_dimension(cls, value):
+        dimension = int(value or 768)
+        if dimension != 768:
+            raise ValueError("EMBEDDING_DIMENSION must be 768 unless the pgvector column is migrated")
+        return dimension
 
     class Config:
         env_file = (PROJECT_DIR / ".env", BACKEND_DIR / ".env")

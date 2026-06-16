@@ -243,12 +243,12 @@ export const mockBalanceEquation = (input: string): BalanceResult => {
     return {
       input,
       balanced: 'HCl + NaOH -> NaCl + H2O',
-      explanation: ['This acid-base neutralization equation is already balanced.', 'Each side has H2, Cl1, Na1, and O1.'],
+      explanation: ['معادلة التعديل بين الحمض والأساس موزونة بالفعل.', 'في كل طرف: H2 و Cl1 و Na1 و O1.'],
     };
   }
   return {
     input,
     balanced: input || 'H2 + O2 -> H2O',
-    explanation: ['No backend equation balancer is available yet.', 'The local helper currently supports common Grade 9 examples and leaves unknown equations unchanged.'],
+    explanation: ['موازن المعادلات من الخادم غير متاح حالياً.', 'المساعد المحلي يدعم أمثلة شائعة من الصف التاسع ويترك المعادلات غير المعروفة كما هي.'],
   };
 };

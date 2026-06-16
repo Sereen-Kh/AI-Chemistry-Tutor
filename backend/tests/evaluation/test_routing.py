@@ -17,16 +17,16 @@ import pytest
 BACKEND_DIR = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(BACKEND_DIR))
 
-from dotenv import load_dotenv
+from dotenv import load_dotenv  # noqa: E402
 
 load_dotenv(BACKEND_DIR / ".env")
 
-from app.services.chat_service import (
+from app.services.chat_service import (  # noqa: E402
     _classify_question,
     _dictionary_entry_for_question,
 )
-from app.services.query_router import route_direct_answer
-from app.services.safety_rules import is_acid_to_water_safety_question
+from app.services.query_router import route_direct_answer  # noqa: E402
+from app.services.safety_rules import is_acid_to_water_safety_question  # noqa: E402
 
 
 def _load_cases() -> dict:

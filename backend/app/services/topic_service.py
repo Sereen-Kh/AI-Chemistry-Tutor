@@ -1,12 +1,22 @@
 from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
+from app.models.chemistry import Lesson
 from app.models.topic import Topic
 from app.schemas.topics import TopicCreate, TopicUpdate
 
-async def get_topics(db: AsyncSession, skip: int = 0, limit: int = 100) -> list[Topic]:
-    result = await db.execute(select(Topic).order_by(Topic.order.asc()).offset(skip).limit(limit))
-    return list(result.scalars().all())
+async def get_topics(
+    db: AsyncSession,
+    skip: int = 0,
+    limit: int = 100,
+    lesson_id: int | None = None,
+) -> list[Topic]:
+    stmt = select(Topic).options(selectinload(Topic.lessons))
+    if lesson_id is not None:
+        stmt = stmt.join(Topic.lessons).where(Lesson.id == lesson_id)
+    result = await db.execute(stmt.order_by(Topic.order.asc(), Topic.id.asc()).offset(skip).limit(limit))
+    return list(result.unique().scalars().all())
 
 async def get_topic(db: AsyncSession, topic_id: int) -> Topic:
     topic = await db.get(Topic, topic_id)

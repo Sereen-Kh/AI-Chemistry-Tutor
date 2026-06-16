@@ -1,0 +1,2 @@
+/Users/sereenkh/Github-Projects/edumind-team-06/src/backend/scripts/verify_pgvector.py:93: SAWarning: Did not recognize type 'vector' of column 'embedding'
+  columns = {column["name"]: column for column in inspector.get_columns("rag_chunks")}

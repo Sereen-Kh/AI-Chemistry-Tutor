@@ -10,9 +10,10 @@ import sys
 BACKEND_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BACKEND_DIR))
 
-from app.database import Base, engine  # noqa: E402
+from app.database import engine  # noqa: E402
 import app.models  # noqa: E402,F401
 from app.services.ingestion_pipeline import run_full_ingestion  # noqa: E402
+from scripts.migration_guard import ensure_migrations_applied  # noqa: E402
 
 
 def progress(value: int, message: str) -> None:
@@ -58,7 +59,7 @@ async def main() -> None:
     parser.add_argument("--clear-existing", action="store_true")
     args = parser.parse_args()
 
-    Base.metadata.create_all(bind=engine)
+    ensure_migrations_applied(engine, required_tables=("alembic_version", "content_sources", "rag_chunks"))
     result = await run_full_ingestion(
         args.pdf_path,
         title=args.title,

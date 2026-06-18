@@ -111,6 +111,9 @@ const preferenceLabel = (value: string): string =>
     interactive: 'تفاعلي',
     quiz: 'اختبار',
     flashcards: 'بطاقات',
+    auto: 'تلقائي',
+    book_only: 'من الكتاب فقط',
+    tutor_general: 'شرح عام عند الحاجة',
   })[value] ?? value;
 
 const primaryAnswerFormat = (modes: LearningMode[]): AnswerFormat => {
@@ -179,7 +182,7 @@ const ProtectedRoute = ({ user, booting }: { user: UserProfile | null; booting: 
 };
 
 const GuestOnly = ({ user, children }: { user: UserProfile | null; children: ReactElement }) => {
-  if (user) return <Navigate to="/dashboard" replace />;
+  if (user) return <Navigate to="/" replace />;
   return children;
 };
 
@@ -201,7 +204,7 @@ const LoginPage = ({ onLogin }: { onLogin: () => Promise<void> }) => {
     try {
       await authApi.login(email, password);
       await onLogin();
-      navigate('/dashboard', { replace: true });
+      navigate('/', { replace: true });
     } catch (err) {
       setError(toErrorMessage(err, 'تعذر تسجيل الدخول. تحقق من البريد وكلمة المرور.'));
     } finally {
@@ -364,7 +367,7 @@ const OnboardingPage = ({
     } finally {
       onSave(next);
       setLoading(false);
-      navigate('/dashboard', { replace: true });
+      navigate('/', { replace: true });
     }
   };
 
@@ -453,7 +456,7 @@ const DashboardPage = ({ user, preferences }: { user: UserProfile; preferences: 
   const quickActions = [
     { to: '/ask-ai', label: 'اسأل الذكاء', icon: 'ذك', tone: 'blue' },
     { to: '/guided-lab', label: 'حل موجه', icon: 'حل', tone: 'purple' },
-    { to: '/quizzes', label: 'اختبار', icon: 'اخ', tone: 'gold' },
+    { to: '/quiz', label: 'اختبار', icon: 'اخ', tone: 'gold' },
     { to: '/flashcards', label: 'بطاقات', icon: 'بط', tone: 'teal' },
     { to: '/homework', label: 'حل واجب', icon: 'وا', tone: 'coral' },
   ];
@@ -535,7 +538,7 @@ const DashboardPage = ({ user, preferences }: { user: UserProfile; preferences: 
           <article>
             <StatusPill tone="gold">اختبار</StatusPill>
             <strong>{nextQuiz}</strong>
-            <Link to="/quizzes">ابدأ الاختبار</Link>
+            <Link to="/quiz">ابدأ الاختبار</Link>
           </article>
           <article>
             <StatusPill tone={unreadCount ? 'coral' : 'blue'}>إشعارات</StatusPill>
@@ -684,6 +687,7 @@ export const AskAiPage = ({ preferences, setPreferences }: { preferences: UserPr
   const [activeSessionId, setActiveSessionId] = useState<number | null>(null);
   const [sessionLoading, setSessionLoading] = useState(true);
   const [historyOpen, setHistoryOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const messageIdRef = useRef(0);
   const [messages, setMessages] = useState<ChatItem[]>([
     {
@@ -913,7 +917,7 @@ export const AskAiPage = ({ preferences, setPreferences }: { preferences: UserPr
         <Link className="ed-btn ed-btn-secondary" to={`/guided-lab?problem=${encodedQuestion}`}>
           ابدأ الحل خطوة بخطوة
         </Link>
-        <Link className="ed-btn ed-btn-ghost" to="/quizzes">
+        <Link className="ed-btn ed-btn-ghost" to="/quiz">
           أنشئ اختباراً قصيراً
         </Link>
         <Link className="ed-btn ed-btn-ghost" to="/flashcards">
@@ -1005,27 +1009,35 @@ export const AskAiPage = ({ preferences, setPreferences }: { preferences: UserPr
           <strong>{activeSession?.title || 'محادثة جديدة'}</strong>
           <small>{activeSession ? `آخر تحديث ${formatSessionTimestamp(activeSession.updated_at)}` : 'سيتم إنشاء جلسة عند إرسال أول سؤال'}</small>
         </div>
-        <div className="chat-toolbar">
-          <label>
-            مستوى الشرح
-            <select value={teachingLevel} onChange={(event) => saveTeachingLevel(event.target.value as TeachingLevel)}>
-              {teachingLevelLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-            </select>
-          </label>
-          <label>
-            طريقة الشرح
-            <select value={explanationMethod} onChange={(event) => saveExplanationMethod(event.target.value as ExplanationMethod)}>
-              {explanationMethodLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-            </select>
-          </label>
-          <label>
-            نطاق الإجابة
-            <select value={answerScope} onChange={(event) => setAnswerScope(event.target.value as AnswerScope)}>
-              {answerScopeLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-            </select>
-          </label>
-          <LearningModeSelector value={learningModes} onChange={saveLearningModes} />
+        <div className="chat-settings-summary">
+          <span>{compactPreferenceLabel} · {preferenceLabel(answerScope)}</span>
+          <Button variant="ghost" onClick={() => setSettingsOpen((open) => !open)} className="ed-btn-xs">
+            {settingsOpen ? 'إخفاء الإعدادات' : 'إعدادات الإجابة'}
+          </Button>
         </div>
+        {settingsOpen && (
+          <div className="chat-toolbar">
+            <label>
+              مستوى الشرح
+              <select value={teachingLevel} onChange={(event) => saveTeachingLevel(event.target.value as TeachingLevel)}>
+                {teachingLevelLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+              </select>
+            </label>
+            <label>
+              طريقة الشرح
+              <select value={explanationMethod} onChange={(event) => saveExplanationMethod(event.target.value as ExplanationMethod)}>
+                {explanationMethodLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+              </select>
+            </label>
+            <label>
+              نطاق الإجابة
+              <select value={answerScope} onChange={(event) => setAnswerScope(event.target.value as AnswerScope)}>
+                {answerScopeLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+              </select>
+            </label>
+            <LearningModeSelector value={learningModes} onChange={saveLearningModes} />
+          </div>
+        )}
         <div className="chat-feed">
           {sessionLoading ? (
             <LoadingSkeleton rows={5} />
@@ -1346,30 +1358,32 @@ function App() {
               )
             }
           />
-          <Route element={auth.user ? <AppShell userName={userName} onLogout={logout} /> : <ProtectedRoute user={auth.user} booting={auth.booting} />}>
-            <Route path="/dashboard" element={auth.user && <DashboardPage user={auth.user} preferences={auth.preferences} />} />
-            <Route path="/lessons" element={<LessonsPage />} />
-            <Route path="/lessons/:lessonId" element={<LessonDetailPage />} />
-            <Route path="/rag-search" element={<RagSearchPage />} />
-            <Route path="/quizzes" element={<QuizzesPage />} />
-            <Route path="/study-plan" element={<StudyPlanPage />} />
-            <Route path="/notifications" element={<NotificationsPage />} />
-            <Route path="/flashcards" element={<FlashcardsPage />} />
-            <Route path="/lab" element={<LabPage />} />
-            <Route path="/homework" element={<HomeworkPage />} />
-            <Route path="/guided-lab" element={<GuidedLabPage />} />
-            <Route path="/guided-lab/session/:sessionId" element={<SolverSessionPage />} />
-            <Route path="/lab/equation-balancer" element={<EquationBalancerPage />} />
-            <Route path="/admin/rag" element={<RagAdminPage />} />
-            <Route path="/admin/rag/reembed" element={<RagReembedPage />} />
-            <Route path="/admin/rag/evaluation" element={<RagEvaluationPage />} />
-            <Route path="/admin/rag/query-logs" element={<RagQueryLogsPage />} />
-            <Route path="/admin/sources" element={<SourcesPage />} />
-            <Route path="/ask-ai" element={<AskAiPage preferences={auth.preferences} setPreferences={updatePreferences} />} />
-            <Route path="/profile" element={auth.user && <ProfilePage user={auth.user} preferences={auth.preferences} setPreferences={updatePreferences} />} />
+          <Route path="/" element={auth.user ? <AppShell userName={userName} onLogout={logout} /> : <ProtectedRoute user={auth.user} booting={auth.booting} />}>
+            <Route index element={auth.user && <DashboardPage user={auth.user} preferences={auth.preferences} />} />
+            <Route path="dashboard" element={<Navigate to="/" replace />} />
+            <Route path="lessons" element={<LessonsPage />} />
+            <Route path="lessons/:lessonId" element={<LessonDetailPage />} />
+            <Route path="book-search" element={<RagSearchPage />} />
+            <Route path="rag-search" element={<RagSearchPage />} />
+            <Route path="quiz" element={<QuizzesPage />} />
+            <Route path="quizzes" element={<QuizzesPage />} />
+            <Route path="study-plan" element={<StudyPlanPage />} />
+            <Route path="notifications" element={<NotificationsPage />} />
+            <Route path="flashcards" element={<FlashcardsPage />} />
+            <Route path="lab" element={<LabPage />} />
+            <Route path="homework" element={<HomeworkPage />} />
+            <Route path="guided-lab" element={<GuidedLabPage />} />
+            <Route path="guided-lab/session/:sessionId" element={<SolverSessionPage />} />
+            <Route path="lab/equation-balancer" element={<EquationBalancerPage />} />
+            <Route path="admin/rag" element={<RagAdminPage />} />
+            <Route path="admin/rag/reembed" element={<RagReembedPage />} />
+            <Route path="admin/rag/evaluation" element={<RagEvaluationPage />} />
+            <Route path="admin/rag/query-logs" element={<RagQueryLogsPage />} />
+            <Route path="admin/sources" element={<SourcesPage />} />
+            <Route path="ask-ai" element={<AskAiPage preferences={auth.preferences} setPreferences={updatePreferences} />} />
+            <Route path="profile" element={auth.user && <ProfilePage user={auth.user} preferences={auth.preferences} setPreferences={updatePreferences} />} />
           </Route>
-          <Route path="/" element={<Navigate to={auth.user ? '/dashboard' : '/login'} replace />} />
-          <Route path="*" element={<Navigate to={auth.user ? '/dashboard' : '/login'} replace />} />
+          <Route path="*" element={<Navigate to={auth.user ? '/' : '/login'} replace />} />
         </Routes>
       </Suspense>
     </div>

@@ -11,11 +11,12 @@ BACKEND_DIR = Path(__file__).resolve().parents[1]
 PROJECT_DIR = BACKEND_DIR.parent
 sys.path.insert(0, str(BACKEND_DIR))
 
-from app.database import Base, SessionLocal, engine  # noqa: E402
+from app.database import SessionLocal, engine  # noqa: E402
 import app.models  # noqa: F401,E402
 from app.models.chemistry import Chapter, Lesson, Unit  # noqa: E402
 from app.models.textbook import ContentSource, RagChunk  # noqa: E402
 from app.models.topic import Topic  # noqa: E402
+from scripts.migration_guard import ensure_migrations_applied  # noqa: E402
 
 
 LEGACY_FLAT_CHAPTER_TITLES = {
@@ -215,7 +216,7 @@ def _upsert_topic(db, data: dict[str, Any], stats: dict[str, int]) -> Topic:
 
 
 def main() -> None:
-    Base.metadata.create_all(bind=engine)
+    ensure_migrations_applied(engine, required_tables=("alembic_version", "units", "chapters", "lessons", "topics"))
     db = SessionLocal()
     stats = {"created": 0, "updated": 0, "skipped": 0}
     try:

@@ -1,10 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import type { AiAskResponse, AnswerFormat, FlashcardItem, LearningMode, LessonItem, SourceCitation } from '../types';
 import { ChemistryFlask } from './ChemistryFlask';
-import { AvatarGuide } from './AvatarGuide';
+import { AICompanion } from '../features/ai-companion/components/AICompanion';
 import { notificationsApi } from '../api';
 
 
@@ -328,7 +327,6 @@ export const LearningModeSelector = ({
 
 export const AuthLayout = ({ children, title, subtitle }: { children: ReactNode; title: string; subtitle: string }) => (
   <main className="auth-layout" dir="rtl">
-    <AvatarGuide expression="welcome" waypoint="top-left" message="أهلاً، أنا مرشدك الهجين في مختبر EduMind." />
     <section className="auth-visual" aria-label="معاينة EduMind">
       <div className="mini-phone">
         <ChemistryFlask color="green" level={65} size={150} />
@@ -430,31 +428,57 @@ const BellIcon = () => (
   </svg>
 );
 
-const navItems = [
-  { to: '/dashboard', label: 'الرئيسية', icon: <HomeIcon />, tone: 'teal' },
-  { to: '/lessons', label: 'الدروس', icon: <LessonsIcon />, tone: 'green' },
-  { to: '/ask-ai', label: 'اسأل الذكاء', icon: <AskAiIcon />, tone: 'purple' },
-  { to: '/rag-search', label: 'بحث الكتاب', icon: <SearchBookIcon />, tone: 'cyan' },
-  { to: '/quizzes', label: 'اختبار', icon: <QuizIcon />, tone: 'gold' },
-  { to: '/flashcards', label: 'بطاقات', icon: <CardsIcon />, tone: 'coral' },
-  { to: '/study-plan', label: 'الخطة', icon: <LessonsIcon />, tone: 'blue' },
-  { to: '/notifications', label: 'الإشعارات', icon: <BellIcon />, tone: 'gold' },
-  { to: '/lab', label: 'المختبر', icon: <LabIcon />, tone: 'teal' },
-  { to: '/homework', label: 'الواجبات', icon: <HomeworkIcon />, tone: 'blue' },
-  { to: '/admin/rag', label: 'إدارة RAG', icon: <AdminIcon />, tone: 'slate' },
-  { to: '/profile', label: 'ملفي', icon: <ProfileIcon />, tone: 'slate' },
+const navSections = [
+  {
+    key: 'learning',
+    label: 'التعلم',
+    collapsible: false,
+    items: [
+      { to: '/', label: 'الرئيسية', icon: <HomeIcon />, tone: 'teal', activePaths: ['/dashboard'] },
+      { to: '/lessons', label: 'الدروس', icon: <LessonsIcon />, tone: 'green' },
+      { to: '/study-plan', label: 'الخطة', icon: <LessonsIcon />, tone: 'blue' },
+      { to: '/ask-ai', label: 'اسأل AI', icon: <AskAiIcon />, tone: 'purple' },
+      { to: '/book-search', label: 'بحث الكتاب', icon: <SearchBookIcon />, tone: 'cyan', activePaths: ['/rag-search'] },
+    ],
+  },
+  {
+    key: 'practice',
+    label: 'التدريب',
+    collapsible: false,
+    items: [
+      { to: '/quiz', label: 'اختبار', icon: <QuizIcon />, tone: 'gold', activePaths: ['/quizzes'] },
+      { to: '/flashcards', label: 'بطاقات', icon: <CardsIcon />, tone: 'coral' },
+      { to: '/lab', label: 'المختبر', icon: <LabIcon />, tone: 'teal' },
+      { to: '/homework', label: 'الواجبات', icon: <HomeworkIcon />, tone: 'slate' },
+    ],
+  },
+  {
+    key: 'management',
+    label: 'الإدارة',
+    collapsible: true,
+    items: [
+      { to: '/notifications', label: 'الإشعارات', icon: <BellIcon />, tone: 'blue' },
+      { to: '/admin/rag', label: 'إدارة RAG', icon: <AdminIcon />, tone: 'slate' },
+      { to: '/profile', label: 'ملفي', icon: <ProfileIcon />, tone: 'violet' },
+    ],
+  },
 ];
 
+const navItems = navSections.flatMap((section) => section.items);
+
 const bottomNavItems = navItems.filter((item) =>
-  ['/dashboard', '/lessons', '/ask-ai', '/notifications', '/profile'].includes(item.to),
+  ['/', '/lessons', '/study-plan', '/ask-ai', '/profile'].includes(item.to),
 );
 
 const routeTitles: Record<string, { eyebrow: string; title: string }> = {
+  '/': { eyebrow: 'مختبر التعلم', title: 'الرئيسية' },
   '/dashboard': { eyebrow: 'مختبر التعلم', title: 'الرئيسية' },
   '/lessons': { eyebrow: 'منهج الكيمياء', title: 'الدروس' },
   '/study-plan': { eyebrow: 'تنظيم المذاكرة', title: 'خطة الدراسة' },
   '/ask-ai': { eyebrow: 'معلّم RAG', title: 'اسأل الذكاء الاصطناعي' },
+  '/book-search': { eyebrow: 'مصادر الكتاب', title: 'البحث في الكتاب' },
   '/rag-search': { eyebrow: 'مصادر الكتاب', title: 'البحث في الكتاب' },
+  '/quiz': { eyebrow: 'تدريب امتحاني', title: 'الاختبارات' },
   '/quizzes': { eyebrow: 'تدريب امتحاني', title: 'الاختبارات' },
   '/flashcards': { eyebrow: 'مراجعة ذكية', title: 'البطاقات التعليمية' },
   '/lab': { eyebrow: 'مختبر كيمياء', title: 'المختبر' },
@@ -470,33 +494,28 @@ const routeTitles: Record<string, { eyebrow: string; title: string }> = {
   '/notifications': { eyebrow: 'تنبيهات النظام', title: 'الإشعارات' },
 };
 
-const RouteTransitionOutlet = () => {
-  const location = useLocation();
-
-  return (
-    <AnimatePresence mode="wait" initial={false}>
-      <motion.div
-        key={location.pathname}
-        className="route-transition"
-        initial={{ opacity: 0, y: 14, filter: 'blur(4px)' }}
-        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-        exit={{ opacity: 0, y: -8, filter: 'blur(4px)' }}
-        transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
-      >
-        <Outlet />
-      </motion.div>
-    </AnimatePresence>
-  );
-};
-
 export const AppShell = ({ userName, onLogout }: { userName: string; onLogout: () => void }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const mainContentRef = useRef<HTMLElement | null>(null);
+  const [isManagementOpen, setIsManagementOpen] = useState(
+    () => location.pathname.startsWith('/admin') || location.pathname.startsWith('/notifications') || location.pathname.startsWith('/profile'),
+  );
   const dynamicRouteTitle = location.pathname.startsWith('/guided-lab/session')
     ? { eyebrow: 'مختبر تفاعلي', title: 'جلسة حل موجهة' }
     : undefined;
-  const routeTitle = routeTitles[location.pathname] ?? dynamicRouteTitle ?? routeTitles['/dashboard'];
+  const routeTitle = routeTitles[location.pathname] ?? dynamicRouteTitle ?? routeTitles['/'];
   const [unreadCount, setUnreadCount] = useState(0);
+
+  const resetMainContentScroll = () => {
+    mainContentRef.current?.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    window.dispatchEvent(new Event('edumind-route-reset'));
+  };
+
+  useLayoutEffect(() => {
+    resetMainContentScroll();
+  }, [location.pathname, location.search]);
 
   useEffect(() => {
     const fetchUnread = async () => {
@@ -519,56 +538,73 @@ export const AppShell = ({ userName, onLogout }: { userName: string; onLogout: (
 
   return (
     <div className="app-shell" dir="rtl">
-      <motion.aside
-        className="sidebar-nav"
-        initial={{ opacity: 0, x: 24 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
-      >
-        <button className="app-brand" type="button" onClick={() => navigate('/dashboard')}>
+      <aside className="sidebar-nav">
+        <button
+          className="app-brand"
+          type="button"
+          onClick={() => {
+            resetMainContentScroll();
+            navigate('/');
+          }}
+        >
           <span>EM</span>
           <div>
             <strong>EduMind</strong>
             <small>مختبر الكيمياء الذكي</small>
           </div>
         </button>
+        <div className="sidebar-stats" aria-label="تقدم الطالب">
+          <span className="stat-chip">5 أيام</span>
+          <span className="stat-chip">1240 XP</span>
+        </div>
         <nav aria-label="التنقل الرئيسي">
-          {navItems.map((item) => (
-            <NavLink key={item.to} to={item.to} data-tone={item.tone} className={({ isActive }) => (isActive ? 'active' : '')}>
-              <span>{item.icon}</span>
-              {item.label}
-              {item.to === '/notifications' && unreadCount > 0 && (
-                <span style={{
-                  background: 'var(--coral)',
-                  color: '#fff',
-                  fontSize: '10px',
-                  fontWeight: 'bold',
-                  width: '18px',
-                  height: '18px',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginRight: 'auto',
-                  border: '1px solid var(--bg2)'
-                }}>{unreadCount}</span>
-              )}
-            </NavLink>
-          ))}
+          {navSections.map((section) => {
+            const isCollapsed = section.collapsible && !isManagementOpen;
+            return (
+              <div className={`nav-section ${isCollapsed ? 'collapsed' : ''}`} key={section.key}>
+                <button
+                  type="button"
+                  className="nav-section-header"
+                  onClick={() => section.collapsible && setIsManagementOpen((current) => !current)}
+                  aria-expanded={section.collapsible ? !isCollapsed : undefined}
+                  disabled={!section.collapsible}
+                >
+                  <span className="nav-section-label">{section.label}</span>
+                  {section.collapsible && <span className="nav-section-chevron">{isCollapsed ? '⌄' : '⌃'}</span>}
+                </button>
+                <div className="nav-section-items">
+                  {section.items.map((item) => (
+                    <NavLink
+                      key={item.to}
+                      to={item.to}
+                      end={item.to === '/'}
+                      data-tone={item.tone}
+                      onClick={resetMainContentScroll}
+                      className={({ isActive }) => (
+                        isActive || item.activePaths?.some((path) => location.pathname === path || location.pathname.startsWith(`${path}/`))
+                          ? 'active'
+                          : ''
+                      )}
+                    >
+                      <span>{item.icon}</span>
+                      {item.label}
+                      {item.to === '/notifications' && unreadCount > 0 && (
+                        <span className="sidebar-nav-badge">{unreadCount}</span>
+                      )}
+                    </NavLink>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </nav>
-        <AvatarGuide waypoint="sidebar" />
         <div className="sidebar-footer">
           <span>{userName}</span>
           <small>جاهز لمهمة كيمياء جديدة</small>
           <Button variant="ghost" onClick={onLogout}>تسجيل الخروج</Button>
         </div>
-      </motion.aside>
-      <motion.main
-        className="app-main"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.28 }}
-      >
+      </aside>
+      <main className="app-main" ref={mainContentRef} aria-label="محتوى الصفحة">
         <header className="shell-topbar">
           <div>
             <p className="eyebrow">{routeTitle.eyebrow}</p>
@@ -584,27 +620,35 @@ export const AppShell = ({ userName, onLogout }: { userName: string; onLogout: (
             <StatusPill tone="coral">تجارب</StatusPill>
           </div>
         </header>
-        <RouteTransitionOutlet />
-      </motion.main>
-      <motion.nav
-        className="bottom-nav"
-        aria-label="تنقل الجوال"
-        initial={{ y: 72 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-      >
+        <div className="route-transition">
+          <Outlet />
+        </div>
+      </main>
+      <nav className="bottom-nav" aria-label="تنقل الجوال">
         {bottomNavItems.map((item) => (
-          <NavLink key={item.to} to={item.to} data-tone={item.tone} className={({ isActive }) => (isActive ? 'active' : '')}>
+          <NavLink
+            key={item.to}
+            to={item.to}
+            end={item.to === '/'}
+            data-tone={item.tone}
+            onClick={resetMainContentScroll}
+            className={({ isActive }) => (
+              isActive || item.activePaths?.some((path) => location.pathname === path || location.pathname.startsWith(`${path}/`))
+                ? 'active'
+                : ''
+            )}
+          >
             <span style={{ position: 'relative', display: 'inline-flex' }}>
               {item.icon}
-              {item.to === '/notifications' && unreadCount > 0 && (
+            {item.to === '/notifications' && unreadCount > 0 && (
                 <span className="bottom-nav-badge">{unreadCount}</span>
               )}
             </span>
-            {item.label}
+            {item.to === '/profile' ? 'المزيد' : item.label}
           </NavLink>
         ))}
-      </motion.nav>
+      </nav>
+      <AICompanion />
     </div>
   );
 };

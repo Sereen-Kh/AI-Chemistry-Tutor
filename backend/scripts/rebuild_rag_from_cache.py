@@ -19,9 +19,10 @@ import sys
 BACKEND_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BACKEND_DIR))
 
-from app.database import Base, SessionLocal, engine  # noqa: E402
+from app.database import SessionLocal, engine  # noqa: E402
 import app.models  # noqa: E402,F401
 from app.services.rag_rebuild import default_chemistry_cache_dir, rebuild_rag_chunks_from_cached_pages  # noqa: E402
+from scripts.migration_guard import ensure_migrations_applied  # noqa: E402
 
 
 async def main() -> None:
@@ -39,7 +40,7 @@ async def main() -> None:
     parser.add_argument("--no-clear-existing", action="store_true")
     args = parser.parse_args()
 
-    Base.metadata.create_all(bind=engine)
+    ensure_migrations_applied(engine, required_tables=("alembic_version", "content_sources", "rag_chunks"))
     db = SessionLocal()
     try:
         result = await rebuild_rag_chunks_from_cached_pages(

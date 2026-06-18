@@ -14,12 +14,13 @@ PROJECT_DIR = BACKEND_DIR.parent
 sys.path.insert(0, str(BACKEND_DIR))
 
 from app.core.config import settings  # noqa: E402
-from app.database import Base, SessionLocal, engine  # noqa: E402
+from app.database import SessionLocal, engine  # noqa: E402
 import app.models  # noqa: E402,F401
 from app.models.textbook import ContentSource, RagChunk  # noqa: E402
 from app.services.chunking import build_page_chunk_records, normalize_arabic  # noqa: E402
 from app.services.embeddings import embed_batch  # noqa: E402
 from app.services.ingestion_pipeline import slugify_source  # noqa: E402
+from scripts.migration_guard import ensure_migrations_applied  # noqa: E402
 
 
 def _default_pages_dir(source: ContentSource) -> Path:
@@ -44,7 +45,7 @@ async def rechunk_cached_source(
     dry_run: bool,
     local_embeddings: bool,
 ) -> dict:
-    Base.metadata.create_all(bind=engine)
+    ensure_migrations_applied(engine, required_tables=("alembic_version", "content_sources", "rag_chunks"))
     db = SessionLocal()
     try:
         source = db.get(ContentSource, source_id)

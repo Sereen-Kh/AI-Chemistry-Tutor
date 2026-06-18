@@ -23,7 +23,7 @@ export const FinalSummaryCard = ({ session }: { session: InteractiveSession }) =
         ))}
       </div>
       <div className="guided-card-actions">
-        <Link className="ed-btn ed-btn-primary" to="/quizzes">أنشئ اختباراً قصيراً</Link>
+        <Link className="ed-btn ed-btn-primary" to="/quiz">أنشئ اختباراً قصيراً</Link>
         <Link className="ed-btn ed-btn-secondary" to="/flashcards">أنشئ بطاقات مراجعة</Link>
         <Link className="ed-btn ed-btn-ghost" to={`/ask-ai?question=${askAiQuery}`}>اسأل الذكاء عن المسألة</Link>
         <Link className="ed-btn ed-btn-ghost" to="/lab">العودة إلى المختبر</Link>

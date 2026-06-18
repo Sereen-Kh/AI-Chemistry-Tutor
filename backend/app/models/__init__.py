@@ -1,7 +1,7 @@
 """Model registry.
 
-Import every SQLAlchemy model here so `Base.metadata.create_all()` and future
-Alembic autogeneration can see the complete schema.
+Import every SQLAlchemy model here so Alembic autogeneration and schema
+verification can see the complete ORM metadata.
 """
 
 from app.models.enums import LearningMode, TeachingStyle  # noqa: F401

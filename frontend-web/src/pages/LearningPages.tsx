@@ -159,7 +159,7 @@ export const LessonsPage = () => {
                         <Link to={`/lessons/${lesson.id}`} className="ed-btn ed-btn-secondary ed-btn-xs">
                           عرض المحتوى
                         </Link>
-                        <Link to={`/quizzes?lessonId=${lesson.id}`} className="ed-btn ed-btn-primary ed-btn-xs">
+                        <Link to={`/quiz?lessonId=${lesson.id}`} className="ed-btn ed-btn-primary ed-btn-xs">
                           توليد اختبار
                         </Link>
                         <Link to={`/flashcards?lessonId=${lesson.id}`} className="ed-btn ed-btn-ghost ed-btn-xs">

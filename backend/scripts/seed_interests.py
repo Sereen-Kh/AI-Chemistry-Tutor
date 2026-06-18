@@ -8,9 +8,10 @@ import sys
 BACKEND_DIR = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BACKEND_DIR))
 
-from app.database import Base, SessionLocal, engine  # noqa: E402
+from app.database import SessionLocal, engine  # noqa: E402
 import app.models  # noqa: E402,F401
 from app.models.interest import InterestCategory  # noqa: E402
+from scripts.migration_guard import ensure_migrations_applied  # noqa: E402
 
 INTEREST_CATEGORIES = [
     {"key": "football", "name_ar": "كرة القدم", "name_en": "Football", "icon": "⚽", "order": 1},
@@ -29,7 +30,7 @@ INTEREST_CATEGORIES = [
 
 
 def main() -> None:
-    Base.metadata.create_all(bind=engine)
+    ensure_migrations_applied(engine, required_tables=("alembic_version", "interest_categories"))
     db = SessionLocal()
     try:
         for item in INTEREST_CATEGORIES:

@@ -65,17 +65,6 @@ const railSectionLabels: Record<LearningRailSection, string> = {
   achievement: 'الإنجاز',
 };
 
-const railSectionMessages: Record<LearningRailSection, string> = {
-  today: 'ابدأ من هنا',
-  continue: 'تابع مسارك الحالي بثبات.',
-  weak: 'هذا موضوع ضعيف يحتاج مراجعة.',
-  ai: 'هذه اقتراحات مبنية على تقدمك.',
-  timeline: 'راقب الخطة وهي تتقدم معك.',
-  review: 'حوّل المعرفة إلى ممارسة سريعة.',
-  exam: 'اقترب موعدك النهائي، ركز هنا.',
-  achievement: 'اقتربت من هدف اليوم.',
-};
-
 const railSectionAccents: Record<LearningRailSection, 'teal' | 'blue' | 'coral' | 'purple' | 'gold'> = {
   today: 'blue',
   continue: 'teal',
@@ -98,58 +87,44 @@ const StudyScrollSection = ({
 }) => (
   <section
     id={`study-section-${section}`}
+    role="tabpanel"
+    tabIndex={0}
+    aria-label={railSectionLabels[section]}
     data-rail-section={section}
     data-accent={railSectionAccents[section]}
-    className={`study-scroll-section reveal-card ${className}`.trim()}
+    className={`study-scroll-section ${className}`.trim()}
   >
     {children}
   </section>
 );
 
-const LearningPathRail = ({
+const StudyPlanSectionTabs = ({
   sections,
   activeSection,
+  onSelect,
 }: {
   sections: LearningRailSection[];
   activeSection: LearningRailSection;
+  onSelect: (section: LearningRailSection) => void;
 }) => (
-  <aside className="study-path-rail" aria-label="مراحل الصفحة">
-    <span className="study-path-caption">مسار التعلم</span>
-    <div className="study-path-list">
+  <nav className="study-section-tabs" aria-label="أقسام خطة الدراسة">
+    <div className="study-section-tab-list" role="tablist" aria-label="أقسام خطة الدراسة">
       {sections.map((section) => (
         <button
           key={section}
           type="button"
           data-accent={railSectionAccents[section]}
-          className={`study-path-item ${activeSection === section ? 'active' : ''}`}
-          onClick={() => {
-            const node = document.getElementById(`study-section-${section}`);
-            node?.scrollIntoView({
-              behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
-              block: 'start',
-            });
-          }}
+          className={`study-section-tab ${activeSection === section ? 'active' : ''}`}
+          onClick={() => onSelect(section)}
+          role="tab"
+          aria-selected={activeSection === section}
+          aria-controls={`study-section-${section}`}
         >
-          <span className="study-path-dot" aria-hidden="true" />
           <span>{railSectionLabels[section]}</span>
         </button>
       ))}
     </div>
-  </aside>
-);
-
-const ContextualStudyAssistant = ({ activeSection }: { activeSection: LearningRailSection }) => (
-  <aside className="study-context-assistant" aria-live="polite">
-    <div className="study-assistant-core" aria-hidden="true">
-      <span className="study-assistant-orbit orbit-a" />
-      <span className="study-assistant-orbit orbit-b" />
-      <span className="study-assistant-nucleus" />
-    </div>
-    <div className="study-assistant-copy">
-      <strong>مرشد EduMind</strong>
-      <p>{railSectionMessages[activeSection]}</p>
-    </div>
-  </aside>
+  </nav>
 );
 
 export const StudyPlanPage = () => {
@@ -288,9 +263,9 @@ export const StudyPlanPage = () => {
   );
 
   const visibleRailSections = useMemo<LearningRailSection[]>(() => {
-    if (activeView === 'home') return ['today', 'continue', 'weak', 'ai', 'review', 'exam'];
+    if (activeView === 'home') return ['today', 'weak', 'timeline', 'review', 'achievement'];
     if (activeView === 'semester-view') return ['today', 'weak', 'timeline', 'review', 'achievement'];
-    if (activeView === 'exam-view') return ['today', 'weak', 'review', 'timeline', 'exam', 'achievement'];
+    if (activeView === 'exam-view') return ['today', 'weak', 'timeline', 'review', 'achievement'];
     return [];
   }, [activeView]);
 
@@ -325,54 +300,19 @@ export const StudyPlanPage = () => {
   }, []);
 
   useEffect(() => {
-    if (typeof window === 'undefined' || !('IntersectionObserver' in window)) return undefined;
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const cards = Array.from(document.querySelectorAll<HTMLElement>('.study-plan-page .reveal-card'));
-
-    if (prefersReducedMotion) {
-      cards.forEach((card) => card.classList.add('is-visible'));
-      return undefined;
+    if (visibleRailSections.length === 0) return;
+    if (!visibleRailSections.includes(activeSection)) {
+      setActiveSection(visibleRailSections[0]);
     }
-
-    const revealObserver = new IntersectionObserver(
-      (entries, observer) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          entry.target.classList.add('is-visible');
-          observer.unobserve(entry.target);
-        });
-      },
-      { threshold: 0.16, rootMargin: '0px 0px -8% 0px' },
-    );
-
-    cards.forEach((card) => revealObserver.observe(card));
-    return () => revealObserver.disconnect();
-  }, [activeView, activePlanTab, plan]);
+  }, [activeSection, visibleRailSections]);
 
   useEffect(() => {
-    if (visibleRailSections.length === 0 || typeof window === 'undefined' || !('IntersectionObserver' in window)) {
-      return undefined;
-    }
-
-    const sections = Array.from(document.querySelectorAll<HTMLElement>('.study-plan-page [data-rail-section]'));
-    if (!sections.length) return undefined;
-
-    const sectionObserver = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((left, right) => right.intersectionRatio - left.intersectionRatio);
-
-        if (!visible[0]) return;
-        const next = visible[0].target.getAttribute('data-rail-section') as LearningRailSection | null;
-        if (next) setActiveSection(next);
-      },
-      { threshold: [0.2, 0.45, 0.72], rootMargin: '-18% 0px -48% 0px' },
-    );
-
-    sections.forEach((section) => sectionObserver.observe(section));
-    return () => sectionObserver.disconnect();
-  }, [activeView, activePlanTab, visibleRailSections, plan]);
+    const handleRouteReset = () => setActiveSection('today');
+    window.addEventListener('edumind-route-reset', handleRouteReset);
+    return () => {
+      window.removeEventListener('edumind-route-reset', handleRouteReset);
+    };
+  }, []);
 
   // Calculation Logic: sum selected lesson durations dynamically
   const semTotalDuration = useMemo(() => {
@@ -604,6 +544,18 @@ export const StudyPlanPage = () => {
   const timelineNextLesson =
     curriculumLessons.find((lesson) => lesson.lesson_id !== timelinePrimaryLesson?.lesson_id && lesson.completion_status !== 'completed')
     ?? timelinePrimaryLesson;
+  const studyProgress = Math.round((completedLessonCount / Math.max(curriculumLessons.length, 1)) * 100);
+  const planName = plan?.config?.title
+    || (plan?.config?.examDate ? 'خطة مراجعة الامتحان' : plan ? 'خطة الفصل الدراسي' : 'خطة الكيمياء الشخصية');
+  const todayMission = `أنجز ${currentLesson?.title_ar ?? 'الدرس الحالي'} ثم راجع ${weakLessons[0]?.title_ar ?? 'أضعف موضوع لديك'}.`;
+  const weakTopicSummary = weakLessons.length
+    ? weakLessons.map((lesson) => lesson.title_ar).join('، ')
+    : 'لا توجد نقاط ضعف واضحة الآن.';
+  const selectStudySection = (section: LearningRailSection) => {
+    setActiveSection(section);
+    document.querySelector<HTMLElement>('.app-main')?.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  };
 
   if (loading) {
     return (
@@ -651,78 +603,80 @@ export const StudyPlanPage = () => {
         </div>
       )}
 
-      <div className={`study-plan-shell ${showMotionLayout ? 'has-rail' : 'no-rail'}`}>
-        {showMotionLayout && <LearningPathRail sections={visibleRailSections} activeSection={displayedActiveSection} />}
-        <div className="study-plan-stage">
+      <div className={`study-plan-shell ${showMotionLayout ? 'has-tabs' : 'no-tabs'}`}>
+        {showMotionLayout && (
+          <StudyPlanSectionTabs
+            sections={visibleRailSections}
+            activeSection={displayedActiveSection}
+            onSelect={selectStudySection}
+          />
+        )}
+        <div className={showMotionLayout ? 'study-plan-stage tabbed' : 'study-plan-stage'} data-active-section={displayedActiveSection}>
 
       {/* ── HOME VIEW ── */}
       {activeView === 'home' && (
         <div className="study-view-transition">
-          <StudyScrollSection section="today" className="study-hero-section">
+          <StudyScrollSection section="today" className="study-overview-section">
             <PageHeader
-              eyebrow="منظم الجدول الدراسي"
-              title="خطة الدراسة المخصصة بالذكاء الاصطناعي"
-              subtitle="جدول يومي يربط بين التعلّم، المراجعة، والامتحان من دون أن تفقد إحساس التقدم."
+              eyebrow="خطة الدراسة"
+              title="خطة الدراسة"
+              subtitle="ملخص اليوم والمسار القادم في مكان واحد، من دون البحث داخل الصفحة."
+              action={(
+                <div className="study-top-actions">
+                  <Button variant="secondary" onClick={() => setActiveView('semester-create')}>خطة فصل</Button>
+                  <Button onClick={() => setActiveView('exam-create')}>خطة امتحان</Button>
+                </div>
+              )}
             />
 
-            <Card className="study-note-card" style={{ background: 'rgba(78,135,245,.06)', borderColor: 'rgba(78,135,245,.25)' }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
-                <span style={{ fontSize: '24px' }}>💡</span>
-                <p style={{ color: 'var(--t2)', fontSize: '0.9rem', lineHeight: '1.7' }}>
-                  لديك منهج كيمياء كامل يحتوي على 5 وحدات و15 درساً. المسار هنا يقسم يومك إلى تعلّم جديد، مراجعة سريعة،
-                  وإنذار مبكر قبل الامتحان حتى تبقى الخطة واضحة وممتعة للعودة إليها كل يوم.
-                </p>
-              </div>
-            </Card>
-          </StudyScrollSection>
-
-          <StudyScrollSection section="continue">
-            <div className="study-plan-home-grid">
-              {plan && plan.chapters.length > 0 ? (
-                <Card className="study-home-highlight-card" style={{ borderColor: 'rgba(0,212,168,.3)', background: 'rgba(0,212,168,.03)' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', marginBottom: '14px', flexWrap: 'wrap' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <span style={{ fontSize: '20px' }}>📘</span>
-                      <div>
-                        <strong style={{ fontSize: '1rem', display: 'block' }}>خطة الدراسة النشطة</strong>
-                        <StatusPill tone="teal">قيد التنفيذ</StatusPill>
-                      </div>
-                    </div>
-                    <Button variant="secondary" onClick={() => setActiveView(plan.config?.examDate ? 'exam-view' : 'semester-view')}>
-                      عرض الخطة ←
-                    </Button>
-                  </div>
-                  <p style={{ color: 'var(--t2)', fontSize: '0.85rem', lineHeight: '1.7', marginBottom: '16px' }}>
-                    تتضمن كافة فصول المنهج مع تقدم {plan.chapters[0]?.progress ?? 62}% في الوحدة الأولى وخط مراجعة جاهز لبقية الأسابيع.
-                  </p>
-                  <ProgressBar value={Math.round((completedLessonCount / curriculumLessons.length) * 100)} tone="teal" />
-                </Card>
-              ) : (
-                <Card className="study-home-highlight-card">
-                  <strong style={{ fontSize: '1rem' }}>لا توجد خطة مفعلة بعد</strong>
-                  <p style={{ color: 'var(--t2)', lineHeight: '1.7' }}>
-                    ابدأ بخطة فصل دراسي إذا أردت مساراً هادئاً ومستداماً، أو بخطة امتحان إذا كان الوقت ضيقاً وتحتاج مراجعة مكثفة.
-                  </p>
-                </Card>
-              )}
-
-              <Card className="study-home-highlight-card study-current-lesson-card">
-                <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: 'flex-start', marginBottom: '12px' }}>
-                  <div>
-                    <strong style={{ fontSize: '1rem', display: 'block' }}>تابع من الدرس الحالي</strong>
-                    <span style={{ color: 'var(--t2)', fontSize: '0.8rem' }}>جلسة مركزة من {currentLesson?.duration_minutes ?? 20} دقيقة</span>
-                  </div>
-                  <StatusPill tone="blue">الآن</StatusPill>
+            <div className="study-overview-grid">
+              <Card className="study-plan-identity-card">
+                <span className="study-card-kicker">الخطة الحالية</span>
+                <h2>{planName}</h2>
+                <div className="study-progress-line">
+                  <strong>{studyProgress}%</strong>
+                  <ProgressBar value={studyProgress} tone="blue" />
                 </div>
-                <h3 style={{ fontSize: '1.08rem', marginBottom: '8px' }}>{currentLesson?.title_ar ?? 'المحاليل المائية'}</h3>
-                <p style={{ color: 'var(--t2)', fontSize: '0.85rem', lineHeight: '1.7', marginBottom: '14px' }}>
-                  صفحات {currentLesson?.pageStart ?? 2}–{currentLesson?.pageEnd ?? 4} · مستوى
-                  {' '}{currentLesson?.difficulty === 'easy' ? 'سهل' : currentLesson?.difficulty === 'medium' ? 'متوسط' : 'صعب'}
-                </p>
+                <p>{plan ? 'الخطة نشطة ومتصلة بتقدمك الحالي.' : 'ابدأ بخطة فصل أو خطة امتحان حسب هدفك القادم.'}</p>
+                {plan && (
+                  <Button variant="secondary" onClick={() => setActiveView(plan.config?.examDate ? 'exam-view' : 'semester-view')}>
+                    عرض تفاصيل الخطة
+                  </Button>
+                )}
+              </Card>
+
+              <Card className="study-mission-card">
+                <div className="study-section-head">
+                  <strong>مهمة اليوم</strong>
+                  <StatusPill tone="blue">اليوم</StatusPill>
+                </div>
+                <h3>{todayMission}</h3>
+                <p>جلسة مركزة من {currentLesson?.duration_minutes ?? 45} دقيقة، ثم مراجعة قصيرة قبل الانتقال.</p>
                 <div className="study-mini-action-row">
                   <Link to={`/lessons/${currentLesson?.lesson_id ?? 401}`} className="ed-btn ed-btn-primary ed-btn-xs">ابدأ الدرس</Link>
-                  <Link to={`/ask-ai?question=${encodeURIComponent(`ساعدني في فهم ${currentLesson?.title_ar ?? 'الدرس الحالي'}`)}`} className="ed-btn ed-btn-ghost ed-btn-xs">اسأل الذكاء</Link>
+                  <Link to="/quiz?mode=weak_lessons" className="ed-btn ed-btn-ghost ed-btn-xs">اختبار سريع</Link>
                 </div>
+              </Card>
+
+              <Card className="study-overview-mini-card">
+                <span className="study-card-kicker">الدرس التالي</span>
+                <strong>{timelineNextLesson?.title_ar ?? 'درس قادم من المنهج'}</strong>
+                <p>
+                  صفحات {timelineNextLesson?.pageStart ?? currentLesson?.pageStart ?? 2}
+                  –{timelineNextLesson?.pageEnd ?? currentLesson?.pageEnd ?? 4}
+                </p>
+              </Card>
+
+              <Card className="study-overview-mini-card">
+                <span className="study-card-kicker">نقاط الضعف</span>
+                <strong>{weakLessons.length ? `${weakLessons.length} مواضيع تحتاج تثبيتاً` : 'لا توجد ثغرات حرجة'}</strong>
+                <p>{weakTopicSummary}</p>
+              </Card>
+
+              <Card className="study-overview-mini-card study-countdown-card">
+                <span className="study-card-kicker">المراجعة والامتحان</span>
+                <strong>{examDaysRemaining} يوم</strong>
+                <p>عد تنازلي افتراضي للمراجعة النهائية، ويمكن تخصيصه من خطة الامتحان.</p>
               </Card>
             </div>
           </StudyScrollSection>
@@ -763,10 +717,10 @@ export const StudyPlanPage = () => {
             </div>
           </StudyScrollSection>
 
-          <StudyScrollSection section="ai">
+          <StudyScrollSection section="timeline">
             <Card className="study-recommendation-band">
               <div className="study-section-head">
-                <strong>توصيات الذكاء لمسارك</strong>
+                <strong>المسار المقترح</strong>
                 <StatusPill tone="purple">مبنية على التقدم</StatusPill>
               </div>
               <div className="study-recommendation-grid">
@@ -786,7 +740,7 @@ export const StudyPlanPage = () => {
             </Card>
 
             <div>
-              <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '16px' }}>ابدأ إنشاء خطتك الدراسية</h2>
+              <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '16px' }}>إنشاء أو تعديل الخطة</h2>
               <div className="type-picker" style={{ marginBottom: '0' }}>
             <button
               type="button"
@@ -837,7 +791,7 @@ export const StudyPlanPage = () => {
                 <strong>حل موجّه</strong>
                 <span>مسألة بخطوات وتغذية راجعة</span>
               </Link>
-              <Link to="/quizzes" className="study-tool-tile">
+              <Link to="/quiz" className="study-tool-tile">
                 <strong>اختبار قصير</strong>
                 <span>تحقق من الفهم خلال دقائق</span>
               </Link>
@@ -848,12 +802,12 @@ export const StudyPlanPage = () => {
             </div>
           </StudyScrollSection>
 
-          <StudyScrollSection section="exam">
+          <StudyScrollSection section="achievement">
             <div className="study-plan-home-grid">
               <Card className="study-home-highlight-card study-exam-focus-card">
                 <div className="study-section-head">
-                  <strong>عدّاد الامتحان</strong>
-                  <StatusPill tone="gold">13 يوماً</StatusPill>
+                  <strong>الإنجاز والعد التنازلي</strong>
+                  <StatusPill tone="gold">{examDaysRemaining} يوماً</StatusPill>
                 </div>
                 <p style={{ color: 'var(--t2)', lineHeight: '1.8', margin: 0 }}>
                   إذا واصلت على وتيرة الدرس الحالي مع جلسة مراجعة يومية قصيرة، ستصل إلى آخر يومين مع مساحة مريحة للمراجعة النهائية فقط.
@@ -1133,7 +1087,7 @@ export const StudyPlanPage = () => {
                                 </div>
                                 <div className="lesson-quick-actions selector-actions" onClick={(event) => event.stopPropagation()}>
                                   <Link to={`/lessons/${lesson.lesson_id}`} className="lesson-quick-btn" title="ابدأ الدرس" aria-label={`ابدأ درس ${lesson.title_ar}`}>▶</Link>
-                                  <Link to={`/quizzes?lessonId=${lesson.lesson_id}`} className="lesson-quick-btn" title="توليد اختبار" aria-label={`توليد اختبار لدرس ${lesson.title_ar}`}>📝</Link>
+                                  <Link to={`/quiz?lessonId=${lesson.lesson_id}`} className="lesson-quick-btn" title="توليد اختبار" aria-label={`توليد اختبار لدرس ${lesson.title_ar}`}>📝</Link>
                                   <Link to={`/flashcards?lessonId=${lesson.lesson_id}`} className="lesson-quick-btn" title="بطاقات مراجعة" aria-label={`توليد بطاقات لدرس ${lesson.title_ar}`}>🃏</Link>
                                   <Link to={`/ask-ai?question=${encodeURIComponent(`اشرح لي درس ${lesson.title_ar}`)}`} className="lesson-quick-btn" title="اسأل الذكاء" aria-label={`اسأل الذكاء عن درس ${lesson.title_ar}`}>✨</Link>
                                   <button
@@ -1458,7 +1412,7 @@ export const StudyPlanPage = () => {
                                 </div>
                                 <div className="lesson-quick-actions selector-actions" onClick={(event) => event.stopPropagation()}>
                                   <Link to={`/lessons/${lesson.lesson_id}`} className="lesson-quick-btn" title="ابدأ الدرس" aria-label={`ابدأ درس ${lesson.title_ar}`}>▶</Link>
-                                  <Link to={`/quizzes?lessonId=${lesson.lesson_id}`} className="lesson-quick-btn" title="توليد اختبار" aria-label={`توليد اختبار لدرس ${lesson.title_ar}`}>📝</Link>
+                                  <Link to={`/quiz?lessonId=${lesson.lesson_id}`} className="lesson-quick-btn" title="توليد اختبار" aria-label={`توليد اختبار لدرس ${lesson.title_ar}`}>📝</Link>
                                   <Link to={`/flashcards?lessonId=${lesson.lesson_id}`} className="lesson-quick-btn" title="بطاقات مراجعة" aria-label={`توليد بطاقات لدرس ${lesson.title_ar}`}>🃏</Link>
                                   <Link to={`/ask-ai?question=${encodeURIComponent(`اشرح لي درس ${lesson.title_ar}`)}`} className="lesson-quick-btn" title="اسأل الذكاء" aria-label={`اسأل الذكاء عن درس ${lesson.title_ar}`}>✨</Link>
                                   <button
@@ -1693,7 +1647,7 @@ export const StudyPlanPage = () => {
                               <div className="lesson-quick-actions">
                                 {!isCompleted && (
                                   <>
-                                    <Link to={`/quizzes?lessonId=${lesson.id}`} className="lesson-quick-btn" title="توليد اختبار" aria-label="توليد اختبار">📝</Link>
+                                    <Link to={`/quiz?lessonId=${lesson.id}`} className="lesson-quick-btn" title="توليد اختبار" aria-label="توليد اختبار">📝</Link>
                                     <Link to={`/flashcards?lessonId=${lesson.id}`} className="lesson-quick-btn" title="بطاقات مراجعة" aria-label="بطاقات مراجعة">🃏</Link>
                                     <Link to={`/ask-ai?question=${encodeURIComponent(`اشرح لي درس ${lesson.title}`)}`} className="lesson-quick-btn" title="اسأل المعلم الذكي" aria-label="اسأل المعلم الذكي">✨</Link>
                                   </>
@@ -1770,7 +1724,7 @@ export const StudyPlanPage = () => {
                 <strong>حل مسألة موجهة</strong>
                 <span>انتقل من الدرس إلى تمرين تطبيقي بخطوات.</span>
               </Link>
-              <Link to="/quizzes" className="study-tool-tile">
+              <Link to="/quiz" className="study-tool-tile">
                 <strong>اختبار نهاية الأسبوع</strong>
                 <span>قياس سريع قبل الانتقال للفصل التالي.</span>
               </Link>
@@ -1859,7 +1813,7 @@ export const StudyPlanPage = () => {
             <Card style={{ background: 'rgba(20, 24, 34, 0.4)' }}>
               <h3 style={{ fontSize: '0.95rem', fontWeight: 'bold', marginBottom: '12px' }}>توصيات الذكاء لمراجعة الامتحان:</h3>
               <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                <Link to="/quizzes?mode=exam_review" className="ed-btn ed-btn-primary" style={{ minHeight: '38px', fontSize: '0.85rem' }}>
+                <Link to="/quiz?mode=exam_review" className="ed-btn ed-btn-primary" style={{ minHeight: '38px', fontSize: '0.85rem' }}>
                   📝 إجراء اختبار الامتحان الموصى به
                 </Link>
                 <Link to="/flashcards?mode=weak_lessons" className="ed-btn ed-btn-secondary" style={{ minHeight: '38px', fontSize: '0.85rem' }}>
@@ -2011,8 +1965,6 @@ export const StudyPlanPage = () => {
 
         </div>
       </div>
-
-      {showMotionLayout && <ContextualStudyAssistant activeSection={displayedActiveSection} />}
     </div>
   );
 };

@@ -1,13 +1,21 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { mockLessons, getLessonQualityReport } from '../api/mockChemistryData';
 import { quizzesApi } from '../api/quizzesApi';
 import { Card, PageHeader, Button, ProgressBar, StatusPill, LoadingSkeleton, ErrorBanner } from '../components/DesignSystem';
-import type { QuizGenerationConfig, GeneratedQuizQuestion, LessonKnowledgeUnit } from '../types';
+import { getCurriculumLessonQuality, lessonPageRange, useActiveCurriculum } from '../hooks/useActiveCurriculum';
+import type { QuizGenerationConfig, GeneratedQuizQuestion } from '../types';
 
 type QuizMode = QuizGenerationConfig['mode'];
 type QuizDifficulty = QuizGenerationConfig['difficulty'];
 type QuizQuestionType = QuizGenerationConfig['questionTypes'][number];
+type QuizAnswerReview = {
+  questionId: string;
+  question: string;
+  userAnswer: string;
+  correctAnswer: string;
+  explanation: string;
+  isCorrect: boolean;
+};
 
 export const QuizzesPage = () => {
   const location = useLocation();
@@ -20,7 +28,7 @@ export const QuizzesPage = () => {
   // Config UI State
   const [mode, setMode] = useState<QuizMode>(paramLessonId ? 'single_lesson' : 'single_lesson');
   const [selectedLessonIds, setSelectedLessonIds] = useState<string[]>(paramLessonId ? [paramLessonId] : []);
-  const [selectedChapterId, setSelectedChapterId] = useState<string>('chapter_1');
+  const [selectedChapterId, setSelectedChapterId] = useState<string>('');
   const [questionsPerLesson, setQuestionsPerLesson] = useState<number>(3);
   const [difficulty, setDifficulty] = useState<QuizDifficulty>('mixed');
   const [questionTypes, setQuestionTypes] = useState<QuizGenerationConfig['questionTypes']>(['mcq', 'true_false', 'short_answer', 'calculation', 'equation_balancing']);
@@ -35,30 +43,37 @@ export const QuizzesPage = () => {
   const [isCurrentCorrect, setIsCurrentCorrect] = useState(false);
   const [score, setScore] = useState(0);
   const [error, setError] = useState('');
+  const [timeElapsed, setTimeElapsed] = useState(0);
+  const [streak, setStreak] = useState(0);
+  const [answerReviews, setAnswerReviews] = useState<QuizAnswerReview[]>([]);
+  const [showQualityReport, setShowQualityReport] = useState(false);
+
+  const { allLessons, chapters, loading: curriculumLoading, usingFallback: usingFallbackCurriculum } = useActiveCurriculum();
+  const effectiveSelectedChapterId = selectedChapterId || (chapters[0] ? String(chapters[0].id) : '');
 
   // Compute selected lessons based on mode
-  const currentSelectedLessons = useMemo<LessonKnowledgeUnit[]>(() => {
+  const currentSelectedLessons = useMemo(() => {
     if (mode === 'single_lesson') {
-      return mockLessons.filter(l => selectedLessonIds.includes(l.lessonId));
+      return allLessons.filter(l => selectedLessonIds.includes(String(l.id)));
     }
     if (mode === 'selected_lessons') {
-      return mockLessons.filter(l => selectedLessonIds.includes(l.lessonId));
+      return allLessons.filter(l => selectedLessonIds.includes(String(l.id)));
     }
     if (mode === 'chapter') {
-      return mockLessons.filter(l => l.chapterId === selectedChapterId);
+      return allLessons.filter(l => String(l.chapter_id) === effectiveSelectedChapterId || String(l.chapter.id) === effectiveSelectedChapterId);
     }
     if (mode === 'weak_lessons') {
-      return mockLessons.filter(l => l.qualityScore >= 60 && l.qualityScore < 80);
+      return allLessons.filter(l => l.difficulty >= 3).slice(0, 5);
     }
     if (mode === 'study_plan' || mode === 'exam_review') {
-      return mockLessons.filter(l => l.qualityScore >= 80).slice(0, 4); // Select a subset of ready lessons
+      return allLessons.filter(l => l.difficulty <= 3).slice(0, 4);
     }
     return [];
-  }, [mode, selectedLessonIds, selectedChapterId]);
+  }, [mode, selectedLessonIds, effectiveSelectedChapterId, allLessons]);
 
   // Compute validation report for selected lessons
   const validationReport = useMemo(() => {
-    const reports = currentSelectedLessons.map(getLessonQualityReport);
+    const reports = currentSelectedLessons.map(getCurriculumLessonQuality);
     const blocked = reports.filter(r => r.status === 'blocked');
     const needsReview = reports.filter(r => r.status === 'needs_review');
     
@@ -77,8 +92,8 @@ export const QuizzesPage = () => {
 
     const config: QuizGenerationConfig = overrideConfig || {
       mode,
-      lessonIds: currentSelectedLessons.map(l => l.lessonId),
-      chapterIds: mode === 'chapter' ? [selectedChapterId] : undefined,
+      lessonIds: currentSelectedLessons.map(l => String(l.id)),
+      chapterIds: mode === 'chapter' && effectiveSelectedChapterId ? [effectiveSelectedChapterId] : undefined,
       questionsPerLesson,
       difficulty,
       questionTypes,
@@ -94,9 +109,9 @@ export const QuizzesPage = () => {
     }
 
     // Double check blocking
-    const selectedReports = mockLessons
-      .filter(l => config.lessonIds.includes(l.lessonId))
-      .map(getLessonQualityReport);
+    const selectedReports = allLessons
+      .filter(l => config.lessonIds.includes(String(l.id)))
+      .map(getCurriculumLessonQuality);
     
     if (selectedReports.some(r => r.status === 'blocked')) {
       setError('لا يمكن توليد الاختبار. أحد الدروس المحددة محظور بسبب نقص الجودة.');
@@ -116,6 +131,9 @@ export const QuizzesPage = () => {
         setTextAnswer('');
         setSubmitted(false);
         setScore(0);
+        setTimeElapsed(0);
+        setStreak(0);
+        setAnswerReviews([]);
         setGameState('playing');
       }
     } catch {
@@ -126,7 +144,7 @@ export const QuizzesPage = () => {
 
   const handleToggleLessonSelection = (lessonId: string) => {
     setSelectedLessonIds(prev => 
-      prev.includes(lessonId) 
+      prev.includes(lessonId)
         ? prev.filter(id => id !== lessonId) 
         : [...prev, lessonId]
     );
@@ -157,8 +175,25 @@ export const QuizzesPage = () => {
     }
 
     setIsCurrentCorrect(correct);
+    const userAnswer = currentQ.questionType === 'mcq' || currentQ.questionType === 'true_false'
+      ? currentQ.options?.[selectedOptionIndex ?? -1] ?? ''
+      : textAnswer;
+    setAnswerReviews((current) => [
+      ...current.filter((item) => item.questionId !== currentQ.id),
+      {
+        questionId: currentQ.id,
+        question: currentQ.question,
+        userAnswer,
+        correctAnswer: currentQ.correctAnswer,
+        explanation: currentQ.explanation,
+        isCorrect: correct,
+      },
+    ]);
     if (correct) {
       setScore(prev => prev + 1);
+      setStreak(prev => prev + 1);
+    } else {
+      setStreak(0);
     }
     setSubmitted(true);
 
@@ -171,12 +206,24 @@ export const QuizzesPage = () => {
   };
 
   const handleSelfRate = (isCorrect: boolean) => {
+    const currentQ = questions[currentIndex];
     if (isCorrect) {
       setScore(prev => prev + 1);
       setIsCurrentCorrect(true);
     } else {
       setIsCurrentCorrect(false);
     }
+    setAnswerReviews((current) => [
+      ...current.filter((item) => item.questionId !== currentQ.id),
+      {
+        questionId: currentQ.id,
+        question: currentQ.question,
+        userAnswer: textAnswer || 'تقييم ذاتي دون إجابة مكتوبة',
+        correctAnswer: currentQ.correctAnswer,
+        explanation: currentQ.explanation,
+        isCorrect,
+      },
+    ]);
     setSubmitted(true);
   };
 
@@ -193,6 +240,14 @@ export const QuizzesPage = () => {
   };
 
   const currentQuestion = questions[currentIndex];
+
+  useEffect(() => {
+    if (gameState !== 'playing') return;
+    const interval = window.setInterval(() => setTimeElapsed((current) => current + 1), 1000);
+    return () => window.clearInterval(interval);
+  }, [gameState]);
+
+  const formattedElapsed = `${Math.floor(timeElapsed / 60)}:${String(timeElapsed % 60).padStart(2, '0')}`;
 
   // Auto-generate if specified in route params. Kept after generator declaration
   // so React Compiler and ESLint can track the function binding correctly.
@@ -213,16 +268,16 @@ export const QuizzesPage = () => {
       avoidDuplicateQuestions: true
     };
 
-    const lesson = mockLessons.find(l => l.lessonId === paramLessonId);
+    const lesson = allLessons.find(l => String(l.id) === paramLessonId);
     if (!lesson) return;
-    const report = getLessonQualityReport(lesson);
+    const report = getCurriculumLessonQuality(lesson);
     if (report.status !== 'blocked') {
       queueMicrotask(() => void handleGenerateQuiz(config));
     } else {
-      queueMicrotask(() => setError(`تعذر التوليد التلقائي: درس "${lesson.titleAr}" محظور بسبب جودة المحتوى.`));
+      queueMicrotask(() => setError(`تعذر التوليد التلقائي: درس "${lesson.title_ar}" محظور بسبب جودة المحتوى.`));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paramAuto, paramLessonId, queryParams]);
+  }, [paramAuto, paramLessonId, queryParams, allLessons]);
 
   return (
     <div className="page-stack quizzes-page">
@@ -232,15 +287,19 @@ export const QuizzesPage = () => {
         subtitle="اختبارات مبنية على محتوى الدرس ونواتج التعلم، مع مراجعة شاملة للإجابات والتفسيرات."
       />
 
+      {usingFallbackCurriculum && <ErrorBanner message="تعذر تحميل المنهج من الخادم، لذلك نعرض بنية الكتاب الاحتياطية مؤقتاً." />}
       {error && <ErrorBanner message={error} onRetry={() => setError('')} />}
 
       {/* SETUP GAME STATE */}
       {gameState === 'setup' && (
-        <div className="quiz-setup-grid">
+        <div className={`quiz-setup-grid ${showQualityReport ? 'has-report' : 'report-collapsed'}`}>
           {/* Config form */}
           <Card className="quiz-config-card">
             <div className="section-title">
               <h2>تكوين معايير الاختبار</h2>
+              <Button variant="ghost" onClick={() => setShowQualityReport((open) => !open)} className="ed-btn-xs">
+                {showQualityReport ? 'إخفاء تقرير الجودة' : 'عرض تقرير الجودة'}
+              </Button>
             </div>
 
             <div className="form-group">
@@ -248,7 +307,7 @@ export const QuizzesPage = () => {
               <select value={mode} onChange={(e) => { setMode(e.target.value as QuizMode); setSelectedLessonIds([]); }}>
                 <option value="single_lesson">درس واحد محدد</option>
                 <option value="selected_lessons">مجموعة دروس محددة</option>
-                <option value="chapter">وحدة كاملة (Chapter)</option>
+                <option value="chapter">فصل كامل من الوحدة</option>
                 <option value="weak_lessons">دروس تحتاج لمراجعة (تحت 80%)</option>
                 <option value="study_plan">خطة المذاكرة اليومية</option>
                 <option value="exam_review">مراجعة الامتحان الشاملة</option>
@@ -259,45 +318,68 @@ export const QuizzesPage = () => {
             {mode === 'single_lesson' && (
               <div className="form-group">
                 <label>اختر الدرس:</label>
-                <select 
-                  value={selectedLessonIds[0] || ''} 
-                  onChange={(e) => setSelectedLessonIds([e.target.value])}
-                >
-                  <option value="" disabled>-- اختر الدرس --</option>
-                  {mockLessons.map(l => (
-                    <option key={l.lessonId} value={l.lessonId}>{l.titleAr}</option>
-                  ))}
-                </select>
+                {curriculumLoading ? <LoadingSkeleton rows={3} /> : (
+                  <div className="lesson-selector-grid">
+                    {allLessons.map((lesson) => {
+                      const lessonId = String(lesson.id);
+                      const selected = selectedLessonIds.includes(lessonId);
+                      return (
+                        <button
+                          key={lesson.id}
+                          type="button"
+                          className={`lesson-select-card ${selected ? 'selected' : ''}`}
+                          onClick={() => setSelectedLessonIds([lessonId])}
+                          aria-pressed={selected}
+                        >
+                          <span className="lesson-num">درس {lesson.order}</span>
+                          <strong>{lesson.title_ar}</strong>
+                          <small>{lesson.unit.title_ar} · {lessonPageRange(lesson)}</small>
+                          {selected && <span className="check-mark">✓</span>}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             )}
 
             {mode === 'selected_lessons' && (
               <div className="form-group">
                 <label>اختر الدروس المطلوبة:</label>
-                <div className="lessons-checkbox-list">
-                  {mockLessons.map(l => (
-                    <label className="checkbox-item" key={l.lessonId}>
-                      <input 
-                        type="checkbox" 
-                        checked={selectedLessonIds.includes(l.lessonId)} 
-                        onChange={() => handleToggleLessonSelection(l.lessonId)} 
-                      />
-                      {l.titleAr}
-                    </label>
-                  ))}
-                </div>
+                {curriculumLoading ? <LoadingSkeleton rows={3} /> : (
+                  <div className="lesson-selector-grid">
+                    {allLessons.map((lesson) => {
+                      const lessonId = String(lesson.id);
+                      const selected = selectedLessonIds.includes(lessonId);
+                      return (
+                        <button
+                          key={lesson.id}
+                          type="button"
+                          className={`lesson-select-card ${selected ? 'selected' : ''}`}
+                          onClick={() => handleToggleLessonSelection(lessonId)}
+                          aria-pressed={selected}
+                        >
+                          <span className="lesson-num">درس {lesson.order}</span>
+                          <strong>{lesson.title_ar}</strong>
+                          <small>{lesson.chapter.title_ar} · {lessonPageRange(lesson)}</small>
+                          {selected && <span className="check-mark">✓</span>}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             )}
 
             {mode === 'chapter' && (
               <div className="form-group">
-                <label>اختر الوحدة الدراسية:</label>
-                <select value={selectedChapterId} onChange={(e) => setSelectedChapterId(e.target.value)}>
-                  <option value="chapter_1">الوحدة الأولى: المحاليل المائية</option>
-                  <option value="chapter_2">الوحدة الثانية: المحاليل الحمضية</option>
-                  <option value="chapter_3">الوحدة الثالثة: المحاليل الأساسية</option>
-                  <option value="chapter_4">الوحدة الرابعة: أنواع التفاعلات الكيميائية</option>
-                  <option value="chapter_5">الوحدة الخامسة: الأملاح</option>
+                <label>اختر الفصل داخل الوحدة:</label>
+                <select value={effectiveSelectedChapterId} onChange={(e) => setSelectedChapterId(e.target.value)}>
+                  {chapters.map((chapter) => (
+                    <option key={chapter.id} value={String(chapter.id)}>
+                      {chapter.unit.title_ar} · {chapter.title_ar}
+                    </option>
+                  ))}
                 </select>
               </div>
             )}
@@ -326,28 +408,32 @@ export const QuizzesPage = () => {
 
             <div className="form-group">
               <label>أنواع الأسئلة المرغوبة:</label>
-              <div className="checkbox-grid">
-                <label>
-                  <input type="checkbox" checked={questionTypes.includes('mcq')} onChange={() => handleToggleType('mcq')} />
-                  خيارات متعددة
-                </label>
-                <label>
-                  <input type="checkbox" checked={questionTypes.includes('true_false')} onChange={() => handleToggleType('true_false')} />
-                  صح أم خطأ
-                </label>
-                <label>
-                  <input type="checkbox" checked={questionTypes.includes('short_answer')} onChange={() => handleToggleType('short_answer')} />
-                  إجابات قصيرة
-                </label>
-                <label>
-                  <input type="checkbox" checked={questionTypes.includes('calculation')} onChange={() => handleToggleType('calculation')} />
-                  مسائل حسابية
-                </label>
-                <label>
-                  <input type="checkbox" checked={questionTypes.includes('equation_balancing')} onChange={() => handleToggleType('equation_balancing')} />
-                  موازنة معادلات
-                </label>
+              <div className="type-pill-row" aria-label="أنواع الأسئلة">
+                {[
+                  { value: 'mcq' as const, label: 'خيارات متعددة', icon: 'MCQ' },
+                  { value: 'true_false' as const, label: 'صح أم خطأ', icon: '✓' },
+                  { value: 'short_answer' as const, label: 'إجابة قصيرة', icon: 'SA' },
+                  { value: 'calculation' as const, label: 'مسائل حسابية', icon: '∑' },
+                  { value: 'equation_balancing' as const, label: 'موازنة معادلات', icon: '→' },
+                ].map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    className={`type-pill ${questionTypes.includes(option.value) ? 'active' : ''}`}
+                    onClick={() => handleToggleType(option.value)}
+                    aria-pressed={questionTypes.includes(option.value)}
+                  >
+                    <span>{option.icon}</span>
+                    {option.label}
+                  </button>
+                ))}
               </div>
+            </div>
+
+            <div className="setup-summary-bar">
+              <strong>{currentSelectedLessons.length} دروس مختارة</strong>
+              <span>{Math.max(1, currentSelectedLessons.length) * questionsPerLesson} أسئلة متوقعة</span>
+              <span>{questionTypes.length} أنواع أسئلة</span>
             </div>
 
             <Button 
@@ -360,60 +446,62 @@ export const QuizzesPage = () => {
           </Card>
 
           {/* Quality check display */}
-          <Card className="quiz-quality-report-sidebar">
-            <div className="section-title">
-              <h2>تقرير سلامة توليد الأسئلة</h2>
-            </div>
-            {currentSelectedLessons.length === 0 ? (
-              <p className="no-data-text text-sm">حدد درساً أو مجموعة دروس لرؤية تقرير فحص الجودة الخاص بها.</p>
-            ) : (
-              <div className="quiz-lessons-status-report">
-                <p className="text-sm mb-3">الدروس المحددة للاختبار ({currentSelectedLessons.length}):</p>
-                <div className="status-lesson-list">
-                  {validationReport.reports.map(rep => {
-                    const l = mockLessons.find(m => m.lessonId === rep.lessonId);
-                    return (
-                      <div className={`status-lesson-item ${rep.status}`} key={rep.lessonId}>
-                        <div className="flex justify-between items-center">
-                          <strong>{l?.titleAr}</strong>
-                          <span className={`text-xs badge-${rep.status}`}>
-                            {rep.status === 'ready' ? 'جاهز' : rep.status === 'needs_review' ? 'مسودة' : 'محظور'}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2 mt-1">
-                          <ProgressBar value={rep.score} tone={rep.status === 'ready' ? 'teal' : rep.status === 'needs_review' ? 'gold' : 'coral'} />
-                          <span className="text-xs font-mono">{rep.score}/100</span>
-                        </div>
-                        
-                        {rep.status === 'blocked' && (
-                          <div className="blocked-items-preview mt-2">
-                            <strong>العناصر المفقودة التي تمنع التوليد:</strong>
-                            <ul>
-                              {rep.issues.map((issue, idx) => (
-                                <li key={idx}>• {issue}</li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {validationReport.isBlocked && (
-                  <div className="warning-card-box tone-coral mt-4">
-                    <p className="text-sm">⚠ يحتوي التحديد الحالي على دروس <strong>محظورة التوليد</strong>. يرجى إزالة الدروس ذات الجودة المتدنية للتمكن من بدء الاختبار.</p>
-                  </div>
-                )}
-
-                {validationReport.hasWarning && !validationReport.isBlocked && (
-                  <div className="warning-card-box tone-gold mt-4">
-                    <p className="text-sm">💡 تنبيه: يحتوي التحديد على دروس <strong>تحتاج مراجعة</strong>. سيتم استخدام نصوص مسودة لتوليد بعض الأسئلة.</p>
-                  </div>
-                )}
+          {showQualityReport && (
+            <Card className="quiz-quality-report-sidebar">
+              <div className="section-title">
+                <h2>تقرير سلامة توليد الأسئلة</h2>
               </div>
-            )}
-          </Card>
+              {currentSelectedLessons.length === 0 ? (
+                <p className="no-data-text text-sm">حدد درساً أو مجموعة دروس لرؤية تقرير فحص الجودة الخاص بها.</p>
+              ) : (
+                <div className="quiz-lessons-status-report">
+                  <p className="text-sm mb-3">الدروس المحددة للاختبار ({currentSelectedLessons.length}):</p>
+                  <div className="status-lesson-list">
+                    {validationReport.reports.map(rep => {
+                      const l = allLessons.find(m => String(m.id) === rep.lessonId);
+                      return (
+                        <div className={`status-lesson-item ${rep.status}`} key={rep.lessonId}>
+                          <div className="flex justify-between items-center">
+                            <strong>{l?.title_ar}</strong>
+                            <span className={`text-xs badge-${rep.status}`}>
+                              {rep.status === 'ready' ? 'جاهز' : rep.status === 'needs_review' ? 'مسودة' : 'محظور'}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 mt-1">
+                            <ProgressBar value={rep.score} tone={rep.status === 'ready' ? 'teal' : rep.status === 'needs_review' ? 'gold' : 'coral'} />
+                            <span className="text-xs font-mono">{rep.score}/100</span>
+                          </div>
+
+                          {rep.status === 'blocked' && (
+                            <div className="blocked-items-preview mt-2">
+                              <strong>العناصر المفقودة التي تمنع التوليد:</strong>
+                              <ul>
+                                {rep.issues.map((issue, idx) => (
+                                  <li key={idx}>• {issue}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {validationReport.isBlocked && (
+                    <div className="warning-card-box tone-coral mt-4">
+                      <p className="text-sm">⚠ يحتوي التحديد الحالي على دروس <strong>محظورة التوليد</strong>. يرجى إزالة الدروس ذات الجودة المتدنية للتمكن من بدء الاختبار.</p>
+                    </div>
+                  )}
+
+                  {validationReport.hasWarning && !validationReport.isBlocked && (
+                    <div className="warning-card-box tone-gold mt-4">
+                      <p className="text-sm">💡 تنبيه: يحتوي التحديد على دروس <strong>تحتاج مراجعة</strong>. سيتم استخدام نصوص مسودة لتوليد بعض الأسئلة.</p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </Card>
+          )}
         </div>
       )}
 
@@ -431,7 +519,11 @@ export const QuizzesPage = () => {
           <Card className="quiz-progress-card">
             <div className="player-progress-header">
               <span>السؤال <strong>{currentIndex + 1}</strong> من <strong>{questions.length}</strong></span>
-              <StatusPill tone="purple">النتيجة: {score}/{currentIndex}</StatusPill>
+              <div className="quiz-player-badges">
+                <StatusPill tone="purple">النتيجة: {score}/{currentIndex}</StatusPill>
+                <StatusPill tone="blue">الوقت: {formattedElapsed}</StatusPill>
+                {streak >= 2 && <StatusPill tone="gold">{streak} إجابات متتالية</StatusPill>}
+              </div>
             </div>
             <ProgressBar value={Math.round(((currentIndex + 1) / questions.length) * 100)} tone="blue" />
           </Card>
@@ -456,8 +548,8 @@ export const QuizzesPage = () => {
                   let classes = '';
                   if (selectedOptionIndex === idx) classes += ' selected';
                   if (submitted) {
-                    if (idx === currentQuestion.correctOptionIndex) classes += ' correct';
-                    else if (selectedOptionIndex === idx) classes += ' wrong';
+                    if (idx === currentQuestion.correctOptionIndex) classes += ' correct correct-pulse';
+                    else if (selectedOptionIndex === idx) classes += ' wrong wrong-shake';
                   }
 
                   return (
@@ -579,6 +671,21 @@ export const QuizzesPage = () => {
           <div className="results-actions mt-6 flex justify-center gap-4">
             <Button onClick={() => setGameState('setup')}>إعداد اختبار جديد</Button>
             <Link className="ed-btn ed-btn-secondary" to="/lessons">العودة لقائمة الدروس</Link>
+          </div>
+
+          <div className="quiz-review-list">
+            {answerReviews.map((review, index) => (
+              <article className={`quiz-review-item ${review.isCorrect ? 'correct' : 'wrong'}`} key={review.questionId}>
+                <div>
+                  <strong>{index + 1}. {review.question}</strong>
+                  <span>{review.isCorrect ? 'صحيحة' : 'بحاجة مراجعة'}</span>
+                </div>
+                <p><b>إجابتك:</b> {review.userAnswer || 'لم يتم إدخال إجابة'}</p>
+                <p><b>الإجابة المعتمدة:</b> {review.correctAnswer}</p>
+                <small>{review.explanation}</small>
+                <Link to={`/ask-ai?question=${encodeURIComponent(`اشرح لي هذا السؤال: ${review.question}`)}`}>اسأل AI عن هذا السؤال</Link>
+              </article>
+            ))}
           </div>
         </Card>
       )}

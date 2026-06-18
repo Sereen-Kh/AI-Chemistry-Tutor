@@ -14,6 +14,8 @@ from app.models.user import User
 from app.schemas.interactive_solver import InteractiveAnswerSubmit, InteractiveSessionCreate
 from app.services import interactive_solver_service as solver
 
+ORIGINAL_DYNAMIC_PLAN_GENERATOR = solver.generate_dynamic_solver_plan
+
 
 def run_async(coro):
     return asyncio.run(coro)
@@ -52,6 +54,11 @@ def deterministic_context(monkeypatch: pytest.MonkeyPatch):
 
     monkeypatch.setattr(solver, "retrieve_problem_context", fake_context)
 
+    async def fake_dynamic_plan(*_args, **_kwargs):
+        return None
+
+    monkeypatch.setattr(solver, "generate_dynamic_solver_plan", fake_dynamic_plan)
+
 
 async def _create_user(db: AsyncSession, *, email: str = "student@example.com") -> User:
     user = User(first_name="سارة", last_name="", email=email, hashed_password="hashed")
@@ -82,6 +89,107 @@ def test_starting_concentration_session_creates_steps(session_factory):
             assert response.source_chunks[0].page_number == 7
 
     run_async(scenario())
+
+
+def test_dynamic_plan_supports_general_chemistry_session(session_factory, monkeypatch: pytest.MonkeyPatch):
+    async def fake_dynamic_plan(*_args, **_kwargs):
+        return {
+            "problem_type": "reaction_equation",
+            "parsed": {"generated_by": "test"},
+            "final_answer": "ينتج غاز الهيدروجين وملح كلوريد الزنك.",
+            "steps": [
+                {
+                    "step_key": "identify_products",
+                    "title_ar": "تحديد النواتج",
+                    "prompt_ar": "ما نواتج تفاعل الزنك مع حمض كلور الماء؟",
+                    "expected_answer_type": "keywords",
+                    "expected_formula": None,
+                    "expected_numeric": None,
+                    "expected_unit": None,
+                    "hint_ar": "المعدن مع الحمض يعطي ملحاً وغاز الهيدروجين.",
+                    "explanation_ar": "ينتج كلوريد الزنك وغاز الهيدروجين.",
+                    "metadata_json": {
+                        "skill_key": "acid_metal_products",
+                        "accepted_keywords": ["كلوريد الزنك", "الهيدروجين"],
+                    },
+                }
+            ],
+        }
+
+    async def scenario():
+        monkeypatch.setattr(solver, "generate_dynamic_solver_plan", fake_dynamic_plan)
+        async with session_factory() as db:
+            user = await _create_user(db)
+            response = await solver.start_interactive_session(
+                db,
+                user,
+                InteractiveSessionCreate(problem_text="ما نواتج تفاعل الزنك مع حمض كلور الماء؟"),
+            )
+            assert response.problem_type == "reaction_equation"
+            assert len(response.steps) == 1
+            result = await solver.submit_step_answer(
+                db,
+                user,
+                response.id,
+                InteractiveAnswerSubmit(answer_text="كلوريد الزنك وغاز الهيدروجين"),
+            )
+            assert result.is_correct is True
+            assert result.session_status == "completed"
+
+    run_async(scenario())
+
+
+def test_dynamic_plan_generation_parses_structured_gemini_response(monkeypatch: pytest.MonkeyPatch):
+    parsed_payload = solver.GeneratedSolverPlan(
+        problem_type="reaction_equation",
+        final_answer="Zn + 2HCl -> ZnCl2 + H2",
+        steps=[
+            solver.GeneratedSolverStep(
+                step_key="write_reactants",
+                title_ar="كتابة المتفاعلات",
+                prompt_ar="اكتب صيغ المتفاعلات.",
+                expected_answer_type="formula",
+                expected_formula="Zn+HCl",
+                formula_aliases=["Zn + HCl"],
+                hint_ar="ابدأ بالزنك وحمض كلور الماء.",
+                explanation_ar="المتفاعلان هما Zn و HCl.",
+                skill_key="reaction_reactants",
+            )
+        ],
+    )
+
+    class FakeResponse:
+        text = ""
+        parsed = parsed_payload
+
+    class FakeModels:
+        def generate_content(self, **kwargs):
+            assert kwargs["model"] == "gemini-test"
+            assert "ما نواتج تفاعل الزنك" in kwargs["contents"]
+            return FakeResponse()
+
+    class FakeClient:
+        models = FakeModels()
+
+    monkeypatch.setattr(solver.settings, "gemini_api_key", "fake-key")
+    monkeypatch.setattr(solver.settings, "google_api_key", "")
+    monkeypatch.setattr(solver.settings, "gemini_tutor_generation_enabled", True)
+    monkeypatch.setattr(solver.settings, "model_name", "gemini-test")
+    monkeypatch.setattr(solver, "get_gemini_client", lambda: FakeClient())
+
+    plan = run_async(
+        ORIGINAL_DYNAMIC_PLAN_GENERATOR(
+            "ما نواتج تفاعل الزنك مع حمض كلور الماء؟",
+            source_chunks=[],
+            problem_type="general_chemistry",
+        )
+    )
+
+    assert plan is not None
+    assert plan["problem_type"] == "reaction_equation"
+    assert plan["parsed"]["generated_by"] == "gemini"
+    assert plan["steps"][0]["expected_answer_type"] == "formula"
+    assert "formula_aliases" in plan["steps"][0]["metadata_json"]
 
 
 def test_correct_answer_advances_to_next_step(session_factory):

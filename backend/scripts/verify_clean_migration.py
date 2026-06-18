@@ -70,7 +70,7 @@ def run() -> int:
     errors: list[str] = []
     report: dict[str, Any] = {
         "database_url": redact_url(db_url),
-        "migration_command": "alembic upgrade head",
+        "migration_command": f"{sys.executable} -m alembic upgrade head",
         "database_considered_disposable": _safe_clean_database(db_url),
         "started_empty": None,
         "migration_returncode": None,
@@ -118,7 +118,7 @@ def run() -> int:
                 raise RuntimeError(errors[-1])
 
         completed = subprocess.run(
-            ["alembic", "upgrade", "head"],
+            [sys.executable, "-m", "alembic", "upgrade", "head"],
             cwd=BACKEND_DIR,
             env=env,
             text=True,
@@ -161,7 +161,9 @@ def run() -> int:
                     report["embedding_column_type"] = str(embedding["type"]) if embedding else None
                 if not embedding:
                     errors.append("rag_chunks.embedding column is missing after migration.")
-                elif "768" not in str(report["embedding_column_type"]):
+                elif db_url.startswith(("postgresql://", "postgres://")) and "768" not in str(
+                    report["embedding_column_type"]
+                ):
                     errors.append(f"rag_chunks.embedding is {report['embedding_column_type']}, expected vector(768).")
     except Exception as exc:
         if not errors:

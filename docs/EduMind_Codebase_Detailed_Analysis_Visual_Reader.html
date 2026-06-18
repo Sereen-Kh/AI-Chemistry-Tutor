@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EduMind Detailed Codebase Analysis — Visual Reader</title>
+<style>
+:root {
+  --bg:#0A1628; --panel:#0F1F38; --card:#162444; --card2:#1E3050;
+  --text:#F0F4FF; --muted:#9CB0D0; --faint:#647898;
+  --blue:#4E87F5; --teal:#00D4A8; --gold:#F5A623; --coral:#FF6B6B; --purple:#8B7FE8;
+  --green-bg:rgba(0,212,168,.10); --blue-bg:rgba(78,135,245,.12);
+  --gold-bg:rgba(245,166,35,.12); --coral-bg:rgba(255,107,107,.12); --purple-bg:rgba(139,127,232,.14);
+  --border:rgba(156,176,208,.20); --shadow:0 16px 44px rgba(0,0,0,.35);
+}
+* { box-sizing:border-box; }
+body {
+  margin:0; background:
+    radial-gradient(circle at top left, rgba(78,135,245,.18), transparent 34rem),
+    radial-gradient(circle at top right, rgba(0,212,168,.12), transparent 32rem),
+    var(--bg);
+  color:var(--text); font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Arial, sans-serif;
+  line-height:1.55;
+}
+.layout { display:grid; grid-template-columns: 280px minmax(0,1fr); min-height:100vh; }
+.sidebar {
+  position:sticky; top:0; height:100vh; overflow:auto; padding:22px 18px; background:rgba(10,22,40,.82);
+  border-right:1px solid var(--border); backdrop-filter: blur(16px);
+}
+.logo { display:flex; gap:10px; align-items:center; margin-bottom:18px; }
+.logo-badge { width:38px; height:38px; display:grid; place-items:center; border-radius:12px; background:linear-gradient(135deg,var(--blue),var(--teal)); font-weight:800; }
+.logo h1 { font-size:15px; margin:0; line-height:1.2; }
+.logo p { font-size:11px; margin:2px 0 0; color:var(--muted); }
+.nav-btn {
+  display:block; width:100%; text-align:left; border:1px solid transparent; background:transparent; color:var(--muted);
+  padding:10px 12px; border-radius:11px; margin:4px 0; cursor:pointer; font:inherit; font-size:13px;
+}
+.nav-btn:hover, .nav-btn.active { color:var(--text); background:var(--card); border-color:var(--border); }
+.side-card { margin-top:18px; padding:13px; background:var(--panel); border:1px solid var(--border); border-radius:14px; }
+.side-card .k { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.08em; }
+.side-card .v { font-size:22px; font-weight:750; margin-top:4px; }
+main { padding:28px; max-width:1280px; width:100%; }
+.hero {
+  background:linear-gradient(135deg, rgba(78,135,245,.22), rgba(0,212,168,.10));
+  border:1px solid var(--border); border-radius:24px; padding:24px; box-shadow:var(--shadow); margin-bottom:20px;
+}
+.hero h2 { margin:0 0 8px; font-size:28px; letter-spacing:-.03em; }
+.hero p { margin:0; color:var(--muted); max-width:900px; }
+.badges { display:flex; flex-wrap:wrap; gap:8px; margin-top:18px; }
+.badge { font-size:12px; padding:5px 9px; border-radius:999px; border:1px solid var(--border); color:var(--text); background:rgba(255,255,255,.04); }
+.section { display:none; animation:fade .18s ease-in; }
+.section.active { display:block; }
+@keyframes fade { from { opacity:.4; transform:translateY(4px); } to { opacity:1; transform:translateY(0); } }
+.grid { display:grid; gap:14px; }
+.grid.cols-2 { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.grid.cols-3 { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.grid.cols-4 { grid-template-columns:repeat(4,minmax(0,1fr)); }
+.card {
+  background:rgba(15,31,56,.82); border:1px solid var(--border); border-radius:18px; padding:18px;
+  box-shadow:0 10px 26px rgba(0,0,0,.20);
+}
+.card h3 { margin:0 0 8px; font-size:17px; }
+.card h4 { margin:0 0 6px; font-size:14px; }
+.card p { margin:0; color:var(--muted); font-size:13px; }
+.metric { display:flex; align-items:flex-end; justify-content:space-between; gap:10px; }
+.metric .num { font-size:30px; font-weight:800; }
+.metric .label { color:var(--muted); font-size:12px; }
+.pill { display:inline-block; padding:3px 8px; border-radius:999px; font-size:11px; margin:2px; }
+.pill.blue { background:var(--blue-bg); color:#A9C6FF; }
+.pill.teal { background:var(--green-bg); color:var(--teal); }
+.pill.gold { background:var(--gold-bg); color:var(--gold); }
+.pill.coral { background:var(--coral-bg); color:var(--coral); }
+.pill.purple { background:var(--purple-bg); color:#C9C4FF; }
+.flow { display:flex; flex-direction:column; gap:10px; }
+.flow-step {
+  display:grid; grid-template-columns:44px minmax(0,1fr); gap:12px; align-items:start;
+  padding:12px; border:1px solid var(--border); border-radius:15px; background:rgba(22,36,68,.72);
+}
+.flow-num { width:34px; height:34px; border-radius:11px; background:var(--blue-bg); color:#A9C6FF; display:grid; place-items:center; font-weight:750; }
+.flow-step strong { display:block; margin-bottom:3px; }
+.flow-step span { color:var(--muted); font-size:13px; }
+.table-wrap { overflow:auto; border:1px solid var(--border); border-radius:16px; }
+table { width:100%; border-collapse:collapse; min-width:780px; }
+th, td { padding:11px 12px; text-align:left; border-bottom:1px solid var(--border); vertical-align:top; }
+th { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:.07em; background:rgba(22,36,68,.62); }
+td { color:var(--text); font-size:13px; }
+tr:last-child td { border-bottom:0; }
+.code, pre {
+  background:#07111F; border:1px solid var(--border); color:#CEE2FF; padding:14px; border-radius:14px;
+  overflow:auto; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; line-height:1.6;
+}
+.route { font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color:#C7D9FF; }
+.timeline { position:relative; padding-left:18px; }
+.timeline:before { content:""; position:absolute; left:6px; top:4px; bottom:4px; width:2px; background:linear-gradient(var(--blue),var(--teal)); }
+.t-item { position:relative; padding:0 0 16px 18px; }
+.t-item:before { content:""; position:absolute; left:-17px; top:5px; width:10px; height:10px; border-radius:50%; background:var(--teal); box-shadow:0 0 0 4px rgba(0,212,168,.12); }
+.t-item strong { display:block; }
+.t-item span { color:var(--muted); font-size:13px; }
+.search { margin:0 0 12px; display:flex; gap:8px; }
+.search input { flex:1; background:var(--panel); border:1px solid var(--border); color:var(--text); border-radius:12px; padding:10px 12px; }
+.heat { display:grid; grid-template-columns: repeat(5,1fr); gap:10px; }
+.heat .card { min-height:150px; }
+.footer-note { margin-top:20px; color:var(--muted); font-size:12px; }
+@media (max-width: 900px) {
+  .layout { grid-template-columns:1fr; }
+  .sidebar { position:relative; height:auto; }
+  main { padding:18px; }
+  .grid.cols-2,.grid.cols-3,.grid.cols-4,.heat { grid-template-columns:1fr; }
+  .hero h2 { font-size:22px; }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-badge">🧠</div>
+      <div><h1>EduMind Analysis</h1><p>Visual reader · codebase map</p></div>
+    </div>
+    <button class="nav-btn active" data-tab="overview">Overview</button>
+    <button class="nav-btn" data-tab="architecture">System Architecture</button>
+    <button class="nav-btn" data-tab="entities">Database Entities</button>
+    <button class="nav-btn" data-tab="ai">AI & ML Models</button>
+    <button class="nav-btn" data-tab="rag">RAG Pipeline</button>
+    <button class="nav-btn" data-tab="lab">Interactive Lab</button>
+    <button class="nav-btn" data-tab="api">API Registry</button>
+    <button class="nav-btn" data-tab="improvements">UI & Functional Improvements</button>
+    <button class="nav-btn" data-tab="original">Original Markdown</button>
+    <div class="side-card">
+      <div class="k">Best way to read</div>
+      <div class="v">1 → 8</div>
+      <p style="color:var(--muted);font-size:12px;margin:4px 0 0;">Start with Overview, then Entities, RAG, Lab, and finally APIs.</p>
+    </div>
+  </aside>
+  <main>
+    <div class="hero">
+      <h2>Detailed Codebase Analysis: EduMind AI Chemistry Tutor</h2>
+      <p>Interactive visual reader for the uploaded architecture document. It reorganizes the report into cards, flows, tables, and quick-read sections so you can understand the backend/frontend/RAG/Lab system faster.</p>
+      <div class="badges">
+        <span class="badge">FastAPI backend</span><span class="badge">React frontend</span><span class="badge">Gemini LLM</span>
+        <span class="badge">pgvector RAG</span><span class="badge">Guided Lab</span><span class="badge">Arabic RTL</span>
+      </div>
+    </div>
+
+    <section class="section active" id="overview">
+      <div class="grid cols-4">
+        <div class="card metric"><div><div class="num" style="color:var(--teal)">5</div><div class="label">Model domains</div></div><span>🗄️</span></div>
+        <div class="card metric"><div><div class="num" style="color:var(--blue)">8</div><div class="label">RAG stages</div></div><span>🔍</span></div>
+        <div class="card metric"><div><div class="num" style="color:var(--gold)">7</div><div class="label">Solver steps</div></div><span>🧪</span></div>
+        <div class="card metric"><div><div class="num" style="color:var(--purple)">5</div><div class="label">API groups</div></div><span>⚡</span></div>
+      </div>
+      <div style="height:14px"></div>
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>What this file is about</h3>
+          <p>It describes EduMind as a split client-server AI Chemistry Tutor with FastAPI, React/Vite, Google Gemini, SQLAlchemy models, pgvector semantic search, and a Guided Interactive Solver for Grade 9 chemistry.</p>
+          <div style="margin-top:10px">
+            <span class="pill blue">Architecture</span><span class="pill teal">Database</span><span class="pill gold">RAG</span><span class="pill purple">Lab</span>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Most important insight</h3>
+          <p>The strongest differentiator is not normal chat. It is the Guided Solver: students solve chemistry problems step by step, the backend validates each step, logs misconceptions, and returns final citations.</p>
+        </div>
+      </div>
+      <div style="height:14px"></div>
+      <div class="card">
+        <h3>Recommended reading order</h3>
+        <div class="timeline">
+          <div class="t-item"><strong>1. System Architecture</strong><span>Understand frontend, backend, Redis, DB, Gemini, and vector store.</span></div>
+          <div class="t-item"><strong>2. Database Entities</strong><span>Read the five ORM domains: User, Curriculum, RAG, Interactive Solver, Practice.</span></div>
+          <div class="t-item"><strong>3. RAG Pipeline</strong><span>Understand how questions become embeddings, retrieval candidates, reranked chunks, and grounded answers.</span></div>
+          <div class="t-item"><strong>4. Interactive Lab</strong><span>Study the step-by-step HCl concentration solver as the main product feature.</span></div>
+          <div class="t-item"><strong>5. API Registry</strong><span>Connect backend endpoints to frontend pages.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="architecture">
+      <div class="grid cols-3">
+        <div class="card"><h3>Frontend</h3><p>React TypeScript SPA with dashboard, lessons, lab, chat, API client, RTL-focused UI.</p><span class="pill blue">React</span><span class="pill blue">Vite</span></div>
+        <div class="card"><h3>Backend</h3><p>FastAPI application with API v1 routers, auth, services, Gemini integration, SQLAlchemy, and RAG services.</p><span class="pill teal">FastAPI</span><span class="pill teal">SQLAlchemy</span></div>
+        <div class="card"><h3>Data & AI</h3><p>Redis cache, SQLite/PostgreSQL, pgvector/local vector fallback, Gemini LLM and embedding model.</p><span class="pill gold">Redis</span><span class="pill gold">pgvector</span></div>
+      </div>
+      <div style="height:14px"></div>
+      <div class="card">
+        <h3>Architecture flow</h3>
+        <div class="flow">
+          <div class="flow-step"><div class="flow-num">1</div><div><strong>User Interface</strong><span>Dashboard, Lessons, Lab, and Chat send requests through API client.</span></div></div><div class="flow-step"><div class="flow-num">2</div><div><strong>API Routers</strong><span>FastAPI v1 routes authorize, validate, and dispatch requests.</span></div></div><div class="flow-step"><div class="flow-num">3</div><div><strong>Service Layer</strong><span>Chat, RAG, interactive solver, embeddings, and Gemini services orchestrate logic.</span></div></div><div class="flow-step"><div class="flow-num">4</div><div><strong>Cache + Database</strong><span>Redis stores query/HyDE/RAG results; SQL stores users, chunks, sessions, and progress.</span></div></div><div class="flow-step"><div class="flow-num">5</div><div><strong>Gemini + Embeddings</strong><span>LLM generates tutor responses; embedding service converts text/query to 768-dim vectors.</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="entities">
+      <div class="search"><input id="entitySearch" placeholder="Search entity/domain/model..." /></div>
+      <div class="grid cols-2" id="entityCards">
+        
+        <div class="card entity-card" data-text="user &amp; profiles user, userinterest authentication, xp/streak, teaching preferences, language, personalized interests identity">
+          <h3>User &amp; Profiles</h3>
+          <p><strong>Models:</strong> User, UserInterest</p>
+          <p style="margin-top:8px">Authentication, XP/streak, teaching preferences, language, personalized interests</p>
+          <span class="pill blue">Identity</span>
+        </div>
+        
+        <div class="card entity-card" data-text="chemistry curriculum unit, chapter, lesson, lessonprogress, topic book structure, lessons, topics, progress curriculum">
+          <h3>Chemistry Curriculum</h3>
+          <p><strong>Models:</strong> Unit, Chapter, Lesson, LessonProgress, Topic</p>
+          <p style="margin-top:8px">Book structure, lessons, topics, progress</p>
+          <span class="pill purple">Curriculum</span>
+        </div>
+        
+        <div class="card entity-card" data-text="ingestion &amp; rag contentsource, ragchunk, extractedquestion, textbookchunk textbook/solution-book chunks, embeddings, source metadata rag">
+          <h3>Ingestion &amp; RAG</h3>
+          <p><strong>Models:</strong> ContentSource, RagChunk, ExtractedQuestion, TextbookChunk</p>
+          <p style="margin-top:8px">Textbook/solution-book chunks, embeddings, source metadata</p>
+          <span class="pill teal">RAG</span>
+        </div>
+        
+        <div class="card entity-card" data-text="interactive solving lab interactivesession, interactivestep, studentstepanswer, misconceptionevent, skillmastery step-by-step chemistry problem solving, validation, weak-topic tracking lab">
+          <h3>Interactive Solving Lab</h3>
+          <p><strong>Models:</strong> InteractiveSession, InteractiveStep, StudentStepAnswer, MisconceptionEvent, SkillMastery</p>
+          <p style="margin-top:8px">Step-by-step chemistry problem solving, validation, weak-topic tracking</p>
+          <span class="pill gold">Lab</span>
+        </div>
+        
+        <div class="card entity-card" data-text="quizzes &amp; spaced repetition question, quizattempt, questionattempt, flashcard, flashcardprogress practice, assessment, sm-2 review learning">
+          <h3>Quizzes &amp; Spaced Repetition</h3>
+          <p><strong>Models:</strong> Question, QuizAttempt, QuestionAttempt, Flashcard, FlashcardProgress</p>
+          <p style="margin-top:8px">Practice, assessment, SM-2 review</p>
+          <span class="pill purple">Learning</span>
+        </div>
+        
+      </div>
+      <div style="height:14px"></div>
+      <div class="card">
+        <h3>Key relationship map</h3>
+        <pre>User → UserInterest → InterestCategory
+User → LessonProgress → Lesson → Chapter → Unit
+User → InteractiveSession → InteractiveStep → StudentStepAnswer
+InteractiveSession → MisconceptionEvent → SkillMastery
+ContentSource → RagChunk → Unit / Chapter / Lesson / Topic
+ContentSource → ExtractedQuestion
+Topic → Question / Flashcard / QuizAttempt / RagChunk</pre>
+      </div>
+    </section>
+
+    <section class="section" id="ai">
+      <div class="grid cols-3">
+        <div class="card">
+          <h3>LLM Generation</h3>
+          <p>Configured Gemini model handles chat tutor generation, quiz generation, step explanations, simplification, and reranking.</p>
+          <span class="pill blue">Gemini</span><span class="pill blue">Backoff</span><span class="pill blue">Cooldown</span>
+        </div>
+        <div class="card">
+          <h3>Embeddings</h3>
+          <p>Primary Gemini embedding model produces 768-dimensional vectors. Local multilingual E5 and hash embeddings exist as fallbacks.</p>
+          <span class="pill teal">768 dim</span><span class="pill teal">query/passage</span>
+        </div>
+        <div class="card">
+          <h3>Fallback Behavior</h3>
+          <p>When quota/transient errors occur, system can fall back to local textbook RAG answers to preserve uptime.</p>
+          <span class="pill gold">503/504 retry</span><span class="pill gold">quota cooldown</span>
+        </div>
+      </div>
+      <div style="height:14px"></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>AI component</th><th>Model/service</th><th>Purpose</th><th>Risk to monitor</th></tr></thead>
+          <tbody>
+            <tr><td>Chat tutor</td><td>Gemini LLM</td><td>Generate personalized explanations</td><td>Hallucination if weak RAG context</td></tr>
+            <tr><td>Semantic embeddings</td><td>gemini-embedding-001 / E5 fallback</td><td>Vector search over chemistry chunks</td><td>Mixed embedding models reduce retrieval quality</td></tr>
+            <tr><td>Reranking</td><td>Gemini scoring</td><td>Relevance score for candidate chunks</td><td>Cost and latency</td></tr>
+            <tr><td>Local fallback</td><td>Textbook RAG/hash embeddings</td><td>Smoke tests and outage fallback</td><td>Should not replace production embeddings silently</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" id="rag">
+      <div class="card">
+        <h3>RAG Pipeline — visual flow</h3>
+        <div class="flow">
+          <div class="flow-step"><div class="flow-num">1</div><div><strong>Student Query</strong><span>Arabic chemistry question from student</span></div></div><div class="flow-step"><div class="flow-num">2</div><div><strong>Intent Router</strong><span>Classify: definition, formula, equation, exercise, safety, general</span></div></div><div class="flow-step"><div class="flow-num">3</div><div><strong>Query Expansion</strong><span>Rewrite, HyDE, and 3 Arabic multi-queries</span></div></div><div class="flow-step"><div class="flow-num">4</div><div><strong>Vector Search</strong><span>Parallel semantic search over textbook and solution-book chunks</span></div></div><div class="flow-step"><div class="flow-num">5</div><div><strong>RRF Fusion</strong><span>Combine original, rewritten, HyDE, and multi-query rankings</span></div></div><div class="flow-step"><div class="flow-num">6</div><div><strong>Gemini Reranking</strong><span>Score top candidates and add content-type/entity boosts</span></div></div><div class="flow-step"><div class="flow-num">7</div><div><strong>Quality Gate</strong><span>Apply intent-specific minimum thresholds</span></div></div><div class="flow-step"><div class="flow-num">8</div><div><strong>Grounded Prompt</strong><span>Send sources to Gemini for personalized answer</span></div></div>
+        </div>
+      </div>
+      <div style="height:14px"></div>
+      <div class="grid cols-2">
+        <div class="card"><h3>Why this RAG is strong</h3><p>It does not rely only on one embedding search. It uses intent classification, Arabic query rewriting, HyDE, multi-query, RRF fusion, entity matching, safety boosts, Gemini reranking, and quality gates.</p></div>
+        <div class="card"><h3>What to test</h3><p>Test textbook vs solution_book routing, Arabic morphology, formula matching, safety questions, exercise solving, and quality thresholds per intent.</p></div>
+      </div>
+    </section>
+
+    <section class="section" id="lab">
+      <div class="card">
+        <h3>Guided Chemistry Solver — HCl concentration example</h3>
+        <div class="flow">
+          <div class="flow-step"><div class="flow-num">1</div><div><strong>Input Problem</strong><span>Student enters HCl concentration word problem</span></div></div><div class="flow-step"><div class="flow-num">2</div><div><strong>Parse Values</strong><span>Extract formula, mass, volume, molar mass</span></div></div><div class="flow-step"><div class="flow-num">3</div><div><strong>Create Session</strong><span>InteractiveSession + deterministic steps</span></div></div><div class="flow-step"><div class="flow-num">4</div><div><strong>Validate Step</strong><span>Formula/numeric/unit validation with tolerance</span></div></div><div class="flow-step"><div class="flow-num">5</div><div><strong>Log Misconception</strong><span>Track errors such as forgot mL→L or missing units</span></div></div><div class="flow-step"><div class="flow-num">6</div><div><strong>Final Summary</strong><span>Answer, citations, weak topics, flashcard/quiz CTAs</span></div></div>
+        </div>
+      </div>
+      <div style="height:14px"></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Step</th><th>Student action</th><th>Expected validation</th><th>Common misconception</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Choose gram concentration formula</td><td>Cg = m / V</td><td>Confuses gram concentration with molar concentration</td></tr>
+            <tr><td>2</td><td>Convert 100 mL to L</td><td>0.1 L</td><td>Forgot mL→L conversion</td></tr>
+            <tr><td>3</td><td>Calculate gram concentration</td><td>36.5 g/L</td><td>Divides in wrong direction</td></tr>
+            <tr><td>4</td><td>Calculate molar mass of HCl</td><td>36.5 g/mol</td><td>Wrong molar mass</td></tr>
+            <tr><td>5</td><td>Calculate moles</td><td>0.1 mol</td><td>Uses mass instead of moles</td></tr>
+            <tr><td>6</td><td>Calculate molar concentration</td><td>1 mol/L</td><td>Missing unit</td></tr>
+            <tr><td>7</td><td>Final answer check</td><td>Cg=36.5 g/L, C=1 mol/L</td><td>Incomplete final answer</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" id="api">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>API group</th><th>Routes</th><th>Frontend use</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Auth/Profile</strong></td><td class="route">POST /auth/register, POST /auth/login, GET /auth/me, POST /auth/onboarding</td><td>Student account, preferences, personalization</td></tr><tr><td><strong>Curriculum</strong></td><td class="route">GET /units, GET /chapters, GET /lessons, GET /elements</td><td>Lessons, units, periodic table, navigation</td></tr><tr><td><strong>AI Chat &amp; RAG</strong></td><td class="route">POST /chat/sessions, POST /chat/sessions/{id}/messages, POST /rag/retrieve</td><td>Tutor conversation and vector retrieval</td></tr><tr><td><strong>Interactive Solver</strong></td><td class="route">POST /interactive-solver/sessions, GET /interactive-solver/sessions, POST /interactive-solver/sessions/{id}/answer, POST /hint</td><td>Guided Lab step solving</td></tr><tr><td><strong>Study &amp; Practice</strong></td><td class="route">POST /study-plans, GET /progress, POST /quizzes/generate, POST /flashcards/next</td><td>Planning, weak topics, quizzes, flashcards</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="height:14px"></div>
+      <div class="card">
+        <h3>Important note</h3>
+        <p>The file’s API registry lists a clean product-facing route set. In implementation, verify exact route names against the active backend before wiring frontend pages, especially quiz, flashcards, study plan, and interactive solver endpoints.</p>
+      </div>
+    </section>
+
+    <section class="section" id="improvements">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Priority</th><th>Improvement</th><th>Area</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><span class="pill gold">P1</span></td><td><strong>Interactive pH Scale Simulator</strong></td><td>Lab UI</td><td>Drag 0–14 pH values and animate flask color for acids, neutral, and bases.</td></tr><tr><td><span class="pill gold">P1</span></td><td><strong>Equation Balancer Interface</strong></td><td>Lab UI</td><td>Use draggable coefficients or element chips to balance chemical reactions visually.</td></tr><tr><td><span class="pill coral">P0</span></td><td><strong>RAG Source PDF Modal</strong></td><td>Ask AI</td><td>Show highlighted textbook/source page lines inside a PDF-style source viewer.</td></tr><tr><td><span class="pill gold">P1</span></td><td><strong>Gemini Multimodal Solver</strong></td><td>Homework/Guided Lab</td><td>Allow phone photo of chemistry problem and pipe OCR text into guided solver.</td></tr><tr><td><span class="pill blue">P2</span></td><td><strong>LLM-based Step Generator</strong></td><td>Guided Lab</td><td>Expand beyond regex-based concentration problems to organic/nuclear/equation solving.</td></tr><tr><td><span class="pill blue">P2</span></td><td><strong>Spaced Repetition Push Notifications</strong></td><td>Notifications</td><td>Connect reminder events to web/mobile push when flashcards are due.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="height:14px"></div>
+      <div class="grid cols-2">
+        <div class="card"><h3>Best next feature</h3><p>Improve Guided Solver UI + backend, because it creates actual learning behavior: step validation, misconception logging, and final summary with citations.</p></div>
+        <div class="card"><h3>Best wow feature</h3><p>Add a pH simulator with live flask color transition and acid/base examples from the book. It fits the Lab tab and makes chemistry visual.</p></div>
+      </div>
+    </section>
+
+    <section class="section" id="original">
+      <div class="card">
+        <h3>Original uploaded markdown</h3>
+        <p>This is preserved so you can search/copy the exact source text.</p>
+      </div>
+      <pre># Detailed Codebase Analysis: EduMind AI Chemistry Tutor
+
+This document provides a comprehensive analysis of the EduMind Chemistry Tutor codebase, focusing on system architecture, database models, AI/ML models, APIs, RAG implementation, and the interactive Lab tab.
+
+---
+
+## 1. System Architecture Overview
+
+EduMind is built as a split client-server web application designed to help Grade 9 students study Chemistry using Arabic-grounded AI tutors, interactive labs, and smart study planners.
+
+*   **Backend Stack:** FastAPI (Python 3.10+) utilizing SQLAlchemy (async engine) with SQLite/PostgreSQL databases, Redis caching, and the Google GenAI SDK (Gemini).
+*   **Frontend Stack:** React (TypeScript), Vite, React Router, TailwindCSS/Vanilla CSS, and a custom interactive design system built for RTL (Arabic) rendering.
+*   **Media/Visuals:** Interactive HTML5 elements, Short Reels, and periodic table visualizers.
+
+```mermaid
+graph TD
+    subgraph Frontend [React Single Page App]
+        UI[User Interface - Dashboard, Lessons, Lab, Chat]
+        API_Client[API Client - Axios / Fetch]
+    end
+
+    subgraph Backend [FastAPI Application]
+        Router[API V1 Routers]
+        ServiceLayer[Services: Chat, RAG, Interactive Solver]
+        EmbeddingService[Embedding Service: Gemini / Local Multilingual]
+        LLM[Gemini LLM Integration]
+        AuthService[JWT Authentication]
+    end
+
+    subgraph Cache [Memory Store]
+        Redis[Redis Cache - Query, HyDE &amp; RAG results]
+    end
+
+    subgraph Database [Relational Database]
+        SQL[SQLite / PostgreSQL]
+        VectorStore[pgvector / local fallback]
+    end
+
+    UI --&gt; API_Client
+    API_Client --&gt; Router
+    Router --&gt; AuthService
+    Router --&gt; ServiceLayer
+    ServiceLayer --&gt; EmbeddingService
+    ServiceLayer --&gt; LLM
+    ServiceLayer --&gt; Redis
+    ServiceLayer --&gt; SQL
+    EmbeddingService --&gt; VectorStore
+```
+
+---
+
+## 2. Database ORM Entities (SQLAlchemy Schema)
+
+Below is the complete database model mapping:
+
+### 1. User &amp; Profiles (`app/models/user.py`)
+*   `User`: Keeps student authentication credentials (`email`, `hashed_password`), current progress stats (`xp`, `level`, `streak_days`), and custom learning preferences:
+    *   `teaching_style`: e.g. `real_life_examples`, `exam_focused`
+    *   `answer_format`: `text`, `audio`, `image`, `video`, `reel`
+    *   `teaching_level`: `simple`, `standard`, `academic`
+    *   `explanation_method`: `direct`, `step_by_step`, `hints_first`, `exam_mode`, `real_life_example`
+    *   `learning_modes`: list of active formats.
+    *   `student_interests`: list of interests (e.g. `football`, `gaming`) to dynamically personalize prompts.
+    *   `language`: `ar` / `en`
+*   `UserInterest`: M:N linking of users to specific category interests.
+
+### 2. Chemistry Curriculum (`app/models/chemistry.py`, `app/models/topic.py`)
+*   `Unit`: Top-level groupings (e.g. Unit 4: Inorganic Chemistry) mapped to `semester` (1 or 2) and `unit_number`.
+*   `Chapter`: Groups related lessons under a Unit (`unit_id`). Has `title_ar`, `order`, `difficulty`.
+*   `Lesson`: Atomic studying unit. Has `chapter_id`, `title_ar`, `content_ar`, `order`, `difficulty`, `duration_min`.
+*   `LessonProgress`: Tracks user completion state (`not_started`, `in_progress`, `completed`).
+*   `Topic`: Specific conceptual tags (e.g., &quot;التركيز المولي&quot;) linked to quizzes, flashcards, and weak-topic analytics.
+
+### 3. Ingestion &amp; RAG (`app/models/textbook.py`)
+*   `ContentSource`: Raw file uploads/textbooks with metadata (`subject`, `grade`, `source_type`).
+*   `RagChunk`: Vectorized pieces of textbooks/solution-books.
+    *   `content`, `normalized_content`, `content_type` (e.g., `definition`, `formula`, `equation`)
+    *   `embedding`: pgvector `Vector(768)` or `JSON` fallback
+    *   `embedding_model`, `embedding_status`
+    *   `unit_id`, `chapter_id`, `lesson_id`, `topic_id` foreign keys for metadata filtering.
+*   `ExtractedQuestion`: Assessment questions mined during PDF ingestion.
+*   `TextbookChunk`: Legacy textbook-only chunk table kept for backward compatibility.
+
+### 4. Interactive Solving Lab (`app/models/interactive_solver.py`)
+*   `InteractiveSession`: Represents one step-by-step problem-solving session (`problem_text`, `status`, `current_step_index`, `weak_topics`, `final_answer`).
+*   `InteractiveStep`: A single action the student must take (formula selection, mL-to-L conversion, numeric substitution, final answer).
+    *   `expected_answer_type`: `formula`, `numeric`, `final`
+    *   `expected_formula`, `expected_numeric`, `expected_unit`, `tolerance`
+    *   `hint_ar`, `explanation_ar`
+*   `StudentStepAnswer`: Records student&#x27;s input (`answer_text`, `is_correct`, `feedback_ar`, `parsed_value`, `parsed_unit`).
+*   `MisconceptionEvent`: Captured errors for weak-topic tracking (e.g., &quot;forgot_ml_to_l_conversion&quot;, &quot;divided_in_wrong_direction&quot;).
+*   `SkillMastery`: Aggregated mastery levels of a student across different chemical skills.
+
+### 5. Quizzes &amp; Spaced Repetition (`app/models/assessment.py`, `app/models/flashcard.py`)
+*   `Question`: Multiple-choice questions.
+*   `QuizAttempt`: User&#x27;s quiz session results.
+*   `QuestionAttempt`: Individual answer logs to extracted RAG questions.
+*   `Flashcard`: Standard flashcard front/back.
+*   `FlashcardProgress`: User SM-2 spaced repetition state (`ease_factor`, `interval_days`, `next_review_at`, `review_count`).
+
+---
+
+## 3. AI &amp; Machine Learning Models
+
+EduMind uses a hybrid AI architecture combining cloud-based LLMs with local or cloud embedding pipelines.
+
+### LLM Integration (`app/services/ai_service.py`, `app/services/gemini_client.py`)
+*   **Model:** `gemini-1.5-flash` (or customized model configured in settings).
+*   **Purpose:** Chat-tutor generation, question simplification, quiz generation, step explanation, and semantic reranking.
+*   **Fallback Handling:** Implements automatic exponential backoff, transient error retries (for 503/504 errors), and active failure cooldowns (e.g. temporarily disabling Gemini call on quota errors and falling back to local textbook RAG answers).
+
+### Embeddings (`app/services/embeddings.py`)
+1.  **Gemini Embeddings:** `gemini-embedding-001` (768 dimensions) using Google GenAI SDK.
+2.  **Local Multilingual Embeddings:** Sentence-Transformers E5 model (`intfloat/multilingual-e5-base`), mapping inputs with specific prefixes (`query: ` / `passage: `).
+3.  **Local Hash Embeddings:** A deterministic token-hash vectorizer used as a fallback for local smoke tests when keys are unavailable.
+
+---
+
+## 4. The RAG Pipeline Architecture
+
+EduMind implements a state-of-the-art semantic RAG pipeline designed to retrieve context with high precision, especially for Arabic-language chemistry queries.
+
+```
+[Student Query] 
+       │
+       ▼
+ 1. INTENT ROUTER ────► Classifier (definition_lookup, exercise_solving, etc.)
+       │
+       ▼
+ 2. QUERY EXPANSION ──► Rewrite Query / Generate HyDE / Generate Multi-queries
+       │
+       ▼
+ 3. VECTOR SEARCH ────► Retrieve Candidates (Parallel Async Variants)
+       │
+       ▼
+ 4. FUSION ───────────► Reciprocal Rank Fusion (RRF)
+       │
+       ▼
+ 5. RERANKING ────────► Gemini Scoring + Content-type &amp; Entity Boosting
+       │
+       ▼
+ 6. QUALITY GATE ─────► Score filtering against intent-specific thresholds
+       │
+       ▼
+[Grounded Prompt] ────► Gemini Generates Personalized Response
+```
+
+### Steps of the Pipeline
+
+1.  **Intent Classification (`app/services/chat_service.py`):**
+    Classifies the incoming question into specific categories: `definition_lookup`, `property_lookup`, `formula_lookup`, `equation_lookup`, `reaction_query`, `table_lookup`, `book_grounded`, `exercise_lookup`, `exercise_solving`, `safety_question`, or `general`.
+2.  **Query Expansion &amp; HyDE (`app/services/semantic_rag.py`):**
+    *   **Rewrite:** Rewrites student query for chemistry search terms in Arabic.
+    *   **HyDE (Hypothetical Document Embeddings):** Generates a brief hypothetical book paragraph answering the query.
+    *   **Multi-Query:** Formulates 3 alternative Arabic search terms.
+3.  **Parallel Candidate Retrieval:**
+    Invokes parallel database queries using cosine similarity over the `embeddings` column, filtering by `source_types` (`textbook` and `solution_book`), unit, chapter, lesson, or topic.
+4.  **Reciprocal Rank Fusion (RRF):**
+    Combines the results of the 5 parallel retrievals (original query, rewritten, hyde, multi-queries) using standard RRF logic: $Score = \sum \frac{1}{60 + Rank}$.
+5.  **Hybrid Scored Reranking &amp; Boosting:**
+    The top candidates (up to 16) are sent to Gemini for a 0-10 relevance score. These scores are blended with:
+    *   **Lexical overlap score** (Arabic-specific token matcher).
+    *   **Content-type boosts:** Boosting `definition` chunks if intent is definition lookup, or `exercise` chunks for solving.
+    *   **Chemical Entity matching:** Exact checks for compound formulas (e.g. $Na_2CO_3$, $HCl$).
+    *   **Safety triggers:** Strongly boosting warning sections (such as &quot;adding acid to water, not water to acid&quot;) when safety hazards are queried.
+6.  **Quality Gate:**
+    Filters out any chunks failing a minimum threshold (calibrated by intent, e.g., `0.52` for definition lookup, `0.48` for equations).
+
+---
+
+## 5. The Lab Tab &amp; Interactive Solver
+
+The **Lab Tab** (`/lab`) provides students with interactive tools instead of simply displaying answers. Its primary feature is the **Guided chemistry solver**.
+
+```
+[Input Word Problem] ────► API parses numerical values &amp; solute formula
+                                 │
+                                 ▼
+                     Create Interactive Session &amp; Steps
+                                 │
+                                 ▼
+                     Student submits Step 1 (Formula)
+                                 │
+                                 ├─► Correct? Advance to Step 2 (ML to L)
+                                 └─► Incorrect? Misconception Event logged, hint displayed
+                                 │
+                                 ▼
+                     Student finishes all steps
+                                 │
+                                 ▼
+                    Generate Final Summary + citations
+```
+
+### How the Guided Solver Works
+
+1.  **Problem Submission:**
+    A student inputs a word problem (e.g., &quot;محلول حمض كلور الماء HCl حجمه 100 mL ويحتوي 3.65 g. احسب التركيز الغرامي والمولي؟&quot;).
+2.  **Numerical Parsing (`app/services/interactive_solver_service.py`):**
+    The backend parses the problem text using regex to extract:
+    *   Solute formula (e.g., `HCl`) and its molar mass (`36.5` g/mol).
+    *   Given mass in grams (`3.65` g).
+    *   Given volume in mL (`100` mL) or L.
+3.  **Dynamic Step Generation:**
+    Based on the parsed values, a deterministic solution plan is generated containing up to 7 steps:
+    *   *Step 1:* Identify gram concentration formula (`Cg=m/V`).
+    *   *Step 2:* Convert volume from mL to L (`0.1` L).
+    *   *Step 3:* Calculate gram concentration (`36.5` g/L).
+    *   *Step 4:* Calculate molar mass of solute (`36.5` g/mol).
+    *   *Step 5:* Calculate moles of solute (`0.1` mol).
+    *   *Step 6:* Calculate molar concentration (`1` mol/L).
+    *   *Step 7:* Final answer check.
+4.  **Step-by-Step Validation:**
+    For each step, the student inputs their answer. The backend performs deterministic math validation:
+    *   For formulas, it normalizes strings (stripping spaces, symbols, and checking aliases like `cg=m/v` or `التركيز=الكتلة/الحجم`).
+    *   For numeric steps, it extracts values and units, validating with a strict $0.02$ tolerance limit.
+5.  **Misconception Analysis:**
+    If a student fails, specific misconceptions are flagged:
+    *   *Forgot conversion:* student typed `100` instead of `0.1` on volume conversion.
+    *   *Divided backwards:* student calculated $V/m$ instead of $m/V$.
+    *   *Wrong molar mass:* incorrect atomic sum.
+    *   *Missing unit:* correct number but missing `g/L` or `mol/L`.
+    These are logged to the `misconception_events` table to update the student&#x27;s **weak topics**.
+6.  **RAG Citations:**
+    The solver queries RAG for the problem&#x27;s content and returns textbook page images and paragraph previews on the sidebar to help students verify rules.
+
+---
+
+## 6. Route and API Registry
+
+Here is the list of active backend v1 route controllers:
+
+*   **Authentication &amp; Profile:**
+    *   `POST /auth/register` - Create student account.
+    *   `POST /auth/login` - Obtain JWT access tokens.
+    *   `GET /auth/me` - Retrieve current profile and preference config.
+    *   `POST /auth/onboarding` - Set interests and custom learning preferences.
+*   **Curriculum Data:**
+    *   `GET /units` - Get units filtered by semester.
+    *   `GET /chapters` - Fetch chapters grouped by unit.
+    *   `GET /lessons` - Fetch lesson titles and durations.
+    *   `GET /elements` - Retrieve periodic table reference information.
+*   **AI Chat &amp; RAG:**
+    *   `POST /chat/sessions` - Start a new chat tutor thread.
+    *   `DELETE /chat/sessions/{id}` - Delete chat history.
+    *   `POST /chat/sessions/{id}/messages` - Send message with custom tutor preferences.
+    *   `POST /rag/retrieve` - Run search queries with vector score diagnostics.
+*   **Interactive Solver:**
+    *   `POST /interactive-solver/sessions` - Start a guided lab session.
+    *   `GET /interactive-solver/sessions` - List active solving attempts.
+    *   `POST /interactive-solver/sessions/{id}/answer` - Check step input.
+    *   `POST /interactive-solver/sessions/{id}/hint` - Retrieve step hint.
+*   **Study Plan &amp; Progress:**
+    *   `POST /study-plans` - Generate an AI-personalized calendar schedule.
+    *   `GET /progress` - Fetch overall syllabus completion rates and weak topics.
+    *   `POST /quizzes/generate` - Generate quizzes based on weak topics.
+    *   `POST /flashcards/next` - Fetch flashcards due for SM-2 review.
+
+---
+
+## 7. Actionable UI &amp; Functionality Improvements
+
+### UI/UX Polish (Wow Aesthetics)
+1.  **Interactive PH Scale Simulator (Lab Tab):** Add a visual slider where students drag values from $0$ to $14$, causing liquid in a flask component to transition through a vibrant color spectrum (red for acids, green for neutral, purple/blue for bases).
+2.  **Equation Balancer Interface:** Provide draggable element chips (e.g., coefficients) that students can drop into placeholder spots to visually balance chemical reactions.
+3.  **Tutor Chat Enhancements:** Style the RAG source page modal with a PDF-viewer interface showing highlighted lines, and implement card-swipe animations for the flashcard review page.
+
+### Functional Enhancements
+1.  **Gemini Multimodal Solver:** Allow students to take pictures of written chemistry problems on their phones, parsing the text using Gemini Vision OCR directly into the `/guided-lab` input.
+2.  **LLM-based Step Generator:** Expand the interactive lab to support organic and nuclear chemistry equations by prompting Gemini to generate the step plan JSON dynamically instead of relying on python-regex.
+3.  **Spaced Repetition Push Notifications:** Connect the background reminder scheduler (`reminder_events`) with Web Push APIs to notify students when flashcards are due for review.
+</pre>
+    </section>
+
+    <p class="footer-note">Generated from the uploaded file: edumind_codebase_detailed_analysis_1.md</p>
+  </main>
+</div>
+<script>
+const buttons = document.querySelectorAll('.nav-btn');
+const sections = document.querySelectorAll('.section');
+buttons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    buttons.forEach(b=>b.classList.remove('active'));
+    sections.forEach(s=>s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+});
+const entitySearch = document.getElementById('entitySearch');
+if (entitySearch) {
+  entitySearch.addEventListener('input', () => {
+    const q = entitySearch.value.toLowerCase().trim();
+    document.querySelectorAll('.entity-card').forEach(card => {
+      card.style.display = card.dataset.text.includes(q) ? '' : 'none';
+    });
+  });
+}
+</script>
+</body>
+</html>

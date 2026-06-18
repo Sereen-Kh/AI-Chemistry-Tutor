@@ -473,9 +473,13 @@ const normalizeFlashcardDifficulty = (
 
 export function mockGenerateQuiz(config: QuizGenerationConfig): GeneratedQuizQuestion[] {
   const questions: GeneratedQuizQuestion[] = [];
-  const validLessons = mockLessons.filter(
+  let validLessons = mockLessons.filter(
     (l) => config.lessonIds.includes(l.lessonId) && l.qualityScore >= 60
   );
+
+  if (!validLessons.length && config.lessonIds.length) {
+    validLessons = mockLessons.filter((l) => l.qualityScore >= 60).slice(0, Math.max(1, config.lessonIds.length));
+  }
 
   if (!validLessons.length) return [];
 
@@ -592,9 +596,13 @@ export function mockGenerateQuiz(config: QuizGenerationConfig): GeneratedQuizQue
 
 export function mockGenerateFlashcards(config: FlashcardGenerationConfig): GeneratedFlashcard[] {
   const cards: GeneratedFlashcard[] = [];
-  const validLessons = mockLessons.filter(
+  let validLessons = mockLessons.filter(
     (l) => config.lessonIds.includes(l.lessonId) && l.qualityScore >= 60
   );
+
+  if (!validLessons.length && config.lessonIds.length) {
+    validLessons = mockLessons.filter((l) => l.qualityScore >= 60).slice(0, Math.max(1, config.lessonIds.length));
+  }
 
   if (!validLessons.length) return [];
 

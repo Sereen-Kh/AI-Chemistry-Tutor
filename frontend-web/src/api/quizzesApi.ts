@@ -1,5 +1,4 @@
 import { api } from './http';
-import { mockGenerateQuiz } from './mockChemistryData';
 import type { QuizGenerationConfig, GeneratedQuizQuestion } from '../types';
 
 interface BackendQuizQuestion {
@@ -76,11 +75,13 @@ export const quizzesApi = {
         limit: Math.min(config.totalQuestions || config.lessonIds.length * config.questionsPerLesson || 5, 30),
       });
       const mapped = data.questions.map(mapBackendQuestion);
-      return mapped.length ? mapped : mockGenerateQuiz(config);
+      if (!mapped.length) {
+        throw new Error('Quiz backend returned no questions for the selected curriculum scope.');
+      }
+      return mapped;
     } catch (error) {
-      console.warn('Quiz backend unavailable, using local generator', error);
-      // Fallback to local mock generator
-      return mockGenerateQuiz(config);
+      console.warn('Quiz backend generation unavailable', error);
+      throw error;
     }
   },
 

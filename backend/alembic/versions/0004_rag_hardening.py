@@ -116,6 +116,8 @@ def downgrade() -> None:
     if _has_table("rag_query_logs"):
         op.drop_table("rag_query_logs")
     if _has_table("rag_chunks"):
+        if _has_index("rag_chunks", "ix_rag_chunks_embedding_model"):
+            op.drop_index("ix_rag_chunks_embedding_model", table_name="rag_chunks")
         if _has_column("rag_chunks", "embedding_updated_at"):
             op.drop_column("rag_chunks", "embedding_updated_at")
         if _has_column("rag_chunks", "embedding_model"):

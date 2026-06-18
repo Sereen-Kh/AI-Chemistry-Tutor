@@ -52,11 +52,13 @@ run_migrations() {
 }
 
 # ---------------------------------------------------------------------------
-# Seed interest categories (idempotent — checks before inserting)
+# Seed core reference data (idempotent — checks before inserting)
 # ---------------------------------------------------------------------------
 run_seed() {
     echo "🌱 Seeding interest categories..."
     python scripts/seed_interests.py || echo "⚠️  Seeding skipped (may already exist)"
+    echo "🌱 Seeding curriculum structure..."
+    python scripts/seed_curriculum.py || echo "⚠️  Curriculum seeding skipped (database may not be migrated or data file missing)"
     echo "✅ Seeding complete"
 }
 

@@ -1,13 +1,29 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, event
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, AsyncSession
-from app.core.config import settings
+from app.core.config import BACKEND_DIR, settings
 
-connect_args = {"check_same_thread": False} if settings.resolved_database_url.startswith("sqlite") else {}
+_is_sqlite = settings.resolved_database_url.startswith("sqlite")
+
+connect_args = {"check_same_thread": False} if _is_sqlite else {}
 
 engine = create_engine(settings.resolved_database_url, connect_args=connect_args)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-async_engine = create_async_engine(settings.resolved_effective_async_database_url)
+
+_async_connect_args = {"timeout": 30} if _is_sqlite else {}
+async_engine = create_async_engine(
+    settings.resolved_effective_async_database_url,
+    connect_args=_async_connect_args,
+)
+
+if _is_sqlite:
+    @event.listens_for(async_engine.sync_engine, "connect")
+    def _set_sqlite_wal(dbapi_conn, _record):
+        cursor = dbapi_conn.cursor()
+        cursor.execute("PRAGMA journal_mode=WAL")
+        cursor.execute("PRAGMA synchronous=NORMAL")
+        cursor.close()
+
 AsyncSessionLocal = async_sessionmaker(async_engine, expire_on_commit=False)
 
 
@@ -29,14 +45,18 @@ async def get_async_db() -> AsyncSession:
 
 
 def init_sqlite_schema_for_dev() -> None:
-    """Create local SQLite tables when running the app without Alembic.
+    """Run Alembic for local SQLite development databases.
 
-    PostgreSQL deployments should continue to use Alembic migrations. This
-    helper exists for local Swagger/frontend smoke tests where the configured
-    SQLite file may not exist yet.
+    This keeps local Swagger/frontend smoke tests on the same schema path as
+    PostgreSQL deployments and avoids direct metadata table creation.
     """
     if not settings.resolved_database_url.startswith("sqlite"):
         return
-    import app.models  # noqa: F401
 
-    Base.metadata.create_all(bind=engine)
+    from alembic import command
+    from alembic.config import Config
+
+    alembic_cfg = Config(str(BACKEND_DIR / "alembic.ini"))
+    alembic_cfg.set_main_option("script_location", str(BACKEND_DIR / "alembic"))
+    alembic_cfg.set_main_option("sqlalchemy.url", settings.resolved_database_url)
+    command.upgrade(alembic_cfg, "head")

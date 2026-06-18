@@ -113,7 +113,7 @@ export const LessonDetailPage = () => {
                 <Link className="ed-btn ed-btn-ghost" to={`/ask-ai?question=${encodeURIComponent(`اشرح لي درس: ${catalogLesson.title_ar}`)}`}>
                   اسأل الذكاء عن الدرس
                 </Link>
-                <Link className="ed-btn ed-btn-primary" to={`/quizzes?lessonId=${catalogLesson.id}`}>
+                <Link className="ed-btn ed-btn-primary" to={`/quiz?lessonId=${catalogLesson.id}`}>
                   توليد اختبار
                 </Link>
                 <Link className="ed-btn ed-btn-secondary" to={`/flashcards?lessonId=${catalogLesson.id}`}>
@@ -157,7 +157,7 @@ export const LessonDetailPage = () => {
   const handleStartQuiz = () => {
     if (report.status === 'blocked') return;
     const typesParam = quizTypes.join(',');
-    navigate(`/quizzes?auto=true&mode=single_lesson&lessonId=${lesson.lessonId}&questions=${questionsPerLesson}&difficulty=${quizDifficulty}&types=${typesParam}`);
+    navigate(`/quiz?auto=true&mode=single_lesson&lessonId=${lesson.lessonId}&questions=${questionsPerLesson}&difficulty=${quizDifficulty}&types=${typesParam}`);
   };
 
   const handleStartFlashcards = () => {
@@ -259,7 +259,7 @@ export const LessonDetailPage = () => {
             </Link>
             <Link 
               className="ed-btn ed-btn-ghost" 
-              to={`/rag-search?query=${encodeURIComponent(lesson.titleAr)}`}
+              to={`/book-search?query=${encodeURIComponent(lesson.titleAr)}`}
             >
               RAG بحث في الدرس
             </Link>

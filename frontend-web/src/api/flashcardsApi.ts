@@ -80,10 +80,14 @@ export const flashcardsApi = {
         limit: config.cardsPerLesson || 8,
         created_by: 'generated',
       });
-      return data.map(mapBackendCard);
+      const mapped = data.map(mapBackendCard);
+      if (!mapped.length) {
+        throw new Error('Flashcard backend returned no cards for the selected curriculum scope.');
+      }
+      return mapped;
     } catch (error) {
-      console.warn('Flashcard generation backend unavailable, using local generator', error);
-      return mockGenerateFlashcards(config);
+      console.warn('Flashcard generation backend unavailable', error);
+      throw error;
     }
   },
 

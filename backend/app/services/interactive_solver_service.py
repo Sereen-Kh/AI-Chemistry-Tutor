@@ -7,11 +7,14 @@ deterministic; RAG is used for grounding/source references.
 from __future__ import annotations
 
 import math
+import asyncio
+import logging
 import re
 from dataclasses import dataclass
 from typing import Any
 
 from fastapi import HTTPException
+from pydantic import BaseModel, Field
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -34,11 +37,49 @@ from app.schemas.interactive_solver import (
     InteractiveStepResponse,
 )
 from app.services.semantic_rag import semantic_retrieve_context
+from app.core.config import settings
+from app.services.gemini_client import (
+    get_gemini_client,
+    is_gemini_auth_error,
+    is_gemini_quota_error,
+    tutor_generation_http_options,
+)
+
+logger = logging.getLogger(__name__)
 
 _ARABIC_DIGITS = str.maketrans("٠١٢٣٤٥٦٧٨٩", "0123456789")
 _SUBSCRIPT_DIGITS = str.maketrans("₀₁₂₃₄₅₆₇₈₉", "0123456789")
 _DIACRITICS_RE = re.compile(r"[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED]")
 _NUMBER_RE = re.compile(r"[-+]?\d+(?:[.,]\d+)?")
+
+
+class GeneratedSolverStep(BaseModel):
+    """One Gemini-generated solver step with deterministic validation targets."""
+
+    step_key: str = Field(..., min_length=1)
+    title_ar: str = Field(..., min_length=1)
+    prompt_ar: str = Field(..., min_length=1)
+    expected_answer_type: str = Field(
+        ...,
+        description="One of: formula, numeric, keywords, final.",
+    )
+    expected_formula: str | None = None
+    expected_numeric: float | None = None
+    expected_unit: str | None = None
+    accepted_keywords: list[str] = Field(default_factory=list)
+    formula_aliases: list[str] = Field(default_factory=list)
+    hint_ar: str | None = None
+    explanation_ar: str | None = None
+    skill_key: str | None = None
+    tolerance: float | None = Field(default=0.02, ge=0.0, le=1.0)
+
+
+class GeneratedSolverPlan(BaseModel):
+    """Full structured plan generated from RAG context and the student problem."""
+
+    problem_type: str = Field(..., min_length=1)
+    final_answer: str = Field(..., min_length=1)
+    steps: list[GeneratedSolverStep] = Field(..., min_length=1, max_length=12)
 
 
 @dataclass(frozen=True)
@@ -76,7 +117,7 @@ def normalize_solver_text(text: str) -> str:
 
 
 def classify_problem_type(problem_text: str) -> str:
-    """Classify the supported MVP problem type."""
+    """Classify the problem type without blocking dynamic plan generation."""
     normalized = normalize_solver_text(problem_text)
     concentration_terms = (
         "التركيز الغرامي",
@@ -95,10 +136,7 @@ def classify_problem_type(problem_text: str) -> str:
         return "concentration_calculation"
     if any(term in normalized for term in dilution_terms):
         return "concentration_calculation"
-    raise HTTPException(
-        status_code=422,
-        detail="يدعم المختبر التفاعلي حالياً مسائل التركيز فقط: التركيز الغرامي، التركيز المولي، أو التمديد.",
-    )
+    return "general_chemistry"
 
 
 def _extract_formula(text: str) -> str | None:
@@ -295,6 +333,11 @@ def _concentration_step_records(parsed: ParsedProblem) -> list[dict[str, Any]]:
 def build_concentration_solution_plan(problem_text: str) -> dict[str, Any]:
     """Build the deterministic concentration calculation plan."""
     parsed = _parse_problem(problem_text)
+    if parsed.problem_type != "concentration_calculation":
+        raise HTTPException(
+            status_code=422,
+            detail="يدعم المسار المحلي حالياً مسائل التركيز فقط. فعّل Gemini لتوليد خطة لمسائل كيميائية أخرى.",
+        )
     steps = _concentration_step_records(parsed)
     final = steps[-1]["explanation_ar"].replace("الجواب النهائي: ", "")
     return {
@@ -311,17 +354,200 @@ def build_concentration_solution_plan(problem_text: str) -> dict[str, Any]:
     }
 
 
+def _compact_source_context(source_chunks: list[dict[str, Any]]) -> str:
+    """Format retrieved sources into a short prompt section for plan generation."""
+    if not source_chunks:
+        return "لا توجد مقاطع مسترجعة كافية. التزم بمنهج الصف التاسع واذكر القوانين الأساسية فقط."
+
+    lines: list[str] = []
+    for index, chunk in enumerate(source_chunks[:5], start=1):
+        source_type = chunk.get("source_type") or "unknown"
+        page_number = chunk.get("page_number") or "?"
+        content_type = chunk.get("content_type") or "text"
+        preview = " ".join(str(chunk.get("preview") or "").split())[:500]
+        lines.append(
+            f"[{index}] المصدر={source_type} الصفحة={page_number} النوع={content_type}\n{preview}"
+        )
+    return "\n\n".join(lines)
+
+
+def _solver_generation_prompt(problem_text: str, source_chunks: list[dict[str, Any]], problem_type: str) -> str:
+    source_context = _compact_source_context(source_chunks)
+    return f"""
+أنت مصمم خطوات حل تفاعلية في EduMind لطلاب الصف التاسع في الكيمياء.
+مهمتك توليد خطة حل قصيرة ومنهجية لمسألة الطالب، وليس كتابة شرح مطول.
+
+قواعد صارمة:
+- استخدم المقاطع المسترجعة من الكتاب/كتاب الحلول كمرجع للمصطلحات والقوانين.
+- لا تعط خطوات كثيرة؛ اجعلها بين 3 و 8 خطوات.
+- كل خطوة يجب أن تحتوي هدف تحقق حتمي:
+  formula لقانون أو علاقة.
+  numeric لقيمة عددية مع وحدة.
+  keywords لإجابة مفهومية قصيرة.
+  final للجواب النهائي.
+- اكتب كل العناوين والتلميحات والشرح بالعربية.
+- ضع expected_numeric كرقم فقط عندما تكون القيمة معروفة من المسألة.
+- ضع expected_unit عندما تكون الوحدة مطلوبة.
+- ضع accepted_keywords للخطوات النصية والجواب النهائي.
+- Gemini لا يتحقق من إجابات الطالب لاحقاً؛ لذلك يجب أن تكون أهداف التحقق واضحة ودقيقة.
+- لا تستخدم معلومات فوق مستوى الصف التاسع إلا إذا كانت ضرورية جداً.
+
+تصنيف أولي: {problem_type}
+
+مسألة الطالب:
+{problem_text}
+
+مقاطع المصادر المسترجعة:
+{source_context}
+""".strip()
+
+
+def _parse_generated_solver_plan(response: Any) -> GeneratedSolverPlan:
+    parsed = getattr(response, "parsed", None)
+    if isinstance(parsed, GeneratedSolverPlan):
+        return parsed
+    if isinstance(parsed, dict):
+        return GeneratedSolverPlan.model_validate(parsed)
+    if parsed is not None and hasattr(parsed, "model_dump"):
+        return GeneratedSolverPlan.model_validate(parsed.model_dump())
+    text = str(getattr(response, "text", "") or "").strip()
+    return GeneratedSolverPlan.model_validate_json(text)
+
+
+def _step_key_from_generated(raw_key: str | None, index: int) -> str:
+    key = re.sub(r"[^a-z0-9_]+", "_", str(raw_key or "").lower()).strip("_")
+    return key or f"generated_step_{index + 1}"
+
+
+def _normalize_expected_answer_type(raw_type: str | None, step: GeneratedSolverStep) -> str:
+    normalized = normalize_solver_text(raw_type or "").replace(" ", "_")
+    if normalized in {"formula", "law", "قانون", "صيغه", "صيغة"}:
+        return "formula"
+    if normalized in {"numeric", "number", "value", "numeric_value", "عدد", "قيمة", "قيمه"}:
+        return "numeric"
+    if normalized in {"final", "final_answer", "answer", "جواب_نهائي", "الجواب_النهائي"}:
+        return "final"
+    if normalized in {"keywords", "keyword", "text", "concept", "كلمات", "مفهوم"}:
+        return "keywords"
+    if step.expected_numeric is not None:
+        return "numeric"
+    if step.expected_formula:
+        return "formula"
+    return "keywords" if step.accepted_keywords else "final"
+
+
+def _keywords_from_text(text: str) -> list[str]:
+    normalized = normalize_solver_text(text)
+    numbers = [match.group(0).replace(",", ".") for match in _NUMBER_RE.finditer(normalized)]
+    chemistry_tokens = re.findall(r"\b[a-z][a-z0-9]*(?:/[a-z0-9]+)?\b", normalized)
+    arabic_terms = [
+        term
+        for term in ("تركيز", "مول", "لتر", "كتله", "كتلة", "حجم", "حمض", "اساس", "ملح", "تفاعل")
+        if term in normalized
+    ]
+    keywords: list[str] = []
+    for item in [*numbers, *chemistry_tokens, *arabic_terms]:
+        if item and item not in keywords:
+            keywords.append(item)
+    return keywords[:8]
+
+
+def _generated_plan_to_records(plan: GeneratedSolverPlan) -> dict[str, Any]:
+    """Convert a Gemini plan into the existing ORM step payload shape."""
+    records: list[dict[str, Any]] = []
+    for index, step in enumerate(plan.steps):
+        answer_type = _normalize_expected_answer_type(step.expected_answer_type, step)
+        accepted_keywords = step.accepted_keywords or (
+            _keywords_from_text(plan.final_answer) if answer_type == "final" else []
+        )
+        metadata: dict[str, Any] = {
+            "skill_key": step.skill_key or _step_key_from_generated(step.step_key, index),
+            "generated_by": "gemini",
+            "accepted_keywords": accepted_keywords,
+            "expected_final_answer": plan.final_answer if answer_type == "final" else None,
+        }
+        if step.formula_aliases:
+            metadata["formula_aliases"] = step.formula_aliases
+        if step.expected_formula and step.expected_formula not in metadata.get("formula_aliases", []):
+            metadata.setdefault("formula_aliases", []).append(step.expected_formula)
+
+        records.append(
+            {
+                "step_key": _step_key_from_generated(step.step_key, index),
+                "title_ar": step.title_ar,
+                "prompt_ar": step.prompt_ar,
+                "expected_answer_type": answer_type,
+                "expected_formula": step.expected_formula,
+                "expected_numeric": step.expected_numeric,
+                "expected_unit": step.expected_unit,
+                "hint_ar": step.hint_ar,
+                "explanation_ar": step.explanation_ar,
+                "tolerance": step.tolerance or 0.02,
+                "metadata_json": {key: value for key, value in metadata.items() if value not in (None, [], {})},
+            }
+        )
+
+    return {
+        "problem_type": plan.problem_type,
+        "parsed": {"generated_by": "gemini", "model": settings.model_name},
+        "steps": records,
+        "final_answer": plan.final_answer,
+    }
+
+
+async def generate_dynamic_solver_plan(
+    problem_text: str,
+    *,
+    source_chunks: list[dict[str, Any]],
+    problem_type: str,
+) -> dict[str, Any] | None:
+    """Generate a structured step plan with Gemini, returning None on unavailable model paths."""
+    if not settings.effective_gemini_api_key or not settings.gemini_tutor_generation_enabled:
+        return None
+
+    prompt = _solver_generation_prompt(problem_text, source_chunks, problem_type)
+
+    def _call() -> GeneratedSolverPlan:
+        from google.genai import types
+
+        client = get_gemini_client()
+        response = client.models.generate_content(
+            model=settings.model_name,
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                http_options=tutor_generation_http_options(),
+                response_mime_type="application/json",
+                response_schema=GeneratedSolverPlan,
+                temperature=0.1,
+                max_output_tokens=4096,
+            ),
+        )
+        return _parse_generated_solver_plan(response)
+
+    try:
+        generated = await asyncio.to_thread(_call)
+        return _generated_plan_to_records(generated)
+    except Exception as exc:  # pragma: no cover - external API behavior
+        if is_gemini_auth_error(exc) or is_gemini_quota_error(exc):
+            logger.info("Dynamic solver plan generation unavailable: %s", exc)
+        else:
+            logger.warning("Dynamic solver plan generation failed; fallback may be used: %s", exc)
+        return None
+
+
 def create_interactive_steps(session: InteractiveSession, plan: dict[str, Any]) -> list[InteractiveStep]:
-    """Create ORM step objects for a session from a deterministic plan."""
+    """Create ORM step objects for a session from a solver plan."""
     steps: list[InteractiveStep] = []
     for index, item in enumerate(plan["steps"]):
+        payload = dict(item)
+        tolerance = float(payload.pop("tolerance", 0.02) or 0.02)
         steps.append(
             InteractiveStep(
                 session=session,
                 step_index=index,
                 status="current" if index == 0 else "pending",
-                tolerance=0.02,
-                **item,
+                tolerance=tolerance,
+                **payload,
             )
         )
     return steps
@@ -393,7 +619,7 @@ async def start_interactive_session(
     user: User,
     request: InteractiveSessionCreate,
 ) -> InteractiveSessionResponse:
-    """Start a concentration-solving session and create deterministic steps."""
+    """Start a guided session with dynamic planning and deterministic validation."""
     problem_type = classify_problem_type(request.problem_text)
     source_chunks, context_meta = await retrieve_problem_context(
         db,
@@ -402,18 +628,32 @@ async def start_interactive_session(
         source_types=request.source_types,
         topic_id=request.topic_id,
     )
-    plan = build_concentration_solution_plan(request.problem_text)
+    plan = await generate_dynamic_solver_plan(
+        request.problem_text,
+        source_chunks=source_chunks,
+        problem_type=problem_type,
+    )
+    plan_source = "gemini_structured"
+    if plan is None and problem_type == "concentration_calculation":
+        plan = build_concentration_solution_plan(request.problem_text)
+        plan_source = "deterministic_concentration_fallback"
+    if plan is None:
+        raise HTTPException(
+            status_code=422,
+            detail="لا أستطيع إنشاء جلسة حل تفاعلية لهذه المسألة حالياً. فعّل Gemini أو استخدم مسألة تركيز.",
+        )
+
     session = InteractiveSession(
         user_id=user.id,
         topic_id=request.topic_id,
         problem_text=request.problem_text,
-        problem_type=problem_type,
+        problem_type=str(plan.get("problem_type") or problem_type),
         status="active",
         current_step_index=0,
         source_chunks=source_chunks,
         final_answer=None,
         weak_topics=[],
-        metadata_json={"plan": plan, **context_meta},
+        metadata_json={"plan": plan, "plan_source": plan_source, **context_meta},
     )
     db.add(session)
     await db.flush()
@@ -471,21 +711,23 @@ def _within_tolerance(value: float, expected: float, tolerance: float) -> bool:
 
 def _feedback_for_misconception(step: InteractiveStep, answer: str, value: float | None, unit: str | None) -> tuple[str, str | None]:
     expected = step.expected_numeric
+    metadata = step.metadata_json if isinstance(step.metadata_json, dict) else {}
     normalized = normalize_solver_text(answer)
     if step.step_key == "convert_volume_ml_to_l" and unit == "mL":
         return "انتبه: المطلوب هو التحويل إلى اللتر. اقسم قيمة mL على 1000.", "forgot_ml_to_l_conversion"
     if expected is not None and unit is None and step.expected_unit:
         return "القيمة قريبة، لكن يجب كتابة الوحدة حتى يكون الجواب الكيميائي كاملاً.", "missing_unit"
     if step.step_key == "calculate_moles" and value is not None:
-        mass = (step.metadata_json or {}).get("mass_g") if isinstance(step.metadata_json, dict) else None
+        mass = metadata.get("mass_g")
         if mass is not None and math.isclose(value, float(mass), rel_tol=0.02, abs_tol=0.02):
             return "استخدمت الكتلة مباشرة. لحساب عدد المولات يجب استعمال n = m / M.", "used_mass_instead_of_moles"
     if step.step_key == "calculate_molar_mass" and value is not None and not _within_tolerance(value, float(expected or 0), 0.02):
-        return "راجع جمع الكتل الذرية في الصيغة؛ الكتلة المولية لـ HCl هي 36.5 g/mol.", "wrong_molar_mass"
+        formula = metadata.get("formula") or metadata.get("compound") or "المركب"
+        return f"راجع جمع الكتل الذرية في الصيغة؛ الكتلة المولية لـ {formula} يجب أن توافق معطيات الخطوة.", "wrong_molar_mass"
     if expected and value and _within_tolerance(value, 1 / expected, 0.02):
         return "يبدو أنك قسمت بالعكس. راجع ترتيب البسط والمقام في القانون.", "divided_in_wrong_direction"
     if "/" in normalized and step.expected_formula and _normalize_formula(step.expected_formula) not in _normalize_formula(answer):
-        return "القانون أو التعويض غير مناسب لهذه الخطوة. راجع المطلوب في السؤال.", "wrong_formula"
+        return f"القانون أو التعويض غير مناسب لهذه الخطوة. القانون المتوقع قريب من: {step.expected_formula}.", "wrong_formula"
     return "الإجابة غير صحيحة بعد. جرّب مرة أخرى مستفيداً من التلميح.", "incorrect_answer"
 
 
@@ -498,9 +740,15 @@ def validate_step_answer(step: InteractiveStep, answer_text: str) -> ValidationR
         if isinstance(step.metadata_json, dict):
             aliases = [str(item) for item in step.metadata_json.get("formula_aliases", [])]
         accepted = {expected, *[_normalize_formula(item) for item in aliases]}
-        if _normalize_formula(answer_text) in accepted:
+        candidate = _normalize_formula(answer_text)
+        if any(item and (candidate == item or item in candidate) for item in accepted):
             return ValidationResult(True, "صحيح. اخترت القانون المناسب لهذه الخطوة.")
-        return ValidationResult(False, "القانون غير مناسب. المطلوب علاقة كتلة المذاب بحجم المحلول.", misconception_type="wrong_formula")
+        formula_hint = step.expected_formula or "القانون المطلوب في هذه الخطوة"
+        return ValidationResult(
+            False,
+            f"القانون غير مناسب. راجع العلاقة المطلوبة، وهي قريبة من: {formula_hint}.",
+            misconception_type="wrong_formula",
+        )
 
     if step.expected_answer_type == "numeric":
         value, unit = _parse_numeric_answer(answer_text)
@@ -514,14 +762,25 @@ def validate_step_answer(step: InteractiveStep, answer_text: str) -> ValidationR
             return ValidationResult(False, feedback, parsed_value=value, parsed_unit=unit, misconception_type=misconception)
         return ValidationResult(True, "صحيح. القيمة والوحدة مناسبتان.", parsed_value=value, parsed_unit=unit)
 
-    if step.expected_answer_type == "final":
+    if step.expected_answer_type in {"keywords", "final"}:
         meta = step.metadata_json if isinstance(step.metadata_json, dict) else {}
         keywords = [normalize_solver_text(str(item)) for item in meta.get("accepted_keywords", [])]
-        if all(keyword in answer for keyword in keywords if keyword):
-            return ValidationResult(True, "ممتاز. الجواب النهائي يتضمن القيم والوحدات المطلوبة.")
+        if keywords and all(keyword in answer for keyword in keywords if keyword):
+            message = "ممتاز. الجواب النهائي يتضمن القيم والوحدات المطلوبة."
+            if step.expected_answer_type == "keywords":
+                message = "صحيح. ذكرت الكلمات أو الأفكار المطلوبة لهذه الخطوة."
+            return ValidationResult(True, message)
+        if not keywords and len(answer) >= 4:
+            return ValidationResult(True, "تم قبول الإجابة النصية لهذه الخطوة.")
+        if step.expected_answer_type == "keywords":
+            return ValidationResult(
+                False,
+                "الإجابة تحتاج إلى ذكر الفكرة أو المصطلح المطلوب بدقة أكبر.",
+                misconception_type="missing_keyword",
+            )
         return ValidationResult(
             False,
-            "الجواب النهائي يجب أن يذكر التركيز الغرامي والتركيز المولي مع الوحدات.",
+            "الجواب النهائي غير مكتمل. تأكد من ذكر القيم أو المصطلحات الأساسية مع الوحدات عندما توجد.",
             misconception_type="incomplete_final_answer",
         )
 

@@ -1,9 +1,9 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { mockLessons, getLessonQualityReport } from '../api/mockChemistryData';
 import { flashcardsApi } from '../api/flashcardsApi';
 import { Card, PageHeader, Button, ProgressBar, StatusPill, LoadingSkeleton, ErrorBanner } from '../components/DesignSystem';
-import type { FlashcardGenerationConfig, GeneratedFlashcard, LessonKnowledgeUnit } from '../types';
+import { getCurriculumLessonQuality, lessonPageRange, useActiveCurriculum } from '../hooks/useActiveCurriculum';
+import type { FlashcardGenerationConfig, GeneratedFlashcard } from '../types';
 
 type FlashcardMode = FlashcardGenerationConfig['mode'];
 type FlashcardDifficulty = FlashcardGenerationConfig['difficulty'];
@@ -20,7 +20,7 @@ export const FlashcardsPage = () => {
   // Config UI State
   const [mode, setMode] = useState<FlashcardMode>(paramLessonId ? 'single_lesson' : 'single_lesson');
   const [selectedLessonIds, setSelectedLessonIds] = useState<string[]>(paramLessonId ? [paramLessonId] : []);
-  const [selectedChapterId, setSelectedChapterId] = useState<string>('chapter_1');
+  const [selectedChapterId, setSelectedChapterId] = useState<string>('');
   const [cardsPerLesson, setCardsPerLesson] = useState<number>(4);
   const [difficulty, setDifficulty] = useState<FlashcardDifficulty>('mixed');
   const [cardTypes, setCardTypes] = useState<FlashcardGenerationConfig['cardTypes']>(['term', 'definition', 'formula', 'experiment']);
@@ -36,34 +36,40 @@ export const FlashcardsPage = () => {
   // Study Metrics
   const [knownCount, setKnownCount] = useState(0);
   const [reviewCount, setReviewCount] = useState(0);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
   // Filter States (studying mode)
   const [filterType, setFilterType] = useState<string>('all');
   const [filterDifficulty, setFilterDifficulty] = useState<string>('all');
+  const [showFilters, setShowFilters] = useState(false);
+  const [showQualityReport, setShowQualityReport] = useState(false);
+
+  const { allLessons, chapters, loading: curriculumLoading, usingFallback: usingFallbackCurriculum } = useActiveCurriculum();
+  const effectiveSelectedChapterId = selectedChapterId || (chapters[0] ? String(chapters[0].id) : '');
 
   // Compute selected lessons
-  const currentSelectedLessons = useMemo<LessonKnowledgeUnit[]>(() => {
+  const currentSelectedLessons = useMemo(() => {
     if (mode === 'single_lesson') {
-      return mockLessons.filter(l => selectedLessonIds.includes(l.lessonId));
+      return allLessons.filter(l => selectedLessonIds.includes(String(l.id)));
     }
     if (mode === 'selected_lessons') {
-      return mockLessons.filter(l => selectedLessonIds.includes(l.lessonId));
+      return allLessons.filter(l => selectedLessonIds.includes(String(l.id)));
     }
     if (mode === 'chapter') {
-      return mockLessons.filter(l => l.chapterId === selectedChapterId);
+      return allLessons.filter(l => String(l.chapter_id) === effectiveSelectedChapterId || String(l.chapter.id) === effectiveSelectedChapterId);
     }
     if (mode === 'weak_lessons') {
-      return mockLessons.filter(l => l.qualityScore >= 60 && l.qualityScore < 80);
+      return allLessons.filter(l => l.difficulty >= 3).slice(0, 5);
     }
     if (mode === 'study_plan') {
-      return mockLessons.filter(l => l.qualityScore >= 80).slice(0, 4);
+      return allLessons.filter(l => l.difficulty <= 3).slice(0, 4);
     }
     return [];
-  }, [mode, selectedLessonIds, selectedChapterId]);
+  }, [mode, selectedLessonIds, effectiveSelectedChapterId, allLessons]);
 
   // Compute validation report
   const validationReport = useMemo(() => {
-    const reports = currentSelectedLessons.map(getLessonQualityReport);
+    const reports = currentSelectedLessons.map(getCurriculumLessonQuality);
     const blocked = reports.filter(r => r.status === 'blocked');
     const needsReview = reports.filter(r => r.status === 'needs_review');
     
@@ -82,7 +88,7 @@ export const FlashcardsPage = () => {
 
     const config: FlashcardGenerationConfig = overrideConfig || {
       mode,
-      lessonIds: currentSelectedLessons.map(l => l.lessonId),
+      lessonIds: currentSelectedLessons.map(l => String(l.id)),
       cardsPerLesson,
       difficulty,
       cardTypes,
@@ -96,9 +102,9 @@ export const FlashcardsPage = () => {
       return;
     }
 
-    const selectedReports = mockLessons
-      .filter(l => config.lessonIds.includes(l.lessonId))
-      .map(getLessonQualityReport);
+    const selectedReports = allLessons
+      .filter(l => config.lessonIds.includes(String(l.id)))
+      .map(getCurriculumLessonQuality);
     
     if (selectedReports.some(r => r.status === 'blocked')) {
       setError('لا يمكن توليد البطاقات. أحد الدروس المحددة محظور بسبب نقص الجودة.');
@@ -142,6 +148,7 @@ export const FlashcardsPage = () => {
     setFlipped(false);
     setKnownCount(0);
     setReviewCount(0);
+    setShowFilters(false);
     setGameState('studying');
   };
 
@@ -192,16 +199,16 @@ export const FlashcardsPage = () => {
       spacedRepetitionEnabled: true
     };
 
-    const lesson = mockLessons.find(l => l.lessonId === paramLessonId);
+    const lesson = allLessons.find(l => String(l.id) === paramLessonId);
     if (!lesson) return;
-    const report = getLessonQualityReport(lesson);
+    const report = getCurriculumLessonQuality(lesson);
     if (report.status !== 'blocked') {
       queueMicrotask(() => void handleGenerateFlashcards(config));
     } else {
-      queueMicrotask(() => setError(`تعذر التوليد التلقائي للبطاقات: درس "${lesson.titleAr}" محظور بسبب جودة المحتوى.`));
+      queueMicrotask(() => setError(`تعذر التوليد التلقائي للبطاقات: درس "${lesson.title_ar}" محظور بسبب جودة المحتوى.`));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paramAuto, paramLessonId, queryParams]);
+  }, [paramAuto, paramLessonId, queryParams, allLessons]);
 
   const getCardTypeLabel = (type: string) => {
     const labels: Record<string, string> = {
@@ -229,112 +236,34 @@ export const FlashcardsPage = () => {
     return tones[type] || 'blue';
   };
 
+  const handleFlashcardTouchEnd = (clientX: number) => {
+    if (touchStartX === null || !activeCard) return;
+    const delta = clientX - touchStartX;
+    setTouchStartX(null);
+    if (Math.abs(delta) < 70) return;
+    void handleCardAction(delta < 0 ? 'known' : 'review');
+  };
+
   return (
     <div className="page-stack flashcards-page">
-      {/* Dynamic inline styles for 3D flip card effect */}
-      <style>{`
-        .flashcard-wrapper {
-          perspective: 1200px;
-          width: 100%;
-          max-width: 550px;
-          height: 340px;
-          margin: 0 auto;
-          cursor: pointer;
-        }
-        .flashcard-inner {
-          position: relative;
-          width: 100%;
-          height: 100%;
-          text-align: center;
-          transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-          transform-style: preserve-3d;
-        }
-        .flashcard-inner.is-flipped {
-          transform: rotateY(180deg);
-        }
-        .flashcard-front, .flashcard-back {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          -webkit-backface-visibility: hidden;
-          backface-visibility: hidden;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          padding: 24px;
-          border-radius: 20px;
-          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-          background: rgba(30, 41, 59, 0.7);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .flashcard-front {
-          color: #f8fafc;
-        }
-        .flashcard-back {
-          color: #f1f5f9;
-          transform: rotateY(180deg);
-          background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(2, 6, 23, 0.95));
-          border: 1px solid rgba(79, 70, 229, 0.2);
-        }
-        .card-body-text {
-          font-size: 1.35rem;
-          line-height: 1.8;
-          font-weight: 600;
-          flex-grow: 1;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 10px 0;
-        }
-        .card-footer-info {
-          display: flex;
-          justify-content: space-between;
-          font-size: 0.8rem;
-          opacity: 0.6;
-          border-top: 1px solid rgba(255, 255, 255, 0.08);
-          padding-top: 12px;
-        }
-        .card-header-badge-row {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 12px;
-        }
-        .pre-generated-list {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-          max-height: 380px;
-          overflow-y: auto;
-          padding-left: 6px;
-        }
-        .pre-generated-card-item {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          background: rgba(255, 255, 255, 0.03);
-          border-radius: 8px;
-          padding: 10px 14px;
-          border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-      `}</style>
-
       <PageHeader
         eyebrow="المراجعة الذكية"
         title="البطاقات التعليمية للكيمياء"
         subtitle="مراجعة المفاهيم، موازنة الصيغ، وتثبيت نواتج التعلم بالاعتماد على خوارزمية التكرار المتباعد."
       />
 
+      {usingFallbackCurriculum && <ErrorBanner message="تعذر تحميل المنهج من الخادم، لذلك نعرض بنية الكتاب الاحتياطية مؤقتاً." />}
       {error && <ErrorBanner message={error} onRetry={() => setError('')} />}
 
       {/* SETUP CONFIG STATE */}
       {gameState === 'setup' && (
-        <div className="quiz-setup-grid">
+        <div className={`quiz-setup-grid ${showQualityReport ? 'has-report' : 'report-collapsed'}`}>
           <Card className="quiz-config-card">
             <div className="section-title">
               <h2>إعداد مجموعة المراجعة</h2>
+              <Button variant="ghost" onClick={() => setShowQualityReport((open) => !open)} className="ed-btn-xs">
+                {showQualityReport ? 'إخفاء تقرير الجودة' : 'عرض تقرير الجودة'}
+              </Button>
             </div>
 
             <div className="form-group">
@@ -342,7 +271,7 @@ export const FlashcardsPage = () => {
               <select value={mode} onChange={(e) => { setMode(e.target.value as FlashcardMode); setSelectedLessonIds([]); }}>
                 <option value="single_lesson">درس واحد محدد</option>
                 <option value="selected_lessons">مجموعة دروس محددة</option>
-                <option value="chapter">الوحدة الكندية الكاملة (Chapter)</option>
+                <option value="chapter">فصل كامل من الوحدة</option>
                 <option value="weak_lessons">الدروس ذات التحصيل الضعيف (تحت 80%)</option>
                 <option value="study_plan">خطة المراجعة اليومية الموصى بها</option>
               </select>
@@ -351,45 +280,68 @@ export const FlashcardsPage = () => {
             {mode === 'single_lesson' && (
               <div className="form-group">
                 <label>اختر الدرس:</label>
-                <select 
-                  value={selectedLessonIds[0] || ''} 
-                  onChange={(e) => setSelectedLessonIds([e.target.value])}
-                >
-                  <option value="" disabled>-- اختر الدرس --</option>
-                  {mockLessons.map(l => (
-                    <option key={l.lessonId} value={l.lessonId}>{l.titleAr}</option>
-                  ))}
-                </select>
+                {curriculumLoading ? <LoadingSkeleton rows={3} /> : (
+                  <div className="lesson-selector-grid">
+                    {allLessons.map((lesson) => {
+                      const lessonId = String(lesson.id);
+                      const selected = selectedLessonIds.includes(lessonId);
+                      return (
+                        <button
+                          key={lesson.id}
+                          type="button"
+                          className={`lesson-select-card ${selected ? 'selected' : ''}`}
+                          onClick={() => setSelectedLessonIds([lessonId])}
+                          aria-pressed={selected}
+                        >
+                          <span className="lesson-num">درس {lesson.order}</span>
+                          <strong>{lesson.title_ar}</strong>
+                          <small>{lesson.unit.title_ar} · {lessonPageRange(lesson)}</small>
+                          {selected && <span className="check-mark">✓</span>}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             )}
 
             {mode === 'selected_lessons' && (
               <div className="form-group">
                 <label>اختر الدروس المطلوبة:</label>
-                <div className="lessons-checkbox-list">
-                  {mockLessons.map(l => (
-                    <label className="checkbox-item" key={l.lessonId}>
-                      <input 
-                        type="checkbox" 
-                        checked={selectedLessonIds.includes(l.lessonId)} 
-                        onChange={() => handleToggleLessonSelection(l.lessonId)} 
-                      />
-                      {l.titleAr}
-                    </label>
-                  ))}
-                </div>
+                {curriculumLoading ? <LoadingSkeleton rows={3} /> : (
+                  <div className="lesson-selector-grid">
+                    {allLessons.map((lesson) => {
+                      const lessonId = String(lesson.id);
+                      const selected = selectedLessonIds.includes(lessonId);
+                      return (
+                        <button
+                          key={lesson.id}
+                          type="button"
+                          className={`lesson-select-card ${selected ? 'selected' : ''}`}
+                          onClick={() => handleToggleLessonSelection(lessonId)}
+                          aria-pressed={selected}
+                        >
+                          <span className="lesson-num">درس {lesson.order}</span>
+                          <strong>{lesson.title_ar}</strong>
+                          <small>{lesson.chapter.title_ar} · {lessonPageRange(lesson)}</small>
+                          {selected && <span className="check-mark">✓</span>}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             )}
 
             {mode === 'chapter' && (
               <div className="form-group">
-                <label>اختر الوحدة:</label>
-                <select value={selectedChapterId} onChange={(e) => setSelectedChapterId(e.target.value)}>
-                  <option value="chapter_1">الوحدة الأولى: المحاليل المائية</option>
-                  <option value="chapter_2">الوحدة الثانية: المحاليل الحمضية</option>
-                  <option value="chapter_3">الوحدة الثالثة: المحاليل الأساسية</option>
-                  <option value="chapter_4">الوحدة الرابعة: أنواع التفاعلات الكيميائية</option>
-                  <option value="chapter_5">الوحدة الخامسة: الأملاح</option>
+                <label>اختر الفصل داخل الوحدة:</label>
+                <select value={effectiveSelectedChapterId} onChange={(e) => setSelectedChapterId(e.target.value)}>
+                  {chapters.map((chapter) => (
+                    <option key={chapter.id} value={String(chapter.id)}>
+                      {chapter.unit.title_ar} · {chapter.title_ar}
+                    </option>
+                  ))}
                 </select>
               </div>
             )}
@@ -418,23 +370,24 @@ export const FlashcardsPage = () => {
 
             <div className="form-group">
               <label>أنواع البطاقات المطلوبة:</label>
-              <div className="checkbox-grid">
-                <label>
-                  <input type="checkbox" checked={cardTypes.includes('term')} onChange={() => handleToggleCardType('term')} />
-                  المصطلحات الكيميائية
-                </label>
-                <label>
-                  <input type="checkbox" checked={cardTypes.includes('definition')} onChange={() => handleToggleCardType('definition')} />
-                  التعاريف الرسمية
-                </label>
-                <label>
-                  <input type="checkbox" checked={cardTypes.includes('formula')} onChange={() => handleToggleCardType('formula')} />
-                  المعادلات والقوانين
-                </label>
-                <label>
-                  <input type="checkbox" checked={cardTypes.includes('experiment')} onChange={() => handleToggleCardType('experiment')} />
-                  التجارب والخلاصات
-                </label>
+              <div className="type-pill-row" aria-label="أنواع البطاقات">
+                {[
+                  { value: 'term' as const, label: 'مصطلحات', icon: 'T' },
+                  { value: 'definition' as const, label: 'تعاريف', icon: 'D' },
+                  { value: 'formula' as const, label: 'قوانين', icon: 'F' },
+                  { value: 'experiment' as const, label: 'تجارب', icon: 'E' },
+                ].map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    className={`type-pill ${cardTypes.includes(option.value) ? 'active' : ''}`}
+                    onClick={() => handleToggleCardType(option.value)}
+                    aria-pressed={cardTypes.includes(option.value)}
+                  >
+                    <span>{option.icon}</span>
+                    {option.label}
+                  </button>
+                ))}
               </div>
             </div>
 
@@ -443,6 +396,12 @@ export const FlashcardsPage = () => {
                 <input type="checkbox" checked={spacedRepetition} onChange={(e) => setSpacedRepetition(e.target.checked)} />
                 تفعيل التكرار المتباعد (Spaced Repetition)
               </label>
+            </div>
+
+            <div className="setup-summary-bar">
+              <strong>{currentSelectedLessons.length} دروس مختارة</strong>
+              <span>{Math.max(1, currentSelectedLessons.length) * cardsPerLesson} بطاقة متوقعة</span>
+              <span>{spacedRepetition ? 'تكرار متباعد مفعل' : 'تكرار متباعد معطل'}</span>
             </div>
 
             <Button 
@@ -455,6 +414,7 @@ export const FlashcardsPage = () => {
           </Card>
 
           {/* Quality reports for verification */}
+          {showQualityReport && (
           <Card className="quiz-quality-report-sidebar">
             <div className="section-title">
               <h2>تقرير جودة دروس البطاقات</h2>
@@ -466,11 +426,11 @@ export const FlashcardsPage = () => {
                 <p className="text-sm mb-3">الدروس المختارة للتوليد ({currentSelectedLessons.length}):</p>
                 <div className="status-lesson-list">
                   {validationReport.reports.map(rep => {
-                    const l = mockLessons.find(m => m.lessonId === rep.lessonId);
+                    const l = allLessons.find(m => String(m.id) === rep.lessonId);
                     return (
                       <div className={`status-lesson-item ${rep.status}`} key={rep.lessonId}>
                         <div className="flex justify-between items-center">
-                          <strong>{l?.titleAr}</strong>
+                          <strong>{l?.title_ar}</strong>
                           <span className={`text-xs badge-${rep.status}`}>
                             {rep.status === 'ready' ? 'جاهز' : rep.status === 'needs_review' ? 'مسودة' : 'محظور'}
                           </span>
@@ -503,6 +463,7 @@ export const FlashcardsPage = () => {
               </div>
             )}
           </Card>
+          )}
         </div>
       )}
 
@@ -547,50 +508,29 @@ export const FlashcardsPage = () => {
 
       {/* ACTIVE STUDY BOARD WITH 3D FLIP */}
       {gameState === 'studying' && activeCard && (
-        <div className="study-layout">
-          {/* Card Filters sidebar */}
-          <Card className="study-filters-panel">
-            <h3>تصفية البطاقات الحالية</h3>
-            
-            <div className="form-group mt-4">
-              <label>تصفية حسب النوع:</label>
-              <select value={filterType} onChange={(e) => { setFilterType(e.target.value); setCurrentIndex(0); }}>
-                <option value="all">كل الأنواع</option>
-                <option value="term">المصطلحات</option>
-                <option value="definition">التعاريف</option>
-                <option value="formula">المعادلات والقوانين</option>
-                <option value="experiment">التجارب والخلاصات</option>
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label>تصفية حسب الصعوبة:</label>
-              <select value={filterDifficulty} onChange={(e) => { setFilterDifficulty(e.target.value); setCurrentIndex(0); }}>
-                <option value="all">كل الصعوبات</option>
-                <option value="easy">سهل</option>
-                <option value="medium">متوسط</option>
-                <option value="hard">صعب</option>
-              </select>
-            </div>
-
-            <div className="study-session-info mt-6 text-xs text-right opacity-85">
-              <div className="font-semibold mb-2">إحصاءات الجلسة:</div>
-              <div>• بطاقات معروفة: {knownCount}</div>
-              <div>• بطاقات تحتاج مراجعة: {reviewCount}</div>
-              <div>• إجمالي ما تمت تصفيته: {filteredCards.length} بطاقة</div>
-            </div>
-            
-            <Button variant="ghost" onClick={() => setGameState('setup')} className="w-full mt-6">إيقاف المراجعة</Button>
-          </Card>
-
+        <div className={`study-layout ${showFilters ? 'filters-open' : 'filters-collapsed'}`}>
           {/* Centered large 3D flip card */}
-          {filteredCards.length === 0 ? (
+          <div className="study-card-player flex-grow">
+            <div className="study-review-toolbar">
+              <div>
+                <strong>مراجعة البطاقات</strong>
+                <span>{filteredCards.length} بطاقة ظاهرة · {knownCount} متقنة · {reviewCount} للمراجعة</span>
+              </div>
+              <div className="study-review-toolbar-actions">
+                <Button variant="ghost" onClick={() => setShowFilters((open) => !open)}>
+                  {showFilters ? 'إخفاء التصفية' : 'تصفية البطاقات'}
+                </Button>
+                <Button variant="ghost" onClick={() => setGameState('setup')}>إيقاف المراجعة</Button>
+              </div>
+            </div>
+
+            {filteredCards.length === 0 ? (
             <Card className="text-center w-full flex-grow">
               <p className="no-data-text">لا توجد بطاقات مطابقة لخيارات التصفية الحالية.</p>
               <Button variant="secondary" onClick={() => { setFilterType('all'); setFilterDifficulty('all'); }} className="mt-4">إزالة التصفية</Button>
             </Card>
           ) : (
-            <div className="study-card-player flex-grow">
+            <>
               <Card className="quiz-progress-card mb-4">
                 <div className="player-progress-header text-sm">
                   <span>البطاقة <strong>{currentIndex + 1}</strong> من <strong>{filteredCards.length}</strong></span>
@@ -601,7 +541,12 @@ export const FlashcardsPage = () => {
 
               {/* 3D Flashcard Stage */}
               <div className="flashcard-stage mt-6">
-                <div className="flashcard-wrapper" onClick={() => setFlipped(!flipped)}>
+                <div
+                  className="flashcard-wrapper"
+                  onClick={() => setFlipped(!flipped)}
+                  onTouchStart={(event) => setTouchStartX(event.changedTouches[0]?.clientX ?? null)}
+                  onTouchEnd={(event) => handleFlashcardTouchEnd(event.changedTouches[0]?.clientX ?? 0)}
+                >
                   <div className={`flashcard-inner ${flipped ? 'is-flipped' : ''}`}>
                     
                     {/* FRONT SIDE */}
@@ -654,7 +599,42 @@ export const FlashcardsPage = () => {
                   </Button>
                 </div>
               </div>
+            </>
+          )}
+          </div>
+
+          {showFilters && (
+          <Card className="study-filters-panel">
+            <h3>تصفية البطاقات الحالية</h3>
+
+            <div className="form-group mt-4">
+              <label>تصفية حسب النوع:</label>
+              <select value={filterType} onChange={(e) => { setFilterType(e.target.value); setCurrentIndex(0); }}>
+                <option value="all">كل الأنواع</option>
+                <option value="term">المصطلحات</option>
+                <option value="definition">التعاريف</option>
+                <option value="formula">المعادلات والقوانين</option>
+                <option value="experiment">التجارب والخلاصات</option>
+              </select>
             </div>
+
+            <div className="form-group">
+              <label>تصفية حسب الصعوبة:</label>
+              <select value={filterDifficulty} onChange={(e) => { setFilterDifficulty(e.target.value); setCurrentIndex(0); }}>
+                <option value="all">كل الصعوبات</option>
+                <option value="easy">سهل</option>
+                <option value="medium">متوسط</option>
+                <option value="hard">صعب</option>
+              </select>
+            </div>
+
+            <div className="study-session-info mt-6 text-xs text-right opacity-85">
+              <div className="font-semibold mb-2">إحصاءات الجلسة:</div>
+              <div>بطاقات معروفة: {knownCount}</div>
+              <div>بطاقات تحتاج مراجعة: {reviewCount}</div>
+              <div>إجمالي ما تمت تصفيته: {filteredCards.length} بطاقة</div>
+            </div>
+          </Card>
           )}
         </div>
       )}

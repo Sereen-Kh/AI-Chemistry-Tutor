@@ -1,0 +1,63 @@
+{
+  "generated_at": "2026-06-24T10:10:25.648663+00:00",
+  "metadata_path": "data/processed/curriculum/reviewed_curriculum_metadata.json",
+  "reviewed_metadata_version": "2026-06-reviewed-v1",
+  "metadata_ready": false,
+  "failure_codes": {
+    "missing_metadata": "REVIEWED_CURRICULUM_METADATA_MISSING",
+    "metadata_not_ready": "CURRICULUM_METADATA_NOT_READY_FOR_EMBEDDING"
+  },
+  "required_chunk_metadata": [
+    "lesson_id",
+    "unit_id",
+    "source_type",
+    "printed_page_start",
+    "printed_page_end",
+    "quality_status",
+    "reviewed_metadata_version"
+  ],
+  "updated_files": [
+    {
+      "file": "src/backend/app/services/reviewed_curriculum_metadata.py",
+      "change": "new shared guard; loads reviewed metadata and raises REVIEWED_CURRICULUM_METADATA_MISSING / CURRICULUM_METADATA_NOT_READY_FOR_EMBEDDING"
+    },
+    {
+      "file": "src/backend/app/services/rag_reembed.py",
+      "change": "requires reviewed metadata before re-embedding; reports reviewed_metadata_version, metadata_ready, skipped_missing_metadata_count, skipped_blocked_count"
+    },
+    {
+      "file": "src/backend/app/schemas/rag.py",
+      "change": "adds reviewed metadata fields to admin re-embed status response"
+    },
+    {
+      "file": "src/backend/app/api/admin_rag.py",
+      "change": "maps reviewed metadata fields into re-embed status response"
+    },
+    {
+      "file": "src/backend/app/services/ingestion_pipeline.py",
+      "change": "refuses to embed extracted chunks missing reviewed metadata"
+    },
+    {
+      "file": "src/backend/app/services/rag_rebuild.py",
+      "change": "refuses cached-page rebuild embedding without reviewed metadata"
+    },
+    {
+      "file": "src/backend/app/services/solution_book_ingestion.py",
+      "change": "filters/skips solution chunks missing reviewed metadata before embedding and reports skip counts"
+    },
+    {
+      "file": "src/backend/scripts/rechunk_cached_source.py",
+      "change": "refuses legacy cached-source re-chunk embedding without reviewed metadata"
+    }
+  ],
+  "dry_run_embedding_readiness": {
+    "can_run_embedding": false,
+    "textbook_chunks_ready": 0,
+    "solution_chunks_ready": 7,
+    "chunks_skipped_missing_metadata": 720,
+    "chunks_skipped_blocked": 0,
+    "chunks_skipped_needs_review": 17
+  },
+  "actual_embedding_run": false,
+  "vector_db_write": false
+}

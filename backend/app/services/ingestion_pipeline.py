@@ -22,6 +22,11 @@ from app.services.pdf_processor import (
     extract_selectable_text_page,
     render_page_to_image,
 )
+from app.services.reviewed_curriculum_metadata import (
+    chunk_is_embedding_ready,
+    ensure_reviewed_metadata_ready,
+    metadata_with_reviewed_version,
+)
 
 ProgressCallback = Callable[[int, str], None]
 VISION_PAGE_TYPES = {"NEEDS_VISION", "MIXED_VISION"}
@@ -567,6 +572,27 @@ async def _store_page_chunks(
 ) -> int:
     """Create RagChunk rows for one extracted page and return chunks created."""
     chunk_records = build_page_chunk_records(page_payload)
+    reviewed_metadata = ensure_reviewed_metadata_ready()
+    metadata_errors: list[dict[str, object]] = []
+    for offset, record in enumerate(chunk_records):
+        candidate = {
+            **(record.metadata or {}),
+            "source_type": document_type or source.source_type,
+        }
+        ready, reason, missing = chunk_is_embedding_ready(candidate, reviewed_metadata)
+        if not ready:
+            metadata_errors.append(
+                {
+                    "chunk_index": chunk_index_start + offset,
+                    "reason": reason,
+                    "missing_metadata": missing,
+                }
+            )
+    if metadata_errors:
+        raise RuntimeError(
+            "Refusing to embed chunks without reviewed curriculum metadata: "
+            + json.dumps(metadata_errors[:10], ensure_ascii=False)
+        )
 
     # Embed with optional prefix for solution book chunks
     texts_to_embed: list[str] = []
@@ -607,7 +633,7 @@ async def _store_page_chunks(
                 embedding_model=current_embedding_model_name(),
                 embedding_updated_at=datetime.now(timezone.utc),
                 metadata_json={
-                    **record.metadata,
+                    **metadata_with_reviewed_version(record.metadata, reviewed_metadata),
                     **extra_meta,
                     "embedding_model": current_embedding_model_name(),
                     "extraction_methods": page_payload.get("extraction_methods") or [],

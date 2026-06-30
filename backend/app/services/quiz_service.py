@@ -8,10 +8,18 @@ from app.models.textbook import ExtractedQuestion
 from app.models.topic import Topic
 
 
-async def generate_quiz(db: AsyncSession, topic_id: int | None, source_type: str | None, limit: int):
+async def generate_quiz(
+    db: AsyncSession,
+    topic_id: int | None,
+    lesson_id: int | None,
+    source_type: str | None,
+    limit: int,
+):
     stmt = select(ExtractedQuestion).where(ExtractedQuestion.question_text.isnot(None))
     if topic_id is not None:
         stmt = stmt.where(ExtractedQuestion.topic_id == topic_id)
+    elif lesson_id is not None:
+        stmt = stmt.where(ExtractedQuestion.lesson_id == lesson_id)
     if source_type is not None:
         # source_type is stored on ContentSource; keep the first MVP version simple.
         pass

@@ -41,6 +41,11 @@ export interface DashboardResponse {
   };
   quick_tools: Array<{ label: string; route: string }>;
   data_quality: Record<string, unknown>;
+  // Flat accessors for frontend parity.
+  current_streak: number;
+  lesson_progress_percentage: number;
+  flashcards_due_count: number;
+  weekly_xp: number;
 }
 
 export const dashboardApi = {

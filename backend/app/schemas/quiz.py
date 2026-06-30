@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field
 
 class QuizGenerateRequest(BaseModel):
     topic_id: int | None = None
+    lesson_id: int | None = None
     source_type: str | None = None
     difficulty: int | None = Field(default=None, ge=1, le=5)
     limit: int = Field(default=5, ge=1, le=30)

@@ -1,0 +1,17 @@
+{
+  "page_190_recovery_found": true,
+  "page_190_validation_status": "passed",
+  "printed_page_number": 190,
+  "unit_title_detected": true,
+  "lesson_title_detected": true,
+  "needs_ocr": false,
+  "needs_vision": false,
+  "blocked": false,
+  "status": "reviewed",
+  "can_update_book_structure": true,
+  "files_checked": [
+    "reports/page_190_recovery/page_190_validation_report.json",
+    "reports/page_190_recovery/page_190_recovery_report.json",
+    "data/processed/textbook/pages/page_190_reviewed.json"
+  ]
+}

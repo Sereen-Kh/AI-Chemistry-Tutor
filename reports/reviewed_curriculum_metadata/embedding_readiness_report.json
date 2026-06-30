@@ -1,0 +1,117 @@
+{
+  "ready_for_embedding": false,
+  "reviewed_metadata_version": "2026-06-reviewed-v1",
+  "textbook_chunks_ready": 0,
+  "solution_chunks_ready": 7,
+  "chunks_skipped_missing_metadata": 720,
+  "chunks_skipped_blocked": 0,
+  "chunks_skipped_needs_review": 17,
+  "can_run_embedding": false,
+  "textbook": {
+    "path": "data/processed/chunk_preview/textbook_chunks_preview.jsonl",
+    "exists": true,
+    "total": 720,
+    "ready": 0,
+    "skipped_missing_metadata": 720,
+    "skipped_blocked": 0,
+    "skipped_needs_review": 0,
+    "missing_metadata_examples": [
+      {
+        "chunk_id": "chunk_unit_04_lesson_01_0001",
+        "source_type": "textbook",
+        "missing_metadata": [
+          "quality_status",
+          "reviewed_metadata_version"
+        ]
+      },
+      {
+        "chunk_id": "chunk_unit_04_lesson_01_0002",
+        "source_type": "textbook",
+        "missing_metadata": [
+          "quality_status",
+          "reviewed_metadata_version"
+        ]
+      },
+      {
+        "chunk_id": "chunk_unit_04_lesson_01_0003",
+        "source_type": "textbook",
+        "missing_metadata": [
+          "quality_status",
+          "reviewed_metadata_version"
+        ]
+      },
+      {
+        "chunk_id": "chunk_unit_04_lesson_01_0004",
+        "source_type": "textbook",
+        "missing_metadata": [
+          "quality_status",
+          "reviewed_metadata_version"
+        ]
+      },
+      {
+        "chunk_id": "chunk_unit_04_lesson_01_0005",
+        "source_type": "textbook",
+        "missing_metadata": [
+          "quality_status",
+          "reviewed_metadata_version"
+        ]
+      },
+      {
+        "chunk_id": "chunk_unit_04_lesson_01_0006",
+        "source_type": "textbook",
+        "missing_metadata": [
+          "quality_status",
+          "reviewed_metadata_version"
+        ]
+      },
+      {
+        "chunk_id": "chunk_unit_04_lesson_01_0007",
+        "source_type": "textbook",
+        "missing_metadata": [
+          "quality_status",
+          "reviewed_metadata_version"
+        ]
+      },
+      {
+        "chunk_id": "chunk_unit_04_lesson_01_0008",
+        "source_type": "textbook",
+        "missing_metadata": [
+          "quality_status",
+          "reviewed_metadata_version"
+        ]
+      },
+      {
+        "chunk_id": "chunk_unit_04_lesson_01_0009",
+        "source_type": "textbook",
+        "missing_metadata": [
+          "quality_status",
+          "reviewed_metadata_version"
+        ]
+      },
+      {
+        "chunk_id": "chunk_unit_04_lesson_01_0010",
+        "source_type": "textbook",
+        "missing_metadata": [
+          "quality_status",
+          "reviewed_metadata_version"
+        ]
+      }
+    ]
+  },
+  "solution_book": {
+    "path": "data/processed/solution_book/solution_chunks.cleaned.jsonl",
+    "exists": true,
+    "total": 24,
+    "ready": 7,
+    "skipped_missing_metadata": 0,
+    "skipped_blocked": 0,
+    "skipped_needs_review": 17,
+    "missing_metadata_examples": []
+  },
+  "blocking_issues": [
+    "CURRICULUM_METADATA_NOT_READY_FOR_EMBEDDING",
+    "chunks_missing_required_reviewed_metadata",
+    "textbook_chunk_preview_missing_required_metadata:720"
+  ],
+  "metadata_path": "data/processed/curriculum/reviewed_curriculum_metadata.json"
+}

@@ -225,4 +225,9 @@ async def get_dashboard(db: AsyncSession, user_id: int) -> DashboardResponse:
             "has_active_study_plan": study_plan is not None,
             "has_flashcard_progress": flashcards.total_reviewed > 0,
         },
+        # Flat accessors for frontend parity.
+        current_streak=user.streak_days,
+        lesson_progress_percentage=overall,
+        flashcards_due_count=flashcards.due_count,
+        weekly_xp=user.xp,
     )

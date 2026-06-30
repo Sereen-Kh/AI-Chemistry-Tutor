@@ -1,0 +1,19 @@
+{
+  "page_190_recovery_status": "passed",
+  "book_structure_validation_status": "passed",
+  "solution_chunk_cleanup_status": "passed",
+  "solution_alignment_exists": true,
+  "can_create_reviewed_metadata": true,
+  "blocking_issues": [],
+  "files_checked": {
+    "page_190_validation": "reports/page_190_recovery/page_190_validation_report.json",
+    "book_structure": "data/processed/book_structure.json",
+    "lesson_map": "data/processed/textbook/textbook_lesson_map.reviewed.json",
+    "book_validation": "reports/book_structure_update/book_structure_validation_report.json",
+    "solution_chunks": "data/processed/solution_book/solution_chunks.cleaned.jsonl",
+    "solution_chunk_preview": "data/processed/chunk_preview/solution_book_chunks_preview.cleaned.jsonl",
+    "solution_validation": "reports/solution_chunk_cleanup/solution_chunk_validation_report.json",
+    "solution_alignment": "data/processed/solution_book/solution_textbook_alignment.json",
+    "textbook_chunks_preview": "data/processed/chunk_preview/textbook_chunks_preview.jsonl"
+  }
+}

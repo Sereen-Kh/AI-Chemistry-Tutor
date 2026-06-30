@@ -11,7 +11,7 @@ from app.models.billing import Subscription  # noqa: F401
 from app.models.chat import ChatMessage, ChatSession  # noqa: F401
 from app.models.chemistry import Chapter, Element, Lesson, LessonProgress, Unit  # noqa: F401
 from app.models.device import DeviceToken  # noqa: F401
-from app.models.flashcard import Flashcard, FlashcardProgress  # noqa: F401
+from app.models.flashcard import Flashcard, FlashcardDeck, FlashcardProgress  # noqa: F401
 from app.models.homework import Homework  # noqa: F401
 from app.models.interest import InterestCategory, UserInterest  # noqa: F401
 from app.models.ingestion import IngestionJob, IngestionPage  # noqa: F401

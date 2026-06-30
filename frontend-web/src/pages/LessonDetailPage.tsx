@@ -110,7 +110,7 @@ export const LessonDetailPage = () => {
             <Card className="content-section-card">
               <h3>إجراءات سريعة</h3>
               <div className="action-buttons-row">
-                <Link className="ed-btn ed-btn-ghost" to={`/ask-ai?question=${encodeURIComponent(`اشرح لي درس: ${catalogLesson.title_ar}`)}`}>
+                <Link className="ed-btn ed-btn-ghost" to={`/ask-ai?question=${encodeURIComponent(`اشرح لي درس: ${catalogLesson.title_ar}`)}&lessonId=${catalogLesson.id}`}>
                   اسأل الذكاء عن الدرس
                 </Link>
                 <Link className="ed-btn ed-btn-primary" to={`/quiz?lessonId=${catalogLesson.id}`}>
@@ -253,7 +253,7 @@ export const LessonDetailPage = () => {
           <div className="action-buttons-row">
             <Link 
               className="ed-btn ed-btn-ghost" 
-              to={`/ask-ai?question=${encodeURIComponent(`اشرح لي بالتفصيل درس: ${lesson.titleAr}`)}`}
+              to={`/ask-ai?question=${encodeURIComponent(`اشرح لي بالتفصيل درس: ${lesson.titleAr}`)}${Number.isInteger(Number(lessonId)) ? `&lessonId=${Number(lessonId)}` : ''}`}
             >
               اسأل الذكاء عن الدرس
             </Link>

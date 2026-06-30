@@ -28,6 +28,7 @@ export const QuizzesPage = () => {
   // Config UI State
   const [mode, setMode] = useState<QuizMode>(paramLessonId ? 'single_lesson' : 'single_lesson');
   const [selectedLessonIds, setSelectedLessonIds] = useState<string[]>(paramLessonId ? [paramLessonId] : []);
+  const [selectedTopicId, setSelectedTopicId] = useState<string>('');
   const [selectedChapterId, setSelectedChapterId] = useState<string>('');
   const [questionsPerLesson, setQuestionsPerLesson] = useState<number>(3);
   const [difficulty, setDifficulty] = useState<QuizDifficulty>('mixed');
@@ -70,6 +71,7 @@ export const QuizzesPage = () => {
     }
     return [];
   }, [mode, selectedLessonIds, effectiveSelectedChapterId, allLessons]);
+  const selectedSingleLesson = mode === 'single_lesson' ? currentSelectedLessons[0] : null;
 
   // Compute validation report for selected lessons
   const validationReport = useMemo(() => {
@@ -93,6 +95,7 @@ export const QuizzesPage = () => {
     const config: QuizGenerationConfig = overrideConfig || {
       mode,
       lessonIds: currentSelectedLessons.map(l => String(l.id)),
+      topicId: selectedTopicId || undefined,
       chapterIds: mode === 'chapter' && effectiveSelectedChapterId ? [effectiveSelectedChapterId] : undefined,
       questionsPerLesson,
       difficulty,
@@ -148,6 +151,7 @@ export const QuizzesPage = () => {
         ? prev.filter(id => id !== lessonId) 
         : [...prev, lessonId]
     );
+    setSelectedTopicId('');
   };
 
   const handleToggleType = (type: QuizQuestionType) => {
@@ -304,7 +308,7 @@ export const QuizzesPage = () => {
 
             <div className="form-group">
               <label>نمط توليد الاختبار:</label>
-              <select value={mode} onChange={(e) => { setMode(e.target.value as QuizMode); setSelectedLessonIds([]); }}>
+              <select value={mode} onChange={(e) => { setMode(e.target.value as QuizMode); setSelectedLessonIds([]); setSelectedTopicId(''); }}>
                 <option value="single_lesson">درس واحد محدد</option>
                 <option value="selected_lessons">مجموعة دروس محددة</option>
                 <option value="chapter">فصل كامل من الوحدة</option>
@@ -328,7 +332,7 @@ export const QuizzesPage = () => {
                           key={lesson.id}
                           type="button"
                           className={`lesson-select-card ${selected ? 'selected' : ''}`}
-                          onClick={() => setSelectedLessonIds([lessonId])}
+                          onClick={() => { setSelectedLessonIds([lessonId]); setSelectedTopicId(''); }}
                           aria-pressed={selected}
                         >
                           <span className="lesson-num">درس {lesson.order}</span>
@@ -338,6 +342,37 @@ export const QuizzesPage = () => {
                         </button>
                       );
                     })}
+                  </div>
+                )}
+                {selectedSingleLesson && (
+                  <div className="selected-lesson-topics-panel">
+                    <div className="selected-lesson-topics-head">
+                      <strong>موضوعات {selectedSingleLesson.title_ar}</strong>
+                      <span>{selectedSingleLesson.topics.length ? `${selectedSingleLesson.topics.length} موضوعات` : 'لا توجد موضوعات مرتبطة بهذا الدرس'}</span>
+                    </div>
+                    {selectedSingleLesson.topics.length ? (
+                      <div className="topic-chip-row selectable">
+                        <button
+                          type="button"
+                          className={`topic-chip ${selectedTopicId ? '' : 'active'}`}
+                          onClick={() => setSelectedTopicId('')}
+                        >
+                          كل موضوعات الدرس
+                        </button>
+                        {selectedSingleLesson.topics.map((topic) => (
+                          <button
+                            key={topic.id}
+                            type="button"
+                            className={`topic-chip ${selectedTopicId === String(topic.id) ? 'active' : ''}`}
+                            onClick={() => setSelectedTopicId(String(topic.id))}
+                          >
+                            {topic.title_ar}
+                          </button>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="muted-text">أضف موضوعات لهذا الدرس من بيانات المنهج حتى تظهر هنا.</p>
+                    )}
                   </div>
                 )}
               </div>

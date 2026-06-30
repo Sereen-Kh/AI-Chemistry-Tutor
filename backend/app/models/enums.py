@@ -4,7 +4,13 @@ from enum import Enum
 
 
 class TeachingStyle(str, Enum):
-    """Legacy single-axis teaching style kept for API compatibility."""
+    """Teaching style enum accepting both backend-native and frontend values.
+
+    Backend-native values: beginner, step_by_step, academic, fast_summary,
+    visual, real_life_examples.
+    Frontend values (aliases): simple ≈ beginner, real_life ≈ real_life_examples,
+    exam (exam-focused style).
+    """
 
     BEGINNER = "beginner"
     STEP_BY_STEP = "step_by_step"
@@ -12,6 +18,10 @@ class TeachingStyle(str, Enum):
     FAST_SUMMARY = "fast_summary"
     VISUAL = "visual"
     REAL_LIFE_EXAMPLES = "real_life_examples"
+    # Frontend-sent aliases — accepted by the API so clients don't need remapping.
+    SIMPLE = "simple"
+    REAL_LIFE = "real_life"
+    EXAM = "exam"
 
 
 class TeachingLevel(str, Enum):

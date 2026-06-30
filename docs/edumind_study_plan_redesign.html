@@ -1,0 +1,461 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased}
+:root{
+  --bg:#0A1628;--bg2:#0F1F38;--bg3:#162444;--bg4:#1E3050;--bg5:#243858;
+  --acc:#4E87F5;--teal:#00D4A8;--gold:#F5A623;--coral:#FF6B6B;--pur:#8B7FE8;
+  --t1:#F0F4FF;--t2:#7A90B5;--t3:#4A607D;
+}
+body{font-family:var(--font-sans);font-size:13px;color:var(--t1);background:var(--bg)}
+button{font-family:inherit;cursor:pointer;border:none}
+input,select{font-family:inherit}
+
+/* ── outer frame ── */
+.frame{background:var(--bg);border-radius:12px;overflow:hidden;border:.5px solid var(--bg4);min-height:600px}
+
+/* ── topbar ── */
+.topbar{background:var(--bg2);border-bottom:1px solid var(--bg4);padding:14px 20px;display:flex;align-items:center;gap:10px}
+.tb-left{display:flex;align-items:center;gap:8px}
+.pill{border-radius:20px;padding:5px 12px;font-size:11px;font-weight:500;cursor:pointer}
+.p-red{background:rgba(255,107,107,.15);color:var(--coral);border:1px solid rgba(255,107,107,.25)}
+.p-gray{background:var(--bg3);color:var(--t2);border:1px solid var(--bg4)}
+.p-green{background:rgba(0,212,168,.12);color:var(--teal);border:1px solid rgba(0,212,168,.25)}
+.tb-right{margin-right:auto;text-align:right}
+.tb-title{font-size:15px;font-weight:600;color:var(--t1)}
+.tb-sub{font-size:10px;color:var(--t2)}
+.notif-btn{width:30px;height:30px;border-radius:7px;background:var(--bg3);border:1px solid var(--bg4);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer}
+
+/* ── state switcher (meta) ── */
+.state-sw{display:flex;gap:6px;padding:12px 20px 0;justify-content:center}
+.ssw{padding:6px 14px;border-radius:20px;font-size:11px;font-weight:500;cursor:pointer;transition:all .15s;background:var(--bg3);color:var(--t2);border:1px solid var(--bg4)}
+.ssw.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+
+/* ═══ EMPTY STATE ═══ */
+.empty-wrap{padding:32px 24px}
+.hero-banner{background:linear-gradient(135deg,rgba(78,135,245,.12) 0%,rgba(0,212,168,.06) 100%);border:1px solid rgba(78,135,245,.2);border-radius:14px;padding:28px 28px 24px;margin-bottom:20px;text-align:center;position:relative;overflow:hidden}
+.hero-banner::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Ccircle stroke='%234E87F5' stroke-width='0.5' stroke-opacity='0.08' cx='30' cy='30' r='20'/%3E%3Ccircle stroke='%2300D4A8' stroke-width='0.5' stroke-opacity='0.06' cx='30' cy='30' r='8'/%3E%3C/g%3E%3C/svg%3E") repeat;opacity:.5}
+.hero-inner{position:relative;z-index:1}
+.hero-icon{font-size:40px;margin-bottom:12px}
+.hero-title{font-size:22px;font-weight:700;color:var(--t1);margin-bottom:6px}
+.hero-sub{font-size:13px;color:var(--t2);line-height:1.6;max-width:440px;margin:0 auto 20px}
+.what-you-get{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+.wyg-item{display:flex;align-items:center;gap:6px;background:var(--bg2);border:1px solid var(--bg4);border-radius:20px;padding:5px 13px;font-size:12px;color:var(--t2)}
+.wyg-icon{font-size:13px}
+.cta-btn{background:var(--acc);color:#fff;border:none;border-radius:10px;padding:12px 32px;font-size:14px;font-weight:600;cursor:pointer;transition:background .15s;display:inline-flex;align-items:center;gap:8px}
+.cta-btn:hover{background:#3d77ea}
+
+/* quick setup form */
+.setup-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.setup-card{background:var(--bg2);border:1px solid var(--bg4);border-radius:10px;padding:16px}
+.sc-label{font-size:11px;font-weight:500;color:var(--t2);margin-bottom:8px;display:block}
+.sc-title{font-size:13px;font-weight:600;color:var(--t1);margin-bottom:12px}
+.form-input{width:100%;background:var(--bg3);border:1px solid var(--bg4);border-radius:7px;padding:9px 12px;font-size:13px;color:var(--t1);outline:none}
+.form-input:focus{border-color:var(--acc)}
+.form-select{width:100%;background:var(--bg3);border:1px solid var(--bg4);border-radius:7px;padding:9px 12px;font-size:13px;color:var(--t1);outline:none;appearance:none}
+.chapter-chips{display:flex;flex-wrap:wrap;gap:6px}
+.ch-chip{padding:5px 11px;border-radius:20px;font-size:11px;font-weight:500;cursor:pointer;background:var(--bg3);color:var(--t2);border:1px solid var(--bg4);transition:all .12s}
+.ch-chip.on{background:rgba(78,135,245,.15);color:var(--acc);border-color:rgba(78,135,245,.4)}
+.gen-btn{width:100%;background:linear-gradient(135deg,var(--acc),#6fa3ff);color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:600;cursor:pointer;transition:opacity .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.gen-btn:hover{opacity:.9}
+
+/* preview strip */
+.preview-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.ps-item{background:var(--bg2);border:1px solid var(--bg4);border-radius:9px;padding:12px;text-align:center}
+.ps-icon{font-size:20px;margin-bottom:5px}
+.ps-t{font-size:12px;font-weight:500;color:var(--t1);margin-bottom:2px}
+.ps-d{font-size:10px;color:var(--t2)}
+
+/* ═══ ACTIVE STATE ═══ */
+.active-wrap{padding:0}
+
+/* tab bar - redesigned */
+.tab-bar{display:flex;background:var(--bg2);border-bottom:1px solid var(--bg4)}
+.t-tab{flex:1;padding:13px 8px;font-size:12px;font-weight:500;cursor:pointer;color:var(--t3);text-align:center;border-bottom:2px solid transparent;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:5px}
+.t-tab:hover{color:var(--t2);background:rgba(255,255,255,.02)}
+.t-tab.on{color:var(--t1);border-bottom-color:var(--acc);background:rgba(78,135,245,.04)}
+.t-tab .tab-ic{font-size:14px}
+.t-tab .tab-badge{background:var(--coral);color:#fff;font-size:9px;padding:1px 5px;border-radius:8px;font-weight:600}
+
+/* tab panels */
+.tab-panel{display:none;padding:20px}
+.tab-panel.on{display:block}
+
+/* today panel */
+.today-hero{background:linear-gradient(135deg,rgba(78,135,245,.15),rgba(0,212,168,.06));border:1px solid rgba(78,135,245,.25);border-radius:12px;padding:18px 20px;margin-bottom:16px;display:flex;align-items:center;gap:16px}
+.th-icon{font-size:28px;flex-shrink:0}
+.th-label{font-size:10px;font-weight:600;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.th-title{font-size:16px;font-weight:600;color:var(--t1);margin-bottom:3px}
+.th-meta{font-size:12px;color:var(--t2)}
+.start-btn{background:var(--acc);color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:500;cursor:pointer;flex-shrink:0;transition:background .12s}
+.start-btn:hover{background:#3d77ea}
+
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.stat-c{background:var(--bg2);border:1px solid var(--bg4);border-radius:9px;padding:12px;text-align:center}
+.sv{font-size:22px;font-weight:700;line-height:1;margin-bottom:3px}
+.sl{font-size:10px;color:var(--t2)}
+
+.week-row{display:flex;gap:5px;background:var(--bg2);border:1px solid var(--bg4);border-radius:10px;padding:12px 14px;margin-bottom:14px}
+.wday{flex:1;border-radius:7px;padding:7px 4px;text-align:center;cursor:pointer}
+.wd-n{font-size:9px;color:var(--t3)}.wd-d{font-size:12px;font-weight:500;color:var(--t2)}
+.wd-dot{width:5px;height:5px;border-radius:50%;margin:3px auto 0;background:var(--bg4)}
+.wday.done{background:rgba(0,212,168,.08)}.wday.done .wd-d{color:var(--teal)}.wday.done .wd-dot{background:var(--teal)}
+.wday.today{background:var(--acc)}.wday.today .wd-n{color:rgba(255,255,255,.6)}.wday.today .wd-d{color:#fff}.wday.today .wd-dot{background:rgba(255,255,255,.6)}
+.wday.exam{background:rgba(245,166,35,.1)}.wday.exam .wd-d{color:var(--gold)}.wday.exam .wd-dot{background:var(--gold)}
+
+/* weakness panel */
+.weak-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.weak-badge{background:rgba(255,107,107,.12);border:1px solid rgba(255,107,107,.25);color:var(--coral);border-radius:6px;padding:3px 9px;font-size:11px;font-weight:500}
+.weak-item{background:var(--bg2);border:1px solid var(--bg4);border-radius:10px;padding:13px 15px;margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.wi-name{flex:1;font-size:13px;font-weight:500;color:var(--t1)}
+.wi-track{flex:2;height:5px;background:var(--bg4);border-radius:3px;overflow:hidden}
+.wi-fill{height:100%;border-radius:3px}
+.wi-pct{font-size:11px;font-weight:600;min-width:36px;text-align:left}
+.wi-action{background:rgba(78,135,245,.1);color:var(--acc);border:1px solid rgba(78,135,245,.2);border-radius:6px;padding:5px 11px;font-size:11px;cursor:pointer;white-space:nowrap;font-family:inherit}
+
+/* path panel */
+.path-tabs{display:flex;gap:4px;background:var(--bg3);border-radius:8px;padding:3px;margin-bottom:14px}
+.pt{flex:1;padding:7px;border-radius:6px;font-size:11px;font-weight:500;text-align:center;cursor:pointer;color:var(--t2);background:none;border:none;transition:all .12s;font-family:inherit}
+.pt.on{background:var(--bg2);color:var(--t1)}
+
+/* timeline */
+.tl-row{display:grid;grid-template-columns:80px 14px 1fr;gap:0 12px;align-items:start;min-height:48px}
+.tl-date{font-size:11px;color:var(--t2);text-align:right;padding-top:4px;line-height:1.4}
+.tl-spine{display:flex;flex-direction:column;align-items:center}
+.tl-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.tl-line{width:2px;flex:1;min-height:20px;margin-top:2px}
+.tl-row:last-child .tl-line{background:transparent!important}
+.tl-c{padding:0 0 14px}
+.tl-lesson{font-size:12px;font-weight:500;color:var(--t1);margin-bottom:2px}
+.tl-meta{font-size:11px;color:var(--t2);display:flex;gap:6px;flex-wrap:wrap}
+.tl-card{background:var(--bg3);border:1px solid var(--bg4);border-radius:7px;padding:9px 11px;display:flex;align-items:center;gap:8px;cursor:pointer;transition:border-color .12s}
+.tl-card:hover{border-color:var(--bg5)}
+.tl-card.today{border-color:var(--acc);background:rgba(78,135,245,.06)}
+.tl-card.exam{border-color:var(--gold);background:rgba(245,166,35,.06)}
+.tl-card.rest{opacity:.6}
+.done-check{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--bg5);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:9px;margin-right:auto;transition:all .12s}
+.done-check.done{background:var(--teal);border-color:var(--teal);color:#033A2E}
+.done-check.today{background:var(--acc);border-color:var(--acc);color:#fff}
+
+/* review panel */
+.review-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.rv-card{background:var(--bg2);border:1px solid var(--bg4);border-radius:10px;padding:16px;cursor:pointer;transition:border-color .15s}
+.rv-card:hover{border-color:rgba(78,135,245,.4)}
+.rv-icon{font-size:22px;margin-bottom:8px}
+.rv-title{font-size:13px;font-weight:600;color:var(--t1);margin-bottom:4px}
+.rv-desc{font-size:11px;color:var(--t2);line-height:1.55}
+.rv-cta{display:inline-block;margin-top:8px;font-size:11px;color:var(--acc);font-weight:500}
+
+/* achievement panel */
+.ach-hero{background:linear-gradient(135deg,rgba(139,127,232,.12),rgba(78,135,245,.06));border:1px solid rgba(139,127,232,.25);border-radius:12px;padding:18px;margin-bottom:14px;text-align:center}
+.ach-icon{font-size:32px;margin-bottom:7px}
+.ach-title{font-size:15px;font-weight:600;color:var(--t1);margin-bottom:4px}
+.ach-sub{font-size:12px;color:var(--t2);line-height:1.55}
+.ach-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.ach-item{background:var(--bg2);border:1px solid var(--bg4);border-radius:9px;padding:12px;text-align:center}
+.ach-item .ai{font-size:22px;margin-bottom:5px}
+.ach-item .an{font-size:11px;font-weight:500;color:var(--t1);margin-bottom:2px}
+.ach-item .as{font-size:10px;color:var(--t2)}
+.ach-item.locked{opacity:.4}
+.progress-ring{width:70px;height:70px;margin:0 auto 10px}
+
+/* bx */
+.bx{display:inline-flex;align-items:center;font-size:10px;font-weight:500;padding:2px 7px;border-radius:10px;gap:3px}
+.b-t{background:rgba(0,212,168,.1);color:var(--teal)}
+.b-b{background:rgba(78,135,245,.1);color:#85B7EB}
+.b-g{background:rgba(245,166,35,.1);color:var(--gold)}
+.b-r{background:rgba(255,107,107,.1);color:var(--coral)}
+.b-p{background:rgba(139,127,232,.1);color:#B0A8F5}
+.b-gray{background:var(--bg3);color:var(--t2)}
+</style>
+
+<div style="font-size:16px;font-weight:600;margin-bottom:12px;padding:0 2px">خطة الدراسة — تصميم مُعاد من الصفر</div>
+<div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:14px;padding:0 2px">حالتان: قبل الإنشاء (Empty state جميل) · بعد الإنشاء (لوحة تحكم كاملة)</div>
+
+<div class="state-sw">
+  <button class="ssw on" onclick="switchState('empty')">📋 قبل الإنشاء — Empty state</button>
+  <button class="ssw" onclick="switchState('active')">✅ بعد الإنشاء — Active plan</button>
+</div>
+
+<div style="height:12px"></div>
+
+<div class="frame">
+
+  <!-- topbar always shown -->
+  <div class="topbar">
+    <div class="tb-left">
+      <div class="pill p-red">تجارب</div>
+      <div class="pill p-gray">فيديو قصير</div>
+      <div class="pill p-green">RAG</div>
+      <div class="notif-btn">🔔</div>
+    </div>
+    <div class="tb-right">
+      <div class="tb-sub">تنظيم المذاكرة</div>
+      <div class="tb-title">خطة الدراسة</div>
+    </div>
+  </div>
+
+  <!-- ══ EMPTY STATE ══ -->
+  <div id="state-empty" class="empty-wrap">
+
+    <!-- hero -->
+    <div class="hero-banner">
+      <div class="hero-inner">
+        <div class="hero-icon">📅</div>
+        <div class="hero-title">لم تُنشئ خطتك الدراسية بعد</div>
+        <div class="hero-sub">أنشئ خطة ذكية تعتمد على الذكاء الاصطناعي — تُوزّع دروسك يومياً، تُركّز على نقاط ضعفك، وتضمن استعدادك للامتحان.</div>
+        <div class="what-you-get">
+          <div class="wyg-item"><span class="wyg-icon">🗓️</span>جدول يومي ذكي</div>
+          <div class="wyg-item"><span class="wyg-icon">🎯</span>يركز على الضعف</div>
+          <div class="wyg-item"><span class="wyg-icon">📊</span>تتبع التقدم</div>
+          <div class="wyg-item"><span class="wyg-icon">🏆</span>إنجازات وتحفيز</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- what you get preview -->
+    <div class="preview-strip">
+      <div class="ps-item"><div class="ps-icon">📖</div><div class="ps-t">مسار الدروس</div><div class="ps-d">جدول مرتّب بالأيام</div></div>
+      <div class="ps-item"><div class="ps-icon">⚠️</div><div class="ps-t">نقاط الضعف</div><div class="ps-d">الدروس التي تحتاج تركيز</div></div>
+      <div class="ps-item"><div class="ps-icon">🔁</div><div class="ps-t">خطة المراجعة</div><div class="ps-d">قبل كل امتحان</div></div>
+      <div class="ps-item"><div class="ps-icon">🏅</div><div class="ps-t">الإنجازات</div><div class="ps-d">تحفيز مستمر</div></div>
+    </div>
+
+    <!-- setup form -->
+    <div class="setup-grid">
+      <div class="setup-card">
+        <div class="sc-title">⚙️ إعداد الخطة</div>
+        <div style="margin-bottom:10px"><label class="sc-label">نوع الخطة</label>
+          <select class="form-select">
+            <option>خطة الفصل الدراسي كاملاً</option>
+            <option>خطة مراجعة للامتحان</option>
+            <option>خطة مخصصة</option>
+          </select>
+        </div>
+        <div style="margin-bottom:10px"><label class="sc-label">تاريخ الامتحان</label>
+          <input type="date" class="form-input" value="2025-06-27">
+        </div>
+        <div><label class="sc-label">ساعات الدراسة يومياً</label>
+          <select class="form-select">
+            <option>ساعة واحدة</option>
+            <option selected>ساعتان</option>
+            <option>3 ساعات</option>
+          </select>
+        </div>
+      </div>
+      <div class="setup-card">
+        <div class="sc-title">📚 اختر الوحدات</div>
+        <div class="chapter-chips" id="chips">
+          <div class="ch-chip on" onclick="toggleChip(this)">الكيمياء اللاعضوية</div>
+          <div class="ch-chip on" onclick="toggleChip(this)">المحاليل والتفاعلات</div>
+          <div class="ch-chip" onclick="toggleChip(this)">الكيمياء العضوية</div>
+          <div class="ch-chip" onclick="toggleChip(this)">الكيمياء النووية</div>
+          <div class="ch-chip" onclick="toggleChip(this)">المحاليل الحمضية</div>
+        </div>
+        <div style="margin-top:12px"><label class="sc-label">أولوية التركيز</label>
+          <select class="form-select">
+            <option>متوازن — دروس جديدة ومراجعة</option>
+            <option>نقاط الضعف أولاً</option>
+            <option>تغطية سريعة للامتحان</option>
+          </select>
+        </div>
+        <div style="margin-top:10px;background:var(--bg3);border-radius:7px;padding:9px;font-size:11px;color:var(--t2)">
+          <span class="bx b-b" style="margin-left:5px">2 وحدة</span>تقديري: ~18 درساً · 36 يوم دراسي
+        </div>
+      </div>
+    </div>
+
+    <button class="gen-btn" onclick="switchState('active')">
+      <span style="font-size:16px">⚡</span> إنشاء خطتي بالذكاء الاصطناعي
+      <span style="font-size:11px;opacity:.7;font-weight:400">سيستغرق ثوانٍ</span>
+    </button>
+
+  </div>
+
+  <!-- ══ ACTIVE STATE ══ -->
+  <div id="state-active" style="display:none">
+
+    <!-- redesigned tab bar — icons + labels, no scrolling -->
+    <div class="tab-bar">
+      <div class="t-tab on" onclick="switchTab(this,'today')"><span class="tab-ic">📋</span>اليوم</div>
+      <div class="t-tab" onclick="switchTab(this,'weakness')"><span class="tab-ic">⚠️</span>الضعف<span class="tab-badge">3</span></div>
+      <div class="t-tab" onclick="switchTab(this,'path')"><span class="tab-ic">🗺️</span>المسار</div>
+      <div class="t-tab" onclick="switchTab(this,'review')"><span class="tab-ic">🔁</span>المراجعة</div>
+      <div class="t-tab" onclick="switchTab(this,'ach')"><span class="tab-ic">🏆</span>الإنجاز</div>
+    </div>
+
+    <!-- TODAY -->
+    <div class="tab-panel on" id="tp-today">
+      <div class="today-hero">
+        <div class="th-icon">📖</div>
+        <div style="flex:1">
+          <div class="th-label">مهمتك اليوم</div>
+          <div class="th-title">الأملاح</div>
+          <div class="th-meta">الوحدة 2 · الكيمياء اللاعضوية · 50 دقيقة</div>
+        </div>
+        <button class="start-btn">ابدأ المراجعة ←</button>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-c"><div class="sv" style="color:var(--teal)">36%</div><div class="sl">إجمالي الإنجاز</div></div>
+        <div class="stat-c"><div class="sv" style="color:var(--acc)">7</div><div class="sl">دروس مكتملة</div></div>
+        <div class="stat-c"><div class="sv" style="color:var(--gold)">13</div><div class="sl">يوم للامتحان</div></div>
+        <div class="stat-c"><div class="sv" style="color:var(--coral)">3</div><div class="sl">دروس متأخرة</div></div>
+      </div>
+
+      <div style="font-size:11px;font-weight:500;color:var(--t2);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
+        <span>هذا الأسبوع</span><a style="color:var(--acc);cursor:pointer;font-size:11px">المسار الكامل ←</a>
+      </div>
+      <div class="week-row">
+        <div class="wday done"><div class="wd-n">إث</div><div class="wd-d">12</div><div class="wd-dot"></div></div>
+        <div class="wday done"><div class="wd-n">ثل</div><div class="wd-d">13</div><div class="wd-dot"></div></div>
+        <div class="wday today"><div class="wd-n">أرب</div><div class="wd-d">14</div><div class="wd-dot"></div></div>
+        <div class="wday"><div class="wd-n">خم</div><div class="wd-d">15</div><div class="wd-dot"></div></div>
+        <div class="wday"><div class="wd-n">جم</div><div class="wd-d">16</div><div class="wd-dot"></div></div>
+        <div class="wday"><div class="wd-n">سب</div><div class="wd-d">17</div><div class="wd-dot"></div></div>
+        <div class="wday exam"><div class="wd-n">امتح</div><div class="wd-d">27</div><div class="wd-dot"></div></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="background:var(--bg2);border:1px solid var(--bg4);border-radius:10px;padding:14px">
+          <div style="font-size:12px;font-weight:500;margin-bottom:9px">الدرس التالي</div>
+          <div style="font-size:13px;font-weight:600;color:var(--t1);margin-bottom:3px">الهيدروكربونات</div>
+          <div style="font-size:11px;color:var(--t2);margin-bottom:9px">الخميس 15 يونيو · 50 دقيقة</div>
+          <span class="bx b-b">قادم</span>
+        </div>
+        <div style="background:rgba(255,107,107,.06);border:1px solid rgba(255,107,107,.2);border-radius:10px;padding:14px">
+          <div style="font-size:12px;font-weight:500;margin-bottom:9px;color:var(--coral)">⚠️ دروس متأخرة</div>
+          <div style="font-size:13px;color:var(--t1);margin-bottom:3px">النشاط الإشعاعي</div>
+          <div style="font-size:11px;color:var(--t2);margin-bottom:6px">تأخّر 2 أيام</div>
+          <button style="background:rgba(255,107,107,.12);color:var(--coral);border:1px solid rgba(255,107,107,.25);border-radius:6px;padding:5px 11px;font-size:11px;cursor:pointer;font-family:inherit">راجعه الآن</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- WEAKNESS -->
+    <div class="tab-panel" id="tp-weakness">
+      <div class="weak-header">
+        <div style="flex:1"><div style="font-size:14px;font-weight:600;margin-bottom:2px">نقاط الضعف</div><div style="font-size:12px;color:var(--t2)">الدروس التي تحتاج تركيزاً إضافياً قبل الامتحان</div></div>
+        <div class="weak-badge">3 دروس تحتاج مراجعة</div>
+      </div>
+      <div style="background:rgba(245,166,35,.06);border:1px solid rgba(245,166,35,.2);border-radius:9px;padding:11px 14px;margin-bottom:14px;font-size:12px;color:var(--t2)">
+        💡 <strong style="color:var(--gold)">توصية الذكاء الاصطناعي:</strong> حافظ على جلسة تعلّم واحدة وجلسة مراجعة خفيفة في نفس اليوم لمنع تراكم الدروس الصعبة.
+      </div>
+      <div class="weak-item">
+        <div style="font-size:18px;flex-shrink:0">⚗️</div>
+        <div class="wi-name">الأملاح</div>
+        <div class="wi-track"><div class="wi-fill" style="width:84%;background:var(--gold)"></div></div>
+        <div class="wi-pct" style="color:var(--gold)">84%</div>
+        <button class="wi-action">راجع الآن</button>
+      </div>
+      <div class="weak-item">
+        <div style="font-size:18px;flex-shrink:0">⚛️</div>
+        <div class="wi-name">الهيدروكربونات</div>
+        <div class="wi-track"><div class="wi-fill" style="width:84%;background:var(--gold)"></div></div>
+        <div class="wi-pct" style="color:var(--gold)">84%</div>
+        <button class="wi-action">راجع الآن</button>
+      </div>
+      <div class="weak-item">
+        <div style="font-size:18px;flex-shrink:0">☢️</div>
+        <div class="wi-name">النشاط الإشعاعي والنظائر</div>
+        <div class="wi-track"><div class="wi-fill" style="width:62%;background:var(--coral)"></div></div>
+        <div class="wi-pct" style="color:var(--coral)">62%</div>
+        <button class="wi-action" style="border-color:rgba(255,107,107,.3);color:var(--coral)">أولوية!</button>
+      </div>
+    </div>
+
+    <!-- PATH -->
+    <div class="tab-panel" id="tp-path">
+      <div class="path-tabs">
+        <button class="pt on">الجدول الزمني</button>
+        <button class="pt" onclick="this.parentElement.querySelectorAll('.pt').forEach(x=>x.classList.remove('on'));this.classList.add('on')">التوزيع الأسبوعي</button>
+        <button class="pt" onclick="this.parentElement.querySelectorAll('.pt').forEach(x=>x.classList.remove('on'));this.classList.add('on')">تقدم الفصول</button>
+      </div>
+      <div style="font-size:11px;color:var(--t2);margin-bottom:12px">الأسبوع الحالي — 14–20 يونيو 2025</div>
+      <div style="display:flex;flex-direction:column;gap:0">
+        <div class="tl-row"><div class="tl-date" style="color:var(--teal)">الاثنين<br>12 يونيو</div><div class="tl-spine"><div class="tl-dot" style="background:var(--teal)"></div><div class="tl-line" style="background:var(--bg4)"></div></div><div class="tl-c"><div class="tl-card"><div style="font-size:12px;flex:1"><div class="tl-lesson">المحاليل المائية</div><div class="tl-meta"><span class="bx b-t">مكتمل</span><span>50 د</span></div></div><div class="done-check done">✓</div></div></div></div>
+        <div class="tl-row"><div class="tl-date" style="color:var(--teal)">الثلاثاء<br>13 يونيو</div><div class="tl-spine"><div class="tl-dot" style="background:var(--teal)"></div><div class="tl-line" style="background:var(--bg4)"></div></div><div class="tl-c"><div class="tl-card"><div style="font-size:12px;flex:1"><div class="tl-lesson">المحاليل الحمضية</div><div class="tl-meta"><span class="bx b-t">مكتمل</span><span>50 د</span></div></div><div class="done-check done">✓</div></div></div></div>
+        <div class="tl-row"><div class="tl-date" style="color:var(--acc);font-weight:600">اليوم<br>14 يونيو</div><div class="tl-spine"><div class="tl-dot" style="background:var(--acc)"></div><div class="tl-line" style="background:var(--bg4)"></div></div><div class="tl-c"><div class="tl-card today"><div style="font-size:12px;flex:1"><div class="tl-lesson" style="color:var(--acc)">الأملاح</div><div class="tl-meta"><span class="bx b-b">اليوم</span><span>50 د</span></div></div><button class="start-btn" style="padding:6px 14px;font-size:11px">ابدأ ←</button></div></div></div>
+        <div class="tl-row"><div class="tl-date">الخميس<br>15 يونيو</div><div class="tl-spine"><div class="tl-dot" style="background:var(--bg5)"></div><div class="tl-line" style="background:var(--bg4)"></div></div><div class="tl-c"><div class="tl-card"><div style="font-size:12px;flex:1"><div class="tl-lesson">الهيدروكربونات</div><div class="tl-meta"><span class="bx b-gray">قادم</span><span>50 د</span></div></div><div class="done-check" onclick="markDone(this)"></div></div></div></div>
+        <div class="tl-row"><div class="tl-date">السبت<br>17 يونيو</div><div class="tl-spine"><div class="tl-dot" style="background:var(--t3)"></div><div class="tl-line" style="background:var(--bg4)"></div></div><div class="tl-c"><div class="tl-card rest"><div style="font-size:12px"><div class="tl-lesson" style="color:var(--t2)">😌 راحة + بطاقات فقط</div></div></div></div></div>
+        <div class="tl-row"><div class="tl-date" style="color:var(--gold);font-weight:600">الامتحان<br>27 يونيو</div><div class="tl-spine"><div class="tl-dot" style="background:var(--gold)"></div></div><div class="tl-c"><div class="tl-card exam"><div style="font-size:12px"><div class="tl-lesson" style="color:var(--gold);font-weight:600">🎓 موعد امتحان الكيمياء</div></div></div></div></div>
+      </div>
+    </div>
+
+    <!-- REVIEW -->
+    <div class="tab-panel" id="tp-review">
+      <div style="font-size:14px;font-weight:600;margin-bottom:4px">أدوات المراجعة</div>
+      <div style="font-size:12px;color:var(--t2);margin-bottom:14px">اختر طريقة المراجعة المناسبة لك الآن</div>
+      <div class="review-grid">
+        <div class="rv-card">
+          <div class="rv-icon">🃏</div>
+          <div class="rv-title">مراجعة فورية</div>
+          <div class="rv-desc">بطاقات تعليمية ذكية على المفاهيم النشطة في ذاكرتك الآن</div>
+          <div class="rv-cta">ابدأ البطاقات ←</div>
+        </div>
+        <div class="rv-card">
+          <div class="rv-icon">📝</div>
+          <div class="rv-title">اختبار نهاية الأسبوع</div>
+          <div class="rv-desc">قياس سريع لمستواك قبل الانتقال للفصل التالي</div>
+          <div class="rv-cta">ابدأ الاختبار ←</div>
+        </div>
+        <div class="rv-card">
+          <div class="rv-icon">🔬</div>
+          <div class="rv-title">حل مسألة موجّهة</div>
+          <div class="rv-desc">انتقل من الدرس إلى تمرين تطبيقي بخطوات مع الذكاء الاصطناعي</div>
+          <div class="rv-cta">ابدأ التمرين ←</div>
+        </div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--bg4);border-radius:10px;padding:14px">
+        <div style="font-size:12px;font-weight:500;margin-bottom:8px">آخر نتائج الاختبارات</div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;align-items:center;gap:10px;font-size:12px"><span style="flex:1;color:var(--t2)">المحاليل المائية</span><div style="flex:2;background:var(--bg4);border-radius:3px;height:5px;overflow:hidden"><div style="height:100%;background:var(--teal);border-radius:3px;width:92%"></div></div><span style="color:var(--teal);font-weight:600;min-width:32px">92%</span></div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:12px"><span style="flex:1;color:var(--t2)">الأملاح</span><div style="flex:2;background:var(--bg4);border-radius:3px;height:5px;overflow:hidden"><div style="height:100%;background:var(--gold);border-radius:3px;width:84%"></div></div><span style="color:var(--gold);font-weight:600;min-width:32px">84%</span></div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:12px"><span style="flex:1;color:var(--t2)">النشاط الإشعاعي</span><div style="flex:2;background:var(--bg4);border-radius:3px;height:5px;overflow:hidden"><div style="height:100%;background:var(--coral);border-radius:3px;width:62%"></div></div><span style="color:var(--coral);font-weight:600;min-width:32px">62%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACHIEVEMENTS -->
+    <div class="tab-panel" id="tp-ach">
+      <div class="ach-hero">
+        <div class="ach-icon">🏆</div>
+        <div class="ach-title">أنجزت 3 دروس هذا الأسبوع</div>
+        <div class="ach-sub">إذا أكملت درساً واحداً جديداً هذا الأسبوع فستنتقل مباشرةً إلى مرحلة مراجعة الوحدة التالية.</div>
+        <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+          <span class="bx b-b">مسار ثابت</span>
+          <span class="bx" style="background:rgba(245,166,35,.1);color:var(--gold)">XP 1,240</span>
+          <span class="bx b-t">5 أيام سلسلة</span>
+        </div>
+      </div>
+      <div style="font-size:12px;font-weight:500;margin-bottom:10px">الشارات المكتسبة</div>
+      <div class="ach-grid">
+        <div class="ach-item"><div class="ai">🎯</div><div class="an">الدرس الأول</div><div class="as">مكتسب</div></div>
+        <div class="ach-item"><div class="ai">🔥</div><div class="an">سلسلة 5 أيام</div><div class="as">اليوم!</div></div>
+        <div class="ach-item"><div class="ai">📚</div><div class="an">3 دروس في أسبوع</div><div class="as">مكتسب</div></div>
+        <div class="ach-item"><div class="ai">🏅</div><div class="an">اختبار مثالي</div><div class="as">مكتسب</div></div>
+        <div class="ach-item locked"><div class="ai">⭐</div><div class="an">إنجاز الوحدة</div><div class="as">2 دروس متبقية</div></div>
+        <div class="ach-item locked"><div class="ai">🌟</div><div class="an">سلسلة 30 يوم</div><div class="as">محجوب</div></div>
+        <div class="ach-item locked"><div class="ai">💎</div><div class="an">اختبار عام 100%</div><div class="as">محجوب</div></div>
+        <div class="ach-item locked"><div class="ai">🎓</div><div class="an">إنجاز المنهج</div><div class="as">محجوب</div></div>
+      </div>
+    </div>
+
+  </div><!-- /active -->
+</div><!-- /frame -->
+
+<script>
+function switchState(s){
+  document.querySelectorAll('.ssw').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.ssw')[s==='empty'?0:1].classList.add('on');
+  document.getElementById('state-empty').style.display=s==='empty'?'':'none';
+  document.getElementById('state-active').style.display=s==='active'?'':'none';
+}
+function switchTab(el,id){
+  document.querySelectorAll('.t-tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('tp-'+id).classList.add('on');
+}
+function toggleChip(el){el.classList.toggle('on');}
+function markDone(btn){btn.classList.toggle('done');btn.textContent=btn.classList.contains('done')?'✓':'';}
+</script>

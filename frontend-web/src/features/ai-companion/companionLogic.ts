@@ -12,6 +12,10 @@ const flashcardRoute = (context: LearningContext) => (
   context.activeLessonId ? `/flashcards?lessonId=${context.activeLessonId}` : '/flashcards'
 );
 
+const askAiLessonRoute = (context: LearningContext, question: string) => (
+  `/ask-ai?question=${encodeURIComponent(question)}${context.activeLessonId ? `&lessonId=${context.activeLessonId}` : ''}`
+);
+
 export const buildCompanionMessage = (context: LearningContext): string => {
   if (context.currentPage === 'lessons') {
     return 'ابدأ من ترتيب الكتاب: وحدة → فصل → درس → موضوع.';
@@ -70,7 +74,7 @@ export const buildCompanionSuggestions = (context: LearningContext): CompanionAc
 
   if (context.currentPage === 'lesson_detail') {
     return [
-      { id: 'explain-lesson', label: 'لخص أهداف الدرس', kind: 'explain_lesson', targetRoute: `/ask-ai?question=${encodeURIComponent(`لخص أهداف درس ${context.activeLessonTitleAr || 'الكيمياء'}`)}` },
+      { id: 'explain-lesson', label: 'لخص أهداف الدرس', kind: 'explain_lesson', targetRoute: askAiLessonRoute(context, `لخص أهداف درس ${context.activeLessonTitleAr || 'الكيمياء'}`) },
       { id: 'quiz-lesson', label: 'اختبرني في هذا الدرس', kind: 'quiz', targetRoute: quizRoute(context) },
       { id: 'cards-lesson', label: 'اصنع بطاقات للدرس', kind: 'flashcards', targetRoute: flashcardRoute(context) },
     ];

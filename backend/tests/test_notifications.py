@@ -152,12 +152,37 @@ def test_notifications_api_mutations(
     async def fake_rebuild(_db, user_id: int):
         called.append(f"rebuild:{user_id}")
 
+    async def fake_test_notification(_db, user_id: int):
+        called.append(f"test:{user_id}")
+        return SimpleNamespace(
+            id=7,
+            user_id=user_id,
+            type="system",
+            title="اختبار الإشعارات",
+            message="هذه رسالة اختبار.",
+            title_ar="اختبار الإشعارات",
+            body_ar="هذه رسالة اختبار.",
+            status="unread",
+            priority="normal",
+            scheduled_for=now,
+            delivered_at=now,
+            sent_at=now,
+            read_at=None,
+            action_url="/notifications",
+            related_entity_type="system",
+            related_entity_id="test",
+            metadata_json={},
+            created_at=now,
+            updated_at=now,
+        )
+
     monkeypatch.setattr("app.services.notification_service.mark_read", fake_mark_read)
     monkeypatch.setattr("app.services.notification_service.mark_all_read", fake_mark_all)
     monkeypatch.setattr("app.services.notification_service.delete_notification", fake_delete)
     monkeypatch.setattr("app.services.notification_service.get_preferences", fake_get_preferences)
     monkeypatch.setattr("app.services.notification_service.update_preferences", fake_update_preferences)
     monkeypatch.setattr("app.services.notification_service.rebuild_reminders", fake_rebuild)
+    monkeypatch.setattr("app.services.notification_service.send_test_notification", fake_test_notification)
 
     assert notifications_client.patch("/api/v1/notifications/5/read").json()["status"] == "read"
     assert notifications_client.patch("/api/v1/notifications/mark-all-read").json() == {"status": "success"}
@@ -168,11 +193,58 @@ def test_notifications_api_mutations(
         json={"lesson_reminders_enabled": False},
     ).status_code == 200
     assert notifications_client.post("/api/v1/reminders/rebuild").json()["status"] == "success"
+    assert notifications_client.post("/api/v1/notifications/test").json()["type"] == "system"
 
     assert "read:10:5" in called
     assert "all:10" in called
     assert "delete:10:5" in called
     assert "rebuild:10" in called
+    assert "test:10" in called
+
+
+def test_push_token_routes(notifications_client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Verify push-token registration and deletion routes are exposed."""
+
+    now = datetime.now(timezone.utc)
+    called: list[str] = []
+
+    async def fake_register(_db, user_id: int, request):
+        called.append(f"register:{user_id}:{request.platform}:{request.device_name}:{request.browser}")
+        return SimpleNamespace(
+            id=11,
+            user_id=user_id,
+            token=request.token,
+            platform=request.platform,
+            device_name=request.device_name,
+            browser=request.browser,
+            is_active=True,
+            last_seen_at=now,
+            created_at=now,
+            updated_at=now,
+        )
+
+    async def fake_list(_db, user_id: int):
+        called.append(f"list:{user_id}")
+        return []
+
+    async def fake_delete(_db, user_id: int, token_id: int):
+        called.append(f"delete-token:{user_id}:{token_id}")
+
+    monkeypatch.setattr("app.services.device_service.register_device_token", fake_register)
+    monkeypatch.setattr("app.services.device_service.list_device_tokens", fake_list)
+    monkeypatch.setattr("app.services.device_service.delete_device_token_by_id", fake_delete)
+
+    response = notifications_client.post(
+        "/api/v1/push-tokens",
+        json={"token": "fcm-token-123", "platform": "web", "device_name": "Chrome", "browser": "Chrome"},
+    )
+    assert response.status_code == 201
+    assert response.json()["platform"] == "web"
+    assert notifications_client.get("/api/v1/push-tokens").json() == []
+    assert notifications_client.delete("/api/v1/push-tokens/11").status_code == 204
+    assert "register:10:web:Chrome:Chrome" in called
+    assert "list:10" in called
+    assert "delete-token:10:11" in called
 
 
 @patch("app.workers.notification_tasks.SessionLocal")

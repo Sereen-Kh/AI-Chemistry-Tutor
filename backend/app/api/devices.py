@@ -9,6 +9,7 @@ from app.schemas.device import DeviceTokenRegisterRequest, DeviceTokenResponse
 from app.services import device_service
 
 router = APIRouter(prefix="/devices", tags=["devices"])
+push_tokens_router = APIRouter(prefix="/push-tokens", tags=["devices"])
 
 
 @router.get("", response_model=list[DeviceTokenResponse])
@@ -35,4 +36,31 @@ async def delete_device(
     db: AsyncSession = Depends(get_async_db),
 ):
     await device_service.delete_device_token(db, user_id, token)
+    return Response(status_code=204)
+
+
+@push_tokens_router.get("", response_model=list[DeviceTokenResponse])
+async def list_push_tokens(
+    user_id: int = Depends(get_current_user_id),
+    db: AsyncSession = Depends(get_async_db),
+):
+    return await device_service.list_device_tokens(db, user_id)
+
+
+@push_tokens_router.post("", response_model=DeviceTokenResponse, status_code=201)
+async def register_push_token(
+    request: DeviceTokenRegisterRequest,
+    user_id: int = Depends(get_current_user_id),
+    db: AsyncSession = Depends(get_async_db),
+):
+    return await device_service.register_device_token(db, user_id, request)
+
+
+@push_tokens_router.delete("/{token_id}", status_code=204)
+async def delete_push_token(
+    token_id: int,
+    user_id: int = Depends(get_current_user_id),
+    db: AsyncSession = Depends(get_async_db),
+):
+    await device_service.delete_device_token_by_id(db, user_id, token_id)
     return Response(status_code=204)

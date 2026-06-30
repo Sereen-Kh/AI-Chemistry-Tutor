@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from datetime import datetime
 import json
 import logging
+from pathlib import Path
 import time
 import re
 from types import SimpleNamespace
@@ -22,6 +23,23 @@ from app.rag.answer_verifier import verify_answer
 from app.rag.arabic_normalizer import normalize_arabic
 from app.rag.book_knowledge import BookKnowledgeAnswer, answer_from_book_knowledge
 from app.rag.chunk_validator import validate_chunks
+from app.schemas.audio import (
+    AudioInputType,
+    AudioProcessingStatus,
+    RequestedReturnType,
+    ResolvedReturnType,
+    resolve_return_type,
+    should_generate_tts,
+)
+from app.services.audio_service import (
+    AudioProviderError,
+    AudioProviderNotConfigured,
+    AudioService,
+    AudioSynthesisError,
+    AudioTranscriptionError,
+    audio_service_from_settings,
+)
+from app.services.audio_storage import LocalAudioStorage
 from app.services import ai_service
 from app.services.chemistry_rules import answer_metal_dilute_acid_reaction, detect_metal_and_acid
 from app.services.query_router import route_direct_answer
@@ -194,6 +212,18 @@ _DEFINITION_CHUNK_PENALTY_MARKERS = (
 )
 
 _ANSWER_SCOPES = {"auto", "book_only", "tutor_general"}
+_ALLOWED_AUDIO_EXTENSIONS = {"webm", "mp3", "wav", "m4a"}
+_ALLOWED_AUDIO_CONTENT_TYPES = {
+    "audio/webm",
+    "audio/mpeg",
+    "audio/mp3",
+    "audio/wav",
+    "audio/x-wav",
+    "audio/mp4",
+    "audio/m4a",
+    "audio/x-m4a",
+    "application/octet-stream",
+}
 _CHEMISTRY_DICTIONARY_PATH = BACKEND_DIR / "app" / "rag" / "data" / "chemistry_entities.json"
 _CHEMISTRY_DICTIONARY_CACHE: list[ChemistryDictionaryEntry] | None = None
 
@@ -273,6 +303,43 @@ def _explicit_book_requested(question: str) -> bool:
 def _normalize_answer_scope(answer_scope: str | None) -> str:
     normalized = (answer_scope or "auto").strip().lower()
     return normalized if normalized in _ANSWER_SCOPES else "auto"
+
+
+def _audio_error(code: str, message: str, status_code: int = 400) -> HTTPException:
+    return HTTPException(status_code=status_code, detail={"code": code, "message": message})
+
+
+def _validate_audio_upload(
+    *,
+    filename: str | None,
+    content_type: str | None,
+    data: bytes,
+) -> str:
+    if not data:
+        raise _audio_error("AUDIO_EMPTY", "Audio file is empty.")
+
+    max_bytes = int(settings.audio_max_file_size_mb) * 1024 * 1024
+    if len(data) > max_bytes:
+        raise _audio_error("AUDIO_FILE_TOO_LARGE", f"Audio file exceeds {settings.audio_max_file_size_mb} MB.")
+
+    extension = LocalAudioStorage.safe_extension(filename, content_type)
+    if extension not in _ALLOWED_AUDIO_EXTENSIONS:
+        raise _audio_error("UNSUPPORTED_AUDIO_FORMAT", "Supported audio formats are webm, mp3, wav, and m4a.")
+
+    normalized_type = (content_type or "application/octet-stream").split(";")[0].strip().lower()
+    if normalized_type not in _ALLOWED_AUDIO_CONTENT_TYPES:
+        raise _audio_error("UNSUPPORTED_AUDIO_FORMAT", f"Unsupported audio MIME type: {content_type}.")
+
+    # TODO: Add duration validation when an audio probing utility is introduced.
+    return extension
+
+
+def _message_response_format(resolved_return_type: ResolvedReturnType) -> str:
+    if resolved_return_type == ResolvedReturnType.AUDIO:
+        return "audio"
+    if resolved_return_type == ResolvedReturnType.TEXT_AUDIO:
+        return "text_audio"
+    return "text"
 
 
 def _definition_entity_for_question(question: str) -> EntityDefinition | None:
@@ -1926,18 +1993,6 @@ async def send_message(
     intent = _classify_intent(content)
     logger.info("Chat intent classified: %s for query: %s", intent, content[:80])
     source_route = await route_source(content, source_types)
-
-    semantic_result = await semantic_retrieve_context(
-        db,
-        content,
-        user_id=user_id,
-        top_k=6,
-        intent=intent,
-        source_types=source_route.source_types,
-    )
-    chunks = semantic_result.chunks
-    page_numbers = sorted({chunk.page_number for chunk in chunks if chunk.page_number is not None})
-    confidence = _compute_confidence(content, chunks)
     diagnostics = {
         "original_query": content,
         "original_question": content,
@@ -1953,6 +2008,7 @@ async def send_message(
         "teaching_style": teaching_style,
         "teaching_preferences": preferences.as_diagnostics(),
         "action": action,
+        "lesson_id": session.lesson_id,
         "source_route": {
             "route": source_route.route,
             "source_types": source_route.source_types,
@@ -1961,6 +2017,195 @@ async def send_message(
             "matched_terms": source_route.matched_terms,
             "cache_hit": source_route.cache_hit,
         },
+        "gemini_available": bool(settings.effective_gemini_api_key),
+    }
+
+    if not action:
+        classification = _classify_question(content)
+        direct_intent = classification["intent"]
+        diagnostics.update(
+            {
+                "intent": direct_intent,
+                "entity": classification.get("entity"),
+                "normalized_entity": classification.get("normalized_entity"),
+                "answer_style": classification.get("answer_style"),
+            }
+        )
+        explicit_book = _explicit_book_requested(content)
+        dictionary_entry = _dictionary_entry_for_question(content, intent=direct_intent)
+        diagnostics["dictionary_entry_id"] = dictionary_entry.id if dictionary_entry else None
+
+        direct_response = _safety_rule_response(
+            question=content,
+            preferred_answer_type=preferred_answer_type,
+            answer_scope=answer_scope,
+            diagnostics=diagnostics,
+        )
+
+        if direct_response is None:
+            litmus_rule = _litmus_rule_response(
+                question=content,
+                preferred_answer_type=preferred_answer_type,
+                answer_scope=answer_scope,
+                diagnostics=diagnostics,
+            )
+            if litmus_rule and answer_scope != "book_only":
+                direct_response = litmus_rule
+
+        simple_dictionary_intents = {"definition_lookup", "formula_lookup", "property_lookup"}
+        if direct_response is None and (
+            dictionary_entry
+            and answer_scope in {"auto", "tutor_general"}
+            and not explicit_book
+            and (direct_intent in (simple_dictionary_intents | {"general", "reaction_query"}) or answer_scope == "tutor_general")
+        ):
+            direct_response = _dictionary_response(
+                entry=dictionary_entry,
+                question=content,
+                answer_scope=answer_scope,
+                preferred_answer_type=preferred_answer_type,
+                route="dictionary_first",
+                grounding="approved_dictionary" if answer_scope == "auto" else "general_tutor",
+                diagnostics=diagnostics,
+            )
+
+        if direct_response is None and direct_intent == "property_lookup" and classification.get("entity") and answer_scope != "book_only" and not explicit_book:
+            direct_response = _direct_property_response(
+                entity=_definition_entity_for_question(content),
+                preferred_answer_type=preferred_answer_type,
+                diagnostics=diagnostics,
+            )
+
+        if direct_response is None:
+            reaction_answer = answer_metal_dilute_acid_reaction(content)
+            if reaction_answer and answer_scope != "book_only":
+                answer_type = _select_answer_type(reaction_answer.intent, preferred_answer_type)
+                diagnostics.update(
+                    {
+                        "intent": reaction_answer.intent,
+                        "route": "chemistry_rule",
+                        "grounding": "book_knowledge",
+                        "rule_engine": "activity_series",
+                        "reaction_happens": reaction_answer.reaction_happens,
+                        "equation": reaction_answer.equation,
+                        "warnings": reaction_answer.warnings,
+                        "retrieved_chunks": [],
+                        "selected_context": [],
+                        "rag_search_skipped": True,
+                    }
+                )
+                direct_response = {
+                    "answer": reaction_answer.answer,
+                    "answer_type": answer_type,
+                    "route": "chemistry_rule",
+                    "grounding": "book_knowledge",
+                    "answer_scope": answer_scope,
+                    "blocks": _build_answer_blocks(
+                        reaction_answer.answer,
+                        [],
+                        answer_type=answer_type,
+                        preferred_answer_type=preferred_answer_type,
+                        page_numbers=reaction_answer.page_numbers,
+                        diagnostics=diagnostics,
+                    ),
+                    "sources": [],
+                    "source_blocks": [],
+                    "page_numbers": reaction_answer.page_numbers,
+                    "confidence": round(float(reaction_answer.confidence), 4),
+                    "diagnostics": diagnostics,
+                    "suggested_next_action": reaction_answer.suggested_next_action,
+                }
+
+        if direct_response is None:
+            book_knowledge = answer_from_book_knowledge(content, intent=direct_intent)
+            if book_knowledge and answer_scope in {"auto", "book_only"}:
+                direct_response = _book_knowledge_response(
+                    item=book_knowledge,
+                    preferred_answer_type=preferred_answer_type,
+                    answer_scope=answer_scope,
+                    diagnostics=diagnostics,
+                )
+
+        if direct_response is None:
+            direct_answer = route_direct_answer(content)
+            if direct_answer and answer_scope != "book_only":
+                answer_type = _select_answer_type(direct_answer.intent, preferred_answer_type)
+                diagnostics.update(
+                    {
+                        "intent": direct_answer.intent,
+                        "rule_engine": "direct_router",
+                        "route": direct_answer.route,
+                        "grounding": direct_answer.grounding,
+                        "answer_scope": answer_scope,
+                        "retrieved_chunks": [],
+                        "selected_context": [],
+                        "rag_search_skipped": True,
+                        "fallback_used": "local_router",
+                    }
+                )
+                direct_response = {
+                    "answer": direct_answer.answer,
+                    "answer_type": answer_type,
+                    "route": direct_answer.route,
+                    "grounding": direct_answer.grounding,
+                    "answer_scope": answer_scope,
+                    "blocks": _build_answer_blocks(
+                        direct_answer.answer,
+                        [],
+                        answer_type=answer_type,
+                        preferred_answer_type=preferred_answer_type,
+                        page_numbers=direct_answer.page_numbers,
+                        diagnostics=diagnostics,
+                    ),
+                    "sources": [],
+                    "source_blocks": [],
+                    "page_numbers": direct_answer.page_numbers,
+                    "confidence": direct_answer.confidence,
+                    "diagnostics": diagnostics,
+                    "suggested_next_action": direct_answer.suggested_next_action,
+                }
+
+        if direct_response is not None:
+            rich_answer = _finalize_answer(direct_response, content)
+            assistant_message = ChatMessage(
+                session_id=session.id,
+                role="assistant",
+                content=rich_answer.get("answer_text") or rich_answer.get("answer") or direct_response.get("answer", ""),
+                answer_text=rich_answer.get("answer_text") or rich_answer.get("answer") or direct_response.get("answer", ""),
+                format=message_format,
+                latency_ms=0,
+                confidence=rich_answer.get("confidence"),
+                answer_type=rich_answer.get("answer_type"),
+                route=rich_answer.get("route"),
+                grounding=rich_answer.get("grounding"),
+                sources_json=[],
+                citations_json=rich_answer.get("citations") or [],
+                blocks_json=rich_answer.get("blocks") or [],
+                media_blocks_json=rich_answer.get("media_blocks") or [],
+                source_blocks_json=rich_answer.get("source_blocks") or [],
+                page_numbers_json=rich_answer.get("page_numbers") or [],
+                diagnostics_json=rich_answer.get("diagnostics") or {},
+                suggested_next_action=rich_answer.get("suggested_next_action"),
+            )
+            db.add(assistant_message)
+            session.updated_at = datetime.now()
+            await db.commit()
+            await db.refresh(assistant_message)
+            return assistant_message
+
+    semantic_result = await semantic_retrieve_context(
+        db,
+        content,
+        user_id=user_id,
+        lesson_id=session.lesson_id,
+        top_k=6,
+        intent=intent,
+        source_types=source_route.source_types,
+    )
+    chunks = semantic_result.chunks
+    page_numbers = sorted({chunk.page_number for chunk in chunks if chunk.page_number is not None})
+    confidence = _compute_confidence(content, chunks)
+    diagnostics.update({
         "semantic_rag": {
             "pipeline": semantic_result.diagnostics.get("pipeline"),
             "cache_hit": semantic_result.diagnostics.get("cache_hit"),
@@ -1979,7 +2224,7 @@ async def send_message(
             for chunk in chunks
         ],
         "gemini_available": bool(settings.effective_gemini_api_key),
-    }
+    })
     diagnostics.update(
         _retrieval_diagnostics(
             question=content,
@@ -2054,6 +2299,7 @@ async def send_message(
         session_id=session.id,
         role="assistant",
         content=rich_answer.get("answer_text") or rich_answer.get("answer") or answer,
+        answer_text=rich_answer.get("answer_text") or rich_answer.get("answer") or answer,
         format=message_format,
         latency_ms=latency_ms,
         confidence=rich_answer.get("confidence"),
@@ -2071,6 +2317,179 @@ async def send_message(
     )
     db.add(assistant_message)
     session.updated_at = datetime.now()
+    await db.commit()
+    await db.refresh(assistant_message)
+    return assistant_message
+
+
+async def _latest_user_message_for_session(db: AsyncSession, session_id: int) -> ChatMessage | None:
+    result = await db.execute(
+        select(ChatMessage)
+        .where(ChatMessage.session_id == session_id, ChatMessage.role == "user")
+        .order_by(ChatMessage.id.desc())
+        .limit(1)
+    )
+    return result.scalars().first()
+
+
+def _require_audio_provider_config(*, needs_tts: bool, needs_stt: bool, injected_audio_service: AudioService | None) -> None:
+    if injected_audio_service is not None:
+        return
+    if not settings.audio_enabled and (needs_tts or needs_stt):
+        raise _audio_error("AUDIO_PROVIDER_NOT_CONFIGURED", "Audio support is disabled. Set AUDIO_ENABLED=true.", 503)
+    if (needs_tts or needs_stt) and not settings.elevenlabs_api_key:
+        raise _audio_error("AUDIO_PROVIDER_NOT_CONFIGURED", "ELEVENLABS_API_KEY is required for audio chat.", 503)
+    if needs_tts and not settings.elevenlabs_default_voice_id:
+        raise _audio_error("AUDIO_PROVIDER_NOT_CONFIGURED", "ELEVENLABS_DEFAULT_VOICE_ID is required for audio answers.", 503)
+
+
+async def send_multimodal_message(
+    db: AsyncSession,
+    *,
+    session_id: int,
+    user_id: int,
+    text: str | None = None,
+    audio_bytes: bytes | None = None,
+    audio_filename: str | None = None,
+    audio_content_type: str | None = None,
+    requested_return_type: str = "auto",
+    language: str = "auto",
+    answer_scope: str = "auto",
+    source_types: list[str] | None = None,
+    teaching_style: str | None = None,
+    teaching_level: str | None = None,
+    explanation_method: str | None = None,
+    learning_modes: list[str] | None = None,
+    student_interests: list[str] | None = None,
+    action: str | None = None,
+    audio_service: AudioService | None = None,
+    storage: LocalAudioStorage | None = None,
+) -> ChatMessage:
+    """Handle text/audio chat through the existing RAG-backed send_message flow."""
+    normalized_text = (text or "").strip()
+    has_text = bool(normalized_text)
+    has_audio = audio_bytes is not None
+    if has_text == has_audio:
+        detail_code = "MIXED_INPUT_NOT_SUPPORTED" if has_text else "CHAT_INPUT_REQUIRED"
+        raise _audio_error(detail_code, "Send either text or audio for this MVP, not both." if has_text else "Text or audio is required.")
+
+    input_type = AudioInputType.AUDIO if has_audio else AudioInputType.TEXT
+    requested = RequestedReturnType(requested_return_type)
+    resolved = resolve_return_type(input_type, requested)
+    needs_tts = should_generate_tts(resolved)
+    needs_stt = input_type == AudioInputType.AUDIO
+    _require_audio_provider_config(needs_tts=needs_tts, needs_stt=needs_stt, injected_audio_service=audio_service)
+
+    storage = storage or LocalAudioStorage()
+    if needs_tts or needs_stt:
+        audio_service = audio_service or audio_service_from_settings()
+    audio_input_url: str | None = None
+    transcript: str | None = None
+    transcription_status = AudioProcessingStatus.NOT_REQUIRED
+    query_text = normalized_text
+
+    if input_type == AudioInputType.AUDIO:
+        assert audio_bytes is not None
+        _validate_audio_upload(filename=audio_filename, content_type=audio_content_type, data=audio_bytes)
+        input_path, audio_input_url = storage.save_input_bytes(
+            audio_bytes,
+            filename=audio_filename,
+            content_type=audio_content_type,
+        )
+        transcription_status = AudioProcessingStatus.PROCESSING
+        try:
+            assert audio_service is not None
+            transcript = await audio_service.transcribe_audio(
+                input_path,
+                language=language,
+                content_type=audio_content_type,
+            )
+        except (AudioTranscriptionError, AudioProviderNotConfigured) as exc:
+            raise _audio_error(
+                getattr(exc, "code", "TRANSCRIPTION_FAILED"),
+                str(exc),
+                503,
+            ) from exc
+        transcription_status = AudioProcessingStatus.READY
+        query_text = transcript
+
+    message_format = _message_response_format(resolved)
+    assistant_message = await send_message(
+        db,
+        session_id=session_id,
+        user_id=user_id,
+        content=query_text,
+        message_format=message_format,
+        answer_scope=answer_scope,
+        source_types=source_types,
+        teaching_style=teaching_style,
+        teaching_level=teaching_level,
+        explanation_method=explanation_method,
+        learning_modes=learning_modes,
+        student_interests=student_interests,
+        action=action,
+    )
+
+    user_message = await _latest_user_message_for_session(db, session_id)
+    if user_message is not None:
+        user_message.input_type = input_type.value
+        user_message.requested_return_type = requested.value
+        user_message.resolved_return_type = resolved.value
+        user_message.text_content = normalized_text or transcript
+        user_message.audio_input_url = audio_input_url
+        user_message.audio_transcript = transcript
+        user_message.transcription_status = transcription_status.value
+        user_message.audio_status = AudioProcessingStatus.NOT_REQUIRED.value
+        user_message.audio_provider = "elevenlabs" if input_type == AudioInputType.AUDIO else None
+        user_message.stt_model = settings.elevenlabs_stt_model if input_type == AudioInputType.AUDIO else None
+
+    assistant_message.input_type = input_type.value
+    assistant_message.requested_return_type = requested.value
+    assistant_message.resolved_return_type = resolved.value
+    assistant_message.text_content = query_text
+    assistant_message.audio_input_url = audio_input_url
+    assistant_message.audio_transcript = transcript
+    assistant_message.transcription_status = transcription_status.value
+    assistant_message.audio_provider = "elevenlabs" if needs_tts or needs_stt else None
+    assistant_message.stt_model = settings.elevenlabs_stt_model if needs_stt else None
+    assistant_message.tts_model = settings.elevenlabs_tts_model if needs_tts else None
+    assistant_message.voice_id = settings.elevenlabs_default_voice_id if needs_tts else None
+    assistant_message.answer_text = assistant_message.answer_text or assistant_message.content
+    assistant_message.audio_status = AudioProcessingStatus.NOT_REQUIRED.value
+
+    if needs_tts:
+        assistant_message.audio_status = AudioProcessingStatus.PROCESSING.value
+        try:
+            assert audio_service is not None
+            audio_bytes_out = await audio_service.synthesize_speech(
+                assistant_message.answer_text or assistant_message.content,
+                voice_id=settings.elevenlabs_default_voice_id,
+                language=language,
+            )
+            _, answer_audio_url = storage.save_output_bytes(audio_bytes_out, message_id=assistant_message.id)
+            assistant_message.answer_audio_url = answer_audio_url
+            assistant_message.media_url = answer_audio_url
+            assistant_message.audio_status = AudioProcessingStatus.READY.value
+            media_blocks = list(assistant_message.media_blocks_json or [])
+            media_blocks.append(
+                {
+                    "type": "audio",
+                    "content": "إجابة صوتية مولدة من النص النهائي.",
+                    "url": answer_audio_url,
+                    "metadata": {
+                        "provider": "elevenlabs",
+                        "model": settings.elevenlabs_tts_model,
+                        "voice_id": settings.elevenlabs_default_voice_id,
+                    },
+                }
+            )
+            assistant_message.media_blocks_json = media_blocks
+        except (AudioSynthesisError, AudioProviderError) as exc:
+            assistant_message.audio_status = AudioProcessingStatus.FAILED.value
+            diagnostics = dict(assistant_message.diagnostics_json or {})
+            diagnostics["audio_error"] = {"code": getattr(exc, "code", "TTS_FAILED"), "message": str(exc)}
+            assistant_message.diagnostics_json = diagnostics
+
     await db.commit()
     await db.refresh(assistant_message)
     return assistant_message

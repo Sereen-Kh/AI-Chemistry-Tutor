@@ -8,7 +8,7 @@ from app.api.ai_companion import router as ai_companion_router
 from app.api.auth.routes import router as auth_router
 from app.api.chat.routes import router as chat_router
 from app.api.dashboard import router as dashboard_router
-from app.api.devices import router as devices_router
+from app.api.devices import push_tokens_router, router as devices_router
 from app.api.exams import router as exams_router
 from app.api.flashcards import router as flashcards_router
 from app.api.health import router as health_router
@@ -33,6 +33,7 @@ api_router.include_router(auth_router)
 api_router.include_router(users_router)
 api_router.include_router(dashboard_router)
 api_router.include_router(devices_router)
+api_router.include_router(push_tokens_router)
 api_router.include_router(notifications_router)
 api_router.include_router(student_profile_router)
 api_router.include_router(units_router)

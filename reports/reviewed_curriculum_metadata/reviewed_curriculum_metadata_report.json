@@ -1,0 +1,256 @@
+{
+  "generated_at": "2026-06-24T10:10:25.649731+00:00",
+  "metadata_path": "data/processed/curriculum/reviewed_curriculum_metadata.json",
+  "reviewed_metadata_version": "2026-06-reviewed-v1",
+  "ready_for_embedding": false,
+  "status": "blocked",
+  "precondition": {
+    "page_190_recovery_status": "passed",
+    "book_structure_validation_status": "passed",
+    "solution_chunk_cleanup_status": "passed",
+    "solution_alignment_exists": true,
+    "can_create_reviewed_metadata": true,
+    "blocking_issues": [],
+    "files_checked": {
+      "page_190_validation": "reports/page_190_recovery/page_190_validation_report.json",
+      "book_structure": "data/processed/book_structure.json",
+      "lesson_map": "data/processed/textbook/textbook_lesson_map.reviewed.json",
+      "book_validation": "reports/book_structure_update/book_structure_validation_report.json",
+      "solution_chunks": "data/processed/solution_book/solution_chunks.cleaned.jsonl",
+      "solution_chunk_preview": "data/processed/chunk_preview/solution_book_chunks_preview.cleaned.jsonl",
+      "solution_validation": "reports/solution_chunk_cleanup/solution_chunk_validation_report.json",
+      "solution_alignment": "data/processed/solution_book/solution_textbook_alignment.json",
+      "textbook_chunks_preview": "data/processed/chunk_preview/textbook_chunks_preview.jsonl"
+    }
+  },
+  "input_audit": {
+    "total_units": 3,
+    "total_textbook_lessons": 9,
+    "unit_5_status": "ready",
+    "unit_6_status": "ready",
+    "page_190_status": "passed",
+    "textbook_blocked_pages": [],
+    "textbook_needs_ocr_pages": [],
+    "textbook_needs_vision_pages": [],
+    "total_solution_alignment_records": 36,
+    "solution_alignment_manual_review_count": 15,
+    "total_cleaned_solution_chunks": 24,
+    "bad_solution_chunk_endings": 0,
+    "blocked_solution_chunks": 0,
+    "missing_lesson_id_count": 0,
+    "missing_source_type_count": 0,
+    "missing_printed_page_range_count": 0,
+    "textbook_chunk_preview_total": 720,
+    "textbook_chunk_preview_missing_required_metadata": 720,
+    "book_validation_status": "passed",
+    "solution_validation_status": "passed"
+  },
+  "validation": {
+    "validation_status": "passed",
+    "metadata_path": "data/processed/curriculum/reviewed_curriculum_metadata.json",
+    "ready_for_embedding": false,
+    "missing_paths": [],
+    "blocking_issues": [],
+    "warnings": [],
+    "ready_lesson_issues": [],
+    "solution_chunk_issues": {
+      "missing_source_type": [],
+      "missing_quality_status": [],
+      "missing_link": []
+    }
+  },
+  "embedding_pipeline_guard": {
+    "generated_at": "2026-06-24T10:10:25.648663+00:00",
+    "metadata_path": "data/processed/curriculum/reviewed_curriculum_metadata.json",
+    "reviewed_metadata_version": "2026-06-reviewed-v1",
+    "metadata_ready": false,
+    "failure_codes": {
+      "missing_metadata": "REVIEWED_CURRICULUM_METADATA_MISSING",
+      "metadata_not_ready": "CURRICULUM_METADATA_NOT_READY_FOR_EMBEDDING"
+    },
+    "required_chunk_metadata": [
+      "lesson_id",
+      "unit_id",
+      "source_type",
+      "printed_page_start",
+      "printed_page_end",
+      "quality_status",
+      "reviewed_metadata_version"
+    ],
+    "updated_files": [
+      {
+        "file": "src/backend/app/services/reviewed_curriculum_metadata.py",
+        "change": "new shared guard; loads reviewed metadata and raises REVIEWED_CURRICULUM_METADATA_MISSING / CURRICULUM_METADATA_NOT_READY_FOR_EMBEDDING"
+      },
+      {
+        "file": "src/backend/app/services/rag_reembed.py",
+        "change": "requires reviewed metadata before re-embedding; reports reviewed_metadata_version, metadata_ready, skipped_missing_metadata_count, skipped_blocked_count"
+      },
+      {
+        "file": "src/backend/app/schemas/rag.py",
+        "change": "adds reviewed metadata fields to admin re-embed status response"
+      },
+      {
+        "file": "src/backend/app/api/admin_rag.py",
+        "change": "maps reviewed metadata fields into re-embed status response"
+      },
+      {
+        "file": "src/backend/app/services/ingestion_pipeline.py",
+        "change": "refuses to embed extracted chunks missing reviewed metadata"
+      },
+      {
+        "file": "src/backend/app/services/rag_rebuild.py",
+        "change": "refuses cached-page rebuild embedding without reviewed metadata"
+      },
+      {
+        "file": "src/backend/app/services/solution_book_ingestion.py",
+        "change": "filters/skips solution chunks missing reviewed metadata before embedding and reports skip counts"
+      },
+      {
+        "file": "src/backend/scripts/rechunk_cached_source.py",
+        "change": "refuses legacy cached-source re-chunk embedding without reviewed metadata"
+      }
+    ],
+    "dry_run_embedding_readiness": {
+      "can_run_embedding": false,
+      "textbook_chunks_ready": 0,
+      "solution_chunks_ready": 7,
+      "chunks_skipped_missing_metadata": 720,
+      "chunks_skipped_blocked": 0,
+      "chunks_skipped_needs_review": 17
+    },
+    "actual_embedding_run": false,
+    "vector_db_write": false
+  },
+  "embedding_readiness": {
+    "ready_for_embedding": false,
+    "reviewed_metadata_version": "2026-06-reviewed-v1",
+    "textbook_chunks_ready": 0,
+    "solution_chunks_ready": 7,
+    "chunks_skipped_missing_metadata": 720,
+    "chunks_skipped_blocked": 0,
+    "chunks_skipped_needs_review": 17,
+    "can_run_embedding": false,
+    "textbook": {
+      "path": "data/processed/chunk_preview/textbook_chunks_preview.jsonl",
+      "exists": true,
+      "total": 720,
+      "ready": 0,
+      "skipped_missing_metadata": 720,
+      "skipped_blocked": 0,
+      "skipped_needs_review": 0,
+      "missing_metadata_examples": [
+        {
+          "chunk_id": "chunk_unit_04_lesson_01_0001",
+          "source_type": "textbook",
+          "missing_metadata": [
+            "quality_status",
+            "reviewed_metadata_version"
+          ]
+        },
+        {
+          "chunk_id": "chunk_unit_04_lesson_01_0002",
+          "source_type": "textbook",
+          "missing_metadata": [
+            "quality_status",
+            "reviewed_metadata_version"
+          ]
+        },
+        {
+          "chunk_id": "chunk_unit_04_lesson_01_0003",
+          "source_type": "textbook",
+          "missing_metadata": [
+            "quality_status",
+            "reviewed_metadata_version"
+          ]
+        },
+        {
+          "chunk_id": "chunk_unit_04_lesson_01_0004",
+          "source_type": "textbook",
+          "missing_metadata": [
+            "quality_status",
+            "reviewed_metadata_version"
+          ]
+        },
+        {
+          "chunk_id": "chunk_unit_04_lesson_01_0005",
+          "source_type": "textbook",
+          "missing_metadata": [
+            "quality_status",
+            "reviewed_metadata_version"
+          ]
+        },
+        {
+          "chunk_id": "chunk_unit_04_lesson_01_0006",
+          "source_type": "textbook",
+          "missing_metadata": [
+            "quality_status",
+            "reviewed_metadata_version"
+          ]
+        },
+        {
+          "chunk_id": "chunk_unit_04_lesson_01_0007",
+          "source_type": "textbook",
+          "missing_metadata": [
+            "quality_status",
+            "reviewed_metadata_version"
+          ]
+        },
+        {
+          "chunk_id": "chunk_unit_04_lesson_01_0008",
+          "source_type": "textbook",
+          "missing_metadata": [
+            "quality_status",
+            "reviewed_metadata_version"
+          ]
+        },
+        {
+          "chunk_id": "chunk_unit_04_lesson_01_0009",
+          "source_type": "textbook",
+          "missing_metadata": [
+            "quality_status",
+            "reviewed_metadata_version"
+          ]
+        },
+        {
+          "chunk_id": "chunk_unit_04_lesson_01_0010",
+          "source_type": "textbook",
+          "missing_metadata": [
+            "quality_status",
+            "reviewed_metadata_version"
+          ]
+        }
+      ]
+    },
+    "solution_book": {
+      "path": "data/processed/solution_book/solution_chunks.cleaned.jsonl",
+      "exists": true,
+      "total": 24,
+      "ready": 7,
+      "skipped_missing_metadata": 0,
+      "skipped_blocked": 0,
+      "skipped_needs_review": 17,
+      "missing_metadata_examples": []
+    },
+    "blocking_issues": [
+      "CURRICULUM_METADATA_NOT_READY_FOR_EMBEDDING",
+      "chunks_missing_required_reviewed_metadata",
+      "textbook_chunk_preview_missing_required_metadata:720"
+    ],
+    "metadata_path": "data/processed/curriculum/reviewed_curriculum_metadata.json"
+  },
+  "remaining_blockers": [
+    "textbook_chunk_preview_missing_required_metadata:720"
+  ],
+  "exact_next_command": "Resolve listed blockers before embedding/re-embedding.",
+  "scope_guardrails": {
+    "embedding_run": false,
+    "reembedding_run": false,
+    "vector_db_write": false,
+    "ocr_rerun": false,
+    "vision_rerun": false,
+    "extraction_rerun": false,
+    "chunk_cleanup_rerun": false,
+    "quiz_flashcard_modified": false
+  }
+}

@@ -15,6 +15,11 @@ from app.models.ingestion import IngestionPage
 from app.models.textbook import ContentSource, ExtractedQuestion, RagChunk
 from app.services.chunking import build_page_chunk_records, normalize_arabic
 from app.services.embeddings import current_embedding_model_name, embed_batch, embedding_provider_status
+from app.services.reviewed_curriculum_metadata import (
+    chunk_is_embedding_ready,
+    ensure_reviewed_metadata_ready,
+    metadata_with_reviewed_version,
+)
 
 
 @dataclass
@@ -200,6 +205,7 @@ async def rebuild_rag_chunks_from_cached_pages(
 ) -> CachedPageRebuildResult:
     """Clear and rebuild RAG chunks from cached ``page_NNN.json`` files."""
 
+    reviewed_metadata = ensure_reviewed_metadata_ready()
     resolved_cache_dir = _resolve_project_path(cache_dir) if cache_dir else default_chemistry_cache_dir()
     resolved_cache_dir = resolved_cache_dir.resolve()
     if not resolved_cache_dir.exists():
@@ -275,6 +281,28 @@ async def rebuild_rag_chunks_from_cached_pages(
             skipped_pages.append(page_num)
             continue
 
+        metadata_errors: list[dict[str, object]] = []
+        for offset, record in enumerate(chunk_records):
+            candidate = {
+                **(record.metadata or {}),
+                "source_type": source.source_type,
+            }
+            ready, reason, missing = chunk_is_embedding_ready(candidate, reviewed_metadata)
+            if not ready:
+                metadata_errors.append(
+                    {
+                        "page_number": page_num,
+                        "chunk_index": chunk_index + offset,
+                        "reason": reason,
+                        "missing_metadata": missing,
+                    }
+                )
+        if metadata_errors:
+            raise RuntimeError(
+                "Refusing to rebuild embeddings without reviewed curriculum metadata: "
+                + json.dumps(metadata_errors[:10], ensure_ascii=False)
+            )
+
         embeddings = await embed_batch([record.content for record in chunk_records])
         for offset, (record, embedding) in enumerate(zip(chunk_records, embeddings)):
             content_type_counter[record.content_type] += 1
@@ -296,7 +324,7 @@ async def rebuild_rag_chunks_from_cached_pages(
                     embedding_model=current_embedding_model_name(),
                     embedding_updated_at=datetime.now(timezone.utc),
                     metadata_json={
-                        **record.metadata,
+                        **metadata_with_reviewed_version(record.metadata, reviewed_metadata),
                         "cache_path": str(page_file),
                         "cache_rebuild": True,
                         "embedding_model": current_embedding_model_name(),

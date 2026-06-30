@@ -1,7 +1,7 @@
 import { api } from './http';
 import { mockInterests } from './mockData';
 import { setToken } from '../lib/storage';
-import type { InterestCategory, UserPreferences, UserProfile } from '../types';
+import type { InterestCategory, TeachingStyle, UserPreferences, UserProfile } from '../types';
 
 interface LoginResponse {
   access_token: string;
@@ -23,7 +23,12 @@ const toBackendTeachingStyle = (style: UserPreferences['teachingStyle']): string
     visual: 'visual',
     exam: 'academic',
     simple: 'beginner',
-  })[style ?? 'real_life'];
+    beginner: 'beginner',
+    step_by_step: 'step_by_step',
+    academic: 'academic',
+    fast_summary: 'fast_summary',
+    real_life_examples: 'real_life_examples',
+  } satisfies Record<TeachingStyle, string>)[style ?? 'real_life'];
 
 const toBackendAnswerFormat = (format: UserPreferences['answerFormat']): string =>
   ({

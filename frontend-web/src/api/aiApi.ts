@@ -9,6 +9,8 @@ import type {
   SourceCitation,
 } from '../types';
 
+const AI_GENERATION_TIMEOUT_MS = 90000;
+
 interface BackendChatSource {
   chunk_id: number;
   source_id: number;
@@ -45,6 +47,8 @@ const mediaUrl = (value?: string): string | undefined => {
   if (value.startsWith('http://') || value.startsWith('https://')) return value;
   return `${origin}${value}`;
 };
+
+export const resolveMediaUrl = mediaUrl;
 
 const asNumber = (value: unknown): number | undefined => (
   typeof value === 'number' && Number.isFinite(value) ? value : undefined
@@ -142,8 +146,10 @@ export const messageResponseToAskResponse = (
   };
 
   const audioUrl = asString(audioBlock?.url);
+  const answerAudioUrl = message.answer_audio_url || message.media_url || undefined;
   const imageUrl = asString(imageBlock?.image_url) || asString(imageBlock?.url);
-  if (audioUrl) response.audio_url = mediaUrl(audioUrl);
+  if (answerAudioUrl) response.audio_url = mediaUrl(answerAudioUrl);
+  if (!response.audio_url && audioUrl) response.audio_url = mediaUrl(audioUrl);
   if (imageUrl) response.source_page_image_url = mediaUrl(imageUrl);
   if (format === 'image' && !response.source_page_image_url) {
     const firstPage = message.page_numbers?.[0] ?? citations[0]?.page;
@@ -175,19 +181,81 @@ export const aiApi = {
   },
 
   async sendSessionMessage(sessionId: number, request: SendSessionMessageRequest): Promise<ChatMessageResponse> {
-    const { data } = await api.post<ChatMessageResponse>(`/chat/sessions/${sessionId}/messages`, {
-      content: request.content,
-      format: request.format ?? 'text',
-      answer_scope: request.answer_scope ?? 'auto',
-      source_types: request.source_types,
-      teaching_style: request.teaching_style,
-      teaching_level: request.teaching_level,
-      explanation_method: request.explanation_method,
-      learning_modes: request.learning_modes,
-      student_interests: request.student_interests,
-      action: request.action,
+    const formData = new FormData();
+    formData.append('conversationId', String(sessionId));
+    formData.append('requestedReturnType', request.requestedReturnType ?? (request.format === 'audio' ? 'audio' : 'auto'));
+    formData.append('language', request.language ?? 'auto');
+    formData.append('answerScope', request.answer_scope ?? 'auto');
+    if (request.teaching_style) formData.append('teachingStyle', request.teaching_style);
+    if (request.teaching_level) formData.append('teachingLevel', request.teaching_level);
+    if (request.explanation_method) formData.append('explanationMethod', request.explanation_method);
+    if (request.learning_modes?.length) formData.append('learningModes', request.learning_modes.join(','));
+    if (request.student_interests?.length) formData.append('studentInterests', request.student_interests.join(','));
+    if (request.action) formData.append('action', request.action);
+    if (request.audio) {
+      formData.append('audio', request.audio, request.audioFilename ?? 'student-message.webm');
+    } else if (request.content) {
+      formData.append('text', request.content);
+    }
+    // Prepared for multimodal backend support. The current FastAPI endpoint
+    // ignores undeclared multipart fields, so text/audio chat remains stable.
+    if (request.image) formData.append('image', request.image, request.image.name);
+    if (request.file) formData.append('file', request.file, request.file.name);
+    if (request.preferredResponseFormat) formData.append('preferredResponseFormat', request.preferredResponseFormat);
+
+    const { data } = await api.post<ChatMessageResponse>('/chat/messages', formData, {
+      timeout: AI_GENERATION_TIMEOUT_MS,
     });
     return data;
+  },
+
+  async sendTextMessage(
+    sessionId: number,
+    text: string,
+    request: Omit<SendSessionMessageRequest, 'content' | 'audio' | 'image' | 'file'> = {},
+  ): Promise<ChatMessageResponse> {
+    return this.sendSessionMessage(sessionId, { ...request, content: text });
+  },
+
+  async sendVoiceMessage(
+    sessionId: number,
+    audio: Blob,
+    request: Omit<SendSessionMessageRequest, 'content' | 'audio' | 'image' | 'file'> = {},
+  ): Promise<ChatMessageResponse> {
+    return this.sendSessionMessage(sessionId, {
+      ...request,
+      audio,
+      audioFilename: request.audioFilename ?? 'student-message.webm',
+    });
+  },
+
+  async sendImageMessage(
+    sessionId: number,
+    image: File,
+    text: string,
+    request: Omit<SendSessionMessageRequest, 'content' | 'audio' | 'image' | 'file'> = {},
+  ): Promise<ChatMessageResponse> {
+    return this.sendSessionMessage(sessionId, { ...request, content: text, image });
+  },
+
+  async transcribeVoiceMessage(): Promise<never> {
+    throw new Error('TRANSCRIBE_ENDPOINT_NOT_READY');
+  },
+
+  async generateResponseAudio(): Promise<never> {
+    throw new Error('GENERATE_RESPONSE_AUDIO_ENDPOINT_NOT_READY');
+  },
+
+  async generateResponseImage(): Promise<never> {
+    throw new Error('GENERATE_RESPONSE_IMAGE_ENDPOINT_NOT_READY');
+  },
+
+  async generateQuizFromAnswer(): Promise<never> {
+    throw new Error('GENERATE_QUIZ_FROM_ANSWER_ENDPOINT_NOT_READY');
+  },
+
+  async generateFlashcardsFromAnswer(): Promise<never> {
+    throw new Error('GENERATE_FLASHCARDS_FROM_ANSWER_ENDPOINT_NOT_READY');
   },
 
   async deleteSession(sessionId: number): Promise<void> {
@@ -214,6 +282,10 @@ export const aiApi = {
         previous_answer: request.previous_answer,
         previous_sources: request.previous_sources,
         previous_selected_chunks: request.previous_selected_chunks,
+        lesson_id: request.lesson_id,
+        topic_id: request.topic_id,
+      }, {
+        timeout: AI_GENERATION_TIMEOUT_MS,
       });
       return mapBackendAnswer(request, data);
     } catch (error) {

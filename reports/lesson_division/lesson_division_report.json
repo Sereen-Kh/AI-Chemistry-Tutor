@@ -1,0 +1,2328 @@
+{
+  "generated_at": "2026-06-24T07:57:36.546974+00:00",
+  "pdf_discovery": {
+    "textbook": {
+      "path": "src/data/textbooks/syria_grade_9/Chemistry.pdf",
+      "exists": true,
+      "size_bytes": 111709083,
+      "sha256": "3e94fe8be9d4c750c0253d3b81dc12ddf826ec6c901a2def17427d32cb5f9187",
+      "page_count": 96
+    },
+    "solution_book": {
+      "path": "src/data/textbooks/solution-book/Chemistry_Solution_Book.pdf",
+      "exists": true,
+      "size_bytes": 834269,
+      "sha256": "2b8ed4051308d3f52d8fb1c33ffc8da50f539db882624ef318a9b68dedd9b1c0",
+      "page_count": 35
+    },
+    "all_pdfs": [
+      {
+        "path": "src/data/textbooks/solution-book/Chemistry_Solution_Book.pdf",
+        "exists": true,
+        "size_bytes": 834269,
+        "sha256": "2b8ed4051308d3f52d8fb1c33ffc8da50f539db882624ef318a9b68dedd9b1c0",
+        "page_count": 35,
+        "role": "chemistry_solution_book"
+      },
+      {
+        "path": "src/data/textbooks/syria_grade_9/Chemistry.pdf",
+        "exists": true,
+        "size_bytes": 111709083,
+        "sha256": "3e94fe8be9d4c750c0253d3b81dc12ddf826ec6c901a2def17427d32cb5f9187",
+        "page_count": 96,
+        "role": "chemistry_textbook"
+      },
+      {
+        "path": "src/docs/EduMind_Team_9_AI_Chemistry_Tutor.pdf",
+        "exists": true,
+        "size_bytes": 5498901,
+        "sha256": "8acc0f3dc30edf33d101fd0b1be6b7e851a520853c8c7a9b57cbc40523e5dacd",
+        "page_count": 10,
+        "role": "other"
+      },
+      {
+        "path": "src/docs/EduMind_Team_9_timeline.pdf",
+        "exists": true,
+        "size_bytes": 8112,
+        "sha256": "567b837ea304a41293f171fbac2f2d0b2c93f91037566d855e723f0da2d3c218",
+        "page_count": 3,
+        "role": "other"
+      }
+    ]
+  },
+  "codebase_audit_path": "docs/lesson_division_codebase_audit.md",
+  "textbook": {
+    "total_pages": 96,
+    "detected_units": 3,
+    "detected_lessons": 9,
+    "detected_subtopics": 52,
+    "detected_learning_objects": 720,
+    "blocked_pages": 0,
+    "needs_ocr_pages": [],
+    "needs_vision_pages": [],
+    "ready_lessons": [
+      "unit_04_lesson_01",
+      "unit_04_lesson_02",
+      "unit_04_lesson_03",
+      "unit_04_lesson_04",
+      "unit_04_lesson_05",
+      "unit_05_lesson_01",
+      "unit_05_lesson_02",
+      "unit_05_lesson_03",
+      "unit_06_lesson_01"
+    ],
+    "needs_review_lessons": [],
+    "blocked_lessons": []
+  },
+  "solution_book": {
+    "total_pages": 35,
+    "detected_solution_units": 36,
+    "linked_solution_units": 36,
+    "accepted_solution_units": 21,
+    "manual_review_units": 15,
+    "blocked_units": 0
+  },
+  "chunks": {
+    "total_textbook_chunks": 720,
+    "total_solution_book_chunks": 39,
+    "total_chunks": 759,
+    "chunks_by_source_type": {
+      "textbook": 720,
+      "solution_book": 39
+    },
+    "chunks_by_lesson": {
+      "unit_04_lesson_01": 98,
+      "unit_04_lesson_02": 58,
+      "unit_04_lesson_03": 61,
+      "unit_04_lesson_04": 133,
+      "unlinked": 58,
+      "unit_04_lesson_05": 98,
+      "unit_05_lesson_01": 69,
+      "unit_05_lesson_02": 70,
+      "unit_05_lesson_03": 66,
+      "unit_06_lesson_01": 48
+    },
+    "bad_endings_count": 70,
+    "blocked_chunks_count": 0,
+    "average_token_estimate": 38.01,
+    "min_token_estimate": 1,
+    "max_token_estimate": 502,
+    "bad_endings_by_source_type": {
+      "textbook": 50,
+      "solution_book": 20
+    }
+  },
+  "textbook_lesson_map": {
+    "book_title": "Chemistry textbook",
+    "source_type": "textbook",
+    "pdf_path": "src/data/textbooks/syria_grade_9/Chemistry.pdf",
+    "pdf_sha256": "3e94fe8be9d4c750c0253d3b81dc12ddf826ec6c901a2def17427d32cb5f9187",
+    "pdf_page_count": 96,
+    "cache_dir": "src/data/textbooks/syria_grade_9_chemistry/pages",
+    "printed_page_mapping": {
+      "method": "mode offset from extracted standalone printed-page numbers",
+      "offset": 106,
+      "evidence_sample": [
+        {
+          "pdf_page_number": 2,
+          "printed_page_number": 108,
+          "offset": 106
+        },
+        {
+          "pdf_page_number": 8,
+          "printed_page_number": 114,
+          "offset": 106
+        },
+        {
+          "pdf_page_number": 9,
+          "printed_page_number": 115,
+          "offset": 106
+        },
+        {
+          "pdf_page_number": 11,
+          "printed_page_number": 117,
+          "offset": 106
+        },
+        {
+          "pdf_page_number": 13,
+          "printed_page_number": 119,
+          "offset": 106
+        },
+        {
+          "pdf_page_number": 15,
+          "printed_page_number": 121,
+          "offset": 106
+        },
+        {
+          "pdf_page_number": 16,
+          "printed_page_number": 122,
+          "offset": 106
+        },
+        {
+          "pdf_page_number": 17,
+          "printed_page_number": 123,
+          "offset": 106
+        },
+        {
+          "pdf_page_number": 18,
+          "printed_page_number": 124,
+          "offset": 106
+        },
+        {
+          "pdf_page_number": 21,
+          "printed_page_number": 127,
+          "offset": 106
+        },
+        {
+          "pdf_page_number": 22,
+          "printed_page_number": 128,
+          "offset": 106
+        },
+        {
+          "pdf_page_number": 25,
+          "printed_page_number": 131,
+          "offset": 106
+        }
+      ]
+    },
+    "units": [
+      {
+        "unit_id": "unit_04",
+        "unit_number": "4",
+        "unit_title": "الوحدة 4 — الكيمياء اللاعضوية",
+        "pdf_page_start": 1,
+        "pdf_page_end": 54,
+        "page_start": 107,
+        "page_end": 160,
+        "chapter_title": "المحاليل والتفاعلات اللاعضوية",
+        "non_lesson_pages": [
+          {
+            "pdf_page_number": 1,
+            "printed_page_number": 107,
+            "page_role": "unit_cover"
+          },
+          {
+            "pdf_page_number": 38,
+            "printed_page_number": 144,
+            "page_role": "formula"
+          },
+          {
+            "pdf_page_number": 39,
+            "printed_page_number": 145,
+            "page_role": "solved_example"
+          },
+          {
+            "pdf_page_number": 50,
+            "printed_page_number": 156,
+            "page_role": "unit_questions"
+          },
+          {
+            "pdf_page_number": 51,
+            "printed_page_number": 157,
+            "page_role": "unit_questions"
+          },
+          {
+            "pdf_page_number": 52,
+            "printed_page_number": 158,
+            "page_role": "unit_questions"
+          },
+          {
+            "pdf_page_number": 53,
+            "printed_page_number": 159,
+            "page_role": "unit_questions"
+          },
+          {
+            "pdf_page_number": 54,
+            "printed_page_number": 160,
+            "page_role": "unit_cover"
+          }
+        ],
+        "lessons": [
+          {
+            "lesson_id": "unit_04_lesson_01",
+            "lesson_number": "1",
+            "lesson_title": "المحاليل المائية",
+            "aliases": [],
+            "pdf_page_start": 2,
+            "pdf_page_end": 9,
+            "page_start": 108,
+            "page_end": 115,
+            "objectives": [
+              "يتعرّف المحلول المائي",
+              "يميّز أنواع المحاليل المائية المتجانسة وغير المتجانسة",
+              "يقوم بإجراء تجربة تحضير محلول",
+              "يتعرّف التركيز الغرامي",
+              "يتعرّف التركيز المولي"
+            ],
+            "keywords": [
+              "| | | | |",
+              "التركيز الغرامي",
+              "التركيز المولي",
+              "التَّركيز الغرامي",
+              "التَّركيز المولي .تكثُر في سورية ينابيع المياه المعدنية كمياه عين الفيجة",
+              "المادة المذابة",
+              "المادة المذيبة",
+              "المادَّة المذابة",
+              "المادَّة المذيبة",
+              "المحلول المائي",
+              "المحلول. المادة المذيبة. المادة المذابة. التركيز الغرامي. التركيز المولي",
+              "اﻫﺪاف",
+              "غير متجانسة)",
+              "و الدّريكيش 1المحاليل المائيَّة 108 | ةيئاملا ليلاحملا َّ | | | |",
+              "و نبع السّ نّ",
+              "و نبع بقّين",
+              "يتعرّف التّركيز الغرامي",
+              "يتعرّف التّركيز المولي. :اﻟﻜﻠﻤﺎت اﻟﻤﻔﺘﺎﺣﻴﺔ .المحلول",
+              "يقوم بإجراء تجربة تحضير محلول",
+              "يميّز أنواع المحاليل المائيّة (متجانسة",
+              "ّيتعرَّف المحلول المائي"
+            ],
+            "subtopics": [
+              {
+                "subtopic_id": "unit_04_lesson_01_subtopic_001",
+                "unit_id": "unit_04",
+                "lesson_id": "unit_04_lesson_01",
+                "lesson_title": "المحاليل المائية",
+                "subtopic_title": "المحلول المائي",
+                "page_start": 108,
+                "page_end": 108,
+                "learning_object_types": [
+                  "experiment"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_002.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_04_lesson_01_subtopic_002",
+                "unit_id": "unit_04",
+                "lesson_id": "unit_04_lesson_01",
+                "lesson_title": "المحاليل المائية",
+                "subtopic_title": "المادة المذيبة",
+                "page_start": 108,
+                "page_end": 108,
+                "learning_object_types": [
+                  "experiment"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_002.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_04_lesson_01_subtopic_003",
+                "unit_id": "unit_04",
+                "lesson_id": "unit_04_lesson_01",
+                "lesson_title": "المحاليل المائية",
+                "subtopic_title": "المادة المذابة",
+                "page_start": 108,
+                "page_end": 114,
+                "learning_object_types": [
+                  "definition",
+                  "experiment",
+                  "formula"
+                ],
+                "quality_score": 1.119,
+                "evidence": [
+                  "page_002.json text match",
+                  "page_004.json text match",
+                  "page_006.json text match",
+                  "page_007.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_04_lesson_01_subtopic_004",
+                "unit_id": "unit_04",
+                "lesson_id": "unit_04_lesson_01",
+                "lesson_title": "المحاليل المائية",
+                "subtopic_title": "التركيز الغرامي",
+                "page_start": 108,
+                "page_end": 113,
+                "learning_object_types": [
+                  "activity",
+                  "definition",
+                  "experiment",
+                  "formula"
+                ],
+                "quality_score": 0.988,
+                "evidence": [
+                  "page_002.json text match",
+                  "page_004.json text match",
+                  "page_005.json text match",
+                  "page_007.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_04_lesson_01_subtopic_005",
+                "unit_id": "unit_04",
+                "lesson_id": "unit_04_lesson_01",
+                "lesson_title": "المحاليل المائية",
+                "subtopic_title": "التركيز المولي",
+                "page_start": 108,
+                "page_end": 113,
+                "learning_object_types": [
+                  "activity",
+                  "definition",
+                  "experiment",
+                  "formula"
+                ],
+                "quality_score": 0.988,
+                "evidence": [
+                  "page_002.json text match",
+                  "page_004.json text match",
+                  "page_005.json text match",
+                  "page_007.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_04_lesson_01_subtopic_006",
+                "unit_id": "unit_04",
+                "lesson_id": "unit_04_lesson_01",
+                "lesson_title": "المحاليل المائية",
+                "subtopic_title": "تمديد المحاليل",
+                "page_start": 112,
+                "page_end": 113,
+                "learning_object_types": [
+                  "formula"
+                ],
+                "quality_score": 1.297,
+                "evidence": [
+                  "page_006.json text match",
+                  "page_007.json text match"
+                ]
+              }
+            ],
+            "learning_object_count": 86,
+            "quality": {
+              "status": "ready",
+              "score": 0.994,
+              "blocked_pages": [],
+              "needs_ocr_pages": [],
+              "needs_vision_pages": []
+            },
+            "source_evidence": [
+              "book_structure.json",
+              "page_002.json lesson-start header"
+            ]
+          },
+          {
+            "lesson_id": "unit_04_lesson_02",
+            "lesson_number": "2",
+            "lesson_title": "المحاليل الحمضية",
+            "aliases": [],
+            "pdf_page_start": 10,
+            "pdf_page_end": 17,
+            "page_start": 116,
+            "page_end": 123,
+            "objectives": [
+              "يتعرّف الوظيفة الحمضية",
+              "يميّز بالتجربة بين الحموض القوية والحموض الضعيفة",
+              "يشرح خواص المحاليل الحمضية",
+              "يبيّن أهمية الحموض"
+            ],
+            "keywords": [
+              "| | | | |",
+              "الحموض",
+              "اﻫﺪاف",
+              "حمض ضعيف",
+              "حمض ضعيف تشـتهر سـوريا بزراعـة الحمضيّـات والتـي تعـدّ ثمارهـا ذات فوائـد غذائيَّـة كبيـرة لإلنسـان الحتوائهـا ) وبذلـك تكتسـب الحمضيـات طعمـاً منعشـاً.C علـى حمضـي السّ ـتريك واالسـكوربيك (فيتاميـن المحاليل الحمضيّة2 116 | ةيضمحلا ليلاحملا ّ | | | |",
+              "حمض قوي",
+              "حمض قويّ",
+              "عدد الوظائف الحمضية",
+              "يبيّن أهمّيَّة الحموض. :اﻟﻜﻠﻤﺎت اﻟﻤﻔﺘﺎﺣﻴﺔ .عدد الوظائف الحمضيَّة",
+              "يتعرَّف الوظيفة الحمضيَّة",
+              "يشرح خواصّ المحاليل الحمضيَّة",
+              "يميّز بالتَّجربة بين الحموض القويّة والحموض الضَّ عيفة"
+            ],
+            "subtopics": [
+              {
+                "subtopic_id": "unit_04_lesson_02_subtopic_001",
+                "unit_id": "unit_04",
+                "lesson_id": "unit_04_lesson_02",
+                "lesson_title": "المحاليل الحمضية",
+                "subtopic_title": "الحموض",
+                "page_start": 116,
+                "page_end": 123,
+                "learning_object_types": [
+                  "activity",
+                  "definition",
+                  "experiment"
+                ],
+                "quality_score": 0.992,
+                "evidence": [
+                  "page_010.json text match",
+                  "page_011.json text match",
+                  "page_013.json text match",
+                  "page_014.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_04_lesson_02_subtopic_002",
+                "unit_id": "unit_04",
+                "lesson_id": "unit_04_lesson_02",
+                "lesson_title": "المحاليل الحمضية",
+                "subtopic_title": "أيون الهدروجين",
+                "page_start": 119,
+                "page_end": 119,
+                "learning_object_types": [
+                  "concept"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_013.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_04_lesson_02_subtopic_003",
+                "unit_id": "unit_04",
+                "lesson_id": "unit_04_lesson_02",
+                "lesson_title": "المحاليل الحمضية",
+                "subtopic_title": "حمض قوي",
+                "page_start": 116,
+                "page_end": 116,
+                "learning_object_types": [
+                  "experiment"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_010.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_04_lesson_02_subtopic_004",
+                "unit_id": "unit_04",
+                "lesson_id": "unit_04_lesson_02",
+                "lesson_title": "المحاليل الحمضية",
+                "subtopic_title": "حمض ضعيف",
+                "page_start": 116,
+                "page_end": 116,
+                "learning_object_types": [
+                  "experiment"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_010.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_04_lesson_02_subtopic_005",
+                "unit_id": "unit_04",
+                "lesson_id": "unit_04_lesson_02",
+                "lesson_title": "المحاليل الحمضية",
+                "subtopic_title": "كواشف الحموض",
+                "page_start": 116,
+                "page_end": 123,
+                "learning_object_types": [
+                  "activity",
+                  "definition",
+                  "experiment"
+                ],
+                "quality_score": 0.992,
+                "evidence": [
+                  "page_010.json text match",
+                  "page_011.json text match",
+                  "page_013.json text match",
+                  "page_014.json text match"
+                ]
+              }
+            ],
+            "learning_object_count": 53,
+            "quality": {
+              "status": "ready",
+              "score": 0.994,
+              "blocked_pages": [],
+              "needs_ocr_pages": [],
+              "needs_vision_pages": []
+            },
+            "source_evidence": [
+              "book_structure.json",
+              "page_010.json lesson-start header"
+            ]
+          },
+          {
+            "lesson_id": "unit_04_lesson_03",
+            "lesson_number": "3",
+            "lesson_title": "المحاليل الأساسية",
+            "aliases": [],
+            "pdf_page_start": 18,
+            "pdf_page_end": 25,
+            "page_start": 124,
+            "page_end": 131,
+            "objectives": [
+              "يتعرّف الوظيفة الأساسية",
+              "يميّز بين الأسس القوية والأسس الضعيفة",
+              "يشرح خواص المحاليل الأساسية"
+            ],
+            "keywords": [
+              "| | | | |",
+              "أساس ضعيف",
+              "أساس قوي",
+              "الأسس",
+              "اﻫﺪاف",
+              "عدد الوظائف الأساسية",
+              "يبيّن أهميَّة األسس. :اﻟﻜﻠﻤﺎت اﻟﻤﻔﺘﺎﺣﻴﺔ .عدد الوظائف األساسيَّة",
+              "يتعرَّف الوظيفة األساسيَّة",
+              "يشرح خواص المحاليل األساسيَّة",
+              "يميّز بالتَّجربة بين األسس القويَّة واألسس الضَّ عيفة",
+              "ًّتُحلّـل البكتيريـا الموجـودة داخـل الفـم بقايـا الطَّعـام بيـن األسـنان ممَّـا يجعـل وسـط الفـم حمضيَّـا وهـذا يسـبّب تـآكل األسـنان عنـد بقائـه فتـرة طويلـة عليهـا. المحاليل األساسيَّة3 124 | ةيساسلأا ليلاحملا َّ | | | |"
+            ],
+            "subtopics": [
+              {
+                "subtopic_id": "unit_04_lesson_03_subtopic_001",
+                "unit_id": "unit_04",
+                "lesson_id": "unit_04_lesson_03",
+                "lesson_title": "المحاليل الأساسية",
+                "subtopic_title": "الأسس",
+                "page_start": 124,
+                "page_end": 130,
+                "learning_object_types": [
+                  "activity",
+                  "experiment",
+                  "formula",
+                  "self_test_question"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_018.json text match",
+                  "page_019.json text match",
+                  "page_023.json text match",
+                  "page_024.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_04_lesson_03_subtopic_002",
+                "unit_id": "unit_04",
+                "lesson_id": "unit_04_lesson_03",
+                "lesson_title": "المحاليل الأساسية",
+                "subtopic_title": "أيون الهدروكسيد",
+                "page_start": 125,
+                "page_end": 130,
+                "learning_object_types": [
+                  "activity",
+                  "formula",
+                  "self_test_question"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_019.json text match",
+                  "page_023.json text match",
+                  "page_024.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_04_lesson_03_subtopic_003",
+                "unit_id": "unit_04",
+                "lesson_id": "unit_04_lesson_03",
+                "lesson_title": "المحاليل الأساسية",
+                "subtopic_title": "أساس قوي",
+                "page_start": 124,
+                "page_end": 124,
+                "learning_object_types": [
+                  "experiment"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_018.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_04_lesson_03_subtopic_004",
+                "unit_id": "unit_04",
+                "lesson_id": "unit_04_lesson_03",
+                "lesson_title": "المحاليل الأساسية",
+                "subtopic_title": "أساس ضعيف",
+                "page_start": 124,
+                "page_end": 124,
+                "learning_object_types": [
+                  "experiment"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_018.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_04_lesson_03_subtopic_005",
+                "unit_id": "unit_04",
+                "lesson_id": "unit_04_lesson_03",
+                "lesson_title": "المحاليل الأساسية",
+                "subtopic_title": "المحاليل القلوية",
+                "page_start": 124,
+                "page_end": 130,
+                "learning_object_types": [
+                  "activity",
+                  "experiment",
+                  "formula",
+                  "self_test_question"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_018.json text match",
+                  "page_021.json text match",
+                  "page_022.json text match",
+                  "page_023.json text match"
+                ]
+              }
+            ],
+            "learning_object_count": 59,
+            "quality": {
+              "status": "ready",
+              "score": 0.994,
+              "blocked_pages": [],
+              "needs_ocr_pages": [],
+              "needs_vision_pages": []
+            },
+            "source_evidence": [
+              "book_structure.json",
+              "page_018.json lesson-start header"
+            ]
+          },
+          {
+            "lesson_id": "unit_04_lesson_04",
+            "lesson_number": "4",
+            "lesson_title": "أنواع التفاعلات الكيميائية",
+            "aliases": [],
+            "pdf_page_start": 26,
+            "pdf_page_end": 37,
+            "page_start": 132,
+            "page_end": 143,
+            "objectives": [
+              "يتعرّف تفاعلات الاتحاد",
+              "يتعرّف تفاعلات التفكك",
+              "يتعرّف تفاعلات الإزاحة",
+              "يتعرّف تفاعلات التبادل الثنائي"
+            ],
+            "keywords": [
+              "| | | | |",
+              "أو ننظّ ـف ..... إلـخ. كيف تستدلّ على حدوث تفاعل كيميائيّ؟ أنواع التَّفاعالت الكيميائيَّة4 132 | تلاعافتَّ ةيئايميكلا لا عاونأ َّ | | | |",
+              "اﻫﺪاف",
+              "تحـدث التّفاعـ اات الكيميائيّـة فـي حياتنـا اليوميّـة",
+              "تفاعالت اإلزاحة",
+              "تفاعالت التّبادل الثّنائي",
+              "تفاعالت التّفكّك",
+              "تفاعلات الإزاحة",
+              "تفاعلات الاتحاد",
+              "تفاعلات التبادل الثنائي",
+              "تفاعلات التفكك",
+              "فـي كلّ مـرة نتنفّـس بهـا أو نطبـخ",
+              "وليـس فقـط فـي المختبـر",
+              "يقوم بتجارب على بعض أنواع التَّفاعالت الكيميائيَّة. :اﻟﻜﻠﻤﺎت اﻟﻤﻔﺘﺎﺣﻴﺔ .تفاعالت االتّحاد",
+              "يميّز بعض أنواع التَّفاعالت الكيميائيَّة",
+              "يُعبّرعن التَّفاعالت الكيميائيَّة بمعادالت كيميائيَّة"
+            ],
+            "subtopics": [
+              {
+                "subtopic_id": "unit_04_lesson_04_subtopic_001",
+                "unit_id": "unit_04",
+                "lesson_id": "unit_04_lesson_04",
+                "lesson_title": "أنواع التفاعلات الكيميائية",
+                "subtopic_title": "تفاعل الاتحاد",
+                "page_start": 132,
+                "page_end": 143,
+                "learning_object_types": [
+                  "activity",
+                  "concept",
+                  "definition",
+                  "experiment",
+                  "formula"
+                ],
+                "quality_score": 0.996,
+                "evidence": [
+                  "page_026.json text match",
+                  "page_027.json text match",
+                  "page_028.json text match",
+                  "page_029.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_04_lesson_04_subtopic_002",
+                "unit_id": "unit_04",
+                "lesson_id": "unit_04_lesson_04",
+                "lesson_title": "أنواع التفاعلات الكيميائية",
+                "subtopic_title": "تفاعل التفكك",
+                "page_start": 132,
+                "page_end": 143,
+                "learning_object_types": [
+                  "activity",
+                  "concept",
+                  "definition",
+                  "experiment",
+                  "formula"
+                ],
+                "quality_score": 0.996,
+                "evidence": [
+                  "page_026.json text match",
+                  "page_027.json text match",
+                  "page_028.json text match",
+                  "page_029.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_04_lesson_04_subtopic_003",
+                "unit_id": "unit_04",
+                "lesson_id": "unit_04_lesson_04",
+                "lesson_title": "أنواع التفاعلات الكيميائية",
+                "subtopic_title": "تفاعل الإزاحة",
+                "page_start": 132,
+                "page_end": 143,
+                "learning_object_types": [
+                  "activity",
+                  "concept",
+                  "definition",
+                  "experiment",
+                  "formula"
+                ],
+                "quality_score": 0.996,
+                "evidence": [
+                  "page_026.json text match",
+                  "page_027.json text match",
+                  "page_028.json text match",
+                  "page_029.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_04_lesson_04_subtopic_004",
+                "unit_id": "unit_04",
+                "lesson_id": "unit_04_lesson_04",
+                "lesson_title": "أنواع التفاعلات الكيميائية",
+                "subtopic_title": "تفاعل التبادل الثنائي",
+                "page_start": 132,
+                "page_end": 143,
+                "learning_object_types": [
+                  "activity",
+                  "concept",
+                  "definition",
+                  "experiment",
+                  "formula"
+                ],
+                "quality_score": 0.996,
+                "evidence": [
+                  "page_026.json text match",
+                  "page_027.json text match",
+                  "page_028.json text match",
+                  "page_029.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_04_lesson_04_subtopic_005",
+                "unit_id": "unit_04",
+                "lesson_id": "unit_04_lesson_04",
+                "lesson_title": "أنواع التفاعلات الكيميائية",
+                "subtopic_title": "المعادلة الكيميائية",
+                "page_start": 132,
+                "page_end": 143,
+                "learning_object_types": [
+                  "activity",
+                  "concept",
+                  "definition",
+                  "experiment",
+                  "formula"
+                ],
+                "quality_score": 0.995,
+                "evidence": [
+                  "page_026.json text match",
+                  "page_027.json text match",
+                  "page_028.json text match",
+                  "page_030.json text match"
+                ]
+              }
+            ],
+            "learning_object_count": 127,
+            "quality": {
+              "status": "ready",
+              "score": 0.996,
+              "blocked_pages": [],
+              "needs_ocr_pages": [],
+              "needs_vision_pages": []
+            },
+            "source_evidence": [
+              "book_structure.json",
+              "page_026.json lesson-start header"
+            ]
+          },
+          {
+            "lesson_id": "unit_04_lesson_05",
+            "lesson_number": "5",
+            "lesson_title": "الأملاح",
+            "aliases": [],
+            "pdf_page_start": 40,
+            "pdf_page_end": 49,
+            "page_start": 146,
+            "page_end": 155,
+            "objectives": [
+              "يتعرّف الأملاح",
+              "يستنتج طرائق تشكل الملح",
+              "يثمّن أهمية الأملاح في حياتنا"
+            ],
+            "keywords": [
+              "| | | | |",
+              "الملح",
+              "اﻫﺪاف",
+              "تركيب الملح",
+              "ذوبان الملح في الماء",
+              "ذوبان الملح في الماء ّيحـوي مـاء البحـر علـى العديـد مـن األمـ ااح المفيـدة لغـذاء الكائنـات الحيّـة",
+              "فمـا هـو الملـح الرئيسـي المسـبّب لملوحـة البحـر؟ 5األمالح 146 | حلاملأا | | | |",
+              "يتعرّف األمالح",
+              "يثمّن أهميّة األمالح في حياتنا. :اﻟﻜﻠﻤﺎت اﻟﻤﻔﺘﺎﺣﻴﺔ .الملح",
+              "يستنتج طرائق تشكّل الملح"
+            ],
+            "subtopics": [
+              {
+                "subtopic_id": "unit_04_lesson_05_subtopic_001",
+                "unit_id": "unit_04",
+                "lesson_id": "unit_04_lesson_05",
+                "lesson_title": "الأملاح",
+                "subtopic_title": "الملح",
+                "page_start": 146,
+                "page_end": 155,
+                "learning_object_types": [
+                  "activity",
+                  "concept",
+                  "definition",
+                  "experiment",
+                  "formula"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_040.json text match",
+                  "page_042.json text match",
+                  "page_043.json text match",
+                  "page_044.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_04_lesson_05_subtopic_002",
+                "unit_id": "unit_04",
+                "lesson_id": "unit_04_lesson_05",
+                "lesson_title": "الأملاح",
+                "subtopic_title": "تشكل الأملاح",
+                "page_start": 146,
+                "page_end": 155,
+                "learning_object_types": [
+                  "activity",
+                  "concept",
+                  "definition",
+                  "experiment",
+                  "formula"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_040.json text match",
+                  "page_041.json text match",
+                  "page_044.json text match",
+                  "page_045.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_04_lesson_05_subtopic_003",
+                "unit_id": "unit_04",
+                "lesson_id": "unit_04_lesson_05",
+                "lesson_title": "الأملاح",
+                "subtopic_title": "ذوبان الأملاح",
+                "page_start": 151,
+                "page_end": 155,
+                "learning_object_types": [
+                  "definition",
+                  "experiment",
+                  "formula"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_045.json text match",
+                  "page_047.json text match",
+                  "page_049.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_04_lesson_05_subtopic_004",
+                "unit_id": "unit_04",
+                "lesson_id": "unit_04_lesson_05",
+                "lesson_title": "الأملاح",
+                "subtopic_title": "أهمية الأملاح",
+                "page_start": 146,
+                "page_end": 155,
+                "learning_object_types": [
+                  "activity",
+                  "concept",
+                  "definition",
+                  "experiment",
+                  "formula"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_040.json text match",
+                  "page_041.json text match",
+                  "page_044.json text match",
+                  "page_045.json text match"
+                ]
+              }
+            ],
+            "learning_object_count": 95,
+            "quality": {
+              "status": "ready",
+              "score": 1.0,
+              "blocked_pages": [],
+              "needs_ocr_pages": [],
+              "needs_vision_pages": []
+            },
+            "source_evidence": [
+              "book_structure.json",
+              "page_040.json lesson-start header"
+            ]
+          }
+        ]
+      },
+      {
+        "unit_id": "unit_05",
+        "unit_number": "5",
+        "unit_title": "الوحدة 5 — الكيمياء العضوية",
+        "pdf_page_start": 55,
+        "pdf_page_end": 83,
+        "page_start": 161,
+        "page_end": 189,
+        "chapter_title": "الكيمياء العضوية",
+        "non_lesson_pages": [
+          {
+            "pdf_page_number": 55,
+            "printed_page_number": 161,
+            "page_role": "unit_cover"
+          },
+          {
+            "pdf_page_number": 65,
+            "printed_page_number": 171,
+            "page_role": "concept"
+          },
+          {
+            "pdf_page_number": 79,
+            "printed_page_number": 185,
+            "page_role": "unit_questions"
+          },
+          {
+            "pdf_page_number": 80,
+            "printed_page_number": 186,
+            "page_role": "unit_questions"
+          },
+          {
+            "pdf_page_number": 81,
+            "printed_page_number": 187,
+            "page_role": "unit_questions"
+          },
+          {
+            "pdf_page_number": 82,
+            "printed_page_number": 188,
+            "page_role": "project"
+          },
+          {
+            "pdf_page_number": 83,
+            "printed_page_number": 189,
+            "page_role": "project"
+          }
+        ],
+        "lessons": [
+          {
+            "lesson_id": "unit_05_lesson_01",
+            "lesson_number": "1",
+            "lesson_title": "مدخل إلى الكيمياء العضوية",
+            "aliases": [
+              "مركبات الكربون"
+            ],
+            "pdf_page_start": 56,
+            "pdf_page_end": 64,
+            "page_start": 162,
+            "page_end": 170,
+            "objectives": [
+              "يتعرّف المواد العضوية",
+              "يستنتج أن الكربون هو المكوّن الرئيسي للمركّبات العضوية",
+              "يستنتج نوع الروابط بين ذرات الكربون",
+              "يصنّف المركبات إلى عضوية ولاعضوية"
+            ],
+            "keywords": [
+              "| | | | |",
+              "الرَّابطة كربون",
+              "الرّابطة كربون",
+              "السَّ السل الكربونيَّة",
+              "السّللسل الكربونية",
+              "الكربون",
+              "الكيمياء العضوية",
+              "المواد العضوية",
+              "اﻫﺪاف",
+              "كربون",
+              "كربون C H O 12 22 11 سكّر الشوندر السكري C H O 6 10 5 سُ كّر النشاء C H O 6 12 6 سُ كّر العنب نتنـاول الخبـز واألرزّ والبطاطـا التـي تحـوي فـي تركيبهـا علـى النّشـاء",
+              "كمـا نتنـاول اللحـوم التـي يدخـل فـي تركيبهـا البروتينـات",
+              "لماذا يُعدّ كلّ من النّشاء والسُ كّر والبروتين من الموادّ العضويَّة؟ 1مدخل إلى الكيمياء العضويَّة 162 | ةيوضعلا ءايميكلا ىلإ لخدم َّ | | | |",
+              "وكذلـك السُ ـكّر المسـتخرج مـن قصـب السـكّر والشّ ـوندر السُ ـكّري",
+              "يتعرّف المواد العضويَّة",
+              "يستنتج أنَّ الكربون هو المكوّن الرئيسي للمركَّبات العضويَّة",
+              "يستنتج نوع الرَّوابط بين ذرَّات الكربون في المركَّبات العضويَّة",
+              "يقارن بين المركَّبات العضويَّة والمركَّبات اللَّ عضويَّة. :اﻟﻜﻠﻤﺎت اﻟﻤﻔﺘﺎﺣﻴﺔ .الكيمياء العضويَّة",
+              "يُصنّف المركَّبات إلى عضويَّة وال عضويَّة"
+            ],
+            "subtopics": [
+              {
+                "subtopic_id": "unit_05_lesson_01_subtopic_001",
+                "unit_id": "unit_05",
+                "lesson_id": "unit_05_lesson_01",
+                "lesson_title": "مدخل إلى الكيمياء العضوية",
+                "subtopic_title": "المواد العضوية",
+                "page_start": 162,
+                "page_end": 162,
+                "learning_object_types": [
+                  "formula"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_056.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_05_lesson_01_subtopic_002",
+                "unit_id": "unit_05",
+                "lesson_id": "unit_05_lesson_01",
+                "lesson_title": "مدخل إلى الكيمياء العضوية",
+                "subtopic_title": "الكربون",
+                "page_start": 162,
+                "page_end": 169,
+                "learning_object_types": [
+                  "activity",
+                  "experiment",
+                  "formula"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_056.json text match",
+                  "page_058.json text match",
+                  "page_059.json text match",
+                  "page_060.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_05_lesson_01_subtopic_003",
+                "unit_id": "unit_05",
+                "lesson_id": "unit_05_lesson_01",
+                "lesson_title": "مدخل إلى الكيمياء العضوية",
+                "subtopic_title": "الكيمياء العضوية",
+                "page_start": 162,
+                "page_end": 162,
+                "learning_object_types": [
+                  "formula"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_056.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_05_lesson_01_subtopic_004",
+                "unit_id": "unit_05",
+                "lesson_id": "unit_05_lesson_01",
+                "lesson_title": "مدخل إلى الكيمياء العضوية",
+                "subtopic_title": "الروابط بين ذرات الكربون",
+                "page_start": 162,
+                "page_end": 169,
+                "learning_object_types": [
+                  "activity",
+                  "experiment",
+                  "formula"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_056.json text match",
+                  "page_058.json text match",
+                  "page_059.json text match",
+                  "page_060.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_05_lesson_01_subtopic_005",
+                "unit_id": "unit_05",
+                "lesson_id": "unit_05_lesson_01",
+                "lesson_title": "مدخل إلى الكيمياء العضوية",
+                "subtopic_title": "خصائص المركبات العضوية",
+                "page_start": 162,
+                "page_end": 170,
+                "learning_object_types": [
+                  "activity",
+                  "formula",
+                  "self_test_question"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_056.json text match",
+                  "page_063.json text match",
+                  "page_064.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_05_lesson_01_subtopic_006",
+                "unit_id": "unit_05",
+                "lesson_id": "unit_05_lesson_01",
+                "lesson_title": "مدخل إلى الكيمياء العضوية",
+                "subtopic_title": "المذيبات العضوية",
+                "page_start": 162,
+                "page_end": 170,
+                "learning_object_types": [
+                  "activity",
+                  "formula",
+                  "self_test_question"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_056.json text match",
+                  "page_063.json text match",
+                  "page_064.json text match"
+                ]
+              }
+            ],
+            "learning_object_count": 68,
+            "quality": {
+              "status": "ready",
+              "score": 1.0,
+              "blocked_pages": [],
+              "needs_ocr_pages": [],
+              "needs_vision_pages": []
+            },
+            "source_evidence": [
+              "page_056.json lesson-start header",
+              "book_structure.json unit/chapter metadata"
+            ]
+          },
+          {
+            "lesson_id": "unit_05_lesson_02",
+            "lesson_number": "1",
+            "lesson_title": "المركبات الهيدروكربونية المشبعة الألكانات",
+            "aliases": [
+              "الهيدروكربونات",
+              "الألكانات"
+            ],
+            "pdf_page_start": 66,
+            "pdf_page_end": 71,
+            "page_start": 172,
+            "page_end": 177,
+            "objectives": [
+              "يستنتج صيغ بعض الألكانات",
+              "يتعرّف أسماء بعض الألكانات",
+              "يتعرّف الصيغة العامة للألكانات",
+              "يكتب الصيغة المنشورة ونصف المنشورة لبعض الألكانات"
+            ],
+            "keywords": [
+              "| | | | | | أ 2 | |",
+              "| | أ 3 |",
+              "الألكانات",
+              "الصيغة العامة",
+              "الصيغة المجملة",
+              "الصيغة المنشورة",
+              "الصيغة المنشورة الصيغة نصف المنشورة األلكانات: :أدوات التجربة علبة النّماذج الذّرّيّة (علبة الكرات واألعواد). خطوات التّجربة: \u0007آخذ كرة تمثّل ذرّة كربون وأربع كرات تمثّل 1 الهدروجين",
+              "الصيغة المنشورة ونصف المنشورة",
+              "الصيغة نصف المنشورة",
+              "الكان",
+              "اﻫﺪاف",
+              "ثمّ أكتب الصّ يغة المجملة لهذا الجزيء",
+              "ثمّ الصّ يغة المنشورة له. أكرّر الخطوات من أجل ذرّتي كربون وستّ ذرّات هدروجين.2 .أكرر الخطوات من أجل ثالث ذرّات كربون وثماني ذرّات هدروجين3 :أﺟﺮب وأﺳﺘﻨﺘﺞ المركَّبات الهدروكربونيَّة المشبعة األلكانات (البرافينات)1 172 | َّ ةعبشملا ةينوبركوردهلا تابكرملا َّ )تانيفاربلا( تاناكللأا | | | |",
+              "جذر الكيل",
+              "وأشكّل منها جزيئاً",
+              "يتعرّف أسماء بعض األلكانات",
+              "يتعرّف الصّ يغة العامّة لأللكانات",
+              "يثمّن التّطبيقات الصّ ناعيّة الحياتيّة لأللكانات. :اﻟﻜﻠﻤﺎت اﻟﻤﻔﺘﺎﺣﻴﺔ",
+              "يستنتج صيغ بعض األلكانات",
+              "يكتب الصّ يغة المنشورة ونصف المنشورة لبعض األلكانات"
+            ],
+            "subtopics": [
+              {
+                "subtopic_id": "unit_05_lesson_02_subtopic_001",
+                "unit_id": "unit_05",
+                "lesson_id": "unit_05_lesson_02",
+                "lesson_title": "المركبات الهيدروكربونية المشبعة الألكانات",
+                "subtopic_title": "الهيدروكربونات",
+                "page_start": 172,
+                "page_end": 172,
+                "learning_object_types": [
+                  "definition",
+                  "experiment"
+                ],
+                "quality_score": 0.7,
+                "evidence": [
+                  "curriculum metadata; no direct string hit in cache"
+                ]
+              },
+              {
+                "subtopic_id": "unit_05_lesson_02_subtopic_002",
+                "unit_id": "unit_05",
+                "lesson_id": "unit_05_lesson_02",
+                "lesson_title": "المركبات الهيدروكربونية المشبعة الألكانات",
+                "subtopic_title": "الألكانات",
+                "page_start": 172,
+                "page_end": 176,
+                "learning_object_types": [
+                  "definition",
+                  "experiment",
+                  "formula",
+                  "self_test_question"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_066.json text match",
+                  "page_067.json text match",
+                  "page_069.json text match",
+                  "page_070.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_05_lesson_02_subtopic_003",
+                "unit_id": "unit_05",
+                "lesson_id": "unit_05_lesson_02",
+                "lesson_title": "المركبات الهيدروكربونية المشبعة الألكانات",
+                "subtopic_title": "الميثان",
+                "page_start": 173,
+                "page_end": 173,
+                "learning_object_types": [
+                  "definition",
+                  "formula"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_067.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_05_lesson_02_subtopic_004",
+                "unit_id": "unit_05",
+                "lesson_id": "unit_05_lesson_02",
+                "lesson_title": "المركبات الهيدروكربونية المشبعة الألكانات",
+                "subtopic_title": "الإيتان",
+                "page_start": 173,
+                "page_end": 176,
+                "learning_object_types": [
+                  "definition",
+                  "formula",
+                  "self_test_question"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_067.json text match",
+                  "page_070.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_05_lesson_02_subtopic_005",
+                "unit_id": "unit_05",
+                "lesson_id": "unit_05_lesson_02",
+                "lesson_title": "المركبات الهيدروكربونية المشبعة الألكانات",
+                "subtopic_title": "الصيغة العامة للألكانات",
+                "page_start": 174,
+                "page_end": 176,
+                "learning_object_types": [
+                  "activity",
+                  "formula",
+                  "self_test_question"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_068.json text match",
+                  "page_070.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_05_lesson_02_subtopic_006",
+                "unit_id": "unit_05",
+                "lesson_id": "unit_05_lesson_02",
+                "lesson_title": "المركبات الهيدروكربونية المشبعة الألكانات",
+                "subtopic_title": "الصيغة المنشورة ونصف المنشورة",
+                "page_start": 172,
+                "page_end": 172,
+                "learning_object_types": [
+                  "definition",
+                  "experiment"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_066.json text match"
+                ]
+              }
+            ],
+            "learning_object_count": 68,
+            "quality": {
+              "status": "ready",
+              "score": 1.0,
+              "blocked_pages": [],
+              "needs_ocr_pages": [],
+              "needs_vision_pages": []
+            },
+            "source_evidence": [
+              "page_066.json lesson-start header",
+              "book_structure.json unit/chapter metadata"
+            ]
+          },
+          {
+            "lesson_id": "unit_05_lesson_03",
+            "lesson_number": "2",
+            "lesson_title": "المركبات الهيدروكربونية غير المشبعة الألكنات",
+            "aliases": [
+              "الألكنات",
+              "الألكينات"
+            ],
+            "pdf_page_start": 72,
+            "pdf_page_end": 78,
+            "page_start": 178,
+            "page_end": 184,
+            "objectives": [
+              "يتعرّف المركبات الهيدروكربونية غير المشبعة",
+              "يسمّي المركبات الهيدروكربونية غير المشبعة",
+              "يميز بين الألكنات والألكينات",
+              "يثمّن استخدام المركبات الهيدروكربونية"
+            ],
+            "keywords": [
+              "| | | | |",
+              "أكتب الصّ يغة المنشورة لهذا الجزيء",
+              "األلكن",
+              "األلكين األلكِ نات(األوليفينات): :أدوات التجربة علبة النّماذج الذّرّيّة (علبة الكرات واألعواد). خطوات التّجربة: \u0007آخذ كرتين تمثّالن ذرّتي كربون وأربع كرات 1 تمثّل الهدروجين",
+              "الألكنات",
+              "الألكينات",
+              "المركبات الهيدروكربونية غير المشبعة",
+              "اﻫﺪاف",
+              "ثمَّ الصّ يغة المجملة له :أﺟﺮب وأﺳﺘﻨﺘﺞ 2 المركّبات الهدروكربونيَّة غير المشبعة األلكِنات (األوليفينات) 178 | ّ ةعبشملا ريغ ةينوبركوردهلا تابكر َّ )تانيفيلولأا( تانكِ للأا | ملا | | |",
+              "ثمَّ الصّ يغة المجملة له. آخذ ثالث كرات تمثّل ذرّات الكربون وست كرات تمثّل ذرّات الهدروجين وأشكّل منها جزيئاً 2 .يحوي رابطة مشتركة ثنائيَّة",
+              "وأشكّل منها جزيئاً يحوي رابطة مشتركة ثنائيّة",
+              "يتعرّف المركّبات الهدروكربونيّة غير المشبعة",
+              "يثمّن استخدام المركّبات غير المشبعة. :اﻟﻜﻠﻤﺎت اﻟﻤﻔﺘﺎﺣﻴﺔ .المركب الهدرو كربوني غير المشبع",
+              "يسمّي المركّبات الهدروكربونيّة غير المشبعة",
+              "يميّز بين األلكِنات واأللكينات"
+            ],
+            "subtopics": [
+              {
+                "subtopic_id": "unit_05_lesson_03_subtopic_001",
+                "unit_id": "unit_05",
+                "lesson_id": "unit_05_lesson_03",
+                "lesson_title": "المركبات الهيدروكربونية غير المشبعة الألكنات",
+                "subtopic_title": "المركبات الهيدروكربونية غير المشبعة",
+                "page_start": 178,
+                "page_end": 178,
+                "learning_object_types": [
+                  "experiment"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_072.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_05_lesson_03_subtopic_002",
+                "unit_id": "unit_05",
+                "lesson_id": "unit_05_lesson_03",
+                "lesson_title": "المركبات الهيدروكربونية غير المشبعة الألكنات",
+                "subtopic_title": "الألكنات",
+                "page_start": 178,
+                "page_end": 182,
+                "learning_object_types": [
+                  "activity",
+                  "definition",
+                  "experiment",
+                  "formula"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_072.json text match",
+                  "page_076.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_05_lesson_03_subtopic_003",
+                "unit_id": "unit_05",
+                "lesson_id": "unit_05_lesson_03",
+                "lesson_title": "المركبات الهيدروكربونية غير المشبعة الألكنات",
+                "subtopic_title": "الألكينات",
+                "page_start": 178,
+                "page_end": 182,
+                "learning_object_types": [
+                  "activity",
+                  "definition",
+                  "experiment",
+                  "formula"
+                ],
+                "quality_score": 0.98,
+                "evidence": [
+                  "page_072.json text match",
+                  "page_073.json text match",
+                  "page_074.json text match",
+                  "page_075.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_05_lesson_03_subtopic_004",
+                "unit_id": "unit_05",
+                "lesson_id": "unit_05_lesson_03",
+                "lesson_title": "المركبات الهيدروكربونية غير المشبعة الألكنات",
+                "subtopic_title": "الإيتن",
+                "page_start": 178,
+                "page_end": 178,
+                "learning_object_types": [
+                  "experiment"
+                ],
+                "quality_score": 0.7,
+                "evidence": [
+                  "curriculum metadata; no direct string hit in cache"
+                ]
+              },
+              {
+                "subtopic_id": "unit_05_lesson_03_subtopic_005",
+                "unit_id": "unit_05",
+                "lesson_id": "unit_05_lesson_03",
+                "lesson_title": "المركبات الهيدروكربونية غير المشبعة الألكنات",
+                "subtopic_title": "البروبين",
+                "page_start": 179,
+                "page_end": 183,
+                "learning_object_types": [
+                  "definition",
+                  "formula"
+                ],
+                "quality_score": 0.967,
+                "evidence": [
+                  "page_073.json text match",
+                  "page_075.json text match",
+                  "page_077.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_05_lesson_03_subtopic_006",
+                "unit_id": "unit_05",
+                "lesson_id": "unit_05_lesson_03",
+                "lesson_title": "المركبات الهيدروكربونية غير المشبعة الألكنات",
+                "subtopic_title": "الإستيلين",
+                "page_start": 180,
+                "page_end": 181,
+                "learning_object_types": [
+                  "definition",
+                  "experiment",
+                  "formula"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_074.json text match",
+                  "page_075.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_05_lesson_03_subtopic_007",
+                "unit_id": "unit_05",
+                "lesson_id": "unit_05_lesson_03",
+                "lesson_title": "المركبات الهيدروكربونية غير المشبعة الألكنات",
+                "subtopic_title": "الصيغة العامة للألكينات",
+                "page_start": 178,
+                "page_end": 182,
+                "learning_object_types": [
+                  "activity",
+                  "definition",
+                  "experiment",
+                  "formula"
+                ],
+                "quality_score": 0.98,
+                "evidence": [
+                  "page_072.json text match",
+                  "page_073.json text match",
+                  "page_074.json text match",
+                  "page_075.json text match"
+                ]
+              }
+            ],
+            "learning_object_count": 61,
+            "quality": {
+              "status": "ready",
+              "score": 0.986,
+              "blocked_pages": [],
+              "needs_ocr_pages": [],
+              "needs_vision_pages": []
+            },
+            "source_evidence": [
+              "page_072.json lesson-start header",
+              "book_structure.json unit/chapter metadata"
+            ]
+          }
+        ]
+      },
+      {
+        "unit_id": "unit_06",
+        "unit_number": "6",
+        "unit_title": "الوحدة 6 — الكيمياء النووية",
+        "pdf_page_start": 84,
+        "pdf_page_end": 96,
+        "page_start": 190,
+        "page_end": 202,
+        "chapter_title": "النشاط الإشعاعي",
+        "non_lesson_pages": [
+          {
+            "pdf_page_number": 84,
+            "printed_page_number": 190,
+            "page_role": "unit_cover"
+          },
+          {
+            "pdf_page_number": 85,
+            "printed_page_number": 191,
+            "page_role": "unit_cover"
+          },
+          {
+            "pdf_page_number": 94,
+            "printed_page_number": 200,
+            "page_role": "glossary"
+          },
+          {
+            "pdf_page_number": 95,
+            "printed_page_number": 201,
+            "page_role": "glossary"
+          },
+          {
+            "pdf_page_number": 96,
+            "printed_page_number": 202,
+            "page_role": "glossary"
+          }
+        ],
+        "lessons": [
+          {
+            "lesson_id": "unit_06_lesson_01",
+            "lesson_number": "1",
+            "lesson_title": "النشاط الإشعاعي",
+            "aliases": [
+              "النشاط الإشعاعي والنظائر"
+            ],
+            "pdf_page_start": 86,
+            "pdf_page_end": 93,
+            "page_start": 192,
+            "page_end": 199,
+            "objectives": [
+              "يتعرّف النشاط الإشعاعي",
+              "يميز أنواع الإشعاعات النووية",
+              "يتعرّف النظائر المشعة",
+              "يتعرّف تحول الكتلة إلى طاقة وبالعكس",
+              "يثمن استخدام الطاقة النووية"
+            ],
+            "keywords": [
+              "أشعة غاما",
+              "أشعّة غاما",
+              "الإشعاعات النووية",
+              "الطاقة النووية",
+              "الطّاقة النّوويّة",
+              "النشاط الإشعاعي",
+              "النظائر",
+              "جسيمات ألفا",
+              "جسيمات بيتا"
+            ],
+            "subtopics": [
+              {
+                "subtopic_id": "unit_06_lesson_01_subtopic_001",
+                "unit_id": "unit_06",
+                "lesson_id": "unit_06_lesson_01",
+                "lesson_title": "النشاط الإشعاعي",
+                "subtopic_title": "النشاط الإشعاعي",
+                "page_start": 192,
+                "page_end": 195,
+                "learning_object_types": [
+                  "activity",
+                  "definition"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_086.json text match",
+                  "page_088.json text match",
+                  "page_089.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_06_lesson_01_subtopic_002",
+                "unit_id": "unit_06",
+                "lesson_id": "unit_06_lesson_01",
+                "lesson_title": "النشاط الإشعاعي",
+                "subtopic_title": "النظائر",
+                "page_start": 192,
+                "page_end": 198,
+                "learning_object_types": [
+                  "activity",
+                  "definition",
+                  "self_test_question"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_086.json text match",
+                  "page_088.json text match",
+                  "page_092.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_06_lesson_01_subtopic_003",
+                "unit_id": "unit_06",
+                "lesson_id": "unit_06_lesson_01",
+                "lesson_title": "النشاط الإشعاعي",
+                "subtopic_title": "الإشعاعات النووية",
+                "page_start": 192,
+                "page_end": 194,
+                "learning_object_types": [
+                  "activity",
+                  "definition"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_086.json text match",
+                  "page_088.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_06_lesson_01_subtopic_004",
+                "unit_id": "unit_06",
+                "lesson_id": "unit_06_lesson_01",
+                "lesson_title": "النشاط الإشعاعي",
+                "subtopic_title": "جسيمات ألفا",
+                "page_start": 192,
+                "page_end": 198,
+                "learning_object_types": [
+                  "activity",
+                  "definition",
+                  "self_test_question"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_086.json text match",
+                  "page_088.json text match",
+                  "page_089.json text match",
+                  "page_091.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_06_lesson_01_subtopic_005",
+                "unit_id": "unit_06",
+                "lesson_id": "unit_06_lesson_01",
+                "lesson_title": "النشاط الإشعاعي",
+                "subtopic_title": "جسيمات بيتا",
+                "page_start": 192,
+                "page_end": 198,
+                "learning_object_types": [
+                  "activity",
+                  "definition",
+                  "self_test_question"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_086.json text match",
+                  "page_088.json text match",
+                  "page_089.json text match",
+                  "page_091.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_06_lesson_01_subtopic_006",
+                "unit_id": "unit_06",
+                "lesson_id": "unit_06_lesson_01",
+                "lesson_title": "النشاط الإشعاعي",
+                "subtopic_title": "أشعة غاما",
+                "page_start": 192,
+                "page_end": 198,
+                "learning_object_types": [
+                  "activity",
+                  "definition",
+                  "self_test_question"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_086.json text match",
+                  "page_088.json text match",
+                  "page_089.json text match",
+                  "page_091.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_06_lesson_01_subtopic_007",
+                "unit_id": "unit_06",
+                "lesson_id": "unit_06_lesson_01",
+                "lesson_title": "النشاط الإشعاعي",
+                "subtopic_title": "الكتلة والطاقة",
+                "page_start": 192,
+                "page_end": 196,
+                "learning_object_types": [
+                  "activity"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_086.json text match",
+                  "page_090.json text match"
+                ]
+              },
+              {
+                "subtopic_id": "unit_06_lesson_01_subtopic_008",
+                "unit_id": "unit_06",
+                "lesson_id": "unit_06_lesson_01",
+                "lesson_title": "النشاط الإشعاعي",
+                "subtopic_title": "الطاقة النووية",
+                "page_start": 192,
+                "page_end": 192,
+                "learning_object_types": [
+                  "activity"
+                ],
+                "quality_score": 1.0,
+                "evidence": [
+                  "page_086.json text match"
+                ]
+              }
+            ],
+            "learning_object_count": 45,
+            "quality": {
+              "status": "ready",
+              "score": 1.0,
+              "blocked_pages": [],
+              "needs_ocr_pages": [],
+              "needs_vision_pages": []
+            },
+            "source_evidence": [
+              "page_086.json lesson-start header",
+              "book_structure.json unit/chapter metadata"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "solution_alignment": [
+    {
+      "solution_unit_id": "sol_unit_7c28dfb896928460",
+      "linked_textbook_lesson_id": "unit_04_lesson_01",
+      "linked_lesson_title": "المحاليل المائية",
+      "confidence": 0.96,
+      "method": "accepted: title/keyword+page",
+      "evidence": [
+        "تركيز",
+        "تمديد",
+        "محلول",
+        "حمض الخل",
+        "printed page reference 110",
+        "printed page reference 111",
+        "printed page reference 114"
+      ],
+      "needs_manual_review": false,
+      "status": "accepted"
+    },
+    {
+      "solution_unit_id": "sol_unit_c35c1fbad9b79fd8",
+      "linked_textbook_lesson_id": "unit_04_lesson_01",
+      "linked_lesson_title": "المحاليل المائية",
+      "confidence": 0.96,
+      "method": "accepted: title/keyword",
+      "evidence": [
+        "المادة المذابة",
+        "غرامي",
+        "مولي",
+        "تمديد",
+        "محلول"
+      ],
+      "needs_manual_review": false,
+      "status": "accepted"
+    },
+    {
+      "solution_unit_id": "sol_unit_4fc19ff94634e46a",
+      "linked_textbook_lesson_id": "unit_04_lesson_01",
+      "linked_lesson_title": "المحاليل المائية",
+      "confidence": 0.96,
+      "method": "accepted: title/keyword",
+      "evidence": [
+        "تركيز",
+        "تمديد",
+        "محلول",
+        "CV",
+        "C V"
+      ],
+      "needs_manual_review": false,
+      "status": "accepted"
+    },
+    {
+      "solution_unit_id": "sol_unit_806ba2178ec185bf",
+      "linked_textbook_lesson_id": "unit_04_lesson_02",
+      "linked_lesson_title": "المحاليل الحمضية",
+      "confidence": 0.96,
+      "method": "accepted: title/keyword+page",
+      "evidence": [
+        "حمض",
+        "HCl",
+        "printed page reference 117",
+        "printed page reference 119"
+      ],
+      "needs_manual_review": false,
+      "status": "accepted"
+    },
+    {
+      "solution_unit_id": "sol_unit_5c0de970553209a6",
+      "linked_textbook_lesson_id": "unit_04_lesson_02",
+      "linked_lesson_title": "المحاليل الحمضية",
+      "confidence": 0.78,
+      "method": "needs_review: title/keyword/page",
+      "evidence": [
+        "حمض",
+        "printed page reference 120",
+        "printed page reference 122"
+      ],
+      "needs_manual_review": true,
+      "status": "needs_review"
+    },
+    {
+      "solution_unit_id": "sol_unit_de0378c50cb2e61f",
+      "linked_textbook_lesson_id": "unit_04_lesson_01",
+      "linked_lesson_title": "المحاليل المائية",
+      "confidence": 0.68,
+      "method": "needs_review: title/keyword/page",
+      "evidence": [
+        "محلول",
+        "حمض الخل"
+      ],
+      "needs_manual_review": true,
+      "status": "needs_review"
+    },
+    {
+      "solution_unit_id": "sol_unit_65b7b7338757b35d",
+      "linked_textbook_lesson_id": "unit_04_lesson_01",
+      "linked_lesson_title": "المحاليل المائية",
+      "confidence": 0.96,
+      "method": "accepted: title/keyword",
+      "evidence": [
+        "غرامي",
+        "مولي",
+        "محلول"
+      ],
+      "needs_manual_review": false,
+      "status": "accepted"
+    },
+    {
+      "solution_unit_id": "sol_unit_55b4a2a972247078",
+      "linked_textbook_lesson_id": "unit_04_lesson_01",
+      "linked_lesson_title": "المحاليل المائية",
+      "confidence": 0.96,
+      "method": "accepted: title/keyword",
+      "evidence": [
+        "غرامي",
+        "مولي",
+        "محلول",
+        "حمض الخل"
+      ],
+      "needs_manual_review": false,
+      "status": "accepted"
+    },
+    {
+      "solution_unit_id": "sol_unit_3db2cdb8f658f7ad",
+      "linked_textbook_lesson_id": "unit_04_lesson_03",
+      "linked_lesson_title": "المحاليل الأساسية",
+      "confidence": 0.96,
+      "method": "accepted: title/keyword+page",
+      "evidence": [
+        "هيدروكسيد",
+        "NaOH",
+        "KOH",
+        "OH",
+        "printed page reference 125",
+        "printed page reference 127"
+      ],
+      "needs_manual_review": false,
+      "status": "accepted"
+    },
+    {
+      "solution_unit_id": "sol_unit_2c631c2f7502b61f",
+      "linked_textbook_lesson_id": "unit_04_lesson_03",
+      "linked_lesson_title": "المحاليل الأساسية",
+      "confidence": 0.78,
+      "method": "needs_review: title/keyword/page",
+      "evidence": [
+        "أساس",
+        "printed page reference 129",
+        "printed page reference 130"
+      ],
+      "needs_manual_review": true,
+      "status": "needs_review"
+    },
+    {
+      "solution_unit_id": "sol_unit_2c575c5c0861fe80",
+      "linked_textbook_lesson_id": "unit_04_lesson_01",
+      "linked_lesson_title": "المحاليل المائية",
+      "confidence": 0.68,
+      "method": "needs_review: title/keyword/page",
+      "evidence": [
+        "مولي",
+        "محلول"
+      ],
+      "needs_manual_review": true,
+      "status": "needs_review"
+    },
+    {
+      "solution_unit_id": "sol_unit_931a399d803cd951",
+      "linked_textbook_lesson_id": "unit_04_lesson_04",
+      "linked_lesson_title": "أنواع التفاعلات الكيميائية",
+      "confidence": 0.96,
+      "method": "accepted: title/keyword+page",
+      "evidence": [
+        "تفاعل",
+        "اتحاد",
+        "معادلة",
+        "printed page reference 135"
+      ],
+      "needs_manual_review": false,
+      "status": "accepted"
+    },
+    {
+      "solution_unit_id": "sol_unit_2cacfc52a6d4374b",
+      "linked_textbook_lesson_id": "unit_04_lesson_04",
+      "linked_lesson_title": "أنواع التفاعلات الكيميائية",
+      "confidence": 0.96,
+      "method": "accepted: title/keyword+page",
+      "evidence": [
+        "تفاعل",
+        "تفكك",
+        "معادلة",
+        "printed page reference 137",
+        "printed page reference 140"
+      ],
+      "needs_manual_review": false,
+      "status": "accepted"
+    },
+    {
+      "solution_unit_id": "sol_unit_840e4723eca2b988",
+      "linked_textbook_lesson_id": "unit_04_lesson_04",
+      "linked_lesson_title": "أنواع التفاعلات الكيميائية",
+      "confidence": 0.9,
+      "method": "accepted: title/keyword+page",
+      "evidence": [
+        "تفاعل",
+        "معادلة",
+        "printed page reference 142"
+      ],
+      "needs_manual_review": false,
+      "status": "accepted"
+    },
+    {
+      "solution_unit_id": "sol_unit_6c5ad5a3db519a43",
+      "linked_textbook_lesson_id": "unit_04_lesson_04",
+      "linked_lesson_title": "أنواع التفاعلات الكيميائية",
+      "confidence": 0.96,
+      "method": "accepted: title/keyword+page",
+      "evidence": [
+        "تفاعل",
+        "اتحاد",
+        "تفكك",
+        "إزاحة",
+        "معادلة",
+        "2KCl",
+        "printed page reference 143"
+      ],
+      "needs_manual_review": false,
+      "status": "accepted"
+    },
+    {
+      "solution_unit_id": "sol_unit_3646e41b845cc61e",
+      "linked_textbook_lesson_id": "unit_04_lesson_04",
+      "linked_lesson_title": "أنواع التفاعلات الكيميائية",
+      "confidence": 0.96,
+      "method": "accepted: title/keyword",
+      "evidence": [
+        "تفاعل",
+        "إزاحة",
+        "معادلة"
+      ],
+      "needs_manual_review": false,
+      "status": "accepted"
+    },
+    {
+      "solution_unit_id": "sol_unit_0f399fb6c2785ed5",
+      "linked_textbook_lesson_id": "unit_04_lesson_01",
+      "linked_lesson_title": "المحاليل المائية",
+      "confidence": 0.96,
+      "method": "accepted: title/keyword",
+      "evidence": [
+        "غرامي",
+        "مولي",
+        "محلول"
+      ],
+      "needs_manual_review": false,
+      "status": "accepted"
+    },
+    {
+      "solution_unit_id": "sol_unit_0daeb961f9beb4e9",
+      "linked_textbook_lesson_id": "unit_04_lesson_05",
+      "linked_lesson_title": "الأملاح",
+      "confidence": 0.96,
+      "method": "accepted: title/keyword+page",
+      "evidence": [
+        "الملح",
+        "ملح",
+        "NaCl",
+        "نترات الفضة",
+        "كلوريد",
+        "كبريتات",
+        "printed page reference 150"
+      ],
+      "needs_manual_review": false,
+      "status": "accepted"
+    },
+    {
+      "solution_unit_id": "sol_unit_61966b7018ce28b9",
+      "linked_textbook_lesson_id": "unit_04_lesson_05",
+      "linked_lesson_title": "الأملاح",
+      "confidence": 0.96,
+      "method": "accepted: title/keyword+page",
+      "evidence": [
+        "الملح",
+        "ملح",
+        "نترات الفضة",
+        "كبريتات النحاس",
+        "راسب",
+        "كلوريد",
+        "كبريتات",
+        "printed page reference 154"
+      ],
+      "needs_manual_review": false,
+      "status": "accepted"
+    },
+    {
+      "solution_unit_id": "sol_unit_9588c0620a95a567",
+      "linked_textbook_lesson_id": "unit_04_lesson_05",
+      "linked_lesson_title": "الأملاح",
+      "confidence": 0.96,
+      "method": "accepted: title/keyword",
+      "evidence": [
+        "الملح",
+        "ملح",
+        "راسب",
+        "كلوريد",
+        "كبريتات"
+      ],
+      "needs_manual_review": false,
+      "status": "accepted"
+    },
+    {
+      "solution_unit_id": "sol_unit_f77985ecf7090b48",
+      "linked_textbook_lesson_id": "unit_04_lesson_02",
+      "linked_lesson_title": "المحاليل الحمضية",
+      "confidence": 0.96,
+      "method": "accepted: title/keyword",
+      "evidence": [
+        "حمض",
+        "HCl",
+        "كلور الماء",
+        "هيدروجين"
+      ],
+      "needs_manual_review": false,
+      "status": "accepted"
+    },
+    {
+      "solution_unit_id": "sol_unit_3e0c6edca7206f74",
+      "linked_textbook_lesson_id": "unit_04_lesson_02",
+      "linked_lesson_title": "المحاليل الحمضية",
+      "confidence": 0.68,
+      "method": "needs_review: title/keyword/page",
+      "evidence": [
+        "حمض",
+        "HCl"
+      ],
+      "needs_manual_review": true,
+      "status": "needs_review"
+    },
+    {
+      "solution_unit_id": "sol_unit_72372ea953dbe970",
+      "linked_textbook_lesson_id": "unit_04_lesson_01",
+      "linked_lesson_title": "المحاليل المائية",
+      "confidence": 0.96,
+      "method": "accepted: title/keyword",
+      "evidence": [
+        "غرامي",
+        "مولي",
+        "محلول"
+      ],
+      "needs_manual_review": false,
+      "status": "accepted"
+    },
+    {
+      "solution_unit_id": "sol_unit_60b1f5d558a79c76",
+      "linked_textbook_lesson_id": "unit_04_lesson_01",
+      "linked_lesson_title": "المحاليل المائية",
+      "confidence": 0.96,
+      "method": "accepted: title/keyword",
+      "evidence": [
+        "التركيز المولي",
+        "تركيز",
+        "مولي",
+        "محلول"
+      ],
+      "needs_manual_review": false,
+      "status": "accepted"
+    },
+    {
+      "solution_unit_id": "sol_unit_84f6604fee79c370",
+      "linked_textbook_lesson_id": "unit_05_lesson_01",
+      "linked_lesson_title": "مدخل إلى الكيمياء العضوية",
+      "confidence": 0.96,
+      "method": "needs_review: mixed lesson evidence",
+      "evidence": [
+        "مدخل إلى الكيمياء العضوية",
+        "الكيمياء العضوية",
+        "عضوية",
+        "printed page reference 170"
+      ],
+      "needs_manual_review": true,
+      "status": "needs_review"
+    },
+    {
+      "solution_unit_id": "sol_unit_f4c58d9e153b4e96",
+      "linked_textbook_lesson_id": "unit_04_lesson_01",
+      "linked_lesson_title": "المحاليل المائية",
+      "confidence": 0.68,
+      "method": "needs_review: mixed lesson evidence",
+      "evidence": [
+        "محلول",
+        "حمض الخل"
+      ],
+      "needs_manual_review": true,
+      "status": "needs_review"
+    },
+    {
+      "solution_unit_id": "sol_unit_66a94b5ab919fd37",
+      "linked_textbook_lesson_id": "unit_05_lesson_02",
+      "linked_lesson_title": "المركبات الهيدروكربونية المشبعة الألكانات",
+      "confidence": 0.96,
+      "method": "accepted: title/keyword+page",
+      "evidence": [
+        "ميتان",
+        "الميتان",
+        "بوتان",
+        "printed page reference 174",
+        "printed page reference 176"
+      ],
+      "needs_manual_review": false,
+      "status": "accepted"
+    },
+    {
+      "solution_unit_id": "sol_unit_6a9a03366ff23cc3",
+      "linked_textbook_lesson_id": "unit_05_lesson_02",
+      "linked_lesson_title": "المركبات الهيدروكربونية المشبعة الألكانات",
+      "confidence": 0.96,
+      "method": "needs_review: mixed lesson evidence",
+      "evidence": [
+        "ميتان",
+        "الميتان",
+        "بروبان"
+      ],
+      "needs_manual_review": true,
+      "status": "needs_review"
+    },
+    {
+      "solution_unit_id": "sol_unit_54968cc8a7a353d8",
+      "linked_textbook_lesson_id": "unit_05_lesson_03",
+      "linked_lesson_title": "المركبات الهيدروكربونية غير المشبعة الألكنات",
+      "confidence": 0.44,
+      "method": "manual_review: weak or noisy evidence",
+      "evidence": [
+        "printed page reference 182",
+        "printed page reference 183"
+      ],
+      "needs_manual_review": true,
+      "status": "needs_manual_review"
+    },
+    {
+      "solution_unit_id": "sol_unit_97e20878997028af",
+      "linked_textbook_lesson_id": "unit_05_lesson_03",
+      "linked_lesson_title": "المركبات الهيدروكربونية غير المشبعة الألكنات",
+      "confidence": 0.48,
+      "method": "needs_review: mixed lesson evidence",
+      "evidence": [
+        "البروبين",
+        "بروبين"
+      ],
+      "needs_manual_review": true,
+      "status": "needs_review"
+    },
+    {
+      "solution_unit_id": "sol_unit_6ad37db21035d8f9",
+      "linked_textbook_lesson_id": "unit_04_lesson_04",
+      "linked_lesson_title": "أنواع التفاعلات الكيميائية",
+      "confidence": 0.34,
+      "method": "manual_review: weak or noisy evidence",
+      "evidence": [
+        "معادلة"
+      ],
+      "needs_manual_review": true,
+      "status": "needs_manual_review"
+    },
+    {
+      "solution_unit_id": "sol_unit_d670488d0656a38a",
+      "linked_textbook_lesson_id": "unit_05_lesson_03",
+      "linked_lesson_title": "المركبات الهيدروكربونية غير المشبعة الألكنات",
+      "confidence": 0.48,
+      "method": "manual_review: weak or noisy evidence",
+      "evidence": [
+        "البروبين",
+        "بروبين"
+      ],
+      "needs_manual_review": true,
+      "status": "needs_manual_review"
+    },
+    {
+      "solution_unit_id": "sol_unit_16950ef2ad929bbe",
+      "linked_textbook_lesson_id": "unit_05_lesson_03",
+      "linked_lesson_title": "المركبات الهيدروكربونية غير المشبعة الألكنات",
+      "confidence": 0.96,
+      "method": "needs_review: mixed lesson evidence",
+      "evidence": [
+        "البروبين",
+        "ألكن",
+        "ألكين",
+        "بروبين",
+        "بروبلين"
+      ],
+      "needs_manual_review": true,
+      "status": "needs_review"
+    },
+    {
+      "solution_unit_id": "sol_unit_441cefeab0bc3569",
+      "linked_textbook_lesson_id": "unit_06_lesson_01",
+      "linked_lesson_title": "النشاط الإشعاعي",
+      "confidence": 0.92,
+      "method": "needs_review: mixed lesson evidence",
+      "evidence": [
+        "أشعة غاما",
+        "غاما",
+        "printed page reference 195",
+        "printed page reference 198"
+      ],
+      "needs_manual_review": true,
+      "status": "needs_review"
+    },
+    {
+      "solution_unit_id": "sol_unit_60f6ed40a2931856",
+      "linked_textbook_lesson_id": "unit_06_lesson_01",
+      "linked_lesson_title": "النشاط الإشعاعي",
+      "confidence": 0.96,
+      "method": "needs_review: mixed lesson evidence",
+      "evidence": [
+        "جسيمات ألفا",
+        "جسيمات بيتا",
+        "نظير",
+        "ألفا",
+        "بيتا",
+        "غاما",
+        "يورانيوم"
+      ],
+      "needs_manual_review": true,
+      "status": "needs_review"
+    },
+    {
+      "solution_unit_id": "sol_unit_4f655e0df9615292",
+      "linked_textbook_lesson_id": "unit_06_lesson_01",
+      "linked_lesson_title": "النشاط الإشعاعي",
+      "confidence": 0.96,
+      "method": "accepted: title/keyword",
+      "evidence": [
+        "الفا",
+        "بيتا",
+        "غاما"
+      ],
+      "needs_manual_review": false,
+      "status": "accepted"
+    }
+  ],
+  "page_190_recovery": {
+    "status": "reviewed",
+    "reviewed_page_file": "data/processed/textbook/pages/page_190_reviewed.json",
+    "needs_ocr": false,
+    "needs_vision": false,
+    "blocked": false,
+    "updated_at": "2026-06-24T09:15:04.931876+00:00"
+  }
+}

@@ -1,6 +1,6 @@
 export { authApi } from './authApi';
 export { userApi } from './userApi';
-export { aiApi, messageResponseToAskResponse } from './aiApi';
+export { aiApi, messageResponseToAskResponse, resolveMediaUrl } from './aiApi';
 export { studyPlanApi } from './studyPlanApi';
 export { flashcardsApi } from './flashcardsApi';
 export { quizzesApi } from './quizzesApi';
@@ -10,4 +10,4 @@ export { homeworkApi } from './homeworkApi';
 export { adminRagApi } from './adminRagApi';
 export { dashboardApi } from './dashboardApi';
 export { curriculumApi, fallbackCurriculumUnits } from './curriculumApi';
-export { toErrorMessage } from './http';
+export { AUTH_EXPIRED_EVENT, AUTH_EXPIRED_MESSAGE, toErrorMessage } from './http';

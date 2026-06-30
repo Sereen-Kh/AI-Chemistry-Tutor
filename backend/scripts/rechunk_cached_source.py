@@ -20,6 +20,11 @@ from app.models.textbook import ContentSource, RagChunk  # noqa: E402
 from app.services.chunking import build_page_chunk_records, normalize_arabic  # noqa: E402
 from app.services.embeddings import embed_batch  # noqa: E402
 from app.services.ingestion_pipeline import slugify_source  # noqa: E402
+from app.services.reviewed_curriculum_metadata import (  # noqa: E402
+    chunk_is_embedding_ready,
+    ensure_reviewed_metadata_ready,
+    metadata_with_reviewed_version,
+)
 from scripts.migration_guard import ensure_migrations_applied  # noqa: E402
 
 
@@ -46,6 +51,7 @@ async def rechunk_cached_source(
     local_embeddings: bool,
 ) -> dict:
     ensure_migrations_applied(engine, required_tables=("alembic_version", "content_sources", "rag_chunks"))
+    reviewed_metadata = ensure_reviewed_metadata_ready()
     db = SessionLocal()
     try:
         source = db.get(ContentSource, source_id)
@@ -81,6 +87,23 @@ async def rechunk_cached_source(
             }:
                 incomplete_vision_pages.append(page_number)
             for record in records:
+                candidate = {
+                    **(record.metadata or {}),
+                    "source_type": source.source_type,
+                }
+                ready, reason, missing = chunk_is_embedding_ready(candidate, reviewed_metadata)
+                if not ready:
+                    raise RuntimeError(
+                        "Refusing to embed cached chunks without reviewed curriculum metadata: "
+                        + json.dumps(
+                            {
+                                "page_number": page_number,
+                                "reason": reason,
+                                "missing_metadata": missing,
+                            },
+                            ensure_ascii=False,
+                        )
+                    )
                 pending_records.append((page_number, payload, record))
 
         if dry_run:
@@ -116,7 +139,7 @@ async def rechunk_cached_source(
                     extraction_method=payload.get("extraction_method") or "+".join(payload.get("extraction_methods") or []),
                     language=payload.get("detected_language") or "ar",
                     embedding=embedding,
-                    metadata_json=record.metadata,
+                    metadata_json=metadata_with_reviewed_version(record.metadata, reviewed_metadata),
                 )
             )
 

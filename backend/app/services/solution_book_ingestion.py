@@ -31,6 +31,11 @@ from app.services.embeddings import EMBEDDING_DIM, current_embedding_model_name,
 from app.services.ocr import get_vision_provider
 from app.services.ocr.normalization import normalize_text
 from app.services.pdf_processor import detect_visual_content, extract_text_page, render_page_to_image
+from app.services.reviewed_curriculum_metadata import (
+    chunk_is_embedding_ready,
+    ensure_reviewed_metadata_ready,
+    metadata_with_reviewed_version,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -985,6 +990,7 @@ async def store_solution_book_chunks(
     force_reingest: bool,
 ) -> dict[str, Any]:
     """Embed and store solution chunks idempotently."""
+    reviewed_metadata = ensure_reviewed_metadata_ready()
     if force_reingest:
         db.query(RagChunk).filter(RagChunk.source_id == source.id).delete(synchronize_session=False)
         db.commit()
@@ -995,7 +1001,29 @@ async def store_solution_book_chunks(
         for row in existing_rows
         if isinstance(row.metadata_json, dict) and (row.metadata_json or {}).get("content_hash")
     }
-    to_insert = [chunk for chunk in chunks if chunk.metadata.get("content_hash") not in existing_hashes]
+    duplicate_skipped = len([chunk for chunk in chunks if chunk.metadata.get("content_hash") in existing_hashes])
+    missing_metadata_skips: list[dict[str, Any]] = []
+    blocked_skips: list[dict[str, Any]] = []
+    to_insert: list[SolutionBookChunk] = []
+    for chunk in chunks:
+        if chunk.metadata.get("content_hash") in existing_hashes:
+            continue
+        candidate = {
+            **(chunk.metadata or {}),
+            "source_type": chunk.source_type,
+            "printed_page_start": chunk.metadata.get("printed_page_start"),
+            "printed_page_end": chunk.metadata.get("printed_page_end"),
+            "quality_status": chunk.metadata.get("quality_status"),
+        }
+        ready, reason, missing = chunk_is_embedding_ready(candidate, reviewed_metadata)
+        if ready:
+            to_insert.append(chunk)
+        elif reason == "blocked_quality_status":
+            blocked_skips.append({"chunk_id": chunk.id, "reason": reason})
+        else:
+            missing_metadata_skips.append(
+                {"chunk_id": chunk.id, "reason": reason, "missing_metadata": missing}
+            )
     skipped = len(chunks) - len(to_insert)
     failed: list[dict[str, Any]] = []
     errors: list[str] = []
@@ -1029,7 +1057,7 @@ async def store_solution_book_chunks(
                     embedding_model=current_embedding_model_name(),
                     embedding_updated_at=datetime.now(timezone.utc),
                     metadata_json={
-                        **chunk.metadata,
+                        **metadata_with_reviewed_version(chunk.metadata, reviewed_metadata),
                         "document_id": chunk.document_id,
                         "document_type": SOURCE_TYPE,
                         "source_file_hash": source_file_hash,
@@ -1049,7 +1077,14 @@ async def store_solution_book_chunks(
         "embedding_dimension": EMBEDDING_DIM,
         "chunks_to_embed": len(to_insert),
         "embedded_chunks": inserted,
-        "skipped_existing": skipped,
+        "skipped_existing": duplicate_skipped,
+        "skipped_missing_metadata_count": len(missing_metadata_skips),
+        "skipped_blocked_count": len(blocked_skips),
+        "skipped_missing_metadata": missing_metadata_skips[:50],
+        "skipped_blocked": blocked_skips[:50],
+        "reviewed_metadata_version": reviewed_metadata.get("version"),
+        "metadata_ready": True,
+        "skipped_total": skipped,
         "failed_chunks": failed,
         "errors": errors,
         "chunks_total": len(chunks),

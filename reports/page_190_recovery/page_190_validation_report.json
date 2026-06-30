@@ -1,0 +1,33 @@
+{
+  "page": 190,
+  "reviewed_page_exists": true,
+  "text_length": 224,
+  "unit_title": "الكيمياء النووية",
+  "lesson_title": "النشاط الإشعاعي",
+  "needs_ocr": false,
+  "needs_vision": false,
+  "blocked": false,
+  "page_structure_updated": true,
+  "page_190_removed_from_ocr_issue_list": true,
+  "page_190_removed_from_vision_issue_list": true,
+  "validation_status": "passed",
+  "remaining_issues": [],
+  "checks": {
+    "reviewed_page_exists": true,
+    "printed_page_number_is_190": true,
+    "unit_title_detected": true,
+    "lesson_title_detected": true,
+    "text_not_empty": true,
+    "needs_ocr_false": true,
+    "needs_vision_false": true,
+    "blocked_false": true,
+    "page_structure_updated": true,
+    "page_190_removed_from_ocr_issue_list": true,
+    "page_190_removed_from_vision_issue_list": true
+  },
+  "files_checked": {
+    "reviewed_page": "data/processed/textbook/pages/page_190_reviewed.json",
+    "page_structure": "data/processed/textbook/page_structure.jsonl",
+    "lesson_division_report": "reports/lesson_division/lesson_division_report.json"
+  }
+}

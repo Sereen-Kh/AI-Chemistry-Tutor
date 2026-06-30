@@ -1,0 +1,399 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);font-size:13px;color:var(--color-text-primary)}
+
+.wrap{display:flex;gap:16px;justify-content:center;align-items:flex-start;flex-wrap:wrap;padding:8px 0 16px}
+.phone{width:230px;border-radius:28px;border:2px solid var(--color-border-secondary);overflow:hidden;background:var(--color-background-primary);flex-shrink:0}
+.phone-bar{height:32px;background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:center;position:relative}
+.phone-bar .ptitle{font-size:12px;font-weight:500}
+.phone-bar .pback{font-size:11px;color:#028090;position:absolute;left:10px;cursor:pointer}
+.phone-bar .pact{font-size:11px;color:#028090;position:absolute;right:10px}
+.phone-body{background:var(--color-background-primary)}
+
+.screen-label{text-align:center;font-size:11px;font-weight:500;color:var(--color-text-tertiary);margin-bottom:6px;letter-spacing:.4px;text-transform:uppercase}
+
+/* SCREEN 1 — Date picker */
+.s1-hero{background:#028090;padding:16px 14px 14px;color:#fff}
+.s1-hero h2{font-size:15px;font-weight:500;margin-bottom:3px}
+.s1-hero p{font-size:11px;opacity:.85;line-height:1.4}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:10px 10px 4px}
+.cal-day{text-align:center;font-size:10px;padding:4px 2px;border-radius:5px;cursor:pointer;line-height:1}
+.cal-day.head{color:var(--color-text-tertiary);font-weight:500;cursor:default}
+.cal-day.past{color:var(--color-text-tertiary)}
+.cal-day.today{background:#E1F5EE;color:#035040;font-weight:500}
+.cal-day.selected{background:#028090;color:#fff;font-weight:500}
+.cal-day.range{background:#E1F5EE;color:#035040}
+.cal-day:hover:not(.head):not(.past){background:var(--color-background-secondary)}
+
+.date-display{margin:8px 10px;padding:8px 11px;border-radius:8px;border:1.5px solid #028090;background:#E1F5EE;display:flex;align-items:center;justify-content:space-between}
+.date-display .label{font-size:10px;color:#035040}
+.date-display .val{font-size:12px;font-weight:500;color:#035040}
+
+.chapter-list{padding:6px 10px 10px}
+.ch-title{font-size:10px;font-weight:500;color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
+.ch-row{display:flex;align-items:center;gap:7px;padding:5px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.ch-row:last-child{border-bottom:none}
+.ch-check{width:14px;height:14px;border-radius:3px;border:1.5px solid var(--color-border-secondary);flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.ch-check.on{background:#028090;border-color:#028090;color:#fff;font-size:8px}
+.ch-name{font-size:11px;flex:1}
+.ch-hard{font-size:9px;padding:1px 5px;border-radius:3px;font-weight:500}
+.hard-h{background:#FAECE7;color:#712B13}
+.hard-m{background:#FAEEDA;color:#633806}
+.hard-e{background:#E1F5EE;color:#035040}
+
+.gen-btn{margin:0 10px 12px;display:block;width:calc(100% - 20px);padding:10px;border-radius:10px;background:#028090;color:#fff;border:none;font-size:13px;font-weight:500;cursor:pointer;text-align:center}
+
+/* SCREEN 2 — AI generating */
+.gen-wrap{padding:24px 16px;text-align:center;min-height:340px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:12px}
+.gen-circle{width:64px;height:64px;border-radius:50%;border:3px solid #E1F5EE;border-top-color:#028090;animation:spin 1s linear infinite;margin:0 auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+.gen-title{font-size:14px;font-weight:500}
+.gen-sub{font-size:11px;color:var(--color-text-secondary);text-align:center;line-height:1.5}
+.gen-steps{width:100%;display:flex;flex-direction:column;gap:6px;margin-top:4px}
+.gen-step{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;background:var(--color-background-secondary);font-size:11px;text-align:left}
+.gen-step .gs-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.gs-done{background:#1D9E75}
+.gs-active{background:#028090;animation:pulse 1s ease-in-out infinite}
+.gs-wait{background:var(--color-border-secondary)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.gen-step .gs-text{color:var(--color-text-secondary)}
+.gen-step.done-step .gs-text{color:var(--color-text-success)}
+
+/* SCREEN 3 — Plan view */
+.plan-header{background:#028090;padding:12px 12px 10px;color:#fff}
+.plan-header .ph-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.plan-header h2{font-size:13px;font-weight:500}
+.plan-header .exam-tag{font-size:10px;background:rgba(255,255,255,.2);padding:2px 7px;border-radius:10px}
+.stats-row{display:flex;gap:6px}
+.stat-pill{flex:1;background:rgba(255,255,255,.15);border-radius:6px;padding:5px 6px;text-align:center}
+.stat-pill .sv{font-size:14px;font-weight:500}
+.stat-pill .sl{font-size:9px;opacity:.8}
+
+.view-tabs{display:flex;border-bottom:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary)}
+.vtab{flex:1;text-align:center;padding:7px 4px;font-size:11px;cursor:pointer;color:var(--color-text-secondary);border-bottom:2px solid transparent}
+.vtab.on{color:#028090;border-bottom-color:#028090;font-weight:500}
+
+.week-strip{padding:8px 8px 4px}
+.week-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.week-nav span{font-size:11px;font-weight:500}
+.week-nav button{width:22px;height:22px;border-radius:5px;border:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary);cursor:pointer;font-size:12px;color:var(--color-text-secondary)}
+.week-days{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.wday{border-radius:7px;padding:5px 2px;text-align:center;cursor:pointer;border:1.5px solid transparent}
+.wday .wd-name{font-size:9px;color:var(--color-text-tertiary);margin-bottom:2px}
+.wday .wd-num{font-size:12px;font-weight:500}
+.wday .wd-dot{width:5px;height:5px;border-radius:50%;margin:2px auto 0}
+.wday.done{background:#E1F5EE}.wday.done .wd-num{color:#035040}.wday.done .wd-dot{background:#1D9E75}
+.wday.today{background:#028090}.wday.today .wd-name{color:rgba(255,255,255,.7)}.wday.today .wd-num{color:#fff}.wday.today .wd-dot{background:#fff}
+.wday.upcoming .wd-dot{background:var(--color-border-secondary)}
+.wday.hard{}.wday.hard .wd-dot{background:#EF9F27}
+.wday.exam{background:#FAEEDA;border-color:#EF9F27}.wday.exam .wd-num{color:#633806}.wday.exam .wd-dot{background:#EF9F27}
+.wday.rest{}.wday.rest .wd-dot{background:var(--color-border-tertiary)}
+
+.day-list{padding:4px 8px 10px;display:flex;flex-direction:column;gap:5px;max-height:240px;overflow-y:auto}
+.day-card{border-radius:9px;border:0.5px solid var(--color-border-tertiary);padding:8px 10px;cursor:pointer;transition:border-color .12s;display:flex;gap:8px;align-items:flex-start}
+.day-card:hover{border-color:var(--color-border-secondary)}
+.day-card.today-card{border-color:#028090;background:#E1F5EE}
+.day-card.done-card{opacity:.65}
+.dc-left{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:28px}
+.dc-date{font-size:9px;color:var(--color-text-tertiary)}
+.dc-num{font-size:14px;font-weight:500}
+.dc-line{flex:1;width:1.5px;background:var(--color-border-tertiary);min-height:12px;margin:0 auto}
+.dc-right{flex:1}
+.dc-lesson{font-size:11px;font-weight:500;margin-bottom:2px}
+.dc-chapter{font-size:10px;color:var(--color-text-secondary)}
+.dc-meta{display:flex;align-items:center;gap:4px;margin-top:4px}
+.dc-diff{font-size:9px;padding:1px 5px;border-radius:3px;font-weight:500}
+.dc-time{font-size:9px;color:var(--color-text-tertiary)}
+.dc-status{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;margin-top:2px}
+.st-done{background:#E1F5EE;color:#035040}
+.st-today{background:#028090;color:#fff}
+.st-up{background:var(--color-background-secondary);color:var(--color-text-tertiary)}
+.st-hard{background:#FAEEDA;color:#633806}
+
+.confirm-bar{padding:8px 10px;border-top:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary)}
+.confirm-bar button{width:100%;padding:9px;border-radius:9px;background:#028090;color:#fff;border:none;font-size:12px;font-weight:500;cursor:pointer}
+
+/* SCREEN 4 — Dashboard with plan */
+.dash-head{background:#028090;padding:12px;color:#fff}
+.dash-head .dh-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.dash-head h2{font-size:13px;font-weight:500}
+.streak{font-size:11px;background:rgba(255,255,255,.2);padding:3px 8px;border-radius:10px}
+.today-card-big{background:rgba(255,255,255,.15);border-radius:10px;padding:10px 11px}
+.tc-label{font-size:9px;opacity:.7;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.tc-lesson{font-size:13px;font-weight:500;margin-bottom:2px}
+.tc-meta{font-size:10px;opacity:.8}
+.tc-btn{display:block;margin-top:8px;text-align:center;background:#fff;color:#028090;border-radius:7px;padding:6px;font-size:11px;font-weight:500;cursor:pointer}
+
+.progress-bar-wrap{padding:10px 12px 6px}
+.pb-row{display:flex;justify-content:space-between;font-size:10px;margin-bottom:4px}
+.pb-row .pct{font-weight:500;color:#028090}
+.pb-track{height:6px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden}
+.pb-fill{height:100%;background:#028090;border-radius:3px;transition:width .3s}
+
+.mini-cal-strip{padding:4px 10px 8px}
+.mc-label{font-size:10px;font-weight:500;color:var(--color-text-secondary);margin-bottom:5px;display:flex;justify-content:space-between;align-items:center}
+.mc-label span{font-size:9px;color:#028090;cursor:pointer}
+.mc-days{display:flex;gap:3px}
+.mc-day{flex:1;text-align:center;border-radius:7px;padding:4px 2px;cursor:pointer}
+.mc-day .mcd-name{font-size:8px;color:var(--color-text-tertiary)}
+.mc-day .mcd-num{font-size:11px;font-weight:500}
+.mc-day .mcd-bar{height:3px;border-radius:2px;margin:2px auto 0;width:80%}
+.mc-done{background:#E1F5EE}.mc-done .mcd-num{color:#035040}.mc-done .mcd-bar{background:#1D9E75}
+.mc-today{background:#028090}.mc-today .mcd-name{color:rgba(255,255,255,.7)}.mc-today .mcd-num{color:#fff}.mc-today .mcd-bar{background:rgba(255,255,255,.5)}
+.mc-up .mcd-bar{background:var(--color-border-tertiary)}
+.mc-exam{background:#FAEEDA}.mc-exam .mcd-num{color:#633806}.mc-exam .mcd-bar{background:#EF9F27}
+
+.quick-row{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:4px 10px 10px}
+.quick-btn{border-radius:8px;padding:8px 4px;text-align:center;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);cursor:pointer}
+.quick-btn .qb-icon{font-size:16px;margin-bottom:2px}
+.quick-btn .qb-label{font-size:9px;color:var(--color-text-secondary)}
+
+.notif-card{margin:0 10px 8px;border-radius:8px;border:0.5px solid #1D9E75;background:#E1F5EE;padding:8px 10px;display:flex;align-items:center;gap:8px}
+.notif-card .ni{font-size:16px}
+.notif-card .nt{font-size:11px;font-weight:500;color:#035040}
+.notif-card .ns{font-size:10px;color:#0F6E56}
+</style>
+
+<div style="padding:6px 0 0">
+
+<div style="text-align:center;font-size:14px;font-weight:500;margin-bottom:4px;color:var(--color-text-primary)">Study plan — 4 screens, tap to interact</div>
+<div style="text-align:center;font-size:11px;color:var(--color-text-secondary);margin-bottom:14px">The full student journey from picking an exam date to seeing the daily schedule</div>
+
+<div class="wrap">
+
+  <!-- SCREEN 1: Set exam date -->
+  <div>
+    <div class="screen-label">Screen 1 · Set your exam</div>
+    <div class="phone">
+      <div class="phone-bar"><span class="pback">← Back</span><span class="ptitle">Study plan setup</span></div>
+      <div class="phone-body">
+        <div class="s1-hero">
+          <h2>When is your chemistry exam?</h2>
+          <p>Pick a date and choose which chapters to cover. The AI builds your schedule automatically.</p>
+        </div>
+        <div class="cal-grid">
+          <div class="cal-day head">S</div><div class="cal-day head">M</div><div class="cal-day head">T</div><div class="cal-day head">W</div><div class="cal-day head">T</div><div class="cal-day head">F</div><div class="cal-day head">S</div>
+          <div class="cal-day past">1</div><div class="cal-day past">2</div><div class="cal-day past">3</div><div class="cal-day past">4</div><div class="cal-day past">5</div><div class="cal-day past">6</div><div class="cal-day past">7</div>
+          <div class="cal-day past">8</div><div class="cal-day past">9</div><div class="cal-day past">10</div><div class="cal-day past">11</div><div class="cal-day today">12</div><div class="cal-day range">13</div><div class="cal-day range">14</div>
+          <div class="cal-day range">15</div><div class="cal-day range">16</div><div class="cal-day range">17</div><div class="cal-day range">18</div><div class="cal-day range">19</div><div class="cal-day range">20</div><div class="cal-day range">21</div>
+          <div class="cal-day range">22</div><div class="cal-day range">23</div><div class="cal-day range">24</div><div class="cal-day range">25</div><div class="cal-day range">26</div><div class="cal-day range">27</div><div class="cal-day selected">28</div>
+          <div class="cal-day">29</div><div class="cal-day">30</div><div class="cal-day">31</div>
+        </div>
+        <div class="date-display">
+          <div>
+            <div class="label">Exam date selected</div>
+            <div class="val">June 28, 2025 — 16 days away</div>
+          </div>
+          <div style="font-size:16px">📅</div>
+        </div>
+        <div class="chapter-list">
+          <div class="ch-title">Which chapters to cover?</div>
+          <div class="ch-row"><div class="ch-check on">✓</div><div class="ch-name">Atomic structure</div><span class="ch-hard hard-e">Easy</span></div>
+          <div class="ch-row"><div class="ch-check on">✓</div><div class="ch-name">Chemical bonding</div><span class="ch-hard hard-m">Medium</span></div>
+          <div class="ch-row"><div class="ch-check on">✓</div><div class="ch-name">Chemical reactions</div><span class="ch-hard hard-h">Hard</span></div>
+          <div class="ch-row"><div class="ch-check on">✓</div><div class="ch-name">Acids, bases & salts</div><span class="ch-hard hard-m">Medium</span></div>
+          <div class="ch-row"><div class="ch-check">✓</div><div class="ch-name">Electrochemistry</div><span class="ch-hard hard-h">Hard</span></div>
+        </div>
+        <button class="gen-btn">Generate my study plan →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: AI generating -->
+  <div>
+    <div class="screen-label">Screen 2 · AI building the plan</div>
+    <div class="phone">
+      <div class="phone-bar"><span class="ptitle">Building your plan...</span></div>
+      <div class="phone-body">
+        <div class="gen-wrap">
+          <div style="width:56px;height:56px;border-radius:50%;border:3px solid #E1F5EE;border-top-color:#028090;animation:spin 1s linear infinite"></div>
+          <div class="gen-title">AI is building your plan</div>
+          <div class="gen-sub">Calculating the perfect schedule for your 16 days...</div>
+          <div class="gen-steps">
+            <div class="gen-step done-step"><div class="gs-dot gs-done"></div><div class="gs-text">Counted 16 days until exam ✓</div></div>
+            <div class="gen-step done-step"><div class="gs-dot gs-done"></div><div class="gs-text">Mapped 4 chapters, 18 lessons ✓</div></div>
+            <div class="gen-step"><div class="gs-dot gs-active"></div><div class="gs-text" style="color:var(--color-text-primary)">Weighing difficulty levels...</div></div>
+            <div class="gen-step"><div class="gs-dot gs-wait"></div><div class="gs-text">Assigning lessons to days</div></div>
+            <div class="gen-step"><div class="gs-dot gs-wait"></div><div class="gs-text">Adding revision + rest days</div></div>
+            <div class="gen-step"><div class="gs-dot gs-wait"></div><div class="gs-text">Setting daily reminders</div></div>
+          </div>
+          <div style="font-size:11px;color:var(--color-text-tertiary);margin-top:4px;font-style:italic">Hard chapters get 2 days each. Easy ones get 1 day. 2 rest days included.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: Generated plan -->
+  <div>
+    <div class="screen-label">Screen 3 · Your day-by-day plan</div>
+    <div class="phone">
+      <div class="phone-bar"><span class="pback">← Adjust</span><span class="ptitle">My study plan</span><span class="pact">Edit</span></div>
+      <div class="phone-body">
+        <div class="plan-header">
+          <div class="ph-row">
+            <h2>June plan — Chemistry</h2>
+            <span class="exam-tag">Exam: Jun 28</span>
+          </div>
+          <div class="stats-row">
+            <div class="stat-pill"><div class="sv">16</div><div class="sl">Days left</div></div>
+            <div class="stat-pill"><div class="sv">18</div><div class="sl">Lessons</div></div>
+            <div class="stat-pill"><div class="sv">4</div><div class="sl">Chapters</div></div>
+            <div class="stat-pill"><div class="sv">33%</div><div class="sl">Done</div></div>
+          </div>
+        </div>
+        <div class="view-tabs">
+          <div class="vtab on">Week view</div>
+          <div class="vtab">Full list</div>
+          <div class="vtab">Calendar</div>
+        </div>
+        <div class="week-strip">
+          <div class="week-nav">
+            <button>‹</button>
+            <span>Week of Jun 12–18</span>
+            <button>›</button>
+          </div>
+          <div class="week-days">
+            <div class="wday done"><div class="wd-name">Sun</div><div class="wd-num">12</div><div class="wd-dot"></div></div>
+            <div class="wday done"><div class="wd-name">Mon</div><div class="wd-num">13</div><div class="wd-dot"></div></div>
+            <div class="wday done"><div class="wd-name">Tue</div><div class="wd-num">14</div><div class="wd-dot"></div></div>
+            <div class="wday today"><div class="wd-name">Wed</div><div class="wd-num">15</div><div class="wd-dot"></div></div>
+            <div class="wday hard"><div class="wd-name">Thu</div><div class="wd-num">16</div><div class="wd-dot"></div></div>
+            <div class="wday hard"><div class="wd-name">Fri</div><div class="wd-num">17</div><div class="wd-dot"></div></div>
+            <div class="wday rest"><div class="wd-name">Sat</div><div class="wd-num">18</div><div class="wd-dot"></div></div>
+          </div>
+        </div>
+
+        <div style="padding:0 8px 4px;display:flex;gap:8px;flex-wrap:wrap">
+          <span style="font-size:9px;display:flex;align-items:center;gap:3px"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#1D9E75"></span>Done</span>
+          <span style="font-size:9px;display:flex;align-items:center;gap:3px"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#028090"></span>Today</span>
+          <span style="font-size:9px;display:flex;align-items:center;gap:3px"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#EF9F27"></span>Hard topic</span>
+          <span style="font-size:9px;display:flex;align-items:center;gap:3px"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--color-border-secondary)"></span>Rest</span>
+        </div>
+
+        <div class="day-list">
+          <div class="day-card done-card">
+            <div class="dc-left"><div class="dc-date">Mon</div><div class="dc-num" style="color:#1D9E75">13</div><div class="dc-line"></div></div>
+            <div class="dc-right"><div class="dc-lesson">Atomic structure — intro</div><div class="dc-chapter">Chapter 1</div><div class="dc-meta"><span class="dc-diff hard-e">Easy</span><span class="dc-time">15 min</span></div></div>
+            <div class="dc-status st-done">✓</div>
+          </div>
+          <div class="day-card done-card">
+            <div class="dc-left"><div class="dc-date">Tue</div><div class="dc-num" style="color:#1D9E75">14</div><div class="dc-line"></div></div>
+            <div class="dc-right"><div class="dc-lesson">Protons, neutrons & electrons</div><div class="dc-chapter">Chapter 1</div><div class="dc-meta"><span class="dc-diff hard-e">Easy</span><span class="dc-time">20 min</span></div></div>
+            <div class="dc-status st-done">✓</div>
+          </div>
+          <div class="day-card today-card">
+            <div class="dc-left"><div class="dc-date" style="color:#028090">TODAY</div><div class="dc-num" style="color:#028090">15</div><div class="dc-line" style="background:#028090"></div></div>
+            <div class="dc-right"><div class="dc-lesson" style="color:#028090">Covalent vs ionic bonds</div><div class="dc-chapter" style="color:#0F6E56">Chapter 2 · Chemical bonding</div><div class="dc-meta"><span class="dc-diff hard-m">Medium</span><span class="dc-time">25 min</span></div></div>
+            <div class="dc-status st-today">→</div>
+          </div>
+          <div class="day-card">
+            <div class="dc-left"><div class="dc-date">Thu</div><div class="dc-num">16</div><div class="dc-line"></div></div>
+            <div class="dc-right"><div class="dc-lesson">Balancing equations — Day 1</div><div class="dc-chapter">Chapter 3 · Chemical reactions</div><div class="dc-meta"><span class="dc-diff hard-h">Hard</span><span class="dc-time">35 min</span></div></div>
+            <div class="dc-status st-hard">!</div>
+          </div>
+          <div class="day-card">
+            <div class="dc-left"><div class="dc-date">Fri</div><div class="dc-num">17</div><div class="dc-line"></div></div>
+            <div class="dc-right"><div class="dc-lesson">Balancing equations — Day 2</div><div class="dc-chapter">Chapter 3 · Chemical reactions</div><div class="dc-meta"><span class="dc-diff hard-h">Hard</span><span class="dc-time">35 min</span></div></div>
+            <div class="dc-status st-hard">!</div>
+          </div>
+          <div class="day-card">
+            <div class="dc-left"><div class="dc-date">Sat</div><div class="dc-num" style="color:var(--color-text-tertiary)">18</div></div>
+            <div class="dc-right"><div class="dc-lesson" style="color:var(--color-text-tertiary)">Rest day</div><div class="dc-chapter">Review flashcards only</div></div>
+            <div style="font-size:14px;margin-top:2px">😌</div>
+          </div>
+        </div>
+        <div class="confirm-bar">
+          <button>Confirm this plan →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 4: Dashboard -->
+  <div>
+    <div class="screen-label">Screen 4 · Dashboard after confirm</div>
+    <div class="phone">
+      <div class="phone-bar"><span class="ptitle">Home</span><span class="pact">🔔</span></div>
+      <div class="phone-body">
+        <div class="dash-head">
+          <div class="dh-row">
+            <h2>Good morning, Ahmed!</h2>
+            <span class="streak">🔥 6 days</span>
+          </div>
+          <div class="today-card-big">
+            <div class="tc-label">Today's lesson</div>
+            <div class="tc-lesson">Covalent vs ionic bonds</div>
+            <div class="tc-meta">Chapter 2 · Medium · est. 25 min</div>
+            <div class="tc-btn">Start now →</div>
+          </div>
+        </div>
+
+        <div class="progress-bar-wrap">
+          <div class="pb-row"><span style="font-size:10px;color:var(--color-text-secondary)">Overall progress</span><span class="pct">33%</span></div>
+          <div class="pb-track"><div class="pb-fill" style="width:33%"></div></div>
+          <div style="display:flex;gap:5px;margin-top:6px">
+            <div style="flex:1;background:var(--color-background-secondary);border-radius:5px;padding:4px 6px">
+              <div style="font-size:9px;color:var(--color-text-tertiary)">Ch 1 · Atoms</div>
+              <div style="height:3px;background:#1D9E75;border-radius:2px;margin-top:3px;width:100%"></div>
+            </div>
+            <div style="flex:1;background:var(--color-background-secondary);border-radius:5px;padding:4px 6px">
+              <div style="font-size:9px;color:var(--color-text-tertiary)">Ch 2 · Bonds</div>
+              <div style="height:3px;background:#028090;border-radius:2px;margin-top:3px;width:20%"></div>
+            </div>
+            <div style="flex:1;background:var(--color-background-secondary);border-radius:5px;padding:4px 6px">
+              <div style="font-size:9px;color:var(--color-text-tertiary)">Ch 3 · Reactions</div>
+              <div style="height:3px;background:var(--color-border-tertiary);border-radius:2px;margin-top:3px;width:0%"></div>
+            </div>
+            <div style="flex:1;background:var(--color-background-secondary);border-radius:5px;padding:4px 6px">
+              <div style="font-size:9px;color:var(--color-text-tertiary)">Ch 4 · Acids</div>
+              <div style="height:3px;background:var(--color-border-tertiary);border-radius:2px;margin-top:3px;width:0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mini-cal-strip">
+          <div class="mc-label">This week <span>View full plan</span></div>
+          <div class="mc-days">
+            <div class="mc-day mc-done"><div class="mcd-name">Mon</div><div class="mcd-num">13</div><div class="mcd-bar"></div></div>
+            <div class="mc-day mc-done"><div class="mcd-name">Tue</div><div class="mcd-num">14</div><div class="mcd-bar"></div></div>
+            <div class="mc-day mc-today"><div class="mcd-name">Wed</div><div class="mcd-num">15</div><div class="mcd-bar"></div></div>
+            <div class="mc-day mc-up"><div class="mcd-name">Thu</div><div class="mcd-num">16</div><div class="mcd-bar"></div></div>
+            <div class="mc-day mc-up"><div class="mcd-name">Fri</div><div class="mcd-num">17</div><div class="mcd-bar"></div></div>
+            <div class="mc-day mc-up"><div class="mcd-name">Sat</div><div class="mcd-num">18</div><div class="mcd-bar"></div></div>
+            <div class="mc-day mc-exam"><div class="mcd-name">Exam</div><div class="mcd-num">28</div><div class="mcd-bar"></div></div>
+          </div>
+        </div>
+
+        <div class="notif-card">
+          <div class="ni">📅</div>
+          <div>
+            <div class="nt">Exam in 13 days</div>
+            <div class="ns">You're on track — keep it up!</div>
+          </div>
+        </div>
+
+        <div class="quick-row">
+          <div class="quick-btn"><div class="qb-icon">💬</div><div class="qb-label">AI Chat</div></div>
+          <div class="quick-btn"><div class="qb-icon">📝</div><div class="qb-label">Quiz</div></div>
+          <div class="quick-btn"><div class="qb-icon">🎬</div><div class="qb-label">Reels</div></div>
+          <div class="quick-btn"><div class="qb-icon">🃏</div><div class="qb-label">Flashcards</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="max-width:600px;margin:0 auto;display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:0 8px">
+  <div style="background:var(--color-background-secondary);border-radius:10px;padding:11px 13px">
+    <div style="font-size:12px;font-weight:500;margin-bottom:5px">How the AI weights the schedule</div>
+    <div style="font-size:11px;color:var(--color-text-secondary);line-height:1.7">Hard chapter = 2 days per lesson<br>Medium chapter = 1.5 days per lesson<br>Easy chapter = 1 day per lesson<br>Rest day = every 5–6 study days<br>Last 2 days before exam = revision only</div>
+  </div>
+  <div style="background:var(--color-background-secondary);border-radius:10px;padding:11px 13px">
+    <div style="font-size:12px;font-weight:500;margin-bottom:5px">What the student can edit</div>
+    <div style="font-size:11px;color:var(--color-text-secondary);line-height:1.7">Drag a lesson to a different day<br>Mark a day as rest / unavailable<br>Add or remove chapters<br>Change the exam date<br>The AI re-calculates instantly</div>
+  </div>
+</div>
+
+</div>

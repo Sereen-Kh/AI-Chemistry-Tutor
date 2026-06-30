@@ -5,6 +5,7 @@ import type { AiAskResponse, AnswerFormat, FlashcardItem, LearningMode, LessonIt
 import { ChemistryFlask } from './ChemistryFlask';
 import { AICompanion } from '../features/ai-companion/components/AICompanion';
 import { notificationsApi } from '../api';
+import { NotificationBell } from './notifications/NotificationBell';
 
 
 interface ButtonProps {
@@ -192,11 +193,25 @@ export const ChatMessage = ({
   role,
   content,
   response,
+  audioUrl,
+  audioTranscript,
+  imageUrl,
+  fileName,
+  inputType,
+  transcriptionStatus,
+  audioStatus,
   actions,
 }: {
   role: 'user' | 'assistant';
   content: string;
   response?: AiAskResponse;
+  audioUrl?: string;
+  audioTranscript?: string | null;
+  imageUrl?: string;
+  fileName?: string;
+  inputType?: 'text' | 'audio' | 'voice' | 'image' | 'file' | 'mixed' | null;
+  transcriptionStatus?: string | null;
+  audioStatus?: string | null;
   actions?: ReactNode;
 }) => (
   <article className={`chat-bubble ${role}`}>
@@ -212,9 +227,37 @@ export const ChatMessage = ({
         </span>
       </div>
     )}
-    <p><FormattedText text={content} /></p>
+    {role === 'user' && inputType === 'audio' && audioUrl && (
+      <div className="chat-audio-player">
+        <audio controls src={audioUrl} />
+      </div>
+    )}
+    {role === 'user' && imageUrl && (
+      <figure className="chat-user-attachment">
+        <img src={imageUrl} alt="مرفق من الطالب" />
+      </figure>
+    )}
+    {role === 'user' && fileName && !imageUrl && (
+      <div className="chat-file-chip">
+        <span>ملف</span>
+        <strong>{fileName}</strong>
+      </div>
+    )}
+    <p><FormattedText text={inputType === 'audio' && role === 'user' ? 'رسالة صوتية' : content} /></p>
+    {inputType === 'audio' && role === 'user' && (
+      <div className="chat-transcript">
+        {transcriptionStatus === 'processing' && <StatusPill tone="gold">جاري تفريغ الصوت...</StatusPill>}
+        {transcriptionStatus === 'failed' && <StatusPill tone="coral">تعذر فهم التسجيل. أعد المحاولة أو اكتب السؤال.</StatusPill>}
+        {audioTranscript && (
+          <small>
+            <strong>النص المفرغ:</strong> {audioTranscript}
+          </small>
+        )}
+      </div>
+    )}
     {response?.format === 'audio' && !response.audio_url && <StatusPill tone="gold">توليد الصوت قيد المعالجة.</StatusPill>}
     {response?.audio_url && <audio controls src={response.audio_url} />}
+    {role === 'assistant' && audioStatus === 'failed' && <StatusPill tone="gold">تعذر توليد الصوت. الإجابة النصية متاحة.</StatusPill>}
     {response?.source_page_image_url && (
       <figure className="answer-media">
         <img src={response.source_page_image_url} alt="صفحة المصدر من كتاب الكيمياء" />
@@ -293,11 +336,17 @@ export const AnswerFormatSelector = ({
 export const LearningModeSelector = ({
   value,
   onChange,
+  singleSelect = false,
 }: {
   value: LearningMode[];
   onChange: (modes: LearningMode[]) => void;
+  singleSelect?: boolean;
 }) => {
   const toggle = (mode: LearningMode) => {
+    if (singleSelect) {
+      onChange([mode]);
+      return;
+    }
     if (mode === 'text') {
       onChange(['text', ...value.filter((item) => item !== 'text')]);
       return;
@@ -315,6 +364,8 @@ export const LearningModeSelector = ({
           className={value.includes(option.value) ? 'active' : ''}
           onClick={() => toggle(option.value)}
           aria-pressed={value.includes(option.value)}
+          role={singleSelect ? 'radio' : undefined}
+          aria-checked={singleSelect ? value.includes(option.value) : undefined}
           aria-label={`نمط التعلم: ${option.label}${value.includes(option.value) ? '، محدد' : ''}`}
         >
           <span>{option.icon}</span>
@@ -492,6 +543,7 @@ const routeTitles: Record<string, { eyebrow: string; title: string }> = {
   '/admin/sources': { eyebrow: 'إدارة المصادر', title: 'مصادر RAG' },
   '/profile': { eyebrow: 'التفضيلات', title: 'الملف الشخصي' },
   '/notifications': { eyebrow: 'تنبيهات النظام', title: 'الإشعارات' },
+  '/notifications/settings': { eyebrow: 'تنبيهات النظام', title: 'إعدادات الإشعارات' },
 };
 
 export const AppShell = ({ userName, onLogout }: { userName: string; onLogout: () => void }) => {
@@ -611,10 +663,7 @@ export const AppShell = ({ userName, onLogout }: { userName: string; onLogout: (
             <strong>{routeTitle.title} · {userName}</strong>
           </div>
           <div className="shell-topbar-actions" style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <Link to="/notifications" className="topbar-bell-btn" aria-label="الإشعارات" title="الإشعارات">
-              <span style={{ fontSize: '16px' }}>🔔</span>
-              {unreadCount > 0 && <span className="topbar-bell-badge">{unreadCount}</span>}
-            </Link>
+            <NotificationBell onUnreadChange={setUnreadCount} />
             <StatusPill tone="teal">RAG</StatusPill>
             <StatusPill tone="purple">فيديو قصير</StatusPill>
             <StatusPill tone="coral">تجارب</StatusPill>

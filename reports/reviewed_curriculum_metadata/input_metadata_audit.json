@@ -1,0 +1,22 @@
+{
+  "total_units": 3,
+  "total_textbook_lessons": 9,
+  "unit_5_status": "ready",
+  "unit_6_status": "ready",
+  "page_190_status": "passed",
+  "textbook_blocked_pages": [],
+  "textbook_needs_ocr_pages": [],
+  "textbook_needs_vision_pages": [],
+  "total_solution_alignment_records": 36,
+  "solution_alignment_manual_review_count": 15,
+  "total_cleaned_solution_chunks": 24,
+  "bad_solution_chunk_endings": 0,
+  "blocked_solution_chunks": 0,
+  "missing_lesson_id_count": 0,
+  "missing_source_type_count": 0,
+  "missing_printed_page_range_count": 0,
+  "textbook_chunk_preview_total": 720,
+  "textbook_chunk_preview_missing_required_metadata": 720,
+  "book_validation_status": "passed",
+  "solution_validation_status": "passed"
+}

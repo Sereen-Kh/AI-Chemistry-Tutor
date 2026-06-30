@@ -1,0 +1,136 @@
+{
+  "generated_at": "2026-06-24T09:23:35.550961+00:00",
+  "source_files": [
+    "data/processed/textbook/page_structure.jsonl",
+    "data/processed/textbook/pages/page_190_reviewed.json",
+    "data/processed/textbook/textbook_lesson_map.json",
+    "src/data/textbooks/syria_grade_9_chemistry/book_structure.json"
+  ],
+  "lessons": [
+    {
+      "unit_id": "unit_05",
+      "unit_number": 5,
+      "unit_title": "الكيمياء العضوية",
+      "lesson_id": "unit_05_lesson_01",
+      "lesson_number": "1",
+      "lesson_title": "مدخل إلى الكيمياء العضوية",
+      "printed_page_start": 162,
+      "printed_page_end": 170,
+      "pdf_page_start": 56,
+      "pdf_page_end": 64,
+      "range_source": "detected_lesson_start_and_self_test_boundary",
+      "confidence": 0.95,
+      "source": "page_structure lesson_start page 162; self_test page 170; next section page 171",
+      "quality": {
+        "status": "ready",
+        "score": 1.0,
+        "blocked_pages": [],
+        "needs_ocr_pages": [],
+        "needs_vision_pages": []
+      },
+      "review_status": "reviewed",
+      "source_type": "textbook"
+    },
+    {
+      "unit_id": "unit_05",
+      "unit_number": 5,
+      "unit_title": "الكيمياء العضوية",
+      "lesson_id": "unit_05_lesson_02",
+      "lesson_number": "2",
+      "lesson_title": "المركبات الهيدروكربونية المشبعة — الألكانات",
+      "printed_page_start": 172,
+      "printed_page_end": 177,
+      "pdf_page_start": 66,
+      "pdf_page_end": 71,
+      "range_source": "detected_lesson_start_and_self_test_boundary",
+      "confidence": 0.95,
+      "source": "page_structure lesson_start page 172; self_test/solved-example pages 176-177",
+      "quality": {
+        "status": "ready",
+        "score": 1.0,
+        "blocked_pages": [],
+        "needs_ocr_pages": [],
+        "needs_vision_pages": []
+      },
+      "review_status": "reviewed",
+      "source_type": "textbook"
+    },
+    {
+      "unit_id": "unit_05",
+      "unit_number": 5,
+      "unit_title": "الكيمياء العضوية",
+      "lesson_id": "unit_05_lesson_03",
+      "lesson_number": "3",
+      "lesson_title": "المركبات الهيدروكربونية غير المشبعة",
+      "printed_page_start": 178,
+      "printed_page_end": 184,
+      "pdf_page_start": 72,
+      "pdf_page_end": 78,
+      "range_source": "detected_lesson_start_and_unit_questions_boundary",
+      "confidence": 0.92,
+      "source": "page_structure lesson_start page 178; unit questions begin page 185",
+      "quality": {
+        "status": "ready",
+        "score": 0.986,
+        "blocked_pages": [],
+        "needs_ocr_pages": [],
+        "needs_vision_pages": []
+      },
+      "review_status": "reviewed",
+      "source_type": "textbook"
+    },
+    {
+      "unit_id": "unit_06",
+      "unit_number": 6,
+      "unit_title": "الكيمياء النووية",
+      "lesson_id": "unit_06_lesson_01",
+      "lesson_number": "1",
+      "lesson_title": "النشاط الإشعاعي",
+      "printed_page_start": 190,
+      "printed_page_end": 199,
+      "pdf_page_start": 84,
+      "pdf_page_end": 93,
+      "range_source": "detected_from_recovered_page_190",
+      "confidence": 0.93,
+      "source": "recovered page 190 lesson opener; lesson content and self-test through page 199; glossary begins page 200",
+      "quality": {
+        "status": "ready",
+        "score": 0.993,
+        "blocked_pages": [],
+        "needs_ocr_pages": [],
+        "needs_vision_pages": []
+      },
+      "review_status": "reviewed",
+      "source_type": "textbook"
+    }
+  ],
+  "projects": [
+    {
+      "project_id": "unit_05_project_01",
+      "unit_id": "unit_05",
+      "unit_number": 5,
+      "unit_title": "الكيمياء العضوية",
+      "project_title": "مشروع الكيمياء — تكرير النفط",
+      "source_type": "textbook",
+      "page_role": "project",
+      "printed_page_start": 188,
+      "printed_page_end": 189,
+      "pdf_page_start": 82,
+      "pdf_page_end": 83,
+      "range_source": "detected_project_pages",
+      "review_status": "reviewed",
+      "quality": {
+        "score": 1.0,
+        "blocked_pages": [],
+        "needs_ocr_pages": [],
+        "needs_vision_pages": []
+      }
+    }
+  ],
+  "notes": [
+    "Printed pages are primary ranges; PDF page numbers are secondary mapping.",
+    "Unit 5 printed page 171 is a section opener for المركبات الهيدروكربونية, not stored as a normal lesson because it has no stable lesson number in page_structure.",
+    "Unit 5 project pages 188-189 are stored as projects with page_role=project, not as normal lessons.",
+    "Unit 6 lesson 1 starts at recovered printed page 190."
+  ]
+}

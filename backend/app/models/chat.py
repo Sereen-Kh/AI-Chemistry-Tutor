@@ -50,6 +50,20 @@ class ChatMessage(Base, TimestampMixin):
     answer_type: Mapped[str | None] = mapped_column(String(50), nullable=True)
     route: Mapped[str | None] = mapped_column(String(80), nullable=True)
     grounding: Mapped[str | None] = mapped_column(String(80), nullable=True)
+    input_type: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    requested_return_type: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    resolved_return_type: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    text_content: Mapped[str | None] = mapped_column(Text, nullable=True)
+    audio_input_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    audio_transcript: Mapped[str | None] = mapped_column(Text, nullable=True)
+    answer_text: Mapped[str | None] = mapped_column(Text, nullable=True)
+    answer_audio_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    transcription_status: Mapped[str | None] = mapped_column(String(30), nullable=True)
+    audio_status: Mapped[str | None] = mapped_column(String(30), nullable=True)
+    audio_provider: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    tts_model: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    stt_model: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    voice_id: Mapped[str | None] = mapped_column(String(120), nullable=True)
     sources_json: Mapped[list[dict[str, Any]] | None] = mapped_column(JSON, nullable=True)
     citations_json: Mapped[list[dict[str, Any]] | None] = mapped_column(JSON, nullable=True)
     blocks_json: Mapped[list[dict[str, Any]] | None] = mapped_column(JSON, nullable=True)
@@ -90,5 +104,5 @@ class ChatMessage(Base, TimestampMixin):
         return self.diagnostics_json or {}
 
     @property
-    def answer_text(self) -> str:
-        return self.content
+    def display_answer_text(self) -> str:
+        return self.answer_text or self.content

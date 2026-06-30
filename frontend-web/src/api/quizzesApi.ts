@@ -69,7 +69,8 @@ export const quizzesApi = {
   async generateQuiz(config: QuizGenerationConfig): Promise<GeneratedQuizQuestion[]> {
     try {
       const { data } = await api.post<BackendQuizGenerateResponse>('/quizzes/generate', {
-        topic_id: undefined,
+        topic_id: config.topicId ? Number(config.topicId) : undefined,
+        lesson_id: config.lessonIds[0] ? Number(config.lessonIds[0]) : undefined,
         source_type: 'textbook',
         difficulty: difficultyNumber(config.difficulty),
         limit: Math.min(config.totalQuestions || config.lessonIds.length * config.questionsPerLesson || 5, 30),

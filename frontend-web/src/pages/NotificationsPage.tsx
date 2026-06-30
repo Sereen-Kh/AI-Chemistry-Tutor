@@ -2,19 +2,26 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { notificationsApi } from '../api';
 import { Button, ErrorBanner, LoadingSkeleton, PageHeader } from '../components/DesignSystem';
+import { NotificationPermissionBanner } from '../components/notifications/NotificationPermissionBanner';
 import type { NotificationItem } from '../types';
 
-type NotificationFilter = 'all' | 'unread' | 'exam' | 'lesson' | 'quiz' | 'system';
+type NotificationFilter = 'all' | 'study' | 'exam' | 'flashcards' | 'system';
 type NotificationGroup = 'today' | 'tomorrow' | 'this_week' | 'earlier';
 
 const filterLabels: Array<{ key: NotificationFilter; label: string }> = [
   { key: 'all', label: 'الكل' },
-  { key: 'unread', label: 'غير مقروءة' },
-  { key: 'exam', label: 'تذكيرات الامتحان' },
-  { key: 'lesson', label: 'تذكيرات الدروس' },
-  { key: 'quiz', label: 'تذكيرات الاختبارات' },
+  { key: 'study', label: 'الدراسة' },
+  { key: 'exam', label: 'الاختبارات' },
+  { key: 'flashcards', label: 'البطاقات' },
   { key: 'system', label: 'النظام' },
 ];
+
+const filterTypes: Record<Exclude<NotificationFilter, 'all'>, NotificationItem['type'][]> = {
+  study: ['study_reminder', 'overdue_lesson', 'weak_topic', 'lesson'],
+  exam: ['exam_countdown', 'quiz_reminder', 'exam', 'quiz'],
+  flashcards: ['flashcards_due'],
+  system: ['system'],
+};
 
 const groupLabels: Record<NotificationGroup, string> = {
   today: 'اليوم',
@@ -134,8 +141,14 @@ export const NotificationsPage = () => {
 
   const getNotifIcon = (type: NotificationItem['type']) => {
     switch (type) {
+      case 'exam_countdown':
       case 'exam': return '🎯';
+      case 'study_reminder':
+      case 'overdue_lesson':
       case 'lesson': return '📖';
+      case 'flashcards_due': return '▣';
+      case 'weak_topic': return '!';
+      case 'quiz_reminder':
       case 'quiz': return '📝';
       case 'system': return '⚙️';
     }
@@ -143,8 +156,7 @@ export const NotificationsPage = () => {
 
   const filteredNotifications = notifications.filter(n => {
     if (activeCategory === 'all') return true;
-    if (activeCategory === 'unread') return n.status === 'unread';
-    return n.type === activeCategory;
+    return filterTypes[activeCategory].includes(n.type);
   });
 
   const groupedNotifications = filteredNotifications
@@ -157,8 +169,7 @@ export const NotificationsPage = () => {
 
   const countForFilter = (filter: NotificationFilter) => {
     if (filter === 'all') return notifications.length;
-    if (filter === 'unread') return notifications.filter(n => n.status === 'unread').length;
-    return notifications.filter(n => n.type === filter).length;
+    return notifications.filter(n => filterTypes[filter].includes(n.type)).length;
   };
 
   const unreadCount = notifications.filter(n => n.status === 'unread').length;
@@ -171,13 +182,20 @@ export const NotificationsPage = () => {
         title="مركز الإشعارات الذكي"
         subtitle="تابع المواعيد الهامة وجداول المراجعة وتوصيات الذكاء الاصطناعي اليومية."
         action={
-          unreadCount > 0 && (
-            <Button variant="ghost" onClick={markAllRead}>
-              ✓ تحديد الكل كمقروء
+          <div className="notif-page-actions">
+            {unreadCount > 0 && (
+              <Button variant="ghost" onClick={markAllRead}>
+                ✓ تحديد الكل كمقروء
+              </Button>
+            )}
+            <Button variant="secondary" onClick={() => navigate('/notifications/settings')}>
+              إعدادات الإشعارات
             </Button>
-          )
+          </div>
         }
       />
+
+      <NotificationPermissionBanner />
 
       {/* Tabs */}
       <div className="notif-filter-tabs">

@@ -91,7 +91,7 @@ interface BackendFinishSummary {
 const mockSessions = new Map<number, InteractiveSession>();
 
 const canUseMockFallback = (): boolean =>
-  import.meta.env.DEV || import.meta.env.VITE_GUIDED_LAB_MOCK === 'true';
+  import.meta.env.VITE_GUIDED_LAB_MOCK === 'true';
 
 const shouldFallbackToMock = (error: unknown): boolean => {
   if (!canUseMockFallback()) return false;
@@ -241,6 +241,20 @@ const mapAnswerResponse = (response: BackendAnswerResponse): SubmitStepAnswerRes
 });
 
 export const interactiveSolverApi = {
+  async listActiveSessions(): Promise<InteractiveSession[]> {
+    try {
+      const { data } = await api.get<BackendSession[]>('/interactive-solver/sessions', {
+        params: { status: 'active' },
+      });
+      return (data ?? []).map((session) => mapSession(session));
+    } catch (error) {
+      if (!shouldFallbackToMock(error)) throw error;
+      return [...mockSessions.values()]
+        .filter((session) => session.status === 'active')
+        .map(cloneSession);
+    }
+  },
+
   async startInteractiveSession(payload: StartInteractiveSessionRequest): Promise<InteractiveSession> {
     try {
       const { data } = await api.post<BackendSession>('/interactive-solver/sessions', payload);

@@ -1,0 +1,14 @@
+{
+  "validation_status": "passed",
+  "metadata_path": "data/processed/curriculum/reviewed_curriculum_metadata.json",
+  "ready_for_embedding": false,
+  "missing_paths": [],
+  "blocking_issues": [],
+  "warnings": [],
+  "ready_lesson_issues": [],
+  "solution_chunk_issues": {
+    "missing_source_type": [],
+    "missing_quality_status": [],
+    "missing_link": []
+  }
+}

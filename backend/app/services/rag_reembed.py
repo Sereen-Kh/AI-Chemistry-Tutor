@@ -18,6 +18,11 @@ from app.services.embeddings import (
     embed_documents_batch,
     embedding_provider_status,
 )
+from app.services.reviewed_curriculum_metadata import (
+    chunk_is_embedding_ready,
+    ensure_reviewed_metadata_ready,
+    metadata_with_reviewed_version,
+)
 
 VALID_EMBEDDING_STATUSES = {"pending", "processing", "completed", "failed", "skipped"}
 
@@ -43,6 +48,10 @@ class ReembedResult:
     progress: int = 0
     last_chunk_id: int | None = None
     errors: list[dict[str, Any]] | None = None
+    reviewed_metadata_version: str | None = None
+    metadata_ready: bool = False
+    skipped_missing_metadata_count: int = 0
+    skipped_blocked_count: int = 0
 
     def to_dict(self) -> dict[str, Any]:
         payload = asdict(self)
@@ -53,8 +62,12 @@ class ReembedResult:
 ReembedProgress = ReembedResult
 
 
-def _metadata_with_embedding_model(raw: dict | list | None, model_name: str) -> dict[str, Any]:
-    metadata = raw if isinstance(raw, dict) else {}
+def _metadata_with_embedding_model(
+    raw: dict | list | None,
+    model_name: str,
+    reviewed_metadata: dict[str, Any],
+) -> dict[str, Any]:
+    metadata = metadata_with_reviewed_version(raw, reviewed_metadata)
     return {
         **metadata,
         "embedding_model": model_name,
@@ -131,7 +144,35 @@ def _record_skip(progress: ReembedResult, chunk: RagChunk, reason: str) -> None:
     chunk.embedding_error = reason[:4000]
 
 
-def _mark_completed(chunk: RagChunk, embedding: list[float], model_name: str, now: datetime) -> None:
+def _record_metadata_skip(
+    progress: ReembedResult,
+    chunk: RagChunk,
+    reason: str | None,
+    missing: list[str],
+) -> None:
+    skip_reason = reason or "reviewed metadata check failed"
+    _record_skip(progress, chunk, skip_reason)
+    if reason == "blocked_quality_status":
+        progress.skipped_blocked_count += 1
+    elif reason == "missing_reviewed_metadata":
+        progress.skipped_missing_metadata_count += 1
+    progress.errors = progress.errors or []
+    progress.errors.append(
+        {
+            "chunk_id": chunk.id,
+            "skip_reason": reason,
+            "missing_metadata": missing,
+        }
+    )
+
+
+def _mark_completed(
+    chunk: RagChunk,
+    embedding: list[float],
+    model_name: str,
+    now: datetime,
+    reviewed_metadata: dict[str, Any],
+) -> None:
     if len(embedding) != EMBEDDING_DIM:
         raise RuntimeError(f"Embedding for chunk {chunk.id} has dimension {len(embedding)}; expected {EMBEDDING_DIM}.")
     chunk.embedding = embedding
@@ -139,7 +180,7 @@ def _mark_completed(chunk: RagChunk, embedding: list[float], model_name: str, no
     chunk.embedding_status = "completed"
     chunk.embedding_updated_at = now
     chunk.embedding_error = None
-    chunk.metadata_json = _metadata_with_embedding_model(chunk.metadata_json, model_name)
+    chunk.metadata_json = _metadata_with_embedding_model(chunk.metadata_json, model_name, reviewed_metadata)
 
 
 async def reembed_rag_chunks(
@@ -161,6 +202,7 @@ async def reembed_rag_chunks(
     """
     _validate_batch_size(batch_size)
 
+    reviewed_metadata = ensure_reviewed_metadata_ready()
     model_name = current_embedding_model_name()
     source_stmt = _source_filtered_stmt(source_id=source_id, source_type=source_type)
     candidate_stmt = _candidate_stmt(
@@ -183,9 +225,45 @@ async def reembed_rag_chunks(
         total_candidates=total_candidates,
         skipped=max(0, total_chunks - total_candidates),
         errors=[],
+        reviewed_metadata_version=str(reviewed_metadata.get("version") or ""),
+        metadata_ready=True,
     )
 
     if dry_run:
+        last_id = resume_after_chunk_id or 0
+        while True:
+            stmt = (
+                _candidate_stmt(
+                    source_id=source_id,
+                    source_type=source_type,
+                    force=force,
+                    resume_failed=resume_failed,
+                )
+                .where(RagChunk.id > last_id)
+                .order_by(RagChunk.id.asc())
+                .limit(batch_size)
+            )
+            result = await db.execute(stmt)
+            chunks = list(result.scalars().all())
+            if not chunks:
+                break
+            for chunk in chunks:
+                ready, reason, missing = chunk_is_embedding_ready(chunk, reviewed_metadata)
+                if not ready:
+                    progress.skipped += 1
+                    if reason == "blocked_quality_status":
+                        progress.skipped_blocked_count += 1
+                    elif reason == "missing_reviewed_metadata":
+                        progress.skipped_missing_metadata_count += 1
+                    progress.errors = progress.errors or []
+                    progress.errors.append(
+                        {
+                            "chunk_id": chunk.id,
+                            "skip_reason": reason,
+                            "missing_metadata": missing,
+                        }
+                    )
+                last_id = chunk.id
         progress.status = "completed"
         progress.progress = 100
         return progress
@@ -212,7 +290,11 @@ async def reembed_rag_chunks(
 
         non_empty_chunks: list[RagChunk] = []
         for chunk in chunks:
-            if not chunk.content.strip():
+            ready, reason, missing = chunk_is_embedding_ready(chunk, reviewed_metadata)
+            if not ready:
+                _record_metadata_skip(progress, chunk, reason, missing)
+                last_id = chunk.id
+            elif not chunk.content.strip():
                 _record_skip(progress, chunk, "chunk content is empty")
                 last_id = chunk.id
             else:
@@ -231,7 +313,7 @@ async def reembed_rag_chunks(
         try:
             embeddings = await embed_documents_batch([chunk.content for chunk in non_empty_chunks], batch_size=batch_size)
             for chunk, embedding in zip(non_empty_chunks, embeddings, strict=True):
-                _mark_completed(chunk, embedding, model_name, now)
+                _mark_completed(chunk, embedding, model_name, now, reviewed_metadata)
                 progress.updated += 1
                 progress.processed += 1
                 progress.last_chunk_id = chunk.id
@@ -248,7 +330,7 @@ async def reembed_rag_chunks(
             for chunk in non_empty_chunks:
                 try:
                     embedding = await embed_document(chunk.content)
-                    _mark_completed(chunk, embedding, model_name, datetime.now(timezone.utc))
+                    _mark_completed(chunk, embedding, model_name, datetime.now(timezone.utc), reviewed_metadata)
                     progress.updated += 1
                     progress.processed += 1
                     progress.last_chunk_id = chunk.id

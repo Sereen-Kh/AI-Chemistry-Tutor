@@ -1,0 +1,30 @@
+{
+  "reviewed_metadata_exists": true,
+  "reviewed_metadata_version": "2026-06-reviewed-v1",
+  "ready_for_embedding": false,
+  "status": "blocked",
+  "validation_status": "passed",
+  "embedding_can_run": false,
+  "required_chunk_metadata": [
+    "lesson_id",
+    "unit_id",
+    "source_type",
+    "printed_page_start",
+    "printed_page_end",
+    "quality_status",
+    "reviewed_metadata_version"
+  ],
+  "missing_required_chunk_metadata": [],
+  "can_propagate_metadata": false,
+  "blocking_issues": [
+    "ready_for_embedding_is_false",
+    "status_is_'blocked'_not_reviewed",
+    "embedding_readiness_can_run_embedding_false"
+  ],
+  "stop_reason": "REVIEWED_CURRICULUM_METADATA_NOT_READY",
+  "files_checked": [
+    "data/processed/curriculum/reviewed_curriculum_metadata.json",
+    "reports/reviewed_curriculum_metadata/validation_report.json",
+    "reports/reviewed_curriculum_metadata/embedding_readiness_report.json"
+  ]
+}

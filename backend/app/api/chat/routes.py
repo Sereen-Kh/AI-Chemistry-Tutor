@@ -1,6 +1,6 @@
 """Chat API routes."""
 
-from fastapi import APIRouter, Depends, Response
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Response, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.dependencies import get_current_user_id
@@ -20,6 +20,13 @@ from app.schemas.chat import (
 from app.services import chat_service
 
 router = APIRouter(prefix="/chat", tags=["chat"])
+
+
+def _csv_values(value: str | None) -> list[str] | None:
+    if not value:
+        return None
+    values = [item.strip() for item in value.split(",") if item.strip()]
+    return values or None
 
 
 @router.post("/sessions", response_model=SessionResponse, status_code=201)
@@ -75,6 +82,53 @@ async def send_chat_message(
         learning_modes=[mode.value for mode in request.learning_modes] if request.learning_modes else None,
         student_interests=[interest.value for interest in request.student_interests] if request.student_interests else None,
         action=request.action,
+    )
+
+
+@router.post("/messages", response_model=MessageResponse)
+async def send_unified_chat_message(
+    conversation_id: str = Form(..., alias="conversationId"),
+    lesson_id: str | None = Form(None, alias="lessonId"),
+    text: str | None = Form(None),
+    requested_return_type: str = Form("auto", alias="requestedReturnType"),
+    language: str = Form("auto"),
+    answer_scope: str = Form("auto", alias="answerScope"),
+    teaching_style: str | None = Form(None, alias="teachingStyle"),
+    teaching_level: str | None = Form(None, alias="teachingLevel"),
+    explanation_method: str | None = Form(None, alias="explanationMethod"),
+    learning_modes: str | None = Form(None, alias="learningModes"),
+    student_interests: str | None = Form(None, alias="studentInterests"),
+    action: str | None = Form(None),
+    audio: UploadFile | None = File(None),
+    user_id: int = Depends(get_current_user_id),
+    db: AsyncSession = Depends(get_async_db),
+):
+    """Unified multipart text/audio chat endpoint for Ask AI."""
+    try:
+        session_id = int(conversation_id)
+    except (TypeError, ValueError) as exc:
+        raise HTTPException(status_code=422, detail={"code": "INVALID_CONVERSATION_ID", "message": "conversationId must be a chat session id."}) from exc
+
+    _ = lesson_id
+    audio_bytes = await audio.read() if audio is not None else None
+    return await chat_service.send_multimodal_message(
+        db,
+        session_id=session_id,
+        user_id=user_id,
+        text=text,
+        audio_bytes=audio_bytes,
+        audio_filename=audio.filename if audio else None,
+        audio_content_type=audio.content_type if audio else None,
+        requested_return_type=requested_return_type,
+        language=language,
+        answer_scope=answer_scope,
+        source_types=None,
+        teaching_style=teaching_style,
+        teaching_level=teaching_level,
+        explanation_method=explanation_method,
+        learning_modes=_csv_values(learning_modes),
+        student_interests=_csv_values(student_interests),
+        action=action,
     )
 
 

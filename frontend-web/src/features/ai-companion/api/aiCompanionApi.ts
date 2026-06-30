@@ -54,7 +54,7 @@ export const aiCompanionApi = {
     return {
       message: `سأفتح لك شرحاً موجهاً لدرس ${context.activeLessonTitleAr || 'الدرس الحالي'}.`,
       suggestedActions: buildCompanionSuggestions(context),
-      targetRoute: `/ask-ai?question=${encodeURIComponent(`اشرح لي درس ${context.activeLessonTitleAr || 'الكيمياء الحالي'} من الكتاب`)}`,
+      targetRoute: `/ask-ai?question=${encodeURIComponent(`اشرح لي درس ${context.activeLessonTitleAr || 'الكيمياء الحالي'} من الكتاب`)}${context.activeLessonId ? `&lessonId=${context.activeLessonId}` : ''}`,
     };
   },
 

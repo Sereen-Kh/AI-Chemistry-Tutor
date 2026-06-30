@@ -1,0 +1,42 @@
+{
+  "validation_status": "passed",
+  "unit_5_exists": true,
+  "unit_6_exists": true,
+  "unit_6_page_190_ready": true,
+  "lessons_with_missing_ids": [],
+  "lessons_with_missing_page_ranges": [],
+  "overlapping_ranges": [],
+  "ready_lessons_with_blockers": [],
+  "remaining_issues": [],
+  "checks": {
+    "book_structure_exists": true,
+    "reviewed_lesson_map_exists": true,
+    "unit_5_exists": true,
+    "unit_6_exists": true,
+    "unit_5_has_lessons": true,
+    "unit_6_has_lessons": true,
+    "unit_6_page_190_ready": true,
+    "all_units_have_ids": true,
+    "all_lessons_have_ids": true,
+    "all_lessons_have_required_ranges": true,
+    "page_190_not_in_ocr_issues": true,
+    "page_190_not_in_vision_issues": true,
+    "ready_lessons_have_no_blockers": true,
+    "no_overlapping_ranges": true,
+    "lesson_ordering_correct": true,
+    "previous_units_not_removed": true
+  },
+  "units_with_missing_ids": [],
+  "unordered_lessons": [],
+  "missing_previous_units": [],
+  "unit_counts": {
+    "total_units": 3,
+    "unit_5_lessons": 3,
+    "unit_6_lessons": 1
+  },
+  "files_checked": {
+    "book_structure": "data/processed/book_structure.json",
+    "reviewed_lesson_map": "data/processed/textbook/textbook_lesson_map.reviewed.json",
+    "source_book_structure": "src/data/textbooks/syria_grade_9_chemistry/book_structure.json"
+  }
+}

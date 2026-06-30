@@ -47,6 +47,7 @@ def deterministic_chat_generation(monkeypatch: pytest.MonkeyPatch) -> None:
         source_type="textbook",
         content_type="definition",
         page_number=11,
+        unit_id=None,
         chapter_id=None,
         lesson_id=None,
         topic_id=None,
@@ -81,6 +82,9 @@ def deterministic_chat_generation(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(chat_service, "semantic_retrieve_context", fake_semantic_retrieve_context)
     monkeypatch.setattr(chat_service, "route_source", fake_route_source)
     monkeypatch.setattr(chat_service, "_answer_with_rag_fallback", fake_answer)
+    monkeypatch.setattr(chat_service, "answer_from_book_knowledge", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(chat_service, "_dictionary_entry_for_question", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(chat_service, "route_direct_answer", lambda *_args, **_kwargs: None)
 
 
 async def _create_user(db: AsyncSession, *, email: str = "student@example.com") -> User:
@@ -131,7 +135,7 @@ def test_send_message_persists_user_and_rich_assistant_message(session_factory):
                 db,
                 session_id=session.id,
                 user_id=user.id,
-                content="ما هو التركيز المولي؟",
+                content="اشرح من الكتاب ما هو التركيز المولي؟",
                 message_format="image",
                 learning_modes=["text", "image"],
                 teaching_level="simple",

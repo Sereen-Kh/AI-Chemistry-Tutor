@@ -1,668 +1,941 @@
-import { useState, useEffect, useMemo } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { flashcardsApi } from '../api/flashcardsApi';
-import { Card, PageHeader, Button, ProgressBar, StatusPill, LoadingSkeleton, ErrorBanner } from '../components/DesignSystem';
-import { getCurriculumLessonQuality, lessonPageRange, useActiveCurriculum } from '../hooks/useActiveCurriculum';
-import type { FlashcardGenerationConfig, GeneratedFlashcard } from '../types';
+import { Button, Card, ErrorBanner, LoadingSkeleton, PageHeader, ProgressBar, StatusPill } from '../components/DesignSystem';
+import { lessonPageRange, useActiveCurriculum } from '../hooks/useActiveCurriculum';
+import type {
+  FlashcardCardType,
+  FlashcardDeck,
+  FlashcardGenerationConfig,
+  FlashcardProgressSummary,
+  FlashcardRating,
+  GeneratedFlashcard,
+} from '../types';
 
-type FlashcardMode = FlashcardGenerationConfig['mode'];
-type FlashcardDifficulty = FlashcardGenerationConfig['difficulty'];
-type FlashcardType = FlashcardGenerationConfig['cardTypes'][number];
+type FlashcardsViewState =
+  | 'loading'
+  | 'empty'
+  | 'setup'
+  | 'generating'
+  | 'deck_list'
+  | 'review_session'
+  | 'deck_detail'
+  | 'error';
+
+type SetupScope = 'lesson' | 'selected_lessons' | 'unit' | 'weak_topics' | 'study_plan';
+
+const cardTypeOptions: Array<{ value: FlashcardCardType; label: string; purpose: string; tone: string }> = [
+  { value: 'term_definition', label: 'مصطلح', purpose: 'تعريف المصطلحات العلمية', tone: 'blue' },
+  { value: 'concept_explanation', label: 'مفهوم', purpose: 'شرح فكرة كيميائية', tone: 'teal' },
+  { value: 'equation_law', label: 'قانون / معادلة', purpose: 'تثبيت القوانين والعلاقات', tone: 'purple' },
+  { value: 'calculation', label: 'مسألة حسابية', purpose: 'تطبيق خطوات الحل', tone: 'gold' },
+  { value: 'experiment_result', label: 'تجربة واستنتاج', purpose: 'ربط التجربة بالاستنتاج', tone: 'teal' },
+  { value: 'compare_contrast', label: 'مقارنة', purpose: 'تمييز المفاهيم المتشابهة', tone: 'coral' },
+  { value: 'reaction_balancing', label: 'موازنة معادلات', purpose: 'ممارسة توازن التفاعلات', tone: 'gold' },
+  { value: 'safety_rule', label: 'قاعدة أمان', purpose: 'تذكر قواعد المختبر', tone: 'slate' },
+  { value: 'image_based', label: 'بطاقة صورة', purpose: 'قراءة الأشكال والجداول', tone: 'cyan' },
+];
+
+const ratingOptions: Array<{ value: FlashcardRating; label: string; helper: string; tone: string }> = [
+  { value: 'again', label: 'لم أتذكرها', helper: 'إعادة قريبة', tone: 'coral' },
+  { value: 'hard', label: 'صعبة', helper: 'فاصل قصير', tone: 'gold' },
+  { value: 'good', label: 'جيدة', helper: 'فاصل عادي', tone: 'blue' },
+  { value: 'easy', label: 'سهلة', helper: 'فاصل أطول', tone: 'teal' },
+];
+
+const emptyProgress: FlashcardProgressSummary = {
+  totalCards: 0,
+  dueToday: 0,
+  newCards: 0,
+  learningCards: 0,
+  masteredCards: 0,
+  overdueCards: 0,
+  masteryPercent: 0,
+};
+
+const typeLabel = (type: string) => cardTypeOptions.find((option) => option.value === type)?.label || type;
+
+const typeTone = (type: string) => cardTypeOptions.find((option) => option.value === type)?.tone || 'blue';
+
+const normalizeError = (error: unknown): string => {
+  if (error instanceof Error) {
+    if (/field required/i.test(error.message)) return 'البيانات المطلوبة غير مكتملة.';
+    if (/not found/i.test(error.message)) return 'لم يتم العثور على نتيجة.';
+  }
+  return 'تعذر توليد البطاقات، حاول مرة أخرى.';
+};
+
+const sourcePages = (card: GeneratedFlashcard) => {
+  if (!card.sourcePage) return 'صفحات غير محددة';
+  if (card.sourcePageEnd && card.sourcePageEnd !== card.sourcePage) return `صفحات ${card.sourcePage} - ${card.sourcePageEnd}`;
+  return `صفحة ${card.sourcePage}`;
+};
+
+const buildConfig = ({
+  scope,
+  selectedLessonIds,
+  selectedTopicIds,
+  selectedUnitId,
+  cardsPerLesson,
+  difficulty,
+  cardTypes,
+}: {
+  scope: SetupScope;
+  selectedLessonIds: string[];
+  selectedTopicIds: string[];
+  selectedUnitId: string;
+  cardsPerLesson: number;
+  difficulty: FlashcardGenerationConfig['difficulty'];
+  cardTypes: FlashcardCardType[];
+}): FlashcardGenerationConfig => ({
+  mode: scope === 'unit'
+    ? 'chapter'
+    : scope === 'study_plan'
+      ? 'study_plan'
+      : scope === 'weak_topics'
+        ? 'weak_lessons'
+        : scope === 'selected_lessons'
+          ? 'selected_lessons'
+          : 'single_lesson',
+  lessonIds: selectedLessonIds,
+  topicIds: selectedTopicIds,
+  unitIds: selectedUnitId ? [selectedUnitId] : [],
+  cardsPerLesson,
+  difficulty,
+  cardTypes,
+  includeSourcePage: true,
+  spacedRepetitionEnabled: true,
+});
 
 export const FlashcardsPage = () => {
   const location = useLocation();
+  const query = useMemo(() => new URLSearchParams(location.search), [location.search]);
+  const queryLessonId = query.get('lessonId') || query.get('lesson_id') || '';
+  const queryScope = query.get('scope');
 
-  // Route/Query parameters parser
-  const queryParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
-  const paramLessonId = queryParams.get('lessonId');
-  const paramAuto = queryParams.get('auto') === 'true';
+  const { units, allLessons, loading: curriculumLoading, usingFallback: usingFallbackCurriculum } = useActiveCurriculum();
 
-  // Config UI State
-  const [mode, setMode] = useState<FlashcardMode>(paramLessonId ? 'single_lesson' : 'single_lesson');
-  const [selectedLessonIds, setSelectedLessonIds] = useState<string[]>(paramLessonId ? [paramLessonId] : []);
-  const [selectedChapterId, setSelectedChapterId] = useState<string>('');
-  const [cardsPerLesson, setCardsPerLesson] = useState<number>(4);
-  const [difficulty, setDifficulty] = useState<FlashcardDifficulty>('mixed');
-  const [cardTypes, setCardTypes] = useState<FlashcardGenerationConfig['cardTypes']>(['term', 'definition', 'formula', 'experiment']);
-  const [spacedRepetition, setSpacedRepetition] = useState(true);
-
-  // Flow States
-  const [gameState, setGameState] = useState<'setup' | 'generating' | 'preview' | 'studying' | 'completed'>('setup');
-  const [cards, setQuestions] = useState<GeneratedFlashcard[]>([]);
-  const [flipped, setFlipped] = useState(false);
+  const [viewState, setViewState] = useState<FlashcardsViewState>('loading');
+  const [decks, setDecks] = useState<FlashcardDeck[]>([]);
+  const [progress, setProgress] = useState<FlashcardProgressSummary>(emptyProgress);
+  const [activeDeck, setActiveDeck] = useState<(FlashcardDeck & { generatedCards?: GeneratedFlashcard[] }) | null>(null);
+  const [reviewCards, setReviewCards] = useState<GeneratedFlashcard[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [revealed, setRevealed] = useState(false);
+  const [detailsOpen, setDetailsOpen] = useState(false);
   const [error, setError] = useState('');
-  
-  // Study Metrics
-  const [knownCount, setKnownCount] = useState(0);
-  const [reviewCount, setReviewCount] = useState(0);
-  const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
-  // Filter States (studying mode)
-  const [filterType, setFilterType] = useState<string>('all');
-  const [filterDifficulty, setFilterDifficulty] = useState<string>('all');
-  const [showFilters, setShowFilters] = useState(false);
-  const [showQualityReport, setShowQualityReport] = useState(false);
+  const [scope, setScope] = useState<SetupScope>(
+    queryScope === 'study_plan' ? 'study_plan' : queryLessonId ? 'lesson' : 'lesson',
+  );
+  const [selectedLessonIds, setSelectedLessonIds] = useState<string[]>(queryLessonId ? [queryLessonId] : []);
+  const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
+  const [selectedUnitId, setSelectedUnitId] = useState<string>('');
+  const [cardsPerLesson, setCardsPerLesson] = useState(4);
+  const [difficulty, setDifficulty] = useState<FlashcardGenerationConfig['difficulty']>('mixed');
+  const [cardTypes, setCardTypes] = useState<FlashcardCardType[]>([
+    'term_definition',
+    'concept_explanation',
+    'equation_law',
+    'calculation',
+  ]);
+  const [formErrors, setFormErrors] = useState<string[]>([]);
 
-  const { allLessons, chapters, loading: curriculumLoading, usingFallback: usingFallbackCurriculum } = useActiveCurriculum();
-  const effectiveSelectedChapterId = selectedChapterId || (chapters[0] ? String(chapters[0].id) : '');
+  const selectedLessons = useMemo(() => {
+    if (scope === 'unit' && selectedUnitId) {
+      return allLessons.filter((lesson) => String(lesson.unit.id) === selectedUnitId);
+    }
+    if (scope === 'weak_topics') {
+      return allLessons.filter((lesson) => lesson.difficulty >= 3).slice(0, 6);
+    }
+    if (scope === 'study_plan') {
+      return allLessons.slice(0, 4);
+    }
+    return allLessons.filter((lesson) => selectedLessonIds.includes(String(lesson.id)));
+  }, [allLessons, scope, selectedLessonIds, selectedUnitId]);
 
-  // Compute selected lessons
-  const currentSelectedLessons = useMemo(() => {
-    if (mode === 'single_lesson') {
-      return allLessons.filter(l => selectedLessonIds.includes(String(l.id)));
-    }
-    if (mode === 'selected_lessons') {
-      return allLessons.filter(l => selectedLessonIds.includes(String(l.id)));
-    }
-    if (mode === 'chapter') {
-      return allLessons.filter(l => String(l.chapter_id) === effectiveSelectedChapterId || String(l.chapter.id) === effectiveSelectedChapterId);
-    }
-    if (mode === 'weak_lessons') {
-      return allLessons.filter(l => l.difficulty >= 3).slice(0, 5);
-    }
-    if (mode === 'study_plan') {
-      return allLessons.filter(l => l.difficulty <= 3).slice(0, 4);
-    }
-    return [];
-  }, [mode, selectedLessonIds, effectiveSelectedChapterId, allLessons]);
+  const activeCard = reviewCards[currentIndex];
 
-  // Compute validation report
-  const validationReport = useMemo(() => {
-    const reports = currentSelectedLessons.map(getCurriculumLessonQuality);
-    const blocked = reports.filter(r => r.status === 'blocked');
-    const needsReview = reports.filter(r => r.status === 'needs_review');
-    
-    return {
-      reports,
-      isBlocked: blocked.length > 0,
-      hasWarning: needsReview.length > 0,
-      blockedLessons: blocked,
-      needsReviewLessons: needsReview
-    };
-  }, [currentSelectedLessons]);
-
-  const handleGenerateFlashcards = async (overrideConfig?: FlashcardGenerationConfig) => {
+  const loadFlashcards = async (preferredState?: FlashcardsViewState) => {
+    setViewState('loading');
     setError('');
-    setGameState('generating');
-
-    const config: FlashcardGenerationConfig = overrideConfig || {
-      mode,
-      lessonIds: currentSelectedLessons.map(l => String(l.id)),
-      cardsPerLesson,
-      difficulty,
-      cardTypes,
-      includeSourcePage: true,
-      spacedRepetitionEnabled: spacedRepetition
-    };
-
-    if (config.lessonIds.length === 0) {
-      setError('يرجى تحديد درس واحد على الأقل لتوليد البطاقات.');
-      setGameState('setup');
-      return;
-    }
-
-    const selectedReports = allLessons
-      .filter(l => config.lessonIds.includes(String(l.id)))
-      .map(getCurriculumLessonQuality);
-    
-    if (selectedReports.some(r => r.status === 'blocked')) {
-      setError('لا يمكن توليد البطاقات. أحد الدروس المحددة محظور بسبب نقص الجودة.');
-      setGameState('setup');
-      return;
-    }
-
     try {
-      const generated = await flashcardsApi.generateFlashcards(config);
-      if (generated.length === 0) {
-        setError('لم نتمكن من توليد أي بطاقات مع هذا التكوين. حاول تحديد أنواع أخرى أو بطاقات إضافية.');
-        setGameState('setup');
+      const [loadedDecks, loadedProgress] = await Promise.all([
+        flashcardsApi.getDecks(),
+        flashcardsApi.getProgress(),
+      ]);
+      setDecks(loadedDecks);
+      setProgress(loadedProgress);
+      if (preferredState) {
+        setViewState(preferredState);
+      } else if (queryLessonId || queryScope) {
+        setViewState('setup');
+      } else if (loadedDecks.length === 0 || loadedProgress.totalCards === 0) {
+        setViewState('empty');
       } else {
-        setQuestions(generated);
-        setGameState('preview');
+        setViewState('deck_list');
       }
-    } catch {
-      setError('حدث خطأ أثناء توليد البطاقات الكيميائية.');
-      setGameState('setup');
+    } catch (err) {
+      setError(normalizeError(err));
+      setViewState('error');
     }
-  };
-
-  const handleToggleLessonSelection = (lessonId: string) => {
-    setSelectedLessonIds(prev => 
-      prev.includes(lessonId) 
-        ? prev.filter(id => id !== lessonId) 
-        : [...prev, lessonId]
-    );
-  };
-
-  const handleToggleCardType = (type: FlashcardType) => {
-    setCardTypes(prev => 
-      prev.includes(type)
-        ? prev.filter(t => t !== type)
-        : [...prev, type]
-    );
-  };
-
-  const handleStartStudying = () => {
-    setCurrentIndex(0);
-    setFlipped(false);
-    setKnownCount(0);
-    setReviewCount(0);
-    setShowFilters(false);
-    setGameState('studying');
-  };
-
-  const filteredCards = cards.filter(card => {
-    if (filterType !== 'all' && card.cardType !== filterType) return false;
-    if (filterDifficulty !== 'all' && card.difficulty !== filterDifficulty) return false;
-    return true;
-  });
-
-  const activeCard = filteredCards[currentIndex];
-
-  const handleCardAction = async (action: 'known' | 'review' | 'skip') => {
-    const currentCard = filteredCards[currentIndex];
-    
-    if (action === 'known') {
-      setKnownCount(prev => prev + 1);
-      void flashcardsApi.updateFlashcardReviewState(currentCard.id, 'known');
-    } else if (action === 'review') {
-      setReviewCount(prev => prev + 1);
-      void flashcardsApi.updateFlashcardReviewState(currentCard.id, 'review');
-    }
-
-    setFlipped(false);
-    
-    // Wait for flip transition back to front before changing card index
-    setTimeout(() => {
-      if (currentIndex + 1 < filteredCards.length) {
-        setCurrentIndex(prev => prev + 1);
-      } else {
-        setGameState('completed');
-      }
-    }, 200);
   };
 
   useEffect(() => {
-    if (!paramAuto || !paramLessonId) return;
-    const cCount = Number(queryParams.get('cards') || '4');
-    const cDiff = (queryParams.get('difficulty') || 'mixed') as FlashcardDifficulty;
-    const cTypes = (queryParams.get('types') || 'term').split(',') as FlashcardType[];
-
-    const config: FlashcardGenerationConfig = {
-      mode: 'single_lesson',
-      lessonIds: [paramLessonId],
-      cardsPerLesson: cCount,
-      difficulty: cDiff,
-      cardTypes: cTypes,
-      includeSourcePage: true,
-      spacedRepetitionEnabled: true
-    };
-
-    const lesson = allLessons.find(l => String(l.id) === paramLessonId);
-    if (!lesson) return;
-    const report = getCurriculumLessonQuality(lesson);
-    if (report.status !== 'blocked') {
-      queueMicrotask(() => void handleGenerateFlashcards(config));
-    } else {
-      queueMicrotask(() => setError(`تعذر التوليد التلقائي للبطاقات: درس "${lesson.title_ar}" محظور بسبب جودة المحتوى.`));
-    }
+    void loadFlashcards();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paramAuto, paramLessonId, queryParams, allLessons]);
+  }, [queryLessonId, queryScope]);
 
-  const getCardTypeLabel = (type: string) => {
-    const labels: Record<string, string> = {
-      term: 'مصطلح',
-      definition: 'تعريف علمي',
-      formula: 'معادلة / قانون',
-      reaction: 'تفاعل كيميائي',
-      comparison: 'مقارنة كيميائية',
-      experiment: 'تجربة مخبرية',
-      common_mistake: 'خطأ شائع'
-    };
-    return labels[type] || type;
+  const validateSetup = () => {
+    const errors: string[] = [];
+    const lessonCount = selectedLessons.length;
+    if (lessonCount === 0) errors.push('اختر درساً واحداً على الأقل');
+    if (cardTypes.length === 0) errors.push('اختر نوع بطاقة واحداً على الأقل');
+    if (!Number.isFinite(cardsPerLesson) || cardsPerLesson < 1) errors.push('عدد البطاقات غير صالح');
+    if (!difficulty) errors.push('اختر مستوى الصعوبة');
+    setFormErrors(errors);
+    return errors.length === 0;
   };
 
-  const getCardTypeTone = (type: string) => {
-    const tones: Record<string, string> = {
-      term: 'blue',
-      definition: 'teal',
-      formula: 'purple',
-      reaction: 'gold',
-      comparison: 'coral',
-      experiment: 'teal',
-      common_mistake: 'coral'
-    };
-    return tones[type] || 'blue';
+  const generateDeck = async () => {
+    if (!validateSetup()) return;
+    setError('');
+    setViewState('generating');
+    try {
+      const generated = await flashcardsApi.generateDeck(buildConfig({
+        scope,
+        selectedLessonIds: selectedLessons.map((lesson) => String(lesson.id)),
+        selectedTopicIds,
+        selectedUnitId,
+        cardsPerLesson,
+        difficulty,
+        cardTypes,
+      }));
+      setActiveDeck(generated);
+      setReviewCards(generated.generatedCards || []);
+      setCurrentIndex(0);
+      setRevealed(false);
+      await loadFlashcards('deck_detail');
+      setActiveDeck(generated);
+      setReviewCards(generated.generatedCards || []);
+    } catch (err) {
+      setError(normalizeError(err));
+      setViewState('setup');
+    }
   };
 
-  const handleFlashcardTouchEnd = (clientX: number) => {
-    if (touchStartX === null || !activeCard) return;
-    const delta = clientX - touchStartX;
-    setTouchStartX(null);
-    if (Math.abs(delta) < 70) return;
-    void handleCardAction(delta < 0 ? 'known' : 'review');
+  const openDeck = async (deckId: string | number) => {
+    setViewState('loading');
+    setError('');
+    try {
+      const deck = await flashcardsApi.getDeck(deckId);
+      setActiveDeck(deck);
+      setReviewCards(deck.generatedCards || []);
+      setCurrentIndex(0);
+      setRevealed(false);
+      setDetailsOpen(false);
+      setViewState('deck_detail');
+    } catch (err) {
+      setError(normalizeError(err));
+      setViewState('deck_list');
+    }
+  };
+
+  const startReview = async (deckId?: string | number) => {
+    setViewState('loading');
+    setError('');
+    try {
+      const session = await flashcardsApi.createReviewSession(deckId, 30);
+      let cards = session.cards;
+      if (cards.length === 0 && deckId) {
+        const deck = await flashcardsApi.getDeck(deckId);
+        cards = deck.generatedCards || [];
+        setActiveDeck(deck);
+      }
+      if (cards.length === 0) {
+        setError('لا توجد بطاقات مستحقة الآن. يمكنك إنشاء بطاقات جديدة أو فتح مجموعة للمراجعة الحرة.');
+        setViewState(decks.length ? 'deck_list' : 'empty');
+        return;
+      }
+      setReviewCards(cards);
+      setCurrentIndex(0);
+      setRevealed(false);
+      setDetailsOpen(false);
+      setViewState('review_session');
+    } catch (err) {
+      setError(normalizeError(err));
+      setViewState('deck_list');
+    }
+  };
+
+  const rateCard = async (rating: FlashcardRating) => {
+    if (!activeCard) return;
+    try {
+      const review = await flashcardsApi.reviewFlashcard(activeCard.id, rating);
+      setReviewCards((cards) => cards.map((card) => (
+        card.id === activeCard.id
+          ? {
+              ...card,
+              reviewState: review.status === 'mastered' ? 'mastered' : review.status,
+              dueAt: review.new_due_at,
+              nextReviewAt: review.new_due_at || undefined,
+              intervalDays: review.interval_days,
+              easeFactor: review.ease_factor,
+              repetitions: review.repetitions,
+              lapses: review.lapses,
+            }
+          : card
+      )));
+      setRevealed(false);
+      setDetailsOpen(false);
+      if (currentIndex + 1 < reviewCards.length) {
+        setCurrentIndex((index) => index + 1);
+      } else {
+        await loadFlashcards('deck_list');
+      }
+    } catch {
+      setError('تعذر حفظ تقييم البطاقة. حاول مرة أخرى.');
+    }
+  };
+
+  const toggleLesson = (lessonId: string) => {
+    setSelectedLessonIds((current) => (
+      current.includes(lessonId)
+        ? current.filter((id) => id !== lessonId)
+        : scope === 'lesson'
+          ? [lessonId]
+          : [...current, lessonId]
+    ));
+  };
+
+  const toggleTopic = (topicId: string) => {
+    setSelectedTopicIds((current) => (
+      current.includes(topicId) ? current.filter((id) => id !== topicId) : [...current, topicId]
+    ));
+  };
+
+  const toggleCardType = (type: FlashcardCardType) => {
+    setCardTypes((current) => (
+      current.includes(type) ? current.filter((item) => item !== type) : [...current, type]
+    ));
   };
 
   return (
-    <div className="page-stack flashcards-page">
+    <div className="page-stack flashcards-page flashcards-v2">
       <PageHeader
         eyebrow="المراجعة الذكية"
-        title="البطاقات التعليمية للكيمياء"
-        subtitle="مراجعة المفاهيم، موازنة الصيغ، وتثبيت نواتج التعلم بالاعتماد على خوارزمية التكرار المتباعد."
+        title="البطاقات التعليمية"
+        subtitle="بطاقات مرتبطة بالكتاب والدروس والموضوعات، مع وصف ومصدر وجدولة مراجعة متباعدة."
+        action={
+          <div className="flashcards-header-actions">
+            <Button variant="secondary" onClick={() => setViewState('setup')}>إنشاء بطاقات</Button>
+            <Button onClick={() => void startReview()}>ابدأ المراجعة</Button>
+          </div>
+        }
       />
 
       {usingFallbackCurriculum && <ErrorBanner message="تعذر تحميل المنهج من الخادم، لذلك نعرض بنية الكتاب الاحتياطية مؤقتاً." />}
       {error && <ErrorBanner message={error} onRetry={() => setError('')} />}
 
-      {/* SETUP CONFIG STATE */}
-      {gameState === 'setup' && (
-        <div className={`quiz-setup-grid ${showQualityReport ? 'has-report' : 'report-collapsed'}`}>
-          <Card className="quiz-config-card">
-            <div className="section-title">
-              <h2>إعداد مجموعة المراجعة</h2>
-              <Button variant="ghost" onClick={() => setShowQualityReport((open) => !open)} className="ed-btn-xs">
-                {showQualityReport ? 'إخفاء تقرير الجودة' : 'عرض تقرير الجودة'}
-              </Button>
-            </div>
-
-            <div className="form-group">
-              <label>نمط توليد البطاقات:</label>
-              <select value={mode} onChange={(e) => { setMode(e.target.value as FlashcardMode); setSelectedLessonIds([]); }}>
-                <option value="single_lesson">درس واحد محدد</option>
-                <option value="selected_lessons">مجموعة دروس محددة</option>
-                <option value="chapter">فصل كامل من الوحدة</option>
-                <option value="weak_lessons">الدروس ذات التحصيل الضعيف (تحت 80%)</option>
-                <option value="study_plan">خطة المراجعة اليومية الموصى بها</option>
-              </select>
-            </div>
-
-            {mode === 'single_lesson' && (
-              <div className="form-group">
-                <label>اختر الدرس:</label>
-                {curriculumLoading ? <LoadingSkeleton rows={3} /> : (
-                  <div className="lesson-selector-grid">
-                    {allLessons.map((lesson) => {
-                      const lessonId = String(lesson.id);
-                      const selected = selectedLessonIds.includes(lessonId);
-                      return (
-                        <button
-                          key={lesson.id}
-                          type="button"
-                          className={`lesson-select-card ${selected ? 'selected' : ''}`}
-                          onClick={() => setSelectedLessonIds([lessonId])}
-                          aria-pressed={selected}
-                        >
-                          <span className="lesson-num">درس {lesson.order}</span>
-                          <strong>{lesson.title_ar}</strong>
-                          <small>{lesson.unit.title_ar} · {lessonPageRange(lesson)}</small>
-                          {selected && <span className="check-mark">✓</span>}
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {mode === 'selected_lessons' && (
-              <div className="form-group">
-                <label>اختر الدروس المطلوبة:</label>
-                {curriculumLoading ? <LoadingSkeleton rows={3} /> : (
-                  <div className="lesson-selector-grid">
-                    {allLessons.map((lesson) => {
-                      const lessonId = String(lesson.id);
-                      const selected = selectedLessonIds.includes(lessonId);
-                      return (
-                        <button
-                          key={lesson.id}
-                          type="button"
-                          className={`lesson-select-card ${selected ? 'selected' : ''}`}
-                          onClick={() => handleToggleLessonSelection(lessonId)}
-                          aria-pressed={selected}
-                        >
-                          <span className="lesson-num">درس {lesson.order}</span>
-                          <strong>{lesson.title_ar}</strong>
-                          <small>{lesson.chapter.title_ar} · {lessonPageRange(lesson)}</small>
-                          {selected && <span className="check-mark">✓</span>}
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {mode === 'chapter' && (
-              <div className="form-group">
-                <label>اختر الفصل داخل الوحدة:</label>
-                <select value={effectiveSelectedChapterId} onChange={(e) => setSelectedChapterId(e.target.value)}>
-                  {chapters.map((chapter) => (
-                    <option key={chapter.id} value={String(chapter.id)}>
-                      {chapter.unit.title_ar} · {chapter.title_ar}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-
-            <div className="form-group-row">
-              <div className="form-group">
-                <label>البطاقات لكل درس:</label>
-                <input 
-                  type="number" 
-                  min={1} 
-                  max={10} 
-                  value={cardsPerLesson} 
-                  onChange={(e) => setCardsPerLesson(Math.max(1, Number(e.target.value)))} 
-                />
-              </div>
-              <div className="form-group">
-                <label>الصعوبة المفضلة:</label>
-                <select value={difficulty} onChange={(e) => setDifficulty(e.target.value as FlashcardDifficulty)}>
-                  <option value="mixed">مختلط</option>
-                  <option value="easy">سهل</option>
-                  <option value="medium">متوسط</option>
-                  <option value="hard">صعب</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label>أنواع البطاقات المطلوبة:</label>
-              <div className="type-pill-row" aria-label="أنواع البطاقات">
-                {[
-                  { value: 'term' as const, label: 'مصطلحات', icon: 'T' },
-                  { value: 'definition' as const, label: 'تعاريف', icon: 'D' },
-                  { value: 'formula' as const, label: 'قوانين', icon: 'F' },
-                  { value: 'experiment' as const, label: 'تجارب', icon: 'E' },
-                ].map((option) => (
-                  <button
-                    key={option.value}
-                    type="button"
-                    className={`type-pill ${cardTypes.includes(option.value) ? 'active' : ''}`}
-                    onClick={() => handleToggleCardType(option.value)}
-                    aria-pressed={cardTypes.includes(option.value)}
-                  >
-                    <span>{option.icon}</span>
-                    {option.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="checkbox-label">
-                <input type="checkbox" checked={spacedRepetition} onChange={(e) => setSpacedRepetition(e.target.checked)} />
-                تفعيل التكرار المتباعد (Spaced Repetition)
-              </label>
-            </div>
-
-            <div className="setup-summary-bar">
-              <strong>{currentSelectedLessons.length} دروس مختارة</strong>
-              <span>{Math.max(1, currentSelectedLessons.length) * cardsPerLesson} بطاقة متوقعة</span>
-              <span>{spacedRepetition ? 'تكرار متباعد مفعل' : 'تكرار متباعد معطل'}</span>
-            </div>
-
-            <Button 
-              onClick={() => handleGenerateFlashcards()} 
-              disabled={validationReport.isBlocked || currentSelectedLessons.length === 0 || cardTypes.length === 0}
-              className="w-full mt-4"
-            >
-              توليد البطاقات للمراجعة
-            </Button>
-          </Card>
-
-          {/* Quality reports for verification */}
-          {showQualityReport && (
-          <Card className="quiz-quality-report-sidebar">
-            <div className="section-title">
-              <h2>تقرير جودة دروس البطاقات</h2>
-            </div>
-            {currentSelectedLessons.length === 0 ? (
-              <p className="no-data-text text-sm">اختر درساً لرؤية تقرير سلامة جودة المحتوى.</p>
-            ) : (
-              <div className="quiz-lessons-status-report">
-                <p className="text-sm mb-3">الدروس المختارة للتوليد ({currentSelectedLessons.length}):</p>
-                <div className="status-lesson-list">
-                  {validationReport.reports.map(rep => {
-                    const l = allLessons.find(m => String(m.id) === rep.lessonId);
-                    return (
-                      <div className={`status-lesson-item ${rep.status}`} key={rep.lessonId}>
-                        <div className="flex justify-between items-center">
-                          <strong>{l?.title_ar}</strong>
-                          <span className={`text-xs badge-${rep.status}`}>
-                            {rep.status === 'ready' ? 'جاهز' : rep.status === 'needs_review' ? 'مسودة' : 'محظور'}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2 mt-1">
-                          <ProgressBar value={rep.score} tone={rep.status === 'ready' ? 'teal' : rep.status === 'needs_review' ? 'gold' : 'coral'} />
-                          <span className="text-xs font-mono">{rep.score}/100</span>
-                        </div>
-                        
-                        {rep.status === 'blocked' && (
-                          <div className="blocked-items-preview mt-2">
-                            <strong>عناصر الجودة الناقصة:</strong>
-                            <ul>
-                              {rep.issues.map((issue, idx) => (
-                                <li key={idx}>• {issue}</li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {validationReport.isBlocked && (
-                  <div className="warning-card-box tone-coral mt-4">
-                    <p className="text-sm">⚠ يحتوي التحديد الحالي على دروس <strong>مغلقة الجودة</strong>. يرجى تعديل الاختيارات ليتم توليد البطاقات بنجاح.</p>
-                  </div>
-                )}
-              </div>
-            )}
-          </Card>
-          )}
-        </div>
+      {viewState === 'loading' && <FlashcardSkeleton />}
+      {viewState === 'error' && (
+        <FlashcardError onRetry={() => void loadFlashcards()} />
       )}
-
-      {/* GENERATING FLASHCARDS LOADER */}
-      {gameState === 'generating' && (
-        <Card className="quiz-generating-loader text-center">
-          <LoadingSkeleton rows={4} />
-          <p className="mt-4 text-lg">جاري مسح محتوى الدروس وتوليد بطاقات المراجعة من RAG ...</p>
-        </Card>
+      {viewState === 'empty' && (
+        <FlashcardsEmptyState onCreate={() => setViewState('setup')} />
       )}
-
-      {/* PREVIEW FLASHCARDS BEFORE SAVING */}
-      {gameState === 'preview' && (
-        <Card className="flashcards-preview-panel">
-          <div className="section-title">
-            <h2>معاينة البطاقات المولدة ({cards.length} بطاقة)</h2>
-            <StatusPill tone="teal">مسودة RAG جاهزة</StatusPill>
-          </div>
-          <p className="text-sm mb-4">راجع قائمة البطاقات المولدة وتأكد من ملائمتها قبل حفظها في ذاكرتك الكيميائية:</p>
-
-          <div className="pre-generated-list">
-            {cards.map((card, idx) => (
-              <div className="pre-generated-card-item" key={card.id}>
-                <div>
-                  <span className="text-xs opacity-60 ml-2">[{idx + 1}]</span>
-                  <strong>{card.front}</strong>
-                </div>
-                <div className="flex items-center gap-2">
-                  <StatusPill tone={getCardTypeTone(card.cardType)}>{getCardTypeLabel(card.cardType)}</StatusPill>
-                  <span className="text-xs opacity-50">صفحة {card.sourcePage}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="results-actions mt-6 flex justify-center gap-4">
-            <Button onClick={handleStartStudying}>حفظ والبدء في الدراسة والتثبيت</Button>
-            <Button variant="secondary" onClick={() => setGameState('setup')}>تعديل التكوين</Button>
-          </div>
-        </Card>
+      {viewState === 'setup' && (
+        <FlashcardDeckSetup
+          units={units}
+          curriculumLoading={curriculumLoading}
+          scope={scope}
+          setScope={setScope}
+          selectedLessonIds={selectedLessonIds}
+          selectedTopicIds={selectedTopicIds}
+          selectedUnitId={selectedUnitId}
+          setSelectedUnitId={setSelectedUnitId}
+          toggleLesson={toggleLesson}
+          toggleTopic={toggleTopic}
+          cardsPerLesson={cardsPerLesson}
+          setCardsPerLesson={setCardsPerLesson}
+          difficulty={difficulty}
+          setDifficulty={setDifficulty}
+          cardTypes={cardTypes}
+          toggleCardType={toggleCardType}
+          selectedLessonsCount={selectedLessons.length}
+          formErrors={formErrors}
+          onGenerate={() => void generateDeck()}
+          onCancel={() => setViewState(decks.length ? 'deck_list' : 'empty')}
+        />
       )}
-
-      {/* ACTIVE STUDY BOARD WITH 3D FLIP */}
-      {gameState === 'studying' && activeCard && (
-        <div className={`study-layout ${showFilters ? 'filters-open' : 'filters-collapsed'}`}>
-          {/* Centered large 3D flip card */}
-          <div className="study-card-player flex-grow">
-            <div className="study-review-toolbar">
-              <div>
-                <strong>مراجعة البطاقات</strong>
-                <span>{filteredCards.length} بطاقة ظاهرة · {knownCount} متقنة · {reviewCount} للمراجعة</span>
-              </div>
-              <div className="study-review-toolbar-actions">
-                <Button variant="ghost" onClick={() => setShowFilters((open) => !open)}>
-                  {showFilters ? 'إخفاء التصفية' : 'تصفية البطاقات'}
-                </Button>
-                <Button variant="ghost" onClick={() => setGameState('setup')}>إيقاف المراجعة</Button>
-              </div>
-            </div>
-
-            {filteredCards.length === 0 ? (
-            <Card className="text-center w-full flex-grow">
-              <p className="no-data-text">لا توجد بطاقات مطابقة لخيارات التصفية الحالية.</p>
-              <Button variant="secondary" onClick={() => { setFilterType('all'); setFilterDifficulty('all'); }} className="mt-4">إزالة التصفية</Button>
-            </Card>
-          ) : (
-            <>
-              <Card className="quiz-progress-card mb-4">
-                <div className="player-progress-header text-sm">
-                  <span>البطاقة <strong>{currentIndex + 1}</strong> من <strong>{filteredCards.length}</strong></span>
-                  <StatusPill tone="blue">تكرار متباعد: {spacedRepetition ? 'مفعل' : 'معطل'}</StatusPill>
-                </div>
-                <ProgressBar value={Math.round(((currentIndex + 1) / filteredCards.length) * 100)} tone="teal" />
-              </Card>
-
-              {/* 3D Flashcard Stage */}
-              <div className="flashcard-stage mt-6">
-                <div
-                  className="flashcard-wrapper"
-                  onClick={() => setFlipped(!flipped)}
-                  onTouchStart={(event) => setTouchStartX(event.changedTouches[0]?.clientX ?? null)}
-                  onTouchEnd={(event) => handleFlashcardTouchEnd(event.changedTouches[0]?.clientX ?? 0)}
-                >
-                  <div className={`flashcard-inner ${flipped ? 'is-flipped' : ''}`}>
-                    
-                    {/* FRONT SIDE */}
-                    <div className="flashcard-front">
-                      <div className="card-header-badge-row">
-                        <StatusPill tone={getCardTypeTone(activeCard.cardType)}>{getCardTypeLabel(activeCard.cardType)}</StatusPill>
-                        <StatusPill tone="gold">صعوبة: {activeCard.difficulty === 'easy' ? 'سهل' : activeCard.difficulty === 'medium' ? 'متوسط' : 'صعب'}</StatusPill>
-                      </div>
-
-                      <div className="card-body-text">
-                        {activeCard.front}
-                      </div>
-
-                      <div className="card-footer-info">
-                        <span>انقر على البطاقة لرؤية الإجابة</span>
-                        <span>بطاقة رقم {currentIndex + 1}</span>
-                      </div>
-                    </div>
-
-                    {/* BACK SIDE */}
-                    <div className="flashcard-back">
-                      <div className="card-header-badge-row">
-                        <StatusPill tone="teal">الإجابة الصحيحة</StatusPill>
-                        <StatusPill tone="blue">صفحة المصدر: {activeCard.sourcePage}</StatusPill>
-                      </div>
-
-                      <div className="card-body-text whitespace-pre-line" dir={activeCard.cardType === 'formula' || activeCard.cardType === 'reaction' ? 'ltr' : 'rtl'}>
-                        {activeCard.back}
-                      </div>
-
-                      <div className="card-footer-info">
-                        <span>انقر للعودة للسؤال</span>
-                        <span>كتاب الكيمياء - التاسع الأساسي</span>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-
-                {/* STUDY ACTIONS PANEL */}
-                <div className="study-actions-row mt-8 flex justify-center gap-4">
-                  <Button variant="secondary" onClick={() => handleCardAction('review')} className="ed-btn-danger">
-                    مراجعة لاحقاً 🔁
-                  </Button>
-                  <Button variant="ghost" onClick={() => handleCardAction('skip')}>
-                    تخطي البطاقة ↷
-                  </Button>
-                  <Button onClick={() => handleCardAction('known')} className="ed-btn-primary">
-                    أعرفها تماماً ✓
-                  </Button>
-                </div>
-              </div>
-            </>
-          )}
-          </div>
-
-          {showFilters && (
-          <Card className="study-filters-panel">
-            <h3>تصفية البطاقات الحالية</h3>
-
-            <div className="form-group mt-4">
-              <label>تصفية حسب النوع:</label>
-              <select value={filterType} onChange={(e) => { setFilterType(e.target.value); setCurrentIndex(0); }}>
-                <option value="all">كل الأنواع</option>
-                <option value="term">المصطلحات</option>
-                <option value="definition">التعاريف</option>
-                <option value="formula">المعادلات والقوانين</option>
-                <option value="experiment">التجارب والخلاصات</option>
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label>تصفية حسب الصعوبة:</label>
-              <select value={filterDifficulty} onChange={(e) => { setFilterDifficulty(e.target.value); setCurrentIndex(0); }}>
-                <option value="all">كل الصعوبات</option>
-                <option value="easy">سهل</option>
-                <option value="medium">متوسط</option>
-                <option value="hard">صعب</option>
-              </select>
-            </div>
-
-            <div className="study-session-info mt-6 text-xs text-right opacity-85">
-              <div className="font-semibold mb-2">إحصاءات الجلسة:</div>
-              <div>بطاقات معروفة: {knownCount}</div>
-              <div>بطاقات تحتاج مراجعة: {reviewCount}</div>
-              <div>إجمالي ما تمت تصفيته: {filteredCards.length} بطاقة</div>
-            </div>
-          </Card>
-          )}
-        </div>
+      {viewState === 'generating' && <FlashcardGenerationOverlay />}
+      {viewState === 'deck_list' && (
+        <FlashcardDeckList
+          progress={progress}
+          decks={decks}
+          onCreate={() => setViewState('setup')}
+          onReview={() => void startReview()}
+          onOpenDeck={(deckId) => void openDeck(deckId)}
+        />
       )}
-
-      {/* COMPLETED DECK RESULTS SCREEN */}
-      {gameState === 'completed' && (
-        <Card className="quiz-results-card text-center max-w-xl mx-auto mt-8">
-          <div className="trophy-icon text-5xl">🎉</div>
-          <h2>نهارك سعيد! اكتملت مراجعة البطاقات</h2>
-          <p className="mt-2 text-lg">لقد أكملت بنجاح مراجعة <strong>{cards.length}</strong> بطاقة كيميائية.</p>
-          
-          <div className="stats-row inline mt-6 w-full max-w-md mx-auto">
-            <article className="stat-tile">
-              <strong>{knownCount}</strong>
-              <span>بطاقات متقنة ✓</span>
-            </article>
-            <article className="stat-tile">
-              <strong>{reviewCount}</strong>
-              <span>تحتاج لمراجعة 🔁</span>
-            </article>
-          </div>
-
-          <div className="results-actions mt-8 flex justify-center gap-4">
-            <Button onClick={() => setGameState('setup')}>مراجعة مجموعة أخرى</Button>
-            <Link className="ed-btn ed-btn-secondary" to="/lessons">العودة للدروس</Link>
-          </div>
-        </Card>
+      {viewState === 'deck_detail' && activeDeck && (
+        <FlashcardDeckDetail
+          deck={activeDeck}
+          cards={reviewCards}
+          onBack={() => setViewState('deck_list')}
+          onReview={() => void startReview(activeDeck.id)}
+        />
+      )}
+      {viewState === 'review_session' && activeCard && (
+        <FlashcardReviewSession
+          card={activeCard}
+          deck={activeDeck}
+          index={currentIndex}
+          total={reviewCards.length}
+          revealed={revealed}
+          detailsOpen={detailsOpen}
+          setDetailsOpen={setDetailsOpen}
+          onReveal={() => setRevealed(true)}
+          onRate={(rating) => void rateCard(rating)}
+          onExit={() => setViewState('deck_list')}
+        />
       )}
     </div>
   );
 };
+
+const FlashcardSkeleton = () => (
+  <Card className="flashcards-skeleton">
+    <LoadingSkeleton rows={6} />
+  </Card>
+);
+
+const FlashcardError = ({ onRetry }: { onRetry: () => void }) => (
+  <Card className="flashcards-empty-state">
+    <p className="eyebrow">تعذر التحميل</p>
+    <h2>لم نتمكن من تحميل البطاقات</h2>
+    <p>تحقق من اتصال الخادم ثم أعد المحاولة.</p>
+    <Button onClick={onRetry}>إعادة المحاولة</Button>
+  </Card>
+);
+
+const FlashcardsEmptyState = ({ onCreate }: { onCreate: () => void }) => (
+  <Card className="flashcards-empty-state">
+    <div>
+      <p className="eyebrow">لا توجد مجموعات بعد</p>
+      <h2>ابدأ ببناء ذاكرة كيميائية من الكتاب</h2>
+      <p>
+        أنشئ بطاقات من درس أو موضوع محدد. كل بطاقة ستعرض السؤال والإجابة والوصف والصفحات المصدرية،
+        ثم يحدد التكرار المتباعد موعد المراجعة التالية.
+      </p>
+      <div className="flashcards-benefits">
+        <span>مرتبطة بالدرس والموضوع</span>
+        <span>مصادر من الكتاب</span>
+        <span>وصف لكل بطاقة</span>
+        <span>مراجعة متباعدة</span>
+      </div>
+    </div>
+    <Button onClick={onCreate}>إنشاء بطاقات</Button>
+  </Card>
+);
+
+const FlashcardDeckSetup = ({
+  units,
+  curriculumLoading,
+  scope,
+  setScope,
+  selectedLessonIds,
+  selectedTopicIds,
+  selectedUnitId,
+  setSelectedUnitId,
+  toggleLesson,
+  toggleTopic,
+  cardsPerLesson,
+  setCardsPerLesson,
+  difficulty,
+  setDifficulty,
+  cardTypes,
+  toggleCardType,
+  selectedLessonsCount,
+  formErrors,
+  onGenerate,
+  onCancel,
+}: {
+  units: ReturnType<typeof useActiveCurriculum>['units'];
+  curriculumLoading: boolean;
+  scope: SetupScope;
+  setScope: (scope: SetupScope) => void;
+  selectedLessonIds: string[];
+  selectedTopicIds: string[];
+  selectedUnitId: string;
+  setSelectedUnitId: (value: string) => void;
+  toggleLesson: (lessonId: string) => void;
+  toggleTopic: (topicId: string) => void;
+  cardsPerLesson: number;
+  setCardsPerLesson: (value: number) => void;
+  difficulty: FlashcardGenerationConfig['difficulty'];
+  setDifficulty: (value: FlashcardGenerationConfig['difficulty']) => void;
+  cardTypes: FlashcardCardType[];
+  toggleCardType: (type: FlashcardCardType) => void;
+  selectedLessonsCount: number;
+  formErrors: string[];
+  onGenerate: () => void;
+  onCancel: () => void;
+}) => (
+  <div className="flashcards-setup-grid">
+    <Card className="flashcards-setup-card">
+      <div className="section-title">
+        <h2>إعداد مجموعة بطاقات</h2>
+        <StatusPill tone="teal">منهج → وحدة → فصل → درس → موضوع</StatusPill>
+      </div>
+
+      <div className="flashcards-scope-grid" role="radiogroup" aria-label="نطاق البطاقات">
+        {[
+          { value: 'lesson' as const, label: 'درس واحد' },
+          { value: 'selected_lessons' as const, label: 'عدة دروس' },
+          { value: 'unit' as const, label: 'وحدة كاملة' },
+          { value: 'weak_topics' as const, label: 'نقاط الضعف فقط' },
+          { value: 'study_plan' as const, label: 'خطة الدراسة' },
+        ].map((option) => (
+          <button
+            key={option.value}
+            type="button"
+            className={scope === option.value ? 'is-active' : ''}
+            onClick={() => setScope(option.value)}
+            role="radio"
+            aria-checked={scope === option.value}
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
+
+      {curriculumLoading ? (
+        <LoadingSkeleton rows={5} />
+      ) : (
+        <LessonSelector
+          units={units}
+          scope={scope}
+          selectedLessonIds={selectedLessonIds}
+          selectedTopicIds={selectedTopicIds}
+          selectedUnitId={selectedUnitId}
+          setSelectedUnitId={setSelectedUnitId}
+          toggleLesson={toggleLesson}
+          toggleTopic={toggleTopic}
+        />
+      )}
+    </Card>
+
+    <aside className="flashcards-setup-side">
+      <Card>
+        <h3>إعدادات التوليد</h3>
+        <label className="form-group">
+          <span>البطاقات لكل درس</span>
+          <input
+            type="number"
+            min={1}
+            max={20}
+            value={cardsPerLesson}
+            onChange={(event) => setCardsPerLesson(Math.max(1, Number(event.target.value)))}
+          />
+        </label>
+        <label className="form-group">
+          <span>الصعوبة</span>
+          <select value={difficulty} onChange={(event) => setDifficulty(event.target.value as FlashcardGenerationConfig['difficulty'])}>
+            <option value="mixed">مختلط</option>
+            <option value="easy">سهل</option>
+            <option value="medium">متوسط</option>
+            <option value="hard">صعب</option>
+          </select>
+        </label>
+
+        <div className="form-group">
+          <span>أنواع البطاقات</span>
+          <div className="flashcard-type-grid">
+            {cardTypeOptions.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                className={cardTypes.includes(option.value) ? 'is-active' : ''}
+                onClick={() => toggleCardType(option.value)}
+                aria-pressed={cardTypes.includes(option.value)}
+              >
+                <strong>{option.label}</strong>
+                <small>{option.purpose}</small>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {formErrors.length > 0 && (
+          <div className="flashcards-form-errors" role="alert">
+            {formErrors.map((item) => <span key={item}>{item}</span>)}
+          </div>
+        )}
+
+        <div className="flashcards-setup-summary">
+          <strong>{selectedLessonsCount} دروس مختارة</strong>
+          <span>{Math.max(selectedLessonsCount, 1) * cardsPerLesson} بطاقة متوقعة</span>
+          <span>سيتم حفظ الوصف والمصدر وجدولة المراجعة لكل بطاقة</span>
+        </div>
+
+        <div className="flashcards-actions">
+          <Button onClick={onGenerate} disabled={selectedLessonsCount === 0 || cardTypes.length === 0}>
+            توليد البطاقات
+          </Button>
+          <Button variant="secondary" onClick={onCancel}>إلغاء</Button>
+        </div>
+      </Card>
+    </aside>
+  </div>
+);
+
+const LessonSelector = ({
+  units,
+  scope,
+  selectedLessonIds,
+  selectedTopicIds,
+  selectedUnitId,
+  setSelectedUnitId,
+  toggleLesson,
+  toggleTopic,
+}: {
+  units: ReturnType<typeof useActiveCurriculum>['units'];
+  scope: SetupScope;
+  selectedLessonIds: string[];
+  selectedTopicIds: string[];
+  selectedUnitId: string;
+  setSelectedUnitId: (value: string) => void;
+  toggleLesson: (lessonId: string) => void;
+  toggleTopic: (topicId: string) => void;
+}) => {
+  if (scope === 'study_plan') {
+    return (
+      <div className="flashcards-info-panel">
+        سيتم استخدام الدروس المجدولة في خطة الدراسة الحالية عند توفرها. يمكنك أيضاً اختيار دروس محددة من القائمة.
+      </div>
+    );
+  }
+  if (scope === 'weak_topics') {
+    return (
+      <div className="flashcards-info-panel">
+        سيتم اقتراح الدروس الأعلى صعوبة كنطاق أولي لنقاط الضعف، ويمكنك تعديل الاختيار يدوياً.
+      </div>
+    );
+  }
+  if (scope === 'unit') {
+    return (
+      <label className="form-group">
+        <span>اختر الوحدة</span>
+        <select value={selectedUnitId} onChange={(event) => setSelectedUnitId(event.target.value)}>
+          <option value="">اختر وحدة</option>
+          {units.map((unit) => (
+            <option key={unit.id} value={String(unit.id)}>
+              الوحدة {unit.unit_number} · {unit.title_ar}
+            </option>
+          ))}
+        </select>
+      </label>
+    );
+  }
+
+  return (
+    <div className="flashcards-curriculum-tree">
+      {units.map((unit) => (
+        <section key={unit.id} className="flashcards-unit-block">
+          <header>
+            <strong>الوحدة {unit.unit_number}: {unit.title_ar}</strong>
+            <span>{unit.chapters.length} فصول</span>
+          </header>
+          {unit.chapters.map((chapter) => (
+            <div key={chapter.id} className="flashcards-chapter-block">
+              <h3>{chapter.title_ar}</h3>
+              <div className="flashcards-lesson-list">
+                {chapter.lessons.map((lesson) => {
+                  const lessonId = String(lesson.id);
+                  const selected = selectedLessonIds.includes(lessonId);
+                  return (
+                    <article key={lesson.id} className={selected ? 'is-selected' : ''}>
+                      <button type="button" onClick={() => toggleLesson(lessonId)} aria-pressed={selected}>
+                        <span>درس {lesson.order}</span>
+                        <strong>{lesson.title_ar}</strong>
+                        <small>{lessonPageRange(lesson)}</small>
+                      </button>
+                      {selected && lesson.topics.length > 0 && (
+                        <div className="flashcards-topic-row">
+                          {lesson.topics.map((topic) => {
+                            const topicId = String(topic.id);
+                            return (
+                              <button
+                                key={topic.id}
+                                type="button"
+                                className={selectedTopicIds.includes(topicId) ? 'is-active' : ''}
+                                onClick={() => toggleTopic(topicId)}
+                                aria-pressed={selectedTopicIds.includes(topicId)}
+                              >
+                                {topic.title_ar}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </article>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </section>
+      ))}
+    </div>
+  );
+};
+
+const FlashcardGenerationOverlay = () => (
+  <Card className="flashcards-generating">
+    <LoadingSkeleton rows={4} />
+    <h2>يتم توليد بطاقات من محتوى الكتاب</h2>
+    <p>نربط كل بطاقة بالدرس والموضوع والصفحات المصدرية ثم ننشئ حالة مراجعة متباعدة.</p>
+  </Card>
+);
+
+const FlashcardDeckList = ({
+  progress,
+  decks,
+  onCreate,
+  onReview,
+  onOpenDeck,
+}: {
+  progress: FlashcardProgressSummary;
+  decks: FlashcardDeck[];
+  onCreate: () => void;
+  onReview: () => void;
+  onOpenDeck: (deckId: number) => void;
+}) => (
+  <div className="flashcards-dashboard">
+    {progress.totalCards > 0 && <FlashcardProgressSummaryCard progress={progress} onReview={onReview} onCreate={onCreate} />}
+    <div className="section-title">
+      <h2>مجموعات البطاقات</h2>
+      <Button variant="secondary" onClick={onCreate}>إنشاء بطاقات</Button>
+    </div>
+    <div className="flashcards-deck-grid">
+      {decks.map((deck) => (
+        <FlashcardDeckCard key={deck.id} deck={deck} onOpen={() => onOpenDeck(deck.id)} onReview={onReview} />
+      ))}
+    </div>
+  </div>
+);
+
+const FlashcardProgressSummaryCard = ({
+  progress,
+  onReview,
+  onCreate,
+}: {
+  progress: FlashcardProgressSummary;
+  onReview: () => void;
+  onCreate: () => void;
+}) => (
+  <Card className="flashcards-progress-card">
+    <div>
+      <p className="eyebrow">تقدم البطاقات</p>
+      <h2>{progress.masteryPercent}%</h2>
+      <span>نسبة الإتقان</span>
+      <ProgressBar value={progress.masteryPercent} tone="teal" />
+    </div>
+    <div className="flashcards-stat-grid">
+      <span><strong>{progress.dueToday}</strong> مستحقة اليوم</span>
+      <span><strong>{progress.newCards}</strong> جديدة</span>
+      <span><strong>{progress.learningCards}</strong> قيد التعلم</span>
+      <span><strong>{progress.masteredCards}</strong> متقنة</span>
+      <span><strong>{progress.overdueCards}</strong> متأخرة</span>
+    </div>
+    <div className="flashcards-actions">
+      <Button onClick={onReview}>ابدأ المراجعة</Button>
+      <Button variant="secondary" onClick={onCreate}>إنشاء بطاقات</Button>
+    </div>
+  </Card>
+);
+
+const FlashcardDeckCard = ({ deck, onOpen, onReview }: { deck: FlashcardDeck; onOpen: () => void; onReview: () => void }) => (
+  <Card className="flashcard-deck-card">
+    <div>
+      <StatusPill tone={deck.source === 'book_rag' ? 'teal' : 'blue'}>{deck.source === 'book_rag' ? 'من الكتاب' : 'مولدة'}</StatusPill>
+      <StatusPill tone="blue">{deck.scopeType || 'lesson'}</StatusPill>
+    </div>
+    <h3>{deck.titleAr || deck.title}</h3>
+    <p>{deck.descriptionAr || 'مجموعة بطاقات مراجعة ذكية.'}</p>
+    <div className="flashcard-deck-stats">
+      <span><strong>{deck.totalCards ?? deck.count}</strong> بطاقة</span>
+      <span><strong>{deck.dueCards ?? 0}</strong> مستحقة</span>
+      <span><strong>{deck.masteryPercent ?? 0}%</strong> إتقان</span>
+    </div>
+    <div className="flashcards-actions">
+      <Button onClick={onOpen}>عرض المجموعة</Button>
+      <Button variant="secondary" onClick={onReview}>مراجعة</Button>
+    </div>
+  </Card>
+);
+
+const FlashcardDeckDetail = ({
+  deck,
+  cards,
+  onBack,
+  onReview,
+}: {
+  deck: FlashcardDeck;
+  cards: GeneratedFlashcard[];
+  onBack: () => void;
+  onReview: () => void;
+}) => (
+  <div className="flashcards-detail">
+    <Card className="flashcards-detail-hero">
+      <div>
+        <p className="eyebrow">مجموعة بطاقات</p>
+        <h2>{deck.titleAr || deck.title}</h2>
+        <p>{deck.descriptionAr}</p>
+      </div>
+      <div className="flashcards-actions">
+        <Button onClick={onReview}>ابدأ مراجعة المجموعة</Button>
+        <Button variant="secondary" onClick={onBack}>العودة</Button>
+      </div>
+    </Card>
+    <div className="flashcards-card-list">
+      {cards.map((card) => (
+        <Card key={card.id} className="flashcards-card-row">
+          <div>
+            <StatusPill tone={typeTone(card.cardType)}>{typeLabel(card.cardType)}</StatusPill>
+            <StatusPill tone="gold">{card.difficulty}</StatusPill>
+          </div>
+          <h3>{card.front}</h3>
+          <p>{card.descriptionAr}</p>
+          <FlashcardSourcePanel card={card} />
+        </Card>
+      ))}
+    </div>
+  </div>
+);
+
+const FlashcardReviewSession = ({
+  card,
+  deck,
+  index,
+  total,
+  revealed,
+  detailsOpen,
+  setDetailsOpen,
+  onReveal,
+  onRate,
+  onExit,
+}: {
+  card: GeneratedFlashcard;
+  deck: FlashcardDeck | null;
+  index: number;
+  total: number;
+  revealed: boolean;
+  detailsOpen: boolean;
+  setDetailsOpen: (open: boolean) => void;
+  onReveal: () => void;
+  onRate: (rating: FlashcardRating) => void;
+  onExit: () => void;
+}) => (
+  <div className="flashcards-review-layout">
+    <Card className="flashcards-review-card">
+      <div className="flashcards-review-head">
+        <div>
+          <span>البطاقة {index + 1} من {total}</span>
+          <strong>{deck?.titleAr || deck?.title || 'جلسة مراجعة'}</strong>
+        </div>
+        <div>
+          <StatusPill tone="blue">تكرار متباعد</StatusPill>
+          <StatusPill tone={typeTone(card.cardType)}>{typeLabel(card.cardType)}</StatusPill>
+          <StatusPill tone="gold">{card.difficulty}</StatusPill>
+        </div>
+      </div>
+      <ProgressBar value={Math.round(((index + 1) / total) * 100)} tone="teal" />
+
+      <FlashcardDescription card={card} />
+
+      <div className="flashcard-study-surface">
+        <p className="eyebrow">السؤال</p>
+        <h2>{card.front}</h2>
+      </div>
+
+      {!revealed ? (
+        <Button onClick={onReveal} className="flashcard-reveal-button">اعرض الإجابة</Button>
+      ) : (
+        <>
+          <FlashcardBack card={card} />
+          <FlashcardSourcePanel card={card} />
+          <FlashcardTechnicalDetails card={card} open={detailsOpen} setOpen={setDetailsOpen} />
+          <FlashcardReviewButtons onRate={onRate} />
+        </>
+      )}
+      <Button variant="ghost" onClick={onExit}>إنهاء الجلسة</Button>
+    </Card>
+  </div>
+);
+
+const FlashcardDescription = ({ card }: { card: GeneratedFlashcard }) => (
+  <div className="flashcard-description">
+    <span>ما الذي تختبره؟</span>
+    <p>{card.descriptionAr || 'تختبر هذه البطاقة فهماً كيميائياً من الدرس.'}</p>
+    <small>
+      {card.unitTitleAr || 'الكتاب'} · {card.lessonTitleAr || 'درس كيمياء'}
+      {card.topicTitleAr ? ` · ${card.topicTitleAr}` : ''}
+    </small>
+  </div>
+);
+
+const FlashcardBack = ({ card }: { card: GeneratedFlashcard }) => (
+  <div className="flashcard-answer-panel">
+    <p className="eyebrow">الإجابة</p>
+    <h3>{card.back}</h3>
+    {card.explanationAr && <p>{card.explanationAr}</p>}
+  </div>
+);
+
+const FlashcardSourcePanel = ({ card }: { card: GeneratedFlashcard }) => (
+  <div className="flashcard-source-panel">
+    <strong>المصدر من الكتاب</strong>
+    <span>{sourcePages(card)}</span>
+    {card.sourceChunkIds?.length ? <small>Chunks: {card.sourceChunkIds.join(', ')}</small> : null}
+  </div>
+);
+
+const FlashcardTechnicalDetails = ({
+  card,
+  open,
+  setOpen,
+}: {
+  card: GeneratedFlashcard;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}) => (
+  <div className="flashcard-technical-details">
+    <button type="button" onClick={() => setOpen(!open)} aria-expanded={open}>
+      تفاصيل البطاقة
+    </button>
+    {open && (
+      <div>
+        <span>نوع البطاقة: {typeLabel(card.cardType)}</span>
+        <span>الدرس: {card.lessonTitleAr || card.lessonId || 'غير محدد'}</span>
+        <span>الموضوع: {card.topicTitleAr || 'كل موضوعات الدرس'}</span>
+        <span>الصفحات: {sourcePages(card)}</span>
+        <span>آخر مراجعة: {card.lastReviewedAt || 'لم تراجع بعد'}</span>
+        <span>موعد المراجعة القادمة: {card.nextReviewAt || 'اليوم'}</span>
+        {card.technicalDescription && <p>{card.technicalDescription}</p>}
+      </div>
+    )}
+  </div>
+);
+
+const FlashcardReviewButtons = ({ onRate }: { onRate: (rating: FlashcardRating) => void }) => (
+  <div className="flashcard-review-buttons">
+    {ratingOptions.map((option) => (
+      <button key={option.value} type="button" className={`tone-${option.tone}`} onClick={() => onRate(option.value)}>
+        <strong>{option.label}</strong>
+        <span>{option.helper}</span>
+      </button>
+    ))}
+  </div>
+);

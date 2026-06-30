@@ -46,6 +46,9 @@ class User(Base, TimestampMixin):
     chat_sessions = relationship("ChatSession", back_populates="user", cascade="all, delete-orphan")
     lesson_progress = relationship("LessonProgress", back_populates="user", cascade="all, delete-orphan")
     quiz_attempts = relationship("QuizAttempt", back_populates="user", cascade="all, delete-orphan")
+    flashcard_decks = relationship(
+        "FlashcardDeck", back_populates="user", cascade="all, delete-orphan"
+    )
     flashcard_progress = relationship(
         "FlashcardProgress", back_populates="user", cascade="all, delete-orphan"
     )

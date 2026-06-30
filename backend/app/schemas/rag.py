@@ -137,6 +137,10 @@ class RagReembedStatusResponse(BaseModel):
     skipped: int = 0
     failed: int = 0
     embedding_model: str | None = None
+    reviewed_metadata_version: str | None = None
+    metadata_ready: bool = False
+    skipped_missing_metadata_count: int = 0
+    skipped_blocked_count: int = 0
     dry_run: bool = False
     source_id: int | None = None
     source_type: str | None = None

@@ -1,0 +1,32 @@
+{
+  "textbook_pdf_path": "src/data/textbooks/syria_grade_9/Chemistry.pdf",
+  "resolved_pdf_page_number_1_based": 84,
+  "resolved_pdf_page_index_0_based": 83,
+  "printed_page_number": 190,
+  "previous_extraction_status": "reviewed",
+  "new_extraction_status": "reviewed",
+  "extraction_method_used": "manual_reviewed_override",
+  "ocr_provider_used": null,
+  "vision_provider_used": "existing rendered page + prior Gemini/image fallback cache; no fresh vision call",
+  "manual_override_used": true,
+  "extracted_text_preview": "النص الظاهر على الصفحة: ٦ — ١- النشاط الإشعاعي.\nوصف بصري: صفحة افتتاحية لدرس النشاط الإشعاعي تعرض صورة انفجار نووي كبير وسحابة فطرية مضيئة.\nسياق الوحدة المؤكد من الصفحة التالية وبنية الكتاب: الوحدة السادسة، الكيمياء النووية.",
+  "detected_unit_title": "الكيمياء النووية",
+  "detected_lesson_title": "النشاط الإشعاعي",
+  "quality_score": 0.93,
+  "needs_ocr": false,
+  "needs_vision": false,
+  "blocked": false,
+  "files_written": [
+    "reports/page_190_recovery/page_190_current_state.md",
+    "data/processed/textbook/pages/page_190_reviewed.json",
+    "data/processed/textbook/pages/page_190_vision_review.json",
+    "data/processed/textbook/page_structure.jsonl",
+    "reports/lesson_division/lesson_division_report.json",
+    "reports/lesson_division/lesson_division_report.md"
+  ],
+  "remaining_issues": [
+    "Unit 6 lesson range still starts at printed page 192 in textbook_lesson_map/book_structure; update that in the next task."
+  ],
+  "exact_next_step": "Update book_structure.json with Unit 6 lesson ranges.",
+  "created_at": "2026-06-24T09:15:04.931876+00:00"
+}

@@ -21,7 +21,13 @@ router = APIRouter(prefix="/quizzes", tags=["quizzes"])
 
 @router.post("/generate", response_model=QuizGenerateResponse)
 async def generate_quiz(request: QuizGenerateRequest, db: AsyncSession = Depends(get_async_db)):
-    questions = await quiz_service.generate_quiz(db, request.topic_id, request.source_type, request.limit)
+    questions = await quiz_service.generate_quiz(
+        db,
+        topic_id=request.topic_id,
+        lesson_id=request.lesson_id,
+        source_type=request.source_type,
+        limit=request.limit,
+    )
     return QuizGenerateResponse(
         questions=[
             QuizQuestionResponse(

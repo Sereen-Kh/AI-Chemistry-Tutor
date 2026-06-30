@@ -1,7 +1,13 @@
 from fastapi import APIRouter, Depends, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_async_db
-from app.schemas.study_plans import StudyPlanCreate, StudyPlanGenerateRequest, StudyPlanResponse, StudyPlanUpdate
+from app.schemas.study_plans import (
+    StudyPlanCreate,
+    StudyPlanGenerateRequest,
+    StudyPlanProgressResponse,
+    StudyPlanResponse,
+    StudyPlanUpdate,
+)
 from app.services import study_plan_service
 from app.core.dependencies import get_current_user_id
 
@@ -29,6 +35,15 @@ async def get_study_plan(
     db: AsyncSession = Depends(get_async_db),
 ):
     return await study_plan_service.get_study_plan(db, plan_id, user_id)
+
+
+@router.get("/{plan_id}/progress", response_model=StudyPlanProgressResponse)
+async def get_study_plan_progress(
+    plan_id: int,
+    user_id: int = Depends(get_current_user_id),
+    db: AsyncSession = Depends(get_async_db),
+):
+    return await study_plan_service.get_study_plan_progress(db, plan_id, user_id)
 
 @router.post("", response_model=StudyPlanResponse, status_code=201)
 async def create_study_plan(

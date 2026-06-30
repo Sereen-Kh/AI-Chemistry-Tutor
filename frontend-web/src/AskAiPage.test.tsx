@@ -4,8 +4,9 @@ import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { AskAiPage } from './App';
+import { AskAiPage } from './pages/AskAIPage';
 import { aiApi } from './api';
+import { LearningModeSelector } from './components/DesignSystem';
 import type { ChatMessageResponse, ChatSessionResponse, UserPreferences } from './types';
 
 vi.mock('./api', () => ({
@@ -20,6 +21,7 @@ vi.mock('./api', () => ({
   labApi: {},
   notificationsApi: {},
   userApi: {},
+  resolveMediaUrl: (value?: string) => value,
   toErrorMessage: (error: unknown, fallback: string) => (error instanceof Error ? error.message : fallback),
   messageResponseToAskResponse: (message: ChatMessageResponse) => ({
     answer: message.answer_text || message.content,
@@ -132,7 +134,7 @@ describe('AskAiPage persistent sessions', () => {
 
     expect((await screen.findAllByText('جلسة تركيز')).length).toBeGreaterThan(0);
     expect((await screen.findAllByText(/التركيز المولي يحسب بالعلاقة/)).length).toBeGreaterThan(0);
-    expect(screen.getByText('إجابة مدعومة بمصادر')).toBeInTheDocument();
+    expect(screen.getAllByText('مصادر قوية').length).toBeGreaterThan(0);
     expect(screen.getByText('صفحة 11')).toBeInTheDocument();
   });
 
@@ -164,9 +166,58 @@ describe('AskAiPage persistent sessions', () => {
         teaching_level: 'standard',
         explanation_method: 'direct',
         learning_modes: ['text'],
+        preferredResponseFormat: 'text',
       }));
     });
     expect((await screen.findAllByText(/التركيز المولي يحسب بالعلاقة/)).length).toBeGreaterThan(0);
+  });
+
+  it('uses one answer format and disables unsupported formats', async () => {
+    mockedAiApi.listSessions.mockResolvedValue([]);
+
+    renderAskAi();
+
+    await screen.findByLabelText('سؤال للذكاء الاصطناعي');
+    expect(screen.queryByLabelText('اختيار نوع الإجابة')).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole('button', { name: /إعدادات الإجابة/ }));
+    const textMode = screen.getByRole('radio', { name: 'صيغة الإجابة: نص' });
+    const audioMode = screen.getByRole('radio', { name: 'صيغة الإجابة: صوت' });
+    const shortVideoMode = screen.getByRole('radio', { name: 'صيغة الإجابة: فيديو قصير، قريباً' });
+
+    expect(textMode).toHaveAttribute('aria-checked', 'true');
+    expect(shortVideoMode).toBeDisabled();
+    expect(screen.getAllByText('قريباً').length).toBeGreaterThan(0);
+
+    await userEvent.click(audioMode);
+    expect(textMode).toHaveAttribute('aria-checked', 'false');
+    expect(audioMode).toHaveAttribute('aria-checked', 'true');
+  });
+
+  it('shows inline validation without calling backend for an empty composer', async () => {
+    mockedAiApi.listSessions.mockResolvedValue([]);
+
+    renderAskAi();
+
+    await screen.findByLabelText('سؤال للذكاء الاصطناعي');
+    await userEvent.click(screen.getByRole('button', { name: 'إرسال' }));
+
+    expect(await screen.findByText('اكتب سؤالاً أو أرفق صورة قبل الإرسال.')).toBeInTheDocument();
+    expect(mockedAiApi.sendSessionMessage).not.toHaveBeenCalled();
+  });
+
+  it('maps backend Field required errors to Arabic composer feedback', async () => {
+    mockedAiApi.listSessions.mockResolvedValue([]);
+    mockedAiApi.createSession.mockResolvedValue(buildSession());
+    mockedAiApi.sendSessionMessage.mockRejectedValue(new Error('Field required'));
+
+    renderAskAi();
+
+    const input = await screen.findByLabelText('سؤال للذكاء الاصطناعي');
+    await userEvent.type(input, 'ما هو الماء؟');
+    await userEvent.click(screen.getByRole('button', { name: 'إرسال' }));
+
+    expect(await screen.findByText('السؤال مطلوب')).toBeInTheDocument();
   });
 
   it('deletes a selected session from the history panel', async () => {
@@ -181,5 +232,30 @@ describe('AskAiPage persistent sessions', () => {
     await waitFor(() => {
       expect(mockedAiApi.deleteSession).toHaveBeenCalledWith(10);
     });
+  });
+});
+
+describe('LearningModeSelector compatibility', () => {
+  afterEach(() => {
+    cleanup();
+    vi.restoreAllMocks();
+  });
+
+  it('keeps legacy multi-select behavior by default', async () => {
+    const onChange = vi.fn();
+    render(<LearningModeSelector value={['text']} onChange={onChange} />);
+
+    await userEvent.click(screen.getByRole('button', { name: /نمط التعلم: صوت/ }));
+
+    expect(onChange).toHaveBeenCalledWith(['text', 'audio']);
+  });
+
+  it('can opt into single-select behavior', async () => {
+    const onChange = vi.fn();
+    render(<LearningModeSelector value={['text']} onChange={onChange} singleSelect />);
+
+    await userEvent.click(screen.getByRole('radio', { name: /نمط التعلم: صوت/ }));
+
+    expect(onChange).toHaveBeenCalledWith(['audio']);
   });
 });

@@ -1,0 +1,199 @@
+{
+  "validation_status": "passed",
+  "cleaned_chunks_exists": true,
+  "cleaned_preview_exists": true,
+  "total_chunks": 24,
+  "bad_endings": [],
+  "manual_review_bad_endings": [
+    {
+      "chunk_id": "sol_clean_chunk_4057853f5a013ba8",
+      "quality_status": "needs_review",
+      "reasons": [
+        "broken_final_line"
+      ],
+      "manual_review_reasons": [
+        "bad_ending:broken_final_line",
+        "source_unit_marked_needs_manual_review"
+      ]
+    },
+    {
+      "chunk_id": "sol_clean_chunk_105ba80a6299bca4",
+      "quality_status": "needs_review",
+      "reasons": [
+        "broken_final_line",
+        "open_bracket_or_parenthesis"
+      ],
+      "manual_review_reasons": [
+        "bad_ending:broken_final_line",
+        "bad_ending:open_bracket_or_parenthesis",
+        "source_unit_marked_needs_manual_review"
+      ]
+    },
+    {
+      "chunk_id": "sol_clean_chunk_08a14fe7edf4cb03",
+      "quality_status": "needs_review",
+      "reasons": [
+        "broken_final_line"
+      ],
+      "manual_review_reasons": [
+        "bad_ending:broken_final_line",
+        "source_unit_marked_needs_manual_review"
+      ]
+    },
+    {
+      "chunk_id": "sol_clean_chunk_1b88a2990a50ac58",
+      "quality_status": "needs_review",
+      "reasons": [
+        "broken_final_line",
+        "open_bracket_or_parenthesis"
+      ],
+      "manual_review_reasons": [
+        "bad_ending:broken_final_line",
+        "bad_ending:open_bracket_or_parenthesis",
+        "source_unit_marked_needs_manual_review"
+      ]
+    },
+    {
+      "chunk_id": "sol_clean_chunk_06e907e1d70f2b93",
+      "quality_status": "needs_review",
+      "reasons": [
+        "broken_final_line",
+        "open_bracket_or_parenthesis"
+      ],
+      "manual_review_reasons": [
+        "bad_ending:broken_final_line",
+        "bad_ending:open_bracket_or_parenthesis"
+      ]
+    },
+    {
+      "chunk_id": "sol_clean_chunk_fe440d6d24bc1e86",
+      "quality_status": "needs_review",
+      "reasons": [
+        "broken_final_line",
+        "open_bracket_or_parenthesis"
+      ],
+      "manual_review_reasons": [
+        "bad_ending:broken_final_line",
+        "bad_ending:open_bracket_or_parenthesis"
+      ]
+    },
+    {
+      "chunk_id": "sol_clean_chunk_1def15f6059f866f",
+      "quality_status": "needs_review",
+      "reasons": [
+        "open_bracket_or_parenthesis"
+      ],
+      "manual_review_reasons": [
+        "bad_ending:open_bracket_or_parenthesis"
+      ]
+    },
+    {
+      "chunk_id": "sol_clean_chunk_b4a612a3267eeb6f",
+      "quality_status": "needs_review",
+      "reasons": [
+        "broken_final_line"
+      ],
+      "manual_review_reasons": [
+        "bad_ending:broken_final_line"
+      ]
+    },
+    {
+      "chunk_id": "sol_clean_chunk_d352c6530e20d3f0",
+      "quality_status": "needs_review",
+      "reasons": [
+        "broken_final_line"
+      ],
+      "manual_review_reasons": [
+        "bad_ending:broken_final_line",
+        "source_unit_marked_needs_manual_review"
+      ]
+    },
+    {
+      "chunk_id": "sol_clean_chunk_7b1112cf5e7f5971",
+      "quality_status": "needs_review",
+      "reasons": [
+        "broken_final_line",
+        "open_bracket_or_parenthesis"
+      ],
+      "manual_review_reasons": [
+        "bad_ending:broken_final_line",
+        "bad_ending:open_bracket_or_parenthesis",
+        "source_unit_marked_needs_manual_review"
+      ]
+    },
+    {
+      "chunk_id": "sol_clean_chunk_a9a3e5875fbaf6ce",
+      "quality_status": "needs_review",
+      "reasons": [
+        "broken_final_line"
+      ],
+      "manual_review_reasons": [
+        "alignment_confidence_below_0.60",
+        "bad_ending:broken_final_line",
+        "source_unit_marked_needs_manual_review"
+      ]
+    },
+    {
+      "chunk_id": "sol_clean_chunk_913ad5da73dbca07",
+      "quality_status": "needs_review",
+      "reasons": [
+        "broken_final_line",
+        "incomplete_equation_or_calculation"
+      ],
+      "manual_review_reasons": [
+        "alignment_confidence_below_0.60",
+        "bad_ending:broken_final_line",
+        "bad_ending:incomplete_equation_or_calculation",
+        "source_unit_marked_needs_manual_review"
+      ]
+    },
+    {
+      "chunk_id": "sol_clean_chunk_7ddb821966157379",
+      "quality_status": "needs_review",
+      "reasons": [
+        "broken_final_line",
+        "open_bracket_or_parenthesis"
+      ],
+      "manual_review_reasons": [
+        "alignment_confidence_below_0.60",
+        "bad_ending:broken_final_line",
+        "bad_ending:open_bracket_or_parenthesis",
+        "source_unit_marked_needs_manual_review"
+      ]
+    },
+    {
+      "chunk_id": "sol_clean_chunk_bf790394cbe3aae9",
+      "quality_status": "needs_review",
+      "reasons": [
+        "broken_final_line"
+      ],
+      "manual_review_reasons": [
+        "bad_ending:broken_final_line"
+      ]
+    }
+  ],
+  "missing_metadata": [],
+  "duplicate_hashes": [],
+  "blocked_marked_ready": [],
+  "mixed_lessons": [],
+  "empty_content": [],
+  "invalid_source_type": [],
+  "remaining_issues": [],
+  "checks": {
+    "cleaned_chunks_exists": true,
+    "cleaned_preview_exists": true,
+    "has_chunks": true,
+    "all_source_types_solution_book": true,
+    "all_required_metadata_present": true,
+    "all_non_manual_review_chunks_end_cleanly": true,
+    "no_blocked_chunk_marked_ready": true,
+    "no_mixed_lessons": true,
+    "no_empty_content": true,
+    "no_duplicate_content_hashes": true
+  },
+  "files_checked": {
+    "cleaned_chunks": "data/processed/solution_book/solution_chunks.cleaned.jsonl",
+    "cleaned_preview": "data/processed/chunk_preview/solution_book_chunks_preview.cleaned.jsonl",
+    "input_solution_units": "data/processed/solution_book/solution_units.jsonl"
+  }
+}

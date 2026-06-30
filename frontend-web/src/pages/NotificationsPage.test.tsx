@@ -41,7 +41,7 @@ describe('NotificationsPage', () => {
     mockedNotificationsApi.deleteNotification.mockResolvedValue({ success: true });
   });
 
-  it('renders grouped reminder notifications and filters unread items', async () => {
+  it('renders grouped reminder notifications and filters study items', async () => {
     const notifications: NotificationItem[] = [
       {
         id: 'exam-1',
@@ -75,10 +75,10 @@ describe('NotificationsPage', () => {
     expect(screen.getByText('غداً')).toBeInTheDocument();
     expect(screen.getByText('درس الغد')).toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole('button', { name: /غير مقروءة/ }));
+    await userEvent.click(screen.getByRole('button', { name: /الدراسة/ }));
 
-    expect(screen.getByText('امتحان قريب')).toBeInTheDocument();
-    expect(screen.queryByText('درس الغد')).not.toBeInTheDocument();
+    expect(screen.queryByText('امتحان قريب')).not.toBeInTheDocument();
+    expect(screen.getByText('درس الغد')).toBeInTheDocument();
   });
 
   it('marks a single notification as read', async () => {

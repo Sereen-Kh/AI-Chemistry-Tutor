@@ -85,8 +85,6 @@ services:
     volumes:
       # Mount PDF data directory so ingestion can access textbook files
       - ./data:/app/data
-      # Persist extracted page caches across container restarts
-      - edumind_textbook_cache:/app/data/textbooks
     depends_on:
       postgres:
         condition: service_healthy
@@ -124,7 +122,6 @@ services:
     volumes:
       # Same data mount as backend — worker needs access to PDFs and cache
       - ./data:/app/data
-      - edumind_textbook_cache:/app/data/textbooks
     depends_on:
       postgres:
         condition: service_healthy
@@ -155,7 +152,6 @@ services:
     volumes:
       # Same data mounts as backend/worker for consistent app runtime context.
       - ./data:/app/data
-      - edumind_textbook_cache:/app/data/textbooks
     depends_on:
       postgres:
         condition: service_healthy
@@ -195,5 +191,4 @@ services:
 volumes:
   edumind_postgres_data:
   edumind_redis_data:
-  edumind_textbook_cache:
   edumind_frontend_node_modules:

@@ -1,0 +1,237 @@
+{
+  "input_solution_units": 36,
+  "input_chunks": 39,
+  "output_chunks": 24,
+  "bad_endings_before": 20,
+  "bad_endings_after": 0,
+  "merged_chunks": 12,
+  "resplit_chunks": 0,
+  "unchanged_chunks": 14,
+  "needs_manual_review_count": 17,
+  "needs_manual_review": [
+    {
+      "chunk_id": "sol_clean_chunk_4057853f5a013ba8",
+      "solution_unit_id": "sol_unit_806ba2178ec185bf",
+      "linked_textbook_lesson_id": "unit_04_lesson_02",
+      "reasons": [
+        "bad_ending:broken_final_line",
+        "source_unit_marked_needs_manual_review"
+      ]
+    },
+    {
+      "chunk_id": "sol_clean_chunk_105ba80a6299bca4",
+      "solution_unit_id": "sol_unit_de0378c50cb2e61f",
+      "linked_textbook_lesson_id": "unit_04_lesson_01",
+      "reasons": [
+        "bad_ending:broken_final_line",
+        "bad_ending:open_bracket_or_parenthesis",
+        "source_unit_marked_needs_manual_review"
+      ]
+    },
+    {
+      "chunk_id": "sol_clean_chunk_08a14fe7edf4cb03",
+      "solution_unit_id": "sol_unit_2c631c2f7502b61f",
+      "linked_textbook_lesson_id": "unit_04_lesson_03",
+      "reasons": [
+        "bad_ending:broken_final_line",
+        "source_unit_marked_needs_manual_review"
+      ]
+    },
+    {
+      "chunk_id": "sol_clean_chunk_1b88a2990a50ac58",
+      "solution_unit_id": "sol_unit_2c575c5c0861fe80",
+      "linked_textbook_lesson_id": "unit_04_lesson_01",
+      "reasons": [
+        "bad_ending:broken_final_line",
+        "bad_ending:open_bracket_or_parenthesis",
+        "source_unit_marked_needs_manual_review"
+      ]
+    },
+    {
+      "chunk_id": "sol_clean_chunk_06e907e1d70f2b93",
+      "solution_unit_id": "sol_unit_6c5ad5a3db519a43",
+      "linked_textbook_lesson_id": "unit_04_lesson_04",
+      "reasons": [
+        "bad_ending:broken_final_line",
+        "bad_ending:open_bracket_or_parenthesis"
+      ]
+    },
+    {
+      "chunk_id": "sol_clean_chunk_fe440d6d24bc1e86",
+      "solution_unit_id": "sol_unit_0f399fb6c2785ed5",
+      "linked_textbook_lesson_id": "unit_04_lesson_01",
+      "reasons": [
+        "bad_ending:broken_final_line",
+        "bad_ending:open_bracket_or_parenthesis"
+      ]
+    },
+    {
+      "chunk_id": "sol_clean_chunk_1def15f6059f866f",
+      "solution_unit_id": "sol_unit_9588c0620a95a567",
+      "linked_textbook_lesson_id": "unit_04_lesson_05",
+      "reasons": [
+        "bad_ending:open_bracket_or_parenthesis"
+      ]
+    },
+    {
+      "chunk_id": "sol_clean_chunk_e6d50cea0f76ba71",
+      "solution_unit_id": "sol_unit_f77985ecf7090b48",
+      "linked_textbook_lesson_id": "unit_04_lesson_02",
+      "reasons": [
+        "source_unit_marked_needs_manual_review"
+      ]
+    },
+    {
+      "chunk_id": "sol_clean_chunk_b4a612a3267eeb6f",
+      "solution_unit_id": "sol_unit_72372ea953dbe970",
+      "linked_textbook_lesson_id": "unit_04_lesson_01",
+      "reasons": [
+        "bad_ending:broken_final_line"
+      ]
+    },
+    {
+      "chunk_id": "sol_clean_chunk_d352c6530e20d3f0",
+      "solution_unit_id": "sol_unit_84f6604fee79c370",
+      "linked_textbook_lesson_id": "unit_05_lesson_01",
+      "reasons": [
+        "bad_ending:broken_final_line",
+        "source_unit_marked_needs_manual_review"
+      ]
+    },
+    {
+      "chunk_id": "sol_clean_chunk_1e360e27a82dd168",
+      "solution_unit_id": "sol_unit_f4c58d9e153b4e96",
+      "linked_textbook_lesson_id": "unit_04_lesson_01",
+      "reasons": [
+        "source_unit_marked_needs_manual_review"
+      ]
+    },
+    {
+      "chunk_id": "sol_clean_chunk_7b1112cf5e7f5971",
+      "solution_unit_id": "sol_unit_66a94b5ab919fd37",
+      "linked_textbook_lesson_id": "unit_05_lesson_02",
+      "reasons": [
+        "bad_ending:broken_final_line",
+        "bad_ending:open_bracket_or_parenthesis",
+        "source_unit_marked_needs_manual_review"
+      ]
+    },
+    {
+      "chunk_id": "sol_clean_chunk_a9a3e5875fbaf6ce",
+      "solution_unit_id": "sol_unit_54968cc8a7a353d8",
+      "linked_textbook_lesson_id": "unit_05_lesson_03",
+      "reasons": [
+        "alignment_confidence_below_0.60",
+        "bad_ending:broken_final_line",
+        "source_unit_marked_needs_manual_review"
+      ]
+    },
+    {
+      "chunk_id": "sol_clean_chunk_913ad5da73dbca07",
+      "solution_unit_id": "sol_unit_6ad37db21035d8f9",
+      "linked_textbook_lesson_id": "unit_04_lesson_04",
+      "reasons": [
+        "alignment_confidence_below_0.60",
+        "bad_ending:broken_final_line",
+        "bad_ending:incomplete_equation_or_calculation",
+        "source_unit_marked_needs_manual_review"
+      ]
+    },
+    {
+      "chunk_id": "sol_clean_chunk_7ddb821966157379",
+      "solution_unit_id": "sol_unit_d670488d0656a38a",
+      "linked_textbook_lesson_id": "unit_05_lesson_03",
+      "reasons": [
+        "alignment_confidence_below_0.60",
+        "bad_ending:broken_final_line",
+        "bad_ending:open_bracket_or_parenthesis",
+        "source_unit_marked_needs_manual_review"
+      ]
+    },
+    {
+      "chunk_id": "sol_clean_chunk_9d1c9f74020ac25a",
+      "solution_unit_id": "sol_unit_441cefeab0bc3569",
+      "linked_textbook_lesson_id": "unit_06_lesson_01",
+      "reasons": [
+        "source_unit_marked_needs_manual_review"
+      ]
+    },
+    {
+      "chunk_id": "sol_clean_chunk_bf790394cbe3aae9",
+      "solution_unit_id": "sol_unit_4f655e0df9615292",
+      "linked_textbook_lesson_id": "unit_06_lesson_01",
+      "reasons": [
+        "bad_ending:broken_final_line"
+      ]
+    }
+  ],
+  "chunks_by_type": {
+    "calculation": 4,
+    "equation": 6,
+    "exercise_answer": 12,
+    "mixed": 2
+  },
+  "chunks_by_lesson": {
+    "unit_04_lesson_01": 6,
+    "unit_04_lesson_02": 2,
+    "unit_04_lesson_03": 2,
+    "unit_04_lesson_04": 5,
+    "unit_04_lesson_05": 3,
+    "unit_05_lesson_01": 1,
+    "unit_05_lesson_02": 1,
+    "unit_05_lesson_03": 2,
+    "unit_06_lesson_01": 2
+  },
+  "average_token_estimate": 311.25,
+  "min_token_estimate": 93,
+  "max_token_estimate": 672,
+  "fixed_examples": [
+    {
+      "chunk_id": "sol_clean_chunk_9ae0219be91b9189",
+      "merged_solution_unit_ids": [
+        "sol_unit_7c28dfb896928460",
+        "sol_unit_c35c1fbad9b79fd8",
+        "sol_unit_4fc19ff94634e46a"
+      ],
+      "linked_textbook_lesson_id": "unit_04_lesson_01",
+      "printed_page_start": 48,
+      "printed_page_end": 50
+    },
+    {
+      "chunk_id": "sol_clean_chunk_e6d50cea0f76ba71",
+      "merged_solution_unit_ids": [
+        "sol_unit_f77985ecf7090b48",
+        "sol_unit_3e0c6edca7206f74"
+      ],
+      "linked_textbook_lesson_id": "unit_04_lesson_02",
+      "printed_page_start": 67,
+      "printed_page_end": 68
+    },
+    {
+      "chunk_id": "sol_clean_chunk_9d1c9f74020ac25a",
+      "merged_solution_unit_ids": [
+        "sol_unit_441cefeab0bc3569",
+        "sol_unit_60f6ed40a2931856"
+      ],
+      "linked_textbook_lesson_id": "unit_06_lesson_01",
+      "printed_page_start": 80,
+      "printed_page_end": 81
+    }
+  ],
+  "status": "passed",
+  "output_files": {
+    "cleaned_chunks": "data/processed/solution_book/solution_chunks.cleaned.jsonl",
+    "cleaned_preview": "data/processed/chunk_preview/solution_book_chunks_preview.cleaned.jsonl"
+  },
+  "scope_guardrails": {
+    "ocr_rerun": false,
+    "vision_rerun": false,
+    "embedding_rerun": false,
+    "vector_db_write": false,
+    "textbook_chunks_modified": false,
+    "canonical_chunks_updated": false
+  },
+  "validation_status": "passed",
+  "validation_report": "reports/solution_chunk_cleanup/solution_chunk_validation_report.json",
+  "manual_review_bad_endings_allowed": 14
+}

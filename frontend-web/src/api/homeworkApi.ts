@@ -29,6 +29,17 @@ export interface HomeworkUploadResponse {
   content_type?: string | null;
 }
 
+export interface HomeworkSolveImageResponse {
+  id: number;
+  problem_text: string;
+  extracted_text?: string | null;
+  solution: string;
+  source_chunks?: HomeworkSource[] | Record<string, unknown> | null;
+  confidence_score?: number | null;
+  image_url?: string | null;
+  created_at: string;
+}
+
 export const homeworkApi = {
   async solveText(problemText: string): Promise<HomeworkSolveTextResponse> {
     const { data } = await api.post<HomeworkSolveTextResponse>('/homework/solve-text', {
@@ -46,4 +57,13 @@ export const homeworkApi = {
     });
     return data;
   },
+
+  async solveImage(imagePath: string, topicId?: number): Promise<HomeworkSolveImageResponse> {
+    const { data } = await api.post<HomeworkSolveImageResponse>('/homework/solve-image', {
+      image_path: imagePath,
+      ...(topicId !== undefined && { topic_id: topicId }),
+    });
+    return data;
+  },
 };
+

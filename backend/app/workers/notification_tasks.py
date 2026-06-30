@@ -1,14 +1,16 @@
 """Celery tasks for processing notifications and reminders."""
 
+import asyncio
 from datetime import datetime, timezone
 import logging
 
 from sqlalchemy import and_, select
 
-from app.database import SessionLocal
+from app.database import AsyncSessionLocal, SessionLocal
 from app.models.chemistry import Lesson
 from app.models.notification import Notification, NotificationPreference, ReminderEvent
 from app.workers.celery_app import celery_app
+from app.services.notification_service import generate_due_reminders
 
 logger = logging.getLogger(__name__)
 
@@ -168,3 +170,15 @@ def check_pending_reminders() -> str:
         db.commit()
 
     return f"Processed reminders. Sent: {sent_count}, Skipped: {skipped_count}, Failed: {failed_count}"
+
+
+@celery_app.task(name="app.workers.notification_tasks.generate_due_reminders")
+def generate_due_reminders_task() -> str:
+    """Generate due notifications from study plans, flashcards, and weak topics."""
+
+    async def _run() -> dict[str, int]:
+        async with AsyncSessionLocal() as db:
+            return await generate_due_reminders(db)
+
+    counts = asyncio.run(_run())
+    return f"Generated due reminders: {counts}"

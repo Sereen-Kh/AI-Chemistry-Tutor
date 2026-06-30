@@ -64,3 +64,9 @@ class DashboardResponse(BaseModel):
     notifications: DashboardNotificationSummary = Field(default_factory=DashboardNotificationSummary)
     quick_tools: list[dict[str, str]] = Field(default_factory=list)
     data_quality: dict[str, Any] = Field(default_factory=dict)
+    # Flat accessors added for frontend parity (Section 23.1 of architecture report).
+    current_streak: int = 0
+    lesson_progress_percentage: int = Field(default=0, ge=0, le=100)
+    flashcards_due_count: int = 0
+    weekly_xp: int = 0
+

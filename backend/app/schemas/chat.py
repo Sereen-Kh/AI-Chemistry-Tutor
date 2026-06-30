@@ -28,6 +28,19 @@ class MessageResponse(BaseModel):
     answer_type: str | None = None
     route: str | None = None
     grounding: str | None = None
+    input_type: str | None = None
+    requested_return_type: str | None = None
+    resolved_return_type: str | None = None
+    text_content: str | None = None
+    audio_input_url: str | None = None
+    audio_transcript: str | None = None
+    answer_audio_url: str | None = None
+    transcription_status: str | None = None
+    audio_status: str | None = None
+    audio_provider: str | None = None
+    tts_model: str | None = None
+    stt_model: str | None = None
+    voice_id: str | None = None
     sources: list[dict[str, Any]] = Field(default_factory=list)
     citations: list[dict[str, Any]] = Field(default_factory=list)
     blocks: list[dict[str, Any]] = Field(default_factory=list)

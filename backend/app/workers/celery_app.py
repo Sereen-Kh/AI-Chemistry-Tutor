@@ -50,5 +50,9 @@ celery_app.conf.beat_schedule = {
     "check-pending-reminders-every-minute": {
         "task": "app.workers.notification_tasks.check_pending_reminders",
         "schedule": 60.0,  # Run every 60 seconds
+    },
+    "generate-due-reminders-every-15-minutes": {
+        "task": "app.workers.notification_tasks.generate_due_reminders",
+        "schedule": 900.0,
     }
 }

@@ -4,8 +4,10 @@ from app.core.config import settings
 # Create a connection pool to reuse connections
 _redis_pool = ConnectionPool.from_url(
     settings.redis_url,
-    decode_responses=True, # Automatically decode bytes to strings
-    max_connections=10
+    decode_responses=True,  # Automatically decode bytes to strings
+    max_connections=10,
+    socket_connect_timeout=1,  # Fail fast if Redis is unavailable
+    socket_timeout=1,
 )
 
 async def get_redis() -> Redis:

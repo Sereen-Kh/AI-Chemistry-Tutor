@@ -1,12 +1,12 @@
-import { useEffect, useMemo, useRef, useState, lazy, Suspense } from 'react';
+import { useEffect, useState, lazy, Suspense } from 'react';
 import type { FormEvent, ReactElement } from 'react';
 import { Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import {
-  aiApi,
+  AUTH_EXPIRED_EVENT,
+  AUTH_EXPIRED_MESSAGE,
   authApi,
   dashboardApi,
   labApi,
-  messageResponseToAskResponse,
   notificationsApi,
   toErrorMessage,
   userApi,
@@ -18,7 +18,6 @@ import {
   AuthLayout,
   Button,
   Card,
-  ChatMessage,
   ErrorBanner,
   LearningModeSelector,
   LoadingSkeleton,
@@ -29,13 +28,16 @@ import {
   StudyMissionCard,
 } from './components/DesignSystem';
 import { clearToken, getToken, loadPreferences, savePreferences } from './lib/storage';
+import { AskAiPage } from './pages/AskAIPage';
 import { LessonsPage, RagSearchPage } from './pages/LearningPages';
 
 const QuizzesPage = lazy(() => import('./pages/QuizzesPage').then(module => ({ default: module.QuizzesPage })));
 const FlashcardsPage = lazy(() => import('./pages/FlashcardsPage').then(module => ({ default: module.FlashcardsPage })));
 const LessonDetailPage = lazy(() => import('./pages/LessonDetailPage').then(module => ({ default: module.LessonDetailPage })));
 const StudyPlanPage = lazy(() => import('./pages/StudyPlanPage').then(module => ({ default: module.StudyPlanPage })));
+const StudySessionPage = lazy(() => import('./pages/StudySessionPage').then(module => ({ default: module.StudySessionPage })));
 const NotificationsPage = lazy(() => import('./pages/NotificationsPage').then(module => ({ default: module.NotificationsPage })));
+const NotificationSettingsPage = lazy(() => import('./pages/NotificationSettingsPage').then(module => ({ default: module.NotificationSettingsPage })));
 const LabPage = lazy(() => import('./pages/LabPage').then(module => ({ default: module.LabPage })));
 const HomeworkPage = lazy(() => import('./pages/HomeworkPage').then(module => ({ default: module.HomeworkPage })));
 const GuidedLabPage = lazy(() => import('./features/guided-lab/pages/GuidedLabPage').then(module => ({ default: module.GuidedLabPage })));
@@ -46,12 +48,8 @@ const RagEvaluationPage = lazy(() => import('./pages/admin/RagEvaluationPage').t
 const RagQueryLogsPage = lazy(() => import('./pages/admin/RagQueryLogsPage').then(module => ({ default: module.RagQueryLogsPage })));
 const SourcesPage = lazy(() => import('./pages/admin/SourcesPage').then(module => ({ default: module.SourcesPage })));
 import type {
-  AiAskResponse,
-  AiAskRequest,
   AnswerFormat,
   BalanceResult,
-  ChatMessageResponse,
-  ChatSessionResponse,
   ExplanationMethod,
   InterestCategory,
   LearningMode,
@@ -60,8 +58,6 @@ import type {
   UserPreferences,
   UserProfile,
 } from './types';
-
-type AnswerScope = NonNullable<AiAskRequest['answer_scope']>;
 
 interface AuthState {
   user: UserProfile | null;
@@ -156,20 +152,6 @@ const preferencesFromUser = (user: UserProfile, current: UserPreferences): UserP
   };
 };
 
-const answerScopeLabels: Array<{ value: AnswerScope; label: string }> = [
-  { value: 'auto', label: 'تلقائي' },
-  { value: 'book_only', label: 'من الكتاب فقط' },
-  { value: 'tutor_general', label: 'شرح عام عند الحاجة' },
-];
-
-const suggestedChemistryQuestions = [
-  'ما هو الماء؟',
-  'ما هي الحموض؟',
-  'لماذا نضيف الحمض إلى الماء وليس العكس؟',
-  'ما هو التركيز المولي؟',
-  'محلول HCl حجمه 100 mL ويحتوي 3.65 g. احسب التركيز الغرامي والمولي؟',
-];
-
 const ProtectedRoute = ({ user, booting }: { user: UserProfile | null; booting: boolean }) => {
   const location = useLocation();
   if (booting) {
@@ -188,10 +170,12 @@ const GuestOnly = ({ user, children }: { user: UserProfile | null; children: Rea
 
 const LoginPage = ({ onLogin }: { onLogin: () => Promise<void> }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const locationState = location.state as { from?: string; sessionExpired?: boolean } | null;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(locationState?.sessionExpired ? AUTH_EXPIRED_MESSAGE : '');
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -204,7 +188,8 @@ const LoginPage = ({ onLogin }: { onLogin: () => Promise<void> }) => {
     try {
       await authApi.login(email, password);
       await onLogin();
-      navigate('/', { replace: true });
+      const nextPath = locationState?.from && locationState.from !== '/login' ? locationState.from : '/';
+      navigate(nextPath, { replace: true });
     } catch (err) {
       setError(toErrorMessage(err, 'تعذر تسجيل الدخول. تحقق من البريد وكلمة المرور.'));
     } finally {
@@ -621,467 +606,6 @@ const EquationBalancerPage = () => {
   );
 };
 
-interface ChatItem {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-  response?: AiAskResponse;
-  question?: string;
-}
-
-const isAnswerFormat = (value: string): value is AnswerFormat => (
-  value === 'text' || value === 'audio' || value === 'image' || value === 'video'
-);
-
-const sessionTitleFromQuestion = (text: string): string => {
-  const cleaned = text.trim().replace(/\s+/g, ' ');
-  return cleaned ? cleaned.slice(0, 40) : 'محادثة جديدة';
-};
-
-const formatSessionTimestamp = (value: string): string => {
-  const timestamp = new Date(value).getTime();
-  if (!Number.isFinite(timestamp)) return '';
-  const diffMinutes = Math.max(0, Math.round((Date.now() - timestamp) / 60000));
-  if (diffMinutes < 1) return 'الآن';
-  if (diffMinutes < 60) return `منذ ${diffMinutes} د`;
-  const diffHours = Math.round(diffMinutes / 60);
-  if (diffHours < 24) return `منذ ${diffHours} س`;
-  const diffDays = Math.round(diffHours / 24);
-  return `منذ ${diffDays} يوم`;
-};
-
-const sessionMessageToChatItem = (message: ChatMessageResponse, question?: string): ChatItem => {
-  const format = isAnswerFormat(message.format) ? message.format : 'text';
-  const response = message.role === 'assistant'
-    ? messageResponseToAskResponse(message, format)
-    : undefined;
-  return {
-    id: String(message.id),
-    role: message.role,
-    content: message.content,
-    response,
-    question,
-  };
-};
-
-const sessionMessagesToChatItems = (messages: ChatMessageResponse[]): ChatItem[] => {
-  let latestUserQuestion = '';
-  return messages.map((message) => {
-    if (message.role === 'user') {
-      latestUserQuestion = message.content;
-      return sessionMessageToChatItem(message);
-    }
-    return sessionMessageToChatItem(message, latestUserQuestion);
-  });
-};
-
-export const AskAiPage = ({ preferences, setPreferences }: { preferences: UserPreferences; setPreferences: (preferences: UserPreferences) => void }) => {
-  const location = useLocation();
-  const initialQuestion = useMemo(() => new URLSearchParams(location.search).get('question') || '', [location.search]);
-  const [question, setQuestion] = useState(initialQuestion);
-  const [teachingLevel, setTeachingLevel] = useState<TeachingLevel>(preferences.teachingLevel);
-  const [explanationMethod, setExplanationMethod] = useState<ExplanationMethod>(preferences.explanationMethod);
-  const [learningModes, setLearningModes] = useState<LearningMode[]>(preferences.learningModes);
-  const [answerScope, setAnswerScope] = useState<AnswerScope>('auto');
-  const [sessions, setSessions] = useState<ChatSessionResponse[]>([]);
-  const [activeSessionId, setActiveSessionId] = useState<number | null>(null);
-  const [sessionLoading, setSessionLoading] = useState(true);
-  const [historyOpen, setHistoryOpen] = useState(false);
-  const [settingsOpen, setSettingsOpen] = useState(false);
-  const messageIdRef = useRef(0);
-  const [messages, setMessages] = useState<ChatItem[]>([
-    {
-      id: 'welcome',
-      role: 'assistant',
-      content: 'اسألني من كتاب الكيمياء للصف التاسع. سأعرض المصادر والصفحات عندما يجدها نظام RAG.',
-    },
-  ]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  const welcomeMessages = (): ChatItem[] => [
-    {
-      id: 'welcome',
-      role: 'assistant',
-      content: 'اسألني من كتاب الكيمياء للصف التاسع. سأعرض المصادر والصفحات عندما يجدها نظام RAG.',
-    },
-  ];
-
-  const upsertSession = (session: ChatSessionResponse) => {
-    setSessions((current) => {
-      const next = [session, ...current.filter((item) => item.id !== session.id)];
-      return next.sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
-    });
-  };
-
-  const loadSession = async (sessionId: number) => {
-    setSessionLoading(true);
-    setError('');
-    try {
-      const session = await aiApi.getSession(sessionId);
-      setActiveSessionId(session.id);
-      upsertSession(session);
-      setMessages(session.messages.length ? sessionMessagesToChatItems(session.messages) : welcomeMessages());
-      setHistoryOpen(false);
-    } catch (err) {
-      setError(toErrorMessage(err, 'تعذر تحميل المحادثة. تأكد أن الخادم يعمل ثم أعد المحاولة.'));
-    } finally {
-      setSessionLoading(false);
-    }
-  };
-
-  const loadSessions = async () => {
-    setSessionLoading(true);
-    setError('');
-    try {
-      const loaded = await aiApi.listSessions();
-      const sorted = [...loaded].sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
-      setSessions(sorted);
-      if (sorted[0]) {
-        setActiveSessionId(sorted[0].id);
-        setMessages(sorted[0].messages.length ? sessionMessagesToChatItems(sorted[0].messages) : welcomeMessages());
-      } else {
-        setActiveSessionId(null);
-        setMessages(welcomeMessages());
-      }
-    } catch (err) {
-      setError(toErrorMessage(err, 'تعذر تحميل سجل المحادثات. تأكد أن backend يعمل على /api/v1.'));
-    } finally {
-      setSessionLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    const timeoutId = window.setTimeout(() => {
-      void loadSessions();
-    }, 0);
-    return () => window.clearTimeout(timeoutId);
-    // Load once when the Ask AI workspace mounts.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const startNewChat = async (title = 'محادثة جديدة'): Promise<ChatSessionResponse | null> => {
-    setSessionLoading(true);
-    setError('');
-    try {
-      const session = await aiApi.createSession({ title });
-      upsertSession(session);
-      setActiveSessionId(session.id);
-      setMessages(welcomeMessages());
-      setHistoryOpen(false);
-      return session;
-    } catch (err) {
-      setError(toErrorMessage(err, 'تعذر إنشاء محادثة جديدة.'));
-      return null;
-    } finally {
-      setSessionLoading(false);
-    }
-  };
-
-  const deleteSession = async (sessionId: number) => {
-    const confirmed = window.confirm('هل تريد حذف هذه المحادثة؟');
-    if (!confirmed) return;
-    setError('');
-    try {
-      await aiApi.deleteSession(sessionId);
-      const remaining = sessions.filter((item) => item.id !== sessionId);
-      setSessions(remaining);
-      if (activeSessionId === sessionId) {
-        if (remaining[0]) {
-          await loadSession(remaining[0].id);
-        } else {
-          setActiveSessionId(null);
-          setMessages(welcomeMessages());
-        }
-      }
-    } catch (err) {
-      setError(toErrorMessage(err, 'تعذر حذف المحادثة.'));
-    }
-  };
-
-  const ask = async (override?: string, action?: AiAskRequest['action']) => {
-    const text = (override ?? question).trim();
-    if (!text || loading) return;
-    setQuestion('');
-    setError('');
-    setLoading(true);
-    messageIdRef.current += 1;
-    const optimisticUserId = `user-${messageIdRef.current}`;
-    setMessages((current) => [...current, { id: optimisticUserId, role: 'user', content: text }]);
-    try {
-      let sessionId = activeSessionId;
-      if (!sessionId) {
-        const created = await startNewChat(sessionTitleFromQuestion(text));
-        if (!created) return;
-        sessionId = created.id;
-        setMessages((current) => [...current.filter((item) => item.id !== 'welcome'), { id: optimisticUserId, role: 'user', content: text }]);
-      }
-      const normalizedLearningModes = normalizeModes(learningModes);
-      const answerFormat = primaryAnswerFormat(normalizedLearningModes);
-      const assistantMessage = await aiApi.sendSessionMessage(sessionId, {
-        content: text,
-        format: answerFormat,
-        answer_scope: answerScope,
-        source_types: undefined,
-        teaching_style: legacyTeachingStyle(teachingLevel, explanationMethod),
-        teaching_level: teachingLevel,
-        explanation_method: explanationMethod,
-        learning_modes: normalizedLearningModes,
-        student_interests: preferences.studentInterests,
-        action,
-      });
-      const response = messageResponseToAskResponse(assistantMessage, answerFormat);
-      setMessages((current) => [
-        ...current,
-        {
-          id: String(assistantMessage.id),
-          role: 'assistant',
-          content: response.answer,
-          response,
-          question: text,
-        },
-      ]);
-      const refreshed = await aiApi.getSession(sessionId);
-      upsertSession(refreshed);
-      setMessages(refreshed.messages.length ? sessionMessagesToChatItems(refreshed.messages) : welcomeMessages());
-    } catch (err) {
-      setError(toErrorMessage(err, 'تعذر إرسال السؤال إلى خدمة الذكاء.'));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const saveLearningModes = (nextModes: LearningMode[]) => {
-    const normalizedLearningModes = normalizeModes(nextModes);
-    setLearningModes(normalizedLearningModes);
-    const next = {
-      ...preferences,
-      learningModes: normalizedLearningModes,
-      answerFormat: primaryAnswerFormat(normalizedLearningModes),
-    };
-    setPreferences(next);
-    savePreferences(next);
-  };
-
-  const saveTeachingLevel = (nextLevel: TeachingLevel) => {
-    setTeachingLevel(nextLevel);
-    const next = {
-      ...preferences,
-      teachingLevel: nextLevel,
-      teachingStyle: legacyTeachingStyle(nextLevel, explanationMethod),
-    };
-    setPreferences(next);
-    savePreferences(next);
-  };
-
-  const saveExplanationMethod = (nextMethod: ExplanationMethod) => {
-    setExplanationMethod(nextMethod);
-    const next = {
-      ...preferences,
-      explanationMethod: nextMethod,
-      teachingStyle: legacyTeachingStyle(teachingLevel, nextMethod),
-    };
-    setPreferences(next);
-    savePreferences(next);
-  };
-
-  const compactPreferenceLabel = [
-    preferenceLabel(teachingLevel),
-    preferenceLabel(explanationMethod),
-    learningModes.map(preferenceLabel).join(' + '),
-  ].join(' · ');
-  const activeSession = sessions.find((session) => session.id === activeSessionId);
-
-  const renderAnswerActions = (message: ChatItem) => {
-    if (!message.response) return null;
-    const encodedQuestion = encodeURIComponent(message.question || message.content);
-    const sourceUrl = message.response.source_page_image_url || message.response.image_url;
-    return (
-      <>
-        <Button
-          variant="secondary"
-          onClick={() => ask('اشرح الإجابة السابقة بطريقة أبسط وبمثال قصير.', 'simplify_previous')}
-          disabled={loading}
-        >
-          اشرح بطريقة أبسط
-        </Button>
-        {sourceUrl ? (
-          <a className="ed-btn ed-btn-ghost" href={sourceUrl} target="_blank" rel="noreferrer">
-            اعرض صفحة المصدر
-          </a>
-        ) : (
-          <Button variant="ghost" onClick={() => setError('لا توجد صورة مصدر متاحة لهذه الإجابة حالياً.')}>
-            اعرض صفحة المصدر
-          </Button>
-        )}
-        <Link className="ed-btn ed-btn-secondary" to={`/guided-lab?problem=${encodedQuestion}`}>
-          ابدأ الحل خطوة بخطوة
-        </Link>
-        <Link className="ed-btn ed-btn-ghost" to="/quiz">
-          أنشئ اختباراً قصيراً
-        </Link>
-        <Link className="ed-btn ed-btn-ghost" to="/flashcards">
-          أنشئ بطاقات مراجعة
-        </Link>
-      </>
-    );
-  };
-
-  return (
-    <div className="ask-layout">
-      <PageHeader
-        eyebrow="اسأل الذكاء"
-        title="معلّم الكيمياء RAG"
-        subtitle={`محادثات محفوظة بذاكرة جلسة. ${compactPreferenceLabel}`}
-        action={(
-          <div className="chat-header-actions">
-            <Button variant="secondary" onClick={() => setHistoryOpen((open) => !open)}>
-              سجل المحادثات
-            </Button>
-            <Button onClick={() => void startNewChat()}>
-              محادثة جديدة
-            </Button>
-          </div>
-        )}
-      />
-      <div className={historyOpen ? 'chat-session-workspace history-open' : 'chat-session-workspace'}>
-        <aside className="chat-history-sidebar" aria-label="سجل محادثات الذكاء">
-          <div className="chat-history-head">
-            <div>
-              <strong>المحادثات</strong>
-              <span>{sessions.length ? `${sessions.length} جلسة محفوظة` : 'لا توجد جلسات بعد'}</span>
-            </div>
-            <Button variant="ghost" onClick={() => void loadSessions()} disabled={sessionLoading}>
-              تحديث
-            </Button>
-          </div>
-          {sessionLoading && !sessions.length ? (
-            <LoadingSkeleton rows={4} />
-          ) : sessions.length ? (
-            <div className="chat-session-list">
-              {sessions.map((session) => {
-                const lastMessage = [...(session.messages || [])].reverse().find((item) => item.content);
-                return (
-                  <button
-                    type="button"
-                    key={session.id}
-                    className={session.id === activeSessionId ? 'chat-session-item active' : 'chat-session-item'}
-                    onClick={() => void loadSession(session.id)}
-                  >
-                    <span>
-                      <strong>{session.title || 'محادثة كيمياء'}</strong>
-                      <small>{lastMessage?.content || 'ابدأ بسؤال جديد'}</small>
-                    </span>
-                    <em>{formatSessionTimestamp(session.updated_at)}</em>
-                    <span
-                      role="button"
-                      tabIndex={0}
-                      className="chat-session-delete"
-                      aria-label={`حذف ${session.title || 'المحادثة'}`}
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        void deleteSession(session.id);
-                      }}
-                      onKeyDown={(event) => {
-                        if (event.key === 'Enter' || event.key === ' ') {
-                          event.preventDefault();
-                          event.stopPropagation();
-                          void deleteSession(session.id);
-                        }
-                      }}
-                    >
-                      حذف
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          ) : (
-            <div className="chat-session-empty">
-              <strong>ابدأ أول محادثة</strong>
-              <p>سيتم حفظ الأسئلة والإجابات هنا لتستطيع الرجوع إليها لاحقاً.</p>
-            </div>
-          )}
-        </aside>
-      <Card className="chat-panel">
-        <div className="active-session-strip">
-          <span>الجلسة الحالية</span>
-          <strong>{activeSession?.title || 'محادثة جديدة'}</strong>
-          <small>{activeSession ? `آخر تحديث ${formatSessionTimestamp(activeSession.updated_at)}` : 'سيتم إنشاء جلسة عند إرسال أول سؤال'}</small>
-        </div>
-        <div className="chat-settings-summary">
-          <span>{compactPreferenceLabel} · {preferenceLabel(answerScope)}</span>
-          <Button variant="ghost" onClick={() => setSettingsOpen((open) => !open)} className="ed-btn-xs">
-            {settingsOpen ? 'إخفاء الإعدادات' : 'إعدادات الإجابة'}
-          </Button>
-        </div>
-        {settingsOpen && (
-          <div className="chat-toolbar">
-            <label>
-              مستوى الشرح
-              <select value={teachingLevel} onChange={(event) => saveTeachingLevel(event.target.value as TeachingLevel)}>
-                {teachingLevelLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-              </select>
-            </label>
-            <label>
-              طريقة الشرح
-              <select value={explanationMethod} onChange={(event) => saveExplanationMethod(event.target.value as ExplanationMethod)}>
-                {explanationMethodLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-              </select>
-            </label>
-            <label>
-              نطاق الإجابة
-              <select value={answerScope} onChange={(event) => setAnswerScope(event.target.value as AnswerScope)}>
-                {answerScopeLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-              </select>
-            </label>
-            <LearningModeSelector value={learningModes} onChange={saveLearningModes} />
-          </div>
-        )}
-        <div className="chat-feed">
-          {sessionLoading ? (
-            <LoadingSkeleton rows={5} />
-          ) : (
-            messages.map((message) => (
-              <ChatMessage
-                key={message.id}
-                role={message.role}
-                content={message.content}
-                response={message.response}
-                actions={message.role === 'assistant' ? renderAnswerActions(message) : undefined}
-              />
-            ))
-          )}
-          {loading && <div className="typing-dots" aria-label="الذكاء يكتب الإجابة" role="status"><span /><span /><span /></div>}
-        </div>
-        <div className="suggestion-row chat-suggestions" aria-label="أسئلة مقترحة">
-          {suggestedChemistryQuestions.map((item) => (
-            <button key={item} type="button" onClick={() => void ask(item)} disabled={loading}>
-              {item}
-            </button>
-          ))}
-        </div>
-        {error && <ErrorBanner message={error} onRetry={() => ask(messages.findLast((item) => item.role === 'user')?.content)} />}
-        <div className="chat-actions">
-          <Button
-            variant="secondary"
-            onClick={() => ask('اشرح هذا بطريقة أبسط مع مثال واضح.', 'rephrase_previous')}
-            disabled={loading}
-          >
-            أعد الشرح
-          </Button>
-          <Button variant="ghost" onClick={() => setError('تم تسجيل أنك فهمت هذه الإجابة في الجلسة الحالية.')}>فهمت</Button>
-        </div>
-        <form className="ask-input-row" onSubmit={(event) => { event.preventDefault(); void ask(); }}>
-          <input value={question} onChange={(event) => setQuestion(event.target.value)} placeholder="اسأل من كتاب الكيمياء..." aria-label="سؤال للذكاء الاصطناعي" />
-          <Button type="submit" disabled={loading || !question.trim()}>{loading ? '...' : 'إرسال'}</Button>
-        </form>
-      </Card>
-      </div>
-    </div>
-  );
-};
-
 const ProfilePage = ({
   user,
   preferences,
@@ -1279,6 +803,8 @@ const ProfilePage = ({
 };
 
 function App() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [auth, setAuth] = useState<AuthState>({
     user: null,
     preferences: loadPreferences(),
@@ -1329,6 +855,24 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    const handleAuthExpired = () => {
+      clearToken();
+      setAuth((current) => ({ ...current, user: null, booting: false }));
+
+      const currentPath = `${location.pathname}${location.search}`;
+      if (location.pathname !== '/login') {
+        navigate('/login', {
+          replace: true,
+          state: { from: currentPath, sessionExpired: true },
+        });
+      }
+    };
+
+    window.addEventListener(AUTH_EXPIRED_EVENT, handleAuthExpired);
+    return () => window.removeEventListener(AUTH_EXPIRED_EVENT, handleAuthExpired);
+  }, [location.pathname, location.search, navigate]);
+
   const updatePreferences = (preferences: UserPreferences) => {
     savePreferences(preferences);
     setAuth((current) => ({ ...current, preferences }));
@@ -1363,12 +907,14 @@ function App() {
             <Route path="dashboard" element={<Navigate to="/" replace />} />
             <Route path="lessons" element={<LessonsPage />} />
             <Route path="lessons/:lessonId" element={<LessonDetailPage />} />
+            <Route path="study-session/:lessonId" element={<StudySessionPage preferences={auth.preferences} />} />
             <Route path="book-search" element={<RagSearchPage />} />
             <Route path="rag-search" element={<RagSearchPage />} />
             <Route path="quiz" element={<QuizzesPage />} />
             <Route path="quizzes" element={<QuizzesPage />} />
             <Route path="study-plan" element={<StudyPlanPage />} />
             <Route path="notifications" element={<NotificationsPage />} />
+            <Route path="notifications/settings" element={<NotificationSettingsPage />} />
             <Route path="flashcards" element={<FlashcardsPage />} />
             <Route path="lab" element={<LabPage />} />
             <Route path="homework" element={<HomeworkPage />} />

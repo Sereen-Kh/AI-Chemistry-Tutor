@@ -1,0 +1,11 @@
+{
+  "book_structure_exists": true,
+  "reviewed_lesson_map_exists": true,
+  "book_structure_validation_status": "passed",
+  "can_cleanup_solution_chunks": true,
+  "files_checked": [
+    "data/processed/book_structure.json",
+    "data/processed/textbook/textbook_lesson_map.reviewed.json",
+    "reports/book_structure_update/book_structure_validation_report.json"
+  ]
+}

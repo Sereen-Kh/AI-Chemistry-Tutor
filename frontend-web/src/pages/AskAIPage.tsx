@@ -769,6 +769,14 @@ export const AskAiPage = ({ preferences, setPreferences }: AskAiPageProps) => {
     setQuestion(initialQuestion);
   }, [initialQuestion]);
 
+  useEffect(() => {
+    setTeachingLevel(preferences.teachingLevel);
+    setExplanationMethod(preferences.explanationMethod);
+    if (preferences.answerFormat === 'audio' || preferences.answerFormat === 'image' || preferences.answerFormat === 'text') {
+      setSelectedResponseFormat(preferences.answerFormat);
+    }
+  }, [preferences.answerFormat, preferences.explanationMethod, preferences.teachingLevel]);
+
   useEffect(() => () => {
     if (recordedAudioUrl) URL.revokeObjectURL(recordedAudioUrl);
   }, [recordedAudioUrl]);

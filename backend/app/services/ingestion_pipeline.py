@@ -9,10 +9,12 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.core.config import PROJECT_DIR, settings
 from app.database import SessionLocal
+from app.models.ingestion import IngestionPage
 from app.models.textbook import ContentSource, ExtractedQuestion, RagChunk
 from app.services.chunking import build_page_chunk_records, deduplicate_sections, normalize_arabic, section_text
 from app.services.embeddings import current_embedding_model_name, embed_batch
@@ -216,6 +218,70 @@ def _write_page_cache(title: str, page_num: int, payload: dict) -> None:
     cache_dir.mkdir(parents=True, exist_ok=True)
     cache_path = cache_dir / f"page_{page_num:03d}.json"
     cache_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+def _page_cache_path(title: str, page_num: int) -> Path:
+    return _source_cache_dir(title) / f"page_{page_num:03d}.json"
+
+
+def _content_preview(payload: dict, limit: int = 500) -> str:
+    text = (
+        payload.get("merged_content")
+        or payload.get("raw_markdown")
+        or payload.get("text_layer_content")
+        or payload.get("raw_text")
+        or ""
+    )
+    return " ".join(str(text).split())[:limit]
+
+
+def _upsert_ingestion_page(
+    db: Session,
+    *,
+    source_id: int,
+    job_id: int | None,
+    page_number: int,
+    page_type: str,
+    payload: dict,
+    cache_path: str | None,
+) -> IngestionPage:
+    page = (
+        db.query(IngestionPage)
+        .filter(IngestionPage.source_id == source_id, IngestionPage.page_number == page_number)
+        .first()
+    )
+    if page is None:
+        page = IngestionPage(source_id=source_id, page_number=page_number, page_type=page_type, status="pending")
+        db.add(page)
+    page.job_id = job_id
+    page.page_type = page_type
+    page.status = str(payload.get("status") or "failed")
+    page.extraction_methods = payload.get("extraction_methods") or []
+    page.cache_path = cache_path
+    page.char_count = int(payload.get("char_count") or 0)
+    page.completeness_score = float(payload.get("completeness_score") or 0.0)
+    page.warnings_json = payload.get("warnings") or []
+    page.errors_json = payload.get("errors") or []
+    page.content_preview = _content_preview(payload)
+    return page
+
+
+def _mark_ingestion_page_failed(
+    db: Session,
+    page: IngestionPage,
+    *,
+    error: str,
+    job_id: int | None = None,
+) -> IngestionPage:
+    page.job_id = job_id if job_id is not None else page.job_id
+    page.status = "failed"
+    page.errors_json = [error]
+    page.warnings_json = []
+    page.completeness_score = 0.0
+    page.char_count = 0
+    page.content_preview = None
+    db.add(page)
+    return page
 
 
 def _structured_text_page(pdf_path: str, page_num: int) -> dict:
@@ -719,6 +785,239 @@ def _get_or_create_source(
     return source
 
 
+def _resolve_source_pdf_path(source: ContentSource) -> str:
+    if not source.file_path:
+        raise FileNotFoundError("Source has no file_path; cannot retry extraction from PDF.")
+    candidate = Path(source.file_path).expanduser()
+    if not candidate.is_absolute():
+        candidate = PROJECT_DIR / candidate
+    if not candidate.exists():
+        raise FileNotFoundError(f"Source PDF not found: {candidate}")
+    return str(candidate)
+
+
+def _source_ingestion_setting(source: ContentSource, key: str, default):
+    metadata = source.metadata_json if isinstance(source.metadata_json, dict) else {}
+    return metadata.get(key, default)
+
+
+def _next_chunk_index(db: Session, source_id: int) -> int:
+    value = db.query(func.max(RagChunk.chunk_index)).filter(RagChunk.source_id == source_id).scalar()
+    return int(value or 0) + (1 if value is not None else 0)
+
+
+def _delete_page_artifacts(db: Session, source_id: int, page_number: int) -> tuple[int, int]:
+    chunks_deleted = (
+        db.query(RagChunk)
+        .filter(RagChunk.source_id == source_id, RagChunk.page_number == page_number)
+        .delete(synchronize_session=False)
+    )
+    questions_deleted = (
+        db.query(ExtractedQuestion)
+        .filter(ExtractedQuestion.source_id == source_id, ExtractedQuestion.page_number == page_number)
+        .delete(synchronize_session=False)
+    )
+    return int(chunks_deleted or 0), int(questions_deleted or 0)
+
+
+def _update_source_retry_metadata(
+    source: ContentSource,
+    *,
+    page_number: int,
+    page_status: str,
+    chunks_created: int,
+    questions_created: int,
+    errors: list[str],
+    warnings: list[str],
+) -> None:
+    metadata = dict(source.metadata_json or {})
+    failed_pages = {int(item) for item in metadata.get("failed_pages") or [] if str(item).isdigit()}
+    skipped_pages = {int(item) for item in metadata.get("skipped_dry_run_pages") or [] if str(item).isdigit()}
+    if page_status in SUCCESS_PAGE_STATUSES:
+        failed_pages.discard(page_number)
+        skipped_pages.discard(page_number)
+    else:
+        failed_pages.add(page_number)
+        if page_status == "skipped_dry_run":
+            skipped_pages.add(page_number)
+    page_statuses = [
+        item
+        for item in metadata.get("page_statuses") or []
+        if int(item.get("page_number") or -1) != page_number
+    ]
+    page_statuses.append(
+        {
+            "page_number": page_number,
+            "status": page_status,
+            "chunks_created": chunks_created,
+            "questions_extracted": questions_created,
+        }
+    )
+    metadata.update(
+        {
+            "failed_pages": sorted(failed_pages),
+            "skipped_dry_run_pages": sorted(skipped_pages),
+            "pages_failed": len(failed_pages),
+            "pages_skipped_dry_run": len(skipped_pages),
+            "page_statuses": sorted(page_statuses, key=lambda item: int(item.get("page_number") or 0)),
+            "last_retry_page": page_number,
+            "last_retry_status": page_status,
+            "last_retry_at": datetime.now(timezone.utc).isoformat(),
+        }
+    )
+    if errors:
+        metadata["errors"] = [*list(metadata.get("errors") or []), *(f"retry page {page_number}: {err}" for err in errors)]
+    if warnings:
+        metadata["warnings"] = [
+            *list(metadata.get("warnings") or []),
+            *(f"retry page {page_number}: {warning}" for warning in warnings),
+        ]
+    source.metadata_json = metadata
+    if page_status in SUCCESS_PAGE_STATUSES and not failed_pages:
+        source.status = "completed"
+    elif page_status in SUCCESS_PAGE_STATUSES:
+        source.status = "completed_with_warnings"
+    else:
+        source.status = "failed"
+
+
+async def retry_ingestion_page(
+    db: Session,
+    page: IngestionPage,
+    *,
+    chapter_id: int | None = None,
+    lesson_id: int | None = None,
+    topic_id: int | None = None,
+) -> dict:
+    """Reprocess one persisted ingestion page and rebuild its chunks/questions.
+
+    The retry path deletes previous page artifacts before inserting new chunks,
+    so repeated retries do not duplicate ``RagChunk`` or ``ExtractedQuestion`` rows.
+    """
+    source = page.source or db.get(ContentSource, page.source_id)
+    if source is None:
+        raise FileNotFoundError("Ingestion page source was not found.")
+
+    page.status = "running"
+    page.errors_json = []
+    page.warnings_json = []
+    db.add(page)
+    db.commit()
+    db.refresh(page)
+
+    chunks_deleted = 0
+    questions_deleted = 0
+    chunks_created = 0
+    questions_created = 0
+    payload: dict | None = None
+    method = "cache_rebuild"
+
+    try:
+        if source.file_path:
+            pdf_path = _resolve_source_pdf_path(source)
+            classification = classify_pages(pdf_path)
+            page_types = {item["page_number"]: item["page_type"] for item in classification.get("pages") or []}
+            page_type = page_types.get(page.page_number) or page.page_type or "NEEDS_VISION"
+            resolved_ingestion_mode = str(_source_ingestion_setting(source, "ingestion_mode", settings.ingestion_mode))
+            resolved_ocr_required = bool(
+                _source_ingestion_setting(source, "ocr_required_for_vision", settings.ocr_required_for_vision)
+            )
+            vision_provider = get_vision_provider(None)
+            uploaded_pdf: UploadedDocument | None = None
+            if page_type in VISION_PAGE_TYPES and vision_provider.is_configured:
+                try:
+                    uploaded_pdf = await vision_provider.upload_pdf(pdf_path)
+                except Exception:
+                    uploaded_pdf = None
+            payload, method = await _extract_page(
+                pdf_path,
+                page.page_number,
+                page_type,
+                source.title,
+                source.source_type,
+                vision_provider,
+                resolved_ingestion_mode,
+                resolved_ocr_required,
+                uploaded_pdf,
+                _neighboring_pages(page.page_number, int(classification.get("total_pages") or page.page_number)),
+            )
+            payload["classification"] = page_type
+            payload["source_id"] = source.id
+            _write_page_cache(source.title, page.page_number, payload)
+            cache_path = str(_page_cache_path(source.title, page.page_number))
+        elif page.cache_path:
+            cache_path = page.cache_path
+            cache_file = Path(cache_path).expanduser()
+            if not cache_file.is_absolute():
+                cache_file = PROJECT_DIR / cache_file
+                cache_path = str(cache_file)
+            payload = json.loads(cache_file.read_text(encoding="utf-8"))
+            method = str(payload.get("extraction_method") or "+".join(payload.get("extraction_methods") or []) or "cache_rebuild")
+            page_type = str(payload.get("page_type") or payload.get("classification") or page.page_type)
+        else:
+            raise FileNotFoundError("No source PDF or page cache is available for retry.")
+
+        page_status = str(payload.get("status") or "failed")
+        chunks_deleted, questions_deleted = _delete_page_artifacts(db, source.id, page.page_number)
+        if page_status in SUCCESS_PAGE_STATUSES and int(payload.get("char_count") or 0) > 0:
+            chunks_created = await _store_page_chunks(
+                db,
+                source,
+                page.page_number,
+                payload,
+                chapter_id,
+                lesson_id,
+                topic_id,
+                method,
+                _next_chunk_index(db, source.id),
+            )
+            questions_created = _store_questions(db, source, page.page_number, payload, chapter_id, lesson_id, topic_id)
+        _upsert_ingestion_page(
+            db,
+            source_id=source.id,
+            job_id=page.job_id,
+            page_number=page.page_number,
+            page_type=page_type,
+            payload=payload,
+            cache_path=cache_path,
+        )
+        _update_source_retry_metadata(
+            source,
+            page_number=page.page_number,
+            page_status=page_status,
+            chunks_created=chunks_created,
+            questions_created=questions_created,
+            errors=list(payload.get("errors") or []),
+            warnings=list(payload.get("warnings") or []),
+        )
+        db.commit()
+    except Exception as exc:
+        db.rollback()
+        page = db.get(IngestionPage, page.id) or page
+        _mark_ingestion_page_failed(db, page, error=str(exc))
+        source = db.get(ContentSource, source.id) or source
+        _update_source_retry_metadata(
+            source,
+            page_number=page.page_number,
+            page_status="failed",
+            chunks_created=0,
+            questions_created=0,
+            errors=[str(exc)],
+            warnings=[],
+        )
+        db.commit()
+
+    db.refresh(page)
+    return {
+        "page": page,
+        "chunks_deleted": chunks_deleted,
+        "questions_deleted": questions_deleted,
+        "chunks_created": chunks_created,
+        "questions_created": questions_created,
+        "status": page.status,
+    }
+
+
 async def run_full_ingestion(
     pdf_path: str,
     chapter_id: int | None = None,
@@ -737,6 +1036,7 @@ async def run_full_ingestion(
     clear_existing: bool = False,
     progress_callback: ProgressCallback | None = None,
     db: Session | None = None,
+    job_id: int | None = None,
     # Solution book / multi-document metadata
     document_id: str | None = None,
     document_type: str | None = None,
@@ -823,6 +1123,33 @@ async def run_full_ingestion(
             errors.append("GEMINI_API_KEY is required before production ingestion can run.")
             failed_pages.extend(range(1, pages_to_process + 1))
             source.status = "failed"
+            if job_id is not None:
+                for page_num in range(1, pages_to_process + 1):
+                    failed_payload = _page_cache_payload(
+                        page_number=page_num,
+                        page_type=page_types.get(page_num, "NEEDS_VISION"),
+                        extraction_methods=["gemini_document"],
+                        status="failed",
+                        text_layer_content="",
+                        vision_payload=None,
+                        sections=[],
+                        questions=[],
+                        diagrams=[],
+                        tables=[],
+                        equations=[],
+                        warnings=[],
+                        errors=["GEMINI_API_KEY is required before production ingestion can run."],
+                        completeness_score=0.0,
+                    )
+                    _upsert_ingestion_page(
+                        session,
+                        source_id=source.id,
+                        job_id=job_id,
+                        page_number=page_num,
+                        page_type=page_types.get(page_num, "NEEDS_VISION"),
+                        payload=failed_payload,
+                        cache_path=None,
+                    )
             source.metadata_json = {
                 "classification": classification,
                 "max_pages": max_pages,
@@ -922,6 +1249,7 @@ async def run_full_ingestion(
                 page_payload["classification"] = page_type
                 page_payload["source_id"] = source.id
                 _write_page_cache(source.title, page_num, page_payload)
+                cache_path = str(_page_cache_path(source.title, page_num))
 
                 page_status = page_payload.get("status") or "failed"
                 page_statuses.append(
@@ -947,6 +1275,16 @@ async def run_full_ingestion(
                 diagrams_extracted += len(page_payload.get("diagrams") or [])
                 tables_extracted += len(page_payload.get("tables") or [])
                 equations_extracted += len(page_payload.get("equations") or [])
+                if job_id is not None:
+                    _upsert_ingestion_page(
+                        session,
+                        source_id=source.id,
+                        job_id=job_id,
+                        page_number=page_num,
+                        page_type=page_type,
+                        payload=page_payload,
+                        cache_path=cache_path,
+                    )
 
                 can_store_page = not page_failed or resolved_allow_partial or resolved_ingestion_mode == "dry_run"
                 if can_store_page and page_payload.get("char_count", 0) > 0:
@@ -1008,6 +1346,16 @@ async def run_full_ingestion(
                 failed_payload["classification"] = page_types.get(page_num, "NEEDS_VISION")
                 failed_payload["source_id"] = source.id
                 _write_page_cache(source.title, page_num, failed_payload)
+                if job_id is not None:
+                    _upsert_ingestion_page(
+                        session,
+                        source_id=source.id,
+                        job_id=job_id,
+                        page_number=page_num,
+                        page_type=page_types.get(page_num, "NEEDS_VISION"),
+                        payload=failed_payload,
+                        cache_path=str(_page_cache_path(source.title, page_num)),
+                    )
             pages_processed += 1
             if progress_callback:
                 progress = 5 + int((pages_processed / pages_to_process) * 95)

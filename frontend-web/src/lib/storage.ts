@@ -14,6 +14,8 @@ export const defaultPreferences: UserPreferences = {
   language: 'ar',
   grade: 'grade_9',
   subject: 'chemistry',
+  goals: '',
+  targetExamDate: '',
 };
 
 export const getToken = (): string | null => localStorage.getItem(TOKEN_KEY);
@@ -54,6 +56,8 @@ export const loadPreferences = (): UserPreferences => {
       learningModes: learningModes.includes('text') ? learningModes : ['text', ...learningModes],
       studentInterests,
       interests: studentInterests,
+      goals: parsed.goals ?? defaultPreferences.goals,
+      targetExamDate: parsed.targetExamDate ?? defaultPreferences.targetExamDate,
     };
   } catch {
     return defaultPreferences;

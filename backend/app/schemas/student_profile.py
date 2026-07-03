@@ -21,6 +21,7 @@ class StudentProfileResponse(BaseModel):
     goals: str | None = None
     target_exam_date: date | None = None
     metadata_json: dict | list | None = None
+    onboarding_completed: bool
     created_at: datetime
     updated_at: datetime
 

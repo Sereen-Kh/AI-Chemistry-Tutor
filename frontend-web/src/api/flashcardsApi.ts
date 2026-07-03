@@ -34,6 +34,7 @@ type BackendFlashcard = {
   back_ar: string;
   front_text_ar?: string | null;
   back_text_ar?: string | null;
+  hint_ar?: string | null;
   description_ar?: string;
   technical_description?: string;
   explanation_ar?: string;
@@ -150,6 +151,7 @@ const mapBackendCard = (card: BackendFlashcard): GeneratedFlashcard => {
     sourceChunkIds: card.source_chunk_ids?.map(String) || [],
     descriptionAr: card.description_ar || 'تختبر هذه البطاقة فهماً كيميائياً من الدرس.',
     technicalDescription: card.technical_description || '',
+    hintAr: card.hint_ar || undefined,
     explanationAr: card.explanation_ar || card.back_text_ar || card.back_ar,
     unitTitleAr: card.metadata_json?.unit_title_ar,
     chapterTitleAr: card.metadata_json?.chapter_title_ar,

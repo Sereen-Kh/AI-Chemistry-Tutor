@@ -13,6 +13,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 
 from app.database import Base
 from app.models.chat import ChatMessage
+from app.models.student_profile import StudentProfile
 from app.models.user import User
 from app.services import chat_service
 from app.services.rag import RetrievedChunk
@@ -155,6 +156,40 @@ def test_send_message_persists_user_and_rich_assistant_message(session_factory):
                 select(func.count(ChatMessage.id)).where(ChatMessage.session_id == session.id)
             )
             assert count == 2
+
+    run_async(scenario())
+
+
+def test_send_message_uses_saved_student_profile_preferences(session_factory):
+    async def scenario():
+        async with session_factory() as db:
+            user = await _create_user(db)
+            db.add(
+                StudentProfile(
+                    user_id=user.id,
+                    teaching_level="academic",
+                    explanation_method="exam_mode",
+                    learning_modes=["text", "image"],
+                    student_interests=["cars"],
+                )
+            )
+            await db.commit()
+            session = await chat_service.create_session(db, user.id, title="تفضيلات")
+
+            assistant = await chat_service.send_message(
+                db,
+                session_id=session.id,
+                user_id=user.id,
+                content="اشرح من الكتاب ما هو التركيز المولي؟",
+                message_format="auto",
+            )
+
+            prefs = assistant.diagnostics["teaching_preferences"]
+            assert prefs["teaching_level"] == "academic"
+            assert prefs["explanation_method"] == "exam_mode"
+            assert prefs["learning_modes"] == ["text", "image"]
+            assert prefs["student_interests"] == ["cars"]
+            assert assistant.answer_type == "image"
 
     run_async(scenario())
 

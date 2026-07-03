@@ -8,6 +8,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database import Base
 from app.models.enums import ExplanationMethod, LearningMode, TeachingLevel, TeachingStyle
 from app.models.mixins import TimestampMixin
+from app.services.onboarding_service import is_profile_onboarding_complete
 
 
 class StudentProfile(Base, TimestampMixin):
@@ -30,3 +31,7 @@ class StudentProfile(Base, TimestampMixin):
     metadata_json: Mapped[dict | list | None] = mapped_column(JSON, nullable=True)
 
     user = relationship("User", back_populates="student_profile")
+
+    @property
+    def onboarding_completed(self) -> bool:
+        return is_profile_onboarding_complete(self)

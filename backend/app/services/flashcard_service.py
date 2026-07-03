@@ -53,6 +53,14 @@ CARD_TYPE_LABELS = {
     "image_based": "بطاقة صورة",
 }
 
+GENERIC_BACK_PATTERNS = (
+    "راجع الدرس",
+    "راجع النص المصدر",
+    "راجع مصدر",
+    "راجع الكتاب",
+    "راجع درس",
+)
+
 
 @dataclass
 class ReviewSchedule:
@@ -187,6 +195,69 @@ def _topic_title(topic: Topic | None, lesson: Lesson) -> str:
     return topic.title_ar if topic else lesson.title_ar
 
 
+def _is_generic_back(value: str | None) -> bool:
+    text = _clean_text(value, limit=500)
+    if len(text) < 18:
+        return True
+    return any(pattern in text for pattern in GENERIC_BACK_PATTERNS)
+
+
+def _fallback_answer_by_type(card_type: str, topic_title: str, lesson: Lesson) -> str:
+    lesson_title = lesson.title_ar
+    page_label = (
+        f"صفحات {lesson.page_start} - {lesson.page_end}"
+        if lesson.page_start and lesson.page_end and lesson.page_end != lesson.page_start
+        else f"صفحة {lesson.page_start}"
+        if lesson.page_start
+        else "مصدر الدرس"
+    )
+    answers = {
+        "term_definition": (
+            f"«{topic_title}» مفهوم أساسي في درس «{lesson_title}». اكتب تعريفه، ثم اربطه بمثال أو تطبيق من {page_label}."
+        ),
+        "concept_explanation": (
+            f"الفكرة الأساسية في «{topic_title}» هي تفسير العلاقة الكيميائية داخل درس «{lesson_title}» مع ذكر سببها أو أثرها."
+        ),
+        "equation_law": (
+            f"ابدأ بتحديد الكميات أو الرموز المرتبطة بـ «{topic_title}»، ثم اكتب العلاقة الكيميائية المناسبة واذكر وحدة القياس إن وجدت."
+        ),
+        "calculation": (
+            f"خطوات الحل: استخرج المعطيات الخاصة بـ «{topic_title}»، اختر القانون المناسب، عوّض القيم، ثم تحقق من وحدة الناتج."
+        ),
+        "experiment_result": (
+            f"في التجربة المرتبطة بـ «{topic_title}» ركّز على الملاحظة ثم الاستنتاج الكيميائي الذي يفسر سبب حدوثها."
+        ),
+        "compare_contrast": (
+            f"قارن من حيث التعريف والخاصية أو السلوك الكيميائي، ثم اذكر مثالاً يوضح الفرق عن مفهوم قريب في درس «{lesson_title}»."
+        ),
+        "reaction_balancing": (
+            "وازن المعادلة بمساواة عدد ذرات كل عنصر في طرفي المعادلة، وابدأ بالعناصر التي تظهر في مركب واحد في كل طرف."
+        ),
+        "safety_rule": (
+            f"قاعدة الأمان هنا هي تحديد الخطر المرتبط بـ «{topic_title}» ثم اختيار التصرف المخبري الذي يقلل هذا الخطر."
+        ),
+        "image_based": (
+            f"اقرأ العنوان والمحاور أو الرموز في الشكل، ثم اربطها بمفهوم «{topic_title}» داخل درس «{lesson_title}»."
+        ),
+    }
+    return answers.get(card_type, answers["concept_explanation"])
+
+
+def _hint_for_card(card_type: str, topic_title: str, lesson: Lesson, answer_text: str) -> str:
+    if card_type == "calculation":
+        return "ابدأ بكتابة المعطيات والوحدات قبل اختيار القانون."
+    if card_type == "equation_law":
+        return "ابحث عن الرموز أو العلاقة الرياضية المرتبطة بالمفهوم."
+    if card_type == "compare_contrast":
+        return "فكّر في خاصية واحدة تميز المفهوم عن مفهوم مشابه."
+    if card_type == "reaction_balancing":
+        return "عدّ ذرات كل عنصر في طرفي المعادلة قبل تغيير المعاملات."
+    if card_type == "experiment_result":
+        return "اربط الملاحظة بسببها الكيميائي وليس بوصف التجربة فقط."
+    first_words = " ".join(_clean_text(answer_text, limit=160).split()[:8])
+    return f"ركّز على الكلمة المفتاحية «{topic_title}» وفكّر في: {first_words}..."
+
+
 def _lesson_metadata(lesson: Lesson, topic: Topic | None, chunk: RagChunk | None) -> dict:
     chapter = lesson.chapter
     unit = chapter.unit if chapter else None
@@ -221,7 +292,8 @@ def _build_card_payload(
     metadata = _lesson_metadata(lesson, topic, chunk)
     topic_title = _topic_title(topic, lesson)
     source_text = _clean_text(chunk.content if chunk else lesson.content_ar, limit=900)
-    answer_text = source_text or f"راجع درس {lesson.title_ar} في الكتاب لتثبيت الفكرة."
+    fallback_answer = _fallback_answer_by_type(card_type, topic_title, lesson)
+    answer_text = source_text if len(source_text) >= 35 else fallback_answer
     short_answer = _first_sentence(answer_text, limit=260) or answer_text[:260]
     page_label = (
         f"صفحة {metadata['source_page_start']}"
@@ -256,7 +328,12 @@ def _build_card_payload(
 
     front = front_by_type[card_type]
     back = short_answer if card_type != "calculation" else f"ابدأ بتحديد المعطيات والقانون المناسب. النتيجة/الفكرة من المصدر: {short_answer}"
+    if _is_generic_back(back):
+        back = fallback_answer
     explanation = answer_text
+    if _is_generic_back(explanation):
+        explanation = fallback_answer
+    hint = _hint_for_card(card_type, topic_title, lesson, explanation)
     technical_description = (
         f"{CARD_TYPE_LABELS[card_type]} card. Source: "
         f"{metadata.get('unit_title_ar') or 'وحدة غير محددة'} > "
@@ -276,6 +353,7 @@ def _build_card_payload(
         "back_ar": back,
         "front_text_ar": front,
         "back_text_ar": back,
+        "hint_ar": hint,
         "description_ar": description_by_type[card_type],
         "technical_description": technical_description,
         "explanation_ar": explanation,
@@ -294,6 +372,12 @@ def _validate_card_payload(payload: dict) -> list[str]:
         errors.append("واجهة البطاقة فارغة")
     if not _clean_text(payload.get("back_ar")):
         errors.append("إجابة البطاقة فارغة")
+    if _is_generic_back(payload.get("back_ar")):
+        errors.append("إجابة البطاقة عامة وغير مفيدة")
+    if not _clean_text(payload.get("hint_ar")):
+        errors.append("تلميح البطاقة غير متوفر")
+    if not _clean_text(payload.get("explanation_ar")):
+        errors.append("شرح البطاقة غير متوفر")
     if not payload.get("lesson_id"):
         errors.append("لا يوجد درس مرتبط بالبطاقة")
     if not payload.get("card_type"):
@@ -473,9 +557,13 @@ async def generate_flashcard_deck(
                 created_by=request.created_by,
             )
             if request.source_text and len(lessons) == 1:
-                payload["back_ar"] = _back_from_source_text(request.source_text)
+                source_back = _back_from_source_text(request.source_text)
+                if _is_generic_back(source_back):
+                    source_back = _fallback_answer_by_type(card_type, _topic_title(topic, lesson), lesson)
+                payload["back_ar"] = source_back
                 payload["back_text_ar"] = payload["back_ar"]
                 payload["explanation_ar"] = payload["back_ar"]
+                payload["hint_ar"] = _hint_for_card(card_type, _topic_title(topic, lesson), lesson, payload["back_ar"])
                 payload["technical_description"] += " Generated from provided source_text."
             errors = _validate_card_payload(payload)
             if errors:
@@ -510,7 +598,7 @@ async def generate_flashcard_deck(
 
 def _back_from_source_text(source_text: str) -> str:
     snippets = [line.strip() for line in source_text.splitlines() if line.strip()]
-    return _clean_text(" ".join(snippets), limit=700) or "راجع النص المصدر للإجابة."
+    return _clean_text(" ".join(snippets), limit=700)
 
 
 async def generate_flashcards(

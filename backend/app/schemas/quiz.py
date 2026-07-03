@@ -9,12 +9,17 @@ class QuizGenerateRequest(BaseModel):
     topic_id: int | None = None
     lesson_id: int | None = None
     source_type: str | None = None
+    source: str | None = None
     difficulty: int | None = Field(default=None, ge=1, le=5)
     limit: int = Field(default=5, ge=1, le=30)
+    question_count: int | None = Field(default=None, ge=1, le=30)
+    question_types: list[str] = Field(default_factory=list)
 
 
 class QuizQuestionResponse(BaseModel):
     id: int
+    lesson_id: int | None = None
+    topic_id: int | None = None
     question_text: str
     question_type: str
     options: list | dict | None = None
@@ -27,6 +32,8 @@ class QuizQuestionResponse(BaseModel):
 
 class QuizGenerateResponse(BaseModel):
     questions: list[QuizQuestionResponse]
+    generated: bool = False
+    source: str = "database"
 
 
 class QuizSubmitRequest(BaseModel):

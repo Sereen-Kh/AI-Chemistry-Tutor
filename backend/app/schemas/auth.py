@@ -1,6 +1,6 @@
 """Pydantic schemas for authentication."""
 
-from datetime import datetime
+from datetime import date, datetime
 
 from pydantic import BaseModel, EmailStr, Field, model_validator
 
@@ -50,6 +50,7 @@ class InterestCategoryResponse(BaseModel):
 
 class OnboardingRequest(BaseModel):
     grade: str = "grade_9"
+    subject: str = "chemistry"
     teaching_style: TeachingStyle = TeachingStyle.REAL_LIFE_EXAMPLES
     answer_format: LearningMode = LearningMode.TEXT
     teaching_level: TeachingLevel = TeachingLevel.STANDARD
@@ -57,6 +58,9 @@ class OnboardingRequest(BaseModel):
     learning_modes: list[LearningMode] = Field(default_factory=lambda: [LearningMode.TEXT])
     student_interests: list[StudentInterest] = Field(default_factory=list)
     language: str = "ar"
+    preferred_language: str | None = None
+    goals: str | None = None
+    target_exam_date: date | None = None
     interest_ids: list[int] = Field(default_factory=list)
 
 
@@ -76,6 +80,10 @@ class UserResponse(BaseModel):
     learning_modes: list[LearningMode]
     student_interests: list[StudentInterest]
     language: str
+    preferred_language: str | None = None
+    goals: str | None = None
+    target_exam_date: date | None = None
+    onboarding_completed: bool
     xp: int
     level: int
     streak_days: int

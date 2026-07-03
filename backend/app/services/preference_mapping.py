@@ -166,13 +166,23 @@ def preferences_from_user(
     student_interests: list[str] | None = None,
 ) -> TutorPreferences:
     """Resolve request overrides over stored user defaults with legacy fallback."""
+    profile = getattr(user, "__dict__", {}).get("student_profile")
     legacy_level, legacy_method = map_legacy_teaching_style(getattr(user, "teaching_style", None))
-    stored_level = normalize_teaching_level(getattr(user, "teaching_level", None) or legacy_level)
-    stored_method = normalize_explanation_method(getattr(user, "explanation_method", None) or legacy_method)
-    stored_modes = normalize_learning_modes(
-        getattr(user, "learning_modes", None) or map_legacy_answer_format(getattr(user, "answer_format", None))
+    stored_level = normalize_teaching_level(
+        getattr(profile, "teaching_level", None) if profile is not None else getattr(user, "teaching_level", None) or legacy_level
     )
-    stored_interests = normalize_student_interests(getattr(user, "student_interests", None))
+    stored_method = normalize_explanation_method(
+        getattr(profile, "explanation_method", None)
+        if profile is not None
+        else getattr(user, "explanation_method", None) or legacy_method
+    )
+    stored_modes = normalize_learning_modes(
+        (getattr(profile, "learning_modes", None) if profile is not None else getattr(user, "learning_modes", None))
+        or map_legacy_answer_format(getattr(user, "answer_format", None))
+    )
+    stored_interests = normalize_student_interests(
+        getattr(profile, "student_interests", None) if profile is not None else getattr(user, "student_interests", None)
+    )
 
     return TutorPreferences(
         teaching_level=normalize_teaching_level(teaching_level or stored_level),

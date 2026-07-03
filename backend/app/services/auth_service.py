@@ -1,9 +1,29 @@
-from sqlalchemy.orm import Session
+from datetime import date
+from sqlalchemy.orm import Session, joinedload
 from fastapi import HTTPException
 from app.models.user import User
 from app.models.interest import InterestCategory, UserInterest
+from app.models.student_profile import StudentProfile
 from app.core.security import get_password_hash, verify_password, create_access_token
-from app.services.preference_mapping import apply_user_preference_updates
+from app.services.preference_mapping import (
+    apply_user_preference_updates,
+    legacy_teaching_style_from_new,
+    normalize_explanation_method,
+    normalize_learning_modes,
+    normalize_student_interests,
+    normalize_teaching_level,
+)
+
+
+DEFAULT_INTEREST_CATEGORIES = [
+    {"key": "daily_life", "name_ar": "الحياة اليومية", "name_en": "Daily life", "icon": "DL", "display_order": 10},
+    {"key": "laboratory", "name_ar": "المختبر", "name_en": "Laboratory", "icon": "LAB", "display_order": 20},
+    {"key": "nature", "name_ar": "الطبيعة", "name_en": "Nature", "icon": "NAT", "display_order": 30},
+    {"key": "football", "name_ar": "كرة القدم", "name_en": "Football", "icon": "FB", "display_order": 40},
+    {"key": "cars", "name_ar": "السيارات", "name_en": "Cars", "icon": "CAR", "display_order": 50},
+    {"key": "cooking", "name_ar": "الطبخ", "name_en": "Cooking", "icon": "CK", "display_order": 60},
+    {"key": "gaming", "name_ar": "الألعاب", "name_en": "Gaming", "icon": "GM", "display_order": 70},
+]
 
 
 def split_name(name: str | None, first_name: str | None, last_name: str | None) -> tuple[str, str]:
@@ -36,6 +56,16 @@ def register_user(
         email=email,
         hashed_password=get_password_hash(password),
     )
+    user.student_profile = StudentProfile(
+        grade=user.grade,
+        subject=user.subject,
+        learning_style=user.teaching_style,
+        teaching_level=user.teaching_level,
+        explanation_method=user.explanation_method,
+        learning_modes=user.learning_modes,
+        student_interests=user.student_interests,
+        preferred_language=user.language,
+    )
     db.add(user)
     db.commit()
     db.refresh(user)
@@ -51,7 +81,7 @@ def authenticate_user(db: Session, email: str, password: str) -> str:
 
 
 def get_user_by_id(db: Session, user_id: int) -> User:
-    user = db.query(User).filter(User.id == user_id).first()
+    user = db.query(User).options(joinedload(User.student_profile)).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
@@ -59,13 +89,54 @@ def get_user_by_id(db: Session, user_id: int) -> User:
 
 def get_all_interests(db: Session) -> list[InterestCategory]:
     """Return selectable personalization interests ordered for the UI."""
+    interests = db.query(InterestCategory).order_by(InterestCategory.display_order).all()
+    if interests:
+        return interests
+    db.add_all(InterestCategory(**payload) for payload in DEFAULT_INTEREST_CATEGORIES)
+    db.commit()
     return db.query(InterestCategory).order_by(InterestCategory.display_order).all()
+
+
+def _raw_value(value: object) -> str:
+    return str(getattr(value, "value", value))
+
+
+def _profile_for_user(db: Session, user: User) -> StudentProfile:
+    profile = user.student_profile or db.query(StudentProfile).filter(StudentProfile.user_id == user.id).first()
+    if profile:
+        return profile
+    profile = StudentProfile(
+        user_id=user.id,
+        grade=user.grade,
+        subject=user.subject,
+        learning_style=user.teaching_style,
+        teaching_level=user.teaching_level,
+        explanation_method=user.explanation_method,
+        learning_modes=user.learning_modes,
+        student_interests=user.student_interests,
+        preferred_language=user.language,
+    )
+    db.add(profile)
+    user.student_profile = profile
+    return profile
+
+
+def _interest_keys_from_ids(db: Session, interest_ids: list[int]) -> list[str]:
+    if not interest_ids:
+        return []
+    interests = db.query(InterestCategory).filter(InterestCategory.id.in_(interest_ids)).all()
+    found_ids = {interest.id for interest in interests}
+    missing = [interest_id for interest_id in interest_ids if interest_id not in found_ids]
+    if missing:
+        raise HTTPException(status_code=400, detail=f"Interest ID {missing[0]} not found")
+    return [interest.key for interest in sorted(interests, key=lambda item: item.display_order)]
 
 
 def update_user_onboarding(
     db: Session,
     user_id: int,
     grade: str,
+    subject: str,
     teaching_style: str,
     answer_format: str,
     language: str,
@@ -74,22 +145,42 @@ def update_user_onboarding(
     explanation_method: str | None = None,
     learning_modes: list[str] | None = None,
     student_interests: list[str] | None = None,
+    goals: str | None = None,
+    target_exam_date: date | None = None,
 ) -> User:
     """Persist onboarding preferences and selected interests."""
     user = get_user_by_id(db, user_id)
+    selected_interest_keys = student_interests or _interest_keys_from_ids(db, interest_ids)
+    normalized_level = normalize_teaching_level(_raw_value(teaching_level))
+    normalized_method = normalize_explanation_method(_raw_value(explanation_method))
+    normalized_modes = normalize_learning_modes(learning_modes)
+    normalized_interests = normalize_student_interests(selected_interest_keys)
+
     user.grade = grade
+    user.subject = subject
     apply_user_preference_updates(
         user,
         {
             "teaching_style": teaching_style,
             "answer_format": answer_format,
-            "teaching_level": teaching_level,
-            "explanation_method": explanation_method,
-            "learning_modes": learning_modes,
-            "student_interests": student_interests,
+            "teaching_level": normalized_level,
+            "explanation_method": normalized_method,
+            "learning_modes": normalized_modes,
+            "student_interests": normalized_interests,
         },
     )
     user.language = language
+    profile = _profile_for_user(db, user)
+    profile.grade = grade
+    profile.subject = subject
+    profile.learning_style = legacy_teaching_style_from_new(normalized_level, normalized_method)
+    profile.teaching_level = normalized_level
+    profile.explanation_method = normalized_method
+    profile.learning_modes = normalized_modes
+    profile.student_interests = normalized_interests
+    profile.preferred_language = language
+    profile.goals = goals
+    profile.target_exam_date = target_exam_date
 
     db.query(UserInterest).filter(UserInterest.user_id == user_id).delete()
     for interest_id in interest_ids:
@@ -100,4 +191,6 @@ def update_user_onboarding(
 
     db.commit()
     db.refresh(user)
+    # Keep the relationship present for response serialization.
+    user.student_profile = profile
     return user

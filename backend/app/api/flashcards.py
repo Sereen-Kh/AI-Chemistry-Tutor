@@ -66,6 +66,7 @@ def _card_response(card: Flashcard, progress: FlashcardProgress | None = None) -
         back_ar=card.back_ar,
         front_text_ar=getattr(card, "front_text_ar", None) or card.front_ar,
         back_text_ar=getattr(card, "back_text_ar", None) or card.back_ar,
+        hint_ar=getattr(card, "hint_ar", None),
         description_ar=getattr(card, "description_ar", "") or "تختبر هذه البطاقة فهماً كيميائياً من الدرس.",
         technical_description=getattr(card, "technical_description", "") or "",
         explanation_ar=getattr(card, "explanation_ar", "") or "",
@@ -147,7 +148,7 @@ async def generate_flashcards(
     user_id: int = Depends(get_current_user_id),
     db: AsyncSession = Depends(get_async_db),
 ):
-    cards = await flashcard_service.generate_flashcards(db, request)
+    cards = await flashcard_service.generate_flashcards(db, request, user_id=user_id)
     return [_card_response(card) for card in cards]
 
 

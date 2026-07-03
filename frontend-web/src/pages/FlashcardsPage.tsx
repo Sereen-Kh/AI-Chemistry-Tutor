@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { flashcardsApi } from '../api/flashcardsApi';
 import { Button, Card, ErrorBanner, LoadingSkeleton, PageHeader, ProgressBar, StatusPill } from '../components/DesignSystem';
@@ -57,12 +57,40 @@ const typeLabel = (type: string) => cardTypeOptions.find((option) => option.valu
 
 const typeTone = (type: string) => cardTypeOptions.find((option) => option.value === type)?.tone || 'blue';
 
-const normalizeError = (error: unknown): string => {
-  if (error instanceof Error) {
-    if (/field required/i.test(error.message)) return 'البيانات المطلوبة غير مكتملة.';
-    if (/not found/i.test(error.message)) return 'لم يتم العثور على نتيجة.';
+const ratingFeedback: Record<FlashcardRating, string> = {
+  again: 'لا بأس، سنراجعها قريباً مرة أخرى.',
+  hard: 'سأعيدها لك بعد وقت قصير.',
+  good: 'جيد، ستظهر لاحقاً حسب التكرار المتباعد.',
+  easy: 'ممتاز، سنؤجلها لمدة أطول.',
+};
+
+const extractBackendDetail = (error: unknown): { status?: number; detail: string } => {
+  const maybeResponse = error as { response?: { status?: number; data?: { detail?: unknown } }; message?: string };
+  const detail = maybeResponse.response?.data?.detail;
+  if (typeof detail === 'string') return { status: maybeResponse.response?.status, detail };
+  if (Array.isArray(detail)) {
+    return {
+      status: maybeResponse.response?.status,
+      detail: detail.map((item) => {
+        if (typeof item === 'string') return item;
+        if (item && typeof item === 'object' && 'msg' in item) return String((item as { msg: unknown }).msg);
+        return '';
+      }).filter(Boolean).join(' '),
+    };
   }
-  return 'تعذر توليد البطاقات، حاول مرة أخرى.';
+  return { status: maybeResponse.response?.status, detail: maybeResponse.message || '' };
+};
+
+const normalizeError = (error: unknown): string => {
+  const { status, detail } = extractBackendDetail(error);
+  if (status === 401 || /unauthorized|forbidden|token/i.test(detail)) {
+    return 'يجب تسجيل الدخول لإنشاء بطاقات.';
+  }
+  if (/field required|required|lesson_ids|اختر درس/i.test(detail)) return 'اختر درساً واحداً على الأقل.';
+  if (status === 404 || /not found|لم يتم العثور/i.test(detail)) return 'تعذر تحميل بيانات الدرس.';
+  if (/content|chunk|لا يوجد محتوى|غير كاف/i.test(detail)) return 'لا يوجد محتوى كافٍ لهذا الدرس.';
+  if (/timeout|server|503|unavailable/i.test(detail)) return 'تعذر توليد البطاقات من الخادم حالياً.';
+  return detail && !/field required/i.test(detail) ? detail : 'تعذر توليد البطاقات من الخادم حالياً.';
 };
 
 const sourcePages = (card: GeneratedFlashcard) => {
@@ -112,8 +140,11 @@ export const FlashcardsPage = () => {
   const query = useMemo(() => new URLSearchParams(location.search), [location.search]);
   const queryLessonId = query.get('lessonId') || query.get('lesson_id') || '';
   const queryScope = query.get('scope');
+  const queryAuto = query.get('auto') === 'true';
+  const querySource = query.get('source') || query.get('mode') || '';
 
   const { units, allLessons, loading: curriculumLoading, usingFallback: usingFallbackCurriculum } = useActiveCurriculum();
+  const autoGenerationStartedRef = useRef(false);
 
   const [viewState, setViewState] = useState<FlashcardsViewState>('loading');
   const [decks, setDecks] = useState<FlashcardDeck[]>([]);
@@ -122,11 +153,14 @@ export const FlashcardsPage = () => {
   const [reviewCards, setReviewCards] = useState<GeneratedFlashcard[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [revealed, setRevealed] = useState(false);
+  const [hintVisible, setHintVisible] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [reviewFeedback, setReviewFeedback] = useState('');
+  const [ratingPending, setRatingPending] = useState(false);
   const [error, setError] = useState('');
 
   const [scope, setScope] = useState<SetupScope>(
-    queryScope === 'study_plan' ? 'study_plan' : queryLessonId ? 'lesson' : 'lesson',
+    queryScope === 'study_plan' || querySource === 'study_plan' ? 'study_plan' : queryLessonId ? 'lesson' : 'lesson',
   );
   const [selectedLessonIds, setSelectedLessonIds] = useState<string[]>(queryLessonId ? [queryLessonId] : []);
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
@@ -168,7 +202,7 @@ export const FlashcardsPage = () => {
       setProgress(loadedProgress);
       if (preferredState) {
         setViewState(preferredState);
-      } else if (queryLessonId || queryScope) {
+      } else if (queryLessonId || queryScope || queryAuto) {
         setViewState('setup');
       } else if (loadedDecks.length === 0 || loadedProgress.totalCards === 0) {
         setViewState('empty');
@@ -184,7 +218,7 @@ export const FlashcardsPage = () => {
   useEffect(() => {
     void loadFlashcards();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [queryLessonId, queryScope]);
+  }, [queryLessonId, queryScope, queryAuto]);
 
   const validateSetup = () => {
     const errors: string[] = [];
@@ -197,14 +231,21 @@ export const FlashcardsPage = () => {
     return errors.length === 0;
   };
 
-  const generateDeck = async () => {
-    if (!validateSetup()) return;
+  const resetReviewDisplay = () => {
+    setRevealed(false);
+    setHintVisible(false);
+    setDetailsOpen(false);
+    setReviewFeedback('');
+    setRatingPending(false);
+  };
+
+  const generateDeckForLessons = async (lessonsToGenerate: typeof selectedLessons, requestedScope: SetupScope = scope) => {
     setError('');
     setViewState('generating');
     try {
       const generated = await flashcardsApi.generateDeck(buildConfig({
-        scope,
-        selectedLessonIds: selectedLessons.map((lesson) => String(lesson.id)),
+        scope: requestedScope,
+        selectedLessonIds: lessonsToGenerate.map((lesson) => String(lesson.id)),
         selectedTopicIds,
         selectedUnitId,
         cardsPerLesson,
@@ -214,7 +255,7 @@ export const FlashcardsPage = () => {
       setActiveDeck(generated);
       setReviewCards(generated.generatedCards || []);
       setCurrentIndex(0);
-      setRevealed(false);
+      resetReviewDisplay();
       await loadFlashcards('deck_detail');
       setActiveDeck(generated);
       setReviewCards(generated.generatedCards || []);
@@ -224,6 +265,33 @@ export const FlashcardsPage = () => {
     }
   };
 
+  const generateDeck = async () => {
+    if (!validateSetup()) return;
+    await generateDeckForLessons(selectedLessons);
+  };
+
+  useEffect(() => {
+    if (!queryAuto) return;
+    if (autoGenerationStartedRef.current) return;
+    if (!queryLessonId) {
+      setError('لا يوجد درس محدد لتوليد المراجعة.');
+      setViewState('setup');
+      return;
+    }
+    if (curriculumLoading) return;
+    const lesson = allLessons.find((item) => String(item.id) === String(queryLessonId));
+    if (!lesson) {
+      setError('تعذر تحميل بيانات الدرس.');
+      setViewState('setup');
+      return;
+    }
+    autoGenerationStartedRef.current = true;
+    setScope(querySource === 'study_plan' ? 'study_plan' : 'lesson');
+    setSelectedLessonIds([String(lesson.id)]);
+    queueMicrotask(() => void generateDeckForLessons([lesson], querySource === 'study_plan' ? 'study_plan' : 'lesson'));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queryAuto, queryLessonId, querySource, curriculumLoading, allLessons]);
+
   const openDeck = async (deckId: string | number) => {
     setViewState('loading');
     setError('');
@@ -232,8 +300,7 @@ export const FlashcardsPage = () => {
       setActiveDeck(deck);
       setReviewCards(deck.generatedCards || []);
       setCurrentIndex(0);
-      setRevealed(false);
-      setDetailsOpen(false);
+      resetReviewDisplay();
       setViewState('deck_detail');
     } catch (err) {
       setError(normalizeError(err));
@@ -259,8 +326,7 @@ export const FlashcardsPage = () => {
       }
       setReviewCards(cards);
       setCurrentIndex(0);
-      setRevealed(false);
-      setDetailsOpen(false);
+      resetReviewDisplay();
       setViewState('review_session');
     } catch (err) {
       setError(normalizeError(err));
@@ -269,7 +335,8 @@ export const FlashcardsPage = () => {
   };
 
   const rateCard = async (rating: FlashcardRating) => {
-    if (!activeCard) return;
+    if (!activeCard || ratingPending) return;
+    setRatingPending(true);
     try {
       const review = await flashcardsApi.reviewFlashcard(activeCard.id, rating);
       setReviewCards((cards) => cards.map((card) => (
@@ -286,15 +353,18 @@ export const FlashcardsPage = () => {
             }
           : card
       )));
-      setRevealed(false);
-      setDetailsOpen(false);
-      if (currentIndex + 1 < reviewCards.length) {
-        setCurrentIndex((index) => index + 1);
-      } else {
-        await loadFlashcards('deck_list');
-      }
+      setReviewFeedback(ratingFeedback[rating]);
+      window.setTimeout(() => {
+        resetReviewDisplay();
+        if (currentIndex + 1 < reviewCards.length) {
+          setCurrentIndex((index) => index + 1);
+        } else {
+          void loadFlashcards('deck_list');
+        }
+      }, 900);
     } catch {
       setError('تعذر حفظ تقييم البطاقة. حاول مرة أخرى.');
+      setRatingPending(false);
     }
   };
 
@@ -393,7 +463,11 @@ export const FlashcardsPage = () => {
           index={currentIndex}
           total={reviewCards.length}
           revealed={revealed}
+          hintVisible={hintVisible}
           detailsOpen={detailsOpen}
+          reviewFeedback={reviewFeedback}
+          ratingPending={ratingPending}
+          onShowHint={() => setHintVisible(true)}
           setDetailsOpen={setDetailsOpen}
           onReveal={() => setRevealed(true)}
           onRate={(rating) => void rateCard(rating)}
@@ -821,7 +895,11 @@ const FlashcardReviewSession = ({
   index,
   total,
   revealed,
+  hintVisible,
   detailsOpen,
+  reviewFeedback,
+  ratingPending,
+  onShowHint,
   setDetailsOpen,
   onReveal,
   onRate,
@@ -832,7 +910,11 @@ const FlashcardReviewSession = ({
   index: number;
   total: number;
   revealed: boolean;
+  hintVisible: boolean;
   detailsOpen: boolean;
+  reviewFeedback: string;
+  ratingPending: boolean;
+  onShowHint: () => void;
   setDetailsOpen: (open: boolean) => void;
   onReveal: () => void;
   onRate: (rating: FlashcardRating) => void;
@@ -861,17 +943,33 @@ const FlashcardReviewSession = ({
       </div>
 
       {!revealed ? (
-        <Button onClick={onReveal} className="flashcard-reveal-button">اعرض الإجابة</Button>
+        <>
+          {hintVisible && <FlashcardHint card={card} />}
+          <div className="flashcard-pre-reveal-actions">
+            <Button variant="ghost" onClick={onShowHint} disabled={hintVisible}>
+              أحتاج تلميح
+            </Button>
+            <Button onClick={onReveal} className="flashcard-reveal-button">اعرض الإجابة</Button>
+          </div>
+        </>
       ) : (
         <>
           <FlashcardBack card={card} />
           <FlashcardSourcePanel card={card} />
           <FlashcardTechnicalDetails card={card} open={detailsOpen} setOpen={setDetailsOpen} />
-          <FlashcardReviewButtons onRate={onRate} />
+          {reviewFeedback && <div className="flashcard-review-feedback">{reviewFeedback}</div>}
+          <FlashcardReviewButtons onRate={onRate} disabled={ratingPending || Boolean(reviewFeedback)} />
         </>
       )}
       <Button variant="ghost" onClick={onExit}>إنهاء الجلسة</Button>
     </Card>
+  </div>
+);
+
+const FlashcardHint = ({ card }: { card: GeneratedFlashcard }) => (
+  <div className="flashcard-hint-panel">
+    <strong>تلميح</strong>
+    <p>{card.hintAr || 'فكّر في التعريف أو القانون المرتبط بعنوان البطاقة قبل كشف الإجابة.'}</p>
   </div>
 );
 
@@ -929,10 +1027,22 @@ const FlashcardTechnicalDetails = ({
   </div>
 );
 
-const FlashcardReviewButtons = ({ onRate }: { onRate: (rating: FlashcardRating) => void }) => (
+const FlashcardReviewButtons = ({
+  onRate,
+  disabled,
+}: {
+  onRate: (rating: FlashcardRating) => void;
+  disabled: boolean;
+}) => (
   <div className="flashcard-review-buttons">
     {ratingOptions.map((option) => (
-      <button key={option.value} type="button" className={`tone-${option.tone}`} onClick={() => onRate(option.value)}>
+      <button
+        key={option.value}
+        type="button"
+        className={`tone-${option.tone}`}
+        disabled={disabled}
+        onClick={() => onRate(option.value)}
+      >
         <strong>{option.label}</strong>
         <span>{option.helper}</span>
       </button>

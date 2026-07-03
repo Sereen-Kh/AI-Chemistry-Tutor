@@ -3,6 +3,8 @@ import type { QuizGenerationConfig, GeneratedQuizQuestion } from '../types';
 
 interface BackendQuizQuestion {
   id: number;
+  lesson_id?: number | null;
+  topic_id?: number | null;
   question_text: string;
   question_type: string;
   options?: string[] | Record<string, string> | null;
@@ -15,6 +17,8 @@ interface BackendQuizQuestion {
 
 interface BackendQuizGenerateResponse {
   questions: BackendQuizQuestion[];
+  generated?: boolean;
+  source?: string;
 }
 
 interface BackendQuizSubmitResponse {
@@ -44,26 +48,75 @@ const optionList = (options?: string[] | Record<string, string> | null): string[
   return Object.values(options).map(String);
 };
 
-const mapBackendQuestion = (question: BackendQuizQuestion): GeneratedQuizQuestion => ({
-  id: String(question.id),
-  lessonId: 'backend',
-  chapterId: 'backend',
-  questionType: question.question_type === 'true_false'
+const normalizeQuestionType = (type: string): GeneratedQuizQuestion['questionType'] => (
+  type === 'true_false'
     ? 'true_false'
-    : question.question_type === 'calculation'
+    : type === 'calculation'
       ? 'calculation'
-      : question.question_type === 'short_answer'
+      : type === 'short_answer' || type === 'fill_blank'
         ? 'short_answer'
-        : 'mcq',
-  question: question.question_text,
-  options: optionList(question.options),
-  correctAnswer: question.correct_answer ?? '',
-  correctOptionIndex: undefined,
-  explanation: question.explanation ?? 'راجع مصدر السؤال لمعرفة سبب الإجابة.',
-  difficulty: difficultyLabel(question.difficulty),
-  sourcePage: question.page_number ?? 0,
-  sourceChunkId: question.source_id ? String(question.source_id) : undefined,
-});
+        : type === 'equation_balancing'
+          ? 'equation_balancing'
+          : 'mcq'
+);
+
+const correctOptionIndex = (options: string[] | undefined, correctAnswer?: string | null): number | undefined => {
+  if (!options?.length || !correctAnswer) return undefined;
+  const normalizedCorrect = String(correctAnswer).trim();
+  const index = options.findIndex((option) => String(option).trim() === normalizedCorrect);
+  return index >= 0 ? index : undefined;
+};
+
+const mapBackendQuestion = (question: BackendQuizQuestion): GeneratedQuizQuestion => {
+  const options = optionList(question.options);
+  return {
+    id: String(question.id),
+    lessonId: question.lesson_id == null ? 'backend' : String(question.lesson_id),
+    chapterId: 'backend',
+    questionType: normalizeQuestionType(question.question_type),
+    question: question.question_text,
+    options,
+    correctAnswer: question.correct_answer ?? '',
+    correctOptionIndex: correctOptionIndex(options, question.correct_answer),
+    explanation: question.explanation ?? 'راجع مصدر السؤال لمعرفة سبب الإجابة.',
+    difficulty: difficultyLabel(question.difficulty),
+    sourcePage: question.page_number ?? 0,
+    sourceChunkId: question.source_id ? String(question.source_id) : undefined,
+  };
+};
+
+const extractBackendDetail = (error: unknown): string => {
+  const maybeResponse = error as { response?: { status?: number; data?: { detail?: unknown } }; message?: string };
+  const detail = maybeResponse.response?.data?.detail;
+  if (typeof detail === 'string') return detail;
+  if (Array.isArray(detail)) return detail.map((item) => {
+    if (typeof item === 'string') return item;
+    if (item && typeof item === 'object' && 'msg' in item) return String((item as { msg: unknown }).msg);
+    return '';
+  }).filter(Boolean).join(' ');
+  return maybeResponse.message || '';
+};
+
+export const quizGenerationErrorMessage = (error: unknown): string => {
+  const maybeResponse = error as { response?: { status?: number } };
+  const detail = extractBackendDetail(error);
+  if (maybeResponse.response?.status === 401 || /unauthorized|forbidden|token/i.test(detail)) {
+    return 'سجّل الدخول لإنشاء اختبار.';
+  }
+  if (/field required|required|lesson|اختر درس/i.test(detail)) {
+    return 'اختر درساً واحداً على الأقل لتوليد الاختبار.';
+  }
+  if (/not found|لم يتم العثور/i.test(detail)) {
+    return 'تعذر تحميل بيانات الدرس المحدد.';
+  }
+  if (/service|unavailable|ai|llm|timeout|503/i.test(detail)) {
+    return 'خدمة توليد الأسئلة غير متاحة حالياً. جرّب لاحقاً أو افتح اسأل AI.';
+  }
+  if (/no questions|لا توجد أسئلة|empty/i.test(detail)) {
+    return 'لا توجد أسئلة كافية لهذا الدرس حالياً.';
+  }
+  return 'تعذر توليد الأسئلة من الخادم حالياً.';
+};
 
 export const quizzesApi = {
   async generateQuiz(config: QuizGenerationConfig): Promise<GeneratedQuizQuestion[]> {
@@ -74,6 +127,8 @@ export const quizzesApi = {
         source_type: 'textbook',
         difficulty: difficultyNumber(config.difficulty),
         limit: Math.min(config.totalQuestions || config.lessonIds.length * config.questionsPerLesson || 5, 30),
+        question_count: Math.min(config.totalQuestions || config.lessonIds.length * config.questionsPerLesson || 5, 30),
+        question_types: config.questionTypes,
       });
       const mapped = data.questions.map(mapBackendQuestion);
       if (!mapped.length) {
@@ -82,7 +137,7 @@ export const quizzesApi = {
       return mapped;
     } catch (error) {
       console.warn('Quiz backend generation unavailable', error);
-      throw error;
+      throw new Error(quizGenerationErrorMessage(error));
     }
   },
 

@@ -2,15 +2,16 @@ import { useEffect, useState, lazy, Suspense } from 'react';
 import type { FormEvent, ReactElement } from 'react';
 import { Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import {
-  AUTH_EXPIRED_EVENT,
-  AUTH_EXPIRED_MESSAGE,
-  authApi,
-  dashboardApi,
-  labApi,
-  notificationsApi,
-  toErrorMessage,
-  userApi,
-} from './api';
+	  AUTH_EXPIRED_EVENT,
+	  AUTH_EXPIRED_MESSAGE,
+	  authApi,
+	  dashboardApi,
+	  labApi,
+	  notificationsApi,
+	  preferencesFromProfile,
+	  toErrorMessage,
+	  userApi,
+	} from './api';
 import { ChemistryFlask } from './components/ChemistryFlask';
 import { MoleculeBackground } from './components/MoleculeBackground';
 import {
@@ -28,6 +29,7 @@ import {
   StudyMissionCard,
 } from './components/DesignSystem';
 import { clearToken, getToken, loadPreferences, savePreferences } from './lib/storage';
+import { isUserOnboardingComplete } from './lib/onboarding';
 import { AskAiPage } from './pages/AskAIPage';
 import { LessonsPage, RagSearchPage } from './pages/LearningPages';
 
@@ -138,19 +140,21 @@ const preferencesFromUser = (user: UserProfile, current: UserPreferences): UserP
   const studentInterests = (user.student_interests?.filter((interest) => interest !== 'none') ?? current.studentInterests) as StudentInterest[];
 
   return {
-    ...current,
-    grade: user.grade || current.grade,
-    subject: user.subject || current.subject,
-    language: user.language === 'en' ? 'en' : 'ar',
-    teachingLevel,
-    explanationMethod,
-    learningModes,
-    studentInterests,
-    interests: studentInterests,
-    teachingStyle: legacyTeachingStyle(teachingLevel, explanationMethod),
-    answerFormat: primaryAnswerFormat(learningModes),
-  };
-};
+	    ...current,
+	    grade: user.grade || current.grade,
+	    subject: user.subject || current.subject,
+	    language: (user.preferred_language || user.language) === 'en' ? 'en' : 'ar',
+	    teachingLevel,
+	    explanationMethod,
+	    learningModes,
+	    studentInterests,
+	    interests: studentInterests,
+	    teachingStyle: legacyTeachingStyle(teachingLevel, explanationMethod),
+	    answerFormat: primaryAnswerFormat(learningModes),
+	    goals: user.goals ?? current.goals,
+	    targetExamDate: user.target_exam_date ?? current.targetExamDate,
+	  };
+	};
 
 const ProtectedRoute = ({ user, booting }: { user: UserProfile | null; booting: boolean }) => {
   const location = useLocation();
@@ -163,12 +167,23 @@ const ProtectedRoute = ({ user, booting }: { user: UserProfile | null; booting: 
   return null;
 };
 
-const GuestOnly = ({ user, children }: { user: UserProfile | null; children: ReactElement }) => {
-  if (user) return <Navigate to="/" replace />;
+const onboardingAwarePath = (user: UserProfile, preferences: UserPreferences): string =>
+  isUserOnboardingComplete(user, preferences) ? '/' : '/onboarding/interests';
+
+const GuestOnly = ({
+  user,
+  preferences,
+  children,
+}: {
+  user: UserProfile | null;
+  preferences: UserPreferences;
+  children: ReactElement;
+}) => {
+  if (user) return <Navigate to={onboardingAwarePath(user, preferences)} replace />;
   return children;
 };
 
-const LoginPage = ({ onLogin }: { onLogin: () => Promise<void> }) => {
+const LoginPage = ({ onLogin }: { onLogin: () => Promise<UserProfile | null> }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const locationState = location.state as { from?: string; sessionExpired?: boolean } | null;
@@ -187,9 +202,13 @@ const LoginPage = ({ onLogin }: { onLogin: () => Promise<void> }) => {
     setError('');
     try {
       await authApi.login(email, password);
-      await onLogin();
-      const nextPath = locationState?.from && locationState.from !== '/login' ? locationState.from : '/';
-      navigate(nextPath, { replace: true });
+      const user = await onLogin();
+      if (!user) throw new Error('تعذر تحميل بيانات المستخدم بعد تسجيل الدخول.');
+      const incomplete = !isUserOnboardingComplete(user);
+      const from = locationState?.from && !['/login', '/register'].includes(locationState.from)
+        ? locationState.from
+        : '/';
+      navigate(incomplete ? '/onboarding/interests' : from, { replace: true });
     } catch (err) {
       setError(toErrorMessage(err, 'تعذر تسجيل الدخول. تحقق من البريد وكلمة المرور.'));
     } finally {
@@ -216,7 +235,7 @@ const LoginPage = ({ onLogin }: { onLogin: () => Promise<void> }) => {
   );
 };
 
-const RegisterPage = ({ onRegistered }: { onRegistered: () => Promise<void> }) => {
+const RegisterPage = ({ onRegistered }: { onRegistered: () => Promise<UserProfile | null> }) => {
   const navigate = useNavigate();
   const [form, setForm] = useState({
     firstName: '',
@@ -311,7 +330,7 @@ const OnboardingPage = ({
   onSave,
 }: {
   preferences: UserPreferences;
-  onSave: (preferences: UserPreferences) => void;
+  onSave: (preferences: UserPreferences, user: UserProfile) => void;
 }) => {
   const navigate = useNavigate();
   const [backendInterests, setBackendInterests] = useState<InterestCategory[]>([]);
@@ -319,11 +338,32 @@ const OnboardingPage = ({
   const [teachingLevel, setTeachingLevel] = useState<TeachingLevel>(preferences.teachingLevel);
   const [explanationMethod, setExplanationMethod] = useState<ExplanationMethod>(preferences.explanationMethod);
   const [learningModes, setLearningModes] = useState<LearningMode[]>(preferences.learningModes);
+  const [language, setLanguage] = useState<UserPreferences['language']>(preferences.language);
+  const [goals, setGoals] = useState(preferences.goals || '');
+  const [targetExamDate, setTargetExamDate] = useState(preferences.targetExamDate || '');
   const [error, setError] = useState('');
+  const [interestsLoading, setInterestsLoading] = useState(true);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    authApi.interests().then(setBackendInterests);
+    let cancelled = false;
+    setInterestsLoading(true);
+    authApi.interests()
+      .then((items) => {
+        if (!cancelled) {
+          setBackendInterests(items);
+          setError('');
+        }
+      })
+      .catch((err) => {
+        if (!cancelled) setError(toErrorMessage(err, 'تعذر تحميل الاهتمامات من الخادم.'));
+      })
+      .finally(() => {
+        if (!cancelled) setInterestsLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const toggle = (key: StudentInterest) => {
@@ -332,6 +372,14 @@ const OnboardingPage = ({
 
   const save = async () => {
     const normalizedLearningModes = normalizeModes(learningModes);
+    if (selected.length === 0) {
+      setError('اختر اهتماماً واحداً على الأقل حتى نخصص الأمثلة لك.');
+      return;
+    }
+    if (normalizedLearningModes.length === 0) {
+      setError('اختر نمط تعلم واحداً على الأقل.');
+      return;
+    }
     const next: UserPreferences = {
       ...preferences,
       interests: selected,
@@ -341,20 +389,31 @@ const OnboardingPage = ({
       learningModes: normalizedLearningModes,
       teachingStyle: legacyTeachingStyle(teachingLevel, explanationMethod),
       answerFormat: primaryAnswerFormat(normalizedLearningModes),
+      language,
+      goals,
+      targetExamDate,
     };
     setLoading(true);
     setError('');
     try {
       const ids = backendInterests.filter((interest) => selected.includes(interest.key as StudentInterest)).map((interest) => interest.id);
-      await authApi.completeOnboarding(next, ids);
-    } catch (err) {
-      setError(toErrorMessage(err, 'تم الحفظ محلياً. تعذر الوصول إلى نقطة إعداد التفضيلات في الخلفية.'));
-    } finally {
-      onSave(next);
-      setLoading(false);
+      const user = await authApi.completeOnboarding(next, ids);
+      onSave(next, user);
       navigate('/', { replace: true });
+    } catch (err) {
+      setError(toErrorMessage(err, 'تعذر حفظ التفضيلات في الخادم.'));
+    } finally {
+      setLoading(false);
     }
   };
+
+  const options = backendInterests.length
+    ? backendInterests.map((interest) => ({
+        value: interest.key as StudentInterest,
+        label: interest.name_ar,
+        icon: interest.icon || interest.key.slice(0, 2).toUpperCase(),
+      }))
+    : studentInterestOptions;
 
   return (
     <main className="onboarding-page">
@@ -365,8 +424,9 @@ const OnboardingPage = ({
           subtitle="هذه التفضيلات تضبط الأمثلة وصيغة الإجابة واقتراحات المراجعة."
         />
         {error && <ErrorBanner message={error} />}
+        {interestsLoading && <LoadingSkeleton rows={2} />}
         <div className="interest-grid">
-          {studentInterestOptions.map((interest) => (
+          {options.map((interest) => (
             <button
               key={interest.value}
               type="button"
@@ -396,7 +456,28 @@ const OnboardingPage = ({
           <span>أنماط التعلم</span>
           <LearningModeSelector value={learningModes} onChange={(modes) => setLearningModes(normalizeModes(modes))} />
         </div>
-        <Button onClick={save} disabled={loading}>{loading ? 'جار الحفظ...' : 'المتابعة إلى الرئيسية'}</Button>
+        <div className="preference-row">
+          <label>
+            اللغة
+            <select value={language} onChange={(event) => setLanguage(event.target.value as UserPreferences['language'])}>
+              <option value="ar">العربية</option>
+              <option value="en">English</option>
+            </select>
+          </label>
+          <label>
+            تاريخ الامتحان الهدف
+            <input type="date" value={targetExamDate} onChange={(event) => setTargetExamDate(event.target.value)} />
+          </label>
+        </div>
+        <label>
+          هدفك الدراسي
+          <textarea
+            value={goals}
+            onChange={(event) => setGoals(event.target.value)}
+            placeholder="مثلاً: أريد تقوية مسائل التركيز قبل الامتحان."
+          />
+        </label>
+        <Button onClick={save} disabled={loading || interestsLoading}>{loading ? 'جار الحفظ...' : 'المتابعة إلى الرئيسية'}</Button>
       </Card>
     </main>
   );
@@ -616,6 +697,9 @@ const ProfilePage = ({
   setPreferences: (preferences: UserPreferences) => void;
 }) => {
   const [status, setStatus] = useState('');
+  const [draftPreferences, setDraftPreferences] = useState<UserPreferences>(preferences);
+  const [profileLoading, setProfileLoading] = useState(true);
+  const [profileSaving, setProfileSaving] = useState(false);
   const [notifPrefs, setNotifPrefs] = useState({
     exam_reminders_enabled: true,
     lesson_reminders_enabled: true,
@@ -624,6 +708,34 @@ const ProfilePage = ({
 
   useEffect(() => {
     notificationsApi.getPreferences().then(setNotifPrefs).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    setDraftPreferences(preferences);
+  }, [preferences]);
+
+  useEffect(() => {
+    let cancelled = false;
+    setProfileLoading(true);
+    userApi.getProfile()
+      .then((profile) => {
+        if (cancelled) return;
+        const next = preferencesFromProfile(profile, preferences);
+        setDraftPreferences(next);
+        setPreferences(next);
+        savePreferences(next);
+      })
+      .catch(() => {
+        if (!cancelled) setStatus('تعذر تحميل ملف التفضيلات من الخادم.');
+      })
+      .finally(() => {
+        if (!cancelled) setProfileLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+    // Load once when profile page opens; later edits are saved explicitly.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const saveNotifPref = async (updates: Partial<typeof notifPrefs>) => {
@@ -641,56 +753,61 @@ const ProfilePage = ({
     }
   };
 
-  const updatePreferences = async (next: UserPreferences) => {
-    setPreferences(next);
-    savePreferences(next);
+  const saveLearningPreferences = async () => {
+    setProfileSaving(true);
+    setStatus('');
     try {
-      await userApi.updatePreferences(next);
+      const saved = await userApi.updateProfile(draftPreferences);
+      const next = preferencesFromProfile(saved, draftPreferences);
+      setDraftPreferences(next);
+      setPreferences(next);
+      savePreferences(next);
       setStatus('تم حفظ التفضيلات.');
     } catch {
-      setStatus('تم حفظ التفضيلات محلياً. تعذر الوصول إلى الخلفية.');
+      setStatus('فشل حفظ التفضيلات في الخادم.');
+    } finally {
+      setProfileSaving(false);
     }
   };
 
-  const updatePreference = async <K extends keyof UserPreferences>(field: K, value: UserPreferences[K]) => {
-    const next = { ...preferences, [field]: value } as UserPreferences;
-    await updatePreferences(next);
+  const updatePreference = <K extends keyof UserPreferences>(field: K, value: UserPreferences[K]) => {
+    setDraftPreferences((current) => ({ ...current, [field]: value }) as UserPreferences);
   };
 
-  const updateTeachingLevel = async (value: TeachingLevel) => {
-    await updatePreferences({
-      ...preferences,
+  const updateTeachingLevel = (value: TeachingLevel) => {
+    setDraftPreferences((current) => ({
+      ...current,
       teachingLevel: value,
-      teachingStyle: legacyTeachingStyle(value, preferences.explanationMethod),
-    });
+      teachingStyle: legacyTeachingStyle(value, current.explanationMethod),
+    }));
   };
 
-  const updateExplanationMethod = async (value: ExplanationMethod) => {
-    await updatePreferences({
-      ...preferences,
+  const updateExplanationMethod = (value: ExplanationMethod) => {
+    setDraftPreferences((current) => ({
+      ...current,
       explanationMethod: value,
-      teachingStyle: legacyTeachingStyle(preferences.teachingLevel, value),
-    });
+      teachingStyle: legacyTeachingStyle(current.teachingLevel, value),
+    }));
   };
 
-  const updateLearningModes = async (value: LearningMode[]) => {
+  const updateLearningModes = (value: LearningMode[]) => {
     const normalizedLearningModes = normalizeModes(value);
-    await updatePreferences({
-      ...preferences,
+    setDraftPreferences((current) => ({
+      ...current,
       learningModes: normalizedLearningModes,
       answerFormat: primaryAnswerFormat(normalizedLearningModes),
-    });
+    }));
   };
 
-  const toggleInterest = async (value: StudentInterest) => {
-    const nextInterests = preferences.studentInterests.includes(value)
-      ? preferences.studentInterests.filter((item) => item !== value)
-      : [...preferences.studentInterests, value];
-    await updatePreferences({
-      ...preferences,
+  const toggleInterest = (value: StudentInterest) => {
+    const nextInterests = draftPreferences.studentInterests.includes(value)
+      ? draftPreferences.studentInterests.filter((item) => item !== value)
+      : [...draftPreferences.studentInterests, value];
+    setDraftPreferences((current) => ({
+      ...current,
       studentInterests: nextInterests,
       interests: nextInterests,
-    });
+    }));
   };
 
   return (
@@ -702,35 +819,41 @@ const ProfilePage = ({
         <ProgressBar value={65} tone="blue" />
       </Card>
       <Card>
-        <div className="section-title"><h2>التفضيلات</h2></div>
+        <div className="section-title">
+          <h2>التفضيلات</h2>
+          <Button onClick={() => void saveLearningPreferences()} disabled={profileSaving || profileLoading}>
+            {profileSaving ? 'جار الحفظ...' : 'حفظ التفضيلات'}
+          </Button>
+        </div>
         {status && <StatusPill tone="teal">{status}</StatusPill>}
+        {profileLoading && <LoadingSkeleton rows={3} />}
         <div className="settings-list">
           <label>
             مستوى الشرح
-            <select value={preferences.teachingLevel} onChange={(event) => void updateTeachingLevel(event.target.value as TeachingLevel)}>
+            <select value={draftPreferences.teachingLevel} onChange={(event) => updateTeachingLevel(event.target.value as TeachingLevel)}>
               {teachingLevelLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
             </select>
           </label>
           <label>
             طريقة الشرح
-            <select value={preferences.explanationMethod} onChange={(event) => void updateExplanationMethod(event.target.value as ExplanationMethod)}>
+            <select value={draftPreferences.explanationMethod} onChange={(event) => updateExplanationMethod(event.target.value as ExplanationMethod)}>
               {explanationMethodLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
             </select>
           </label>
           <div className="preference-stack">
             <span>أنماط التعلم</span>
-            <LearningModeSelector value={preferences.learningModes} onChange={(modes) => void updateLearningModes(modes)} />
+            <LearningModeSelector value={draftPreferences.learningModes} onChange={(modes) => updateLearningModes(modes)} />
           </div>
           <div className="preference-stack">
             <span>اهتمامات الطالب</span>
             <div className="interest-grid compact">
               {studentInterestOptions.map((interest) => (
                 <button
-                  key={interest.value}
-                  type="button"
-                  className={preferences.studentInterests.includes(interest.value) ? 'interest active' : 'interest'}
-                  onClick={() => void toggleInterest(interest.value)}
-                >
+	                  key={interest.value}
+	                  type="button"
+	                  className={draftPreferences.studentInterests.includes(interest.value) ? 'interest active' : 'interest'}
+	                  onClick={() => toggleInterest(interest.value)}
+	                >
                   <span>{interest.icon}</span>
                   <strong>{interest.label}</strong>
                 </button>
@@ -739,10 +862,26 @@ const ProfilePage = ({
           </div>
           <label>
             اللغة
-            <select value={preferences.language} onChange={(event) => void updatePreference('language', event.target.value as UserPreferences['language'])}>
+            <select value={draftPreferences.language} onChange={(event) => updatePreference('language', event.target.value as UserPreferences['language'])}>
               <option value="ar">العربية</option>
               <option value="en">English</option>
             </select>
+          </label>
+          <label>
+            الهدف الدراسي
+            <textarea
+              value={draftPreferences.goals || ''}
+              onChange={(event) => updatePreference('goals', event.target.value)}
+              placeholder="اكتب هدفك الدراسي أو نقطة الضعف التي تريد التركيز عليها."
+            />
+          </label>
+          <label>
+            تاريخ الامتحان الهدف
+            <input
+              type="date"
+              value={draftPreferences.targetExamDate || ''}
+              onChange={(event) => updatePreference('targetExamDate', event.target.value)}
+            />
           </label>
 
           {/* User notifications preferences */}
@@ -811,21 +950,23 @@ function App() {
     booting: Boolean(getToken()),
   });
 
-  const refreshUser = async () => {
+  const refreshUser = async (): Promise<UserProfile | null> => {
     if (!getToken()) {
       setAuth((current) => ({ ...current, booting: false }));
-      return;
+      return null;
     }
     try {
       const user = await authApi.me();
       setAuth((current) => {
         const preferences = preferencesFromUser(user, current.preferences);
         savePreferences(preferences);
-        return { ...current, user, preferences, booting: false };
-      });
+	        return { ...current, user, preferences, booting: false };
+	      });
+      return user;
     } catch {
       clearToken();
       setAuth((current) => ({ ...current, user: null, booting: false }));
+      return null;
     }
   };
 
@@ -878,6 +1019,12 @@ function App() {
     setAuth((current) => ({ ...current, preferences }));
   };
 
+  const completeOnboarding = (preferences: UserPreferences, user: UserProfile) => {
+    const mergedPreferences = preferencesFromUser(user, preferences);
+    savePreferences(mergedPreferences);
+    setAuth((current) => ({ ...current, user, preferences: mergedPreferences }));
+  };
+
   const logout = () => {
     clearToken();
     setAuth((current) => ({ ...current, user: null }));
@@ -890,19 +1037,32 @@ function App() {
       <MoleculeBackground />
       <Suspense fallback={<main className="route-loading"><LoadingSkeleton rows={5} /></main>}>
         <Routes>
-          <Route path="/login" element={<GuestOnly user={auth.user}><LoginPage onLogin={refreshUser} /></GuestOnly>} />
-          <Route path="/register" element={<GuestOnly user={auth.user}><RegisterPage onRegistered={refreshUser} /></GuestOnly>} />
+          <Route path="/login" element={<GuestOnly user={auth.user} preferences={auth.preferences}><LoginPage onLogin={refreshUser} /></GuestOnly>} />
+          <Route path="/register" element={<GuestOnly user={auth.user} preferences={auth.preferences}><RegisterPage onRegistered={refreshUser} /></GuestOnly>} />
           <Route
             path="/onboarding/interests"
             element={
-              auth.user ? (
-                <OnboardingPage preferences={auth.preferences} onSave={updatePreferences} />
+              auth.booting ? (
+                <main className="route-loading"><LoadingSkeleton rows={5} /></main>
+              ) : auth.user ? (
+                <OnboardingPage preferences={auth.preferences} onSave={completeOnboarding} />
               ) : (
                 <Navigate to="/login" replace />
               )
             }
           />
-          <Route path="/" element={auth.user ? <AppShell userName={userName} onLogout={logout} /> : <ProtectedRoute user={auth.user} booting={auth.booting} />}>
+          <Route
+            path="/"
+            element={
+              auth.user
+                ? (
+                    isUserOnboardingComplete(auth.user, auth.preferences)
+                      ? <AppShell userName={userName} onLogout={logout} />
+                      : <Navigate to="/onboarding/interests" replace />
+                  )
+                : <ProtectedRoute user={auth.user} booting={auth.booting} />
+            }
+          >
             <Route index element={auth.user && <DashboardPage user={auth.user} preferences={auth.preferences} />} />
             <Route path="dashboard" element={<Navigate to="/" replace />} />
             <Route path="lessons" element={<LessonsPage />} />
@@ -929,7 +1089,7 @@ function App() {
             <Route path="ask-ai" element={<AskAiPage preferences={auth.preferences} setPreferences={updatePreferences} />} />
             <Route path="profile" element={auth.user && <ProfilePage user={auth.user} preferences={auth.preferences} setPreferences={updatePreferences} />} />
           </Route>
-          <Route path="*" element={<Navigate to={auth.user ? '/' : '/login'} replace />} />
+          <Route path="*" element={<Navigate to={auth.user ? onboardingAwarePath(auth.user, auth.preferences) : '/login'} replace />} />
         </Routes>
       </Suspense>
     </div>

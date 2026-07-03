@@ -58,6 +58,7 @@ class FlashcardResponse(BaseModel):
     back_ar: str
     front_text_ar: str | None = None
     back_text_ar: str | None = None
+    hint_ar: str | None = None
     description_ar: str = ""
     technical_description: str = ""
     explanation_ar: str = ""
@@ -102,6 +103,7 @@ class FlashcardCreateRequest(BaseModel):
     deck_id: int | None = None
     front_ar: str = Field(..., min_length=1)
     back_ar: str = Field(..., min_length=1)
+    hint_ar: str | None = None
     card_type: str = "term_definition"
     difficulty: str = "medium"
     description_ar: str = Field(default="تختبر هذه البطاقة فهماً كيميائياً من الدرس.", min_length=1)
@@ -119,6 +121,7 @@ class FlashcardDeckUpdateRequest(BaseModel):
 class FlashcardUpdateRequest(BaseModel):
     front_text_ar: str | None = None
     back_text_ar: str | None = None
+    hint_ar: str | None = None
     description_ar: str | None = None
     technical_description: str | None = None
     explanation_ar: str | None = None

@@ -1,6 +1,6 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { quizzesApi } from '../api/quizzesApi';
+import { quizGenerationErrorMessage, quizzesApi } from '../api/quizzesApi';
 import { Card, PageHeader, Button, ProgressBar, StatusPill, LoadingSkeleton, ErrorBanner } from '../components/DesignSystem';
 import { getCurriculumLessonQuality, lessonPageRange, useActiveCurriculum } from '../hooks/useActiveCurriculum';
 import type { QuizGenerationConfig, GeneratedQuizQuestion } from '../types';
@@ -24,6 +24,7 @@ export const QuizzesPage = () => {
   const queryParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
   const paramLessonId = queryParams.get('lessonId');
   const paramAuto = queryParams.get('auto') === 'true';
+  const autoGenerationStartedRef = useRef(false);
 
   // Config UI State
   const [mode, setMode] = useState<QuizMode>(paramLessonId ? 'single_lesson' : 'single_lesson');
@@ -48,6 +49,7 @@ export const QuizzesPage = () => {
   const [streak, setStreak] = useState(0);
   const [answerReviews, setAnswerReviews] = useState<QuizAnswerReview[]>([]);
   const [showQualityReport, setShowQualityReport] = useState(false);
+  const [lastGenerationConfig, setLastGenerationConfig] = useState<QuizGenerationConfig | null>(null);
 
   const { allLessons, chapters, loading: curriculumLoading, usingFallback: usingFallbackCurriculum } = useActiveCurriculum();
   const effectiveSelectedChapterId = selectedChapterId || (chapters[0] ? String(chapters[0].id) : '');
@@ -104,6 +106,7 @@ export const QuizzesPage = () => {
       requireExplanation: true,
       avoidDuplicateQuestions: true
     };
+    setLastGenerationConfig(config);
 
     if (config.lessonIds.length === 0) {
       setError('يرجى تحديد درس واحد على الأقل لتوليد الاختبار.');
@@ -139,8 +142,8 @@ export const QuizzesPage = () => {
         setAnswerReviews([]);
         setGameState('playing');
       }
-    } catch {
-      setError('حدث خطأ أثناء توليد الأسئلة.');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : quizGenerationErrorMessage(err));
       setGameState('setup');
     }
   };
@@ -256,7 +259,13 @@ export const QuizzesPage = () => {
   // Auto-generate if specified in route params. Kept after generator declaration
   // so React Compiler and ESLint can track the function binding correctly.
   useEffect(() => {
-    if (!paramAuto || !paramLessonId) return;
+    if (!paramAuto) return;
+    if (autoGenerationStartedRef.current) return;
+    if (!paramLessonId) {
+      setError('لا يوجد درس محدد لتوليد الاختبار.');
+      return;
+    }
+    if (curriculumLoading) return;
     const qCount = Number(queryParams.get('questions') || '3');
     const qDiff = (queryParams.get('difficulty') || 'mixed') as QuizDifficulty;
     const qTypes = (queryParams.get('types') || 'mcq').split(',') as QuizQuestionType[];
@@ -273,7 +282,11 @@ export const QuizzesPage = () => {
     };
 
     const lesson = allLessons.find(l => String(l.id) === paramLessonId);
-    if (!lesson) return;
+    if (!lesson) {
+      setError('تعذر تحميل بيانات الدرس المحدد.');
+      return;
+    }
+    autoGenerationStartedRef.current = true;
     const report = getCurriculumLessonQuality(lesson);
     if (report.status !== 'blocked') {
       queueMicrotask(() => void handleGenerateQuiz(config));
@@ -281,7 +294,7 @@ export const QuizzesPage = () => {
       queueMicrotask(() => setError(`تعذر التوليد التلقائي: درس "${lesson.title_ar}" محظور بسبب جودة المحتوى.`));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paramAuto, paramLessonId, queryParams, allLessons]);
+  }, [paramAuto, paramLessonId, queryParams, allLessons, curriculumLoading]);
 
   return (
     <div className="page-stack quizzes-page">
@@ -292,7 +305,18 @@ export const QuizzesPage = () => {
       />
 
       {usingFallbackCurriculum && <ErrorBanner message="تعذر تحميل المنهج من الخادم، لذلك نعرض بنية الكتاب الاحتياطية مؤقتاً." />}
-      {error && <ErrorBanner message={error} onRetry={() => setError('')} />}
+      {error && (
+        <ErrorBanner
+          message={error}
+          onRetry={() => {
+            if (lastGenerationConfig) {
+              void handleGenerateQuiz(lastGenerationConfig);
+            } else {
+              setError('');
+            }
+          }}
+        />
+      )}
 
       {/* SETUP GAME STATE */}
       {gameState === 'setup' && (

@@ -22,6 +22,39 @@ export interface RagSource {
   file_path?: string | null;
   original_filename?: string | null;
   status: string;
+  metadata_json?: Record<string, unknown> | unknown[] | null;
+  chunk_count?: number;
+  embedded_chunk_count?: number;
+  question_count?: number;
+  pages_summary?: Record<string, number>;
+}
+
+export interface IngestionPage {
+  id?: number | null;
+  source_id: number;
+  job_id?: number | null;
+  page_number: number;
+  page_type: string;
+  status: string;
+  extraction_methods?: string[] | Record<string, unknown> | null;
+  cache_path?: string | null;
+  char_count: number;
+  completeness_score: number;
+  warnings_json?: unknown[] | Record<string, unknown> | null;
+  errors_json?: unknown[] | Record<string, unknown> | null;
+  content_preview?: string | null;
+}
+
+export interface IngestionRetryPageResponse {
+  page_id: number;
+  status: string;
+  message: string;
+  page?: IngestionPage | null;
+  chunks_deleted: number;
+  questions_deleted: number;
+  chunks_created: number;
+  questions_created: number;
+  cache_invalidation: Record<string, number>;
 }
 
 export interface RagReembedRequest {
@@ -121,6 +154,21 @@ export const adminRagApi = {
 
   async getSources(): Promise<RagSource[]> {
     const { data } = await api.get<RagSource[]>('/admin/ingestion/sources');
+    return data;
+  },
+
+  async getSource(sourceId: number): Promise<RagSource> {
+    const { data } = await api.get<RagSource>(`/admin/ingestion/sources/${sourceId}`);
+    return data;
+  },
+
+  async getSourcePages(sourceId: number): Promise<IngestionPage[]> {
+    const { data } = await api.get<IngestionPage[]>(`/admin/ingestion/pages/${sourceId}`);
+    return data;
+  },
+
+  async retryPage(pageId: number): Promise<IngestionRetryPageResponse> {
+    const { data } = await api.post<IngestionRetryPageResponse>(`/admin/ingestion/retry-page/${pageId}`);
     return data;
   },
 

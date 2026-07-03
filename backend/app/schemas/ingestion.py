@@ -1,5 +1,7 @@
 """Pydantic schemas for ingestion endpoints."""
 
+from datetime import datetime
+
 from pydantic import BaseModel, Field
 
 
@@ -76,6 +78,10 @@ class SourceResponse(BaseModel):
     original_filename: str | None = None
     status: str
     metadata_json: dict | list | None = None
+    chunk_count: int = 0
+    embedded_chunk_count: int = 0
+    question_count: int = 0
+    pages_summary: dict[str, int] = Field(default_factory=dict)
 
     model_config = {"from_attributes": True}
 
@@ -102,6 +108,12 @@ class IngestionRetryPageResponse(BaseModel):
     page_id: int
     status: str
     message: str
+    page: IngestionPageResponse | None = None
+    chunks_deleted: int = 0
+    questions_deleted: int = 0
+    chunks_created: int = 0
+    questions_created: int = 0
+    cache_invalidation: dict[str, int] = Field(default_factory=dict)
 
 
 class IngestionTestQueryRequest(BaseModel):
@@ -163,10 +175,13 @@ class SolutionBookReportResponse(BaseModel):
 
 class IngestionStatusResponse(BaseModel):
     task_id: str
+    job_uid: str | None = None
     status: str
     progress: int = 0
+    message: str | None = None
     source_id: int | None = None
     source_status: str | None = None
+    result: dict | list | None = None
     total_pages: int = 0
     pages_to_process: int = 0
     selectable_text_pages: int = 0
@@ -193,6 +208,9 @@ class IngestionStatusResponse(BaseModel):
     page_statuses: list[dict] = Field(default_factory=list)
     warnings: list[str] = Field(default_factory=list)
     errors: list[str] = Field(default_factory=list)
+    pages: dict[str, int] = Field(default_factory=dict)
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
 
 
 class IngestionStatsResponse(BaseModel):

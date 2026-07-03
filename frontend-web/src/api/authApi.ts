@@ -38,6 +38,9 @@ const toBackendAnswerFormat = (format: UserPreferences['answerFormat']): string 
     video: 'video',
   })[format ?? 'text'];
 
+const allowDemoFallbacks = (): boolean =>
+  import.meta.env.DEV && import.meta.env.VITE_ALLOW_DEMO_FALLBACKS === 'true';
+
 export const authApi = {
   async login(email: string, password: string): Promise<string> {
     const { data } = await api.post<LoginResponse>('/auth/login', { email, password });
@@ -63,15 +66,19 @@ export const authApi = {
   async interests(): Promise<InterestCategory[]> {
     try {
       const { data } = await api.get<InterestCategory[]>('/auth/interests');
-      return data.length ? data : mockInterests;
-    } catch {
-      return mockInterests;
+      if (data.length) return data;
+      if (allowDemoFallbacks()) return mockInterests;
+      throw new Error('لم يتم العثور على اهتمامات مهيأة في الخادم.');
+    } catch (error) {
+      if (allowDemoFallbacks()) return mockInterests;
+      throw error;
     }
   },
 
   async completeOnboarding(preferences: UserPreferences, interestIds: number[]): Promise<UserProfile> {
     const { data } = await api.patch<UserProfile>('/auth/onboarding', {
       grade: preferences.grade,
+      subject: preferences.subject,
       teaching_style: toBackendTeachingStyle(preferences.teachingStyle),
       answer_format: toBackendAnswerFormat(preferences.answerFormat),
       teaching_level: preferences.teachingLevel,
@@ -79,6 +86,9 @@ export const authApi = {
       learning_modes: preferences.learningModes,
       student_interests: preferences.studentInterests,
       language: preferences.language,
+      preferred_language: preferences.language,
+      goals: preferences.goals || null,
+      target_exam_date: preferences.targetExamDate || null,
       interest_ids: interestIds,
     });
     return data;

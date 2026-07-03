@@ -9,6 +9,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database import Base
 from app.models.enums import ExplanationMethod, LearningMode, TeachingLevel, TeachingStyle
 from app.models.mixins import TimestampMixin
+from app.services.onboarding_service import is_user_onboarding_complete
 
 
 class User(Base, TimestampMixin):
@@ -69,3 +70,22 @@ class User(Base, TimestampMixin):
     @property
     def name(self) -> str:
         return f"{self.first_name} {self.last_name}".strip()
+
+    @property
+    def onboarding_completed(self) -> bool:
+        return is_user_onboarding_complete(self)
+
+    @property
+    def preferred_language(self) -> str:
+        profile = self.__dict__.get("student_profile")
+        return getattr(profile, "preferred_language", None) or self.language
+
+    @property
+    def goals(self) -> str | None:
+        profile = self.__dict__.get("student_profile")
+        return getattr(profile, "goals", None)
+
+    @property
+    def target_exam_date(self) -> date | None:
+        profile = self.__dict__.get("student_profile")
+        return getattr(profile, "target_exam_date", None)

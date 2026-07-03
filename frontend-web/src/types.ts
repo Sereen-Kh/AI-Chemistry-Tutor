@@ -76,6 +76,8 @@ export interface UserPreferences {
   language: 'ar' | 'en';
   grade: string;
   subject: string;
+  goals?: string;
+  targetExamDate?: string;
 }
 
 export interface UserProfile {
@@ -93,6 +95,10 @@ export interface UserProfile {
   learning_modes?: LearningMode[];
   student_interests?: StudentInterest[];
   language: string;
+  preferred_language?: string | null;
+  goals?: string | null;
+  target_exam_date?: string | null;
+  onboarding_completed?: boolean;
   xp: number;
   level: number;
   streak_days: number;
@@ -562,6 +568,7 @@ export type GeneratedFlashcard = {
   sourceChunkIds?: string[];
   descriptionAr?: string;
   technicalDescription?: string;
+  hintAr?: string;
   explanationAr?: string;
   lessonTitleAr?: string;
   topicTitleAr?: string;

@@ -1,5 +1,5 @@
 export { authApi } from './authApi';
-export { userApi } from './userApi';
+export { preferencesFromProfile, userApi } from './userApi';
 export { aiApi, messageResponseToAskResponse, resolveMediaUrl } from './aiApi';
 export { studyPlanApi } from './studyPlanApi';
 export { flashcardsApi } from './flashcardsApi';

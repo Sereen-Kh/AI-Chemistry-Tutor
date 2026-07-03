@@ -35,6 +35,7 @@ from app.schemas.ingestion import (
     TestChunkResponse,
 )
 from app.services.ingestion_pipeline import run_full_ingestion
+from app.services.ingestion_pipeline import retry_ingestion_page as retry_ingestion_page_service
 from app.services.rag import retrieve_context
 from app.services.rag_rebuild import rebuild_rag_chunks_from_cached_pages
 from app.services.rag_cache import invalidate_rag_caches
@@ -61,6 +62,131 @@ def _update_task(task_id: str, **updates):
     current.update(updates)
 
 
+def _page_status_summary(db: Session, source_id: int | None = None, job_id: int | None = None) -> dict[str, int]:
+    query = db.query(IngestionPage.status, func.count(IngestionPage.id))
+    if source_id is not None:
+        query = query.filter(IngestionPage.source_id == source_id)
+    if job_id is not None:
+        query = query.filter(IngestionPage.job_id == job_id)
+    rows = query.group_by(IngestionPage.status).all()
+    summary = {str(status or "unknown"): int(count) for status, count in rows}
+    total = sum(summary.values())
+    completed = sum(count for status, count in summary.items() if status.startswith("completed"))
+    failed = int(summary.get("failed", 0))
+    needs_review = sum(
+        count
+        for status, count in summary.items()
+        if status in {"skipped_dry_run", "queued_retry", "needs_review"} or "review" in status
+    )
+    return {
+        "total": total,
+        "completed": completed,
+        "failed": failed,
+        "needs_review": needs_review,
+        **summary,
+    }
+
+
+def _source_response(source: ContentSource, db: Session) -> dict:
+    chunk_count = db.query(func.count(RagChunk.id)).filter(RagChunk.source_id == source.id).scalar() or 0
+    embedded_chunk_count = (
+        db.query(func.count(RagChunk.id))
+        .filter(
+            RagChunk.source_id == source.id,
+            RagChunk.embedding.isnot(None),
+            RagChunk.embedding_status == "completed",
+        )
+        .scalar()
+        or 0
+    )
+    question_count = (
+        db.query(func.count(ExtractedQuestion.id)).filter(ExtractedQuestion.source_id == source.id).scalar() or 0
+    )
+    return {
+        "id": source.id,
+        "source_type": source.source_type,
+        "title": source.title,
+        "grade": source.grade,
+        "subject": source.subject,
+        "year": source.year,
+        "file_path": source.file_path,
+        "original_filename": source.original_filename,
+        "status": source.status,
+        "metadata_json": source.metadata_json,
+        "chunk_count": int(chunk_count),
+        "embedded_chunk_count": int(embedded_chunk_count),
+        "question_count": int(question_count),
+        "pages_summary": _page_status_summary(db, source_id=source.id),
+    }
+
+
+def _job_status_response(job: IngestionJob, db: Session) -> dict:
+    result = job.result_json if isinstance(job.result_json, dict) else {}
+    errors = job.errors_json if isinstance(job.errors_json, list) else result.get("errors") or []
+    pages_summary = _page_status_summary(db, source_id=job.source_id, job_id=job.id)
+    page_rows = (
+        db.query(IngestionPage)
+        .filter(IngestionPage.job_id == job.id)
+        .order_by(IngestionPage.page_number.asc())
+        .all()
+    )
+    page_statuses = [
+        {
+            "page_number": page.page_number,
+            "page_type": page.page_type,
+            "status": page.status,
+            "char_count": page.char_count,
+            "completeness_score": page.completeness_score,
+            "errors": page.errors_json or [],
+            "warnings": page.warnings_json or [],
+        }
+        for page in page_rows
+    ] or list(result.get("page_statuses") or [])
+    source_status = None
+    if job.source_id:
+        source = db.get(ContentSource, job.source_id)
+        source_status = source.status if source else None
+    return {
+        "task_id": job.job_uid,
+        "job_uid": job.job_uid,
+        "status": job.status,
+        "progress": job.progress,
+        "message": job.message,
+        "source_id": job.source_id,
+        "source_status": source_status or result.get("status"),
+        "result": job.result_json,
+        "total_pages": int(result.get("total_pages") or pages_summary.get("total") or 0),
+        "pages_to_process": int(result.get("pages_to_process") or pages_summary.get("total") or 0),
+        "selectable_text_pages": int(result.get("selectable_text_pages") or 0),
+        "needs_vision_pages": int(result.get("needs_vision_pages") or 0),
+        "mixed_vision_pages": int(result.get("mixed_vision_pages") or 0),
+        "chunks_created": int(result.get("chunks_created") or 0),
+        "questions_extracted": int(result.get("questions_extracted") or 0),
+        "diagrams_extracted": int(result.get("diagrams_extracted") or 0),
+        "tables_extracted": int(result.get("tables_extracted") or 0),
+        "equations_extracted": int(result.get("equations_extracted") or 0),
+        "pages_processed": int(result.get("pages_processed") or pages_summary.get("completed") or 0),
+        "pages_completed": int(result.get("pages_completed") or pages_summary.get("completed") or 0),
+        "pages_failed": int(result.get("pages_failed") or pages_summary.get("failed") or 0),
+        "pages_skipped_dry_run": int(result.get("pages_skipped_dry_run") or pages_summary.get("skipped_dry_run") or 0),
+        "ocr_provider": result.get("ocr_provider"),
+        "ocr_provider_configured": result.get("ocr_provider_configured"),
+        "vision_provider": result.get("vision_provider"),
+        "vision_provider_configured": result.get("vision_provider_configured"),
+        "ingestion_mode": result.get("ingestion_mode"),
+        "ocr_required_for_vision": result.get("ocr_required_for_vision"),
+        "allow_partial_ingestion": result.get("allow_partial_ingestion"),
+        "failed_pages": list(result.get("failed_pages") or []),
+        "skipped_dry_run_pages": list(result.get("skipped_dry_run_pages") or []),
+        "page_statuses": page_statuses,
+        "warnings": list(result.get("warnings") or []),
+        "errors": errors,
+        "pages": pages_summary,
+        "created_at": job.created_at,
+        "updated_at": job.updated_at,
+    }
+
+
 async def _run_ingestion_task(
     task_id: str,
     pdf_path: str,
@@ -80,12 +206,24 @@ async def _run_ingestion_task(
     clear_existing: bool,
 ) -> None:
     """Run ingestion in a FastAPI background task for local development."""
+    db = SessionLocal()
+
     def progress(progress_value: int, message: str) -> None:
         _update_task(task_id, status="processing", progress=progress_value, message=message)
+        job = db.query(IngestionJob).filter(IngestionJob.job_uid == task_id).first()
+        if job:
+            job.status = "running"
+            job.progress = int(progress_value)
+            job.message = message[:255]
+            db.commit()
 
-    db = SessionLocal()
     try:
         _update_task(task_id, status="processing", progress=0)
+        job = db.query(IngestionJob).filter(IngestionJob.job_uid == task_id).first()
+        if job:
+            job.status = "running"
+            job.message = "starting ingestion"
+            db.commit()
         result = await run_full_ingestion(
             pdf_path,
             chapter_id=chapter_id,
@@ -104,6 +242,7 @@ async def _run_ingestion_task(
             clear_existing=clear_existing,
             progress_callback=progress,
             db=db,
+            job_id=job.id if job else None,
         )
         job = db.query(IngestionJob).filter(IngestionJob.job_uid == task_id).first()
         if job:
@@ -113,23 +252,27 @@ async def _run_ingestion_task(
             job.message = "ingestion finished"
             job.result_json = result
             job.errors_json = result["errors"]
-            db.query(IngestionPage).filter(IngestionPage.source_id == result["source_id"]).delete(
-                synchronize_session=False
+            existing_pages = (
+                db.query(func.count(IngestionPage.id))
+                .filter(IngestionPage.source_id == result["source_id"], IngestionPage.job_id == job.id)
+                .scalar()
+                or 0
             )
-            for page in result["page_statuses"]:
-                db.add(
-                    IngestionPage(
-                        source_id=result["source_id"],
-                        job_id=job.id,
-                        page_number=page["page_number"],
-                        page_type=page["page_type"],
-                        status=page["status"],
-                        extraction_methods=[page.get("extraction_method")],
-                        char_count=page.get("char_count") or 0,
-                        completeness_score=page.get("completeness_score") or 0.0,
-                        content_preview=None,
+            if existing_pages == 0:
+                for page in result["page_statuses"]:
+                    db.add(
+                        IngestionPage(
+                            source_id=result["source_id"],
+                            job_id=job.id,
+                            page_number=page["page_number"],
+                            page_type=page["page_type"],
+                            status=page["status"],
+                            extraction_methods=[page.get("extraction_method")],
+                            char_count=page.get("char_count") or 0,
+                            completeness_score=page.get("completeness_score") or 0.0,
+                            content_preview=None,
+                        )
                     )
-                )
             db.commit()
         _update_task(
             task_id,
@@ -183,8 +326,10 @@ async def start_ingestion(
     db: Session = Depends(get_db),
 ):
     task_id = uuid.uuid4().hex
-    db.add(IngestionJob(job_uid=task_id, status="queued", progress=0, message="queued"))
+    job = IngestionJob(job_uid=task_id, status="queued", progress=0, message="queued")
+    db.add(job)
     db.commit()
+    db.refresh(job)
     _update_task(task_id, status="queued", progress=0)
     background_tasks.add_task(
         _run_ingestion_task,
@@ -287,7 +432,8 @@ def list_sources(
     _admin=Depends(require_admin),
     db: Session = Depends(get_db),
 ):
-    return db.query(ContentSource).order_by(ContentSource.created_at.desc()).all()
+    sources = db.query(ContentSource).order_by(ContentSource.created_at.desc()).all()
+    return [_source_response(source, db) for source in sources]
 
 
 @router.post("/sources", response_model=SourceResponse, status_code=201)
@@ -310,7 +456,7 @@ def register_source(
     db.add(source)
     db.commit()
     db.refresh(source)
-    return source
+    return _source_response(source, db)
 
 
 @router.get("/sources/{source_id}", response_model=SourceResponse)
@@ -322,15 +468,19 @@ def get_source(
     source = db.get(ContentSource, source_id)
     if source is None:
         raise HTTPException(status_code=404, detail="Source not found")
-    return source
+    return _source_response(source, db)
 
 
 @router.get("/status/{task_id}", response_model=IngestionStatusResponse)
-def ingestion_status(task_id: str, _admin=Depends(require_admin)):
-    task = _TASKS.get(task_id)
-    if not task:
-        raise HTTPException(status_code=404, detail="Task not found")
-    return task
+def ingestion_status(
+    task_id: str,
+    _admin=Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    job = db.query(IngestionJob).filter(IngestionJob.job_uid == task_id).first()
+    if job is None:
+        raise HTTPException(status_code=404, detail="Ingestion job not found")
+    return _job_status_response(job, db)
 
 
 @router.get("/stats", response_model=IngestionStatsResponse)
@@ -431,7 +581,7 @@ def list_ingestion_pages(
 
 
 @router.post("/retry-page/{page_id}", response_model=IngestionRetryPageResponse)
-def retry_ingestion_page(
+async def retry_ingestion_page(
     page_id: int,
     _admin=Depends(require_admin),
     db: Session = Depends(get_db),
@@ -439,12 +589,18 @@ def retry_ingestion_page(
     page = db.get(IngestionPage, page_id)
     if page is None:
         raise HTTPException(status_code=404, detail="Ingestion page not found")
-    page.status = "queued_retry"
-    db.commit()
+    result = await retry_ingestion_page_service(db, page)
+    cache_result = await invalidate_rag_caches()
     return IngestionRetryPageResponse(
         page_id=page_id,
-        status=page.status,
-        message="Page marked for retry. Full per-page retry worker is not implemented yet.",
+        status=result["status"],
+        message="Page retry completed." if result["status"] != "failed" else "Page retry failed; see page errors.",
+        page=result["page"],
+        chunks_deleted=result["chunks_deleted"],
+        questions_deleted=result["questions_deleted"],
+        chunks_created=result["chunks_created"],
+        questions_created=result["questions_created"],
+        cache_invalidation=cache_result,
     )
 
 

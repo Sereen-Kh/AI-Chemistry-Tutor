@@ -1962,7 +1962,10 @@ async def send_message(
     """Save a user message, retrieve RAG context, generate and save an AI reply."""
     session = await get_owned_session(db, session_id, user_id)
     answer_scope = _normalize_answer_scope(answer_scope)
-    user = await db.get(User, user_id)
+    user_result = await db.execute(
+        select(User).options(selectinload(User.student_profile)).where(User.id == user_id)
+    )
+    user = user_result.scalar_one_or_none()
     if user is None:
         user = SimpleNamespace(
             teaching_style=teaching_style,
@@ -2560,7 +2563,12 @@ async def ask_question(
 ) -> dict:
     """Answer a one-off question with RAG sources."""
     answer_scope = _normalize_answer_scope(answer_scope)
-    user = await db.get(User, user_id) if db is not None else None
+    user = None
+    if db is not None:
+        user_result = await db.execute(
+            select(User).options(selectinload(User.student_profile)).where(User.id == user_id)
+        )
+        user = user_result.scalar_one_or_none()
     if user is None:
         user = SimpleNamespace(
             teaching_style=teaching_style,

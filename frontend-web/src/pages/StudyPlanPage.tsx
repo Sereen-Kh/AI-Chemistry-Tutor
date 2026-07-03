@@ -1094,9 +1094,14 @@ const TimelineView = ({
 
 const ReviewPanel = ({ progress }: { progress: StudyPlanProgress | null }) => {
   const nextLesson = progress?.next_lesson;
-  const studyPlanFlashcardsUrl = progress?.plan_id
-    ? `/flashcards?scope=study_plan&plan_id=${progress.plan_id}`
-    : '/flashcards';
+  const planParam = progress?.plan_id ? `&planId=${encodeURIComponent(String(progress.plan_id))}` : '';
+  const nextLessonParam = nextLesson ? `lessonId=${encodeURIComponent(String(nextLesson.id))}` : '';
+  const studyPlanFlashcardsUrl = nextLesson
+    ? `/flashcards?auto=true&source=study_plan${planParam}&${nextLessonParam}`
+    : '';
+  const studyPlanQuizUrl = nextLesson
+    ? `/quiz?auto=true&source=study_plan${planParam}&${nextLessonParam}`
+    : '';
   const weakTopicsFlashcardsUrl = progress?.plan_id
     ? `/flashcards?scope=weak_topics&plan_id=${progress.plan_id}`
     : '/flashcards?scope=weak_topics';
@@ -1108,9 +1113,13 @@ const ReviewPanel = ({ progress }: { progress: StudyPlanProgress | null }) => {
         <h3>بطاقات ذكية</h3>
         <p>راجع أهم التعاريف والقوانين من الدرس التالي أو نقاط الضعف.</p>
         <div className="sp-action-row">
-          <Link className="ed-btn ed-btn-primary" to={studyPlanFlashcardsUrl}>بطاقات اليوم</Link>
+          {nextLesson ? (
+            <Link className="ed-btn ed-btn-primary" to={studyPlanFlashcardsUrl}>بطاقات اليوم</Link>
+          ) : (
+            <button className="ed-btn ed-btn-primary" type="button" disabled>غير متاح حالياً</button>
+          )}
           {nextLesson && (
-            <Link className="ed-btn ed-btn-secondary" to={`/flashcards?lessonId=${nextLesson.id}`}>
+            <Link className="ed-btn ed-btn-secondary" to={studyPlanFlashcardsUrl}>
               بطاقات الدرس التالي
             </Link>
           )}
@@ -1121,7 +1130,11 @@ const ReviewPanel = ({ progress }: { progress: StudyPlanProgress | null }) => {
         <span className="sp-kicker">اختبار نهاية الأسبوع</span>
         <h3>اختبار قصير</h3>
         <p>ولّد اختباراً من الدروس المجدولة فقط حتى تقيس تقدم الخطة.</p>
-        <Link className="ed-btn ed-btn-secondary" to={nextLesson ? `/quiz?lessonId=${nextLesson.id}` : '/quiz'}>أنشئ اختباراً</Link>
+        {nextLesson ? (
+          <Link className="ed-btn ed-btn-secondary" to={studyPlanQuizUrl}>أنشئ اختباراً</Link>
+        ) : (
+          <button className="ed-btn ed-btn-secondary" type="button" disabled>غير متاح حالياً</button>
+        )}
       </Card>
       <Card className="sp-review-card">
         <span className="sp-kicker">حل موجّه</span>

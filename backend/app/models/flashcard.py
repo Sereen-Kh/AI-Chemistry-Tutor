@@ -58,6 +58,7 @@ class Flashcard(Base, TimestampMixin):
     difficulty: Mapped[str] = mapped_column(String(20), default="medium", index=True, nullable=False)
     front_text_ar: Mapped[str | None] = mapped_column(Text, nullable=True)
     back_text_ar: Mapped[str | None] = mapped_column(Text, nullable=True)
+    hint_ar: Mapped[str | None] = mapped_column(Text, nullable=True)
     description_ar: Mapped[str] = mapped_column(Text, default="", nullable=False)
     technical_description: Mapped[str] = mapped_column(Text, default="", nullable=False)
     explanation_ar: Mapped[str] = mapped_column(Text, default="", nullable=False)

@@ -74,7 +74,13 @@ def _metadata_dict(raw: Any) -> dict[str, Any]:
 def _chunk_value(chunk: Any, field: str) -> Any:
     if isinstance(chunk, dict):
         metadata = _metadata_dict(chunk.get("metadata") or chunk.get("metadata_json"))
-        return chunk.get(field, metadata.get(field))
+        if field in metadata:
+            return metadata[field]
+        if field == "printed_page_start":
+            return chunk.get("printed_page_start") or chunk.get("page_start") or chunk.get("page_number")
+        if field == "printed_page_end":
+            return chunk.get("printed_page_end") or chunk.get("page_end") or chunk.get("page_number")
+        return chunk.get(field)
 
     metadata = _metadata_dict(getattr(chunk, "metadata_json", None))
     if field in metadata:
@@ -98,15 +104,20 @@ def chunk_reviewed_metadata_issues(
 
     payload = metadata or load_reviewed_curriculum_metadata(require_ready=True)
     missing: list[str] = []
+    contract = payload.get("embedding_contract") or {}
+    optional_lesson_scopes = set(contract.get("lesson_id_optional_for_content_scopes") or [])
     for field in required_chunk_metadata(payload):
         value = _chunk_value(chunk, field)
+        if (
+            field == "lesson_id"
+            and _chunk_value(chunk, "content_scope") in optional_lesson_scopes
+            and _chunk_value(chunk, "unit_id") not in (None, "", [])
+        ):
+            continue
         if value in (None, "", []):
             missing.append(field)
     source_type = _chunk_value(chunk, "source_type")
-    allowed_source_types = set(
-        (payload.get("embedding_contract") or {}).get("allowed_source_types")
-        or ["textbook", "solution_book"]
-    )
+    allowed_source_types = set(contract.get("allowed_source_types") or ["textbook", "solution_book"])
     if source_type and source_type not in allowed_source_types:
         missing.append("source_type_not_allowed")
     return sorted(set(missing))

@@ -233,6 +233,45 @@ def test_unsupported_audio_format_rejected(session_factory, tmp_path: Path):
     run_async(scenario())
 
 
+def test_missing_audio_mime_type_rejected(session_factory, tmp_path: Path):
+    async def scenario():
+        async with session_factory() as db:
+            user, session_id = await _create_user_and_session(db)
+            with pytest.raises(HTTPException) as exc_info:
+                await chat_service.send_multimodal_message(
+                    db,
+                    session_id=session_id,
+                    user_id=user.id,
+                    audio_bytes=b"webm-bytes",
+                    audio_filename="student.webm",
+                    audio_content_type=None,
+                    audio_service=FakeAudioService(),
+                    storage=LocalAudioStorage(tmp_path / "audio"),
+                )
+            assert exc_info.value.detail["code"] == "UNSUPPORTED_AUDIO_FORMAT"
+
+    run_async(scenario())
+
+
+def test_invalid_requested_return_type_rejected(session_factory, tmp_path: Path):
+    async def scenario():
+        async with session_factory() as db:
+            user, session_id = await _create_user_and_session(db)
+            with pytest.raises(HTTPException) as exc_info:
+                await chat_service.send_multimodal_message(
+                    db,
+                    session_id=session_id,
+                    user_id=user.id,
+                    text="ما هو الماء؟",
+                    requested_return_type="voice",
+                    audio_service=FakeAudioService(),
+                    storage=LocalAudioStorage(tmp_path / "audio"),
+                )
+            assert exc_info.value.detail["code"] == "INVALID_REQUESTED_RETURN_TYPE"
+
+    run_async(scenario())
+
+
 def test_audio_too_large_rejected(session_factory, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr(chat_service.settings, "audio_max_file_size_mb", 0)
 
@@ -253,6 +292,28 @@ def test_audio_too_large_rejected(session_factory, tmp_path: Path, monkeypatch: 
             assert exc_info.value.detail["code"] == "AUDIO_FILE_TOO_LARGE"
 
     run_async(scenario())
+
+
+def test_audio_storage_uses_opaque_media_urls(tmp_path: Path):
+    storage = LocalAudioStorage(tmp_path / "audio")
+    input_path, input_url = storage.save_input_bytes(
+        b"webm-bytes",
+        filename="student private name.webm",
+        content_type="audio/webm",
+    )
+    output_path, output_url = storage.save_output_bytes(b"mp3-bytes", message_id=123)
+
+    assert input_path.exists()
+    assert output_path.exists()
+    assert input_path.name.startswith("input_")
+    assert "student" not in input_path.name
+    assert "private" not in input_path.name
+    assert output_path.name.startswith("answer_123_")
+    assert output_path.name != "answer_123.mp3"
+    assert input_url.startswith("/media/uploads/")
+    assert output_url.startswith("/media/uploads/")
+    assert not input_url.startswith("file://")
+    assert not output_url.startswith("file://")
 
 
 def test_stt_failure_blocks_rag(session_factory, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):

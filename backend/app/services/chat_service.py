@@ -222,7 +222,6 @@ _ALLOWED_AUDIO_CONTENT_TYPES = {
     "audio/mp4",
     "audio/m4a",
     "audio/x-m4a",
-    "application/octet-stream",
 }
 _CHEMISTRY_DICTIONARY_PATH = BACKEND_DIR / "app" / "rag" / "data" / "chemistry_entities.json"
 _CHEMISTRY_DICTIONARY_CACHE: list[ChemistryDictionaryEntry] | None = None
@@ -326,8 +325,13 @@ def _validate_audio_upload(
     if extension not in _ALLOWED_AUDIO_EXTENSIONS:
         raise _audio_error("UNSUPPORTED_AUDIO_FORMAT", "Supported audio formats are webm, mp3, wav, and m4a.")
 
-    normalized_type = (content_type or "application/octet-stream").split(";")[0].strip().lower()
-    if normalized_type not in _ALLOWED_AUDIO_CONTENT_TYPES:
+    normalized_type = (content_type or "").split(";")[0].strip().lower()
+    allowed_content_types = {
+        str(item).split(";")[0].strip().lower()
+        for item in (settings.allowed_audio_mime_types or _ALLOWED_AUDIO_CONTENT_TYPES)
+        if str(item).strip()
+    }
+    if not normalized_type or normalized_type not in allowed_content_types:
         raise _audio_error("UNSUPPORTED_AUDIO_FORMAT", f"Unsupported audio MIME type: {content_type}.")
 
     # TODO: Add duration validation when an audio probing utility is introduced.
@@ -2377,7 +2381,13 @@ async def send_multimodal_message(
         raise _audio_error(detail_code, "Send either text or audio for this MVP, not both." if has_text else "Text or audio is required.")
 
     input_type = AudioInputType.AUDIO if has_audio else AudioInputType.TEXT
-    requested = RequestedReturnType(requested_return_type)
+    try:
+        requested = RequestedReturnType(requested_return_type)
+    except ValueError as exc:
+        raise _audio_error(
+            "INVALID_REQUESTED_RETURN_TYPE",
+            "requestedReturnType must be one of: auto, text, audio, text_audio.",
+        ) from exc
     resolved = resolve_return_type(input_type, requested)
     needs_tts = should_generate_tts(resolved)
     needs_stt = input_type == AudioInputType.AUDIO

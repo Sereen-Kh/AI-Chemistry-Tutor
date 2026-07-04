@@ -1,3 +1,4 @@
+from copy import deepcopy
 from datetime import date, datetime, timedelta, timezone
 import re
 from typing import Any
@@ -294,6 +295,120 @@ def _build_schedule(
         "over_capacity": over_capacity,
         "warnings": warnings,
     }
+
+
+def _task_id(*parts: object) -> str:
+    normalized = [
+        re.sub(r"[^a-zA-Z0-9_-]+", "-", str(part).strip()).strip("-")
+        for part in parts
+        if part is not None and str(part).strip()
+    ]
+    return "-".join(normalized).lower()
+
+
+def _task_from_session(entry: dict[str, Any], session: dict[str, Any], session_index: int) -> dict[str, Any]:
+    session_type = str(session.get("type") or "review")
+    lesson_id = _as_int(session.get("lesson_id"))
+    task_type = "lesson" if session_type == "lesson" and lesson_id else "review"
+    return {
+        "id": _task_id("task", entry.get("date"), task_type, lesson_id or session_index),
+        "type": task_type,
+        "title": str(session.get("title") or ("مراجعة" if task_type == "review" else "درس")),
+        "lesson_id": lesson_id,
+        "topic_id": None,
+        "estimated_minutes": int(session.get("minutes") or entry.get("planned_minutes") or 20),
+        "status": "completed" if session.get("completed") is True or session.get("status") == "completed" else "pending",
+        "completed_at": session.get("completed_at"),
+    }
+
+
+def _build_plan_weeks(schedule: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    weeks: list[dict[str, Any]] = []
+    current_week: dict[str, Any] | None = None
+    previous_iso_week: tuple[int, int] | None = None
+
+    for entry in schedule:
+        scheduled_date = _parse_date(str(entry.get("date") or ""))
+        if scheduled_date is None:
+            continue
+        iso_year, iso_week, _ = scheduled_date.isocalendar()
+        iso_key = (iso_year, iso_week)
+        if current_week is None or previous_iso_week != iso_key:
+            current_week = {
+                "week_number": len(weeks) + 1,
+                "focus": "تغطية الدروس المجدولة ومراجعة قصيرة",
+                "days": [],
+            }
+            weeks.append(current_week)
+            previous_iso_week = iso_key
+
+        sessions = entry.get("sessions") if isinstance(entry.get("sessions"), list) else []
+        tasks = [
+            _task_from_session(entry, session, index)
+            for index, session in enumerate(sessions, start=1)
+            if isinstance(session, dict)
+        ]
+        lesson_ids = [
+            task["lesson_id"]
+            for task in tasks
+            if task["lesson_id"] is not None
+        ]
+        unique_lesson_ids = list(dict.fromkeys(lesson_ids))
+        if unique_lesson_ids:
+            tasks.append(
+                {
+                    "id": _task_id("task", entry.get("date"), "flashcards", "-".join(map(str, unique_lesson_ids))),
+                    "type": "flashcards",
+                    "title": "مراجعة بطاقات الدروس المجدولة",
+                    "lesson_id": unique_lesson_ids[0],
+                    "topic_id": None,
+                    "estimated_minutes": 10,
+                    "status": "pending",
+                    "completed_at": None,
+                }
+            )
+        if len(unique_lesson_ids) >= 2:
+            tasks.append(
+                {
+                    "id": _task_id("task", entry.get("date"), "quiz", "-".join(map(str, unique_lesson_ids))),
+                    "type": "quiz",
+                    "title": "اختبار قصير للدروس المجدولة",
+                    "lesson_id": unique_lesson_ids[0],
+                    "topic_id": None,
+                    "estimated_minutes": 15,
+                    "status": "pending",
+                    "completed_at": None,
+                }
+            )
+
+        current_week["days"].append(
+            {
+                "date": scheduled_date.isoformat(),
+                "title": f"خطة {entry.get('weekday_ar') or scheduled_date.isoformat()}",
+                "lesson_ids": unique_lesson_ids,
+                "topic_ids": [],
+                "tasks": tasks,
+            }
+        )
+
+    return weeks
+
+
+def _validate_plan_json_contract(plan_json: dict[str, Any]) -> None:
+    weeks = plan_json.get("weeks")
+    if not isinstance(weeks, list):
+        raise HTTPException(status_code=500, detail="Generated study plan is missing weeks")
+    for week in weeks:
+        days = week.get("days") if isinstance(week, dict) else None
+        if not isinstance(days, list):
+            raise HTTPException(status_code=500, detail="Generated study plan week is invalid")
+        for day in days:
+            tasks = day.get("tasks") if isinstance(day, dict) else None
+            if not isinstance(tasks, list):
+                raise HTTPException(status_code=500, detail="Generated study plan day is invalid")
+            for task in tasks:
+                if not isinstance(task, dict) or not task.get("id") or task.get("status") not in {"pending", "completed", "skipped"}:
+                    raise HTTPException(status_code=500, detail="Generated study plan task is invalid")
 
 
 def _as_int(value: Any) -> int | None:
@@ -607,14 +722,22 @@ async def generate_study_plan(db: AsyncSession, user_id: int, request: StudyPlan
     )
     plan_json = {
         "title": request.title or "خطة دراسة الكيمياء",
+        "overview": "خطة دراسة يومية مبنية على الدروس المختارة والوقت المتاح لكل يوم.",
+        "target_date": end_date.isoformat(),
         "config": config,
         "chapters": list(chapters.values()),
         "lesson_ids": selected_ids,
         "completed_lesson_ids": [],
         "weakTopics": [],
+        "weak_topics": [],
         "currentLesson": (list(chapters.values())[0]["lessons"][0] if chapters and list(chapters.values())[0]["lessons"] else None),
         "schedule": schedule,
+        "weeks": _build_plan_weeks(schedule),
         "study_days": [{"code": day, "label": WEEKDAYS[day]["ar"]} for day in study_days],
+        "recommendations": [
+            "ابدأ بالدرس المجدول ثم راجع بطاقاته في نفس اليوم.",
+            "استخدم الاختبار القصير بعد كل مجموعة دروس لتثبيت الفهم.",
+        ],
         "summary": {
             "start_date": start_date.isoformat(),
             "end_date": end_date.isoformat(),
@@ -623,6 +746,7 @@ async def generate_study_plan(db: AsyncSession, user_id: int, request: StudyPlan
             **schedule_summary,
         },
     }
+    _validate_plan_json_contract(plan_json)
     plan = StudyPlan(user_id=user_id, exam_date=exam_date, status="active", plan_json=plan_json)
     db.add(plan)
     await db.commit()
@@ -674,15 +798,29 @@ async def get_study_plan_progress(db: AsyncSession, plan_id: int, user_id: int) 
 
 async def complete_study_plan_lesson(db: AsyncSession, plan_id: int, user_id: int, lesson_id: int) -> StudyPlan:
     plan = await get_study_plan(db, plan_id, user_id)
-    metadata = plan.plan_json if isinstance(plan.plan_json, dict) else {}
+    metadata = deepcopy(plan.plan_json) if isinstance(plan.plan_json, dict) else {}
+    planned_lesson_ids = set(_scheduled_lesson_ids(metadata))
+    chapters = metadata.get("chapters") if isinstance(metadata.get("chapters"), list) else []
+    for chapter in chapters:
+        lessons = chapter.get("lessons") if isinstance(chapter, dict) else []
+        if not isinstance(lessons, list):
+            continue
+        for lesson in lessons:
+            if isinstance(lesson, dict):
+                lesson_id_from_chapter = _as_int(lesson.get("id"))
+                if lesson_id_from_chapter:
+                    planned_lesson_ids.add(lesson_id_from_chapter)
+    if planned_lesson_ids and int(lesson_id) not in planned_lesson_ids:
+        raise HTTPException(status_code=422, detail="Lesson is not part of this study plan")
+
     completed = {int(item) for item in metadata.get("completed_lesson_ids", []) if str(item).isdigit()}
     completed.add(int(lesson_id))
     metadata["completed_lesson_ids"] = sorted(completed)
 
-    chapters = metadata.get("chapters") if isinstance(metadata.get("chapters"), list) else []
     next_current = None
     total = 0
     done = 0
+    completed_at = datetime.now(timezone.utc)
     for chapter in chapters:
         lessons = chapter.get("lessons") if isinstance(chapter, dict) else []
         if not isinstance(lessons, list):
@@ -723,6 +861,23 @@ async def complete_study_plan_lesson(db: AsyncSession, plan_id: int, user_id: in
             if session_lesson_id in completed:
                 session["completed"] = True
                 session["status"] = "completed"
+                session["completed_at"] = completed_at.isoformat()
+    weeks = metadata.get("weeks") if isinstance(metadata.get("weeks"), list) else []
+    for week in weeks:
+        days = week.get("days") if isinstance(week, dict) else []
+        if not isinstance(days, list):
+            continue
+        for day in days:
+            tasks = day.get("tasks") if isinstance(day, dict) else []
+            if not isinstance(tasks, list):
+                continue
+            for task in tasks:
+                if not isinstance(task, dict) or task.get("type") != "lesson":
+                    continue
+                task_lesson_id = _as_int(task.get("lesson_id"))
+                if task_lesson_id in completed:
+                    task["status"] = "completed"
+                    task["completed_at"] = completed_at.isoformat()
     plan.plan_json = metadata
 
     result = await db.execute(
@@ -734,12 +889,12 @@ async def complete_study_plan_lesson(db: AsyncSession, plan_id: int, user_id: in
             user_id=user_id,
             lesson_id=lesson_id,
             status="completed",
-            completed_at=datetime.now(timezone.utc),
+            completed_at=completed_at,
         )
         db.add(progress)
     else:
         progress.status = "completed"
-        progress.completed_at = datetime.now(timezone.utc)
+        progress.completed_at = completed_at
 
     await db.commit()
     await db.refresh(plan)

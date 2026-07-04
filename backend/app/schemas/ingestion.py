@@ -82,8 +82,98 @@ class SourceResponse(BaseModel):
     embedded_chunk_count: int = 0
     question_count: int = 0
     pages_summary: dict[str, int] = Field(default_factory=dict)
+    canonical_source: bool = False
+    file_sha256: str | None = None
+    file_size_bytes: int | None = None
+    page_count: int | None = None
+    reviewed_metadata_version: str | None = None
+    reviewed_metadata_status: str | None = None
+    ready_for_embedding: bool | None = None
+    embedding_status: str | None = None
+    missing_metadata_count: int = 0
+    manual_review_count: int = 0
+    reviewed_chunks_path: str | None = None
+    reviewed_preview_path: str | None = None
+    reviewed_metadata_path: str | None = None
 
     model_config = {"from_attributes": True}
+
+
+class CanonicalSourceStatus(BaseModel):
+    source_type: str
+    title: str
+    file_path: str
+    grade: str
+    subject: str
+    year: int | None = None
+    exists: bool
+    file_size_bytes: int | None = None
+    sha256: str | None = None
+    page_count: int | None = None
+    source_id: int | None = None
+    source_status: str | None = None
+    chunk_count: int = 0
+    embedded_chunk_count: int = 0
+    reviewed_metadata_version: str | None = None
+    reviewed_metadata_status: str | None = None
+    ready_for_embedding: bool = False
+    missing_metadata_count: int = 0
+    manual_review_count: int = 0
+    embedding_status: str = "not_embedded"
+    reviewed_chunks_path: str | None = None
+    reviewed_preview_path: str | None = None
+    reviewed_metadata_path: str | None = None
+    errors: list[str] = Field(default_factory=list)
+
+
+class CanonicalSourcesValidationResponse(BaseModel):
+    sources: list[CanonicalSourceStatus]
+    registered_count: int = 0
+    updated_count: int = 0
+    missing_count: int = 0
+    reviewed_metadata_version: str | None = None
+    ready_for_embedding: bool = False
+    can_prepare_chunks: bool = False
+
+
+class PrepareReviewedChunksRequest(BaseModel):
+    write: bool = True
+    include_textbook: bool = True
+    include_solution_book: bool = True
+
+
+class PrepareReviewedChunksResponse(BaseModel):
+    status: str
+    write: bool
+    reviewed_metadata_version: str
+    ready_for_embedding: bool
+    textbook: dict = Field(default_factory=dict)
+    solution_book: dict = Field(default_factory=dict)
+    counts: dict = Field(default_factory=dict)
+    blocking_issues: list[str] = Field(default_factory=list)
+    files_written: list[str] = Field(default_factory=list)
+    backups: list[str] = Field(default_factory=list)
+
+
+class EmbeddingReadinessResponse(BaseModel):
+    reviewed_metadata_version: str | None = None
+    status: str
+    ready_for_embedding: bool
+    blocking_issues: list[str] = Field(default_factory=list)
+    required_chunk_metadata: list[str] = Field(default_factory=list)
+    allowed_source_types: list[str] = Field(default_factory=list)
+    embedding_model: str
+    embedding_dimension: int
+    vector_store: str
+    vector_index: str
+    textbook_chunks_total: int = 0
+    textbook_missing_metadata_count: int = 0
+    solution_chunks_total: int = 0
+    solution_manual_review_count: int = 0
+    solution_bad_endings_count: int = 0
+    ready_chunk_count: int = 0
+    needs_review_chunk_count: int = 0
+    blocked_chunk_count: int = 0
 
 
 class IngestionPageResponse(BaseModel):

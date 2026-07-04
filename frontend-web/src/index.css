@@ -3276,6 +3276,13 @@ label {
   margin-top: 16px;
 }
 
+.admin-action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-block: 16px;
+}
+
 .admin-source-type-grid article,
 .admin-metric-list article,
 .admin-source-list article,

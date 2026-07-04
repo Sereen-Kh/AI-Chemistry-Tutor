@@ -6,7 +6,7 @@ import re
 from pathlib import Path
 from uuid import uuid4
 
-from app.core.config import PROJECT_DIR
+from app.core.config import PROJECT_DIR, settings
 
 
 _SAFE_SUFFIX_RE = re.compile(r"[^a-zA-Z0-9]+")
@@ -15,8 +15,12 @@ _SAFE_SUFFIX_RE = re.compile(r"[^a-zA-Z0-9]+")
 class LocalAudioStorage:
     """Minimal local storage under data/uploads/audio for the audio MVP."""
 
-    def __init__(self, root: Path | None = None) -> None:
-        self.root = root or PROJECT_DIR / "data" / "uploads" / "audio"
+    def __init__(self, root: Path | None = None, public_base_url: str | None = None) -> None:
+        configured_root = Path(settings.audio_storage_dir)
+        if not configured_root.is_absolute():
+            configured_root = PROJECT_DIR / configured_root
+        self.root = (root or configured_root).resolve()
+        self.public_base_url = (public_base_url or settings.audio_public_base_url or "/media/uploads").rstrip("/")
         self.input_dir = self.root / "input"
         self.output_dir = self.root / "output"
         self.input_dir.mkdir(parents=True, exist_ok=True)
@@ -40,20 +44,22 @@ class LocalAudioStorage:
 
     def save_input_bytes(self, data: bytes, *, filename: str | None, content_type: str | None) -> tuple[Path, str]:
         ext = self.safe_extension(filename, content_type)
-        stem = _SAFE_SUFFIX_RE.sub("_", Path(filename or "student_audio").stem).strip("_") or "student_audio"
-        path = self.input_dir / f"input_{uuid4().hex}_{stem}.{ext}"
+        path = self.input_dir / f"input_{uuid4().hex}.{ext}"
         path.write_bytes(data)
         return path, self.to_media_url(path)
 
     def save_output_bytes(self, data: bytes, *, message_id: int | str, extension: str = "mp3") -> tuple[Path, str]:
-        ext = extension.lower().lstrip(".") or "mp3"
-        path = self.output_dir / f"answer_{message_id}.{ext}"
+        ext = _SAFE_SUFFIX_RE.sub("", extension.lower().lstrip(".")) or "mp3"
+        path = self.output_dir / f"answer_{message_id}_{uuid4().hex}.{ext}"
         path.write_bytes(data)
         return path, self.to_media_url(path)
 
     def to_media_url(self, path: Path) -> str:
+        resolved = path.resolve()
+        uploads_root = (PROJECT_DIR / "data" / "uploads").resolve()
         try:
-            relative = path.resolve().relative_to((PROJECT_DIR / "data" / "uploads").resolve())
+            relative = resolved.relative_to(uploads_root)
             return f"/media/uploads/{relative.as_posix()}"
         except ValueError:
-            return path.resolve().as_uri()
+            relative = resolved.relative_to(self.root)
+            return f"{self.public_base_url}/audio/{relative.as_posix()}"

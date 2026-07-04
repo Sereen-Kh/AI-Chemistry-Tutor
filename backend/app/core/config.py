@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 from typing import List
 
@@ -49,8 +50,20 @@ class Settings(BaseSettings):
     elevenlabs_tts_model: str = "eleven_multilingual_v2"
     elevenlabs_default_voice_id: str = ""
     elevenlabs_base_url: str = "https://api.elevenlabs.io"
+    audio_storage_dir: str = "data/uploads/audio"
+    audio_public_base_url: str = "/media/uploads"
     audio_max_duration_seconds: int = 90
     audio_max_file_size_mb: int = 10
+    allowed_audio_mime_types: List[str] = [
+        "audio/webm",
+        "audio/mpeg",
+        "audio/mp3",
+        "audio/wav",
+        "audio/x-wav",
+        "audio/mp4",
+        "audio/m4a",
+        "audio/x-m4a",
+    ]
     tts_max_chars_per_response: int = 1200
     firebase_project_id: str = ""
     firebase_service_account_json: str = ""
@@ -152,6 +165,18 @@ class Settings(BaseSettings):
         if dimension != 768:
             raise ValueError("EMBEDDING_DIMENSION must be 768 unless the pgvector column is migrated")
         return dimension
+
+    @field_validator("allowed_audio_mime_types", mode="before")
+    @classmethod
+    def parse_allowed_audio_mime_types(cls, value):
+        if isinstance(value, str):
+            stripped = value.strip()
+            if not stripped:
+                return []
+            if stripped.startswith("["):
+                return json.loads(stripped)
+            return [item.strip() for item in stripped.split(",") if item.strip()]
+        return value
 
     class Config:
         env_file = (PROJECT_DIR / ".env", BACKEND_DIR / ".env")

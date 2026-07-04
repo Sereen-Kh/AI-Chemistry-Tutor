@@ -1,0 +1,2458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>EduMind Feature Inventory Audit 2 — Visual Review</title>
+<style>
+:root {
+  --bg:#09111f; --panel:#0f1b2e; --panel2:#14233a; --panel3:#192a45;
+  --text:#eef5ff; --muted:#91a4c4; --muted2:#61718d; --line:#263a5e;
+  --green:#21c18a; --green2:#0f766e; --amber:#f59e0b; --red:#ef4444; --blue:#60a5fa; --violet:#a78bfa;
+  --shadow: 0 14px 40px rgba(0,0,0,.30); --radius:18px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(circle at top left,#132b55 0,#09111f 42%,#070c15 100%);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Arial,sans-serif;color:var(--text);line-height:1.55}
+a{color:#93c5fd}
+.layout{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
+.sidebar{position:sticky;top:0;height:100vh;padding:22px 18px;background:rgba(8,16,30,.82);border-right:1px solid var(--line);backdrop-filter: blur(14px);overflow:auto}
+.brand{font-weight:800;font-size:18px;letter-spacing:-.02em;margin-bottom:5px}
+.sub{font-size:12px;color:var(--muted);margin-bottom:18px}
+.nav a{display:block;text-decoration:none;color:var(--muted);padding:9px 10px;border-radius:12px;margin:4px 0;font-size:13px}
+.nav a:hover,.nav a.active{background:var(--panel2);color:var(--text)}
+.main{padding:26px 30px 80px;max-width:1440px;width:100%}
+.hero{padding:28px;border:1px solid rgba(96,165,250,.25);background:linear-gradient(135deg,rgba(96,165,250,.14),rgba(33,193,138,.08));border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:18px}
+.hero h1{margin:0 0 8px;font-size:32px;letter-spacing:-.04em;line-height:1.05}
+.hero p{margin:0;color:var(--muted);font-size:15px}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:12px;padding:9px 12px;font-size:13px;cursor:pointer}
+.btn:hover{border-color:#4776b7;background:#1b3356}
+.section{margin-top:28px}
+.section h2{font-size:22px;margin:0 0 12px;letter-spacing:-.02em}
+.section-lead{color:var(--muted);margin:0 0 14px;font-size:14px}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:16px 0}
+.kpi{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:16px;padding:16px}
+.kpi .num{font-size:30px;font-weight:800;line-height:1}
+.kpi .label{font-size:12px;color:var(--muted);margin-top:5px}
+.kpi.ok .num{color:var(--green)}.kpi.partial .num{color:var(--amber)}.kpi.stub .num{color:var(--red)}.kpi.total .num{color:var(--blue)}
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.chart-card,.panel{background:rgba(15,27,46,.95);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.16)}
+.bar-row{display:grid;grid-template-columns:120px 1fr 48px;gap:10px;align-items:center;margin:12px 0}
+.bar-label{font-size:13px;color:var(--muted)}
+.bar-track{height:10px;background:#0b1423;border-radius:999px;overflow:hidden;border:1px solid #203351}
+.bar-fill{height:100%;border-radius:999px}
+.bar-val{font-weight:700;font-size:13px;text-align:right}
+.fill-ok{background:linear-gradient(90deg,#0f766e,#21c18a)}.fill-partial{background:linear-gradient(90deg,#a16207,#f59e0b)}.fill-stub{background:linear-gradient(90deg,#991b1b,#ef4444)}.fill-planned{background:linear-gradient(90deg,#475569,#94a3b8)}.fill-blue{background:linear-gradient(90deg,#2563eb,#60a5fa)}
+.filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:12px 0 18px}
+.search{flex:1;min-width:260px;background:#0b1423;border:1px solid var(--line);color:var(--text);border-radius:12px;padding:11px 13px}
+.select{background:#0b1423;border:1px solid var(--line);color:var(--text);border-radius:12px;padding:10px 12px}
+.feature-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.feature-card{background:rgba(15,27,46,.98);border:1px solid var(--line);border-radius:16px;padding:15px;box-shadow:0 12px 28px rgba(0,0,0,.14)}
+.feature-card.hidden{display:none}
+.feature-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.feature-title{font-weight:800;font-size:16px;letter-spacing:-.015em;margin-bottom:8px}
+.feature-meta{display:flex;gap:6px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;border-radius:999px;padding:3px 8px;font-size:11px;font-weight:700;border:1px solid transparent;white-space:nowrap}
+.ok{background:rgba(33,193,138,.12);color:#57e4af;border-color:rgba(33,193,138,.25)}
+.partial{background:rgba(245,158,11,.13);color:#fbbf24;border-color:rgba(245,158,11,.28)}
+.stub{background:rgba(239,68,68,.13);color:#fca5a5;border-color:rgba(239,68,68,.28)}
+.planned{background:rgba(148,163,184,.13);color:#cbd5e1;border-color:rgba(148,163,184,.24)}
+.risk-low{background:rgba(33,193,138,.12);color:#57e4af;border-color:rgba(33,193,138,.25)}
+.risk-med{background:rgba(245,158,11,.13);color:#fbbf24;border-color:rgba(245,158,11,.28)}
+.risk-high{background:rgba(239,68,68,.13);color:#fca5a5;border-color:rgba(239,68,68,.28)}
+.toggle{background:#0b1423;color:#dbeafe;border:1px solid var(--line);border-radius:10px;padding:7px 10px;cursor:pointer}
+.layer-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
+.layer-grid div{background:#0b1423;border:1px solid #203351;border-radius:12px;padding:10px;min-height:68px}
+.layer-grid span{display:block;color:var(--muted2);font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.layer-grid strong{font-size:12px;color:#dbeafe}
+.feature-detail{display:none;margin-top:14px;border-top:1px solid var(--line);padding-top:14px;color:#dbeafe;font-size:13px}
+.feature-detail.open{display:block}
+.feature-detail h4,.feature-detail h3{margin:16px 0 8px}
+.feature-detail ul{padding-left:20px}
+.feature-detail code{background:#081120;border:1px solid #203351;border-radius:6px;padding:1px 5px;color:#bfdbfe}
+.feature-detail pre{white-space:pre-wrap;background:#081120;border:1px solid #203351;border-radius:12px;padding:12px;overflow:auto}
+.matrix-wrap{overflow:auto;border:1px solid var(--line);border-radius:16px;background:var(--panel)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{position:sticky;top:0;background:#14233a;color:#bfdbfe;text-align:left;padding:11px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:11px;border-bottom:1px solid #1d2f4f;vertical-align:top;color:#dbeafe}
+tr:hover td{background:#13233b}
+.gaps-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.gap-card{display:flex;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px}
+.gap-card.p0{border-color:rgba(239,68,68,.45);background:linear-gradient(90deg,rgba(239,68,68,.11),rgba(15,27,46,.95))}
+.gap-card.p1{border-color:rgba(245,158,11,.45);background:linear-gradient(90deg,rgba(245,158,11,.11),rgba(15,27,46,.95))}
+.gap-card.p2{border-color:rgba(96,165,250,.35);background:linear-gradient(90deg,rgba(96,165,250,.10),rgba(15,27,46,.95))}
+.gap-num{width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:#0b1423;border:1px solid var(--line);font-weight:800;color:#fff;flex:0 0 auto}
+.gap-text{font-size:13px;color:#e5eefc}
+.flow{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:14px}
+.flow-item{padding:12px;border-radius:14px;border:1px solid var(--line);background:var(--panel2);text-align:center;font-size:13px;font-weight:700}
+.flow-item.ok{background:rgba(33,193,138,.14)}.flow-item.partial{background:rgba(245,158,11,.14)}.flow-item.high{background:rgba(239,68,68,.14)}
+.callout{border-left:4px solid var(--blue);background:rgba(96,165,250,.10);border-radius:14px;padding:14px;margin:14px 0;color:#dbeafe}
+.callout.warn{border-left-color:var(--amber);background:rgba(245,158,11,.10)}
+.callout.danger{border-left-color:var(--red);background:rgba(239,68,68,.10)}
+.markdown-body{background:#0b1423;border:1px solid var(--line);border-radius:18px;padding:20px;overflow:auto}
+.markdown-body table{display:block;overflow:auto}
+.markdown-body h1,.markdown-body h2,.markdown-body h3{color:#fff}
+.markdown-body code{background:#111d31;border:1px solid #203351;border-radius:6px;padding:1px 5px}
+.markdown-body pre{background:#081120;border:1px solid #203351;border-radius:12px;padding:12px;overflow:auto}
+.mermaid-box{background:#0b1423;border:1px solid var(--line);border-radius:16px;padding:16px;overflow:auto}
+.mermaid-box pre{white-space:pre-wrap;color:#cbd5e1}
+@media(max-width:1100px){.layout{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.chart-grid,.feature-grid,.gaps-grid{grid-template-columns:1fr}.kpi-grid{grid-template-columns:repeat(2,1fr)}.flow{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.main{padding:18px}.hero h1{font-size:24px}.kpi-grid{grid-template-columns:1fr}.layer-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand">EduMind Audit 2</div>
+    <div class="sub">Feature inventory visual review<br/>Audit date: 2026-07-03</div>
+    <nav class="nav">
+      <a href="#overview" class="active">Overview</a>
+      <a href="#status">Status & Risk</a>
+      <a href="#features">Feature Cards</a>
+      <a href="#matrix">Layer Matrix</a>
+      <a href="#gaps">Top Gaps</a>
+      <a href="#flows">Learning Flow</a>
+      <a href="#source">Original Report</a>
+    </nav>
+  </aside>
+  <main class="main">
+    <section id="overview" class="hero">
+      <h1>EduMind Feature Inventory Audit 2</h1>
+      <p>A visual review board for implementation status, risks, frontend/backend readiness, tests, and next fixes.</p>
+      <div class="tools">
+        <button class="btn" onclick="document.getElementById('featureSearch').focus()">Search features</button>
+        <button class="btn" onclick="setQuickFilter('Partial','all')">Show partial</button>
+        <button class="btn" onclick="setQuickFilter('all','High')">Show high risk</button>
+        <button class="btn" onclick="setQuickFilter('all','all')">Reset filters</button>
+      </div>
+    </section>
+
+    <section id="status" class="section">
+      <h2>Status snapshot</h2>
+      <p class="section-lead">The audit covers <strong>18</strong> features across backend, database, frontend, and tests.</p>
+      <div class="kpi-grid">
+        <div class="kpi total"><div class="num">18</div><div class="label">Total features</div></div>
+        <div class="kpi ok"><div class="num">6</div><div class="label">Implemented</div></div>
+        <div class="kpi partial"><div class="num">9</div><div class="label">Partial</div></div>
+        <div class="kpi stub"><div class="num">3</div><div class="label">Stub / placeholder</div></div>
+      </div>
+      <div class="chart-grid">
+        <div class="chart-card">
+          <h3>Feature status distribution</h3>
+          <div class="bar-row"><div class="bar-label">Implemented</div><div class="bar-track"><div class="bar-fill fill-ok" style="width:33.3%"></div></div><div class="bar-val">6</div></div><div class="bar-row"><div class="bar-label">Partial</div><div class="bar-track"><div class="bar-fill fill-partial" style="width:50.0%"></div></div><div class="bar-val">9</div></div><div class="bar-row"><div class="bar-label">Stub</div><div class="bar-track"><div class="bar-fill fill-stub" style="width:16.7%"></div></div><div class="bar-val">3</div></div>
+        </div>
+        <div class="chart-card">
+          <h3>Risk distribution</h3>
+          <div class="bar-row"><div class="bar-label">Low</div><div class="bar-track"><div class="bar-fill fill-ok" style="width:5.6%"></div></div><div class="bar-val">1</div></div><div class="bar-row"><div class="bar-label">Medium</div><div class="bar-track"><div class="bar-fill fill-partial" style="width:50.0%"></div></div><div class="bar-val">9</div></div><div class="bar-row"><div class="bar-label">High</div><div class="bar-track"><div class="bar-fill fill-stub" style="width:44.4%"></div></div><div class="bar-val">8</div></div>
+        </div>
+      </div>
+      <div class="callout warn"><strong>How to review this:</strong> start with high-risk partial features, then use the matrix to see whether the issue is backend, frontend, database, or tests. The detail cards preserve the evidence from the audit.</div>
+    </section>
+
+    <section id="features" class="section">
+      <h2>Feature cards</h2>
+      <p class="section-lead">Search and filter by status/risk. Open a card to review evidence, limitations, and needed work.</p>
+      <div class="filters">
+        <input id="featureSearch" class="search" placeholder="Search feature, e.g. flashcards, RAG, Study Plan..." oninput="applyFilters()"/>
+        <select id="statusFilter" class="select" onchange="applyFilters()"><option value="all">All statuses</option><option value="Implemented">Implemented</option><option value="Partial">Partial</option><option value="Stub">Stub</option></select>
+        <select id="riskFilter" class="select" onchange="applyFilters()"><option value="all">All risks</option><option value="High">High risk</option><option value="Low">Low risk</option><option value="Medium">Medium risk</option></select>
+      </div>
+      <div class="feature-grid" id="featureGrid">
+        
+    <article class="feature-card" data-status="Implemented" data-risk="Low" data-name="auth/login/register">
+      <div class="feature-head">
+        <div>
+          <div class="feature-title">1. Auth/login/register</div>
+          <div class="feature-meta"><span class="pill ok">Implemented</span><span class="pill risk-low">Low risk</span></div>
+        </div>
+        <button class="toggle" onclick="toggleDetail('f1')">Review</button>
+      </div>
+      <div class="layer-grid">
+        <div><span>Backend</span><strong>Routes and service</strong></div>
+        <div><span>DB</span><strong>Yes</strong></div>
+        <div><span>Frontend</span><strong>Login/register/profile routing</strong></div>
+        <div><span>Tests</span><strong>Partial</strong></div>
+      </div>
+      <div id="f1" class="feature-detail"><ul>
+<li>Status: Implemented</li>
+<li>Backend routes:<ul>
+<li><code>POST /api/v1/auth/register</code> - <code>src/backend/app/api/auth/routes.py:24</code></li>
+<li><code>POST /api/v1/auth/login</code> - <code>src/backend/app/api/auth/routes.py:36</code></li>
+<li><code>GET /api/v1/auth/me</code> - <code>src/backend/app/api/auth/routes.py:42</code></li>
+<li><code>GET /api/v1/users/me</code> - <code>src/backend/app/api/users.py:14</code></li>
+<li><code>PATCH /api/v1/users/me</code> - <code>src/backend/app/api/users.py:19</code></li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li><code>register_user</code> creates the user/profile and hashes the password - <code>src/backend/app/services/auth_service.py:39</code></li>
+<li><code>authenticate_user</code> validates credentials and returns a token - <code>src/backend/app/services/auth_service.py:75</code></li>
+<li><code>get_user</code> / <code>update_user</code> - <code>src/backend/app/services/user_service.py:12</code>, <code>src/backend/app/services/user_service.py:19</code></li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li><code>User</code> / <code>users</code> - <code>src/backend/app/models/user.py:15</code>, <code>src/backend/app/models/user.py:18</code></li>
+<li><code>StudentProfile</code> / <code>student_profiles</code> created with the user - <code>src/backend/app/models/student_profile.py:14</code>, <code>src/backend/app/models/student_profile.py:17</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li><code>LoginPage</code> - <code>src/frontend-web/src/App.tsx:186</code></li>
+<li><code>RegisterPage</code> - <code>src/frontend-web/src/App.tsx:238</code></li>
+<li><code>authApi.login</code>, <code>authApi.register</code>, <code>authApi.me</code> - <code>src/frontend-web/src/api/authApi.ts:45</code>, <code>src/frontend-web/src/api/authApi.ts:51</code>, <code>src/frontend-web/src/api/authApi.ts:61</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>Profile/onboarding tests create users and exercise user/profile persistence - <code>src/backend/tests/test_profile_onboarding_preferences.py:71</code></li>
+<li>No direct frontend login/register test was found.</li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>Real FastAPI routes exist and are registered through the API router.</li>
+<li>Registration creates durable <code>User</code> and <code>StudentProfile</code> records.</li>
+<li>Frontend login/register pages call real auth API methods.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>Auth UI is not directly covered by frontend tests.</li>
+<li><code>authApi.getInterests</code> may return <code>mockInterests</code> when demo fallbacks are enabled - <code>src/frontend-web/src/api/authApi.ts:70</code>, <code>src/frontend-web/src/api/authApi.ts:73</code>.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Add explicit frontend tests for login, registration, expired-session handling, and failed credentials.</li>
+</ul>
+</li>
+</ul>
+</div>
+    </article>
+    
+    <article class="feature-card" data-status="Implemented" data-risk="Medium" data-name="profile/onboarding/preferences">
+      <div class="feature-head">
+        <div>
+          <div class="feature-title">2. Profile/onboarding/preferences</div>
+          <div class="feature-meta"><span class="pill ok">Implemented</span><span class="pill risk-med">Medium risk</span></div>
+        </div>
+        <button class="toggle" onclick="toggleDetail('f2')">Review</button>
+      </div>
+      <div class="layer-grid">
+        <div><span>Backend</span><strong>Routes and services</strong></div>
+        <div><span>DB</span><strong>Yes</strong></div>
+        <div><span>Frontend</span><strong>Profile page and onboarding helpers</strong></div>
+        <div><span>Tests</span><strong>Yes</strong></div>
+      </div>
+      <div id="f2" class="feature-detail"><ul>
+<li>Status: Implemented</li>
+<li>Backend routes:<ul>
+<li><code>GET /api/v1/auth/interests</code> - <code>src/backend/app/api/auth/routes.py:50</code></li>
+<li><code>PATCH /api/v1/auth/onboarding</code> - <code>src/backend/app/api/auth/routes.py:55</code></li>
+<li><code>GET /api/v1/student-profile/me</code> - <code>src/backend/app/api/student_profile.py:14</code></li>
+<li><code>PUT /api/v1/student-profile/me</code> - <code>src/backend/app/api/student_profile.py:19</code></li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li><code>update_user_onboarding</code> - <code>src/backend/app/services/auth_service.py:135</code></li>
+<li><code>get_or_create_profile</code> - <code>src/backend/app/services/profile_service.py:23</code></li>
+<li><code>upsert_profile</code> - <code>src/backend/app/services/profile_service.py:64</code></li>
+<li>Preference normalization helpers - <code>src/backend/app/services/preference_mapping.py:77</code>, <code>src/backend/app/services/preference_mapping.py:91</code>, <code>src/backend/app/services/preference_mapping.py:160</code></li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li><code>StudentProfile</code> / <code>student_profiles</code> - <code>src/backend/app/models/student_profile.py:14</code></li>
+<li><code>InterestCategory</code> and <code>UserInterest</code> - <code>src/backend/app/models/interest.py:11</code>, <code>src/backend/app/models/interest.py:27</code></li>
+<li>User preference fields live on <code>User</code> and are synchronized into <code>StudentProfile</code> - <code>src/backend/app/services/profile_service.py:46</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li><code>ProfilePage</code> - <code>src/frontend-web/src/App.tsx:690</code></li>
+<li><code>userApi.getProfile</code>, <code>userApi.updateProfile</code>, <code>userApi.updatePreferences</code> - <code>src/frontend-web/src/api/userApi.ts:62</code>, <code>src/frontend-web/src/api/userApi.ts:67</code>, <code>src/frontend-web/src/api/userApi.ts:72</code></li>
+<li>Onboarding completion helpers - <code>src/frontend-web/src/lib/onboarding.ts:5</code>, <code>src/frontend-web/src/lib/onboarding.ts:22</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>Backend profile/onboarding/preference coverage - <code>src/backend/tests/test_profile_onboarding_preferences.py:71</code></li>
+<li>Frontend onboarding helper tests - <code>src/frontend-web/src/lib/onboarding.test.ts:7</code></li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>Backend has durable profile and preference storage.</li>
+<li>Frontend profile page loads and saves preferences.</li>
+<li>Preference mapping keeps legacy learning-style fields compatible with newer fields.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>Frontend profile page itself lacks a dedicated component integration test.</li>
+<li>Interest loading can fall back to static demo interests when demo fallback is enabled - <code>src/frontend-web/src/api/authApi.ts:70</code>.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Add ProfilePage integration tests and remove or hard-gate interest demo fallback in production builds.</li>
+</ul>
+</li>
+</ul>
+</div>
+    </article>
+    
+    <article class="feature-card" data-status="Partial" data-risk="Medium" data-name="curriculum units/chapters/lessons/topics">
+      <div class="feature-head">
+        <div>
+          <div class="feature-title">3. Curriculum units/chapters/lessons/topics</div>
+          <div class="feature-meta"><span class="pill partial">Partial</span><span class="pill risk-med">Medium risk</span></div>
+        </div>
+        <button class="toggle" onclick="toggleDetail('f3')">Review</button>
+      </div>
+      <div class="layer-grid">
+        <div><span>Backend</span><strong>CRUD/read routes</strong></div>
+        <div><span>DB</span><strong>Yes</strong></div>
+        <div><span>Frontend</span><strong>Lessons UI, detail UI</strong></div>
+        <div><span>Tests</span><strong>Limited</strong></div>
+      </div>
+      <div id="f3" class="feature-detail"><ul>
+<li>Status: Partial</li>
+<li>Backend routes:<ul>
+<li>Units: <code>GET /api/v1/units</code>, <code>GET /api/v1/units/{unit_id}</code>, <code>GET /api/v1/units/{unit_id}/chapters</code> - <code>src/backend/app/api/units.py:14</code>, <code>src/backend/app/api/units.py:22</code>, <code>src/backend/app/api/units.py:27</code></li>
+<li>Chapters: list/get/create/update - <code>src/backend/app/api/chapters.py:14</code>, <code>src/backend/app/api/chapters.py:23</code>, <code>src/backend/app/api/chapters.py:28</code>, <code>src/backend/app/api/chapters.py:37</code></li>
+<li>Lessons: list/get/create/update - <code>src/backend/app/api/lessons.py:14</code>, <code>src/backend/app/api/lessons.py:23</code>, <code>src/backend/app/api/lessons.py:28</code>, <code>src/backend/app/api/lessons.py:37</code></li>
+<li>Topics: list/get/create/update/delete - <code>src/backend/app/api/topics.py:10</code>, <code>src/backend/app/api/topics.py:20</code>, <code>src/backend/app/api/topics.py:28</code>, <code>src/backend/app/api/topics.py:36</code>, <code>src/backend/app/api/topics.py:45</code></li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li>Curriculum service for units/chapters/lessons - <code>src/backend/app/services/curriculum_service.py:11</code>, <code>src/backend/app/services/curriculum_service.py:44</code>, <code>src/backend/app/services/curriculum_service.py:87</code></li>
+<li>Topic service - <code>src/backend/app/services/topic_service.py:9</code>, <code>src/backend/app/services/topic_service.py:27</code></li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li><code>Unit</code>, <code>Chapter</code>, <code>Lesson</code>, <code>LessonProgress</code> - <code>src/backend/app/models/chemistry.py:38</code>, <code>src/backend/app/models/chemistry.py:57</code>, <code>src/backend/app/models/chemistry.py:84</code>, <code>src/backend/app/models/chemistry.py:112</code></li>
+<li><code>Topic</code> - <code>src/backend/app/models/topic.py:10</code></li>
+<li><code>lesson_topics</code> many-to-many table - <code>src/backend/app/models/chemistry.py:13</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li>Lessons page - <code>src/frontend-web/src/pages/LearningPages.tsx:34</code></li>
+<li>Lesson detail page - <code>src/frontend-web/src/pages/LessonDetailPage.tsx:24</code></li>
+<li><code>curriculumApi.getUnits</code>, <code>curriculumApi.getLesson</code> - <code>src/frontend-web/src/api/curriculumApi.ts:216</code>, <code>src/frontend-web/src/api/curriculumApi.ts:223</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>No dedicated curriculum route/service test was found.</li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>Core curriculum CRUD/read API and ORM hierarchy exist.</li>
+<li>Frontend can load units and lesson details from the backend.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>Frontend lessons fall back to static curriculum data on empty/error API responses - <code>src/frontend-web/src/pages/LearningPages.tsx:56</code>, <code>src/frontend-web/src/pages/LearningPages.tsx:61</code>.</li>
+<li>Lesson detail page combines backend catalog data with mock quality/lesson content - <code>src/frontend-web/src/pages/LessonDetailPage.tsx:4</code>, <code>src/frontend-web/src/pages/LessonDetailPage.tsx:5</code>, <code>src/frontend-web/src/pages/LessonDetailPage.tsx:44</code>.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Remove production fallback curriculum, populate backend curriculum reliably, and add curriculum API tests.</li>
+</ul>
+</li>
+</ul>
+</div>
+    </article>
+    
+    <article class="feature-card" data-status="Implemented" data-risk="Medium" data-name="ask ai chat">
+      <div class="feature-head">
+        <div>
+          <div class="feature-title">4. Ask AI chat</div>
+          <div class="feature-meta"><span class="pill ok">Implemented</span><span class="pill risk-med">Medium risk</span></div>
+        </div>
+        <button class="toggle" onclick="toggleDetail('f4')">Review</button>
+      </div>
+      <div class="layer-grid">
+        <div><span>Backend</span><strong>Persistent sessions/messages and ask route</strong></div>
+        <div><span>DB</span><strong>Yes</strong></div>
+        <div><span>Frontend</span><strong>Ask AI page</strong></div>
+        <div><span>Tests</span><strong>Yes</strong></div>
+      </div>
+      <div id="f4" class="feature-detail"><ul>
+<li>Status: Implemented</li>
+<li>Backend routes:<ul>
+<li>Sessions: <code>POST /api/v1/chat/sessions</code>, <code>GET /api/v1/chat/sessions</code>, <code>GET /api/v1/chat/sessions/{session_id}</code>, <code>DELETE /api/v1/chat/sessions/{session_id}</code> - <code>src/backend/app/api/chat/routes.py:32</code>, <code>src/backend/app/api/chat/routes.py:47</code>, <code>src/backend/app/api/chat/routes.py:55</code>, <code>src/backend/app/api/chat/routes.py:206</code></li>
+<li>Messages: <code>POST /api/v1/chat/sessions/{session_id}/messages</code>, <code>POST /api/v1/chat/messages</code>, feedback route - <code>src/backend/app/api/chat/routes.py:64</code>, <code>src/backend/app/api/chat/routes.py:88</code>, <code>src/backend/app/api/chat/routes.py:196</code></li>
+<li>Legacy/direct ask: <code>POST /api/v1/chat/ask</code> - <code>src/backend/app/api/chat/routes.py:135</code></li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li>Session creation/list/ownership - <code>src/backend/app/services/chat_service.py:1908</code>, <code>src/backend/app/services/chat_service.py:1927</code>, <code>src/backend/app/services/chat_service.py:1938</code></li>
+<li>Text message flow - <code>src/backend/app/services/chat_service.py:1951</code></li>
+<li>Multipart/multimodal message flow - <code>src/backend/app/services/chat_service.py:2353</code></li>
+<li>Direct ask flow - <code>src/backend/app/services/chat_service.py:2552</code></li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li><code>ChatSession</code> / <code>chat_sessions</code> - <code>src/backend/app/models/chat.py:12</code>, <code>src/backend/app/models/chat.py:15</code></li>
+<li><code>ChatMessage</code> / <code>chat_messages</code> - <code>src/backend/app/models/chat.py:34</code>, <code>src/backend/app/models/chat.py:37</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li><code>AskAiPage</code> - <code>src/frontend-web/src/pages/AskAIPage.tsx:716</code></li>
+<li>Session and message API methods - <code>src/frontend-web/src/api/aiApi.ts:168</code>, <code>src/frontend-web/src/api/aiApi.ts:173</code>, <code>src/frontend-web/src/api/aiApi.ts:178</code>, <code>src/frontend-web/src/api/aiApi.ts:183</code>, <code>src/frontend-web/src/api/aiApi.ts:206</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>Backend chat sessions - <code>src/backend/tests/test_chat_sessions.py:85</code></li>
+<li>Backend Ask AI/RAG fallback tests - <code>src/backend/tests/test_ai_service_fallbacks.py:12</code></li>
+<li>Frontend Ask AI session/source/mode/error tests - <code>src/frontend-web/src/AskAiPage.test.tsx:120</code>, <code>src/frontend-web/src/AskAiPage.test.tsx:141</code>, <code>src/frontend-web/src/AskAiPage.test.tsx:175</code>, <code>src/frontend-web/src/AskAiPage.test.tsx:197</code>, <code>src/frontend-web/src/AskAiPage.test.tsx:209</code></li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>Session-based chat persists user and assistant messages.</li>
+<li><code>send_message</code> saves user messages and assistant messages with sources/citations - <code>src/backend/app/services/chat_service.py:1991</code>, <code>src/backend/app/services/chat_service.py:2177</code>, <code>src/backend/app/services/chat_service.py:2305</code>.</li>
+<li>Ask AI frontend renders persisted source evidence and validates empty composer submissions.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>Some post-answer transformations are disabled or frontend-only placeholders, e.g. response action chips show <code>قريباً</code> - <code>src/frontend-web/src/pages/AskAIPage.tsx:388</code>, <code>src/frontend-web/src/pages/AskAIPage.tsx:390</code>, <code>src/frontend-web/src/pages/AskAIPage.tsx:392</code>.</li>
+<li><code>aiApi</code> still exposes unimplemented helper methods that throw endpoint-not-ready errors - <code>src/frontend-web/src/api/aiApi.ts:242</code>, <code>src/frontend-web/src/api/aiApi.ts:246</code>, <code>src/frontend-web/src/api/aiApi.ts:250</code>, <code>src/frontend-web/src/api/aiApi.ts:254</code>, <code>src/frontend-web/src/api/aiApi.ts:258</code>.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Either implement or remove unsupported answer-transformation API methods from the public frontend API surface.</li>
+</ul>
+</li>
+</ul>
+</div>
+    </article>
+    
+    <article class="feature-card" data-status="Implemented" data-risk="Medium" data-name="rag search/retrieval">
+      <div class="feature-head">
+        <div>
+          <div class="feature-title">5. RAG search/retrieval</div>
+          <div class="feature-meta"><span class="pill ok">Implemented</span><span class="pill risk-med">Medium risk</span></div>
+        </div>
+        <button class="toggle" onclick="toggleDetail('f5')">Review</button>
+      </div>
+      <div class="layer-grid">
+        <div><span>Backend</span><strong>Retrieval/search/answer routes</strong></div>
+        <div><span>DB</span><strong>Yes</strong></div>
+        <div><span>Frontend</span><strong>RAG search UI, Ask AI sources</strong></div>
+        <div><span>Tests</span><strong>Yes</strong></div>
+      </div>
+      <div id="f5" class="feature-detail"><ul>
+<li>Status: Implemented</li>
+<li>Backend routes:<ul>
+<li><code>GET /api/v1/rag/search</code> - <code>src/backend/app/api/rag/routes.py:64</code></li>
+<li><code>POST /api/v1/rag/retrieve</code> - <code>src/backend/app/api/rag/routes.py:106</code></li>
+<li><code>POST /api/v1/rag/search</code> - <code>src/backend/app/api/rag/routes.py:129</code></li>
+<li><code>POST /api/v1/rag/answer</code> - <code>src/backend/app/api/rag/routes.py:154</code></li>
+<li><code>POST /api/v1/rag/semantic-retrieve</code> - <code>src/backend/app/api/rag/routes.py:192</code></li>
+<li><code>POST /api/v1/rag/retrieve-debug</code> - <code>src/backend/app/api/rag/routes.py:218</code></li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li>Core retrieve/format flow - <code>src/backend/app/services/rag.py:743</code>, <code>src/backend/app/services/rag.py:1021</code></li>
+<li>Hybrid scoring and lexical scoring - <code>src/backend/app/services/rag.py:551</code>, <code>src/backend/app/services/rag.py:591</code></li>
+<li>Semantic retrieval with query rewrite/HyDE/multi-query/rerank - <code>src/backend/app/services/semantic_rag.py:603</code>, <code>src/backend/app/services/semantic_rag.py:643</code>, <code>src/backend/app/services/semantic_rag.py:684</code></li>
+<li>Embedding service - <code>src/backend/app/services/embeddings.py:225</code>, <code>src/backend/app/services/embeddings.py:235</code></li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li><code>RagChunk</code> / <code>rag_chunks</code> - <code>src/backend/app/models/textbook.py:65</code></li>
+<li>Vector field with pgvector/JSON fallback - <code>src/backend/app/models/textbook.py:18</code>, <code>src/backend/app/models/textbook.py:69</code></li>
+<li>Query logging models - <code>src/backend/app/models/rag_logging.py</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li><code>RagSearchPage</code> - <code>src/frontend-web/src/pages/LearningPages.tsx:188</code></li>
+<li>RAG source panel in Ask AI - <code>src/frontend-web/src/pages/AskAIPage.tsx:346</code></li>
+<li>Admin debug client - <code>src/frontend-web/src/api/adminRagApi.ts:203</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>Retrieval ranking/local fallback tests - <code>src/backend/tests/test_rag_retrieval.py:105</code>, <code>src/backend/tests/test_rag_retrieval.py:136</code></li>
+<li>RAG hardening tests - <code>src/backend/tests/test_rag_hardening.py:32</code></li>
+<li>Grade 9 QA tests - <code>src/backend/tests/test_rag_grade9_qa.py:14</code></li>
+<li>Ask AI source rendering - <code>src/frontend-web/src/AskAiPage.test.tsx:120</code></li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>Real retrieval routes and services exist.</li>
+<li>Retrieval supports hybrid lexical/vector scoring and semantic stages.</li>
+<li>Chat uses semantic retrieval before answer generation - <code>src/backend/app/services/chat_service.py:2203</code>, <code>src/backend/app/services/chat_service.py:2261</code>.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>Vector storage falls back to JSON when not running on PostgreSQL/pgvector, which is useful for tests but different from production retrieval - <code>src/backend/app/models/textbook.py:18</code>.</li>
+<li>Quality depends on having ingested chunks; retrieval can only be as good as the available RAG data.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Keep production on pgvector, monitor missing-metadata chunks, and add end-to-end tests with real reviewed curriculum chunks.</li>
+</ul>
+</li>
+</ul>
+</div>
+    </article>
+    
+    <article class="feature-card" data-status="Partial" data-risk="High" data-name="rag ingestion/admin tools">
+      <div class="feature-head">
+        <div>
+          <div class="feature-title">6. RAG ingestion/admin tools</div>
+          <div class="feature-meta"><span class="pill partial">Partial</span><span class="pill risk-high">High risk</span></div>
+        </div>
+        <button class="toggle" onclick="toggleDetail('f6')">Review</button>
+      </div>
+      <div class="layer-grid">
+        <div><span>Backend</span><strong>Admin ingestion/re-embed/eval routes</strong></div>
+        <div><span>DB</span><strong>Yes</strong></div>
+        <div><span>Frontend</span><strong>Admin pages</strong></div>
+        <div><span>Tests</span><strong>Yes</strong></div>
+      </div>
+      <div id="f6" class="feature-detail"><ul>
+<li>Status: Partial</li>
+<li>Backend routes:<ul>
+<li>Ingestion start/rebuild/solution-book endpoints - <code>src/backend/app/api/ingestion/routes.py:321</code>, <code>src/backend/app/api/ingestion/routes.py:356</code>, <code>src/backend/app/api/ingestion/routes.py:380</code></li>
+<li>Sources/status/stats/pages/retry/test/review endpoints - <code>src/backend/app/api/ingestion/routes.py:430</code>, <code>src/backend/app/api/ingestion/routes.py:474</code>, <code>src/backend/app/api/ingestion/routes.py:486</code>, <code>src/backend/app/api/ingestion/routes.py:569</code>, <code>src/backend/app/api/ingestion/routes.py:583</code>, <code>src/backend/app/api/ingestion/routes.py:607</code>, <code>src/backend/app/api/ingestion/routes.py:683</code></li>
+<li>Re-embed/evaluation/query-log admin endpoints - <code>src/backend/app/api/admin_rag.py:44</code>, <code>src/backend/app/api/admin_rag.py:67</code>, <code>src/backend/app/api/admin_rag.py:100</code>, <code>src/backend/app/api/admin_rag.py:141</code></li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li>Ingestion pipeline - <code>src/backend/app/services/ingestion_pipeline.py:1021</code></li>
+<li>Page extraction/chunk/question storage helpers - <code>src/backend/app/services/ingestion_pipeline.py:421</code>, <code>src/backend/app/services/ingestion_pipeline.py:624</code>, <code>src/backend/app/services/ingestion_pipeline.py:713</code></li>
+<li>Chunk builder - <code>src/backend/app/services/chunking.py:255</code></li>
+<li>Solution book ingestion - <code>src/backend/app/services/solution_book_ingestion.py:426</code></li>
+<li>Re-embed/evaluation services - <code>src/backend/app/services/rag_reembed.py</code>, <code>src/backend/app/services/rag_evaluation.py</code></li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li>Textbook/content/RAG/question models - <code>src/backend/app/models/textbook.py:24</code>, <code>src/backend/app/models/textbook.py:43</code>, <code>src/backend/app/models/textbook.py:65</code>, <code>src/backend/app/models/textbook.py:125</code></li>
+<li>Ingestion tracking models - <code>src/backend/app/models/ingestion.py</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li>RAG admin pages - <code>src/frontend-web/src/pages/admin/RagAdminPage.tsx:7</code>, <code>src/frontend-web/src/pages/admin/RagReembedPage.tsx:6</code>, <code>src/frontend-web/src/pages/admin/RagEvaluationPage.tsx:6</code>, <code>src/frontend-web/src/pages/admin/RagQueryLogsPage.tsx:6</code>, <code>src/frontend-web/src/pages/admin/SourcesPage.tsx:20</code></li>
+<li>Admin API client - <code>src/frontend-web/src/api/adminRagApi.ts:150</code>, <code>src/frontend-web/src/api/adminRagApi.ts:175</code>, <code>src/frontend-web/src/api/adminRagApi.ts:185</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>Admin ingestion tests - <code>src/backend/tests/test_ingestion_admin.py:63</code></li>
+<li>Ingestion foundation/OCR fallback tests - <code>src/backend/tests/test_ingestion_foundation.py:118</code></li>
+<li>Solution book ingestion tests - <code>src/backend/tests/test_solution_book_ingestion.py:264</code></li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>Admin ingestion and monitoring surfaces exist.</li>
+<li>OCR/vision fallback and solution-book ingestion have tests.</li>
+<li>Frontend admin pages call the admin endpoints.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>This remains provider/configuration dependent and operationally sensitive.</li>
+<li>Some ingestion jobs are kicked through background tasks or admin flows and need production job-state/worker verification beyond unit tests.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Add production runbook/tests for source registration, retry, re-embed, evaluation, and job recovery after worker/server restart.</li>
+</ul>
+</li>
+</ul>
+</div>
+    </article>
+    
+    <article class="feature-card" data-status="Partial" data-risk="High" data-name="audio chat/stt/tts">
+      <div class="feature-head">
+        <div>
+          <div class="feature-title">7. Audio chat/STT/TTS</div>
+          <div class="feature-meta"><span class="pill partial">Partial</span><span class="pill risk-high">High risk</span></div>
+        </div>
+        <button class="toggle" onclick="toggleDetail('f7')">Review</button>
+      </div>
+      <div class="layer-grid">
+        <div><span>Backend</span><strong>Multipart chat + ElevenLabs service</strong></div>
+        <div><span>DB</span><strong>Yes</strong></div>
+        <div><span>Frontend</span><strong>Recorder/audio bubbles</strong></div>
+        <div><span>Tests</span><strong>Yes</strong></div>
+      </div>
+      <div id="f7" class="feature-detail"><ul>
+<li>Status: Partial</li>
+<li>Backend routes:<ul>
+<li>Unified multipart chat route <code>POST /api/v1/chat/messages</code> - <code>src/backend/app/api/chat/routes.py:88</code></li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li>Return type resolver - <code>src/backend/app/schemas/audio.py:39</code></li>
+<li>Audio provider abstraction and ElevenLabs providers - <code>src/backend/app/services/audio_service.py:32</code>, <code>src/backend/app/services/audio_service.py:53</code>, <code>src/backend/app/services/audio_service.py:105</code>, <code>src/backend/app/services/audio_service.py:154</code></li>
+<li>Local audio storage - <code>src/backend/app/services/audio_storage.py:15</code></li>
+<li>Provider config guard - <code>src/backend/app/services/chat_service.py:2342</code></li>
+<li>Multipart audio pipeline - <code>src/backend/app/services/chat_service.py:2353</code>, <code>src/backend/app/services/chat_service.py:2404</code>, <code>src/backend/app/services/chat_service.py:2473</code></li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li>Audio fields on <code>ChatMessage</code> - <code>src/backend/app/models/chat.py:53</code>, <code>src/backend/app/models/chat.py:66</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li>Audio send via <code>aiApi.sendVoiceMessage</code> / multipart message client - <code>src/frontend-web/src/api/aiApi.ts:206</code>, <code>src/frontend-web/src/api/aiApi.ts:220</code></li>
+<li>Ask AI audio player/recorder UI - <code>src/frontend-web/src/pages/AskAIPage.tsx:428</code>, <code>src/frontend-web/src/pages/AskAIPage.tsx:848</code>, <code>src/frontend-web/src/pages/AskAIPage.tsx:1085</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>Backend text/audio behavior matrix and failure cases - <code>src/backend/tests/test_chat_audio.py:118</code>, <code>src/backend/tests/test_chat_audio.py:151</code>, <code>src/backend/tests/test_chat_audio.py:348</code></li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>Backend supports audio input -&gt; STT -&gt; existing chat/RAG answer -&gt; optional TTS.</li>
+<li>Text answer is preserved when TTS fails in tests.</li>
+<li>Frontend has recording and audio bubble UX.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>Audio is disabled by default and requires env config - <code>src/backend/app/core/config.py:45</code>, <code>src/backend/app/core/config.py:48</code>, <code>src/backend/app/core/config.py:51</code>.</li>
+<li>File-size validation exists, but duration validation is not proven from code; max duration is only a config value - <code>src/backend/app/core/config.py:55</code>, <code>src/backend/app/services/chat_service.py:320</code>.</li>
+<li>Frontend helper methods for standalone transcription/TTS/image/video still throw endpoint-not-ready errors - <code>src/frontend-web/src/api/aiApi.ts:242</code>, <code>src/frontend-web/src/api/aiApi.ts:246</code>.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Configure authenticated media serving, validate audio duration, and add frontend recording tests.</li>
+</ul>
+</li>
+</ul>
+</div>
+    </article>
+    
+    <article class="feature-card" data-status="Implemented" data-risk="Medium" data-name="study plan">
+      <div class="feature-head">
+        <div>
+          <div class="feature-title">8. Study Plan</div>
+          <div class="feature-meta"><span class="pill ok">Implemented</span><span class="pill risk-med">Medium risk</span></div>
+        </div>
+        <button class="toggle" onclick="toggleDetail('f8')">Review</button>
+      </div>
+      <div class="layer-grid">
+        <div><span>Backend</span><strong>Generate/progress/complete routes</strong></div>
+        <div><span>DB</span><strong>Yes</strong></div>
+        <div><span>Frontend</span><strong>Setup/active dashboard</strong></div>
+        <div><span>Tests</span><strong>Yes</strong></div>
+      </div>
+      <div id="f8" class="feature-detail"><ul>
+<li>Status: Implemented</li>
+<li>Backend routes:<ul>
+<li><code>GET /api/v1/study-plans</code> - <code>src/backend/app/api/study_plans.py:16</code></li>
+<li><code>POST /api/v1/study-plans/generate</code> - <code>src/backend/app/api/study_plans.py:23</code></li>
+<li><code>GET /api/v1/study-plans/{plan_id}</code> - <code>src/backend/app/api/study_plans.py:31</code></li>
+<li><code>GET /api/v1/study-plans/{plan_id}/progress</code> - <code>src/backend/app/api/study_plans.py:40</code></li>
+<li><code>POST /api/v1/study-plans</code>, <code>PUT /api/v1/study-plans/{plan_id}</code>, complete lesson, delete - <code>src/backend/app/api/study_plans.py:48</code>, <code>src/backend/app/api/study_plans.py:56</code>, <code>src/backend/app/api/study_plans.py:65</code>, <code>src/backend/app/api/study_plans.py:74</code></li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li>Date validation and weekday/hour normalization - <code>src/backend/app/services/study_plan_service.py:67</code>, <code>src/backend/app/services/study_plan_service.py:101</code>, <code>src/backend/app/services/study_plan_service.py:157</code></li>
+<li>Schedule/week generation - <code>src/backend/app/services/study_plan_service.py:207</code>, <code>src/backend/app/services/study_plan_service.py:325</code></li>
+<li>Plan JSON validation - <code>src/backend/app/services/study_plan_service.py:397</code></li>
+<li>Generate/progress/complete/delete - <code>src/backend/app/services/study_plan_service.py:659</code>, <code>src/backend/app/services/study_plan_service.py:766</code>, <code>src/backend/app/services/study_plan_service.py:799</code>, <code>src/backend/app/services/study_plan_service.py:903</code></li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li><code>StudyPlan</code> / <code>study_plans</code> - <code>src/backend/app/models/study_plan.py:12</code>, <code>src/backend/app/models/study_plan.py:15</code></li>
+<li>Completion also uses <code>LessonProgress</code> - <code>src/backend/app/models/chemistry.py:112</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li><code>StudyPlanPage</code> - <code>src/frontend-web/src/pages/StudyPlanPage.tsx:1181</code></li>
+<li>Setup wizard, active dashboard, today/path/review/achievement panels - <code>src/frontend-web/src/pages/StudyPlanPage.tsx:433</code>, <code>src/frontend-web/src/pages/StudyPlanPage.tsx:760</code>, <code>src/frontend-web/src/pages/StudyPlanPage.tsx:861</code>, <code>src/frontend-web/src/pages/StudyPlanPage.tsx:1018</code>, <code>src/frontend-web/src/pages/StudyPlanPage.tsx:1095</code>, <code>src/frontend-web/src/pages/StudyPlanPage.tsx:1149</code></li>
+<li>Study plan API client - <code>src/frontend-web/src/api/studyPlanApi.ts:146</code>, <code>src/frontend-web/src/api/studyPlanApi.ts:184</code>, <code>src/frontend-web/src/api/studyPlanApi.ts:188</code>, <code>src/frontend-web/src/api/studyPlanApi.ts:221</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>Backend study plan service tests - <code>src/backend/tests/test_study_plan_service.py:263</code></li>
+<li>Frontend API behavior tests that prevent fake local plans on backend failure - <code>src/frontend-web/src/studyPlanApi.test.ts:20</code>, <code>src/frontend-web/src/studyPlanApi.test.ts:25</code>, <code>src/frontend-web/src/studyPlanApi.test.ts:31</code>, <code>src/frontend-web/src/studyPlanApi.test.ts:37</code></li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>Backend generates date-based schedules and exposes progress.</li>
+<li>Frontend has explicit empty/setup/active states and calls backend generation/progress/completion.</li>
+<li>Tests verify no fabricated active plan is returned when backend has no plan or generation fails.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>Frontend still uses fallback curriculum data for lesson selection if curriculum API fails - <code>src/frontend-web/src/pages/StudyPlanPage.tsx:1183</code>, <code>src/frontend-web/src/pages/StudyPlanPage.tsx:1196</code>.</li>
+<li>Some achievement/review actions in the Study Plan page are explicitly disabled or marked <code>قريباً</code> - <code>src/frontend-web/src/pages/StudyPlanPage.tsx:1119</code>, <code>src/frontend-web/src/pages/StudyPlanPage.tsx:1136</code>, <code>src/frontend-web/src/pages/StudyPlanPage.tsx:1164</code>.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Remove production curriculum fallback, fully wire review actions, and add StudyPlanPage UI integration tests.</li>
+</ul>
+</li>
+</ul>
+</div>
+    </article>
+    
+    <article class="feature-card" data-status="Partial" data-risk="Medium" data-name="study session if present">
+      <div class="feature-head">
+        <div>
+          <div class="feature-title">9. Study Session if present</div>
+          <div class="feature-meta"><span class="pill partial">Partial</span><span class="pill risk-med">Medium risk</span></div>
+        </div>
+        <button class="toggle" onclick="toggleDetail('f9')">Review</button>
+      </div>
+      <div class="layer-grid">
+        <div><span>Backend</span><strong>Reuses other APIs only</strong></div>
+        <div><span>DB</span><strong>No dedicated session DB</strong></div>
+        <div><span>Frontend</span><strong>Page exists</strong></div>
+        <div><span>Tests</span><strong>Not found</strong></div>
+      </div>
+      <div id="f9" class="feature-detail"><ul>
+<li>Status: Partial</li>
+<li>Backend routes:<ul>
+<li>No dedicated study-session backend route was found.</li>
+<li>The page appears to rely on lesson, study plan, quiz, flashcard, and Ask AI APIs.</li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li>No dedicated study-session service was found.</li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li>No dedicated study-session table was found.</li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li>Route <code>/study-session/:lessonId</code> - <code>src/frontend-web/src/App.tsx:1048</code></li>
+<li><code>StudySessionPage</code> - <code>src/frontend-web/src/pages/StudySessionPage.tsx:24</code></li>
+<li>Lesson summary component - <code>src/frontend-web/src/components/study-session/StudySessionLessonSummary.tsx:10</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>No dedicated StudySessionPage test was found.</li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>A frontend focused-session page exists and is routed.</li>
+<li>It can connect to existing lesson/study-plan actions.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>The page imports and searches <code>fallbackCurriculumUnits</code> directly - <code>src/frontend-web/src/pages/StudySessionPage.tsx:3</code>, <code>src/frontend-web/src/pages/StudySessionPage.tsx:15</code>.</li>
+<li>No backend session persistence exists for a study session lifecycle.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Add a backend study-session contract or explicitly define it as a frontend orchestration page over existing APIs, remove fallback lesson lookup, and add tests.</li>
+</ul>
+</li>
+</ul>
+</div>
+    </article>
+    
+    <article class="feature-card" data-status="Partial" data-risk="High" data-name="quiz generation/submission">
+      <div class="feature-head">
+        <div>
+          <div class="feature-title">10. Quiz generation/submission</div>
+          <div class="feature-meta"><span class="pill partial">Partial</span><span class="pill risk-high">High risk</span></div>
+        </div>
+        <button class="toggle" onclick="toggleDetail('f10')">Review</button>
+      </div>
+      <div class="layer-grid">
+        <div><span>Backend</span><strong>Generate/submit/history routes</strong></div>
+        <div><span>DB</span><strong>Yes</strong></div>
+        <div><span>Frontend</span><strong>Quiz page</strong></div>
+        <div><span>Tests</span><strong>Partial</strong></div>
+      </div>
+      <div id="f10" class="feature-detail"><ul>
+<li>Status: Partial</li>
+<li>Backend routes:<ul>
+<li><code>POST /api/v1/quizzes/generate</code> - <code>src/backend/app/api/quizzes.py:22</code></li>
+<li><code>POST /api/v1/quizzes/submit</code> - <code>src/backend/app/api/quizzes.py:56</code></li>
+<li><code>GET /api/v1/quizzes/history</code> - <code>src/backend/app/api/quizzes.py:72</code></li>
+<li><code>GET /api/v1/quizzes/recommendations</code> - <code>src/backend/app/api/quizzes.py:77</code></li>
+<li>Practice exam endpoint - <code>src/backend/app/api/exams.py:13</code></li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li>Generate from existing questions, AI fallback, or template fallback - <code>src/backend/app/services/quiz_service.py:216</code>, <code>src/backend/app/services/quiz_service.py:243</code>, <code>src/backend/app/services/quiz_service.py:256</code></li>
+<li>Submit quiz attempts - <code>src/backend/app/services/quiz_service.py:281</code></li>
+<li>Recommendations - <code>src/backend/app/services/quiz_service.py:333</code></li>
+<li>AI quiz generator - <code>src/backend/app/services/ai_quiz_generator.py:9</code></li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li><code>Question</code>, <code>QuizAttempt</code>, <code>QuestionAttempt</code> - <code>src/backend/app/models/assessment.py:13</code>, <code>src/backend/app/models/assessment.py:30</code>, <code>src/backend/app/models/assessment.py:48</code></li>
+<li>Extracted/generated question pool - <code>src/backend/app/models/textbook.py:125</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li><code>QuizzesPage</code> - <code>src/frontend-web/src/pages/QuizzesPage.tsx:20</code></li>
+<li><code>quizzesApi.generateQuiz</code> - <code>src/frontend-web/src/api/quizzesApi.ts:121</code></li>
+<li><code>quizzesApi.submitQuizResult</code> - <code>src/frontend-web/src/api/quizzesApi.ts:151</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>Backend generation fallback test - <code>src/backend/tests/test_quiz_flashcard_generation_fallbacks.py:21</code></li>
+<li>No dedicated frontend quiz test was found.</li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>Quiz generation route exists and will not return empty success when generation fails - <code>src/frontend-web/src/api/quizzesApi.ts:135</code>.</li>
+<li>Backend can submit quiz attempts.</li>
+<li>Frontend has generation, answer checking, and review UI.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>Frontend <code>submitQuizAnswer</code> returns local success rather than calling backend - <code>src/frontend-web/src/api/quizzesApi.ts:144</code>, <code>src/frontend-web/src/api/quizzesApi.ts:148</code>.</li>
+<li><code>submitQuizResult</code> posts a hardcoded <code>topic_id: 1</code> and falls back to local success on submit failure - <code>src/frontend-web/src/api/quizzesApi.ts:151</code>, <code>src/frontend-web/src/api/quizzesApi.ts:162</code>.</li>
+<li>AI quiz generator is topic-based, so lesson-only generation may depend on service fallback behavior - <code>src/backend/app/services/ai_quiz_generator.py:9</code>.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Align frontend submission with backend attempts/questions, remove local submit fallback, and add end-to-end quiz tests.</li>
+</ul>
+</li>
+</ul>
+</div>
+    </article>
+    
+    <article class="feature-card" data-status="Implemented" data-risk="Medium" data-name="flashcard generation/review">
+      <div class="feature-head">
+        <div>
+          <div class="feature-title">11. Flashcard generation/review</div>
+          <div class="feature-meta"><span class="pill ok">Implemented</span><span class="pill risk-med">Medium risk</span></div>
+        </div>
+        <button class="toggle" onclick="toggleDetail('f11')">Review</button>
+      </div>
+      <div class="layer-grid">
+        <div><span>Backend</span><strong>Deck generation, due cards, SM-2 review</strong></div>
+        <div><span>DB</span><strong>Yes</strong></div>
+        <div><span>Frontend</span><strong>Generate/review workflow</strong></div>
+        <div><span>Tests</span><strong>Partial</strong></div>
+      </div>
+      <div id="f11" class="feature-detail"><ul>
+<li>Status: Implemented</li>
+<li>Backend routes:<ul>
+<li>List/create/admin cards - <code>src/backend/app/api/flashcards.py:112</code>, <code>src/backend/app/api/flashcards.py:117</code></li>
+<li>Deck list/generate/get/update/delete - <code>src/backend/app/api/flashcards.py:126</code>, <code>src/backend/app/api/flashcards.py:134</code>, <code>src/backend/app/api/flashcards.py:155</code>, <code>src/backend/app/api/flashcards.py:165</code>, <code>src/backend/app/api/flashcards.py:177</code></li>
+<li>Due/progress/review session/review card/update/get - <code>src/backend/app/api/flashcards.py:187</code>, <code>src/backend/app/api/flashcards.py:213</code>, <code>src/backend/app/api/flashcards.py:221</code>, <code>src/backend/app/api/flashcards.py:236</code>, <code>src/backend/app/api/flashcards.py:256</code>, <code>src/backend/app/api/flashcards.py:267</code></li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li>Deck generation - <code>src/backend/app/services/flashcard_service.py:500</code></li>
+<li>Generated card validation and saving progress rows - <code>src/backend/app/services/flashcard_service.py:568</code>, <code>src/backend/app/services/flashcard_service.py:581</code></li>
+<li>Due cards and SM-2-style review update - <code>src/backend/app/services/flashcard_service.py:732</code>, <code>src/backend/app/services/flashcard_service.py:770</code></li>
+<li>Review summary/session - <code>src/backend/app/services/flashcard_service.py:814</code>, <code>src/backend/app/services/flashcard_service.py:827</code></li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li><code>FlashcardDeck</code>, <code>Flashcard</code>, <code>FlashcardProgress</code> - <code>src/backend/app/models/flashcard.py:12</code>, <code>src/backend/app/models/flashcard.py:30</code>, <code>src/backend/app/models/flashcard.py:86</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li><code>FlashcardsPage</code> - <code>src/frontend-web/src/pages/FlashcardsPage.tsx:138</code></li>
+<li>Generation/review API methods - <code>src/frontend-web/src/api/flashcardsApi.ts:245</code>, <code>src/frontend-web/src/api/flashcardsApi.ts:258</code>, <code>src/frontend-web/src/api/flashcardsApi.ts:271</code>, <code>src/frontend-web/src/api/flashcardsApi.ts:281</code>, <code>src/frontend-web/src/api/flashcardsApi.ts:286</code></li>
+<li>Review UX front -&gt; hint -&gt; reveal -&gt; rate - <code>src/frontend-web/src/pages/FlashcardsPage.tsx:940</code>, <code>src/frontend-web/src/pages/FlashcardsPage.tsx:949</code>, <code>src/frontend-web/src/pages/FlashcardsPage.tsx:955</code>, <code>src/frontend-web/src/pages/FlashcardsPage.tsx:961</code>, <code>src/frontend-web/src/pages/FlashcardsPage.tsx:1037</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>Backend fallback quality test - <code>src/backend/tests/test_quiz_flashcard_generation_fallbacks.py:67</code></li>
+<li>Scheduler/review tests - <code>src/backend/tests/test_flashcard_scheduler.py:6</code></li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>Real deck generation and review endpoints exist.</li>
+<li>Flashcard progress is stored per user/card and updated when rated.</li>
+<li>Frontend review flow hides the answer until reveal and then rates the card.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>No dedicated frontend FlashcardsPage test was found.</li>
+<li>Generated quality depends on available RAG chunks and fallback generation.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Add frontend tests for auto-generation from study plan, hint/reveal/rating, and error states.</li>
+</ul>
+</li>
+</ul>
+</div>
+    </article>
+    
+    <article class="feature-card" data-status="Partial" data-risk="High" data-name="homework solver">
+      <div class="feature-head">
+        <div>
+          <div class="feature-title">12. Homework solver</div>
+          <div class="feature-meta"><span class="pill partial">Partial</span><span class="pill risk-high">High risk</span></div>
+        </div>
+        <button class="toggle" onclick="toggleDetail('f12')">Review</button>
+      </div>
+      <div class="layer-grid">
+        <div><span>Backend</span><strong>Text/image solve routes</strong></div>
+        <div><span>DB</span><strong>Yes</strong></div>
+        <div><span>Frontend</span><strong>Homework page</strong></div>
+        <div><span>Tests</span><strong>Limited</strong></div>
+      </div>
+      <div id="f12" class="feature-detail"><ul>
+<li>Status: Partial</li>
+<li>Backend routes:<ul>
+<li><code>POST /api/v1/homework/solve-text</code> - <code>src/backend/app/api/homework.py:26</code></li>
+<li><code>POST /api/v1/homework/upload</code> - <code>src/backend/app/api/homework.py:35</code></li>
+<li><code>POST /api/v1/homework/solve-image</code> - <code>src/backend/app/api/homework.py:86</code></li>
+<li><code>GET /api/v1/homework/history</code>, <code>GET /api/v1/homework/{homework_id}</code> - <code>src/backend/app/api/homework.py:95</code>, <code>src/backend/app/api/homework.py:100</code></li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li>Text solver uses RAG and AI answer generation - <code>src/backend/app/services/homework_service.py:15</code></li>
+<li>Image solver - <code>src/backend/app/services/homework_service.py:31</code></li>
+<li>History/detail - <code>src/backend/app/services/homework_service.py:48</code>, <code>src/backend/app/services/homework_service.py:53</code></li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li><code>Homework</code> / <code>homework</code> - <code>src/backend/app/models/homework.py:10</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li><code>HomeworkPage</code> - <code>src/frontend-web/src/pages/HomeworkPage.tsx:33</code></li>
+<li><code>homeworkApi.solveText</code>, upload, solve image - <code>src/frontend-web/src/api/homeworkApi.ts:44</code>, <code>src/frontend-web/src/api/homeworkApi.ts:51</code>, <code>src/frontend-web/src/api/homeworkApi.ts:61</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>Contract endpoint tests touch homework behavior - <code>src/backend/tests/test_contract_gap_endpoints.py:125</code></li>
+<li>No dedicated frontend HomeworkPage test was found.</li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>Text and image homework routes exist.</li>
+<li>Frontend can submit typed text or uploaded images.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>Image solving is provider-dependent and needs stronger tests.</li>
+<li>No evidence of durable homework-specific feedback loop beyond storing answer/history.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Add robust image-solver tests, provider-error handling coverage, and frontend tests.</li>
+</ul>
+</li>
+</ul>
+</div>
+    </article>
+    
+    <article class="feature-card" data-status="Partial" data-risk="Medium" data-name="interactive solver/lab">
+      <div class="feature-head">
+        <div>
+          <div class="feature-title">13. Interactive solver/lab</div>
+          <div class="feature-meta"><span class="pill partial">Partial</span><span class="pill risk-med">Medium risk</span></div>
+        </div>
+        <button class="toggle" onclick="toggleDetail('f13')">Review</button>
+      </div>
+      <div class="layer-grid">
+        <div><span>Backend</span><strong>Guided solver implemented</strong></div>
+        <div><span>DB</span><strong>Yes</strong></div>
+        <div><span>Frontend</span><strong>Guided lab and lab shell</strong></div>
+        <div><span>Tests</span><strong>Yes</strong></div>
+      </div>
+      <div id="f13" class="feature-detail"><ul>
+<li>Status: Partial</li>
+<li>Backend routes:<ul>
+<li>Guided solver sessions create/list/get - <code>src/backend/app/api/interactive_solver/routes.py:21</code>, <code>src/backend/app/api/interactive_solver/routes.py:30</code>, <code>src/backend/app/api/interactive_solver/routes.py:40</code></li>
+<li>Answer/hint/finish - <code>src/backend/app/api/interactive_solver/routes.py:49</code>, <code>src/backend/app/api/interactive_solver/routes.py:59</code>, <code>src/backend/app/api/interactive_solver/routes.py:68</code></li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li>Start session - <code>src/backend/app/services/interactive_solver_service.py:617</code></li>
+<li>Submit answer - <code>src/backend/app/services/interactive_solver_service.py:846</code></li>
+<li>Hint and finish - <code>src/backend/app/services/interactive_solver_service.py:941</code>, <code>src/backend/app/services/interactive_solver_service.py:994</code></li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li><code>InteractiveSession</code>, <code>InteractiveStep</code>, <code>StudentStepAnswer</code>, <code>MisconceptionEvent</code>, <code>SkillMastery</code> - <code>src/backend/app/models/interactive_solver.py:12</code>, <code>src/backend/app/models/interactive_solver.py:45</code>, <code>src/backend/app/models/interactive_solver.py:80</code>, <code>src/backend/app/models/interactive_solver.py:109</code>, <code>src/backend/app/models/interactive_solver.py:134</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li>Guided lab page and solver session page - <code>src/frontend-web/src/features/guided-lab/pages/GuidedLabPage.tsx:9</code>, <code>src/frontend-web/src/features/guided-lab/pages/SolverSessionPage.tsx:20</code></li>
+<li>Guided solver API client - <code>src/frontend-web/src/features/guided-lab/api/interactiveSolverApi.ts:243</code>, <code>src/frontend-web/src/features/guided-lab/api/interactiveSolverApi.ts:258</code>, <code>src/frontend-web/src/features/guided-lab/api/interactiveSolverApi.ts:280</code>, <code>src/frontend-web/src/features/guided-lab/api/interactiveSolverApi.ts:296</code>, <code>src/frontend-web/src/features/guided-lab/api/interactiveSolverApi.ts:310</code></li>
+<li>Lab shell page - <code>src/frontend-web/src/pages/LabPage.tsx:81</code></li>
+<li>Mock equation-balancer API - <code>src/frontend-web/src/api/labApi.ts:1</code>, <code>src/frontend-web/src/api/labApi.ts:6</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>Backend interactive solver tests - <code>src/backend/tests/test_interactive_solver.py:66</code></li>
+<li>Frontend guided lab tests - <code>src/frontend-web/src/features/guided-lab/GuidedLab.test.tsx:52</code></li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>Guided solver is implemented across backend, DB, frontend, and tests.</li>
+<li>Lab landing page routes users into guided solver and related tools.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>The broader Lab page includes tools that route to Ask AI or are not backend-backed.</li>
+<li>Frontend guided lab API contains a local mock session fallback path - <code>src/frontend-web/src/features/guided-lab/api/interactiveSolverApi.ts:91</code>, <code>src/frontend-web/src/features/guided-lab/api/interactiveSolverApi.ts:292</code>, <code>src/frontend-web/src/features/guided-lab/api/interactiveSolverApi.ts:306</code>.</li>
+<li>Equation balancing is entirely local mock logic - <code>src/frontend-web/src/api/labApi.ts:1</code>, <code>src/frontend-web/src/api/labApi.ts:6</code>.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Split &quot;guided solver&quot; from &quot;lab tools&quot;, remove production mock fallback, and implement real backend services for the remaining lab tools.</li>
+</ul>
+</li>
+</ul>
+</div>
+    </article>
+    
+    <article class="feature-card" data-status="Partial" data-risk="Medium" data-name="progress/dashboard">
+      <div class="feature-head">
+        <div>
+          <div class="feature-title">14. Progress/dashboard</div>
+          <div class="feature-meta"><span class="pill partial">Partial</span><span class="pill risk-med">Medium risk</span></div>
+        </div>
+        <button class="toggle" onclick="toggleDetail('f14')">Review</button>
+      </div>
+      <div class="layer-grid">
+        <div><span>Backend</span><strong>Dashboard/progress routes</strong></div>
+        <div><span>DB</span><strong>Yes</strong></div>
+        <div><span>Frontend</span><strong>Home dashboard</strong></div>
+        <div><span>Tests</span><strong>Limited</strong></div>
+      </div>
+      <div id="f14" class="feature-detail"><ul>
+<li>Status: Partial</li>
+<li>Backend routes:<ul>
+<li><code>GET /api/v1/dashboard</code> - <code>src/backend/app/api/dashboard.py:14</code></li>
+<li><code>PUT /api/v1/progress/lessons/{lesson_id}</code> - <code>src/backend/app/api/progress.py:19</code></li>
+<li><code>GET /api/v1/progress/topics</code> - <code>src/backend/app/api/progress.py:29</code></li>
+<li><code>GET /api/v1/progress/achievements</code> - <code>src/backend/app/api/progress.py:34</code></li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li>Dashboard aggregation - <code>src/backend/app/services/dashboard_service.py:30</code>, <code>src/backend/app/services/dashboard_service.py:68</code>, <code>src/backend/app/services/dashboard_service.py:84</code>, <code>src/backend/app/services/dashboard_service.py:117</code>, <code>src/backend/app/services/dashboard_service.py:155</code>, <code>src/backend/app/services/dashboard_service.py:189</code></li>
+<li>Progress service - <code>src/backend/app/services/progress_service.py:14</code>, <code>src/backend/app/services/progress_service.py:31</code>, <code>src/backend/app/services/progress_service.py:36</code>, <code>src/backend/app/services/progress_service.py:41</code></li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li><code>LessonProgress</code> - <code>src/backend/app/models/chemistry.py:112</code></li>
+<li><code>UserProgress</code> - <code>src/backend/app/models/user_progress.py:11</code></li>
+<li><code>Achievement</code> - <code>src/backend/app/models/achievement.py:12</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li>Home/dashboard layout inside <code>App.tsx</code> - <code>src/frontend-web/src/App.tsx:339</code>, <code>src/frontend-web/src/App.tsx:540</code>, <code>src/frontend-web/src/App.tsx:936</code></li>
+<li><code>dashboardApi.getDashboard</code> - <code>src/frontend-web/src/api/dashboardApi.ts:53</code></li>
+<li>Study plan progress card component - <code>src/frontend-web/src/components/study-plan/StudyPlanProgressCard.tsx:43</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>Backend contract test patches dashboard service - <code>src/backend/tests/test_contract_gap_endpoints.py:47</code></li>
+<li>No dedicated frontend dashboard test was found.</li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>Dashboard endpoint aggregates current lesson, progress, weak topics, flashcards, quiz, study plan, and unread notification summaries.</li>
+<li>Lesson progress and topic progress APIs exist.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>Dashboard UI still falls back to static XP/streak-style values when user/dashboard data is absent - <code>src/frontend-web/src/App.tsx:540</code>, <code>src/frontend-web/src/App.tsx:936</code>.</li>
+<li>Achievement flow is read-only/stub-like; no award/XP mutation service was found.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Add dashboard integration tests and implement actual XP/achievement accrual.</li>
+</ul>
+</li>
+</ul>
+</div>
+    </article>
+    
+    <article class="feature-card" data-status="Partial" data-risk="High" data-name="notifications/push tokens">
+      <div class="feature-head">
+        <div>
+          <div class="feature-title">15. Notifications/push tokens</div>
+          <div class="feature-meta"><span class="pill partial">Partial</span><span class="pill risk-high">High risk</span></div>
+        </div>
+        <button class="toggle" onclick="toggleDetail('f15')">Review</button>
+      </div>
+      <div class="layer-grid">
+        <div><span>Backend</span><strong>In-app, reminders, device tokens, push delivery</strong></div>
+        <div><span>DB</span><strong>Yes</strong></div>
+        <div><span>Frontend</span><strong>Bell, pages, settings, SW</strong></div>
+        <div><span>Tests</span><strong>Yes</strong></div>
+      </div>
+      <div id="f15" class="feature-detail"><ul>
+<li>Status: Partial</li>
+<li>Backend routes:<ul>
+<li>Notifications list/unread/read/mark-all/delete/test/generate - <code>src/backend/app/api/notifications.py:19</code>, <code>src/backend/app/api/notifications.py:39</code>, <code>src/backend/app/api/notifications.py:49</code>, <code>src/backend/app/api/notifications.py:59</code>, <code>src/backend/app/api/notifications.py:79</code>, <code>src/backend/app/api/notifications.py:119</code>, <code>src/backend/app/api/notifications.py:128</code></li>
+<li>Preferences - <code>src/backend/app/api/notifications.py:90</code>, <code>src/backend/app/api/notifications.py:99</code></li>
+<li>Device and push token routes - <code>src/backend/app/api/devices.py:15</code>, <code>src/backend/app/api/devices.py:23</code>, <code>src/backend/app/api/devices.py:42</code>, <code>src/backend/app/api/devices.py:50</code>, <code>src/backend/app/api/devices.py:59</code></li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li>Notification CRUD/preferences/test/reminders - <code>src/backend/app/services/notification_service.py:38</code>, <code>src/backend/app/services/notification_service.py:98</code>, <code>src/backend/app/services/notification_service.py:270</code>, <code>src/backend/app/services/notification_service.py:287</code>, <code>src/backend/app/services/notification_service.py:330</code></li>
+<li>Study, overdue, exam, flashcard, weak-topic reminder generators - <code>src/backend/app/services/notification_service.py:419</code>, <code>src/backend/app/services/notification_service.py:455</code>, <code>src/backend/app/services/notification_service.py:491</code>, <code>src/backend/app/services/notification_service.py:523</code>, <code>src/backend/app/services/notification_service.py:566</code></li>
+<li>Push delivery service - <code>src/backend/app/services/notification_delivery_service.py:33</code>, <code>src/backend/app/services/notification_delivery_service.py:49</code>, <code>src/backend/app/services/notification_delivery_service.py:69</code>, <code>src/backend/app/services/notification_delivery_service.py:79</code>, <code>src/backend/app/services/notification_delivery_service.py:122</code></li>
+<li>Device token service - <code>src/backend/app/services/device_service.py:13</code>, <code>src/backend/app/services/device_service.py:47</code>, <code>src/backend/app/services/device_service.py:54</code></li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li><code>Notification</code>, <code>NotificationPreference</code>, <code>ReminderEvent</code> - <code>src/backend/app/models/notification.py:13</code>, <code>src/backend/app/models/notification.py:42</code>, <code>src/backend/app/models/notification.py:73</code></li>
+<li><code>DeviceToken</code> - <code>src/backend/app/models/device.py:12</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li>Notifications page/settings - <code>src/frontend-web/src/pages/NotificationsPage.tsx:45</code>, <code>src/frontend-web/src/pages/NotificationSettingsPage.tsx:46</code></li>
+<li>Bell/dropdown/banner - <code>src/frontend-web/src/components/notifications/NotificationBell.tsx:5</code>, <code>src/frontend-web/src/components/notifications/NotificationDropdown.tsx:36</code>, <code>src/frontend-web/src/components/notifications/NotificationPermissionBanner.tsx:4</code></li>
+<li>Push hook and service worker - <code>src/frontend-web/src/hooks/usePushNotifications.ts:29</code>, <code>src/frontend-web/public/firebase-messaging-sw.js:3</code></li>
+<li>API client - <code>src/frontend-web/src/api/notificationsApi.ts:153</code>, <code>src/frontend-web/src/api/notificationsApi.ts:166</code>, <code>src/frontend-web/src/api/notificationsApi.ts:177</code>, <code>src/frontend-web/src/api/notificationsApi.ts:214</code>, <code>src/frontend-web/src/api/notificationsApi.ts:273</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>Backend notification and Celery reminder tests - <code>src/backend/tests/test_notifications.py:251</code>, <code>src/backend/tests/test_notifications.py:298</code>, <code>src/backend/tests/test_notifications.py:333</code>, <code>src/backend/tests/test_notifications.py:364</code></li>
+<li>Frontend NotificationsPage tests - <code>src/frontend-web/src/pages/NotificationsPage.test.tsx:36</code></li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>In-app notification storage, preferences, reminder generation, and token registration exist.</li>
+<li>Web push setup exists with Firebase service worker and foreground permission flow.</li>
+<li>Tests cover notification page behavior and scheduler duplicate/preference cases.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>Frontend notification API has a comment indicating a client-side local state mock fallback - <code>src/frontend-web/src/api/notificationsApi.ts:104</code>.</li>
+<li>Push delivery is provider/configuration dependent and mobile app behavior was not found.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Validate production Firebase/Expo configuration, remove local notification fallback, and add push-token lifecycle integration tests.</li>
+</ul>
+</li>
+</ul>
+</div>
+    </article>
+    
+    <article class="feature-card" data-status="Stub" data-risk="High" data-name="achievements/xp">
+      <div class="feature-head">
+        <div>
+          <div class="feature-title">16. Achievements/XP</div>
+          <div class="feature-meta"><span class="pill stub">Stub</span><span class="pill risk-high">High risk</span></div>
+        </div>
+        <button class="toggle" onclick="toggleDetail('f16')">Review</button>
+      </div>
+      <div class="layer-grid">
+        <div><span>Backend</span><strong>Read-only progress endpoint</strong></div>
+        <div><span>DB</span><strong>Yes</strong></div>
+        <div><span>Frontend</span><strong>Static/derived display</strong></div>
+        <div><span>Tests</span><strong>Not found</strong></div>
+      </div>
+      <div id="f16" class="feature-detail"><ul>
+<li>Status: Stub</li>
+<li>Backend routes:<ul>
+<li><code>GET /api/v1/progress/achievements</code> - <code>src/backend/app/api/progress.py:34</code></li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li><code>list_achievements</code> only reads achievements - <code>src/backend/app/services/progress_service.py:36</code></li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li><code>Achievement</code> / <code>achievements</code> - <code>src/backend/app/models/achievement.py:12</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li>Dashboard displays XP using dashboard/user/static fallback - <code>src/frontend-web/src/App.tsx:540</code>, <code>src/frontend-web/src/App.tsx:936</code></li>
+<li>Study Plan achievement panel displays placeholder cards marked <code>قريباً</code> - <code>src/frontend-web/src/pages/StudyPlanPage.tsx:1149</code>, <code>src/frontend-web/src/pages/StudyPlanPage.tsx:1164</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>No achievement/XP award tests were found.</li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>There is a DB model and a read route.</li>
+<li>UI surfaces XP and achievement concepts.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>No service was found that awards XP, unlocks badges, or writes achievements based on activity.</li>
+<li>UI values can fall back to static defaults.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Add XP/achievement event service, award triggers, persistence tests, and frontend achievement history/progress UX.</li>
+</ul>
+</li>
+</ul>
+</div>
+    </article>
+    
+    <article class="feature-card" data-status="Stub" data-risk="High" data-name="reels/video generation">
+      <div class="feature-head">
+        <div>
+          <div class="feature-title">17. Reels/video generation</div>
+          <div class="feature-meta"><span class="pill stub">Stub</span><span class="pill risk-high">High risk</span></div>
+        </div>
+        <button class="toggle" onclick="toggleDetail('f17')">Review</button>
+      </div>
+      <div class="layer-grid">
+        <div><span>Backend</span><strong>Model only, no route/service</strong></div>
+        <div><span>DB</span><strong>Yes, model only</strong></div>
+        <div><span>Frontend</span><strong>Disabled/fallback UI</strong></div>
+        <div><span>Tests</span><strong>Not found</strong></div>
+      </div>
+      <div id="f17" class="feature-detail"><ul>
+<li>Status: Stub</li>
+<li>Backend routes:<ul>
+<li>No reels/video generation route was found.</li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li>No reels/video generation service was found.</li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li><code>Reel</code> / <code>reels</code> model only - <code>src/backend/app/models/reel.py:12</code>, <code>src/backend/app/models/reel.py:15</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li>Ask AI short-video answer format exists but is disabled - <code>src/frontend-web/src/pages/AskAIPage.tsx:79</code>, <code>src/frontend-web/src/pages/AskAIPage.tsx:275</code>, <code>src/frontend-web/src/pages/AskAIPage.tsx:290</code></li>
+<li>Mock AI data includes video fallback text only - <code>src/frontend-web/src/api/mockData.ts:201</code>, <code>src/frontend-web/src/api/mockData.ts:213</code></li>
+<li><code>aiApi</code> returns placeholder video metadata for video format rather than generating video - <code>src/frontend-web/src/api/aiApi.ts:109</code>, <code>src/frontend-web/src/api/aiApi.ts:160</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>No reels/video generation tests were found.</li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>A model and frontend placeholders exist.</li>
+<li>No working generation or retrieval flow exists.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>Video is disabled in Ask AI and not backed by a backend endpoint.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Define a video generation contract, add backend service/storage/job tracking, connect the UI, and add tests.</li>
+</ul>
+</li>
+</ul>
+</div>
+    </article>
+    
+    <article class="feature-card" data-status="Stub" data-risk="High" data-name="subscriptions/billing">
+      <div class="feature-head">
+        <div>
+          <div class="feature-title">18. Subscriptions/billing</div>
+          <div class="feature-meta"><span class="pill stub">Stub</span><span class="pill risk-high">High risk</span></div>
+        </div>
+        <button class="toggle" onclick="toggleDetail('f18')">Review</button>
+      </div>
+      <div class="layer-grid">
+        <div><span>Backend</span><strong>Model only, no route/service</strong></div>
+        <div><span>DB</span><strong>Yes, model only</strong></div>
+        <div><span>Frontend</span><strong>Not found</strong></div>
+        <div><span>Tests</span><strong>Not found</strong></div>
+      </div>
+      <div id="f18" class="feature-detail"><ul>
+<li>Status: Stub</li>
+<li>Backend routes:<ul>
+<li>No billing/subscription route was found.</li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li>No billing/subscription service was found.</li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li><code>Subscription</code> / <code>subscriptions</code> model only - <code>src/backend/app/models/billing.py:12</code>, <code>src/backend/app/models/billing.py:15</code></li>
+<li>Stripe-related fields exist on the model - <code>src/backend/app/models/billing.py:21</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li>No subscription/billing page or API client was found.</li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>No subscription/billing tests were found.</li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>The database model exists.</li>
+<li>No end-to-end billing flow exists.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>No checkout, webhook, entitlement, or plan enforcement code path was found.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Add billing routes, Stripe/webhook service, entitlement checks, frontend settings/paywall UX, and tests.</li>
+</ul>
+</li>
+</ul>
+</div>
+    </article>
+    
+      </div>
+    </section>
+
+    <section id="matrix" class="section">
+      <h2>Feature layer matrix</h2>
+      <p class="section-lead">A compact view of backend, database, frontend, and test readiness.</p>
+      <div class="matrix-wrap"><table>
+        <thead><tr><th>Feature</th><th>Status</th><th>Backend</th><th>DB</th><th>Frontend</th><th>Tests</th><th>Risk</th></tr></thead>
+        <tbody><tr data-status='Implemented' data-risk='Low'><td><strong>Auth/login/register</strong></td><td><span class='pill ok'>Implemented</span></td><td>Routes and service</td><td>Yes</td><td>Login/register/profile routing</td><td>Partial</td><td><span class='pill risk-low'>Low</span></td></tr><tr data-status='Implemented' data-risk='Medium'><td><strong>Profile/onboarding/preferences</strong></td><td><span class='pill ok'>Implemented</span></td><td>Routes and services</td><td>Yes</td><td>Profile page and onboarding helpers</td><td>Yes</td><td><span class='pill risk-med'>Medium</span></td></tr><tr data-status='Partial' data-risk='Medium'><td><strong>Curriculum units/chapters/lessons/topics</strong></td><td><span class='pill partial'>Partial</span></td><td>CRUD/read routes</td><td>Yes</td><td>Lessons UI, detail UI</td><td>Limited</td><td><span class='pill risk-med'>Medium</span></td></tr><tr data-status='Implemented' data-risk='Medium'><td><strong>Ask AI chat</strong></td><td><span class='pill ok'>Implemented</span></td><td>Persistent sessions/messages and ask route</td><td>Yes</td><td>Ask AI page</td><td>Yes</td><td><span class='pill risk-med'>Medium</span></td></tr><tr data-status='Implemented' data-risk='Medium'><td><strong>RAG search/retrieval</strong></td><td><span class='pill ok'>Implemented</span></td><td>Retrieval/search/answer routes</td><td>Yes</td><td>RAG search UI, Ask AI sources</td><td>Yes</td><td><span class='pill risk-med'>Medium</span></td></tr><tr data-status='Partial' data-risk='High'><td><strong>RAG ingestion/admin tools</strong></td><td><span class='pill partial'>Partial</span></td><td>Admin ingestion/re-embed/eval routes</td><td>Yes</td><td>Admin pages</td><td>Yes</td><td><span class='pill risk-high'>High</span></td></tr><tr data-status='Partial' data-risk='High'><td><strong>Audio chat/STT/TTS</strong></td><td><span class='pill partial'>Partial</span></td><td>Multipart chat + ElevenLabs service</td><td>Yes</td><td>Recorder/audio bubbles</td><td>Yes</td><td><span class='pill risk-high'>High</span></td></tr><tr data-status='Implemented' data-risk='Medium'><td><strong>Study Plan</strong></td><td><span class='pill ok'>Implemented</span></td><td>Generate/progress/complete routes</td><td>Yes</td><td>Setup/active dashboard</td><td>Yes</td><td><span class='pill risk-med'>Medium</span></td></tr><tr data-status='Partial' data-risk='Medium'><td><strong>Study Session if present</strong></td><td><span class='pill partial'>Partial</span></td><td>Reuses other APIs only</td><td>No dedicated session DB</td><td>Page exists</td><td>Not found</td><td><span class='pill risk-med'>Medium</span></td></tr><tr data-status='Partial' data-risk='High'><td><strong>Quiz generation/submission</strong></td><td><span class='pill partial'>Partial</span></td><td>Generate/submit/history routes</td><td>Yes</td><td>Quiz page</td><td>Partial</td><td><span class='pill risk-high'>High</span></td></tr><tr data-status='Implemented' data-risk='Medium'><td><strong>Flashcard generation/review</strong></td><td><span class='pill ok'>Implemented</span></td><td>Deck generation, due cards, SM-2 review</td><td>Yes</td><td>Generate/review workflow</td><td>Partial</td><td><span class='pill risk-med'>Medium</span></td></tr><tr data-status='Partial' data-risk='High'><td><strong>Homework solver</strong></td><td><span class='pill partial'>Partial</span></td><td>Text/image solve routes</td><td>Yes</td><td>Homework page</td><td>Limited</td><td><span class='pill risk-high'>High</span></td></tr><tr data-status='Partial' data-risk='Medium'><td><strong>Interactive solver/lab</strong></td><td><span class='pill partial'>Partial</span></td><td>Guided solver implemented</td><td>Yes</td><td>Guided lab and lab shell</td><td>Yes</td><td><span class='pill risk-med'>Medium</span></td></tr><tr data-status='Partial' data-risk='Medium'><td><strong>Progress/dashboard</strong></td><td><span class='pill partial'>Partial</span></td><td>Dashboard/progress routes</td><td>Yes</td><td>Home dashboard</td><td>Limited</td><td><span class='pill risk-med'>Medium</span></td></tr><tr data-status='Partial' data-risk='High'><td><strong>Notifications/push tokens</strong></td><td><span class='pill partial'>Partial</span></td><td>In-app, reminders, device tokens, push delivery</td><td>Yes</td><td>Bell, pages, settings, SW</td><td>Yes</td><td><span class='pill risk-high'>High</span></td></tr><tr data-status='Stub' data-risk='High'><td><strong>Achievements/XP</strong></td><td><span class='pill stub'>Stub</span></td><td>Read-only progress endpoint</td><td>Yes</td><td>Static/derived display</td><td>Not found</td><td><span class='pill risk-high'>High</span></td></tr><tr data-status='Stub' data-risk='High'><td><strong>Reels/video generation</strong></td><td><span class='pill stub'>Stub</span></td><td>Model only, no route/service</td><td>Yes, model only</td><td>Disabled/fallback UI</td><td>Not found</td><td><span class='pill risk-high'>High</span></td></tr><tr data-status='Stub' data-risk='High'><td><strong>Subscriptions/billing</strong></td><td><span class='pill stub'>Stub</span></td><td>Model only, no route/service</td><td>Yes, model only</td><td>Not found</td><td>Not found</td><td><span class='pill risk-high'>High</span></td></tr></tbody>
+      </table></div>
+    </section>
+
+    <section id="gaps" class="section">
+      <h2>Top 10 gaps to fix next</h2>
+      <p class="section-lead">P0 = trust/data correctness, P1 = product workflow reliability, P2 = polish/platform expansion.</p>
+      <div class="gaps-grid"><div class='gap-card p0'><div class='gap-num'>1</div><div class='gap-text'>Remove production curriculum fallbacks from lessons, lesson detail, study plan, and study session; they hide backend/data failures (`src/frontend-web/src/pages/LearningPages.tsx:56`, `src/frontend-web/src/pages/LessonDetailPage.tsx:62`, `src/frontend-web/src/pages/StudyPlanPage.tsx:1196`, `src/frontend-web/src/pages/StudySessionPage.tsx:15`).</div></div><div class='gap-card p0'><div class='gap-num'>2</div><div class='gap-text'>Align quiz submission with backend persistence; remove local `submitQuizAnswer` success and `topic_id: 1` fallback (`src/frontend-web/src/api/quizzesApi.ts:144`, `src/frontend-web/src/api/quizzesApi.ts:151`, `src/frontend-web/src/api/quizzesApi.ts:162`).</div></div><div class='gap-card p0'><div class='gap-num'>3</div><div class='gap-text'>Finish Study Session as either a real backend-backed feature or a clearly documented frontend orchestration page (`src/frontend-web/src/pages/StudySessionPage.tsx:24`).</div></div><div class='gap-card p1'><div class='gap-num'>4</div><div class='gap-text'>Harden audio support for production: enable config, add duration validation, verify media serving, and add frontend recording tests (`src/backend/app/core/config.py:45`, `src/backend/app/services/chat_service.py:320`).</div></div><div class='gap-card p1'><div class='gap-num'>5</div><div class='gap-text'>Remove or implement unsupported Ask AI helper methods that currently throw endpoint-not-ready errors (`src/frontend-web/src/api/aiApi.ts:242`, `src/frontend-web/src/api/aiApi.ts:258`).</div></div><div class='gap-card p1'><div class='gap-num'>6</div><div class='gap-text'>Implement real XP/achievement award logic; current achievement support is read-only/stub-like (`src/backend/app/services/progress_service.py:36`, `src/frontend-web/src/pages/StudyPlanPage.tsx:1164`).</div></div><div class='gap-card p1'><div class='gap-num'>7</div><div class='gap-text'>Split Guided Solver from mock Lab tools and replace `labApi` mock equation balancing with backend-backed behavior (`src/frontend-web/src/api/labApi.ts:1`, `src/frontend-web/src/api/labApi.ts:6`).</div></div><div class='gap-card p2'><div class='gap-num'>8</div><div class='gap-text'>Remove local notification fallback and verify production push provider configuration (`src/frontend-web/src/api/notificationsApi.ts:104`, `src/backend/app/services/notification_delivery_service.py:122`).</div></div><div class='gap-card p2'><div class='gap-num'>9</div><div class='gap-text'>Add direct tests for curriculum API, dashboard UI, homework image solving, flashcards UI, and ProfilePage.</div></div><div class='gap-card p2'><div class='gap-num'>10</div><div class='gap-text'>Decide whether video/reels and billing are in MVP; currently they are model/UI placeholders without working flows (`src/backend/app/models/reel.py:12`, `src/backend/app/models/billing.py:12`).</div></div></div>
+    </section>
+
+    <section id="flows" class="section">
+      <h2>Learning flow readiness</h2>
+      <p class="section-lead">A student-facing path from account creation to learning, review, and reminders.</p>
+      <div class="flow">
+        <div class="flow-item ok">Auth</div>
+        <div class="flow-item ok">Profile</div>
+        <div class="flow-item partial">Curriculum</div>
+        <div class="flow-item ok">Ask AI</div>
+        <div class="flow-item partial">Quiz</div>
+        <div class="flow-item ok">Flashcards</div>
+        <div class="flow-item partial">Study Plan</div>
+        <div class="flow-item partial">Homework</div>
+        <div class="flow-item partial">Guided Lab</div>
+        <div class="flow-item partial">Progress</div>
+        <div class="flow-item partial">Notifications</div>
+        <div class="flow-item high">Reels/Billing</div>
+      </div>
+      <div class="chart-grid" style="margin-top:16px">
+        <div class="panel"><h3>UI looks implemented, but not fully backend-ready</h3><ul>
+<li>Study Session: routed and designed, but no dedicated backend session model/API was found (<code>src/frontend-web/src/App.tsx:1048</code>, <code>src/frontend-web/src/pages/StudySessionPage.tsx:24</code>).</li>
+<li>Short video/reels: visible in Ask AI options and avatar language, but disabled or placeholder-only (<code>src/frontend-web/src/pages/AskAIPage.tsx:79</code>, <code>src/frontend-web/src/api/aiApi.ts:109</code>).</li>
+<li>Achievement/XP: visible in dashboard and Study Plan, but no award/update service was found (<code>src/frontend-web/src/App.tsx:540</code>, <code>src/frontend-web/src/pages/StudyPlanPage.tsx:1164</code>).</li>
+<li>Lab tools: Lab page exists, but equation balancing is local mock logic and several lab actions route elsewhere (<code>src/frontend-web/src/pages/LabPage.tsx:81</code>, <code>src/frontend-web/src/api/labApi.ts:6</code>).</li>
+<li>Ask AI post-answer transformations: buttons exist, but several are disabled or throw endpoint-not-ready errors (<code>src/frontend-web/src/pages/AskAIPage.tsx:388</code>, <code>src/frontend-web/src/api/aiApi.ts:254</code>).</li>
+</ul>
+</div>
+        <div class="panel"><h3>Backend-only or placeholder areas</h3><ul>
+<li><p>Billing/subscriptions: <code>Subscription</code> model exists, but no frontend page or API client was found (<code>src/backend/app/models/billing.py:12</code>).</p>
+</li>
+<li><p>Reel/video storage: <code>Reel</code> model exists, but no route/service/frontend workflow was found (<code>src/backend/app/models/reel.py:12</code>).</p>
+</li>
+<li><p>Some curriculum authoring endpoints exist for chapters/lessons/topics, but no full admin curriculum authoring UI was found (<code>src/backend/app/api/chapters.py:28</code>, <code>src/backend/app/api/lessons.py:28</code>, <code>src/backend/app/api/topics.py:28</code>).</p>
+</li>
+<li><p>RAG ingestion/admin is backend-heavy and partially surfaced in admin pages, but production workflow and job recovery still need operational hardening (<code>src/backend/app/api/ingestion/routes.py:321</code>, <code>src/frontend-web/src/pages/admin/SourcesPage.tsx:20</code>).</p>
+</li>
+<li><p>Subscriptions/billing: model-only placeholder; no working flow.</p>
+</li>
+<li><p>Reels/video generation: model/UI placeholder; no working generation.</p>
+</li>
+<li><p>Full achievement/XP engine: UI/read model exists, but no award service.</p>
+</li>
+<li><p>Standalone Ask AI transformations to quiz/flashcards/audio/image from an existing answer are not implemented in <code>aiApi</code> (<code>src/frontend-web/src/api/aiApi.ts:246</code>, <code>src/frontend-web/src/api/aiApi.ts:250</code>, <code>src/frontend-web/src/api/aiApi.ts:254</code>, <code>src/frontend-web/src/api/aiApi.ts:258</code>).</p>
+</li>
+</ul>
+</div>
+      </div>
+    </section>
+
+    <section id="source" class="section">
+      <h2>Original Markdown report</h2>
+      <p class="section-lead">The original audit remains preserved below for detailed review and copy/paste.</p>
+      <div class="markdown-body"><h1>EduMind Feature Inventory Audit 2</h1>
+<p>Audit date: 2026-07-03</p>
+<p>Scope inspected:</p>
+<ul>
+<li>Backend routes: <code>src/backend/app/api/</code></li>
+<li>Backend services: <code>src/backend/app/services/</code></li>
+<li>ORM models: <code>src/backend/app/models/</code></li>
+<li>Frontend pages, components, hooks, and API clients: <code>src/frontend-web/src/</code></li>
+<li>Tests: <code>src/backend/tests/</code> and frontend <code>*.test.*</code></li>
+<li>Existing docs were not used as proof of implementation.</li>
+</ul>
+<p>Routing baseline:</p>
+<ul>
+<li>The FastAPI application mounts the API router under <code>/api/v1</code> in <code>src/backend/app/main.py:75</code>.</li>
+<li>The shared API router registers auth, users, dashboard, devices, push tokens, notifications, student profile, curriculum, study plans, AI companion, chat, interactive solver, RAG, admin RAG, ingestion, quizzes, exams, homework, progress, flashcards, and health routers in <code>src/backend/app/api/router.py:31-57</code>.</li>
+<li>The frontend registers protected application routes including <code>/lessons</code>, <code>/study-session/:lessonId</code>, <code>/quiz</code>, <code>/study-plan</code>, <code>/notifications</code>, <code>/flashcards</code>, <code>/lab</code>, <code>/homework</code>, <code>/guided-lab</code>, admin RAG routes, <code>/ask-ai</code>, and <code>/profile</code> in <code>src/frontend-web/src/App.tsx:1039-1093</code>.</li>
+</ul>
+<h2>Summary Table</h2>
+<table>
+<thead>
+<tr>
+  <th>Feature</th>
+  <th>Status</th>
+  <th>Backend</th>
+  <th>DB</th>
+  <th>Frontend</th>
+  <th>Tests</th>
+  <th>Risk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Auth/login/register</td>
+  <td>Implemented</td>
+  <td>Routes and service</td>
+  <td>Yes</td>
+  <td>Login/register/profile routing</td>
+  <td>Partial</td>
+  <td>Low</td>
+</tr>
+<tr>
+  <td>Profile/onboarding/preferences</td>
+  <td>Implemented</td>
+  <td>Routes and services</td>
+  <td>Yes</td>
+  <td>Profile page and onboarding helpers</td>
+  <td>Yes</td>
+  <td>Medium</td>
+</tr>
+<tr>
+  <td>Curriculum units/chapters/lessons/topics</td>
+  <td>Partial</td>
+  <td>CRUD/read routes</td>
+  <td>Yes</td>
+  <td>Lessons UI, detail UI</td>
+  <td>Limited</td>
+  <td>Medium</td>
+</tr>
+<tr>
+  <td>Ask AI chat</td>
+  <td>Implemented</td>
+  <td>Persistent sessions/messages and ask route</td>
+  <td>Yes</td>
+  <td>Ask AI page</td>
+  <td>Yes</td>
+  <td>Medium</td>
+</tr>
+<tr>
+  <td>RAG search/retrieval</td>
+  <td>Implemented</td>
+  <td>Retrieval/search/answer routes</td>
+  <td>Yes</td>
+  <td>RAG search UI, Ask AI sources</td>
+  <td>Yes</td>
+  <td>Medium</td>
+</tr>
+<tr>
+  <td>RAG ingestion/admin tools</td>
+  <td>Partial</td>
+  <td>Admin ingestion/re-embed/eval routes</td>
+  <td>Yes</td>
+  <td>Admin pages</td>
+  <td>Yes</td>
+  <td>High</td>
+</tr>
+<tr>
+  <td>Audio chat/STT/TTS</td>
+  <td>Partial</td>
+  <td>Multipart chat + ElevenLabs service</td>
+  <td>Yes</td>
+  <td>Recorder/audio bubbles</td>
+  <td>Yes</td>
+  <td>High</td>
+</tr>
+<tr>
+  <td>Study Plan</td>
+  <td>Implemented</td>
+  <td>Generate/progress/complete routes</td>
+  <td>Yes</td>
+  <td>Setup/active dashboard</td>
+  <td>Yes</td>
+  <td>Medium</td>
+</tr>
+<tr>
+  <td>Study Session if present</td>
+  <td>Partial</td>
+  <td>Reuses other APIs only</td>
+  <td>No dedicated session DB</td>
+  <td>Page exists</td>
+  <td>Not found</td>
+  <td>Medium</td>
+</tr>
+<tr>
+  <td>Quiz generation/submission</td>
+  <td>Partial</td>
+  <td>Generate/submit/history routes</td>
+  <td>Yes</td>
+  <td>Quiz page</td>
+  <td>Partial</td>
+  <td>High</td>
+</tr>
+<tr>
+  <td>Flashcard generation/review</td>
+  <td>Implemented</td>
+  <td>Deck generation, due cards, SM-2 review</td>
+  <td>Yes</td>
+  <td>Generate/review workflow</td>
+  <td>Partial</td>
+  <td>Medium</td>
+</tr>
+<tr>
+  <td>Homework solver</td>
+  <td>Partial</td>
+  <td>Text/image solve routes</td>
+  <td>Yes</td>
+  <td>Homework page</td>
+  <td>Limited</td>
+  <td>High</td>
+</tr>
+<tr>
+  <td>Interactive solver/lab</td>
+  <td>Partial</td>
+  <td>Guided solver implemented</td>
+  <td>Yes</td>
+  <td>Guided lab and lab shell</td>
+  <td>Yes</td>
+  <td>Medium</td>
+</tr>
+<tr>
+  <td>Progress/dashboard</td>
+  <td>Partial</td>
+  <td>Dashboard/progress routes</td>
+  <td>Yes</td>
+  <td>Home dashboard</td>
+  <td>Limited</td>
+  <td>Medium</td>
+</tr>
+<tr>
+  <td>Notifications/push tokens</td>
+  <td>Partial</td>
+  <td>In-app, reminders, device tokens, push delivery</td>
+  <td>Yes</td>
+  <td>Bell, pages, settings, SW</td>
+  <td>Yes</td>
+  <td>High</td>
+</tr>
+<tr>
+  <td>Achievements/XP</td>
+  <td>Stub</td>
+  <td>Read-only progress endpoint</td>
+  <td>Yes</td>
+  <td>Static/derived display</td>
+  <td>Not found</td>
+  <td>High</td>
+</tr>
+<tr>
+  <td>Reels/video generation</td>
+  <td>Stub</td>
+  <td>Model only, no route/service</td>
+  <td>Yes, model only</td>
+  <td>Disabled/fallback UI</td>
+  <td>Not found</td>
+  <td>High</td>
+</tr>
+<tr>
+  <td>Subscriptions/billing</td>
+  <td>Stub</td>
+  <td>Model only, no route/service</td>
+  <td>Yes, model only</td>
+  <td>Not found</td>
+  <td>Not found</td>
+  <td>High</td>
+</tr>
+</tbody>
+</table>
+<h2>Feature Inventory</h2>
+<h3>Auth/login/register</h3>
+<ul>
+<li>Status: Implemented</li>
+<li>Backend routes:<ul>
+<li><code>POST /api/v1/auth/register</code> - <code>src/backend/app/api/auth/routes.py:24</code></li>
+<li><code>POST /api/v1/auth/login</code> - <code>src/backend/app/api/auth/routes.py:36</code></li>
+<li><code>GET /api/v1/auth/me</code> - <code>src/backend/app/api/auth/routes.py:42</code></li>
+<li><code>GET /api/v1/users/me</code> - <code>src/backend/app/api/users.py:14</code></li>
+<li><code>PATCH /api/v1/users/me</code> - <code>src/backend/app/api/users.py:19</code></li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li><code>register_user</code> creates the user/profile and hashes the password - <code>src/backend/app/services/auth_service.py:39</code></li>
+<li><code>authenticate_user</code> validates credentials and returns a token - <code>src/backend/app/services/auth_service.py:75</code></li>
+<li><code>get_user</code> / <code>update_user</code> - <code>src/backend/app/services/user_service.py:12</code>, <code>src/backend/app/services/user_service.py:19</code></li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li><code>User</code> / <code>users</code> - <code>src/backend/app/models/user.py:15</code>, <code>src/backend/app/models/user.py:18</code></li>
+<li><code>StudentProfile</code> / <code>student_profiles</code> created with the user - <code>src/backend/app/models/student_profile.py:14</code>, <code>src/backend/app/models/student_profile.py:17</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li><code>LoginPage</code> - <code>src/frontend-web/src/App.tsx:186</code></li>
+<li><code>RegisterPage</code> - <code>src/frontend-web/src/App.tsx:238</code></li>
+<li><code>authApi.login</code>, <code>authApi.register</code>, <code>authApi.me</code> - <code>src/frontend-web/src/api/authApi.ts:45</code>, <code>src/frontend-web/src/api/authApi.ts:51</code>, <code>src/frontend-web/src/api/authApi.ts:61</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>Profile/onboarding tests create users and exercise user/profile persistence - <code>src/backend/tests/test_profile_onboarding_preferences.py:71</code></li>
+<li>No direct frontend login/register test was found.</li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>Real FastAPI routes exist and are registered through the API router.</li>
+<li>Registration creates durable <code>User</code> and <code>StudentProfile</code> records.</li>
+<li>Frontend login/register pages call real auth API methods.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>Auth UI is not directly covered by frontend tests.</li>
+<li><code>authApi.getInterests</code> may return <code>mockInterests</code> when demo fallbacks are enabled - <code>src/frontend-web/src/api/authApi.ts:70</code>, <code>src/frontend-web/src/api/authApi.ts:73</code>.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Add explicit frontend tests for login, registration, expired-session handling, and failed credentials.</li>
+</ul>
+</li>
+</ul>
+<h3>Profile/onboarding/preferences</h3>
+<ul>
+<li>Status: Implemented</li>
+<li>Backend routes:<ul>
+<li><code>GET /api/v1/auth/interests</code> - <code>src/backend/app/api/auth/routes.py:50</code></li>
+<li><code>PATCH /api/v1/auth/onboarding</code> - <code>src/backend/app/api/auth/routes.py:55</code></li>
+<li><code>GET /api/v1/student-profile/me</code> - <code>src/backend/app/api/student_profile.py:14</code></li>
+<li><code>PUT /api/v1/student-profile/me</code> - <code>src/backend/app/api/student_profile.py:19</code></li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li><code>update_user_onboarding</code> - <code>src/backend/app/services/auth_service.py:135</code></li>
+<li><code>get_or_create_profile</code> - <code>src/backend/app/services/profile_service.py:23</code></li>
+<li><code>upsert_profile</code> - <code>src/backend/app/services/profile_service.py:64</code></li>
+<li>Preference normalization helpers - <code>src/backend/app/services/preference_mapping.py:77</code>, <code>src/backend/app/services/preference_mapping.py:91</code>, <code>src/backend/app/services/preference_mapping.py:160</code></li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li><code>StudentProfile</code> / <code>student_profiles</code> - <code>src/backend/app/models/student_profile.py:14</code></li>
+<li><code>InterestCategory</code> and <code>UserInterest</code> - <code>src/backend/app/models/interest.py:11</code>, <code>src/backend/app/models/interest.py:27</code></li>
+<li>User preference fields live on <code>User</code> and are synchronized into <code>StudentProfile</code> - <code>src/backend/app/services/profile_service.py:46</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li><code>ProfilePage</code> - <code>src/frontend-web/src/App.tsx:690</code></li>
+<li><code>userApi.getProfile</code>, <code>userApi.updateProfile</code>, <code>userApi.updatePreferences</code> - <code>src/frontend-web/src/api/userApi.ts:62</code>, <code>src/frontend-web/src/api/userApi.ts:67</code>, <code>src/frontend-web/src/api/userApi.ts:72</code></li>
+<li>Onboarding completion helpers - <code>src/frontend-web/src/lib/onboarding.ts:5</code>, <code>src/frontend-web/src/lib/onboarding.ts:22</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>Backend profile/onboarding/preference coverage - <code>src/backend/tests/test_profile_onboarding_preferences.py:71</code></li>
+<li>Frontend onboarding helper tests - <code>src/frontend-web/src/lib/onboarding.test.ts:7</code></li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>Backend has durable profile and preference storage.</li>
+<li>Frontend profile page loads and saves preferences.</li>
+<li>Preference mapping keeps legacy learning-style fields compatible with newer fields.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>Frontend profile page itself lacks a dedicated component integration test.</li>
+<li>Interest loading can fall back to static demo interests when demo fallback is enabled - <code>src/frontend-web/src/api/authApi.ts:70</code>.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Add ProfilePage integration tests and remove or hard-gate interest demo fallback in production builds.</li>
+</ul>
+</li>
+</ul>
+<h3>Curriculum units/chapters/lessons/topics</h3>
+<ul>
+<li>Status: Partial</li>
+<li>Backend routes:<ul>
+<li>Units: <code>GET /api/v1/units</code>, <code>GET /api/v1/units/{unit_id}</code>, <code>GET /api/v1/units/{unit_id}/chapters</code> - <code>src/backend/app/api/units.py:14</code>, <code>src/backend/app/api/units.py:22</code>, <code>src/backend/app/api/units.py:27</code></li>
+<li>Chapters: list/get/create/update - <code>src/backend/app/api/chapters.py:14</code>, <code>src/backend/app/api/chapters.py:23</code>, <code>src/backend/app/api/chapters.py:28</code>, <code>src/backend/app/api/chapters.py:37</code></li>
+<li>Lessons: list/get/create/update - <code>src/backend/app/api/lessons.py:14</code>, <code>src/backend/app/api/lessons.py:23</code>, <code>src/backend/app/api/lessons.py:28</code>, <code>src/backend/app/api/lessons.py:37</code></li>
+<li>Topics: list/get/create/update/delete - <code>src/backend/app/api/topics.py:10</code>, <code>src/backend/app/api/topics.py:20</code>, <code>src/backend/app/api/topics.py:28</code>, <code>src/backend/app/api/topics.py:36</code>, <code>src/backend/app/api/topics.py:45</code></li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li>Curriculum service for units/chapters/lessons - <code>src/backend/app/services/curriculum_service.py:11</code>, <code>src/backend/app/services/curriculum_service.py:44</code>, <code>src/backend/app/services/curriculum_service.py:87</code></li>
+<li>Topic service - <code>src/backend/app/services/topic_service.py:9</code>, <code>src/backend/app/services/topic_service.py:27</code></li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li><code>Unit</code>, <code>Chapter</code>, <code>Lesson</code>, <code>LessonProgress</code> - <code>src/backend/app/models/chemistry.py:38</code>, <code>src/backend/app/models/chemistry.py:57</code>, <code>src/backend/app/models/chemistry.py:84</code>, <code>src/backend/app/models/chemistry.py:112</code></li>
+<li><code>Topic</code> - <code>src/backend/app/models/topic.py:10</code></li>
+<li><code>lesson_topics</code> many-to-many table - <code>src/backend/app/models/chemistry.py:13</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li>Lessons page - <code>src/frontend-web/src/pages/LearningPages.tsx:34</code></li>
+<li>Lesson detail page - <code>src/frontend-web/src/pages/LessonDetailPage.tsx:24</code></li>
+<li><code>curriculumApi.getUnits</code>, <code>curriculumApi.getLesson</code> - <code>src/frontend-web/src/api/curriculumApi.ts:216</code>, <code>src/frontend-web/src/api/curriculumApi.ts:223</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>No dedicated curriculum route/service test was found.</li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>Core curriculum CRUD/read API and ORM hierarchy exist.</li>
+<li>Frontend can load units and lesson details from the backend.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>Frontend lessons fall back to static curriculum data on empty/error API responses - <code>src/frontend-web/src/pages/LearningPages.tsx:56</code>, <code>src/frontend-web/src/pages/LearningPages.tsx:61</code>.</li>
+<li>Lesson detail page combines backend catalog data with mock quality/lesson content - <code>src/frontend-web/src/pages/LessonDetailPage.tsx:4</code>, <code>src/frontend-web/src/pages/LessonDetailPage.tsx:5</code>, <code>src/frontend-web/src/pages/LessonDetailPage.tsx:44</code>.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Remove production fallback curriculum, populate backend curriculum reliably, and add curriculum API tests.</li>
+</ul>
+</li>
+</ul>
+<h3>Ask AI chat</h3>
+<ul>
+<li>Status: Implemented</li>
+<li>Backend routes:<ul>
+<li>Sessions: <code>POST /api/v1/chat/sessions</code>, <code>GET /api/v1/chat/sessions</code>, <code>GET /api/v1/chat/sessions/{session_id}</code>, <code>DELETE /api/v1/chat/sessions/{session_id}</code> - <code>src/backend/app/api/chat/routes.py:32</code>, <code>src/backend/app/api/chat/routes.py:47</code>, <code>src/backend/app/api/chat/routes.py:55</code>, <code>src/backend/app/api/chat/routes.py:206</code></li>
+<li>Messages: <code>POST /api/v1/chat/sessions/{session_id}/messages</code>, <code>POST /api/v1/chat/messages</code>, feedback route - <code>src/backend/app/api/chat/routes.py:64</code>, <code>src/backend/app/api/chat/routes.py:88</code>, <code>src/backend/app/api/chat/routes.py:196</code></li>
+<li>Legacy/direct ask: <code>POST /api/v1/chat/ask</code> - <code>src/backend/app/api/chat/routes.py:135</code></li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li>Session creation/list/ownership - <code>src/backend/app/services/chat_service.py:1908</code>, <code>src/backend/app/services/chat_service.py:1927</code>, <code>src/backend/app/services/chat_service.py:1938</code></li>
+<li>Text message flow - <code>src/backend/app/services/chat_service.py:1951</code></li>
+<li>Multipart/multimodal message flow - <code>src/backend/app/services/chat_service.py:2353</code></li>
+<li>Direct ask flow - <code>src/backend/app/services/chat_service.py:2552</code></li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li><code>ChatSession</code> / <code>chat_sessions</code> - <code>src/backend/app/models/chat.py:12</code>, <code>src/backend/app/models/chat.py:15</code></li>
+<li><code>ChatMessage</code> / <code>chat_messages</code> - <code>src/backend/app/models/chat.py:34</code>, <code>src/backend/app/models/chat.py:37</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li><code>AskAiPage</code> - <code>src/frontend-web/src/pages/AskAIPage.tsx:716</code></li>
+<li>Session and message API methods - <code>src/frontend-web/src/api/aiApi.ts:168</code>, <code>src/frontend-web/src/api/aiApi.ts:173</code>, <code>src/frontend-web/src/api/aiApi.ts:178</code>, <code>src/frontend-web/src/api/aiApi.ts:183</code>, <code>src/frontend-web/src/api/aiApi.ts:206</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>Backend chat sessions - <code>src/backend/tests/test_chat_sessions.py:85</code></li>
+<li>Backend Ask AI/RAG fallback tests - <code>src/backend/tests/test_ai_service_fallbacks.py:12</code></li>
+<li>Frontend Ask AI session/source/mode/error tests - <code>src/frontend-web/src/AskAiPage.test.tsx:120</code>, <code>src/frontend-web/src/AskAiPage.test.tsx:141</code>, <code>src/frontend-web/src/AskAiPage.test.tsx:175</code>, <code>src/frontend-web/src/AskAiPage.test.tsx:197</code>, <code>src/frontend-web/src/AskAiPage.test.tsx:209</code></li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>Session-based chat persists user and assistant messages.</li>
+<li><code>send_message</code> saves user messages and assistant messages with sources/citations - <code>src/backend/app/services/chat_service.py:1991</code>, <code>src/backend/app/services/chat_service.py:2177</code>, <code>src/backend/app/services/chat_service.py:2305</code>.</li>
+<li>Ask AI frontend renders persisted source evidence and validates empty composer submissions.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>Some post-answer transformations are disabled or frontend-only placeholders, e.g. response action chips show <code>قريباً</code> - <code>src/frontend-web/src/pages/AskAIPage.tsx:388</code>, <code>src/frontend-web/src/pages/AskAIPage.tsx:390</code>, <code>src/frontend-web/src/pages/AskAIPage.tsx:392</code>.</li>
+<li><code>aiApi</code> still exposes unimplemented helper methods that throw endpoint-not-ready errors - <code>src/frontend-web/src/api/aiApi.ts:242</code>, <code>src/frontend-web/src/api/aiApi.ts:246</code>, <code>src/frontend-web/src/api/aiApi.ts:250</code>, <code>src/frontend-web/src/api/aiApi.ts:254</code>, <code>src/frontend-web/src/api/aiApi.ts:258</code>.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Either implement or remove unsupported answer-transformation API methods from the public frontend API surface.</li>
+</ul>
+</li>
+</ul>
+<h3>RAG search/retrieval</h3>
+<ul>
+<li>Status: Implemented</li>
+<li>Backend routes:<ul>
+<li><code>GET /api/v1/rag/search</code> - <code>src/backend/app/api/rag/routes.py:64</code></li>
+<li><code>POST /api/v1/rag/retrieve</code> - <code>src/backend/app/api/rag/routes.py:106</code></li>
+<li><code>POST /api/v1/rag/search</code> - <code>src/backend/app/api/rag/routes.py:129</code></li>
+<li><code>POST /api/v1/rag/answer</code> - <code>src/backend/app/api/rag/routes.py:154</code></li>
+<li><code>POST /api/v1/rag/semantic-retrieve</code> - <code>src/backend/app/api/rag/routes.py:192</code></li>
+<li><code>POST /api/v1/rag/retrieve-debug</code> - <code>src/backend/app/api/rag/routes.py:218</code></li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li>Core retrieve/format flow - <code>src/backend/app/services/rag.py:743</code>, <code>src/backend/app/services/rag.py:1021</code></li>
+<li>Hybrid scoring and lexical scoring - <code>src/backend/app/services/rag.py:551</code>, <code>src/backend/app/services/rag.py:591</code></li>
+<li>Semantic retrieval with query rewrite/HyDE/multi-query/rerank - <code>src/backend/app/services/semantic_rag.py:603</code>, <code>src/backend/app/services/semantic_rag.py:643</code>, <code>src/backend/app/services/semantic_rag.py:684</code></li>
+<li>Embedding service - <code>src/backend/app/services/embeddings.py:225</code>, <code>src/backend/app/services/embeddings.py:235</code></li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li><code>RagChunk</code> / <code>rag_chunks</code> - <code>src/backend/app/models/textbook.py:65</code></li>
+<li>Vector field with pgvector/JSON fallback - <code>src/backend/app/models/textbook.py:18</code>, <code>src/backend/app/models/textbook.py:69</code></li>
+<li>Query logging models - <code>src/backend/app/models/rag_logging.py</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li><code>RagSearchPage</code> - <code>src/frontend-web/src/pages/LearningPages.tsx:188</code></li>
+<li>RAG source panel in Ask AI - <code>src/frontend-web/src/pages/AskAIPage.tsx:346</code></li>
+<li>Admin debug client - <code>src/frontend-web/src/api/adminRagApi.ts:203</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>Retrieval ranking/local fallback tests - <code>src/backend/tests/test_rag_retrieval.py:105</code>, <code>src/backend/tests/test_rag_retrieval.py:136</code></li>
+<li>RAG hardening tests - <code>src/backend/tests/test_rag_hardening.py:32</code></li>
+<li>Grade 9 QA tests - <code>src/backend/tests/test_rag_grade9_qa.py:14</code></li>
+<li>Ask AI source rendering - <code>src/frontend-web/src/AskAiPage.test.tsx:120</code></li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>Real retrieval routes and services exist.</li>
+<li>Retrieval supports hybrid lexical/vector scoring and semantic stages.</li>
+<li>Chat uses semantic retrieval before answer generation - <code>src/backend/app/services/chat_service.py:2203</code>, <code>src/backend/app/services/chat_service.py:2261</code>.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>Vector storage falls back to JSON when not running on PostgreSQL/pgvector, which is useful for tests but different from production retrieval - <code>src/backend/app/models/textbook.py:18</code>.</li>
+<li>Quality depends on having ingested chunks; retrieval can only be as good as the available RAG data.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Keep production on pgvector, monitor missing-metadata chunks, and add end-to-end tests with real reviewed curriculum chunks.</li>
+</ul>
+</li>
+</ul>
+<h3>RAG ingestion/admin tools</h3>
+<ul>
+<li>Status: Partial</li>
+<li>Backend routes:<ul>
+<li>Ingestion start/rebuild/solution-book endpoints - <code>src/backend/app/api/ingestion/routes.py:321</code>, <code>src/backend/app/api/ingestion/routes.py:356</code>, <code>src/backend/app/api/ingestion/routes.py:380</code></li>
+<li>Sources/status/stats/pages/retry/test/review endpoints - <code>src/backend/app/api/ingestion/routes.py:430</code>, <code>src/backend/app/api/ingestion/routes.py:474</code>, <code>src/backend/app/api/ingestion/routes.py:486</code>, <code>src/backend/app/api/ingestion/routes.py:569</code>, <code>src/backend/app/api/ingestion/routes.py:583</code>, <code>src/backend/app/api/ingestion/routes.py:607</code>, <code>src/backend/app/api/ingestion/routes.py:683</code></li>
+<li>Re-embed/evaluation/query-log admin endpoints - <code>src/backend/app/api/admin_rag.py:44</code>, <code>src/backend/app/api/admin_rag.py:67</code>, <code>src/backend/app/api/admin_rag.py:100</code>, <code>src/backend/app/api/admin_rag.py:141</code></li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li>Ingestion pipeline - <code>src/backend/app/services/ingestion_pipeline.py:1021</code></li>
+<li>Page extraction/chunk/question storage helpers - <code>src/backend/app/services/ingestion_pipeline.py:421</code>, <code>src/backend/app/services/ingestion_pipeline.py:624</code>, <code>src/backend/app/services/ingestion_pipeline.py:713</code></li>
+<li>Chunk builder - <code>src/backend/app/services/chunking.py:255</code></li>
+<li>Solution book ingestion - <code>src/backend/app/services/solution_book_ingestion.py:426</code></li>
+<li>Re-embed/evaluation services - <code>src/backend/app/services/rag_reembed.py</code>, <code>src/backend/app/services/rag_evaluation.py</code></li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li>Textbook/content/RAG/question models - <code>src/backend/app/models/textbook.py:24</code>, <code>src/backend/app/models/textbook.py:43</code>, <code>src/backend/app/models/textbook.py:65</code>, <code>src/backend/app/models/textbook.py:125</code></li>
+<li>Ingestion tracking models - <code>src/backend/app/models/ingestion.py</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li>RAG admin pages - <code>src/frontend-web/src/pages/admin/RagAdminPage.tsx:7</code>, <code>src/frontend-web/src/pages/admin/RagReembedPage.tsx:6</code>, <code>src/frontend-web/src/pages/admin/RagEvaluationPage.tsx:6</code>, <code>src/frontend-web/src/pages/admin/RagQueryLogsPage.tsx:6</code>, <code>src/frontend-web/src/pages/admin/SourcesPage.tsx:20</code></li>
+<li>Admin API client - <code>src/frontend-web/src/api/adminRagApi.ts:150</code>, <code>src/frontend-web/src/api/adminRagApi.ts:175</code>, <code>src/frontend-web/src/api/adminRagApi.ts:185</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>Admin ingestion tests - <code>src/backend/tests/test_ingestion_admin.py:63</code></li>
+<li>Ingestion foundation/OCR fallback tests - <code>src/backend/tests/test_ingestion_foundation.py:118</code></li>
+<li>Solution book ingestion tests - <code>src/backend/tests/test_solution_book_ingestion.py:264</code></li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>Admin ingestion and monitoring surfaces exist.</li>
+<li>OCR/vision fallback and solution-book ingestion have tests.</li>
+<li>Frontend admin pages call the admin endpoints.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>This remains provider/configuration dependent and operationally sensitive.</li>
+<li>Some ingestion jobs are kicked through background tasks or admin flows and need production job-state/worker verification beyond unit tests.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Add production runbook/tests for source registration, retry, re-embed, evaluation, and job recovery after worker/server restart.</li>
+</ul>
+</li>
+</ul>
+<h3>Audio chat/STT/TTS</h3>
+<ul>
+<li>Status: Partial</li>
+<li>Backend routes:<ul>
+<li>Unified multipart chat route <code>POST /api/v1/chat/messages</code> - <code>src/backend/app/api/chat/routes.py:88</code></li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li>Return type resolver - <code>src/backend/app/schemas/audio.py:39</code></li>
+<li>Audio provider abstraction and ElevenLabs providers - <code>src/backend/app/services/audio_service.py:32</code>, <code>src/backend/app/services/audio_service.py:53</code>, <code>src/backend/app/services/audio_service.py:105</code>, <code>src/backend/app/services/audio_service.py:154</code></li>
+<li>Local audio storage - <code>src/backend/app/services/audio_storage.py:15</code></li>
+<li>Provider config guard - <code>src/backend/app/services/chat_service.py:2342</code></li>
+<li>Multipart audio pipeline - <code>src/backend/app/services/chat_service.py:2353</code>, <code>src/backend/app/services/chat_service.py:2404</code>, <code>src/backend/app/services/chat_service.py:2473</code></li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li>Audio fields on <code>ChatMessage</code> - <code>src/backend/app/models/chat.py:53</code>, <code>src/backend/app/models/chat.py:66</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li>Audio send via <code>aiApi.sendVoiceMessage</code> / multipart message client - <code>src/frontend-web/src/api/aiApi.ts:206</code>, <code>src/frontend-web/src/api/aiApi.ts:220</code></li>
+<li>Ask AI audio player/recorder UI - <code>src/frontend-web/src/pages/AskAIPage.tsx:428</code>, <code>src/frontend-web/src/pages/AskAIPage.tsx:848</code>, <code>src/frontend-web/src/pages/AskAIPage.tsx:1085</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>Backend text/audio behavior matrix and failure cases - <code>src/backend/tests/test_chat_audio.py:118</code>, <code>src/backend/tests/test_chat_audio.py:151</code>, <code>src/backend/tests/test_chat_audio.py:348</code></li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>Backend supports audio input -&gt; STT -&gt; existing chat/RAG answer -&gt; optional TTS.</li>
+<li>Text answer is preserved when TTS fails in tests.</li>
+<li>Frontend has recording and audio bubble UX.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>Audio is disabled by default and requires env config - <code>src/backend/app/core/config.py:45</code>, <code>src/backend/app/core/config.py:48</code>, <code>src/backend/app/core/config.py:51</code>.</li>
+<li>File-size validation exists, but duration validation is not proven from code; max duration is only a config value - <code>src/backend/app/core/config.py:55</code>, <code>src/backend/app/services/chat_service.py:320</code>.</li>
+<li>Frontend helper methods for standalone transcription/TTS/image/video still throw endpoint-not-ready errors - <code>src/frontend-web/src/api/aiApi.ts:242</code>, <code>src/frontend-web/src/api/aiApi.ts:246</code>.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Configure authenticated media serving, validate audio duration, and add frontend recording tests.</li>
+</ul>
+</li>
+</ul>
+<h3>Study Plan</h3>
+<ul>
+<li>Status: Implemented</li>
+<li>Backend routes:<ul>
+<li><code>GET /api/v1/study-plans</code> - <code>src/backend/app/api/study_plans.py:16</code></li>
+<li><code>POST /api/v1/study-plans/generate</code> - <code>src/backend/app/api/study_plans.py:23</code></li>
+<li><code>GET /api/v1/study-plans/{plan_id}</code> - <code>src/backend/app/api/study_plans.py:31</code></li>
+<li><code>GET /api/v1/study-plans/{plan_id}/progress</code> - <code>src/backend/app/api/study_plans.py:40</code></li>
+<li><code>POST /api/v1/study-plans</code>, <code>PUT /api/v1/study-plans/{plan_id}</code>, complete lesson, delete - <code>src/backend/app/api/study_plans.py:48</code>, <code>src/backend/app/api/study_plans.py:56</code>, <code>src/backend/app/api/study_plans.py:65</code>, <code>src/backend/app/api/study_plans.py:74</code></li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li>Date validation and weekday/hour normalization - <code>src/backend/app/services/study_plan_service.py:67</code>, <code>src/backend/app/services/study_plan_service.py:101</code>, <code>src/backend/app/services/study_plan_service.py:157</code></li>
+<li>Schedule/week generation - <code>src/backend/app/services/study_plan_service.py:207</code>, <code>src/backend/app/services/study_plan_service.py:325</code></li>
+<li>Plan JSON validation - <code>src/backend/app/services/study_plan_service.py:397</code></li>
+<li>Generate/progress/complete/delete - <code>src/backend/app/services/study_plan_service.py:659</code>, <code>src/backend/app/services/study_plan_service.py:766</code>, <code>src/backend/app/services/study_plan_service.py:799</code>, <code>src/backend/app/services/study_plan_service.py:903</code></li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li><code>StudyPlan</code> / <code>study_plans</code> - <code>src/backend/app/models/study_plan.py:12</code>, <code>src/backend/app/models/study_plan.py:15</code></li>
+<li>Completion also uses <code>LessonProgress</code> - <code>src/backend/app/models/chemistry.py:112</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li><code>StudyPlanPage</code> - <code>src/frontend-web/src/pages/StudyPlanPage.tsx:1181</code></li>
+<li>Setup wizard, active dashboard, today/path/review/achievement panels - <code>src/frontend-web/src/pages/StudyPlanPage.tsx:433</code>, <code>src/frontend-web/src/pages/StudyPlanPage.tsx:760</code>, <code>src/frontend-web/src/pages/StudyPlanPage.tsx:861</code>, <code>src/frontend-web/src/pages/StudyPlanPage.tsx:1018</code>, <code>src/frontend-web/src/pages/StudyPlanPage.tsx:1095</code>, <code>src/frontend-web/src/pages/StudyPlanPage.tsx:1149</code></li>
+<li>Study plan API client - <code>src/frontend-web/src/api/studyPlanApi.ts:146</code>, <code>src/frontend-web/src/api/studyPlanApi.ts:184</code>, <code>src/frontend-web/src/api/studyPlanApi.ts:188</code>, <code>src/frontend-web/src/api/studyPlanApi.ts:221</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>Backend study plan service tests - <code>src/backend/tests/test_study_plan_service.py:263</code></li>
+<li>Frontend API behavior tests that prevent fake local plans on backend failure - <code>src/frontend-web/src/studyPlanApi.test.ts:20</code>, <code>src/frontend-web/src/studyPlanApi.test.ts:25</code>, <code>src/frontend-web/src/studyPlanApi.test.ts:31</code>, <code>src/frontend-web/src/studyPlanApi.test.ts:37</code></li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>Backend generates date-based schedules and exposes progress.</li>
+<li>Frontend has explicit empty/setup/active states and calls backend generation/progress/completion.</li>
+<li>Tests verify no fabricated active plan is returned when backend has no plan or generation fails.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>Frontend still uses fallback curriculum data for lesson selection if curriculum API fails - <code>src/frontend-web/src/pages/StudyPlanPage.tsx:1183</code>, <code>src/frontend-web/src/pages/StudyPlanPage.tsx:1196</code>.</li>
+<li>Some achievement/review actions in the Study Plan page are explicitly disabled or marked <code>قريباً</code> - <code>src/frontend-web/src/pages/StudyPlanPage.tsx:1119</code>, <code>src/frontend-web/src/pages/StudyPlanPage.tsx:1136</code>, <code>src/frontend-web/src/pages/StudyPlanPage.tsx:1164</code>.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Remove production curriculum fallback, fully wire review actions, and add StudyPlanPage UI integration tests.</li>
+</ul>
+</li>
+</ul>
+<h3>Study Session if present</h3>
+<ul>
+<li>Status: Partial</li>
+<li>Backend routes:<ul>
+<li>No dedicated study-session backend route was found.</li>
+<li>The page appears to rely on lesson, study plan, quiz, flashcard, and Ask AI APIs.</li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li>No dedicated study-session service was found.</li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li>No dedicated study-session table was found.</li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li>Route <code>/study-session/:lessonId</code> - <code>src/frontend-web/src/App.tsx:1048</code></li>
+<li><code>StudySessionPage</code> - <code>src/frontend-web/src/pages/StudySessionPage.tsx:24</code></li>
+<li>Lesson summary component - <code>src/frontend-web/src/components/study-session/StudySessionLessonSummary.tsx:10</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>No dedicated StudySessionPage test was found.</li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>A frontend focused-session page exists and is routed.</li>
+<li>It can connect to existing lesson/study-plan actions.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>The page imports and searches <code>fallbackCurriculumUnits</code> directly - <code>src/frontend-web/src/pages/StudySessionPage.tsx:3</code>, <code>src/frontend-web/src/pages/StudySessionPage.tsx:15</code>.</li>
+<li>No backend session persistence exists for a study session lifecycle.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Add a backend study-session contract or explicitly define it as a frontend orchestration page over existing APIs, remove fallback lesson lookup, and add tests.</li>
+</ul>
+</li>
+</ul>
+<h3>Quiz generation/submission</h3>
+<ul>
+<li>Status: Partial</li>
+<li>Backend routes:<ul>
+<li><code>POST /api/v1/quizzes/generate</code> - <code>src/backend/app/api/quizzes.py:22</code></li>
+<li><code>POST /api/v1/quizzes/submit</code> - <code>src/backend/app/api/quizzes.py:56</code></li>
+<li><code>GET /api/v1/quizzes/history</code> - <code>src/backend/app/api/quizzes.py:72</code></li>
+<li><code>GET /api/v1/quizzes/recommendations</code> - <code>src/backend/app/api/quizzes.py:77</code></li>
+<li>Practice exam endpoint - <code>src/backend/app/api/exams.py:13</code></li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li>Generate from existing questions, AI fallback, or template fallback - <code>src/backend/app/services/quiz_service.py:216</code>, <code>src/backend/app/services/quiz_service.py:243</code>, <code>src/backend/app/services/quiz_service.py:256</code></li>
+<li>Submit quiz attempts - <code>src/backend/app/services/quiz_service.py:281</code></li>
+<li>Recommendations - <code>src/backend/app/services/quiz_service.py:333</code></li>
+<li>AI quiz generator - <code>src/backend/app/services/ai_quiz_generator.py:9</code></li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li><code>Question</code>, <code>QuizAttempt</code>, <code>QuestionAttempt</code> - <code>src/backend/app/models/assessment.py:13</code>, <code>src/backend/app/models/assessment.py:30</code>, <code>src/backend/app/models/assessment.py:48</code></li>
+<li>Extracted/generated question pool - <code>src/backend/app/models/textbook.py:125</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li><code>QuizzesPage</code> - <code>src/frontend-web/src/pages/QuizzesPage.tsx:20</code></li>
+<li><code>quizzesApi.generateQuiz</code> - <code>src/frontend-web/src/api/quizzesApi.ts:121</code></li>
+<li><code>quizzesApi.submitQuizResult</code> - <code>src/frontend-web/src/api/quizzesApi.ts:151</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>Backend generation fallback test - <code>src/backend/tests/test_quiz_flashcard_generation_fallbacks.py:21</code></li>
+<li>No dedicated frontend quiz test was found.</li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>Quiz generation route exists and will not return empty success when generation fails - <code>src/frontend-web/src/api/quizzesApi.ts:135</code>.</li>
+<li>Backend can submit quiz attempts.</li>
+<li>Frontend has generation, answer checking, and review UI.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>Frontend <code>submitQuizAnswer</code> returns local success rather than calling backend - <code>src/frontend-web/src/api/quizzesApi.ts:144</code>, <code>src/frontend-web/src/api/quizzesApi.ts:148</code>.</li>
+<li><code>submitQuizResult</code> posts a hardcoded <code>topic_id: 1</code> and falls back to local success on submit failure - <code>src/frontend-web/src/api/quizzesApi.ts:151</code>, <code>src/frontend-web/src/api/quizzesApi.ts:162</code>.</li>
+<li>AI quiz generator is topic-based, so lesson-only generation may depend on service fallback behavior - <code>src/backend/app/services/ai_quiz_generator.py:9</code>.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Align frontend submission with backend attempts/questions, remove local submit fallback, and add end-to-end quiz tests.</li>
+</ul>
+</li>
+</ul>
+<h3>Flashcard generation/review</h3>
+<ul>
+<li>Status: Implemented</li>
+<li>Backend routes:<ul>
+<li>List/create/admin cards - <code>src/backend/app/api/flashcards.py:112</code>, <code>src/backend/app/api/flashcards.py:117</code></li>
+<li>Deck list/generate/get/update/delete - <code>src/backend/app/api/flashcards.py:126</code>, <code>src/backend/app/api/flashcards.py:134</code>, <code>src/backend/app/api/flashcards.py:155</code>, <code>src/backend/app/api/flashcards.py:165</code>, <code>src/backend/app/api/flashcards.py:177</code></li>
+<li>Due/progress/review session/review card/update/get - <code>src/backend/app/api/flashcards.py:187</code>, <code>src/backend/app/api/flashcards.py:213</code>, <code>src/backend/app/api/flashcards.py:221</code>, <code>src/backend/app/api/flashcards.py:236</code>, <code>src/backend/app/api/flashcards.py:256</code>, <code>src/backend/app/api/flashcards.py:267</code></li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li>Deck generation - <code>src/backend/app/services/flashcard_service.py:500</code></li>
+<li>Generated card validation and saving progress rows - <code>src/backend/app/services/flashcard_service.py:568</code>, <code>src/backend/app/services/flashcard_service.py:581</code></li>
+<li>Due cards and SM-2-style review update - <code>src/backend/app/services/flashcard_service.py:732</code>, <code>src/backend/app/services/flashcard_service.py:770</code></li>
+<li>Review summary/session - <code>src/backend/app/services/flashcard_service.py:814</code>, <code>src/backend/app/services/flashcard_service.py:827</code></li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li><code>FlashcardDeck</code>, <code>Flashcard</code>, <code>FlashcardProgress</code> - <code>src/backend/app/models/flashcard.py:12</code>, <code>src/backend/app/models/flashcard.py:30</code>, <code>src/backend/app/models/flashcard.py:86</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li><code>FlashcardsPage</code> - <code>src/frontend-web/src/pages/FlashcardsPage.tsx:138</code></li>
+<li>Generation/review API methods - <code>src/frontend-web/src/api/flashcardsApi.ts:245</code>, <code>src/frontend-web/src/api/flashcardsApi.ts:258</code>, <code>src/frontend-web/src/api/flashcardsApi.ts:271</code>, <code>src/frontend-web/src/api/flashcardsApi.ts:281</code>, <code>src/frontend-web/src/api/flashcardsApi.ts:286</code></li>
+<li>Review UX front -&gt; hint -&gt; reveal -&gt; rate - <code>src/frontend-web/src/pages/FlashcardsPage.tsx:940</code>, <code>src/frontend-web/src/pages/FlashcardsPage.tsx:949</code>, <code>src/frontend-web/src/pages/FlashcardsPage.tsx:955</code>, <code>src/frontend-web/src/pages/FlashcardsPage.tsx:961</code>, <code>src/frontend-web/src/pages/FlashcardsPage.tsx:1037</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>Backend fallback quality test - <code>src/backend/tests/test_quiz_flashcard_generation_fallbacks.py:67</code></li>
+<li>Scheduler/review tests - <code>src/backend/tests/test_flashcard_scheduler.py:6</code></li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>Real deck generation and review endpoints exist.</li>
+<li>Flashcard progress is stored per user/card and updated when rated.</li>
+<li>Frontend review flow hides the answer until reveal and then rates the card.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>No dedicated frontend FlashcardsPage test was found.</li>
+<li>Generated quality depends on available RAG chunks and fallback generation.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Add frontend tests for auto-generation from study plan, hint/reveal/rating, and error states.</li>
+</ul>
+</li>
+</ul>
+<h3>Homework solver</h3>
+<ul>
+<li>Status: Partial</li>
+<li>Backend routes:<ul>
+<li><code>POST /api/v1/homework/solve-text</code> - <code>src/backend/app/api/homework.py:26</code></li>
+<li><code>POST /api/v1/homework/upload</code> - <code>src/backend/app/api/homework.py:35</code></li>
+<li><code>POST /api/v1/homework/solve-image</code> - <code>src/backend/app/api/homework.py:86</code></li>
+<li><code>GET /api/v1/homework/history</code>, <code>GET /api/v1/homework/{homework_id}</code> - <code>src/backend/app/api/homework.py:95</code>, <code>src/backend/app/api/homework.py:100</code></li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li>Text solver uses RAG and AI answer generation - <code>src/backend/app/services/homework_service.py:15</code></li>
+<li>Image solver - <code>src/backend/app/services/homework_service.py:31</code></li>
+<li>History/detail - <code>src/backend/app/services/homework_service.py:48</code>, <code>src/backend/app/services/homework_service.py:53</code></li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li><code>Homework</code> / <code>homework</code> - <code>src/backend/app/models/homework.py:10</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li><code>HomeworkPage</code> - <code>src/frontend-web/src/pages/HomeworkPage.tsx:33</code></li>
+<li><code>homeworkApi.solveText</code>, upload, solve image - <code>src/frontend-web/src/api/homeworkApi.ts:44</code>, <code>src/frontend-web/src/api/homeworkApi.ts:51</code>, <code>src/frontend-web/src/api/homeworkApi.ts:61</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>Contract endpoint tests touch homework behavior - <code>src/backend/tests/test_contract_gap_endpoints.py:125</code></li>
+<li>No dedicated frontend HomeworkPage test was found.</li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>Text and image homework routes exist.</li>
+<li>Frontend can submit typed text or uploaded images.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>Image solving is provider-dependent and needs stronger tests.</li>
+<li>No evidence of durable homework-specific feedback loop beyond storing answer/history.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Add robust image-solver tests, provider-error handling coverage, and frontend tests.</li>
+</ul>
+</li>
+</ul>
+<h3>Interactive solver/lab</h3>
+<ul>
+<li>Status: Partial</li>
+<li>Backend routes:<ul>
+<li>Guided solver sessions create/list/get - <code>src/backend/app/api/interactive_solver/routes.py:21</code>, <code>src/backend/app/api/interactive_solver/routes.py:30</code>, <code>src/backend/app/api/interactive_solver/routes.py:40</code></li>
+<li>Answer/hint/finish - <code>src/backend/app/api/interactive_solver/routes.py:49</code>, <code>src/backend/app/api/interactive_solver/routes.py:59</code>, <code>src/backend/app/api/interactive_solver/routes.py:68</code></li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li>Start session - <code>src/backend/app/services/interactive_solver_service.py:617</code></li>
+<li>Submit answer - <code>src/backend/app/services/interactive_solver_service.py:846</code></li>
+<li>Hint and finish - <code>src/backend/app/services/interactive_solver_service.py:941</code>, <code>src/backend/app/services/interactive_solver_service.py:994</code></li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li><code>InteractiveSession</code>, <code>InteractiveStep</code>, <code>StudentStepAnswer</code>, <code>MisconceptionEvent</code>, <code>SkillMastery</code> - <code>src/backend/app/models/interactive_solver.py:12</code>, <code>src/backend/app/models/interactive_solver.py:45</code>, <code>src/backend/app/models/interactive_solver.py:80</code>, <code>src/backend/app/models/interactive_solver.py:109</code>, <code>src/backend/app/models/interactive_solver.py:134</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li>Guided lab page and solver session page - <code>src/frontend-web/src/features/guided-lab/pages/GuidedLabPage.tsx:9</code>, <code>src/frontend-web/src/features/guided-lab/pages/SolverSessionPage.tsx:20</code></li>
+<li>Guided solver API client - <code>src/frontend-web/src/features/guided-lab/api/interactiveSolverApi.ts:243</code>, <code>src/frontend-web/src/features/guided-lab/api/interactiveSolverApi.ts:258</code>, <code>src/frontend-web/src/features/guided-lab/api/interactiveSolverApi.ts:280</code>, <code>src/frontend-web/src/features/guided-lab/api/interactiveSolverApi.ts:296</code>, <code>src/frontend-web/src/features/guided-lab/api/interactiveSolverApi.ts:310</code></li>
+<li>Lab shell page - <code>src/frontend-web/src/pages/LabPage.tsx:81</code></li>
+<li>Mock equation-balancer API - <code>src/frontend-web/src/api/labApi.ts:1</code>, <code>src/frontend-web/src/api/labApi.ts:6</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>Backend interactive solver tests - <code>src/backend/tests/test_interactive_solver.py:66</code></li>
+<li>Frontend guided lab tests - <code>src/frontend-web/src/features/guided-lab/GuidedLab.test.tsx:52</code></li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>Guided solver is implemented across backend, DB, frontend, and tests.</li>
+<li>Lab landing page routes users into guided solver and related tools.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>The broader Lab page includes tools that route to Ask AI or are not backend-backed.</li>
+<li>Frontend guided lab API contains a local mock session fallback path - <code>src/frontend-web/src/features/guided-lab/api/interactiveSolverApi.ts:91</code>, <code>src/frontend-web/src/features/guided-lab/api/interactiveSolverApi.ts:292</code>, <code>src/frontend-web/src/features/guided-lab/api/interactiveSolverApi.ts:306</code>.</li>
+<li>Equation balancing is entirely local mock logic - <code>src/frontend-web/src/api/labApi.ts:1</code>, <code>src/frontend-web/src/api/labApi.ts:6</code>.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Split &quot;guided solver&quot; from &quot;lab tools&quot;, remove production mock fallback, and implement real backend services for the remaining lab tools.</li>
+</ul>
+</li>
+</ul>
+<h3>Progress/dashboard</h3>
+<ul>
+<li>Status: Partial</li>
+<li>Backend routes:<ul>
+<li><code>GET /api/v1/dashboard</code> - <code>src/backend/app/api/dashboard.py:14</code></li>
+<li><code>PUT /api/v1/progress/lessons/{lesson_id}</code> - <code>src/backend/app/api/progress.py:19</code></li>
+<li><code>GET /api/v1/progress/topics</code> - <code>src/backend/app/api/progress.py:29</code></li>
+<li><code>GET /api/v1/progress/achievements</code> - <code>src/backend/app/api/progress.py:34</code></li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li>Dashboard aggregation - <code>src/backend/app/services/dashboard_service.py:30</code>, <code>src/backend/app/services/dashboard_service.py:68</code>, <code>src/backend/app/services/dashboard_service.py:84</code>, <code>src/backend/app/services/dashboard_service.py:117</code>, <code>src/backend/app/services/dashboard_service.py:155</code>, <code>src/backend/app/services/dashboard_service.py:189</code></li>
+<li>Progress service - <code>src/backend/app/services/progress_service.py:14</code>, <code>src/backend/app/services/progress_service.py:31</code>, <code>src/backend/app/services/progress_service.py:36</code>, <code>src/backend/app/services/progress_service.py:41</code></li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li><code>LessonProgress</code> - <code>src/backend/app/models/chemistry.py:112</code></li>
+<li><code>UserProgress</code> - <code>src/backend/app/models/user_progress.py:11</code></li>
+<li><code>Achievement</code> - <code>src/backend/app/models/achievement.py:12</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li>Home/dashboard layout inside <code>App.tsx</code> - <code>src/frontend-web/src/App.tsx:339</code>, <code>src/frontend-web/src/App.tsx:540</code>, <code>src/frontend-web/src/App.tsx:936</code></li>
+<li><code>dashboardApi.getDashboard</code> - <code>src/frontend-web/src/api/dashboardApi.ts:53</code></li>
+<li>Study plan progress card component - <code>src/frontend-web/src/components/study-plan/StudyPlanProgressCard.tsx:43</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>Backend contract test patches dashboard service - <code>src/backend/tests/test_contract_gap_endpoints.py:47</code></li>
+<li>No dedicated frontend dashboard test was found.</li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>Dashboard endpoint aggregates current lesson, progress, weak topics, flashcards, quiz, study plan, and unread notification summaries.</li>
+<li>Lesson progress and topic progress APIs exist.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>Dashboard UI still falls back to static XP/streak-style values when user/dashboard data is absent - <code>src/frontend-web/src/App.tsx:540</code>, <code>src/frontend-web/src/App.tsx:936</code>.</li>
+<li>Achievement flow is read-only/stub-like; no award/XP mutation service was found.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Add dashboard integration tests and implement actual XP/achievement accrual.</li>
+</ul>
+</li>
+</ul>
+<h3>Notifications/push tokens</h3>
+<ul>
+<li>Status: Partial</li>
+<li>Backend routes:<ul>
+<li>Notifications list/unread/read/mark-all/delete/test/generate - <code>src/backend/app/api/notifications.py:19</code>, <code>src/backend/app/api/notifications.py:39</code>, <code>src/backend/app/api/notifications.py:49</code>, <code>src/backend/app/api/notifications.py:59</code>, <code>src/backend/app/api/notifications.py:79</code>, <code>src/backend/app/api/notifications.py:119</code>, <code>src/backend/app/api/notifications.py:128</code></li>
+<li>Preferences - <code>src/backend/app/api/notifications.py:90</code>, <code>src/backend/app/api/notifications.py:99</code></li>
+<li>Device and push token routes - <code>src/backend/app/api/devices.py:15</code>, <code>src/backend/app/api/devices.py:23</code>, <code>src/backend/app/api/devices.py:42</code>, <code>src/backend/app/api/devices.py:50</code>, <code>src/backend/app/api/devices.py:59</code></li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li>Notification CRUD/preferences/test/reminders - <code>src/backend/app/services/notification_service.py:38</code>, <code>src/backend/app/services/notification_service.py:98</code>, <code>src/backend/app/services/notification_service.py:270</code>, <code>src/backend/app/services/notification_service.py:287</code>, <code>src/backend/app/services/notification_service.py:330</code></li>
+<li>Study, overdue, exam, flashcard, weak-topic reminder generators - <code>src/backend/app/services/notification_service.py:419</code>, <code>src/backend/app/services/notification_service.py:455</code>, <code>src/backend/app/services/notification_service.py:491</code>, <code>src/backend/app/services/notification_service.py:523</code>, <code>src/backend/app/services/notification_service.py:566</code></li>
+<li>Push delivery service - <code>src/backend/app/services/notification_delivery_service.py:33</code>, <code>src/backend/app/services/notification_delivery_service.py:49</code>, <code>src/backend/app/services/notification_delivery_service.py:69</code>, <code>src/backend/app/services/notification_delivery_service.py:79</code>, <code>src/backend/app/services/notification_delivery_service.py:122</code></li>
+<li>Device token service - <code>src/backend/app/services/device_service.py:13</code>, <code>src/backend/app/services/device_service.py:47</code>, <code>src/backend/app/services/device_service.py:54</code></li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li><code>Notification</code>, <code>NotificationPreference</code>, <code>ReminderEvent</code> - <code>src/backend/app/models/notification.py:13</code>, <code>src/backend/app/models/notification.py:42</code>, <code>src/backend/app/models/notification.py:73</code></li>
+<li><code>DeviceToken</code> - <code>src/backend/app/models/device.py:12</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li>Notifications page/settings - <code>src/frontend-web/src/pages/NotificationsPage.tsx:45</code>, <code>src/frontend-web/src/pages/NotificationSettingsPage.tsx:46</code></li>
+<li>Bell/dropdown/banner - <code>src/frontend-web/src/components/notifications/NotificationBell.tsx:5</code>, <code>src/frontend-web/src/components/notifications/NotificationDropdown.tsx:36</code>, <code>src/frontend-web/src/components/notifications/NotificationPermissionBanner.tsx:4</code></li>
+<li>Push hook and service worker - <code>src/frontend-web/src/hooks/usePushNotifications.ts:29</code>, <code>src/frontend-web/public/firebase-messaging-sw.js:3</code></li>
+<li>API client - <code>src/frontend-web/src/api/notificationsApi.ts:153</code>, <code>src/frontend-web/src/api/notificationsApi.ts:166</code>, <code>src/frontend-web/src/api/notificationsApi.ts:177</code>, <code>src/frontend-web/src/api/notificationsApi.ts:214</code>, <code>src/frontend-web/src/api/notificationsApi.ts:273</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>Backend notification and Celery reminder tests - <code>src/backend/tests/test_notifications.py:251</code>, <code>src/backend/tests/test_notifications.py:298</code>, <code>src/backend/tests/test_notifications.py:333</code>, <code>src/backend/tests/test_notifications.py:364</code></li>
+<li>Frontend NotificationsPage tests - <code>src/frontend-web/src/pages/NotificationsPage.test.tsx:36</code></li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>In-app notification storage, preferences, reminder generation, and token registration exist.</li>
+<li>Web push setup exists with Firebase service worker and foreground permission flow.</li>
+<li>Tests cover notification page behavior and scheduler duplicate/preference cases.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>Frontend notification API has a comment indicating a client-side local state mock fallback - <code>src/frontend-web/src/api/notificationsApi.ts:104</code>.</li>
+<li>Push delivery is provider/configuration dependent and mobile app behavior was not found.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Validate production Firebase/Expo configuration, remove local notification fallback, and add push-token lifecycle integration tests.</li>
+</ul>
+</li>
+</ul>
+<h3>Achievements/XP</h3>
+<ul>
+<li>Status: Stub</li>
+<li>Backend routes:<ul>
+<li><code>GET /api/v1/progress/achievements</code> - <code>src/backend/app/api/progress.py:34</code></li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li><code>list_achievements</code> only reads achievements - <code>src/backend/app/services/progress_service.py:36</code></li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li><code>Achievement</code> / <code>achievements</code> - <code>src/backend/app/models/achievement.py:12</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li>Dashboard displays XP using dashboard/user/static fallback - <code>src/frontend-web/src/App.tsx:540</code>, <code>src/frontend-web/src/App.tsx:936</code></li>
+<li>Study Plan achievement panel displays placeholder cards marked <code>قريباً</code> - <code>src/frontend-web/src/pages/StudyPlanPage.tsx:1149</code>, <code>src/frontend-web/src/pages/StudyPlanPage.tsx:1164</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>No achievement/XP award tests were found.</li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>There is a DB model and a read route.</li>
+<li>UI surfaces XP and achievement concepts.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>No service was found that awards XP, unlocks badges, or writes achievements based on activity.</li>
+<li>UI values can fall back to static defaults.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Add XP/achievement event service, award triggers, persistence tests, and frontend achievement history/progress UX.</li>
+</ul>
+</li>
+</ul>
+<h3>Reels/video generation</h3>
+<ul>
+<li>Status: Stub</li>
+<li>Backend routes:<ul>
+<li>No reels/video generation route was found.</li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li>No reels/video generation service was found.</li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li><code>Reel</code> / <code>reels</code> model only - <code>src/backend/app/models/reel.py:12</code>, <code>src/backend/app/models/reel.py:15</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li>Ask AI short-video answer format exists but is disabled - <code>src/frontend-web/src/pages/AskAIPage.tsx:79</code>, <code>src/frontend-web/src/pages/AskAIPage.tsx:275</code>, <code>src/frontend-web/src/pages/AskAIPage.tsx:290</code></li>
+<li>Mock AI data includes video fallback text only - <code>src/frontend-web/src/api/mockData.ts:201</code>, <code>src/frontend-web/src/api/mockData.ts:213</code></li>
+<li><code>aiApi</code> returns placeholder video metadata for video format rather than generating video - <code>src/frontend-web/src/api/aiApi.ts:109</code>, <code>src/frontend-web/src/api/aiApi.ts:160</code></li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>No reels/video generation tests were found.</li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>A model and frontend placeholders exist.</li>
+<li>No working generation or retrieval flow exists.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>Video is disabled in Ask AI and not backed by a backend endpoint.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Define a video generation contract, add backend service/storage/job tracking, connect the UI, and add tests.</li>
+</ul>
+</li>
+</ul>
+<h3>Subscriptions/billing</h3>
+<ul>
+<li>Status: Stub</li>
+<li>Backend routes:<ul>
+<li>No billing/subscription route was found.</li>
+</ul>
+</li>
+<li>Backend services:<ul>
+<li>No billing/subscription service was found.</li>
+</ul>
+</li>
+<li>Database entities:<ul>
+<li><code>Subscription</code> / <code>subscriptions</code> model only - <code>src/backend/app/models/billing.py:12</code>, <code>src/backend/app/models/billing.py:15</code></li>
+<li>Stripe-related fields exist on the model - <code>src/backend/app/models/billing.py:21</code></li>
+</ul>
+</li>
+<li>Frontend:<ul>
+<li>No subscription/billing page or API client was found.</li>
+</ul>
+</li>
+<li>Tests:<ul>
+<li>No subscription/billing tests were found.</li>
+</ul>
+</li>
+<li>Evidence summary:<ul>
+<li>The database model exists.</li>
+<li>No end-to-end billing flow exists.</li>
+</ul>
+</li>
+<li>Known limitations:<ul>
+<li>No checkout, webhook, entitlement, or plan enforcement code path was found.</li>
+</ul>
+</li>
+<li>Needed to become fully implemented:<ul>
+<li>Add billing routes, Stripe/webhook service, entitlement checks, frontend settings/paywall UX, and tests.</li>
+</ul>
+</li>
+</ul>
+<h2>Top 10 Gaps To Fix Next</h2>
+<ol>
+<li>Remove production curriculum fallbacks from lessons, lesson detail, study plan, and study session; they hide backend/data failures (<code>src/frontend-web/src/pages/LearningPages.tsx:56</code>, <code>src/frontend-web/src/pages/LessonDetailPage.tsx:62</code>, <code>src/frontend-web/src/pages/StudyPlanPage.tsx:1196</code>, <code>src/frontend-web/src/pages/StudySessionPage.tsx:15</code>).</li>
+<li>Align quiz submission with backend persistence; remove local <code>submitQuizAnswer</code> success and <code>topic_id: 1</code> fallback (<code>src/frontend-web/src/api/quizzesApi.ts:144</code>, <code>src/frontend-web/src/api/quizzesApi.ts:151</code>, <code>src/frontend-web/src/api/quizzesApi.ts:162</code>).</li>
+<li>Finish Study Session as either a real backend-backed feature or a clearly documented frontend orchestration page (<code>src/frontend-web/src/pages/StudySessionPage.tsx:24</code>).</li>
+<li>Harden audio support for production: enable config, add duration validation, verify media serving, and add frontend recording tests (<code>src/backend/app/core/config.py:45</code>, <code>src/backend/app/services/chat_service.py:320</code>).</li>
+<li>Remove or implement unsupported Ask AI helper methods that currently throw endpoint-not-ready errors (<code>src/frontend-web/src/api/aiApi.ts:242</code>, <code>src/frontend-web/src/api/aiApi.ts:258</code>).</li>
+<li>Implement real XP/achievement award logic; current achievement support is read-only/stub-like (<code>src/backend/app/services/progress_service.py:36</code>, <code>src/frontend-web/src/pages/StudyPlanPage.tsx:1164</code>).</li>
+<li>Split Guided Solver from mock Lab tools and replace <code>labApi</code> mock equation balancing with backend-backed behavior (<code>src/frontend-web/src/api/labApi.ts:1</code>, <code>src/frontend-web/src/api/labApi.ts:6</code>).</li>
+<li>Remove local notification fallback and verify production push provider configuration (<code>src/frontend-web/src/api/notificationsApi.ts:104</code>, <code>src/backend/app/services/notification_delivery_service.py:122</code>).</li>
+<li>Add direct tests for curriculum API, dashboard UI, homework image solving, flashcards UI, and ProfilePage.</li>
+<li>Decide whether video/reels and billing are in MVP; currently they are model/UI placeholders without working flows (<code>src/backend/app/models/reel.py:12</code>, <code>src/backend/app/models/billing.py:12</code>).</li>
+</ol>
+<h2>Features That Look Implemented In UI But Are Not Fully Backend-Ready</h2>
+<ul>
+<li>Study Session: routed and designed, but no dedicated backend session model/API was found (<code>src/frontend-web/src/App.tsx:1048</code>, <code>src/frontend-web/src/pages/StudySessionPage.tsx:24</code>).</li>
+<li>Short video/reels: visible in Ask AI options and avatar language, but disabled or placeholder-only (<code>src/frontend-web/src/pages/AskAIPage.tsx:79</code>, <code>src/frontend-web/src/api/aiApi.ts:109</code>).</li>
+<li>Achievement/XP: visible in dashboard and Study Plan, but no award/update service was found (<code>src/frontend-web/src/App.tsx:540</code>, <code>src/frontend-web/src/pages/StudyPlanPage.tsx:1164</code>).</li>
+<li>Lab tools: Lab page exists, but equation balancing is local mock logic and several lab actions route elsewhere (<code>src/frontend-web/src/pages/LabPage.tsx:81</code>, <code>src/frontend-web/src/api/labApi.ts:6</code>).</li>
+<li>Ask AI post-answer transformations: buttons exist, but several are disabled or throw endpoint-not-ready errors (<code>src/frontend-web/src/pages/AskAIPage.tsx:388</code>, <code>src/frontend-web/src/api/aiApi.ts:254</code>).</li>
+</ul>
+<h2>Backend-Only Features Without Complete Frontend UX</h2>
+<ul>
+<li>Billing/subscriptions: <code>Subscription</code> model exists, but no frontend page or API client was found (<code>src/backend/app/models/billing.py:12</code>).</li>
+<li>Reel/video storage: <code>Reel</code> model exists, but no route/service/frontend workflow was found (<code>src/backend/app/models/reel.py:12</code>).</li>
+<li>Some curriculum authoring endpoints exist for chapters/lessons/topics, but no full admin curriculum authoring UI was found (<code>src/backend/app/api/chapters.py:28</code>, <code>src/backend/app/api/lessons.py:28</code>, <code>src/backend/app/api/topics.py:28</code>).</li>
+<li>RAG ingestion/admin is backend-heavy and partially surfaced in admin pages, but production workflow and job recovery still need operational hardening (<code>src/backend/app/api/ingestion/routes.py:321</code>, <code>src/frontend-web/src/pages/admin/SourcesPage.tsx:20</code>).</li>
+</ul>
+<h2>Planned/Docs-Only Or Placeholder Features</h2>
+<ul>
+<li>Subscriptions/billing: model-only placeholder; no working flow.</li>
+<li>Reels/video generation: model/UI placeholder; no working generation.</li>
+<li>Full achievement/XP engine: UI/read model exists, but no award service.</li>
+<li>Standalone Ask AI transformations to quiz/flashcards/audio/image from an existing answer are not implemented in <code>aiApi</code> (<code>src/frontend-web/src/api/aiApi.ts:246</code>, <code>src/frontend-web/src/api/aiApi.ts:250</code>, <code>src/frontend-web/src/api/aiApi.ts:254</code>, <code>src/frontend-web/src/api/aiApi.ts:258</code>).</li>
+</ul>
+<h2>Verification</h2>
+<ul>
+<li>This audit was produced through non-mutating source inspection.</li>
+<li>Application code, migrations, and tests were not changed.</li>
+<li>Only this report file was added.</li>
+</ul>
+</div>
+    </section>
+  </main>
+</div>
+<script>
+function toggleDetail(id){
+  const el=document.getElementById(id); if(el) el.classList.toggle('open');
+}
+function setQuickFilter(status,risk){
+  document.getElementById('statusFilter').value=status;
+  document.getElementById('riskFilter').value=risk;
+  document.getElementById('featureSearch').value='';
+  applyFilters();
+  location.hash='features';
+}
+function applyFilters(){
+  const q=document.getElementById('featureSearch').value.toLowerCase().trim();
+  const status=document.getElementById('statusFilter').value;
+  const risk=document.getElementById('riskFilter').value;
+  document.querySelectorAll('.feature-card').forEach(card=>{
+    const okQ=!q || card.dataset.name.includes(q) || card.innerText.toLowerCase().includes(q);
+    const okS=status==='all' || card.dataset.status===status;
+    const okR=risk==='all' || card.dataset.risk===risk;
+    card.classList.toggle('hidden', !(okQ && okS && okR));
+  });
+}
+const navLinks=[...document.querySelectorAll('.nav a')];
+const sectionsEl=navLinks.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
+window.addEventListener('scroll',()=>{
+  let current=sectionsEl[0]?.id;
+  for(const sec of sectionsEl){ if(sec.getBoundingClientRect().top < 120) current=sec.id; }
+  navLinks.forEach(a=>a.classList.toggle('active', a.getAttribute('href')==='#'+current));
+});
+</script>
+</body>
+</html>

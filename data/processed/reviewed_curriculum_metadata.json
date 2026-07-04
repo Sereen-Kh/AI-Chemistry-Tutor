@@ -1,0 +1,135 @@
+{
+  "version": "2026-06-reviewed-v1",
+  "status": "reviewed",
+  "created_at": "2026-06-24T10:08:47.082596+00:00",
+  "reviewed_at": "2026-07-04T11:16:26.799770+00:00",
+  "ready_for_embedding": true,
+  "paths": {
+    "textbook_pdf": "src/data/textbooks/syria_grade_9/Chemistry.pdf",
+    "solution_book_pdf": "src/data/processed/Chemistry_Solution_Book.pdf",
+    "book_structure": "data/processed/book_structure.json",
+    "textbook_page_structure": "data/processed/textbook/page_structure.jsonl",
+    "textbook_lesson_map": "data/processed/textbook/textbook_lesson_map.reviewed.json",
+    "textbook_chunk_preview": "data/processed/chunk_preview/textbook_chunks_preview.jsonl",
+    "solution_chunks": "data/processed/solution_book/solution_chunks.cleaned.jsonl",
+    "solution_chunk_preview": "data/processed/chunk_preview/solution_book_chunks_preview.cleaned.jsonl",
+    "solution_alignment": "data/processed/solution_book/solution_textbook_alignment.json"
+  },
+  "sources": [
+    {
+      "source_type": "textbook",
+      "title": "Chemistry Textbook - Grade 9 Syria",
+      "file_path": "src/data/textbooks/syria_grade_9/Chemistry.pdf",
+      "grade": "grade_9",
+      "subject": "chemistry",
+      "year": 2026,
+      "exists": true,
+      "file_size_bytes": 111709083,
+      "sha256": "3e94fe8be9d4c750c0253d3b81dc12ddf826ec6c901a2def17427d32cb5f9187",
+      "page_count": 96,
+      "source_id": null,
+      "source_status": null,
+      "chunk_count": 0,
+      "embedded_chunk_count": 0,
+      "reviewed_metadata_version": "2026-06-reviewed-v1",
+      "reviewed_metadata_status": "reviewed",
+      "ready_for_embedding": true,
+      "missing_metadata_count": 0,
+      "manual_review_count": 17,
+      "embedding_status": "not_embedded",
+      "reviewed_chunks_path": "src/data/textbooks/syria_grade_9/reviewed_chunks/textbook_chunks_reviewed.jsonl",
+      "reviewed_preview_path": "src/data/textbooks/syria_grade_9/reviewed_chunks/textbook_chunks_reviewed.jsonl",
+      "reviewed_metadata_path": "src/data/textbooks/syria_grade_9/reviewed_chunks/reviewed_curriculum_metadata.json",
+      "errors": []
+    },
+    {
+      "source_type": "solution_book",
+      "title": "Chemistry Solution Book - Grade 9 Syria",
+      "file_path": "src/data/processed/Chemistry_Solution_Book.pdf",
+      "grade": "grade_9",
+      "subject": "chemistry",
+      "year": 2026,
+      "exists": true,
+      "file_size_bytes": 834269,
+      "sha256": "2b8ed4051308d3f52d8fb1c33ffc8da50f539db882624ef318a9b68dedd9b1c0",
+      "page_count": 35,
+      "source_id": null,
+      "source_status": null,
+      "chunk_count": 0,
+      "embedded_chunk_count": 0,
+      "reviewed_metadata_version": "2026-06-reviewed-v1",
+      "reviewed_metadata_status": "reviewed",
+      "ready_for_embedding": true,
+      "missing_metadata_count": 0,
+      "manual_review_count": 17,
+      "embedding_status": "not_embedded",
+      "reviewed_chunks_path": "src/data/processed/solution_book/solution_chunks.cleaned.reviewed.jsonl",
+      "reviewed_preview_path": "src/data/processed/chunk_preview/solution_book_chunks_preview.cleaned.reviewed.jsonl",
+      "reviewed_metadata_path": "src/data/processed/reviewed_curriculum_metadata.json",
+      "errors": []
+    }
+  ],
+  "quality": {
+    "textbook_pages_blocked": [],
+    "textbook_pages_needing_ocr": [],
+    "textbook_pages_needing_vision": [],
+    "solution_chunks_bad_endings": 0,
+    "manual_review_chunks": 17,
+    "manual_review_chunks_block_embedding": false,
+    "student_generation_uses_ready_only": true
+  },
+  "counts": {
+    "units": 3,
+    "textbook_lessons": 9,
+    "solution_alignment_records": 36,
+    "solution_chunks": 24,
+    "ready_lessons": 9,
+    "needs_review_lessons": 0,
+    "blocked_lessons": 0,
+    "textbook_chunk_preview_chunks": 720,
+    "textbook_chunk_preview_missing_required_metadata": 0,
+    "textbook_chunks_ready": 670,
+    "textbook_chunks_needs_review": 50,
+    "textbook_chunks_blocked": 0,
+    "solution_chunks_ready": 7,
+    "solution_chunks_needs_review": 17,
+    "solution_chunks_blocked": 0,
+    "solution_chunk_bad_endings": 0,
+    "manual_review_chunks": 17
+  },
+  "blocking_issues": [],
+  "embedding_contract": {
+    "required": true,
+    "source_of_truth": true,
+    "required_chunk_metadata": [
+      "lesson_id",
+      "unit_id",
+      "source_type",
+      "printed_page_start",
+      "printed_page_end",
+      "quality_status",
+      "reviewed_metadata_version"
+    ],
+    "allowed_source_types": [
+      "textbook",
+      "solution_book"
+    ],
+    "blocked_quality_statuses": [
+      "blocked"
+    ],
+    "version_field": "reviewed_metadata_version",
+    "lesson_id_optional_for_content_scopes": [
+      "unit_level",
+      "glossary",
+      "project",
+      "unit_questions"
+    ],
+    "rag_search_quality_statuses": [
+      "ready",
+      "needs_review"
+    ],
+    "student_generation_quality_statuses": [
+      "ready"
+    ]
+  }
+}

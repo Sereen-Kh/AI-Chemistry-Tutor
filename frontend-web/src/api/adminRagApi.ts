@@ -27,6 +27,90 @@ export interface RagSource {
   embedded_chunk_count?: number;
   question_count?: number;
   pages_summary?: Record<string, number>;
+  canonical_source?: boolean;
+  file_sha256?: string | null;
+  file_size_bytes?: number | null;
+  page_count?: number | null;
+  reviewed_metadata_version?: string | null;
+  reviewed_metadata_status?: string | null;
+  ready_for_embedding?: boolean | null;
+  embedding_status?: string | null;
+  missing_metadata_count?: number;
+  manual_review_count?: number;
+  reviewed_chunks_path?: string | null;
+  reviewed_preview_path?: string | null;
+  reviewed_metadata_path?: string | null;
+}
+
+export interface CanonicalSourceStatus {
+  source_type: string;
+  title: string;
+  file_path: string;
+  grade: string;
+  subject: string;
+  year?: number | null;
+  exists: boolean;
+  file_size_bytes?: number | null;
+  sha256?: string | null;
+  page_count?: number | null;
+  source_id?: number | null;
+  source_status?: string | null;
+  chunk_count: number;
+  embedded_chunk_count: number;
+  reviewed_metadata_version?: string | null;
+  reviewed_metadata_status?: string | null;
+  ready_for_embedding: boolean;
+  missing_metadata_count: number;
+  manual_review_count: number;
+  embedding_status: string;
+  reviewed_chunks_path?: string | null;
+  reviewed_preview_path?: string | null;
+  reviewed_metadata_path?: string | null;
+  errors: string[];
+}
+
+export interface CanonicalSourcesValidationResponse {
+  sources: CanonicalSourceStatus[];
+  registered_count: number;
+  updated_count: number;
+  missing_count: number;
+  reviewed_metadata_version?: string | null;
+  ready_for_embedding: boolean;
+  can_prepare_chunks: boolean;
+}
+
+export interface PrepareReviewedChunksResponse {
+  status: string;
+  write: boolean;
+  reviewed_metadata_version: string;
+  ready_for_embedding: boolean;
+  textbook: Record<string, unknown>;
+  solution_book: Record<string, unknown>;
+  counts: Record<string, number>;
+  blocking_issues: string[];
+  files_written: string[];
+  backups: string[];
+}
+
+export interface EmbeddingReadiness {
+  reviewed_metadata_version?: string | null;
+  status: string;
+  ready_for_embedding: boolean;
+  blocking_issues: string[];
+  required_chunk_metadata: string[];
+  allowed_source_types: string[];
+  embedding_model: string;
+  embedding_dimension: number;
+  vector_store: string;
+  vector_index: string;
+  textbook_chunks_total: number;
+  textbook_missing_metadata_count: number;
+  solution_chunks_total: number;
+  solution_manual_review_count: number;
+  solution_bad_endings_count: number;
+  ready_chunk_count: number;
+  needs_review_chunk_count: number;
+  blocked_chunk_count: number;
 }
 
 export interface IngestionPage {
@@ -154,6 +238,25 @@ export const adminRagApi = {
 
   async getSources(): Promise<RagSource[]> {
     const { data } = await api.get<RagSource[]>('/admin/ingestion/sources');
+    return data;
+  },
+
+  async validateCanonicalSources(): Promise<CanonicalSourcesValidationResponse> {
+    const { data } = await api.post<CanonicalSourcesValidationResponse>('/admin/ingestion/sources/validate');
+    return data;
+  },
+
+  async prepareReviewedChunks(payload: { write?: boolean } = {}): Promise<PrepareReviewedChunksResponse> {
+    const { data } = await api.post<PrepareReviewedChunksResponse>('/admin/ingestion/prepare-reviewed-chunks', {
+      write: payload.write ?? true,
+      include_textbook: true,
+      include_solution_book: true,
+    });
+    return data;
+  },
+
+  async getEmbeddingReadiness(): Promise<EmbeddingReadiness> {
+    const { data } = await api.get<EmbeddingReadiness>('/admin/ingestion/embedding-readiness');
     return data;
   },
 

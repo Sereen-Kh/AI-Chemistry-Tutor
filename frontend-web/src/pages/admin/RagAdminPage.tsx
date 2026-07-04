@@ -1,27 +1,35 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { adminRagApi, toErrorMessage } from '../../api';
-import type { RagEvaluationResponse, RagIngestionStats, RagQueryLog, RagSource } from '../../api/adminRagApi';
-import { Card, ErrorBanner, LoadingSkeleton, PageHeader, ProgressBar, StatusPill } from '../../components/DesignSystem';
+import type {
+  EmbeddingReadiness,
+  RagEvaluationResponse,
+  RagIngestionStats,
+  RagQueryLog,
+  RagSource,
+} from '../../api/adminRagApi';
+import { Button, Card, ErrorBanner, LoadingSkeleton, PageHeader, ProgressBar, StatusPill } from '../../components/DesignSystem';
 
 export const RagAdminPage = () => {
   const [stats, setStats] = useState<RagIngestionStats | null>(null);
   const [sources, setSources] = useState<RagSource[]>([]);
+  const [readiness, setReadiness] = useState<EmbeddingReadiness | null>(null);
   const [evaluation, setEvaluation] = useState<RagEvaluationResponse | null>(null);
   const [logs, setLogs] = useState<RagQueryLog[]>([]);
   const [loading, setLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState('');
+  const [actionMessage, setActionMessage] = useState('');
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    let cancelled = false;
-    const load = async () => {
+  const loadDashboard = async (cancelledRef?: { cancelled: boolean }) => {
       setLoading(true);
       setError('');
       try {
-        const [nextStats, nextSources, nextLogs] = await Promise.all([
+        const [nextStats, nextSources, nextLogs, nextReadiness] = await Promise.all([
           adminRagApi.getStats(),
           adminRagApi.getSources(),
           adminRagApi.getQueryLogs({ limit: 8 }),
+          adminRagApi.getEmbeddingReadiness(),
         ]);
         let latestEval: RagEvaluationResponse | null = null;
         try {
@@ -29,21 +37,25 @@ export const RagAdminPage = () => {
         } catch {
           latestEval = null;
         }
-        if (!cancelled) {
+        if (!cancelledRef?.cancelled) {
           setStats(nextStats);
           setSources(nextSources);
           setLogs(nextLogs);
+          setReadiness(nextReadiness);
           setEvaluation(latestEval);
         }
       } catch (err) {
-        if (!cancelled) setError(toErrorMessage(err, 'تعذر تحميل لوحة RAG الإدارية.'));
+        if (!cancelledRef?.cancelled) setError(toErrorMessage(err, 'تعذر تحميل لوحة RAG الإدارية.'));
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!cancelledRef?.cancelled) setLoading(false);
       }
     };
-    void load();
+
+  useEffect(() => {
+    const cancelledRef = { cancelled: false };
+    void loadDashboard(cancelledRef);
     return () => {
-      cancelled = true;
+      cancelledRef.cancelled = true;
     };
   }, []);
 
@@ -52,6 +64,38 @@ export const RagAdminPage = () => {
     const completed = Number(stats.chunks_by_source_type.textbook || 0) + Number(stats.chunks_by_source_type.solution_book || 0);
     return Math.min(100, Math.round((completed / stats.total_chunks) * 100));
   }, [stats]);
+
+  const validateSources = async () => {
+    setActionLoading('validate');
+    setActionMessage('');
+    setError('');
+    try {
+      const result = await adminRagApi.validateCanonicalSources();
+      setActionMessage(`تم التحقق من ${result.sources.length} مصدر. جاهزية التضمين: ${result.ready_for_embedding ? 'جاهزة' : 'غير جاهزة'}.`);
+      await loadDashboard();
+    } catch (err) {
+      setError(toErrorMessage(err, 'تعذر التحقق من مصادر PDF.'));
+    } finally {
+      setActionLoading('');
+    }
+  };
+
+  const prepareChunks = async () => {
+    setActionLoading('prepare');
+    setActionMessage('');
+    setError('');
+    try {
+      const result = await adminRagApi.prepareReviewedChunks({ write: true });
+      setActionMessage(
+        `تم تجهيز ${result.counts.textbook_chunk_preview_chunks ?? 0} مقطع كتاب و${result.counts.solution_chunks ?? 0} مقطع حلول.`
+      );
+      await loadDashboard();
+    } catch (err) {
+      setError(toErrorMessage(err, 'تعذر تجهيز المقاطع المراجعة.'));
+    } finally {
+      setActionLoading('');
+    }
+  };
 
   if (loading) {
     return <main className="page-stack"><LoadingSkeleton rows={6} /></main>;
@@ -66,6 +110,7 @@ export const RagAdminPage = () => {
         action={<Link className="ed-btn ed-btn-primary" to="/admin/rag/reembed">إعادة التضمين</Link>}
       />
       {error && <ErrorBanner message={error} />}
+      {actionMessage && <StatusPill tone="teal">{actionMessage}</StatusPill>}
 
       <section className="admin-stat-grid">
         <Card>
@@ -88,6 +133,21 @@ export const RagAdminPage = () => {
           <strong>{evaluation ? (evaluation.passed ? 'ناجح' : 'يحتاج ضبط') : 'غير متاح'}</strong>
           <span>آخر تقييم RAG</span>
         </Card>
+        <Card>
+          <StatusPill tone={readiness?.ready_for_embedding ? 'teal' : 'coral'}>جاهزية</StatusPill>
+          <strong>{readiness?.ready_for_embedding ? 'جاهز' : 'محجوب'}</strong>
+          <span>{readiness?.reviewed_metadata_version || 'لا توجد نسخة مراجعة'}</span>
+        </Card>
+        <Card>
+          <StatusPill tone={(readiness?.textbook_missing_metadata_count ?? 0) > 0 ? 'coral' : 'teal'}>بيانات</StatusPill>
+          <strong>{readiness?.textbook_missing_metadata_count ?? 0}</strong>
+          <span>مقاطع كتاب ناقصة metadata</span>
+        </Card>
+        <Card>
+          <StatusPill tone={(readiness?.solution_bad_endings_count ?? 0) > 0 ? 'coral' : 'gold'}>حلول</StatusPill>
+          <strong>{readiness?.solution_manual_review_count ?? 0}</strong>
+          <span>مقاطع تحتاج مراجعة يدوية</span>
+        </Card>
       </section>
 
       <section className="admin-two-column">
@@ -106,6 +166,32 @@ export const RagAdminPage = () => {
               </article>
             ))}
           </div>
+        </Card>
+
+        <Card>
+          <div className="section-title">
+            <h2>مصادر PDF المعتمدة</h2>
+            <Link to="/admin/sources">فتح المصادر</Link>
+          </div>
+          <div className="admin-source-type-grid">
+            <article><span>مصادر Canonical</span><strong>{sources.filter((source) => source.canonical_source).length || sources.length}</strong></article>
+            <article><span>مقاطع جاهزة</span><strong>{readiness?.ready_chunk_count ?? 0}</strong></article>
+            <article><span>needs_review</span><strong>{readiness?.needs_review_chunk_count ?? 0}</strong></article>
+            <article><span>blocked</span><strong>{readiness?.blocked_chunk_count ?? 0}</strong></article>
+          </div>
+          <div className="admin-action-row">
+            <Button variant="secondary" onClick={() => void validateSources()} disabled={Boolean(actionLoading)}>
+              {actionLoading === 'validate' ? 'جار التحقق...' : 'تحقق من المصادر'}
+            </Button>
+            <Button variant="primary" onClick={() => void prepareChunks()} disabled={Boolean(actionLoading)}>
+              {actionLoading === 'prepare' ? 'جار التجهيز...' : 'جهّز المقاطع المراجعة'}
+            </Button>
+          </div>
+          {readiness?.blocking_issues?.length ? (
+            <ErrorBanner message={`عوائق التضمين: ${readiness.blocking_issues.join('، ')}`} />
+          ) : (
+            <p className="admin-muted">المقاطع المراجعة جاهزة لحارس إعادة التضمين. لا يتم تشغيل embedding من هذه الشاشة.</p>
+          )}
         </Card>
 
         <Card>

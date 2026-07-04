@@ -13,6 +13,8 @@ from app.database import SessionLocal, get_db
 from app.models.ingestion import IngestionJob, IngestionPage
 from app.models.textbook import ContentSource, ExtractedQuestion, RagChunk
 from app.schemas.ingestion import (
+    CanonicalSourcesValidationResponse,
+    EmbeddingReadinessResponse,
     ExtractedQuestionResponse,
     IngestionClearResponse,
     IngestionPageResponse,
@@ -25,6 +27,8 @@ from app.schemas.ingestion import (
     IngestionStatusResponse,
     IngestionTestQueryRequest,
     IngestionTestQueryResponse,
+    PrepareReviewedChunksRequest,
+    PrepareReviewedChunksResponse,
     QuestionReviewRequest,
     SolutionBookIngestRequest,
     SolutionBookIngestResponse,
@@ -39,6 +43,11 @@ from app.services.ingestion_pipeline import retry_ingestion_page as retry_ingest
 from app.services.rag import retrieve_context
 from app.services.rag_rebuild import rebuild_rag_chunks_from_cached_pages
 from app.services.rag_cache import invalidate_rag_caches
+from app.services.reviewed_ingestion_assets import (
+    embedding_readiness,
+    prepare_reviewed_chunks,
+    validate_canonical_sources,
+)
 from app.services.solution_book_ingestion import ingest_solution_book, latest_solution_book_report
 
 router = APIRouter(prefix="/admin/ingestion", tags=["admin-ingestion"])
@@ -88,6 +97,7 @@ def _page_status_summary(db: Session, source_id: int | None = None, job_id: int 
 
 
 def _source_response(source: ContentSource, db: Session) -> dict:
+    metadata = source.metadata_json if isinstance(source.metadata_json, dict) else {}
     chunk_count = db.query(func.count(RagChunk.id)).filter(RagChunk.source_id == source.id).scalar() or 0
     embedded_chunk_count = (
         db.query(func.count(RagChunk.id))
@@ -117,6 +127,19 @@ def _source_response(source: ContentSource, db: Session) -> dict:
         "embedded_chunk_count": int(embedded_chunk_count),
         "question_count": int(question_count),
         "pages_summary": _page_status_summary(db, source_id=source.id),
+        "canonical_source": bool(metadata.get("canonical_source") or False),
+        "file_sha256": metadata.get("file_sha256"),
+        "file_size_bytes": metadata.get("file_size_bytes"),
+        "page_count": metadata.get("page_count"),
+        "reviewed_metadata_version": metadata.get("reviewed_metadata_version"),
+        "reviewed_metadata_status": metadata.get("reviewed_metadata_status"),
+        "ready_for_embedding": metadata.get("ready_for_embedding"),
+        "embedding_status": metadata.get("embedding_status"),
+        "missing_metadata_count": int(metadata.get("missing_metadata_count") or 0),
+        "manual_review_count": int(metadata.get("manual_review_count") or 0),
+        "reviewed_chunks_path": metadata.get("reviewed_chunks_path"),
+        "reviewed_preview_path": metadata.get("reviewed_preview_path"),
+        "reviewed_metadata_path": metadata.get("reviewed_metadata_path"),
     }
 
 
@@ -457,6 +480,50 @@ def register_source(
     db.commit()
     db.refresh(source)
     return _source_response(source, db)
+
+
+@router.post("/sources/validate", response_model=CanonicalSourcesValidationResponse)
+def validate_sources(
+    _admin=Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    """Validate and register the canonical textbook and solution-book PDFs."""
+
+    try:
+        return validate_canonical_sources(db=db, register_missing=True)
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Could not validate canonical sources: {exc}") from exc
+
+
+@router.post("/prepare-reviewed-chunks", response_model=PrepareReviewedChunksResponse)
+def prepare_reviewed_chunks_endpoint(
+    request: PrepareReviewedChunksRequest,
+    _admin=Depends(require_admin),
+):
+    """Patch reviewed chunks with metadata and refresh embedding readiness."""
+
+    try:
+        return prepare_reviewed_chunks(
+            write=request.write,
+            include_textbook=request.include_textbook,
+            include_solution_book=request.include_solution_book,
+        )
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@router.get("/embedding-readiness", response_model=EmbeddingReadinessResponse)
+def get_embedding_readiness(
+    _admin=Depends(require_admin),
+):
+    """Return the reviewed metadata gate status used before embedding/re-embedding."""
+
+    try:
+        return embedding_readiness()
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
 
 
 @router.get("/sources/{source_id}", response_model=SourceResponse)

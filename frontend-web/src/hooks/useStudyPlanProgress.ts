@@ -12,11 +12,16 @@ export const useStudyPlanProgress = (plan: StudyPlan | null) => {
       setProgress(null);
       return;
     }
+    if (!plan.id) {
+      setProgress(null);
+      setError('لا توجد خطة دراسة محفوظة لتحميل التقدم.');
+      return;
+    }
 
     setLoading(true);
     setError(null);
     try {
-      const nextProgress = await studyPlanApi.getStudyPlanProgress(plan.id ?? 'local-plan', plan);
+      const nextProgress = await studyPlanApi.getStudyPlanProgress(plan.id, plan);
       setProgress(nextProgress);
     } catch {
       setError('تعذر تحميل تقدّم الخطة.');

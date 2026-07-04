@@ -1,11 +1,37 @@
-from datetime import date
+import asyncio
+from collections.abc import AsyncIterator
+from datetime import date, datetime, timezone
 from types import SimpleNamespace
 
 import pytest
 from fastapi import HTTPException
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
+from app.database import Base
+from app.models.chemistry import LessonProgress
+from app.models.study_plan import StudyPlan
+from app.models.user import User
 from app.schemas.study_plans import StudyPlanGenerateRequest
 from app.services import study_plan_service
+
+
+def run_async(coro):
+    return asyncio.run(coro)
+
+
+@pytest.fixture()
+def session_factory() -> AsyncIterator[async_sessionmaker[AsyncSession]]:
+    engine = create_async_engine("sqlite+aiosqlite:///:memory:")
+
+    async def init() -> async_sessionmaker[AsyncSession]:
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+        return async_sessionmaker(engine, expire_on_commit=False)
+
+    factory = run_async(init())
+    yield factory
+    run_async(engine.dispose())
 
 
 def _lesson(lesson_id: int, title: str, duration: int = 45) -> SimpleNamespace:
@@ -92,6 +118,31 @@ def test_study_plan_schedule_uses_selected_days_and_hours() -> None:
         for entry in schedule
         for session in entry["sessions"]
     )
+
+
+def test_study_plan_builds_week_day_task_contract() -> None:
+    schedule = [
+        _schedule_entry("2026-06-22", 1, "درس 1"),
+        _schedule_entry("2026-06-23", 2, "درس 2"),
+    ]
+
+    weeks = study_plan_service._build_plan_weeks(schedule)
+    plan_json = {
+        "overview": "خطة اختبار",
+        "target_date": "2026-06-30",
+        "weeks": weeks,
+        "weak_topics": [],
+        "recommendations": [],
+    }
+
+    study_plan_service._validate_plan_json_contract(plan_json)
+    assert weeks[0]["week_number"] == 1
+    assert weeks[0]["days"][0]["date"] == "2026-06-22"
+    assert weeks[0]["days"][0]["lesson_ids"] == [1]
+    task_types = {task["type"] for day in weeks[0]["days"] for task in day["tasks"]}
+    assert "lesson" in task_types
+    assert "flashcards" in task_types
+    assert all(task["status"] in {"pending", "completed", "skipped"} for day in weeks[0]["days"] for task in day["tasks"])
 
 
 def _plan_with_schedule(schedule: list[dict], completed_ids: list[int] | None = None) -> SimpleNamespace:
@@ -202,3 +253,75 @@ def test_study_plan_progress_handles_all_completed() -> None:
     assert result["completion_percent"] == 100
     assert result["track_status"] == "ahead"
     assert result["next_lesson"] is None
+
+
+def test_complete_study_plan_lesson_rejects_lesson_outside_plan(session_factory) -> None:
+    async def scenario():
+        async with session_factory() as db:
+            user = User(first_name="سارة", email="study-plan@example.com", hashed_password="hashed")
+            db.add(user)
+            await db.commit()
+            await db.refresh(user)
+            plan = StudyPlan(
+                user_id=user.id,
+                status="active",
+                plan_json={
+                    "schedule": [_schedule_entry("2026-06-22", 1, "درس 1")],
+                    "chapters": [],
+                    "completed_lesson_ids": [],
+                    "weeks": study_plan_service._build_plan_weeks([_schedule_entry("2026-06-22", 1, "درس 1")]),
+                },
+            )
+            db.add(plan)
+            await db.commit()
+            await db.refresh(plan)
+
+            with pytest.raises(HTTPException) as exc_info:
+                await study_plan_service.complete_study_plan_lesson(db, plan.id, user.id, 2)
+
+            assert exc_info.value.status_code == 422
+
+    run_async(scenario())
+
+
+def test_complete_study_plan_lesson_updates_tasks_and_lesson_progress(session_factory) -> None:
+    async def scenario():
+        async with session_factory() as db:
+            user = User(first_name="سارة", email="study-plan-complete@example.com", hashed_password="hashed")
+            db.add(user)
+            await db.commit()
+            await db.refresh(user)
+            schedule = [_schedule_entry("2026-06-22", 1, "درس 1")]
+            plan = StudyPlan(
+                user_id=user.id,
+                status="active",
+                plan_json={
+                    "schedule": schedule,
+                    "chapters": [{"id": 1, "title": "فصل", "lessons": [{"id": 1, "title": "درس 1", "status": "current"}]}],
+                    "completed_lesson_ids": [],
+                    "weeks": study_plan_service._build_plan_weeks(schedule),
+                    "summary": {"start_date": "2026-06-22", "end_date": "2026-06-30"},
+                },
+            )
+            db.add(plan)
+            await db.commit()
+            await db.refresh(plan)
+
+            updated = await study_plan_service.complete_study_plan_lesson(db, plan.id, user.id, 1)
+            metadata = updated.plan_json
+            lesson_task = metadata["weeks"][0]["days"][0]["tasks"][0]
+
+            assert metadata["completed_lesson_ids"] == [1]
+            assert metadata["schedule"][0]["sessions"][0]["status"] == "completed"
+            assert lesson_task["status"] == "completed"
+            assert lesson_task["completed_at"]
+
+            progress = await db.scalar(
+                select(LessonProgress).where(LessonProgress.user_id == user.id, LessonProgress.lesson_id == 1)
+            )
+            assert progress is not None
+            assert progress.status == "completed"
+            assert isinstance(progress.completed_at, datetime)
+            assert progress.completed_at.tzinfo is not None or progress.completed_at.replace(tzinfo=timezone.utc)
+
+    run_async(scenario())

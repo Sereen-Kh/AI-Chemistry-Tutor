@@ -25,6 +25,7 @@ export const SourcesPage = () => {
   const [loading, setLoading] = useState(true);
   const [pagesLoading, setPagesLoading] = useState(false);
   const [retryingPageId, setRetryingPageId] = useState<number | null>(null);
+  const [validatingSources, setValidatingSources] = useState(false);
   const [error, setError] = useState('');
   const [detailError, setDetailError] = useState('');
 
@@ -100,6 +101,25 @@ export const SourcesPage = () => {
     }
   };
 
+  const validateSources = async () => {
+    setValidatingSources(true);
+    setError('');
+    try {
+      await adminRagApi.validateCanonicalSources();
+      const [nextSources, nextStats] = await Promise.all([
+        adminRagApi.getSources(),
+        adminRagApi.getStats(),
+      ]);
+      setSources(nextSources);
+      setStats(nextStats);
+      setSelectedSourceId((current) => current ?? nextSources[0]?.id ?? null);
+    } catch (err) {
+      setError(toErrorMessage(err, 'تعذر التحقق من مصادر PDF المعتمدة.'));
+    } finally {
+      setValidatingSources(false);
+    }
+  };
+
   if (loading) {
     return <main className="page-stack"><LoadingSkeleton rows={6} /></main>;
   }
@@ -114,6 +134,11 @@ export const SourcesPage = () => {
         eyebrow="إدارة المصادر"
         title="مصادر الكتاب وكتاب الحلول"
         subtitle="راجع مصادر RAG المفهرسة وحالة كل مصدر وعدد المقاطع حسب النوع."
+        action={
+          <Button variant="secondary" onClick={() => void validateSources()} disabled={validatingSources}>
+            {validatingSources ? 'جار التحقق...' : 'تحقق من مصادر PDF'}
+          </Button>
+        }
       />
       {error && <ErrorBanner message={error} />}
 
@@ -122,6 +147,7 @@ export const SourcesPage = () => {
         <Card><StatusPill tone="teal">مقاطع</StatusPill><strong>{stats?.total_chunks ?? 0}</strong><span>مقاطع</span></Card>
         <Card><StatusPill tone="purple">أسئلة</StatusPill><strong>{stats?.total_questions ?? 0}</strong><span>أسئلة مستخرجة</span></Card>
         <Card><StatusPill tone={failedPages ? 'coral' : reviewPages ? 'gold' : 'teal'}>صفحات</StatusPill><strong>{stats?.pages_processed ?? 0}</strong><span>صفحات ممثلة</span></Card>
+        <Card><StatusPill tone="teal">Canonical</StatusPill><strong>{sources.filter((source) => source.canonical_source).length}</strong><span>مصادر PDF معتمدة</span></Card>
       </section>
 
       <section className="admin-two-column admin-source-detail-layout">
@@ -144,6 +170,11 @@ export const SourcesPage = () => {
                 </div>
                 <span>{source.source_type} · {source.grade} · {source.subject}</span>
                 <small>{source.file_path || source.original_filename || 'لا يوجد مسار ملف'}</small>
+                {source.canonical_source && (
+                  <small>
+                    {source.page_count ?? 0} صفحة · {source.ready_for_embedding ? 'metadata جاهزة' : 'metadata غير جاهزة'}
+                  </small>
+                )}
                 <div className="admin-source-counters">
                   <span>{source.chunk_count ?? 0} مقطع</span>
                   <span>{source.embedded_chunk_count ?? 0} مضمّن</span>
@@ -169,7 +200,34 @@ export const SourcesPage = () => {
                 <article><span>مكتملة</span><strong>{selectedSource.pages_summary?.completed ?? 0}</strong></article>
                 <article><span>فاشلة</span><strong>{selectedSource.pages_summary?.failed ?? failedPages}</strong></article>
                 <article><span>تحتاج مراجعة</span><strong>{selectedSource.pages_summary?.needs_review ?? reviewPages}</strong></article>
+                <article><span>صفحات PDF</span><strong>{selectedSource.page_count ?? '—'}</strong></article>
+                <article><span>metadata ناقصة</span><strong>{selectedSource.missing_metadata_count ?? 0}</strong></article>
+                <article><span>مراجعة يدوية</span><strong>{selectedSource.manual_review_count ?? 0}</strong></article>
+                <article><span>جاهزية التضمين</span><strong>{selectedSource.ready_for_embedding ? 'جاهزة' : 'غير جاهزة'}</strong></article>
               </div>
+              {selectedSource.file_sha256 && (
+                <p className="admin-muted">SHA256: {selectedSource.file_sha256.slice(0, 16)}… · {selectedSource.reviewed_metadata_version || 'بدون نسخة مراجعة'}</p>
+              )}
+              {selectedSource.reviewed_chunks_path && (
+                <div className="admin-metric-list">
+                  <article>
+                    <span>مسار المقاطع المراجعة</span>
+                    <strong>{selectedSource.reviewed_chunks_path}</strong>
+                  </article>
+                  {selectedSource.reviewed_preview_path && (
+                    <article>
+                      <span>مسار preview</span>
+                      <strong>{selectedSource.reviewed_preview_path}</strong>
+                    </article>
+                  )}
+                  {selectedSource.reviewed_metadata_path && (
+                    <article>
+                      <span>مسار metadata</span>
+                      <strong>{selectedSource.reviewed_metadata_path}</strong>
+                    </article>
+                  )}
+                </div>
+              )}
               {pagesLoading ? (
                 <LoadingSkeleton rows={4} />
               ) : (

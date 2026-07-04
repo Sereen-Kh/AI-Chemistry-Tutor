@@ -48,9 +48,13 @@ export const StudySessionPage = ({ preferences }: { preferences?: UserPreference
       try {
         const lessonPromise = curriculumApi.getLesson(numericLessonId).catch(() => findFallbackLesson(numericLessonId));
         const activePlan = await studyPlanApi.getStudyPlan();
+        if (!activePlan.id) {
+          setError('لا توجد خطة دراسة محفوظة لهذه الجلسة.');
+          return;
+        }
         const [lessonData, progressData] = await Promise.all([
           lessonPromise,
-          studyPlanApi.getStudyPlanProgress(activePlan.id ?? 'local-plan', activePlan),
+          studyPlanApi.getStudyPlanProgress(activePlan.id, activePlan),
         ]);
 
         if (cancelled) return;
@@ -88,11 +92,15 @@ export const StudySessionPage = ({ preferences }: { preferences?: UserPreference
 
   const completeLesson = async () => {
     if (!lesson || completing) return;
+    if (!plan?.id) {
+      setError('لا توجد خطة دراسة محفوظة لتحديث هذا الدرس.');
+      return;
+    }
     setCompleting(true);
     setError('');
     try {
-      const updatedPlan = await studyPlanApi.completeLesson(plan?.id || 'active-plan', lesson.id);
-      const updatedProgress = await studyPlanApi.getStudyPlanProgress(updatedPlan.id ?? plan?.id ?? 'local-plan', updatedPlan);
+      const updatedPlan = await studyPlanApi.completeLesson(plan.id, lesson.id);
+      const updatedProgress = await studyPlanApi.getStudyPlanProgress(updatedPlan.id ?? plan.id, updatedPlan);
       setPlan(updatedPlan);
       setProgress(updatedProgress);
       setSuccess('تم تحديث خطة الدراسة. هذا الدرس أصبح مكتملًا الآن.');

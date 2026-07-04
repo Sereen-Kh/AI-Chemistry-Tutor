@@ -25,6 +25,11 @@ from app.schemas.rag import (
     RagReembedStatusResponse,
 )
 from app.services.rag_evaluation import evaluate_rag_dataset
+from app.services.reviewed_curriculum_metadata import (
+    NOT_READY_CODE,
+    ReviewedCurriculumMetadataError,
+    ensure_reviewed_metadata_ready,
+)
 from app.workers.celery_app import celery_app
 from app.workers.rag_tasks import reembed_rag_chunks_task
 
@@ -46,6 +51,11 @@ def start_rag_reembed(
     request: RagReembedRequest,
     _admin=Depends(require_admin),
 ):
+    try:
+        ensure_reviewed_metadata_ready()
+    except ReviewedCurriculumMetadataError as exc:
+        status_code = 409 if exc.code == NOT_READY_CODE else 404
+        raise HTTPException(status_code=status_code, detail=exc.code) from exc
     try:
         task = reembed_rag_chunks_task.delay(
             source_id=request.source_id,

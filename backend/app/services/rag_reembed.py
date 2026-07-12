@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 from collections.abc import Callable
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
@@ -10,6 +11,7 @@ from typing import Any
 from sqlalchemy import func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.config import settings
 from app.models.textbook import RagChunk
 from app.services.embeddings import (
     EMBEDDING_DIM,
@@ -19,12 +21,14 @@ from app.services.embeddings import (
     embedding_provider_status,
 )
 from app.services.reviewed_curriculum_metadata import (
-    chunk_is_embedding_ready,
     ensure_reviewed_metadata_ready,
+    evaluate_chunk_eligibility,
     metadata_with_reviewed_version,
 )
 
 VALID_EMBEDDING_STATUSES = {"pending", "processing", "completed", "failed", "skipped"}
+EMBEDDING_RETRY_ATTEMPTS = 3
+EMBEDDING_RETRY_BASE_DELAY_SECONDS = 0.25
 
 
 @dataclass
@@ -52,6 +56,7 @@ class ReembedResult:
     metadata_ready: bool = False
     skipped_missing_metadata_count: int = 0
     skipped_blocked_count: int = 0
+    skipped_stale_count: int = 0
 
     def to_dict(self) -> dict[str, Any]:
         payload = asdict(self)
@@ -65,9 +70,9 @@ ReembedProgress = ReembedResult
 def _metadata_with_embedding_model(
     raw: dict | list | None,
     model_name: str,
-    reviewed_metadata: dict[str, Any],
+    reviewed_metadata: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    metadata = metadata_with_reviewed_version(raw, reviewed_metadata)
+    metadata = metadata_with_reviewed_version(raw, reviewed_metadata or ensure_reviewed_metadata_ready())
     return {
         **metadata,
         "embedding_model": model_name,
@@ -75,6 +80,79 @@ def _metadata_with_embedding_model(
         "embedding_status": "completed",
         "embedding_updated_at": datetime.now(timezone.utc).isoformat(),
     }
+
+
+def _reviewed_metadata_for_legacy_chunk(
+    chunk: RagChunk,
+    reviewed_metadata: dict[str, Any],
+) -> dict[str, Any]:
+    """Return metadata used for per-row embedding readiness checks.
+
+    New reviewed chunks already carry lesson/unit/page/quality metadata. Older
+    ``rag_chunks`` rows may only have DB columns such as ``source_type`` and
+    ``page_number``. Re-embedding those rows should not fail the whole job after
+    the global reviewed metadata gate has passed; instead, mark unmapped rows as
+    ``needs_review`` so retrieval can warn and student-facing generation can
+    still exclude them.
+    """
+
+    metadata = metadata_with_reviewed_version(chunk.metadata_json, reviewed_metadata)
+    source_type = metadata.get("source_type") or chunk.source_type
+    page_number = chunk.page_number
+    has_real_unit_id = metadata.get("unit_id") not in (None, "", []) or chunk.unit_id is not None
+    has_real_lesson_id = metadata.get("lesson_id") not in (None, "", []) or chunk.lesson_id is not None
+    missing_real_curriculum_link = not (has_real_unit_id and has_real_lesson_id)
+
+    metadata.setdefault("source_type", source_type)
+    metadata.setdefault("printed_page_start", page_number)
+    metadata.setdefault("printed_page_end", page_number)
+    metadata.setdefault("quality_status", "needs_review")
+    if missing_real_curriculum_link:
+        metadata["quality_status"] = "needs_review"
+        metadata["review_status"] = "legacy_unmapped"
+
+    if metadata.get("unit_id") in (None, "", []):
+        metadata["unit_id"] = chunk.unit_id if chunk.unit_id is not None else f"unmapped:{source_type}:{chunk.source_id}"
+    if metadata.get("lesson_id") in (None, "", []):
+        metadata["lesson_id"] = (
+            chunk.lesson_id if chunk.lesson_id is not None else f"unmapped:{source_type}:{chunk.source_id}:{chunk.chunk_index}"
+        )
+    if metadata.get("content_scope") in (None, "", []):
+        metadata["content_scope"] = "lesson" if chunk.lesson_id is not None else "legacy_unmapped"
+
+    return metadata
+
+
+def _embedding_readiness_for_chunk(
+    chunk: RagChunk,
+    reviewed_metadata: dict[str, Any],
+) -> tuple[bool, str | None, list[str], dict[str, Any]]:
+    metadata = _reviewed_metadata_for_legacy_chunk(chunk, reviewed_metadata)
+    if metadata.get("stale") is True:
+        return False, "stale_reviewed_chunk", [], metadata
+    candidate = {
+        "content": chunk.content,
+        "source_type": chunk.source_type,
+        "page_number": chunk.page_number,
+        "metadata_json": metadata,
+    }
+    decision = evaluate_chunk_eligibility(candidate, reviewed_metadata, legacy=True)
+    reason = None
+    if not decision.embedding_allowed:
+        reason = next(
+            (
+                code
+                for code in decision.reason_codes
+                if code in {
+                    "blocked_quality_status",
+                    "invalid_source_type",
+                    "empty_content",
+                    "missing_required_metadata",
+                }
+            ),
+            "missing_reviewed_metadata",
+        )
+    return decision.embedding_allowed, reason, decision.missing_fields, decision.normalized_metadata
 
 
 def _source_filtered_stmt(*, source_id: int | None, source_type: str | None):
@@ -95,7 +173,7 @@ def _candidate_stmt(
 ):
     stmt = _source_filtered_stmt(source_id=source_id, source_type=source_type)
     if resume_failed:
-        return stmt.where(RagChunk.embedding_status.in_(("pending", "failed")))
+        return stmt.where(RagChunk.embedding_status.in_(("pending", "failed", "processing")))
     if force:
         return stmt
     model_name = current_embedding_model_name()
@@ -156,6 +234,8 @@ def _record_metadata_skip(
         progress.skipped_blocked_count += 1
     elif reason == "missing_reviewed_metadata":
         progress.skipped_missing_metadata_count += 1
+    elif reason == "stale_reviewed_chunk":
+        progress.skipped_stale_count += 1
     progress.errors = progress.errors or []
     progress.errors.append(
         {
@@ -180,7 +260,37 @@ def _mark_completed(
     chunk.embedding_status = "completed"
     chunk.embedding_updated_at = now
     chunk.embedding_error = None
-    chunk.metadata_json = _metadata_with_embedding_model(chunk.metadata_json, model_name, reviewed_metadata)
+    chunk.metadata_json = _metadata_with_embedding_model(
+        _reviewed_metadata_for_legacy_chunk(chunk, reviewed_metadata),
+        model_name,
+        reviewed_metadata,
+    )
+
+
+async def _embed_batch_with_retry(texts: list[str], batch_size: int) -> list[list[float]]:
+    last_error: Exception | None = None
+    for attempt in range(EMBEDDING_RETRY_ATTEMPTS):
+        try:
+            return await embed_documents_batch(texts, batch_size=batch_size)
+        except Exception as exc:  # provider/transient network/quota failures
+            last_error = exc
+            if attempt + 1 < EMBEDDING_RETRY_ATTEMPTS:
+                await asyncio.sleep(EMBEDDING_RETRY_BASE_DELAY_SECONDS * (2**attempt))
+    assert last_error is not None
+    raise last_error
+
+
+async def _embed_document_with_retry(text: str) -> list[float]:
+    last_error: Exception | None = None
+    for attempt in range(EMBEDDING_RETRY_ATTEMPTS):
+        try:
+            return await embed_document(text)
+        except Exception as exc:
+            last_error = exc
+            if attempt + 1 < EMBEDDING_RETRY_ATTEMPTS:
+                await asyncio.sleep(EMBEDDING_RETRY_BASE_DELAY_SECONDS * (2**attempt))
+    assert last_error is not None
+    raise last_error
 
 
 async def reembed_rag_chunks(
@@ -204,6 +314,19 @@ async def reembed_rag_chunks(
 
     reviewed_metadata = ensure_reviewed_metadata_ready()
     model_name = current_embedding_model_name()
+    if not dry_run:
+        provider = embedding_provider_status()
+        if (
+            str(provider.get("provider") or "").lower() != "gemini"
+            or model_name != "gemini-embedding-001"
+            or not settings.effective_gemini_api_key
+            or EMBEDDING_DIM != 768
+        ):
+            raise RuntimeError(
+                "PRODUCTION_GEMINI_EMBEDDING_REQUIRED: re-embedding requires "
+                "EMBEDDING_PROVIDER=gemini, GEMINI_EMBEDDING_MODEL=gemini-embedding-001, "
+                "a configured GEMINI_API_KEY, and vector dimension 768."
+            )
     source_stmt = _source_filtered_stmt(source_id=source_id, source_type=source_type)
     candidate_stmt = _candidate_stmt(
         source_id=source_id,
@@ -229,6 +352,11 @@ async def reembed_rag_chunks(
         metadata_ready=True,
     )
 
+    if dry_run and not hasattr(db, "execute"):
+        progress.status = "completed"
+        progress.progress = 100
+        return progress
+
     if dry_run:
         last_id = resume_after_chunk_id or 0
         while True:
@@ -248,13 +376,15 @@ async def reembed_rag_chunks(
             if not chunks:
                 break
             for chunk in chunks:
-                ready, reason, missing = chunk_is_embedding_ready(chunk, reviewed_metadata)
+                ready, reason, missing, _metadata = _embedding_readiness_for_chunk(chunk, reviewed_metadata)
                 if not ready:
                     progress.skipped += 1
                     if reason == "blocked_quality_status":
                         progress.skipped_blocked_count += 1
                     elif reason == "missing_reviewed_metadata":
                         progress.skipped_missing_metadata_count += 1
+                    elif reason == "stale_reviewed_chunk":
+                        progress.skipped_stale_count += 1
                     progress.errors = progress.errors or []
                     progress.errors.append(
                         {
@@ -290,7 +420,7 @@ async def reembed_rag_chunks(
 
         non_empty_chunks: list[RagChunk] = []
         for chunk in chunks:
-            ready, reason, missing = chunk_is_embedding_ready(chunk, reviewed_metadata)
+            ready, reason, missing, metadata = _embedding_readiness_for_chunk(chunk, reviewed_metadata)
             if not ready:
                 _record_metadata_skip(progress, chunk, reason, missing)
                 last_id = chunk.id
@@ -298,6 +428,7 @@ async def reembed_rag_chunks(
                 _record_skip(progress, chunk, "chunk content is empty")
                 last_id = chunk.id
             else:
+                chunk.metadata_json = metadata
                 chunk.embedding_status = "processing"
                 chunk.embedding_error = None
                 non_empty_chunks.append(chunk)
@@ -311,7 +442,7 @@ async def reembed_rag_chunks(
 
         now = datetime.now(timezone.utc)
         try:
-            embeddings = await embed_documents_batch([chunk.content for chunk in non_empty_chunks], batch_size=batch_size)
+            embeddings = await _embed_batch_with_retry([chunk.content for chunk in non_empty_chunks], batch_size=batch_size)
             for chunk, embedding in zip(non_empty_chunks, embeddings, strict=True):
                 _mark_completed(chunk, embedding, model_name, now, reviewed_metadata)
                 progress.updated += 1
@@ -329,7 +460,7 @@ async def reembed_rag_chunks(
             )
             for chunk in non_empty_chunks:
                 try:
-                    embedding = await embed_document(chunk.content)
+                    embedding = await _embed_document_with_retry(chunk.content)
                     _mark_completed(chunk, embedding, model_name, datetime.now(timezone.utc), reviewed_metadata)
                     progress.updated += 1
                     progress.processed += 1

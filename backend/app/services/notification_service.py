@@ -23,6 +23,10 @@ from app.services import notification_delivery_service
 
 NOTIFICATION_TYPES = {
     "study_reminder",
+    "quiz_due",
+    "homework_feedback",
+    "streak_warning",
+    "achievement_unlocked",
     "exam_countdown",
     "overdue_lesson",
     "flashcards_due",
@@ -32,6 +36,7 @@ NOTIFICATION_TYPES = {
     # Legacy names accepted while existing clients migrate.
     "exam_reminder",
     "lesson_reminder",
+    "quiz_reminder",
 }
 
 

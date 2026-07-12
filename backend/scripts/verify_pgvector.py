@@ -55,6 +55,15 @@ def run() -> int:
         "embedding_dimension_768": False,
         "embedding_index_exists": False,
         "similarity_operator_works": False,
+        "embedding_index_type": None,
+        "embedding_distance_operator": None,
+        "rag_chunks_count": 0,
+        "embedded_chunks_count": 0,
+        "completed_vectors_missing": 0,
+        "noncompleted_with_embeddings": 0,
+        "wrong_dimension_embeddings": 0,
+        "embedding_model_mismatch": 0,
+        "embedding_index_empty": False,
         "errors": [],
     }
     errors: list[str] = []
@@ -73,7 +82,10 @@ def run() -> int:
 
     try:
         engine = create_engine(args.database_url, pool_pre_ping=True)
-        with engine.begin() as conn:
+        # This verifier is intentionally read-only.  Do not use a temporary
+        # table or INSERT smoke test: pgvector operators can be checked with
+        # literals and production data must remain untouched.
+        with engine.connect() as conn:
             conn.execute(text("SELECT 1"))
             report["postgres_reachable"] = True
             ext = conn.execute(
@@ -107,23 +119,68 @@ def run() -> int:
                     or "embedding" in str(index.get("name", ""))
                     for index in indexes
                 )
+                index_row = conn.execute(
+                    text(
+                        """
+                        SELECT indexdef
+                        FROM pg_indexes
+                        WHERE schemaname = current_schema()
+                          AND tablename = 'rag_chunks'
+                          AND indexdef ILIKE '%embedding%'
+                        ORDER BY CASE WHEN indexname = 'rag_chunks_embedding_idx' THEN 0 ELSE 1 END, indexname
+                        LIMIT 1
+                        """
+                    )
+                ).scalar_one_or_none()
+                indexdef = str(index_row or '').lower()
+                report["embedding_index_type"] = "ivfflat" if "ivfflat" in indexdef else None
+                report["embedding_distance_operator"] = "vector_cosine_ops" if "vector_cosine_ops" in indexdef else None
+                if report["embedding_index_exists"] and report["embedding_index_type"] != "ivfflat":
+                    errors.append("rag_chunks embedding index must use ivfflat.")
+                if report["embedding_index_exists"] and report["embedding_distance_operator"] != "vector_cosine_ops":
+                    errors.append("rag_chunks embedding index must use vector_cosine_ops.")
+
+                counts = conn.execute(
+                    text(
+                        """
+                        SELECT
+                          count(*) AS total,
+                          count(embedding) AS embedded,
+                          count(*) FILTER (WHERE embedding_status = 'completed' AND embedding IS NULL) AS completed_missing,
+                          count(*) FILTER (WHERE embedding_status <> 'completed' AND embedding IS NOT NULL) AS noncompleted_with_embeddings,
+                          count(*) FILTER (WHERE embedding IS NOT NULL AND vector_dims(embedding) <> 768) AS wrong_dimension,
+                          count(*) FILTER (WHERE embedding IS NOT NULL AND embedding_model IS NOT NULL AND embedding_model <> :model) AS model_mismatch
+                        FROM rag_chunks
+                        """
+                    ),
+                    {"model": settings.gemini_embedding_model},
+                ).mappings().one()
+                report["rag_chunks_count"] = int(counts["total"] or 0)
+                report["embedded_chunks_count"] = int(counts["embedded"] or 0)
+                report["completed_vectors_missing"] = int(counts["completed_missing"] or 0)
+                report["noncompleted_with_embeddings"] = int(counts["noncompleted_with_embeddings"] or 0)
+                report["wrong_dimension_embeddings"] = int(counts["wrong_dimension"] or 0)
+                report["embedding_model_mismatch"] = int(counts["model_mismatch"] or 0)
+                report["embedding_index_empty"] = report["rag_chunks_count"] > 0 and report["embedded_chunks_count"] == 0
+                if report["embedding_index_empty"]:
+                    errors.append("EMBEDDING_INDEX_EMPTY: rag_chunks has no stored embeddings.")
+                if report["completed_vectors_missing"]:
+                    errors.append("COMPLETED_VECTOR_MISSING: completed chunks have no vector.")
+                if report["noncompleted_with_embeddings"]:
+                    errors.append("NONCOMPLETED_WITH_EMBEDDINGS: embedding status and vector disagree.")
+                if report["wrong_dimension_embeddings"]:
+                    errors.append("PGVECTOR_DIMENSION_MISMATCH: stored vector is not dimension 768.")
+                if report["embedding_model_mismatch"]:
+                    errors.append("EMBEDDING_MODEL_MISMATCH: stored vectors use another model.")
 
             if ext:
-                conn.execute(text("CREATE TEMP TABLE edumind_pgvector_smoke (id integer, embedding vector(3))"))
-                conn.execute(
-                    text(
-                        "INSERT INTO edumind_pgvector_smoke (id, embedding) "
-                        "VALUES (1, '[1,0,0]'), (2, '[0,1,0]')"
-                    )
-                )
                 nearest = conn.execute(
                     text(
-                        "SELECT id FROM edumind_pgvector_smoke "
-                        "ORDER BY embedding <=> '[1,0,0]' LIMIT 1"
+                        "SELECT '[1,0,0]'::vector <=> '[1,0,0]'::vector"
                     )
                 ).scalar()
-                report["similarity_operator_works"] = nearest == 1
-                if nearest != 1:
+                report["similarity_operator_works"] = nearest == 0
+                if nearest != 0:
                     errors.append("pgvector cosine/distance operator returned an unexpected result.")
     except Exception as exc:
         errors.append(f"pgvector verification failed: {type(exc).__name__}: {exc}")
@@ -148,6 +205,11 @@ def run() -> int:
                     status_line("embedding column type", report["embedding_column_type"]),
                     status_line("embedding dimension 768", report["embedding_dimension_768"]),
                     status_line("embedding index exists", report["embedding_index_exists"]),
+                    status_line("embedding index type", report["embedding_index_type"]),
+                    status_line("embedding distance operator", report["embedding_distance_operator"]),
+                    status_line("rag_chunks count", report["rag_chunks_count"]),
+                    status_line("embedded chunks", report["embedded_chunks_count"]),
+                    status_line("empty embedding index", not report["embedding_index_empty"]),
                     status_line("similarity operator works", report["similarity_operator_works"]),
                 ],
             ),

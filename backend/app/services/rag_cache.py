@@ -10,7 +10,8 @@ logger = logging.getLogger(__name__)
 
 RAG_CACHE_PATTERNS = (
     "rag_cache:*",
-    "semantic_rag:result:*",
+    "rag:*",
+    "semantic_rag:*",
     "source_router:*",
 )
 

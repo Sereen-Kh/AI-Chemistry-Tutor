@@ -10,8 +10,14 @@ import app.models  # noqa: F401
 from app.api.router import api_router
 from app.core.config import PROJECT_DIR, settings
 from app.core.middleware import RateLimitMiddleware
-from app.database import init_sqlite_schema_for_dev
+from app.database import SessionLocal, init_sqlite_schema_for_dev
 from app.schemas.common import HealthResponse
+from app.services.rag_cache import invalidate_rag_caches
+from app.services.rag_runtime import (
+    assert_database_activation_ready,
+    assert_production_activation_ready,
+    student_retrieval_is_enabled,
+)
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -21,6 +27,12 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     logger.info("Starting EduMind API...")
     init_sqlite_schema_for_dev()
+    assert_production_activation_ready()
+    if settings.rag_require_production_gate and student_retrieval_is_enabled():
+        with SessionLocal() as db:
+            assert_database_activation_ready(db)
+    if settings.rag_require_production_gate or not student_retrieval_is_enabled():
+        await invalidate_rag_caches()
     yield
     logger.info("Shutting down EduMind API...")
 

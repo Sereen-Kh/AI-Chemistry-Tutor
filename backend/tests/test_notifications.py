@@ -57,7 +57,7 @@ def test_notifications_api_list_and_unread_count(
 
     now = datetime.now(timezone.utc)
 
-    async def fake_get_notifications(_db, user_id: int):
+    async def fake_get_notifications(_db, user_id: int, **_kwargs):
         assert user_id == 10
         return [
             SimpleNamespace(
@@ -66,12 +66,17 @@ def test_notifications_api_list_and_unread_count(
                 type="exam_reminder",
                 title="متبقي 7 أيام على الامتحان!",
                 message="راجع خطة الامتحان.",
+                title_ar="متبقي 7 أيام على الامتحان!",
+                body_ar="راجع خطة الامتحان.",
                 status="unread",
                 priority="high",
                 scheduled_for=now,
                 delivered_at=now,
+                sent_at=None,
                 read_at=None,
                 action_url="/study-plan",
+                related_entity_type="exam",
+                related_entity_id="1",
                 metadata_json={"source_type": "exam", "source_id": "1"},
                 created_at=now,
                 updated_at=now,
@@ -112,12 +117,17 @@ def test_notifications_api_mutations(
             type="lesson_reminder",
             title="درس اليوم",
             message="ابدأ الدرس الآن.",
+            title_ar="درس اليوم",
+            body_ar="ابدأ الدرس الآن.",
             status="read",
             priority="normal",
             scheduled_for=now,
             delivered_at=now,
+            sent_at=None,
             read_at=now,
             action_url="/lessons/1",
+            related_entity_type="lesson",
+            related_entity_id="1",
             metadata_json={"source_type": "lesson", "source_id": "1"},
             created_at=now,
             updated_at=now,
@@ -134,11 +144,20 @@ def test_notifications_api_mutations(
         return SimpleNamespace(
             id=3,
             user_id=user_id,
-            exam_reminders_enabled=True,
-            lesson_reminders_enabled=False,
             push_enabled=True,
             email_enabled=False,
             in_app_enabled=True,
+            daily_study_reminder_enabled=False,
+            daily_study_reminder_time="08:00",
+            exam_reminder_enabled=True,
+            flashcards_reminder_enabled=True,
+            overdue_lesson_reminder_enabled=False,
+            weak_topic_reminder_enabled=True,
+            quiet_hours_enabled=False,
+            quiet_hours_start="22:00",
+            quiet_hours_end="07:00",
+            exam_reminders_enabled=True,
+            lesson_reminders_enabled=False,
             reminder_time_local="08:00",
             timezone="Asia/Damascus",
             created_at=now,
@@ -186,11 +205,17 @@ def test_notifications_api_mutations(
 
     assert notifications_client.patch("/api/v1/notifications/5/read").json()["status"] == "read"
     assert notifications_client.patch("/api/v1/notifications/mark-all-read").json() == {"status": "success"}
+    assert notifications_client.patch("/api/v1/notifications/read-all").json() == {"status": "success"}
     assert notifications_client.delete("/api/v1/notifications/5").status_code == 204
     assert notifications_client.get("/api/v1/notification-preferences").json()["timezone"] == "Asia/Damascus"
+    assert notifications_client.get("/api/v1/users/me/notification-settings").json()["timezone"] == "Asia/Damascus"
     assert notifications_client.patch(
         "/api/v1/notification-preferences",
         json={"lesson_reminders_enabled": False},
+    ).status_code == 200
+    assert notifications_client.patch(
+        "/api/v1/users/me/notification-settings",
+        json={"daily_study_reminder_enabled": False},
     ).status_code == 200
     assert notifications_client.post("/api/v1/reminders/rebuild").json()["status"] == "success"
     assert notifications_client.post("/api/v1/notifications/test").json()["type"] == "system"

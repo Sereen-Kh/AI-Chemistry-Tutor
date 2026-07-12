@@ -26,6 +26,8 @@ async def generate_quiz(request: QuizGenerateRequest, db: AsyncSession = Depends
         db,
         topic_id=request.topic_id,
         lesson_id=request.lesson_id,
+        topic_ids=request.topic_ids,
+        lesson_ids=request.lesson_ids,
         source_type=request.source_type,
         limit=limit,
         difficulty=request.difficulty,
@@ -45,6 +47,16 @@ async def generate_quiz(request: QuizGenerateRequest, db: AsyncSession = Depends
                 difficulty=question.difficulty,
                 correct_answer=question.correct_answer,
                 explanation=question.explanation,
+                quality_status=(
+                    question.metadata_json.get("quality_status")
+                    if isinstance(question.metadata_json, dict)
+                    else None
+                ),
+                reviewed_metadata_version=(
+                    question.metadata_json.get("reviewed_metadata_version")
+                    if isinstance(question.metadata_json, dict)
+                    else None
+                ),
             )
             for question in questions
         ],

@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-06-16T11:49:52.759480+00:00",
-  "database_url": "postgresql://***:***@127.0.0.1:55433/edumind_migration_test",
+  "generated_at": "2026-07-12T13:37:21.193666+00:00",
+  "database_url": "postgresql://***:***@localhost:5432/edumind",
   "postgres_reachable": true,
   "pgvector_extension_installed": true,
   "pgvector_extension_version": "0.8.2",
@@ -10,6 +10,17 @@
   "embedding_dimension_768": true,
   "embedding_index_exists": true,
   "similarity_operator_works": true,
-  "errors": [],
-  "result": "passed"
+  "embedding_index_type": "ivfflat",
+  "embedding_distance_operator": "vector_cosine_ops",
+  "rag_chunks_count": 744,
+  "embedded_chunks_count": 0,
+  "completed_vectors_missing": 0,
+  "noncompleted_with_embeddings": 0,
+  "wrong_dimension_embeddings": 0,
+  "embedding_model_mismatch": 0,
+  "embedding_index_empty": true,
+  "errors": [
+    "EMBEDDING_INDEX_EMPTY: rag_chunks has no stored embeddings."
+  ],
+  "result": "failed"
 }

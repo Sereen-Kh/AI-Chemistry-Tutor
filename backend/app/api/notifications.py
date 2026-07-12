@@ -76,6 +76,16 @@ async def mark_all_notifications_read(
     return {"status": "success"}
 
 
+@router.patch("/notifications/read-all")
+async def mark_all_notifications_read_alias(
+    user_id: int = Depends(get_current_user_id),
+    db: AsyncSession = Depends(get_async_db),
+):
+    """Alias for bulk marking all unread notifications as read."""
+    await notification_service.mark_all_read(db, user_id)
+    return {"status": "success"}
+
+
 @router.delete("/notifications/{id}", status_code=204)
 async def delete_notification(
     id: int,

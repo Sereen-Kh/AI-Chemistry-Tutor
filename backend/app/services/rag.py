@@ -9,24 +9,36 @@ import math
 import re
 from dataclasses import dataclass
 from collections.abc import Callable
+from typing import Any
 
 from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
+from app.core.config import settings
 from app.core.redis import get_redis_client
 from app.models.textbook import ContentSource, RagChunk
 from app.services.chunking import extract_formula_terms, normalize_formula
 from app.services.embeddings import embed_query
 from app.services.rag_diagnostics import CandidateInfo, RetrievalDiagnostics
 from app.services.rag_logging import log_rag_retrieval
+from app.services.rag_runtime import (
+    active_reviewed_metadata_version,
+    rag_cache_namespace,
+    student_retrieval_is_enabled,
+)
+from app.services.reviewed_curriculum_metadata import (
+    ReviewedCurriculumMetadataError,
+    evaluate_chunk_eligibility,
+    load_reviewed_curriculum_metadata,
+)
 from app.services.safety_rules import ACID_TO_WATER_REWRITE
 
 logger = logging.getLogger(__name__)
 
 _CACHE: dict[str, tuple[float, list["RetrievedChunk"]]] = {}
 _CACHE_TTL_SECONDS = 3600
-_CACHE_VERSION = "v14"
+_CACHE_VERSION = "v15"
 # Allow local dry-run sources for retrieval/debugging without marking ingestion complete.
 _RETRIEVABLE_SOURCE_STATUSES = [
     "completed",
@@ -390,12 +402,66 @@ class RetrievedChunk:
     source_type: str
     content_type: str
     page_number: int | None
-    unit_id: int | None
-    chapter_id: int | None
-    lesson_id: int | None
-    topic_id: int | None
-    metadata_json: dict | list | None
-    similarity_score: float
+    unit_id: int | str | None = None
+    chapter_id: int | None = None
+    lesson_id: int | str | None = None
+    topic_id: int | None = None
+    metadata_json: dict | list | None = None
+    quality_status: str | None = None
+    quality_warning: str | None = None
+    reviewed_metadata_version: str | None = None
+    curriculum_metadata: dict[str, Any] | None = None
+    similarity_score: float = 0.0
+
+
+def _metadata_dict(raw: Any) -> dict[str, Any]:
+    return dict(raw) if isinstance(raw, dict) else {}
+
+
+def _not_empty(value: Any) -> bool:
+    return value not in (None, "", [])
+
+
+def _first_metadata_value(metadata: dict[str, Any], *keys: str) -> Any:
+    for key in keys:
+        value = metadata.get(key)
+        if _not_empty(value):
+            return value
+    return None
+
+
+def _reviewed_chunk_metadata(chunk: RagChunk) -> dict[str, Any]:
+    """Return stable reviewed curriculum metadata for a retrieved chunk.
+
+    New reviewed chunks store stable curriculum ids in ``metadata_json``. Older
+    rows may still rely on integer FK columns. Retrieval responses need both
+    paths to avoid dropping ``unit_id``/``lesson_id`` when one storage shape is
+    missing.
+    """
+
+    metadata = _metadata_dict(chunk.metadata_json)
+    source_type = _first_metadata_value(metadata, "source_type") or chunk.source_type
+    unit_id = chunk.unit_id if chunk.unit_id is not None else _first_metadata_value(metadata, "unit_id")
+    lesson_id = (
+        chunk.lesson_id
+        if chunk.lesson_id is not None
+        else _first_metadata_value(metadata, "lesson_id", "linked_textbook_lesson_id")
+    )
+    page_start = _first_metadata_value(metadata, "printed_page_start", "page_start") or chunk.page_number
+    page_end = _first_metadata_value(metadata, "printed_page_end", "page_end") or chunk.page_number
+    quality_status = str(_first_metadata_value(metadata, "quality_status") or "needs_review")
+    reviewed_version = _first_metadata_value(metadata, "reviewed_metadata_version")
+    return {
+        "unit_id": unit_id,
+        "lesson_id": lesson_id,
+        "source_type": source_type,
+        "printed_page_start": page_start,
+        "printed_page_end": page_end,
+        "quality_status": quality_status,
+        "reviewed_metadata_version": reviewed_version,
+        "content_scope": _first_metadata_value(metadata, "content_scope"),
+        "review_status": _first_metadata_value(metadata, "review_status"),
+    }
 
 
 def _cosine_similarity(left: list[float], right: list[float]) -> float:
@@ -722,21 +788,79 @@ def _hybrid_score(
     return round(min(max(score, 0.0), 1.0), 4)
 
 
-def _retrieved_from_chunk(chunk: RagChunk, score: float) -> RetrievedChunk:
+def _retrieved_from_chunk(chunk: RagChunk, score: float, decision=None) -> RetrievedChunk:
+    metadata = _reviewed_chunk_metadata(chunk)
+    if decision is not None:
+        metadata = {
+            **metadata,
+            **{
+                key: decision.normalized_metadata.get(key)
+                for key in (
+                    "source_type",
+                    "unit_id",
+                    "lesson_id",
+                    "printed_page_start",
+                    "printed_page_end",
+                    "reviewed_metadata_version",
+                    "review_status",
+                )
+                if decision.normalized_metadata.get(key) not in (None, "", [])
+            },
+            "quality_status": decision.normalized_quality_status,
+            "embedding_allowed": decision.embedding_allowed,
+            "rag_search_allowed": decision.rag_search_allowed,
+            "student_generation_allowed": decision.student_generation_allowed,
+            "warning_required": decision.warning_required,
+            "eligibility_reason_codes": decision.reason_codes,
+            "legacy_unmapped": bool(decision.normalized_metadata.get("legacy_unmapped")),
+        }
+    quality_warning = "This source is marked needs_review." if metadata.get("quality_status") == "needs_review" else None
     return RetrievedChunk(
         id=chunk.id,
         source_id=chunk.source_id,
         content=chunk.content,
         source=chunk.source.title if chunk.source else None,
-        source_type=chunk.source_type,
+        source_type=str(metadata.get("source_type") or chunk.source_type),
         content_type=chunk.content_type,
         page_number=chunk.page_number,
-        unit_id=chunk.unit_id,
+        unit_id=metadata.get("unit_id"),
         chapter_id=chunk.chapter_id,
-        lesson_id=chunk.lesson_id,
+        lesson_id=metadata.get("lesson_id"),
         topic_id=chunk.topic_id,
         metadata_json=chunk.metadata_json,
+        quality_status=metadata.get("quality_status"),
+        quality_warning=quality_warning,
+        reviewed_metadata_version=metadata.get("reviewed_metadata_version"),
+        curriculum_metadata=metadata,
         similarity_score=score,
+    )
+
+
+def _retrieval_eligibility(chunk: Any, reviewed_metadata: dict[str, Any] | None):
+    if reviewed_metadata is None:
+        return None
+    metadata = _metadata_dict(getattr(chunk, "metadata_json", None))
+    legacy = bool(
+        metadata.get("legacy_unmapped")
+        or metadata.get("review_status") == "legacy_unmapped"
+        or getattr(chunk, "extraction_method", "reviewed_jsonl") != "reviewed_jsonl"
+    )
+    return evaluate_chunk_eligibility(chunk, reviewed_metadata, legacy=legacy)
+
+
+def _production_candidate_allowed(chunk: Any, decision: Any) -> bool:
+    if not settings.rag_require_production_gate:
+        return True
+    metadata = decision.normalized_metadata if decision is not None else _metadata_dict(
+        getattr(chunk, "metadata_json", None)
+    )
+    return bool(
+        decision
+        and decision.rag_search_allowed
+        and metadata.get("stale") is not True
+        and str(metadata.get("reviewed_metadata_version") or "") == active_reviewed_metadata_version()
+        and getattr(chunk, "embedding_status", "completed") == "completed"
+        and getattr(chunk, "embedding_model", settings.gemini_embedding_model) == settings.gemini_embedding_model
     )
 
 
@@ -771,10 +895,26 @@ async def retrieve_context(
     Uses PostgreSQL pgvector if available, otherwise falls back to Python-based
     cosine similarity for SQLite local development. Uses Redis for caching.
     """
+    if not student_retrieval_is_enabled():
+        if diagnostics_callback:
+            diagnostics_callback(
+                {
+                    "pipeline": "disabled",
+                    "reason": "RAG_STUDENT_RETRIEVAL_DISABLED",
+                    "final_confidence": 0.0,
+                    "final_top_k": [],
+                }
+            )
+        return []
+
     diag = RetrievalDiagnostics()
     diag.original_query = query
     diag.detected_intent = intent
     diag.start_timer()
+    try:
+        reviewed_metadata = load_reviewed_curriculum_metadata(require_ready=False)
+    except (ReviewedCurriculumMetadataError, ValueError, OSError):
+        reviewed_metadata = None
 
     # --- Query cleanup & rewriting ---
     cleaned = clean_query(query)
@@ -789,7 +929,10 @@ async def retrieve_context(
         f"{source_types}|{content_types}|{top_k}|{min_similarity}|{intent}|"
         f"{document_type}|{document_id}|{lesson_no}|{page_start}|{page_end}"
     )
-    cache_key = f"rag_cache:{_CACHE_VERSION}:" + hashlib.md5(cache_key_raw.encode()).hexdigest()
+    cache_key = (
+        f"rag_cache:{_CACHE_VERSION}:{rag_cache_namespace()}:"
+        + hashlib.md5(cache_key_raw.encode()).hexdigest()
+    )
 
     redis = get_redis_client()
     try:
@@ -799,7 +942,23 @@ async def retrieve_context(
             for item in chunks_dict:
                 if isinstance(item, dict):
                     item.setdefault("unit_id", None)
-            cached_chunks = [RetrievedChunk(**c) for c in chunks_dict]
+            cached_chunks: list[RetrievedChunk] = []
+            for cached in chunks_dict:
+                candidate = RetrievedChunk(**cached)
+                if _metadata_dict(candidate.metadata_json).get("stale") is True:
+                    continue
+                decision = _retrieval_eligibility(candidate, reviewed_metadata)
+                if (
+                    not decision
+                    or not decision.rag_search_allowed
+                    or not _production_candidate_allowed(candidate, decision)
+                ):
+                    continue
+                candidate.quality_status = decision.normalized_quality_status
+                candidate.quality_warning = (
+                    "This source is marked needs_review." if decision.warning_required else None
+                )
+                cached_chunks.append(candidate)
             diag.cache_hit = True
             diag.final_confidence = max((c.get("similarity_score", 0) for c in chunks_dict), default=0)
             if diagnostics_callback:
@@ -853,6 +1012,11 @@ async def retrieve_context(
             ContentSource.status.in_(_RETRIEVABLE_SOURCE_STATUSES),
         )
     )
+    if settings.rag_require_production_gate:
+        stmt = stmt.where(
+            RagChunk.embedding_status == "completed",
+            RagChunk.embedding_model == settings.gemini_embedding_model,
+        )
 
     if unit_id is not None:
         stmt = stmt.where(RagChunk.unit_id == unit_id)
@@ -912,6 +1076,15 @@ async def retrieve_context(
     diag.total_candidates_scanned = len(chunks_list)
 
     for chunk in chunks_list:
+        if _metadata_dict(chunk.metadata_json).get("stale") is True:
+            continue
+        eligibility = _retrieval_eligibility(chunk, reviewed_metadata)
+        if (
+            not eligibility
+            or not eligibility.rag_search_allowed
+            or not _production_candidate_allowed(chunk, eligibility)
+        ):
+            continue
         vector_score = _cosine_similarity(query_embedding, _embedding_values(chunk.embedding))
         # Use both original content and normalized content for lexical matching
         lexical_content = f"{chunk.normalized_content or ''}\n{chunk.content}"
@@ -943,7 +1116,7 @@ async def retrieve_context(
         all_candidates.append(candidate)
 
         if score >= min_similarity:
-            scored.append(_retrieved_from_chunk(chunk, score))
+            scored.append(_retrieved_from_chunk(chunk, score, eligibility))
 
     scored.sort(key=lambda item: item.similarity_score, reverse=True)
     scored = scored[:top_k]

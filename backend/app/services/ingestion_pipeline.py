@@ -643,6 +643,7 @@ async def _store_page_chunks(
     for offset, record in enumerate(chunk_records):
         candidate = {
             **(record.metadata or {}),
+            "content": record.content,
             "source_type": document_type or source.source_type,
         }
         ready, reason, missing = chunk_is_embedding_ready(candidate, reviewed_metadata)

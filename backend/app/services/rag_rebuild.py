@@ -285,6 +285,7 @@ async def rebuild_rag_chunks_from_cached_pages(
         for offset, record in enumerate(chunk_records):
             candidate = {
                 **(record.metadata or {}),
+                "content": record.content,
                 "source_type": source.source_type,
             }
             ready, reason, missing = chunk_is_embedding_ready(candidate, reviewed_metadata)

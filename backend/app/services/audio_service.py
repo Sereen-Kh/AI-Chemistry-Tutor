@@ -86,13 +86,18 @@ class ElevenLabsSTTProvider(STTProvider):
                 content_type or "application/octet-stream",
             )
         }
-        async with httpx.AsyncClient(timeout=self.timeout_seconds) as client:
-            response = await client.post(
-                f"{self.base_url}/v1/speech-to-text",
-                headers={"xi-api-key": self.api_key},
-                data=data,
-                files=files,
-            )
+        try:
+            async with httpx.AsyncClient(timeout=self.timeout_seconds) as client:
+                response = await client.post(
+                    f"{self.base_url}/v1/speech-to-text",
+                    headers={"xi-api-key": self.api_key},
+                    data=data,
+                    files=files,
+                )
+        except httpx.TimeoutException as exc:
+            raise AudioTranscriptionError("ElevenLabs STT timed out.") from exc
+        except httpx.RequestError as exc:
+            raise AudioTranscriptionError(f"ElevenLabs STT request failed: {exc}") from exc
         if response.status_code >= 400:
             raise AudioTranscriptionError(f"ElevenLabs STT failed with status {response.status_code}: {response.text[:300]}")
         payload: dict[str, Any] = response.json()
@@ -133,17 +138,22 @@ class ElevenLabsTTSProvider(TTSProvider):
         lang = _language_code(language)
         if lang:
             payload["language_code"] = lang
-        async with httpx.AsyncClient(timeout=self.timeout_seconds) as client:
-            response = await client.post(
-                f"{self.base_url}/v1/text-to-speech/{voice_id}",
-                params={"output_format": "mp3_44100_128"},
-                headers={
-                    "xi-api-key": self.api_key,
-                    "Accept": "audio/mpeg",
-                    "Content-Type": "application/json",
-                },
-                json=payload,
-            )
+        try:
+            async with httpx.AsyncClient(timeout=self.timeout_seconds) as client:
+                response = await client.post(
+                    f"{self.base_url}/v1/text-to-speech/{voice_id}",
+                    params={"output_format": "mp3_44100_128"},
+                    headers={
+                        "xi-api-key": self.api_key,
+                        "Accept": "audio/mpeg",
+                        "Content-Type": "application/json",
+                    },
+                    json=payload,
+                )
+        except httpx.TimeoutException as exc:
+            raise AudioSynthesisError("ElevenLabs TTS timed out.") from exc
+        except httpx.RequestError as exc:
+            raise AudioSynthesisError(f"ElevenLabs TTS request failed: {exc}") from exc
         if response.status_code >= 400:
             raise AudioSynthesisError(f"ElevenLabs TTS failed with status {response.status_code}: {response.text[:300]}")
         if not response.content:

@@ -34,6 +34,7 @@ from app.services.rag import (
     rewrite_query,
 )
 from app.services.rag_logging import log_rag_retrieval
+from app.services.rag_runtime import rag_cache_namespace, student_retrieval_is_enabled
 from app.services.source_router import SourceRoute, route_source
 
 logger = logging.getLogger(__name__)
@@ -211,12 +212,20 @@ def _chunk_to_dict(chunk: RetrievedChunk) -> dict[str, Any]:
         "lesson_id": chunk.lesson_id,
         "topic_id": chunk.topic_id,
         "metadata_json": chunk.metadata_json,
+        "quality_status": chunk.quality_status,
+        "quality_warning": chunk.quality_warning,
+        "reviewed_metadata_version": chunk.reviewed_metadata_version,
+        "curriculum_metadata": chunk.curriculum_metadata,
         "similarity_score": chunk.similarity_score,
     }
 
 
 def _chunk_from_dict(payload: dict[str, Any]) -> RetrievedChunk:
     payload.setdefault("unit_id", None)
+    payload.setdefault("quality_status", None)
+    payload.setdefault("quality_warning", None)
+    payload.setdefault("reviewed_metadata_version", None)
+    payload.setdefault("curriculum_metadata", None)
     return RetrievedChunk(**payload)
 
 
@@ -260,7 +269,7 @@ async def _gemini_json(prompt: str, *, max_output_tokens: int = 2048) -> Any | N
 
 async def rewrite_student_query(query: str) -> str:
     """Stage 1: rewrite/expand a student query for chemistry retrieval."""
-    cache_key = "semantic_rag:rewrite:" + _CACHE_VERSION + ":" + _hash_payload(query)
+    cache_key = "semantic_rag:rewrite:" + _CACHE_VERSION + ":" + rag_cache_namespace() + ":" + _hash_payload(query)
     cached = await _redis_get_json(cache_key)
     if isinstance(cached, dict) and cached.get("rewritten_query"):
         return str(cached["rewritten_query"])
@@ -283,7 +292,7 @@ async def rewrite_student_query(query: str) -> str:
 
 async def generate_hyde_answer(query: str) -> str:
     """Stage 2: generate a hypothetical source-grounded answer for HyDE retrieval."""
-    cache_key = "semantic_rag:hyde:" + _CACHE_VERSION + ":" + _hash_payload(query)
+    cache_key = "semantic_rag:hyde:" + _CACHE_VERSION + ":" + rag_cache_namespace() + ":" + _hash_payload(query)
     cached = await _redis_get_json(cache_key)
     if isinstance(cached, dict) and cached.get("hyde"):
         return str(cached["hyde"])
@@ -306,7 +315,7 @@ async def generate_hyde_answer(query: str) -> str:
 
 async def generate_multi_queries(query: str) -> list[str]:
     """Stage 3: generate alternative Arabic query formulations."""
-    cache_key = "semantic_rag:multi:" + _CACHE_VERSION + ":" + _hash_payload(query)
+    cache_key = "semantic_rag:multi:" + _CACHE_VERSION + ":" + rag_cache_namespace() + ":" + _hash_payload(query)
     cached = await _redis_get_json(cache_key)
     if isinstance(cached, dict) and isinstance(cached.get("queries"), list):
         return [str(item) for item in cached["queries"] if str(item).strip()][:3]
@@ -615,10 +624,20 @@ async def semantic_retrieve_context(
     document_type: str | None = None,
 ) -> SemanticRagResult:
     """Run the full semantic RAG retrieval pipeline."""
+    if not student_retrieval_is_enabled():
+        return SemanticRagResult(
+            chunks=[],
+            diagnostics={
+                "pipeline": "disabled",
+                "reason": "RAG_STUDENT_RETRIEVAL_DISABLED",
+                "retrieval_time_ms": 0,
+                "quality_gate": {"accepted_count": 0, "rejected_count": 0},
+            },
+        )
     start = time.monotonic()
     source_route: SourceRoute = await route_source(query, source_types)
     resolved_source_types = source_route.source_types
-    cache_key = "semantic_rag:result:" + _CACHE_VERSION + ":" + _hash_payload(
+    cache_key = "semantic_rag:result:" + _CACHE_VERSION + ":" + rag_cache_namespace() + ":" + _hash_payload(
         query, resolved_source_types, unit_id, chapter_id, lesson_id, topic_id, top_k, intent
     )
     cached = await _redis_get_json(cache_key)

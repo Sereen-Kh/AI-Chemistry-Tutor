@@ -13,6 +13,21 @@ const firebaseConfig = {
 
 const vapidKey = import.meta.env.VITE_FIREBASE_VAPID_KEY as string | undefined;
 
+type FirebaseAppRuntime = {
+  initializeApp: (config: typeof firebaseConfig) => unknown;
+};
+
+type FirebaseMessagingRuntime = {
+  getMessaging: (app: unknown) => unknown;
+  getToken: (
+    messaging: unknown,
+    options: {
+      vapidKey: string | undefined;
+      serviceWorkerRegistration: ServiceWorkerRegistration;
+    },
+  ) => Promise<string>;
+};
+
 const isFirebaseConfigPresent = () => (
   Boolean(firebaseConfig.apiKey)
   && Boolean(firebaseConfig.projectId)
@@ -21,8 +36,8 @@ const isFirebaseConfigPresent = () => (
   && Boolean(vapidKey)
 );
 
-const importRuntime = async (specifier: string): Promise<any> => {
-  const loader = new Function('specifier', 'return import(specifier)');
+const importRuntime = async <T>(specifier: string): Promise<T> => {
+  const loader = new Function('specifier', 'return import(specifier)') as (specifier: string) => Promise<T>;
   return loader(specifier);
 };
 
@@ -73,8 +88,8 @@ export const usePushNotifications = () => {
         appId: firebaseConfig.appId ?? '',
       });
       const registration = await navigator.serviceWorker.register(`/firebase-messaging-sw.js?${swParams.toString()}`);
-      const appModule = await importRuntime('firebase/app');
-      const messagingModule = await importRuntime('firebase/messaging');
+      const appModule = await importRuntime<FirebaseAppRuntime>('firebase/app');
+      const messagingModule = await importRuntime<FirebaseMessagingRuntime>('firebase/messaging');
       const app = appModule.initializeApp(firebaseConfig);
       const messaging = messagingModule.getMessaging(app);
       const token = await messagingModule.getToken(messaging, {

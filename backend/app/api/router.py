@@ -3,10 +3,11 @@
 from fastapi import APIRouter
 
 from app.api.chapters import router as chapters_router
+from app.api.admin_curriculum import router as admin_curriculum_router
 from app.api.admin_rag import router as admin_rag_router
 from app.api.ai_companion import router as ai_companion_router
 from app.api.auth.routes import router as auth_router
-from app.api.chat.routes import router as chat_router
+from app.api.chat.routes import ai_alias_router, router as chat_router
 from app.api.dashboard import router as dashboard_router
 from app.api.devices import push_tokens_router, router as devices_router
 from app.api.exams import router as exams_router
@@ -44,8 +45,10 @@ api_router.include_router(elements_router)
 api_router.include_router(study_plans_router)
 api_router.include_router(ai_companion_router)
 api_router.include_router(chat_router)
+api_router.include_router(ai_alias_router)
 api_router.include_router(interactive_solver_router)
 api_router.include_router(rag_router)
+api_router.include_router(admin_curriculum_router)
 api_router.include_router(admin_rag_router)
 api_router.include_router(ingestion_router)
 api_router.include_router(ingestion_alias_router)

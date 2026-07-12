@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { curriculumApi, fallbackCurriculumUnits, studyPlanApi } from '../api';
 import { Button, Card, ErrorBanner, LoadingSkeleton, PageHeader, ProgressBar, StatusPill } from '../components/DesignSystem';
+import { allowDemoFallbacks } from '../config/demoFallbacks';
 import { useStudyPlanProgress } from '../hooks/useStudyPlanProgress';
 import type {
   CurriculumEntityId,
@@ -1180,7 +1181,7 @@ const AchievementPanel = ({ progress }: { progress: StudyPlanProgress | null }) 
 
 export const StudyPlanPage = () => {
   const [viewState, setViewState] = useState<StudyPlanViewState>('loading');
-  const [units, setUnits] = useState<UnitCatalogItem[]>(fallbackCurriculumUnits);
+  const [units, setUnits] = useState<UnitCatalogItem[]>(() => (allowDemoFallbacks ? fallbackCurriculumUnits : []));
   const [activePlan, setActivePlan] = useState<StudyPlan | null>(null);
   const [setupForm, setSetupForm] = useState<SetupFormState>(() => getDefaultSetupForm());
   const [activeTab, setActiveTab] = useState<ActiveTab>('today');
@@ -1193,10 +1194,10 @@ export const StudyPlanPage = () => {
     setViewState('loading');
     try {
       const [curriculumUnits, plan] = await Promise.all([
-        curriculumApi.getUnits().catch(() => fallbackCurriculumUnits),
+        curriculumApi.getUnits().catch(() => (allowDemoFallbacks ? fallbackCurriculumUnits : [])),
         studyPlanApi.getActiveStudyPlan(),
       ]);
-      setUnits(curriculumUnits.length ? curriculumUnits : fallbackCurriculumUnits);
+      setUnits(curriculumUnits.length ? curriculumUnits : allowDemoFallbacks ? fallbackCurriculumUnits : []);
       setActivePlan(plan);
       setViewState(plan && hasGeneratedSchedule(plan) ? 'active' : plan ? 'setup' : 'empty');
     } catch {
@@ -1206,12 +1207,12 @@ export const StudyPlanPage = () => {
   };
 
   useEffect(() => {
-    void loadInitialData();
+    queueMicrotask(() => void loadInitialData());
   }, []);
 
   useEffect(() => {
     if (activePlan && hasGeneratedSchedule(activePlan, progress) && viewState !== 'generating') {
-      setViewState('active');
+      queueMicrotask(() => setViewState('active'));
     }
   }, [activePlan, progress, viewState]);
 

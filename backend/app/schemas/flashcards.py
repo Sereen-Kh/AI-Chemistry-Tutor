@@ -150,6 +150,8 @@ class FlashcardGenerateRequest(BaseModel):
     card_types: list[str] = Field(default_factory=lambda: ["term_definition", "concept_explanation"])
     difficulty: FlashcardDifficulty = "mixed"
     include_sources: bool = True
+    allow_needs_review: bool = False
+    admin_review_approved: bool = False
     title_ar: str | None = None
     description_ar: str | None = None
 

@@ -20,6 +20,20 @@ from app.services.rag import RetrievedChunk
 BACKEND_DIR = Path(__file__).resolve().parents[1]
 DATASET_PATH = BACKEND_DIR / "tests" / "fixtures" / "rag_grade9_qa_cases.json"
 REPORT_PATH = BACKEND_DIR / "reports" / "rag_qa_report.json"
+REVIEWED_METADATA_VERSION = "2026-06-reviewed-v1"
+
+_CATEGORY_CURRICULUM = {
+    "solutions": ("unit_04", "unit_04_lesson_01", 110),
+    "acids": ("unit_04", "unit_04_lesson_02", 117),
+    "bases": ("unit_04", "unit_04_lesson_03", 124),
+    "salts": ("unit_04", "unit_04_lesson_03", 128),
+    "reactions": ("unit_04", "unit_04_lesson_04", 134),
+    "redox": ("unit_04", "unit_04_lesson_04", 141),
+    "formulas": ("unit_04", "unit_04_lesson_05", 148),
+    "organic": ("unit_05", "unit_05_lesson_01", 165),
+    "radioactivity": ("unit_06", "unit_06_lesson_01", 192),
+    "exercises": ("unit_05", "unit_05_lesson_03", 183),
+}
 
 REQUIRED_CASE_FIELDS = {
     "id",
@@ -94,11 +108,15 @@ def _stable_int(value: str, *, modulo: int = 1_000_000) -> int:
 
 
 def case_page_number(case: dict[str, Any]) -> int:
-    return (_stable_int(case["id"], modulo=96) or 1)
+    explicit_pages = case.get("expected_printed_pages")
+    if isinstance(explicit_pages, list) and explicit_pages:
+        return int(explicit_pages[0])
+    return _CATEGORY_CURRICULUM.get(case["category"], ("unit_04", "unit_04_lesson_01", 108))[2]
 
 
 def case_chunk_id(case: dict[str, Any]) -> int:
-    return 10_000 + _stable_int(case["id"], modulo=900_000)
+    source_case_id = str(case.get("source_case_id") or case["id"])
+    return 10_000 + _stable_int(source_case_id, modulo=900_000)
 
 
 def is_answerable(case: dict[str, Any]) -> bool:
@@ -125,18 +143,51 @@ def answer_text_for_case(case: dict[str, Any]) -> str:
 
 def chunk_for_case(case: dict[str, Any]) -> RetrievedChunk:
     score = max(float(case["min_confidence"]), 0.82)
+    fallback_unit_id, fallback_lesson_id, fallback_page = _CATEGORY_CURRICULUM.get(
+        case["category"], ("unit_04", "unit_04_lesson_01", 108)
+    )
+    unit_id = case.get("expected_unit_id") or fallback_unit_id
+    lesson_id = case.get("expected_lesson_id") or fallback_lesson_id
+    printed_page = case_page_number(case) if case.get("expected_printed_pages") else fallback_page
+    quality_status = str(
+        case.get("expected_quality_status")
+        or ("needs_review" if case["category"] == "exercises" else "ready")
+    )
+    source_type = str(
+        case.get("expected_source_type")
+        or ("solution_book" if case["category"] == "exercises" else "textbook")
+    )
+    curriculum_metadata = {
+        "source_type": source_type,
+        "unit_id": unit_id,
+        "lesson_id": lesson_id,
+        "printed_page_start": printed_page,
+        "printed_page_end": printed_page,
+        "quality_status": quality_status,
+        "reviewed_metadata_version": REVIEWED_METADATA_VERSION,
+        "stale": False,
+    }
     return RetrievedChunk(
         id=case_chunk_id(case),
         source_id=9000 + _stable_int(case["category"], modulo=900),
         content=source_text_for_case(case),
         source="EduMind Grade 9 Chemistry QA Fixture",
-        source_type="textbook",
+        source_type=source_type,
         content_type="definition" if case["category"] in {"acids", "bases", "salts"} else "text",
-        page_number=case_page_number(case),
+        page_number=printed_page,
+        unit_id=unit_id,
         chapter_id=None,
-        lesson_id=None,
+        lesson_id=lesson_id,
         topic_id=None,
-        metadata_json={"qa_case_id": case["id"], "topics": case["expected_source_topics"]},
+        metadata_json={
+            "qa_case_id": case["id"],
+            "topics": case["expected_source_topics"],
+            **curriculum_metadata,
+        },
+        quality_status=quality_status,
+        quality_warning="This source is marked needs_review." if quality_status == "needs_review" else None,
+        reviewed_metadata_version=REVIEWED_METADATA_VERSION,
+        curriculum_metadata=curriculum_metadata,
         similarity_score=round(score, 4),
     )
 
@@ -146,9 +197,17 @@ def chunk_dict_for_case(case: dict[str, Any]) -> dict[str, Any]:
     return {
         "chunk_id": chunk.id,
         "source_id": chunk.source_id,
+        "source_type": chunk.source_type,
         "page_number": chunk.page_number,
+        "printed_page_start": chunk.curriculum_metadata["printed_page_start"],
+        "printed_page_end": chunk.curriculum_metadata["printed_page_end"],
+        "unit_id": chunk.unit_id,
+        "lesson_id": chunk.lesson_id,
         "content_type": chunk.content_type,
         "similarity_score": chunk.similarity_score,
+        "quality_status": chunk.quality_status,
+        "quality_warning": chunk.quality_warning,
+        "reviewed_metadata_version": chunk.reviewed_metadata_version,
         "preview": chunk.content[:180],
     }
 
@@ -161,7 +220,13 @@ def chunk_previews(chunks: list[dict[str, Any]] | list[RetrievedChunk] | None) -
                 {
                     "chunk_id": item.get("id") or item.get("chunk_id"),
                     "source_id": item.get("source_id"),
+                    "source_type": item.get("source_type"),
                     "page_number": item.get("page_number"),
+                    "unit_id": item.get("unit_id"),
+                    "lesson_id": item.get("lesson_id"),
+                    "quality_status": item.get("quality_status"),
+                    "quality_warning": item.get("quality_warning"),
+                    "reviewed_metadata_version": item.get("reviewed_metadata_version"),
                     "similarity_score": item.get("similarity_score"),
                     "content": str(item.get("content") or item.get("preview") or "")[:180],
                 }
@@ -171,7 +236,13 @@ def chunk_previews(chunks: list[dict[str, Any]] | list[RetrievedChunk] | None) -
                 {
                     "chunk_id": item.id,
                     "source_id": item.source_id,
+                    "source_type": item.source_type,
                     "page_number": item.page_number,
+                    "unit_id": item.unit_id,
+                    "lesson_id": item.lesson_id,
+                    "quality_status": item.quality_status,
+                    "quality_warning": item.quality_warning,
+                    "reviewed_metadata_version": item.reviewed_metadata_version,
                     "similarity_score": item.similarity_score,
                     "content": item.content[:180],
                 }
@@ -207,6 +278,7 @@ def install_deterministic_api_overrides(app, cases: list[dict[str, Any]], monkey
         db,
         query: str,
         user_id: int | None = None,
+        unit_id: int | None = None,
         chapter_id: int | None = None,
         lesson_id: int | None = None,
         topic_id: int | None = None,
@@ -286,7 +358,15 @@ def install_deterministic_api_overrides(app, cases: list[dict[str, Any]], monkey
                     "book_id": "qa_fixture",
                     "page": chunk.page_number,
                     "chunk_id": chunk.id,
+                    "source_id": chunk.source_id,
                     "chunk_type": chunk.content_type,
+                    "source_type": chunk.source_type,
+                    "unit_id": chunk.unit_id,
+                    "lesson_id": chunk.lesson_id,
+                    "quality_status": chunk.quality_status,
+                    "quality_warning": chunk.quality_warning,
+                    "reviewed_metadata_version": chunk.reviewed_metadata_version,
+                    "curriculum_metadata": chunk.curriculum_metadata,
                     "score": chunk.similarity_score,
                 }
             ],

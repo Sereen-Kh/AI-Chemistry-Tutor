@@ -10,6 +10,7 @@ from pathlib import Path
 import time
 import re
 from types import SimpleNamespace
+from uuid import uuid4
 
 from fastapi import HTTPException
 from sqlalchemy import delete, select
@@ -50,6 +51,7 @@ from app.services.rag import (
     lexical_relevance_score,
     rewrite_query,
 )
+from app.services.rag_runtime import student_retrieval_is_enabled
 from app.services.safety_rules import answer_safety_rule, is_acid_to_water_safety_question
 from app.services.semantic_rag import semantic_retrieve_context
 from app.services.source_router import route_source
@@ -554,14 +556,30 @@ def _append_audio_unavailable_if_requested(
     )
 
 
+def _chunk_attr(chunk: RetrievedChunk, name: str, default=None):
+    return getattr(chunk, name, default)
+
+
+def _has_chunk_attr(chunk: RetrievedChunk, name: str) -> bool:
+    return hasattr(chunk, name)
+
+
 def _source_blocks(chunks: list[RetrievedChunk]) -> list[dict]:
     return [
         {
-            "book_id": chunk.source or _SOURCE_SLUG,
-            "page": chunk.page_number,
-            "chunk_id": chunk.id,
-            "chunk_type": chunk.content_type,
-            "score": round(float(chunk.similarity_score), 4),
+            "book_id": _chunk_attr(chunk, "source") or _SOURCE_SLUG,
+            "page": _chunk_attr(chunk, "page_number"),
+            "chunk_id": _chunk_attr(chunk, "id"),
+            "source_id": _chunk_attr(chunk, "source_id"),
+            "chunk_type": _chunk_attr(chunk, "content_type"),
+            "source_type": _chunk_attr(chunk, "source_type"),
+            "unit_id": _chunk_attr(chunk, "unit_id"),
+            "lesson_id": _chunk_attr(chunk, "lesson_id"),
+            "quality_status": _chunk_attr(chunk, "quality_status"),
+            "quality_warning": _chunk_attr(chunk, "quality_warning"),
+            "reviewed_metadata_version": _chunk_attr(chunk, "reviewed_metadata_version"),
+            "curriculum_metadata": _chunk_attr(chunk, "curriculum_metadata", {}) or {},
+            "score": round(float(_chunk_attr(chunk, "similarity_score", 0.0)), 4),
         }
         for chunk in chunks
     ]
@@ -569,17 +587,31 @@ def _source_blocks(chunks: list[RetrievedChunk]) -> list[dict]:
 
 def _citation_blocks(chunks: list[RetrievedChunk]) -> list[dict]:
     """Return citation metadata for clients that use the new response shape."""
-    return [
-        {
-            "chunk_id": chunk.id,
-            "source_id": chunk.source_id,
-            "source": chunk.source or _SOURCE_SLUG,
-            "page_number": chunk.page_number,
-            "content_type": chunk.content_type,
-            "similarity_score": round(float(chunk.similarity_score), 4),
+    citations: list[dict] = []
+    for chunk in chunks:
+        citation = {
+            "chunk_id": _chunk_attr(chunk, "id"),
+            "source_id": _chunk_attr(chunk, "source_id"),
+            "source": _chunk_attr(chunk, "source") or _SOURCE_SLUG,
+            "page_number": _chunk_attr(chunk, "page_number"),
+            "content_type": _chunk_attr(chunk, "content_type"),
+            "similarity_score": round(float(_chunk_attr(chunk, "similarity_score", 0.0)), 4),
         }
-        for chunk in chunks
-    ]
+        for key in (
+            "source_type",
+            "unit_id",
+            "lesson_id",
+            "quality_status",
+            "quality_warning",
+            "reviewed_metadata_version",
+            "curriculum_metadata",
+        ):
+            if _has_chunk_attr(chunk, key):
+                citation[key] = _chunk_attr(chunk, key, {} if key == "curriculum_metadata" else None) or (
+                    {} if key == "curriculum_metadata" else None
+                )
+        citations.append(citation)
+    return citations
 
 
 def _media_blocks_for_modes(
@@ -2508,6 +2540,78 @@ async def send_multimodal_message(
     return assistant_message
 
 
+async def synthesize_ask_answer_audio(
+    answer_text: str,
+    *,
+    language: str = "auto",
+    audio_service: AudioService | None = None,
+    storage: LocalAudioStorage | None = None,
+    message_id: int | str | None = None,
+) -> dict:
+    """Generate optional TTS for the one-off Ask AI endpoint.
+
+    Text answer generation has already succeeded before this helper is called.
+    TTS failures are therefore returned as status metadata instead of raising so
+    the student still receives the grounded text answer.
+    """
+    text = (answer_text or "").strip()
+    if not text:
+        return {
+            "audio_url": None,
+            "audio_status": AudioProcessingStatus.FAILED.value,
+            "audio_error": {"code": "TTS_FAILED", "message": "Cannot synthesize empty answer text."},
+            "media_block": None,
+        }
+
+    if audio_service is None:
+        try:
+            _require_audio_provider_config(needs_tts=True, needs_stt=False, injected_audio_service=None)
+            audio_service = audio_service_from_settings()
+        except HTTPException as exc:
+            detail = exc.detail if isinstance(exc.detail, dict) else {}
+            return {
+                "audio_url": None,
+                "audio_status": AudioProcessingStatus.FAILED.value,
+                "audio_error": {
+                    "code": detail.get("code", "AUDIO_PROVIDER_NOT_CONFIGURED"),
+                    "message": detail.get("message", str(exc.detail)),
+                },
+                "media_block": None,
+            }
+
+    storage = storage or LocalAudioStorage()
+    try:
+        audio_bytes = await audio_service.synthesize_speech(
+            text,
+            voice_id=settings.elevenlabs_default_voice_id,
+            language=language,
+        )
+        _, audio_url = storage.save_output_bytes(audio_bytes, message_id=message_id or f"ask_{uuid4().hex}")
+    except (AudioSynthesisError, AudioProviderError) as exc:
+        return {
+            "audio_url": None,
+            "audio_status": AudioProcessingStatus.FAILED.value,
+            "audio_error": {"code": getattr(exc, "code", "TTS_FAILED"), "message": str(exc)},
+            "media_block": None,
+        }
+
+    return {
+        "audio_url": audio_url,
+        "audio_status": AudioProcessingStatus.READY.value,
+        "audio_error": None,
+        "media_block": {
+            "type": "audio",
+            "content": "إجابة صوتية مولدة من النص النهائي.",
+            "url": audio_url,
+            "metadata": {
+                "provider": "elevenlabs",
+                "model": settings.elevenlabs_tts_model,
+                "voice_id": settings.elevenlabs_default_voice_id,
+            },
+        },
+    }
+
+
 async def _context_from_parent_message(
     db: AsyncSession | None,
     user_id: int,
@@ -2596,6 +2700,26 @@ async def ask_question(
         student_interests=student_interests,
     )
     preferred_answer_type = _preferred_answer_type_from_learning_modes(preferred_answer_type, preferences.learning_modes)
+
+    if not student_retrieval_is_enabled():
+        diagnostics = {
+            "original_query": question,
+            "normalized_query": clean_query(question),
+            "intent": "disabled",
+            "rag_disabled": True,
+            "reason": "RAG_STUDENT_RETRIEVAL_DISABLED",
+            "teaching_preferences": preferences.as_diagnostics(),
+        }
+        return _finalize_answer(
+            _not_found_response(
+                question=question,
+                answer_scope=answer_scope,
+                preferred_answer_type=preferred_answer_type,
+                diagnostics=diagnostics,
+                chunks=[],
+            ),
+            question,
+        )
 
     if _is_followup_rephrase(question, action=action):
         parent_question, parent_answer = await _context_from_parent_message(db, user_id, parent_message_id)

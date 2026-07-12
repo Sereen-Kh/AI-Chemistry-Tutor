@@ -27,6 +27,8 @@ from app.schemas.ingestion import (
     IngestionStatusResponse,
     IngestionTestQueryRequest,
     IngestionTestQueryResponse,
+    LoadReviewedChunksRequest,
+    LoadReviewedChunksResponse,
     PrepareReviewedChunksRequest,
     PrepareReviewedChunksResponse,
     QuestionReviewRequest,
@@ -45,6 +47,7 @@ from app.services.rag_rebuild import rebuild_rag_chunks_from_cached_pages
 from app.services.rag_cache import invalidate_rag_caches
 from app.services.reviewed_ingestion_assets import (
     embedding_readiness,
+    load_reviewed_chunks_to_rag,
     prepare_reviewed_chunks,
     validate_canonical_sources,
 )
@@ -512,6 +515,30 @@ def prepare_reviewed_chunks_endpoint(
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@router.post("/load-reviewed-chunks", response_model=LoadReviewedChunksResponse)
+def load_reviewed_chunks_endpoint(
+    request: LoadReviewedChunksRequest,
+    _admin=Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    """Load reviewed JSONL chunks into rag_chunks as pending embeddings."""
+
+    try:
+        return load_reviewed_chunks_to_rag(
+            db,
+            clear_existing=request.clear_existing,
+            dry_run=request.dry_run,
+            include_textbook=request.include_textbook,
+            include_solution_book=request.include_solution_book,
+        )
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
 @router.get("/embedding-readiness", response_model=EmbeddingReadinessResponse)

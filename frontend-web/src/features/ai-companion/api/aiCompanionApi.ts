@@ -1,4 +1,5 @@
 import { api } from '../../../api/http';
+import { allowDemoFallbacks } from '../../../config/demoFallbacks';
 import type { CompanionMessageResponse, CompanionSuggestionResponse, LearningContext } from '../types';
 import { buildCompanionMessage, buildCompanionSuggestions } from '../companionLogic';
 
@@ -23,8 +24,8 @@ export const aiCompanionApi = {
         response_mode: 'action',
       } satisfies CompanionRequest);
       return data;
-    } catch {
-      // TODO: remove fallback after POST /api/v1/ai/companion/suggest is production-ready.
+    } catch (error) {
+      if (!allowDemoFallbacks) throw error;
       return fallbackSuggestion(context);
     }
   },
@@ -38,8 +39,8 @@ export const aiCompanionApi = {
         response_mode: 'text',
       } satisfies CompanionRequest);
       return data;
-    } catch {
-      // TODO: remove fallback after POST /api/v1/ai/companion/message is production-ready.
+    } catch (error) {
+      if (!allowDemoFallbacks) throw error;
       return {
         message: message.trim()
           ? `سأربط سؤالك بالسياق الحالي: ${buildCompanionMessage(context)}`

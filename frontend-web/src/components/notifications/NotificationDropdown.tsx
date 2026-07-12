@@ -4,6 +4,10 @@ import type { NotificationItem } from '../../types';
 
 const typeLabel: Record<NotificationItem['type'], string> = {
   study_reminder: 'الدراسة',
+  quiz_due: 'اختبار قصير',
+  homework_feedback: 'واجب',
+  streak_warning: 'استمرارية',
+  achievement_unlocked: 'إنجاز',
   exam_countdown: 'اختبار',
   overdue_lesson: 'متأخر',
   flashcards_due: 'بطاقات',
@@ -19,6 +23,10 @@ const iconFor = (type: NotificationItem['type']): string => {
   if (type === 'exam_countdown' || type === 'exam') return '🎯';
   if (type === 'flashcards_due') return '▣';
   if (type === 'weak_topic') return '!';
+  if (type === 'quiz_due' || type === 'quiz_reminder' || type === 'quiz') return '📝';
+  if (type === 'homework_feedback') return '✎';
+  if (type === 'streak_warning') return '🔥';
+  if (type === 'achievement_unlocked') return '★';
   if (type === 'system') return '⚙';
   return '📘';
 };

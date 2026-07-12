@@ -20,6 +20,7 @@ from app.schemas.chat import (
 from app.services import chat_service
 
 router = APIRouter(prefix="/chat", tags=["chat"])
+ai_alias_router = APIRouter(prefix="/ai", tags=["chat"])
 
 
 def _csv_values(value: str | None) -> list[str] | None:
@@ -132,12 +133,12 @@ async def send_unified_chat_message(
     )
 
 
-@router.post("/ask", response_model=ChatAnswerResponse)
-async def ask_chat(
+async def _ask_chat_response(
     request: ChatAskRequest,
-    user_id: int = Depends(get_current_user_id),
-    db: AsyncSession = Depends(get_async_db),
-):
+    *,
+    user_id: int,
+    db: AsyncSession,
+) -> ChatAnswerResponse:
     result = await chat_service.ask_question(
         db,
         user_id=user_id,
@@ -160,10 +161,35 @@ async def ask_chat(
         previous_sources=request.previous_sources,
         previous_selected_chunks=request.previous_selected_chunks,
     )
+    requested_format = request.answer_format or request.preferred_answer_type or "text"
+    media_blocks = list(result.get("media_blocks", []))
+    diagnostics = dict(result.get("diagnostics", {}))
+    audio_url: str | None = None
+    audio_status = "not_required"
+
+    if requested_format == "audio":
+        tts_result = await chat_service.synthesize_ask_answer_audio(
+            result.get("answer_text", result["answer"]),
+            language="ar",
+            message_id=request.conversation_id or "ask",
+        )
+        audio_url = tts_result["audio_url"]
+        audio_status = tts_result["audio_status"]
+        diagnostics["audio_status"] = audio_status
+        if tts_result.get("audio_error"):
+            diagnostics["audio_error"] = tts_result["audio_error"]
+        else:
+            diagnostics.pop("audio_requested_but_tts_unavailable", None)
+        if tts_result.get("media_block"):
+            media_blocks.append(tts_result["media_block"])
+
     return ChatAnswerResponse(
         answer=result["answer"],
         answer_text=result.get("answer_text", result["answer"]),
         answer_type=result["answer_type"],
+        format=requested_format,
+        audio_url=audio_url,
+        audio_status=audio_status,
         route=result.get("route", "textbook_rag"),
         grounding=result.get("grounding", "book"),
         answer_scope=result.get("answer_scope", request.answer_scope),
@@ -177,20 +203,45 @@ async def ask_chat(
                 chunk_id=chunk.id,
                 source_id=chunk.source_id,
                 source=chunk.source,
+                source_type=getattr(chunk, "source_type", None),
                 page_number=chunk.page_number,
                 content_type=chunk.content_type,
+                unit_id=getattr(chunk, "unit_id", None),
+                lesson_id=getattr(chunk, "lesson_id", None),
+                quality_status=getattr(chunk, "quality_status", None),
+                quality_warning=getattr(chunk, "quality_warning", None),
+                reviewed_metadata_version=getattr(chunk, "reviewed_metadata_version", None),
+                curriculum_metadata=getattr(chunk, "curriculum_metadata", None),
                 similarity_score=chunk.similarity_score,
             )
             for chunk in result["sources"]
         ],
         citations=result.get("citations", []),
-        media_blocks=[AnswerBlock(**block) for block in result.get("media_blocks", [])],
+        media_blocks=[AnswerBlock(**block) for block in media_blocks],
         source_blocks=[AnswerSourceBlock(**block) for block in result.get("source_blocks", [])],
         page_numbers=result["page_numbers"],
         confidence=result["confidence"],
-        diagnostics=result.get("diagnostics", {}),
+        diagnostics=diagnostics,
         suggested_next_action=result["suggested_next_action"],
     )
+
+
+@router.post("/ask", response_model=ChatAnswerResponse)
+async def ask_chat(
+    request: ChatAskRequest,
+    user_id: int = Depends(get_current_user_id),
+    db: AsyncSession = Depends(get_async_db),
+):
+    return await _ask_chat_response(request, user_id=user_id, db=db)
+
+
+@ai_alias_router.post("/ask", response_model=ChatAnswerResponse)
+async def ask_ai_alias(
+    request: ChatAskRequest,
+    user_id: int = Depends(get_current_user_id),
+    db: AsyncSession = Depends(get_async_db),
+):
+    return await _ask_chat_response(request, user_id=user_id, db=db)
 
 
 @router.post("/messages/{message_id}/feedback", response_model=MessageResponse)

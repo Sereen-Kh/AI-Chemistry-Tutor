@@ -17,10 +17,10 @@ const filterLabels: Array<{ key: NotificationFilter; label: string }> = [
 ];
 
 const filterTypes: Record<Exclude<NotificationFilter, 'all'>, NotificationItem['type'][]> = {
-  study: ['study_reminder', 'overdue_lesson', 'weak_topic', 'lesson'],
-  exam: ['exam_countdown', 'quiz_reminder', 'exam', 'quiz'],
+  study: ['study_reminder', 'overdue_lesson', 'weak_topic', 'streak_warning', 'lesson'],
+  exam: ['exam_countdown', 'quiz_due', 'quiz_reminder', 'exam', 'quiz'],
   flashcards: ['flashcards_due'],
-  system: ['system'],
+  system: ['system', 'homework_feedback', 'achievement_unlocked'],
 };
 
 const groupLabels: Record<NotificationGroup, string> = {
@@ -148,8 +148,12 @@ export const NotificationsPage = () => {
       case 'lesson': return '📖';
       case 'flashcards_due': return '▣';
       case 'weak_topic': return '!';
+      case 'quiz_due':
       case 'quiz_reminder':
       case 'quiz': return '📝';
+      case 'homework_feedback': return '✎';
+      case 'streak_warning': return '🔥';
+      case 'achievement_unlocked': return '★';
       case 'system': return '⚙️';
     }
   };

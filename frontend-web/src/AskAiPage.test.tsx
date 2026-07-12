@@ -23,22 +23,29 @@ vi.mock('./api', () => ({
   userApi: {},
   resolveMediaUrl: (value?: string) => value,
   toErrorMessage: (error: unknown, fallback: string) => (error instanceof Error ? error.message : fallback),
-  messageResponseToAskResponse: (message: ChatMessageResponse) => ({
-    answer: message.answer_text || message.content,
-    sources: (message.sources || []).map((source) => ({
-      title: String(source.source || 'كتاب الكيمياء - الصف التاسع'),
-      page: Number(source.page_number || 0) || null,
-      chunk_id: Number(source.chunk_id || 0),
-      quote: String(source.content_type || ''),
-      score: Number(source.similarity_score || 0),
-    })),
-    citations: [],
-    confidence: message.confidence || 0,
-    format: 'text',
-    answer_type: message.answer_type || undefined,
-    route: message.route || undefined,
-    diagnostics: message.diagnostics,
-  }),
+  messageResponseToAskResponse: (message: ChatMessageResponse) => {
+    const format = ['text', 'audio', 'image', 'video'].includes(String(message.format))
+      ? message.format
+      : 'text';
+    return {
+      answer: message.answer_text || message.content,
+      sources: (message.sources || []).map((source) => ({
+        title: String(source.source || 'كتاب الكيمياء - الصف التاسع'),
+        page: Number(source.page_number || 0) || null,
+        chunk_id: Number(source.chunk_id || 0),
+        quote: String(source.content_type || ''),
+        score: Number(source.similarity_score || 0),
+      })),
+      citations: [],
+      confidence: message.confidence || 0,
+      format,
+      answer_type: message.answer_type || undefined,
+      route: message.route || undefined,
+      diagnostics: message.diagnostics,
+      audio_url: message.answer_audio_url || message.media_url || undefined,
+      audio_status: message.audio_status,
+    };
+  },
 }));
 
 const mockedAiApi = vi.mocked(aiApi);
@@ -99,7 +106,7 @@ const buildSession = (messages: ChatMessageResponse[] = []): ChatSessionResponse
 });
 
 const renderAskAi = () => {
-  render(
+  return render(
     <MemoryRouter>
       <AskAiPage preferences={preferences} setPreferences={vi.fn()} />
     </MemoryRouter>,
@@ -135,7 +142,37 @@ describe('AskAiPage persistent sessions', () => {
     expect((await screen.findAllByText('جلسة تركيز')).length).toBeGreaterThan(0);
     expect((await screen.findAllByText(/التركيز المولي يحسب بالعلاقة/)).length).toBeGreaterThan(0);
     expect(screen.getAllByText('مصادر قوية').length).toBeGreaterThan(0);
+    expect(screen.getByText('أفضل تطابق مع المصدر 86%')).toBeInTheDocument();
     expect(screen.getByText('صفحة 11')).toBeInTheDocument();
+  });
+
+  it('keeps answer confidence separate when no textbook source was retrieved', async () => {
+    mockedAiApi.listSessions.mockResolvedValue([buildSession([
+      {
+        id: 1,
+        session_id: 10,
+        role: 'user',
+        content: 'ما هي الحموض؟',
+        format: 'text',
+        created_at: new Date().toISOString(),
+      },
+      {
+        ...assistantMessage,
+        id: 5,
+        content: 'الحموض مواد تعطي أيونات الهدروجين في الماء.',
+        answer_text: 'الحموض مواد تعطي أيونات الهدروجين في الماء.',
+        confidence: 0.95,
+        sources: [],
+        citations: [],
+        page_numbers: [],
+      },
+    ])]);
+
+    renderAskAi();
+
+    expect((await screen.findAllByText('لم أجد مصدراً كافياً في الكتاب')).length).toBeGreaterThan(0);
+    expect(screen.getByText('ثقة الإجابة 95% · دون توثيق كتابي')).toBeInTheDocument();
+    expect(screen.queryByText('ثقة المصدر 95%')).not.toBeInTheDocument();
   });
 
   it('creates a session on first send and posts through the session endpoint', async () => {
@@ -218,6 +255,109 @@ describe('AskAiPage persistent sessions', () => {
     await userEvent.click(screen.getByRole('button', { name: 'إرسال' }));
 
     expect(await screen.findByText('السؤال مطلوب')).toBeInTheDocument();
+  });
+
+  it('maps an expired session to an Arabic login message', async () => {
+    mockedAiApi.listSessions.mockResolvedValue([]);
+    mockedAiApi.createSession.mockResolvedValue(buildSession());
+    mockedAiApi.sendSessionMessage.mockRejectedValue(new Error('Invalid or expired token'));
+
+    renderAskAi();
+
+    const input = await screen.findByLabelText('سؤال للذكاء الاصطناعي');
+    await userEvent.type(input, 'ما هو الماء؟');
+    await userEvent.click(screen.getByRole('button', { name: 'إرسال' }));
+
+    expect(await screen.findByText('انتهت صلاحية الجلسة. سجّل الدخول من جديد.')).toBeInTheDocument();
+  });
+
+  it('maps an unavailable backend to an Arabic retry message', async () => {
+    mockedAiApi.listSessions.mockResolvedValue([]);
+    mockedAiApi.createSession.mockResolvedValue(buildSession());
+    mockedAiApi.sendSessionMessage.mockRejectedValue(new Error('Network Error'));
+
+    renderAskAi();
+
+    const input = await screen.findByLabelText('سؤال للذكاء الاصطناعي');
+    await userEvent.type(input, 'ما هو الماء؟');
+    await userEvent.click(screen.getByRole('button', { name: 'إرسال' }));
+
+    expect(
+      await screen.findByText('تعذر الاتصال بالخادم. تأكد أن الخدمة تعمل ثم أعد المحاولة.'),
+    ).toBeInTheDocument();
+  });
+
+  it('renders an audio player for audio answers', async () => {
+    mockedAiApi.listSessions.mockResolvedValue([buildSession([
+      {
+        id: 1,
+        session_id: 10,
+        role: 'user',
+        content: 'ما هو الماء؟',
+        format: 'text',
+        created_at: new Date().toISOString(),
+      },
+      {
+        ...assistantMessage,
+        id: 3,
+        format: 'audio',
+        answer_audio_url: '/media/uploads/audio/output/answer_test.mp3',
+        audio_status: 'ready',
+      },
+    ])]);
+
+    const view = renderAskAi();
+
+    expect((await screen.findAllByText(/التركيز المولي يحسب بالعلاقة/)).length).toBeGreaterThan(0);
+    expect(view.container.querySelector('audio[src="/media/uploads/audio/output/answer_test.mp3"]')).toBeInTheDocument();
+  });
+
+  it('renders the transcript for a persisted student audio message', async () => {
+    mockedAiApi.listSessions.mockResolvedValue([buildSession([
+      {
+        id: 1,
+        session_id: 10,
+        role: 'user',
+        content: 'ما هو التركيز المولي؟',
+        format: 'audio',
+        input_type: 'audio',
+        audio_input_url: '/media/uploads/audio/input/student.webm',
+        audio_transcript: 'ما هو التركيز المولي؟',
+        transcription_status: 'ready',
+        created_at: new Date().toISOString(),
+      },
+      assistantMessage,
+    ])]);
+
+    renderAskAi();
+
+    expect(await screen.findByText(/النص المفرغ:/)).toBeInTheDocument();
+    expect(screen.getAllByText(/ما هو التركيز المولي؟/).length).toBeGreaterThan(0);
+  });
+
+  it('renders failed audio state when TTS fails', async () => {
+    mockedAiApi.listSessions.mockResolvedValue([buildSession([
+      {
+        id: 1,
+        session_id: 10,
+        role: 'user',
+        content: 'ما هو الماء؟',
+        format: 'text',
+        created_at: new Date().toISOString(),
+      },
+      {
+        ...assistantMessage,
+        id: 4,
+        format: 'audio',
+        answer_audio_url: null,
+        audio_status: 'failed',
+      },
+    ])]);
+
+    renderAskAi();
+
+    expect(await screen.findByText('تعذر توليد الصوت. الإجابة النصية متاحة.')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'أعد المحاولة' })).toBeInTheDocument();
   });
 
   it('deletes a selected session from the history panel', async () => {

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { api } from './http';
 import { fallbackCurriculumUnits } from './curriculumApi';
+import { allowDemoFallbacks, demoFallbackDisabledMessage } from '../config/demoFallbacks';
 import type {
   ChapterPlan,
   ExamPlanConfig,
@@ -150,17 +151,57 @@ export const studyPlanApi = {
       activePlan = null;
       return null;
     }
-    const basePlan = await this.getCurriculumBackedPlan();
-    activePlan = mapBackendStudyPlan(activeBackendPlan, basePlan);
+    const basePlan = await this.getCurriculumBackedPlanOrNull();
+    activePlan = mapBackendStudyPlan(activeBackendPlan, basePlan ?? undefined);
     return activePlan;
   },
 
   async getCurriculumBackedPlan(): Promise<StudyPlan> {
     try {
       const { data: units } = await api.get<UnitCatalogItem[]>('/units');
-      return mapUnitsToStudyPlan(units.length ? units : fallbackCurriculumUnits);
+      if (units.length) return mapUnitsToStudyPlan(units);
+      if (allowDemoFallbacks) return mapUnitsToStudyPlan(fallbackCurriculumUnits);
+      throw new Error('لا توجد بيانات منهج متاحة من الخادم.');
+    } catch (error) {
+      if (allowDemoFallbacks) return mapUnitsToStudyPlan(fallbackCurriculumUnits);
+      if (error instanceof Error && error.message === 'لا توجد بيانات منهج متاحة من الخادم.') throw error;
+      throw new Error(demoFallbackDisabledMessage, { cause: error });
+    }
+  },
+
+  async getCurriculumBackedPlanOrNull(): Promise<StudyPlan | null> {
+    try {
+      return await this.getCurriculumBackedPlan();
     } catch {
-      return mapUnitsToStudyPlan(fallbackCurriculumUnits);
+      return null;
+    }
+  },
+
+  async getStudyPlanProgress(planId: string | number, planFallback?: StudyPlan): Promise<StudyPlanProgress> {
+    try {
+      const { data } = await api.get<StudyPlanProgress>(`/study-plans/${planId}/progress`);
+      return data;
+    } catch (error) {
+      if (allowDemoFallbacks && planFallback) {
+        const lessons = planFallback.chapters.flatMap((chapter) => chapter.lessons);
+        const completed = lessons.filter((lesson) => lesson.status === 'completed').length;
+        return {
+          plan_id: Number(planId),
+          plan_title: planFallback.config?.title || 'خطة الدراسة',
+          total_scheduled_lessons: lessons.length,
+          completed_lessons: completed,
+          in_progress_lessons: lessons.filter((lesson) => lesson.status === 'current').length,
+          not_started_lessons: lessons.filter((lesson) => lesson.status === 'locked').length,
+          overdue_lessons: 0,
+          completion_percent: lessons.length ? Math.round((completed / lessons.length) * 100) : 0,
+          expected_percent: 0,
+          track_status: 'on_track',
+          next_lesson: null,
+          unit_progress: [],
+          scheduled_lessons: [],
+        };
+      }
+      throw new Error('تعذر تحميل تقدّم خطة الدراسة من الخادم.', { cause: error });
     }
   },
 
@@ -175,30 +216,25 @@ export const studyPlanApi = {
   async getStudyPlans(): Promise<StudyPlan[]> {
     const [{ data: backendPlans }, basePlan] = await Promise.all([
       api.get<BackendStudyPlanResponse[]>('/study-plans'),
-      this.getCurriculumBackedPlan(),
+      this.getCurriculumBackedPlanOrNull(),
     ]);
-    return backendPlans.map((plan) => mapBackendStudyPlan(plan, basePlan));
-  },
-
-  async getStudyPlanProgress(planId: string | number, _planFallback?: StudyPlan): Promise<StudyPlanProgress> {
-    const { data } = await api.get<StudyPlanProgress>(`/study-plans/${planId}/progress`);
-    return data;
+    return backendPlans.map((plan) => mapBackendStudyPlan(plan, basePlan ?? undefined));
   },
 
   async generatePlan(config: StudyPlanGenerationConfig): Promise<StudyPlan> {
     const normalizedConfig = normalizeGenerationConfig(config);
     try {
       const [basePlan, response] = await Promise.all([
-        this.getCurriculumBackedPlan(),
+        this.getCurriculumBackedPlanOrNull(),
         api.post<BackendStudyPlanResponse>('/study-plans/generate', normalizedConfig),
       ]);
-      activePlan = mapBackendStudyPlan(response.data, basePlan);
+      activePlan = mapBackendStudyPlan(response.data, basePlan ?? undefined);
       return activePlan;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 422) {
-        throw new Error(validationMessageFrom422(error));
+        throw new Error(validationMessageFrom422(error), { cause: error });
       }
-      throw new Error('تعذر إنشاء خطة الدراسة من الخادم. تحقق من الاتصال وحاول مرة أخرى.');
+      throw new Error('تعذر إنشاء خطة الدراسة من الخادم. تحقق من الاتصال وحاول مرة أخرى.', { cause: error });
     }
   },
 

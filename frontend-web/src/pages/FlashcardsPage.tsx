@@ -68,6 +68,16 @@ const extractBackendDetail = (error: unknown): { status?: number; detail: string
   const maybeResponse = error as { response?: { status?: number; data?: { detail?: unknown } }; message?: string };
   const detail = maybeResponse.response?.data?.detail;
   if (typeof detail === 'string') return { status: maybeResponse.response?.status, detail };
+  if (detail && typeof detail === 'object' && !Array.isArray(detail)) {
+    const payload = detail as { code?: unknown; message?: unknown; quality_status?: unknown; lesson_title?: unknown };
+    return {
+      status: maybeResponse.response?.status,
+      detail: [payload.message, payload.code, payload.quality_status, payload.lesson_title]
+        .filter(Boolean)
+        .map(String)
+        .join(' '),
+    };
+  }
   if (Array.isArray(detail)) {
     return {
       status: maybeResponse.response?.status,
@@ -85,6 +95,15 @@ const normalizeError = (error: unknown): string => {
   const { status, detail } = extractBackendDetail(error);
   if (status === 401 || /unauthorized|forbidden|token/i.test(detail)) {
     return 'يجب تسجيل الدخول لإنشاء بطاقات.';
+  }
+  if (/ADMIN_APPROVAL_REQUIRED_FOR_NEEDS_REVIEW_FLASHCARDS|needs_review|غير جاهز/i.test(detail)) {
+    return 'هذا الدرس غير جاهز لتوليد البطاقات بعد.';
+  }
+  if (/LESSON_BLOCKED_FOR_FLASHCARD_GENERATION|blocked|محظور/i.test(detail)) {
+    return 'هذا الدرس غير جاهز لتوليد البطاقات بعد.';
+  }
+  if (/INSUFFICIENT_CONTENT_FOR_FLASHCARDS|missing_ready_content|لا يوجد محتوى/i.test(detail)) {
+    return 'لا يوجد محتوى كافٍ لهذا الدرس.';
   }
   if (/field required|required|lesson_ids|اختر درس/i.test(detail)) return 'اختر درساً واحداً على الأقل.';
   if (status === 404 || /not found|لم يتم العثور/i.test(detail)) return 'تعذر تحميل بيانات الدرس.';
@@ -143,7 +162,15 @@ export const FlashcardsPage = () => {
   const queryAuto = query.get('auto') === 'true';
   const querySource = query.get('source') || query.get('mode') || '';
 
-  const { units, allLessons, loading: curriculumLoading, usingFallback: usingFallbackCurriculum } = useActiveCurriculum();
+  const {
+    units,
+    allLessons,
+    loading: curriculumLoading,
+    usingFallback: usingFallbackCurriculum,
+    error: curriculumError,
+    reload: reloadCurriculum,
+  } = useActiveCurriculum();
+  const curriculumUnavailable = !curriculumLoading && allLessons.length === 0;
   const autoGenerationStartedRef = useRef(false);
 
   const [viewState, setViewState] = useState<FlashcardsViewState>('loading');
@@ -216,7 +243,7 @@ export const FlashcardsPage = () => {
   };
 
   useEffect(() => {
-    void loadFlashcards();
+    queueMicrotask(() => void loadFlashcards());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queryLessonId, queryScope, queryAuto]);
 
@@ -266,6 +293,10 @@ export const FlashcardsPage = () => {
   };
 
   const generateDeck = async () => {
+    if (curriculumLoading || curriculumError || allLessons.length === 0) {
+      setError('لا يمكن إنشاء بطاقات قبل تحميل بيانات المنهج المُراجع.');
+      return;
+    }
     if (!validateSetup()) return;
     await generateDeckForLessons(selectedLessons);
   };
@@ -274,23 +305,30 @@ export const FlashcardsPage = () => {
     if (!queryAuto) return;
     if (autoGenerationStartedRef.current) return;
     if (!queryLessonId) {
-      setError('لا يوجد درس محدد لتوليد المراجعة.');
-      setViewState('setup');
+      queueMicrotask(() => {
+        setError('لا يوجد درس محدد لتوليد المراجعة.');
+        setViewState('setup');
+      });
       return;
     }
     if (curriculumLoading) return;
+    if (curriculumError || allLessons.length === 0) return;
     const lesson = allLessons.find((item) => String(item.id) === String(queryLessonId));
     if (!lesson) {
-      setError('تعذر تحميل بيانات الدرس.');
-      setViewState('setup');
+      queueMicrotask(() => {
+        setError('تعذر تحميل بيانات الدرس.');
+        setViewState('setup');
+      });
       return;
     }
     autoGenerationStartedRef.current = true;
-    setScope(querySource === 'study_plan' ? 'study_plan' : 'lesson');
-    setSelectedLessonIds([String(lesson.id)]);
-    queueMicrotask(() => void generateDeckForLessons([lesson], querySource === 'study_plan' ? 'study_plan' : 'lesson'));
+    queueMicrotask(() => {
+      setScope(querySource === 'study_plan' ? 'study_plan' : 'lesson');
+      setSelectedLessonIds([String(lesson.id)]);
+      void generateDeckForLessons([lesson], querySource === 'study_plan' ? 'study_plan' : 'lesson');
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [queryAuto, queryLessonId, querySource, curriculumLoading, allLessons]);
+  }, [queryAuto, queryLessonId, querySource, curriculumLoading, curriculumError, allLessons]);
 
   const openDeck = async (deckId: string | number) => {
     setViewState('loading');
@@ -404,7 +442,10 @@ export const FlashcardsPage = () => {
         }
       />
 
-      {usingFallbackCurriculum && <ErrorBanner message="تعذر تحميل المنهج من الخادم، لذلك نعرض بنية الكتاب الاحتياطية مؤقتاً." />}
+      {curriculumError && <ErrorBanner message={curriculumError} onRetry={reloadCurriculum} />}
+      {usingFallbackCurriculum && (
+        <ErrorBanner message="تعذر تحميل المنهج من الخادم. تُعرض بيانات تجريبية لأن وضع العرض التجريبي مفعّل." />
+      )}
       {error && <ErrorBanner message={error} onRetry={() => setError('')} />}
 
       {viewState === 'loading' && <FlashcardSkeleton />}
@@ -414,7 +455,14 @@ export const FlashcardsPage = () => {
       {viewState === 'empty' && (
         <FlashcardsEmptyState onCreate={() => setViewState('setup')} />
       )}
-      {viewState === 'setup' && (
+      {viewState === 'setup' && curriculumUnavailable && (
+        <Card className="flashcards-empty-state">
+          <h2>لا توجد دروس متاحة لإنشاء بطاقات</h2>
+          <p>يجب تحميل المنهج المُراجع من الخادم قبل إنشاء بطاقات مرتبطة بالدروس.</p>
+          <Button onClick={reloadCurriculum}>إعادة تحميل المنهج</Button>
+        </Card>
+      )}
+      {viewState === 'setup' && !curriculumUnavailable && (
         <FlashcardDeckSetup
           units={units}
           curriculumLoading={curriculumLoading}

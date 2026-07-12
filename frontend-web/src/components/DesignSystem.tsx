@@ -189,6 +189,20 @@ export const Flashcard = ({
   </button>
 );
 
+const chatEvidenceConfidenceLabel = (response: AiAskResponse): string => {
+  if (response.sources.length > 0) {
+    const scores = response.sources
+      .map((source) => source.score)
+      .filter((score): score is number => typeof score === 'number' && Number.isFinite(score));
+    return scores.length
+      ? `أفضل تطابق مع المصدر ${Math.round(Math.max(...scores) * 100)}%`
+      : 'درجة مطابقة المصدر غير متاحة';
+  }
+  return typeof response.confidence === 'number'
+    ? `ثقة الإجابة ${Math.round(response.confidence * 100)}% · دون توثيق كتابي`
+    : 'ثقة الإجابة غير متاحة · دون توثيق كتابي';
+};
+
 export const ChatMessage = ({
   role,
   content,
@@ -220,11 +234,7 @@ export const ChatMessage = ({
         <StatusPill tone={response.sources.length ? 'teal' : 'gold'}>
           {response.sources.length ? 'إجابة مدعومة بمصادر' : 'لم أجد دليلاً كافياً في المصادر'}
         </StatusPill>
-        <span>
-          {typeof response.confidence === 'number'
-            ? `ثقة المصدر ${Math.round(response.confidence * 100)}%`
-            : 'ثقة المصدر غير متاحة'}
-        </span>
+        <span>{chatEvidenceConfidenceLabel(response)}</span>
       </div>
     )}
     {role === 'user' && inputType === 'audio' && audioUrl && (

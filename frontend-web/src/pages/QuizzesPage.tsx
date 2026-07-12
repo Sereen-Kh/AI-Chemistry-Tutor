@@ -51,8 +51,16 @@ export const QuizzesPage = () => {
   const [showQualityReport, setShowQualityReport] = useState(false);
   const [lastGenerationConfig, setLastGenerationConfig] = useState<QuizGenerationConfig | null>(null);
 
-  const { allLessons, chapters, loading: curriculumLoading, usingFallback: usingFallbackCurriculum } = useActiveCurriculum();
+  const {
+    allLessons,
+    chapters,
+    loading: curriculumLoading,
+    usingFallback: usingFallbackCurriculum,
+    error: curriculumError,
+    reload: reloadCurriculum,
+  } = useActiveCurriculum();
   const effectiveSelectedChapterId = selectedChapterId || (chapters[0] ? String(chapters[0].id) : '');
+  const curriculumUnavailable = !curriculumLoading && allLessons.length === 0;
 
   // Compute selected lessons based on mode
   const currentSelectedLessons = useMemo(() => {
@@ -92,6 +100,13 @@ export const QuizzesPage = () => {
 
   const handleGenerateQuiz = async (overrideConfig?: QuizGenerationConfig) => {
     setError('');
+
+    if (curriculumLoading || curriculumError || allLessons.length === 0) {
+      setError('لا يمكن توليد اختبار قبل تحميل بيانات المنهج المُراجع.');
+      setGameState('setup');
+      return;
+    }
+
     setGameState('generating');
 
     const config: QuizGenerationConfig = overrideConfig || {
@@ -204,12 +219,6 @@ export const QuizzesPage = () => {
     }
     setSubmitted(true);
 
-    // Call submit answer in backend
-    void quizzesApi.submitQuizAnswer('session_quiz', currentQ.id, 
-      currentQ.questionType === 'mcq' || currentQ.questionType === 'true_false' 
-        ? String(selectedOptionIndex) 
-        : textAnswer
-    );
   };
 
   const handleSelfRate = (isCorrect: boolean) => {
@@ -242,7 +251,11 @@ export const QuizzesPage = () => {
       setSubmitted(false);
     } else {
       setGameState('results');
-      void quizzesApi.submitQuizResult('session_quiz', score, questions.length);
+      const answers = Object.fromEntries(answerReviews.map((review) => [review.questionId, review.userAnswer]));
+      const topicId = questions.find((question) => question.topicId)?.topicId ?? (selectedTopicId || undefined);
+      void quizzesApi.submitQuizResult({ topicId, answers }).catch((err: unknown) => {
+        setError(err instanceof Error ? err.message : 'تعذر حفظ نتيجة الاختبار. بقيت النتيجة ظاهرة محلياً.');
+      });
     }
   };
 
@@ -262,10 +275,11 @@ export const QuizzesPage = () => {
     if (!paramAuto) return;
     if (autoGenerationStartedRef.current) return;
     if (!paramLessonId) {
-      setError('لا يوجد درس محدد لتوليد الاختبار.');
+      queueMicrotask(() => setError('لا يوجد درس محدد لتوليد الاختبار.'));
       return;
     }
     if (curriculumLoading) return;
+    if (curriculumError || allLessons.length === 0) return;
     const qCount = Number(queryParams.get('questions') || '3');
     const qDiff = (queryParams.get('difficulty') || 'mixed') as QuizDifficulty;
     const qTypes = (queryParams.get('types') || 'mcq').split(',') as QuizQuestionType[];
@@ -283,7 +297,7 @@ export const QuizzesPage = () => {
 
     const lesson = allLessons.find(l => String(l.id) === paramLessonId);
     if (!lesson) {
-      setError('تعذر تحميل بيانات الدرس المحدد.');
+      queueMicrotask(() => setError('الدرس المطلوب غير موجود في المنهج المستورد. اختر درساً متاحاً من صفحة الدروس.'));
       return;
     }
     autoGenerationStartedRef.current = true;
@@ -294,7 +308,7 @@ export const QuizzesPage = () => {
       queueMicrotask(() => setError(`تعذر التوليد التلقائي: درس "${lesson.title_ar}" محظور بسبب جودة المحتوى.`));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paramAuto, paramLessonId, queryParams, allLessons, curriculumLoading]);
+  }, [paramAuto, paramLessonId, queryParams, allLessons, curriculumLoading, curriculumError]);
 
   return (
     <div className="page-stack quizzes-page">
@@ -304,7 +318,10 @@ export const QuizzesPage = () => {
         subtitle="اختبارات مبنية على محتوى الدرس ونواتج التعلم، مع مراجعة شاملة للإجابات والتفسيرات."
       />
 
-      {usingFallbackCurriculum && <ErrorBanner message="تعذر تحميل المنهج من الخادم، لذلك نعرض بنية الكتاب الاحتياطية مؤقتاً." />}
+      {curriculumError && <ErrorBanner message={curriculumError} onRetry={reloadCurriculum} />}
+      {usingFallbackCurriculum && (
+        <ErrorBanner message="تعذر تحميل المنهج من الخادم. تُعرض بيانات تجريبية لأن وضع العرض التجريبي مفعّل." />
+      )}
       {error && (
         <ErrorBanner
           message={error}
@@ -319,7 +336,20 @@ export const QuizzesPage = () => {
       )}
 
       {/* SETUP GAME STATE */}
-      {gameState === 'setup' && (
+      {gameState === 'setup' && curriculumUnavailable && (
+        <Card className="quiz-config-card">
+          <h2>لا توجد دروس متاحة لتكوين اختبار</h2>
+          <p className="muted-text mt-2">
+            يجب تحميل المنهج المُراجع من الخادم قبل اختيار درس أو توليد أسئلة موثقة.
+          </p>
+          <div className="button-row mt-4">
+            <Button onClick={reloadCurriculum}>إعادة تحميل المنهج</Button>
+            <Link className="ed-btn ed-btn-secondary" to="/lessons">فتح صفحة الدروس</Link>
+          </div>
+        </Card>
+      )}
+
+      {gameState === 'setup' && !curriculumUnavailable && (
         <div className={`quiz-setup-grid ${showQualityReport ? 'has-report' : 'report-collapsed'}`}>
           {/* Config form */}
           <Card className="quiz-config-card">

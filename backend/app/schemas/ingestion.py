@@ -155,6 +155,33 @@ class PrepareReviewedChunksResponse(BaseModel):
     backups: list[str] = Field(default_factory=list)
 
 
+class LoadReviewedChunksRequest(BaseModel):
+    clear_existing: bool = False
+    dry_run: bool = False
+    include_textbook: bool = True
+    include_solution_book: bool = True
+
+
+class LoadReviewedChunksResponse(BaseModel):
+    status: str
+    clear_existing: bool
+    dry_run: bool = False
+    would_write: bool = False
+    reviewed_metadata_version: str | None = None
+    sources: dict = Field(default_factory=dict)
+    chunks_deleted: int = 0
+    chunks_inserted: int = 0
+    chunks_updated: int = 0
+    chunks_unchanged: int = 0
+    chunks_stale: int = 0
+    embedding_reset: int = 0
+    skipped_blocked: int = 0
+    skipped_missing_metadata: int = 0
+    skipped_empty_content: int = 0
+    embedding_status: str = "pending"
+    next_step: str
+
+
 class EmbeddingReadinessResponse(BaseModel):
     reviewed_metadata_version: str | None = None
     status: str

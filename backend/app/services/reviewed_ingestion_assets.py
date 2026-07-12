@@ -18,11 +18,14 @@ import fitz
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
+from app.models.chemistry import Lesson, Unit
 from app.models.textbook import ContentSource, RagChunk
+from app.rag.arabic_normalizer import normalize_arabic
 from app.services.reviewed_curriculum_metadata import (
     DEFAULT_REQUIRED_CHUNK_METADATA,
     REVIEWED_METADATA_RELATIVE_PATH,
-    chunk_is_embedding_ready,
+    ensure_reviewed_metadata_ready,
+    evaluate_chunk_eligibility,
 )
 
 
@@ -37,6 +40,7 @@ BOOK_STRUCTURE = "data/processed/book_structure.json"
 TEXTBOOK_PAGE_STRUCTURE = "data/processed/textbook/page_structure.jsonl"
 TEXTBOOK_LESSON_MAP = "data/processed/textbook/textbook_lesson_map.reviewed.json"
 TEXTBOOK_CHUNKS_PREVIEW = "data/processed/chunk_preview/textbook_chunks_preview.jsonl"
+SOLUTION_PAGE_STRUCTURE = "data/processed/solution_book/solution_page_structure.jsonl"
 SOLUTION_CHUNKS_CLEANED = "data/processed/solution_book/solution_chunks.cleaned.jsonl"
 SOLUTION_CHUNKS_PREVIEW_CLEANED = "data/processed/chunk_preview/solution_book_chunks_preview.cleaned.jsonl"
 SOLUTION_ALIGNMENT = "data/processed/solution_book/solution_textbook_alignment.json"
@@ -176,6 +180,122 @@ def _content_hash(content: str) -> str:
     return hashlib.sha256(content.encode("utf-8")).hexdigest()
 
 
+def _file_modified_at(path: Path) -> str | None:
+    if not path.exists():
+        return None
+    return datetime.fromtimestamp(path.stat().st_mtime, timezone.utc).isoformat()
+
+
+def _safe_read_jsonl(relative_path: str | Path) -> list[dict[str, Any]]:
+    path = _path(relative_path)
+    if not path.exists():
+        return []
+    return _read_jsonl(relative_path)
+
+
+def _page_range_values(row: dict[str, Any], start_key: str, end_key: str | None = None) -> set[int]:
+    start = row.get(start_key)
+    end = row.get(end_key) if end_key else start
+    if not isinstance(start, int):
+        return set()
+    if not isinstance(end, int):
+        end = start
+    if end < start:
+        end = start
+    return set(range(start, end + 1))
+
+
+def _source_artifact_rows(source_type: str) -> dict[str, list[dict[str, Any]]]:
+    if source_type == "textbook":
+        return {
+            "pages": _safe_read_jsonl(TEXTBOOK_PAGE_STRUCTURE),
+            "chunks": _safe_read_jsonl(TEXTBOOK_REVIEWED_CHUNKS_MIRROR),
+        }
+    if source_type == "solution_book":
+        return {
+            "pages": _safe_read_jsonl(SOLUTION_PAGE_STRUCTURE),
+            "chunks": _safe_read_jsonl(SOLUTION_REVIEWED_CHUNKS_MIRROR),
+        }
+    return {"pages": [], "chunks": []}
+
+
+def _coverage_status(actual: int, expected: int | None, blockers: int = 0) -> str:
+    if actual == 0:
+        return "missing"
+    if blockers > 0:
+        return "partial"
+    if expected is not None and expected > 0 and actual < expected:
+        return "partial"
+    return "complete"
+
+
+def _reviewed_artifact_status(source_type: str, page_count: int | None) -> tuple[dict[str, int], str, str, list[str]]:
+    rows = _source_artifact_rows(source_type)
+    page_rows = rows["pages"]
+    chunk_rows = rows["chunks"]
+
+    if source_type == "textbook":
+        extraction_pages: set[int] = {
+            value
+            for row in page_rows
+            for value in _page_range_values(row, "printed_page_number")
+        }
+        chunk_pages: set[int] = {
+            value
+            for row in chunk_rows
+            for value in _page_range_values(row, "printed_page_start", "printed_page_end")
+        }
+    else:
+        extraction_pages = {
+            value
+            for row in page_rows
+            for value in _page_range_values(row, "page_number")
+        }
+        chunk_pages = {
+            value
+            for row in chunk_rows
+            for value in _page_range_values(row, "pdf_page_start", "pdf_page_end")
+        }
+
+    blocked_pages = sum(1 for row in page_rows if row.get("blocked") is True)
+    needs_ocr_pages = sum(1 for row in page_rows if row.get("needs_ocr") is True)
+    needs_vision_pages = sum(1 for row in page_rows if row.get("needs_vision") is True)
+    chunk_quality = Counter(str(row.get("quality_status") or "unknown") for row in chunk_rows)
+    missing_chunk_pages = sorted(extraction_pages - chunk_pages)
+    warnings: list[str] = []
+    if not page_rows:
+        warnings.append("reviewed_page_structure_missing")
+    if not chunk_rows:
+        warnings.append("reviewed_chunks_missing")
+    if missing_chunk_pages:
+        warnings.append(f"missing_chunk_pages:{len(missing_chunk_pages)}")
+
+    counts = {
+        "extraction_pages": len(extraction_pages),
+        "page_structure_rows": len(page_rows),
+        "blocked_pages": blocked_pages,
+        "needs_ocr_pages": needs_ocr_pages,
+        "needs_vision_pages": needs_vision_pages,
+        "reviewed_chunks": len(chunk_rows),
+        "chunked_pages": len(chunk_pages),
+        "missing_chunk_pages": len(missing_chunk_pages),
+        "ready_chunks": int(chunk_quality.get("ready", 0)),
+        "needs_review_chunks": int(chunk_quality.get("needs_review", 0)),
+        "blocked_chunks": int(chunk_quality.get("blocked", 0)),
+    }
+    extraction_status = _coverage_status(len(extraction_pages), page_count, blockers=blocked_pages)
+    chunk_status = _coverage_status(len(chunk_pages), len(extraction_pages) or page_count, blockers=counts["missing_chunk_pages"])
+    return counts, extraction_status, chunk_status, warnings
+
+
+def _embedding_status(chunk_count: int, embedded_chunk_count: int) -> str:
+    if chunk_count <= 0 or embedded_chunk_count <= 0:
+        return "not_embedded"
+    if embedded_chunk_count < chunk_count:
+        return "partial"
+    return "embedded"
+
+
 def _current_reviewed_metadata() -> dict[str, Any]:
     return _read_json(REVIEWED_METADATA, default={}) or {}
 
@@ -265,6 +385,7 @@ def canonical_source_statuses(db: Session | None = None) -> list[dict[str, Any]]
                 **asdict(spec),
                 "exists": exists,
                 "file_size_bytes": path.stat().st_size if exists else None,
+                "last_modified_at": _file_modified_at(path) if exists else None,
                 "sha256": _sha256_file(path) if exists else None,
                 "page_count": page_count,
                 "source_id": source.id if source else None,
@@ -276,12 +397,91 @@ def canonical_source_statuses(db: Session | None = None) -> list[dict[str, Any]]
                 "ready_for_embedding": reviewed["ready_for_embedding"],
                 "missing_metadata_count": reviewed["missing_metadata_count"],
                 "manual_review_count": reviewed["manual_review_count"],
-                "embedding_status": "embedded" if embedded_chunk_count else "not_embedded",
+                "embedding_status": _embedding_status(int(chunk_count), int(embedded_chunk_count)),
                 **artifact_paths,
                 "errors": errors,
             }
         )
     return statuses
+
+
+def _source_spec_for_id(source_id: str, db: Session | None = None) -> CanonicalSourceSpec | None:
+    normalized = str(source_id).strip()
+    for spec in CANONICAL_SOURCES:
+        if normalized == spec.source_type:
+            return spec
+    if normalized.isdigit() and db is not None:
+        source = db.get(ContentSource, int(normalized))
+        if source is not None:
+            for spec in CANONICAL_SOURCES:
+                if source.file_path == spec.file_path or source.source_type == spec.source_type:
+                    return spec
+    return None
+
+
+def rag_source_statuses(db: Session | None = None) -> list[dict[str, Any]]:
+    """Return stable RAG source discovery statuses for the admin source view."""
+
+    statuses: list[dict[str, Any]] = []
+    for status in canonical_source_statuses(db):
+        source_type = str(status["source_type"])
+        artifact_counts, extraction_status, chunk_status, artifact_warnings = _reviewed_artifact_status(
+            source_type,
+            status.get("page_count"),
+        )
+        errors = list(status.get("errors") or [])
+        warnings = artifact_warnings
+        ingestion_status = "missing" if not status.get("exists") else status.get("source_status") or "not_registered"
+        if artifact_counts["missing_chunk_pages"]:
+            warnings.append(f"{source_type}_chunk_coverage_partial")
+        counts = {
+            "db_chunks": int(status.get("chunk_count") or 0),
+            "db_embedded_chunks": int(status.get("embedded_chunk_count") or 0),
+            "missing_metadata": int(status.get("missing_metadata_count") or 0),
+            "manual_review": int(status.get("manual_review_count") or 0),
+            **artifact_counts,
+        }
+        statuses.append(
+            {
+                "id": source_type,
+                "db_source_id": status.get("source_id"),
+                "source_type": source_type,
+                "file_path": status["file_path"],
+                "filename": Path(status["file_path"]).name,
+                "checksum_sha256": status.get("sha256"),
+                "page_count": status.get("page_count"),
+                "file_size_bytes": status.get("file_size_bytes"),
+                "last_modified_at": status.get("last_modified_at"),
+                "ingestion_status": ingestion_status,
+                "extraction_status": extraction_status,
+                "chunk_status": chunk_status,
+                "embedding_status": status.get("embedding_status") or "not_embedded",
+                "errors": errors,
+                "warnings": warnings,
+                "counts": counts,
+            }
+        )
+    return statuses
+
+
+def rag_source_status(source_id: str, db: Session | None = None) -> dict[str, Any] | None:
+    spec = _source_spec_for_id(source_id, db=db)
+    if spec is None:
+        return None
+    for status in rag_source_statuses(db):
+        if status["id"] == spec.source_type:
+            return status
+    return None
+
+
+def scan_rag_source(source_id: str, db: Session) -> dict[str, Any] | None:
+    """Register/update one canonical source and return its refreshed discovery status."""
+
+    spec = _source_spec_for_id(source_id, db=db)
+    if spec is None:
+        return None
+    validate_canonical_sources(db=db, register_missing=True)
+    return rag_source_status(spec.source_type, db=db)
 
 
 def validate_canonical_sources(db: Session | None = None, *, register_missing: bool = True) -> dict[str, Any]:
@@ -408,7 +608,11 @@ def _quality_for_textbook_chunk(chunk: dict[str, Any], lesson: dict[str, Any] | 
 
 
 def _metadata_issues_count(rows: list[dict[str, Any]], metadata_payload: dict[str, Any]) -> int:
-    return sum(1 for row in rows if chunk_is_embedding_ready(row, metadata_payload)[0] is False)
+    return sum(
+        1
+        for row in rows
+        if not evaluate_chunk_eligibility(row, metadata_payload, legacy=False).embedding_allowed
+    )
 
 
 def prepare_textbook_chunks(*, write: bool = True, version: str | None = None) -> dict[str, Any]:
@@ -762,6 +966,586 @@ def prepare_reviewed_chunks(
     if write:
         write_prepare_report(result)
     return result
+
+
+def _selected_source_types(*, include_textbook: bool, include_solution_book: bool) -> list[str]:
+    selected: list[str] = []
+    if include_textbook:
+        selected.append("textbook")
+    if include_solution_book:
+        selected.append("solution_book")
+    return selected
+
+
+def _reviewed_chunk_rows_for_source(source_type: str) -> list[dict[str, Any]]:
+    if source_type == "textbook":
+        return _read_jsonl(TEXTBOOK_REVIEWED_CHUNKS_MIRROR)
+    if source_type == "solution_book":
+        return _read_jsonl(SOLUTION_REVIEWED_CHUNKS_MIRROR)
+    raise ValueError(f"Unsupported source_type: {source_type}")
+
+
+def _source_for_type(db: Session, source_type: str) -> ContentSource:
+    spec = next((item for item in CANONICAL_SOURCES if item.source_type == source_type), None)
+    if spec is None:
+        raise ValueError(f"Unsupported source_type: {source_type}")
+    source = (
+        db.query(ContentSource)
+        .filter(ContentSource.source_type == spec.source_type, ContentSource.file_path == spec.file_path)
+        .order_by(ContentSource.created_at.desc())
+        .first()
+    )
+    if source is None:
+        raise RuntimeError(f"Canonical source was not registered for {source_type}")
+    return source
+
+
+def _curriculum_fk_maps(db: Session) -> tuple[dict[str, int], dict[str, int]]:
+    unit_map: dict[str, int] = {}
+    for unit in db.query(Unit).all():
+        unit_map[f"unit_{int(unit.unit_number):02d}"] = int(unit.id)
+
+    lesson_map: dict[str, int] = {}
+    lessons = db.query(Lesson).all()
+    for lesson in lessons:
+        unit = lesson.chapter.unit if lesson.chapter and lesson.chapter.unit else None
+        if unit is not None:
+            lesson_map[f"unit_{int(unit.unit_number):02d}_lesson_{int(lesson.order):02d}"] = int(lesson.id)
+        if lesson.title_ar:
+            lesson_map.setdefault(f"title:{normalize_arabic(lesson.title_ar)}", int(lesson.id))
+    return unit_map, lesson_map
+
+
+def _db_lesson_id_for_chunk(chunk: dict[str, Any], lesson_map: dict[str, int]) -> int | None:
+    stable = str(chunk.get("lesson_id") or chunk.get("linked_textbook_lesson_id") or "")
+    if stable and stable in lesson_map:
+        return lesson_map[stable]
+    title = str(chunk.get("lesson_title") or chunk.get("linked_lesson_title") or "")
+    if title:
+        return lesson_map.get(f"title:{normalize_arabic(title)}")
+    return None
+
+
+def _chunk_page_number(chunk: dict[str, Any], source_type: str) -> int | None:
+    if source_type == "solution_book":
+        return _int_or_none(chunk.get("printed_page_start") or chunk.get("pdf_page_start"))
+    return _int_or_none(chunk.get("printed_page_start") or chunk.get("page_start") or chunk.get("page_number"))
+
+
+def _chunk_metadata_for_db(chunk: dict[str, Any], source_type: str) -> dict[str, Any]:
+    metadata = chunk.get("metadata") if isinstance(chunk.get("metadata"), dict) else {}
+    content = str(chunk.get("content") or chunk.get("content_ar") or "")
+    reviewed_fields = {
+        "reviewed_chunk_id": chunk.get("reviewed_chunk_id") or chunk.get("chunk_id"),
+        "chunk_type": chunk.get("chunk_type") or chunk.get("content_type"),
+        "source_type": source_type,
+        "unit_id": chunk.get("unit_id"),
+        "lesson_id": chunk.get("lesson_id") or chunk.get("linked_textbook_lesson_id"),
+        "lesson_title": chunk.get("lesson_title") or chunk.get("linked_lesson_title"),
+        "subtopic_title": chunk.get("subtopic_title"),
+        "printed_page_start": chunk.get("printed_page_start") or chunk.get("page_start"),
+        "printed_page_end": chunk.get("printed_page_end") or chunk.get("page_end") or chunk.get("printed_page_start"),
+        "pdf_page_start": chunk.get("pdf_page_start"),
+        "pdf_page_end": chunk.get("pdf_page_end"),
+        "quality_status": chunk.get("quality_status"),
+        "review_status": chunk.get("review_status"),
+        "reviewed_metadata_version": chunk.get("reviewed_metadata_version") or _current_version(),
+        "content_scope": chunk.get("content_scope"),
+        "ends_cleanly": chunk.get("ends_cleanly"),
+        "bad_ending_reason": chunk.get("bad_ending_reason"),
+        "solution_unit_id": chunk.get("solution_unit_id"),
+        "linked_textbook_lesson_id": chunk.get("linked_textbook_lesson_id"),
+        "linked_lesson_title": chunk.get("linked_lesson_title"),
+        "exercise_number": chunk.get("exercise_number"),
+        "question_number": chunk.get("question_number"),
+        "token_estimate": chunk.get("token_estimate"),
+    }
+    return {
+        **metadata,
+        **{key: value for key, value in reviewed_fields.items() if value not in (None, "", [])},
+        "content_hash": metadata.get("content_hash") or _content_hash(content),
+        "reviewed_curriculum_metadata_path": REVIEWED_METADATA_RELATIVE_PATH,
+    }
+
+
+def _load_reviewed_chunks_to_rag_clear_legacy(
+    db: Session,
+    *,
+    clear_existing: bool = True,
+    include_textbook: bool = True,
+    include_solution_book: bool = True,
+) -> dict[str, Any]:
+    """Load already-reviewed chunk files into ``rag_chunks`` without embedding.
+
+    This is the missing bridge between reviewed JSONL assets and the DB-backed
+    re-embedding pipeline. It intentionally does not call Gemini or write
+    vectors; rows are inserted with ``embedding_status='pending'`` and should be
+    embedded by ``scripts/reembed_rag.py`` or the admin re-embed job.
+    """
+
+    reviewed_metadata = ensure_reviewed_metadata_ready()
+    selected = _selected_source_types(include_textbook=include_textbook, include_solution_book=include_solution_book)
+    if not selected:
+        raise ValueError("At least one source type must be selected.")
+
+    validate_canonical_sources(db=db, register_missing=True)
+    unit_map, lesson_map = _curriculum_fk_maps(db)
+
+    source_results: dict[str, Any] = {}
+    inserted_total = 0
+    deleted_total = 0
+    skipped_blocked_total = 0
+    skipped_missing_total = 0
+    skipped_empty_total = 0
+
+    for source_type in selected:
+        source = _source_for_type(db, source_type)
+        rows = _reviewed_chunk_rows_for_source(source_type)
+        deleted = 0
+        if clear_existing:
+            deleted = (
+                db.query(RagChunk)
+                .filter(RagChunk.source_id == source.id)
+                .delete(synchronize_session=False)
+            )
+
+        inserted = 0
+        skipped_blocked = 0
+        skipped_missing = 0
+        skipped_empty = 0
+        quality_counts: Counter[str] = Counter()
+        content_type_counts: Counter[str] = Counter()
+        for row in rows:
+            content = str(row.get("content") or row.get("content_ar") or "").strip()
+            if not content:
+                skipped_empty += 1
+                continue
+            candidate = {**row, "source_type": row.get("source_type") or source_type}
+            decision = evaluate_chunk_eligibility(candidate, reviewed_metadata, legacy=False)
+            if not decision.embedding_allowed:
+                if "blocked_quality_status" in decision.reason_codes:
+                    skipped_blocked += 1
+                else:
+                    skipped_missing += 1
+                continue
+
+            metadata = {
+                **_chunk_metadata_for_db(row, source_type),
+                **decision.normalized_metadata,
+            }
+            stable_unit_id = str(row.get("unit_id") or "")
+            db_unit_id = unit_map.get(stable_unit_id)
+            db_lesson_id = _db_lesson_id_for_chunk(row, lesson_map)
+            content_type = str(row.get("chunk_type") or row.get("content_type") or "text")[:40]
+            page_number = _chunk_page_number(row, source_type)
+            db.add(
+                RagChunk(
+                    source_id=source.id,
+                    unit_id=db_unit_id,
+                    chapter_id=None,
+                    lesson_id=db_lesson_id,
+                    topic_id=None,
+                    page_number=page_number,
+                    chunk_index=inserted,
+                    content=content,
+                    normalized_content=normalize_arabic(content),
+                    content_type=content_type,
+                    source_type=source_type,
+                    extraction_method="reviewed_jsonl",
+                    language="ar",
+                    embedding=None,
+                    embedding_model=None,
+                    embedding_status="pending",
+                    embedding_error=None,
+                    metadata_json=metadata,
+                )
+            )
+            inserted += 1
+            quality_counts[str(metadata.get("quality_status") or "unknown")] += 1
+            content_type_counts[content_type] += 1
+
+        source_metadata = source.metadata_json if isinstance(source.metadata_json, dict) else {}
+        source.metadata_json = {
+            **source_metadata,
+            "last_reviewed_chunk_load": {
+                "at": _now_iso(),
+                "clear_existing": clear_existing,
+                "rows_seen": len(rows),
+                "chunks_deleted": int(deleted),
+                "chunks_inserted": inserted,
+                "skipped_blocked": skipped_blocked,
+                "skipped_missing_metadata": skipped_missing,
+                "skipped_empty_content": skipped_empty,
+                "quality_counts": dict(quality_counts),
+                "content_type_counts": dict(content_type_counts),
+                "reviewed_metadata_version": reviewed_metadata.get("version"),
+            },
+        }
+        source.status = "reviewed_chunks_loaded"
+        source_results[source_type] = {
+            "source_id": source.id,
+            "rows_seen": len(rows),
+            "chunks_deleted": int(deleted),
+            "chunks_inserted": inserted,
+            "skipped_blocked": skipped_blocked,
+            "skipped_missing_metadata": skipped_missing,
+            "skipped_empty_content": skipped_empty,
+            "quality_counts": dict(quality_counts),
+            "content_type_counts": dict(content_type_counts),
+        }
+        inserted_total += inserted
+        deleted_total += int(deleted)
+        skipped_blocked_total += skipped_blocked
+        skipped_missing_total += skipped_missing
+        skipped_empty_total += skipped_empty
+
+    db.commit()
+    return {
+        "status": "loaded",
+        "clear_existing": clear_existing,
+        "reviewed_metadata_version": reviewed_metadata.get("version"),
+        "sources": source_results,
+        "chunks_deleted": deleted_total,
+        "chunks_inserted": inserted_total,
+        "skipped_blocked": skipped_blocked_total,
+        "skipped_missing_metadata": skipped_missing_total,
+        "skipped_empty_content": skipped_empty_total,
+        "embedding_status": "pending",
+        "next_step": "Run scripts/reembed_rag.py to generate pgvector embeddings.",
+    }
+
+
+def load_reviewed_chunks_to_rag(
+    db: Session,
+    *,
+    clear_existing: bool = False,
+    dry_run: bool = False,
+    include_textbook: bool = True,
+    include_solution_book: bool = True,
+) -> dict[str, Any]:
+    """Idempotently load reviewed chunks without generating or writing vectors."""
+
+    reviewed_metadata = ensure_reviewed_metadata_ready()
+    selected = _selected_source_types(
+        include_textbook=include_textbook,
+        include_solution_book=include_solution_book,
+    )
+    if not selected:
+        raise ValueError("At least one source type must be selected.")
+    if clear_existing and db.get_bind().dialect.name != "sqlite":
+        raise ValueError("CLEAR_EXISTING_DISABLED_IN_PRODUCTION")
+
+    validate_canonical_sources(db=db, register_missing=not dry_run)
+    unit_map, lesson_map = _curriculum_fk_maps(db)
+    source_results: dict[str, Any] = {}
+    totals: Counter[str] = Counter()
+    pending_inserts: list[RagChunk] = []
+    pending_updates: list[tuple[RagChunk, dict[str, Any]]] = []
+    pending_stale: list[RagChunk] = []
+    pending_deletes: list[RagChunk] = []
+    pending_source_updates: list[tuple[ContentSource, dict[str, Any]]] = []
+
+    def content_hash_for(value: str) -> str:
+        return _content_hash(value.strip())
+
+    def identity_for_row(row: dict[str, Any], source_type: str) -> tuple[str, str]:
+        content = str(row.get("content") or row.get("content_ar") or "").strip()
+        nested = row.get("metadata") if isinstance(row.get("metadata"), dict) else row.get("metadata_json")
+        nested = nested if isinstance(nested, dict) else {}
+        reviewed_id = row.get("reviewed_chunk_id") or row.get("chunk_id") or nested.get("reviewed_chunk_id")
+        content_hash = str(nested.get("content_hash") or row.get("content_hash") or content_hash_for(content))
+        if reviewed_id not in (None, "", []):
+            return f"{source_type}:id:{reviewed_id}", content_hash
+        return f"{source_type}:hash:{content_hash}", content_hash
+
+    def identity_for_db(chunk: RagChunk) -> tuple[str, str]:
+        metadata = chunk.metadata_json if isinstance(chunk.metadata_json, dict) else {}
+        reviewed_id = metadata.get("reviewed_chunk_id") or metadata.get("chunk_id")
+        content_hash = str(metadata.get("content_hash") or content_hash_for(chunk.content or ""))
+        if reviewed_id not in (None, "", []):
+            return f"{chunk.source_type}:id:{reviewed_id}", content_hash
+        return f"{chunk.source_type}:hash:{content_hash}", content_hash
+
+    try:
+        for source_type in selected:
+            try:
+                source = _source_for_type(db, source_type)
+            except RuntimeError:
+                if not dry_run:
+                    raise
+                # A dry-run must work before an admin has registered the
+                # canonical source. Use an in-memory source descriptor and
+                # never attach it to the session.
+                spec = next(item for item in CANONICAL_SOURCES if item.source_type == source_type)
+                source = ContentSource(
+                    source_type=spec.source_type,
+                    title=spec.title,
+                    grade=spec.grade,
+                    subject=spec.subject,
+                    year=spec.year,
+                    file_path=spec.file_path,
+                    original_filename=Path(spec.file_path).name,
+                    status="reviewed_source_ready",
+                )
+            rows = _reviewed_chunk_rows_for_source(source_type)
+            existing_rows = list(
+                db.query(RagChunk)
+                .filter(RagChunk.source_id == source.id)
+                .order_by(RagChunk.chunk_index.asc(), RagChunk.id.asc())
+                .all()
+            )
+            existing_by_identity: dict[str, RagChunk] = {}
+            for existing in existing_rows:
+                identity, _hash = identity_for_db(existing)
+                existing_by_identity.setdefault(identity, existing)
+
+            if clear_existing:
+                pending_deletes.extend(existing_rows)
+                existing_by_identity = {}
+                totals["deleted"] += len(existing_rows)
+
+            seen_identities: set[str] = set()
+            source_inserts: list[RagChunk] = []
+            inserted = updated = unchanged = stale = 0
+            skipped_blocked = skipped_missing = skipped_empty = embedding_reset = 0
+            quality_counts: Counter[str] = Counter()
+            content_type_counts: Counter[str] = Counter()
+
+            for row_index, row in enumerate(rows):
+                content = str(row.get("content") or row.get("content_ar") or "").strip()
+                if not content:
+                    skipped_empty += 1
+                    continue
+                candidate = {
+                    **row,
+                    "content": content,
+                    "source_type": row.get("source_type") or source_type,
+                }
+                decision = evaluate_chunk_eligibility(candidate, reviewed_metadata, legacy=False)
+                identity, content_hash = identity_for_row(row, source_type)
+                seen_identities.add(identity)
+                existing = existing_by_identity.get(identity)
+
+                if not decision.embedding_allowed:
+                    if "blocked_quality_status" in decision.reason_codes:
+                        skipped_blocked += 1
+                    else:
+                        skipped_missing += 1
+                    if existing and "blocked_quality_status" in decision.reason_codes:
+                        metadata = {
+                            **(existing.metadata_json if isinstance(existing.metadata_json, dict) else {}),
+                            **decision.normalized_metadata,
+                            "content_hash": content_hash,
+                            "stale": False,
+                        }
+                        pending_updates.append(
+                            (
+                                existing,
+                                {
+                                    "metadata_json": metadata,
+                                    "embedding": None,
+                                    "embedding_model": None,
+                                    "embedding_updated_at": None,
+                                    "embedding_status": "skipped",
+                                    "embedding_error": "blocked_quality_status",
+                                },
+                            )
+                        )
+                        updated += 1
+                    continue
+
+                metadata = {
+                    **_chunk_metadata_for_db(row, source_type),
+                    **decision.normalized_metadata,
+                    "reviewed_chunk_id": row.get("reviewed_chunk_id") or row.get("chunk_id"),
+                    "content_hash": content_hash,
+                    "reviewed_metadata_version": reviewed_metadata.get("version"),
+                    "stale": False,
+                }
+                metadata = {key: value for key, value in metadata.items() if value not in (None, "", [])}
+                db_unit_id = unit_map.get(str(row.get("unit_id") or ""))
+                db_lesson_id = _db_lesson_id_for_chunk(row, lesson_map)
+                content_type = str(row.get("chunk_type") or row.get("content_type") or "text")[:40]
+                page_number = _chunk_page_number(row, source_type)
+
+                if existing is None:
+                    source_inserts.append(
+                        RagChunk(
+                            source_id=source.id,
+                            unit_id=db_unit_id,
+                            chapter_id=None,
+                            lesson_id=db_lesson_id,
+                            page_number=page_number,
+                            chunk_index=row_index,
+                            content=content,
+                            normalized_content=normalize_arabic(content),
+                            content_type=content_type,
+                            source_type=source_type,
+                            extraction_method="reviewed_jsonl",
+                            language="ar",
+                            embedding=None,
+                            embedding_model=None,
+                            embedding_status="pending",
+                            embedding_error=None,
+                            metadata_json=metadata,
+                        )
+                    )
+                    inserted += 1
+                else:
+                    old_metadata = existing.metadata_json if isinstance(existing.metadata_json, dict) else {}
+                    old_hash = str(old_metadata.get("content_hash") or content_hash_for(existing.content or ""))
+                    content_same = old_hash == content_hash and (existing.content or "").strip() == content
+                    update = {
+                        "unit_id": db_unit_id,
+                        "lesson_id": db_lesson_id,
+                        "page_number": page_number,
+                        "chunk_index": row_index,
+                        "content": content,
+                        "normalized_content": normalize_arabic(content),
+                        "content_type": content_type,
+                        "source_type": source_type,
+                        "extraction_method": "reviewed_jsonl",
+                        "metadata_json": metadata,
+                    }
+                    if content_same:
+                        if existing.embedding_status == "skipped" and old_metadata.get("stale"):
+                            update.update({"embedding_status": "pending", "embedding_error": None})
+                            embedding_reset += 1
+                        pending_updates.append((existing, update))
+                        if old_metadata == metadata and "embedding_status" not in update:
+                            unchanged += 1
+                        else:
+                            updated += 1
+                    else:
+                        update.update(
+                            {
+                                "embedding": None,
+                                "embedding_model": None,
+                                "embedding_status": "pending",
+                                "embedding_error": None,
+                            }
+                        )
+                        pending_updates.append((existing, update))
+                        updated += 1
+                        embedding_reset += 1
+
+                quality_counts[str(metadata.get("quality_status") or "unknown")] += 1
+                content_type_counts[content_type] += 1
+
+            pending_inserts.extend(source_inserts)
+            if not clear_existing:
+                for existing in existing_rows:
+                    identity, _hash = identity_for_db(existing)
+                    if (
+                        identity not in seen_identities
+                        and existing.extraction_method == "reviewed_jsonl"
+                        and not (existing.metadata_json or {}).get("stale")
+                    ):
+                        pending_stale.append(existing)
+                        stale += 1
+
+            source_metadata = source.metadata_json if isinstance(source.metadata_json, dict) else {}
+            pending_source_updates.append(
+                (
+                    source,
+                    {
+                        **source_metadata,
+                        "last_reviewed_chunk_load": {
+                            "at": _now_iso(),
+                            "dry_run": dry_run,
+                            "clear_existing": clear_existing,
+                            "rows_seen": len(rows),
+                            "chunks_deleted": len(existing_rows) if clear_existing else 0,
+                            "chunks_inserted": inserted,
+                            "chunks_updated": updated,
+                            "chunks_unchanged": unchanged,
+                            "chunks_stale": stale,
+                            "skipped_blocked": skipped_blocked,
+                            "skipped_missing_metadata": skipped_missing,
+                            "skipped_empty_content": skipped_empty,
+                            "embedding_reset": embedding_reset,
+                            "quality_counts": dict(quality_counts),
+                            "content_type_counts": dict(content_type_counts),
+                            "reviewed_metadata_version": reviewed_metadata.get("version"),
+                        },
+                    },
+                )
+            )
+            source_results[source_type] = {
+                "source_id": source.id,
+                "rows_seen": len(rows),
+                "chunks_deleted": len(existing_rows) if clear_existing else 0,
+                "chunks_inserted": inserted,
+                "chunks_updated": updated,
+                "chunks_unchanged": unchanged,
+                "chunks_stale": stale,
+                "skipped_blocked": skipped_blocked,
+                "skipped_missing_metadata": skipped_missing,
+                "skipped_empty_content": skipped_empty,
+                "embedding_reset": embedding_reset,
+                "quality_counts": dict(quality_counts),
+                "content_type_counts": dict(content_type_counts),
+            }
+            totals.update(
+                {
+                    "inserted": inserted,
+                    "updated": updated,
+                    "unchanged": unchanged,
+                    "stale": stale,
+                    "skipped_blocked": skipped_blocked,
+                    "skipped_missing": skipped_missing,
+                    "skipped_empty": skipped_empty,
+                    "embedding_reset": embedding_reset,
+                }
+            )
+
+        if not dry_run:
+            for row in pending_deletes:
+                db.delete(row)
+            for row in pending_inserts:
+                db.add(row)
+            for row, updates in pending_updates:
+                for key, value in updates.items():
+                    setattr(row, key, value)
+            for row in pending_stale:
+                metadata = row.metadata_json if isinstance(row.metadata_json, dict) else {}
+                row.metadata_json = {**metadata, "stale": True, "stale_reason": "stale_reviewed_chunk"}
+                row.embedding_status = "skipped"
+                row.embedding_error = "stale_reviewed_chunk"
+            for source, metadata in pending_source_updates:
+                source.metadata_json = metadata
+                source.status = "reviewed_chunks_loaded"
+            db.commit()
+        else:
+            db.rollback()
+    except Exception:
+        db.rollback()
+        raise
+
+    return {
+        "status": "dry_run" if dry_run else "loaded",
+        "clear_existing": clear_existing,
+        "dry_run": dry_run,
+        "would_write": bool(
+            totals["inserted"]
+            or totals["updated"]
+            or totals["stale"]
+            or totals["deleted"]
+        ),
+        "reviewed_metadata_version": reviewed_metadata.get("version"),
+        "sources": source_results,
+        "chunks_deleted": totals["deleted"],
+        "chunks_inserted": totals["inserted"],
+        "chunks_updated": totals["updated"],
+        "chunks_unchanged": totals["unchanged"],
+        "chunks_stale": totals["stale"],
+        "embedding_reset": totals["embedding_reset"],
+        "skipped_blocked": totals["skipped_blocked"],
+        "skipped_missing_metadata": totals["skipped_missing"],
+        "skipped_empty_content": totals["skipped_empty"],
+        "embedding_status": "pending",
+        "next_step": "Run scripts/reembed_rag.py to generate pgvector embeddings.",
+    }
 
 
 def write_prepare_report(result: dict[str, Any]) -> None:

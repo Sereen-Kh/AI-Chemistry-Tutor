@@ -40,6 +40,10 @@ def _chunk_response(item) -> RetrievedChunkResponse:
         lesson_id=item.lesson_id,
         topic_id=item.topic_id,
         metadata_json=item.metadata_json,
+        quality_status=item.quality_status,
+        quality_warning=item.quality_warning,
+        reviewed_metadata_version=item.reviewed_metadata_version,
+        curriculum_metadata=item.curriculum_metadata,
         similarity_score=item.similarity_score,
     )
 

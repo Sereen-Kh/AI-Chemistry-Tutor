@@ -1,0 +1,583 @@
+{
+  "generated_at": "2026-07-07T11:50:58.156344+00:00",
+  "passed": false,
+  "metrics": {
+    "case_count": 30,
+    "top1_expected_page_hit_rate": 0.0,
+    "top3_expected_page_hit_rate": 0.0,
+    "top5_expected_page_hit_rate": 0.0,
+    "keyword_hit_rate": 0.0,
+    "mrr": 0.0,
+    "no_result_rate": 1.0,
+    "low_confidence_rate": 1.0,
+    "wrong_source_rate": 0.0,
+    "average_retrieval_latency_ms": 703.03,
+    "thresholds": {
+      "top5_expected_page_hit_rate": 0.8,
+      "no_result_rate": 0.1,
+      "wrong_source_rate": 0.15,
+      "low_confidence_rate": 0.25,
+      "average_retrieval_latency_ms": 1500
+    }
+  },
+  "cases": [
+    {
+      "id": "acid_definition_001",
+      "query": "ما تعريف الحمض؟",
+      "expected_pages": [
+        11,
+        13,
+        15
+      ],
+      "expected_source_types": [
+        "textbook"
+      ],
+      "expected_page_rank": null,
+      "top_score": 0.0,
+      "source_type_hit": false,
+      "keyword_hit": false,
+      "latency_ms": 1763,
+      "retrieved": []
+    },
+    {
+      "id": "base_definition_001",
+      "query": "ما تعريف الأساس؟",
+      "expected_pages": [
+        18,
+        19,
+        20
+      ],
+      "expected_source_types": [
+        "textbook"
+      ],
+      "expected_page_rank": null,
+      "top_score": 0.0,
+      "source_type_hit": false,
+      "keyword_hit": false,
+      "latency_ms": 573,
+      "retrieved": []
+    },
+    {
+      "id": "acid_safety_001",
+      "query": "لماذا نضيف الحمض إلى الماء وليس العكس؟",
+      "expected_pages": [
+        10,
+        14,
+        15
+      ],
+      "expected_source_types": [
+        "textbook"
+      ],
+      "expected_page_rank": null,
+      "top_score": 0.0,
+      "source_type_hit": false,
+      "keyword_hit": false,
+      "latency_ms": 603,
+      "retrieved": []
+    },
+    {
+      "id": "litmus_acid_001",
+      "query": "ما تأثير الحموض على ورقة عباد الشمس؟",
+      "expected_pages": [
+        11,
+        12,
+        13
+      ],
+      "expected_source_types": [
+        "textbook"
+      ],
+      "expected_page_rank": null,
+      "top_score": 0.0,
+      "source_type_hit": false,
+      "keyword_hit": false,
+      "latency_ms": 555,
+      "retrieved": []
+    },
+    {
+      "id": "litmus_base_001",
+      "query": "ما تأثير الأسس على ورقة عباد الشمس؟",
+      "expected_pages": [
+        18,
+        19,
+        20
+      ],
+      "expected_source_types": [
+        "textbook"
+      ],
+      "expected_page_rank": null,
+      "top_score": 0.0,
+      "source_type_hit": false,
+      "keyword_hit": false,
+      "latency_ms": 588,
+      "retrieved": []
+    },
+    {
+      "id": "molar_concentration_definition_001",
+      "query": "ما هو التركيز المولي؟",
+      "expected_pages": [
+        4,
+        7,
+        53
+      ],
+      "expected_source_types": [
+        "textbook"
+      ],
+      "expected_page_rank": null,
+      "top_score": 0.0,
+      "source_type_hit": false,
+      "keyword_hit": false,
+      "latency_ms": 609,
+      "retrieved": []
+    },
+    {
+      "id": "mass_concentration_definition_001",
+      "query": "ما هو التركيز الغرامي؟",
+      "expected_pages": [
+        4,
+        5,
+        6
+      ],
+      "expected_source_types": [
+        "textbook"
+      ],
+      "expected_page_rank": null,
+      "top_score": 0.0,
+      "source_type_hit": false,
+      "keyword_hit": false,
+      "latency_ms": 880,
+      "retrieved": []
+    },
+    {
+      "id": "dilution_001",
+      "query": "كيف يتم تمديد المحاليل؟",
+      "expected_pages": [
+        7,
+        8,
+        9
+      ],
+      "expected_source_types": [
+        "textbook"
+      ],
+      "expected_page_rank": null,
+      "top_score": 0.0,
+      "source_type_hit": false,
+      "keyword_hit": false,
+      "latency_ms": 745,
+      "retrieved": []
+    },
+    {
+      "id": "hcl_calculation_001",
+      "query": "محلول HCl حجمه 100 mL ويحتوي 3.65 g احسب التركيز الغرامي والمولي",
+      "expected_pages": [
+        4,
+        7,
+        53
+      ],
+      "expected_source_types": [
+        "solution_book",
+        "textbook"
+      ],
+      "expected_page_rank": null,
+      "top_score": 0.0,
+      "source_type_hit": false,
+      "keyword_hit": false,
+      "latency_ms": 620,
+      "retrieved": []
+    },
+    {
+      "id": "water_formula_001",
+      "query": "ما صيغة الماء؟",
+      "expected_pages": [
+        2,
+        3,
+        4
+      ],
+      "expected_source_types": [
+        "textbook"
+      ],
+      "expected_page_rank": null,
+      "top_score": 0.0,
+      "source_type_hit": false,
+      "keyword_hit": false,
+      "latency_ms": 640,
+      "retrieved": []
+    },
+    {
+      "id": "acid_formula_hcl_001",
+      "query": "ما صيغة حمض كلور الماء؟",
+      "expected_pages": [
+        11,
+        13,
+        15
+      ],
+      "expected_source_types": [
+        "textbook"
+      ],
+      "expected_page_rank": null,
+      "top_score": 0.0,
+      "source_type_hit": false,
+      "keyword_hit": false,
+      "latency_ms": 575,
+      "retrieved": []
+    },
+    {
+      "id": "sulfuric_acid_formula_001",
+      "query": "ما صيغة حمض الكبريت؟",
+      "expected_pages": [
+        11,
+        13,
+        15
+      ],
+      "expected_source_types": [
+        "textbook"
+      ],
+      "expected_page_rank": null,
+      "top_score": 0.0,
+      "source_type_hit": false,
+      "keyword_hit": false,
+      "latency_ms": 592,
+      "retrieved": []
+    },
+    {
+      "id": "sodium_hydroxide_formula_001",
+      "query": "ما صيغة هيدروكسيد الصوديوم؟",
+      "expected_pages": [
+        18,
+        19,
+        20
+      ],
+      "expected_source_types": [
+        "textbook"
+      ],
+      "expected_page_rank": null,
+      "top_score": 0.0,
+      "source_type_hit": false,
+      "keyword_hit": false,
+      "latency_ms": 697,
+      "retrieved": []
+    },
+    {
+      "id": "neutralization_001",
+      "query": "ما هو تفاعل التعديل بين حمض وأساس؟",
+      "expected_pages": [
+        22,
+        23,
+        24
+      ],
+      "expected_source_types": [
+        "textbook"
+      ],
+      "expected_page_rank": null,
+      "top_score": 0.0,
+      "source_type_hit": false,
+      "keyword_hit": false,
+      "latency_ms": 542,
+      "retrieved": []
+    },
+    {
+      "id": "salts_definition_001",
+      "query": "ما هي الأملاح؟",
+      "expected_pages": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "expected_source_types": [
+        "textbook"
+      ],
+      "expected_page_rank": null,
+      "top_score": 0.0,
+      "source_type_hit": false,
+      "keyword_hit": false,
+      "latency_ms": 566,
+      "retrieved": []
+    },
+    {
+      "id": "salt_preparation_001",
+      "query": "اذكر طرائق تحضير الأملاح",
+      "expected_pages": [
+        23,
+        24,
+        25,
+        26
+      ],
+      "expected_source_types": [
+        "textbook"
+      ],
+      "expected_page_rank": null,
+      "top_score": 0.0,
+      "source_type_hit": false,
+      "keyword_hit": false,
+      "latency_ms": 641,
+      "retrieved": []
+    },
+    {
+      "id": "zinc_hcl_reaction_001",
+      "query": "ما ناتج تفاعل الزنك مع حمض كلور الماء؟",
+      "expected_pages": [
+        28,
+        29,
+        30
+      ],
+      "expected_source_types": [
+        "textbook",
+        "solution_book"
+      ],
+      "expected_page_rank": null,
+      "top_score": 0.0,
+      "source_type_hit": false,
+      "keyword_hit": false,
+      "latency_ms": 683,
+      "retrieved": []
+    },
+    {
+      "id": "copper_sulfuric_acid_001",
+      "query": "هل يتفاعل النحاس مع حمض الكبريت الممدد؟",
+      "expected_pages": [
+        28,
+        29,
+        30
+      ],
+      "expected_source_types": [
+        "textbook",
+        "solution_book"
+      ],
+      "expected_page_rank": null,
+      "top_score": 0.0,
+      "source_type_hit": false,
+      "keyword_hit": false,
+      "latency_ms": 998,
+      "retrieved": []
+    },
+    {
+      "id": "activity_series_001",
+      "query": "ما فائدة سلسلة النشاط الكيميائي؟",
+      "expected_pages": [
+        28,
+        29,
+        30
+      ],
+      "expected_source_types": [
+        "textbook"
+      ],
+      "expected_page_rank": null,
+      "top_score": 0.0,
+      "source_type_hit": false,
+      "keyword_hit": false,
+      "latency_ms": 670,
+      "retrieved": []
+    },
+    {
+      "id": "oxidation_reduction_001",
+      "query": "ما الفرق بين الأكسدة والإرجاع؟",
+      "expected_pages": [
+        35,
+        36,
+        37
+      ],
+      "expected_source_types": [
+        "textbook"
+      ],
+      "expected_page_rank": null,
+      "top_score": 0.0,
+      "source_type_hit": false,
+      "keyword_hit": false,
+      "latency_ms": 713,
+      "retrieved": []
+    },
+    {
+      "id": "atom_structure_001",
+      "query": "ما مكونات الذرة؟",
+      "expected_pages": [
+        40,
+        41,
+        42
+      ],
+      "expected_source_types": [
+        "textbook"
+      ],
+      "expected_page_rank": null,
+      "top_score": 0.0,
+      "source_type_hit": false,
+      "keyword_hit": false,
+      "latency_ms": 628,
+      "retrieved": []
+    },
+    {
+      "id": "ion_definition_001",
+      "query": "ما هو الأيون؟",
+      "expected_pages": [
+        42,
+        43,
+        44
+      ],
+      "expected_source_types": [
+        "textbook"
+      ],
+      "expected_page_rank": null,
+      "top_score": 0.0,
+      "source_type_hit": false,
+      "keyword_hit": false,
+      "latency_ms": 676,
+      "retrieved": []
+    },
+    {
+      "id": "organic_chemistry_001",
+      "query": "ما المقصود بالكيمياء العضوية؟",
+      "expected_pages": [
+        59,
+        60,
+        61
+      ],
+      "expected_source_types": [
+        "textbook"
+      ],
+      "expected_page_rank": null,
+      "top_score": 0.0,
+      "source_type_hit": false,
+      "keyword_hit": false,
+      "latency_ms": 657,
+      "retrieved": []
+    },
+    {
+      "id": "carbon_bonds_001",
+      "query": "ما أنواع الروابط بين ذرات الكربون؟",
+      "expected_pages": [
+        60,
+        61
+      ],
+      "expected_source_types": [
+        "textbook"
+      ],
+      "expected_page_rank": null,
+      "top_score": 0.0,
+      "source_type_hit": false,
+      "keyword_hit": false,
+      "latency_ms": 1075,
+      "retrieved": []
+    },
+    {
+      "id": "hydrocarbons_001",
+      "query": "ما هي الهيدروكربونات؟",
+      "expected_pages": [
+        64,
+        65,
+        66
+      ],
+      "expected_source_types": [
+        "textbook"
+      ],
+      "expected_page_rank": null,
+      "top_score": 0.0,
+      "source_type_hit": false,
+      "keyword_hit": false,
+      "latency_ms": 626,
+      "retrieved": []
+    },
+    {
+      "id": "alkanes_formula_001",
+      "query": "ما الصيغة العامة للألكانات؟",
+      "expected_pages": [
+        66,
+        67,
+        68
+      ],
+      "expected_source_types": [
+        "textbook"
+      ],
+      "expected_page_rank": null,
+      "top_score": 0.0,
+      "source_type_hit": false,
+      "keyword_hit": false,
+      "latency_ms": 609,
+      "retrieved": []
+    },
+    {
+      "id": "alkenes_formula_001",
+      "query": "ما الصيغة العامة للألكنات؟",
+      "expected_pages": [
+        72,
+        73,
+        77
+      ],
+      "expected_source_types": [
+        "textbook"
+      ],
+      "expected_page_rank": null,
+      "top_score": 0.0,
+      "source_type_hit": false,
+      "keyword_hit": false,
+      "latency_ms": 569,
+      "retrieved": []
+    },
+    {
+      "id": "alkynes_formula_001",
+      "query": "ما الصيغة العامة للألكينات؟",
+      "expected_pages": [
+        74,
+        75,
+        77
+      ],
+      "expected_source_types": [
+        "textbook"
+      ],
+      "expected_page_rank": null,
+      "top_score": 0.0,
+      "source_type_hit": false,
+      "keyword_hit": false,
+      "latency_ms": 633,
+      "retrieved": []
+    },
+    {
+      "id": "methane_001",
+      "query": "ما صيغة الميثان؟",
+      "expected_pages": [
+        66,
+        67,
+        68
+      ],
+      "expected_source_types": [
+        "textbook"
+      ],
+      "expected_page_rank": null,
+      "top_score": 0.0,
+      "source_type_hit": false,
+      "keyword_hit": false,
+      "latency_ms": 702,
+      "retrieved": []
+    },
+    {
+      "id": "exam_hydrocarbon_question_001",
+      "query": "حل سؤال عن صيغة الإيتن في الاختبارات",
+      "expected_pages": [
+        77
+      ],
+      "expected_source_types": [
+        "solution_book",
+        "textbook"
+      ],
+      "expected_page_rank": null,
+      "top_score": 0.0,
+      "source_type_hit": false,
+      "keyword_hit": false,
+      "latency_ms": 663,
+      "retrieved": []
+    }
+  ],
+  "threshold_failures": [
+    "low_confidence_rate above threshold",
+    "no_result_rate above threshold",
+    "top5 expected page hit rate below RAG_EVAL_MIN_HIT_RATE",
+    "top5_expected_page_hit_rate below threshold"
+  ],
+  "report_json_path": "/Users/sereenkh/Github-Projects/edumind-team-06/src/reports/rag/_raw/rag_eval_latest.json",
+  "report_markdown_path": "/Users/sereenkh/Github-Projects/edumind-team-06/src/reports/rag/_raw/rag_eval_latest.md",
+  "result": "failed",
+  "ci_gate": {
+    "chunk_count": 744,
+    "min_hit_rate": 0.8,
+    "min_top_score": 0.5,
+    "required_source_metadata": true
+  }
+}

@@ -8,6 +8,7 @@ import json
 import re
 
 from app.core.redis import get_redis_client
+from app.services.rag_runtime import rag_cache_namespace
 
 ROUTE_TEXTBOOK = "textbook"
 ROUTE_SOLUTIONS = "solution_book"
@@ -217,7 +218,7 @@ async def route_source(query: str, requested_source_types: list[str] | None = No
     if requested_source_types:
         return route_source_sync(query, requested_source_types)
 
-    cache_key = "source_router:" + _CACHE_VERSION + ":" + hashlib.sha256(
+    cache_key = "source_router:" + _CACHE_VERSION + ":" + rag_cache_namespace() + ":" + hashlib.sha256(
         normalize_query_text(query).encode("utf-8", errors="ignore")
     ).hexdigest()
     redis = get_redis_client()

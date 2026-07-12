@@ -42,6 +42,87 @@ export interface RagSource {
   reviewed_metadata_path?: string | null;
 }
 
+export interface RagSourceStatus {
+  id: 'textbook' | 'solution_book';
+  db_source_id?: number | null;
+  source_type: 'textbook' | 'solution_book';
+  file_path: string;
+  filename: string;
+  checksum_sha256?: string | null;
+  page_count?: number | null;
+  file_size_bytes?: number | null;
+  last_modified_at?: string | null;
+  ingestion_status: string;
+  extraction_status: string;
+  chunk_status: string;
+  embedding_status: string;
+  errors: string[];
+  warnings: string[];
+  counts: Record<string, number>;
+}
+
+export interface RagChunkExplorerItem {
+  id: number;
+  source_id: number;
+  source_type: string;
+  source_file?: string | null;
+  reviewed_chunk_id?: number | string | null;
+  content_type: string;
+  page_number?: number | null;
+  unit_id?: number | string | null;
+  lesson_id?: number | string | null;
+  topic_id?: number | null;
+  printed_page_start?: number | null;
+  printed_page_end?: number | null;
+  quality_status?: string | null;
+  reviewed_metadata_version?: string | null;
+  embedding_status: string;
+  embedding_model?: string | null;
+  embedding_error?: string | null;
+  content_hash?: string | null;
+  missing_metadata: string[];
+  embedding_allowed?: boolean;
+  rag_search_allowed?: boolean;
+  student_generation_allowed?: boolean;
+  warning_required?: boolean;
+  reason_codes?: string[];
+  legacy_unmapped?: boolean;
+  stale?: boolean;
+  content_preview: string;
+  metadata_json?: Record<string, unknown> | unknown[] | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+}
+
+export interface RagChunkExplorerResponse {
+  total: number;
+  limit: number;
+  offset: number;
+  items: RagChunkExplorerItem[];
+  counts: Record<string, number>;
+  filtered_total?: number;
+  global_counts?: Record<string, number>;
+}
+
+export interface RagChunkExplorerParams {
+  source_type?: string;
+  quality_status?: string;
+  embedding_status?: string;
+  unit_id?: string;
+  lesson_id?: string;
+  missing_metadata?: boolean;
+  missing_metadata_field?: string;
+  page_start?: number;
+  page_end?: number;
+  reviewed_metadata_version?: string;
+  legacy_unmapped?: boolean;
+  embedding_error?: string;
+  content_type?: string;
+  search?: string;
+  limit?: number;
+  offset?: number;
+}
+
 export interface CanonicalSourceStatus {
   source_type: string;
   title: string;
@@ -113,6 +194,26 @@ export interface EmbeddingReadiness {
   blocked_chunk_count: number;
 }
 
+export interface LoadReviewedChunksResponse {
+  status: string;
+  clear_existing: boolean;
+  dry_run: boolean;
+  would_write: boolean;
+  reviewed_metadata_version?: string | null;
+  sources: Record<string, unknown>;
+  chunks_deleted: number;
+  chunks_inserted: number;
+  chunks_updated: number;
+  chunks_unchanged: number;
+  chunks_stale: number;
+  embedding_reset: number;
+  skipped_blocked: number;
+  skipped_missing_metadata: number;
+  skipped_empty_content: number;
+  embedding_status: string;
+  next_step: string;
+}
+
 export interface IngestionPage {
   id?: number | null;
   source_id: number;
@@ -169,15 +270,92 @@ export interface RagReembedStatus {
   embedding_model?: string | null;
   dry_run: boolean;
   error?: string | null;
+  reviewed_metadata_version?: string | null;
+  skipped_missing_metadata_count?: number;
+  skipped_blocked_count?: number;
+  skipped_stale_count?: number;
+  source_id?: number | null;
+  source_type?: string | null;
+  result?: Record<string, unknown> | null;
+}
+
+export interface RagPreflightResponse {
+  status: string;
+  database: {
+    dialect: string;
+    reachable: boolean;
+    pgvector_available: boolean;
+    pgvector_version?: string | null;
+    embedding_dimension: number;
+    vector_index_present: boolean;
+    vector_index_name?: string | null;
+    vector_index_type?: string | null;
+    distance_operator?: string | null;
+    vector_column_type?: string | null;
+    vector_dimension_valid?: boolean;
+  };
+  provider: { provider: string; model: string; configured: boolean };
+  reviewed_metadata: {
+    exists: boolean;
+    status: string;
+    version?: string | null;
+    ready_for_embedding: boolean;
+    blocking_issues: string[];
+  };
+  sources: Record<string, boolean>;
+  chunks: Record<string, number>;
+  can_load_chunks: boolean;
+  can_embed: boolean;
+  can_evaluate: boolean;
+  blocking_issues: string[];
+  warnings: string[];
 }
 
 export interface RagEvaluationResponse {
   status: string;
   passed: boolean;
+  reviewed_metadata_version?: string | null;
+  embedding_model?: string | null;
+  preconditions: Record<string, unknown>;
   report_json_path: string;
   report_markdown_path: string;
-  metrics: Record<string, number | string | boolean | null>;
+  metrics: Record<string, unknown>;
   threshold_failures: string[];
+  failed_cases: Array<Record<string, unknown>>;
+}
+
+export interface RagQaResponse {
+  status: string;
+  reviewed_metadata_version?: string | null;
+  embedding_model?: string | null;
+  preconditions: Record<string, unknown>;
+  metrics: Record<string, unknown>;
+  threshold_failures: string[];
+  failed_cases: Array<Record<string, unknown>>;
+  report_json_path: string;
+  report_markdown_path?: string | null;
+}
+
+export interface RagOperationsResponse {
+  status: string;
+  window_hours: number;
+  active_reviewed_metadata_version?: string | null;
+  embedding_model: string;
+  student_retrieval_enabled: boolean;
+  production_gate_required: boolean;
+  production_gate_status: Record<string, unknown>;
+  query_volume: number;
+  no_result_rate: number;
+  low_confidence_rate: number;
+  average_retrieval_latency_ms: number;
+  p95_retrieval_latency_ms: number;
+  source_type_distribution: Record<string, number>;
+  quality_status_counts: Record<string, number>;
+  missing_citation_metadata_count: number;
+  latest_embedding_job?: Record<string, unknown> | null;
+  latest_evaluation?: Record<string, unknown> | null;
+  latest_student_flow_qa?: Record<string, unknown> | null;
+  degraded_reasons: string[];
 }
 
 export interface RetrievedChunkLog {
@@ -241,6 +419,36 @@ export const adminRagApi = {
     return data;
   },
 
+  async getRagSources(): Promise<RagSourceStatus[]> {
+    const { data } = await api.get<RagSourceStatus[]>('/admin/rag/sources');
+    return data;
+  },
+
+  async getPreflight(): Promise<RagPreflightResponse> {
+    const { data } = await api.get<RagPreflightResponse>('/admin/rag/preflight');
+    return data;
+  },
+
+  async getRagSource(sourceId: string): Promise<RagSourceStatus> {
+    const { data } = await api.get<RagSourceStatus>(`/admin/rag/sources/${sourceId}`);
+    return data;
+  },
+
+  async scanRagSource(sourceId: string): Promise<RagSourceStatus> {
+    const { data } = await api.post<RagSourceStatus>(`/admin/rag/sources/${sourceId}/scan`);
+    return data;
+  },
+
+  async getRagChunks(params?: RagChunkExplorerParams): Promise<RagChunkExplorerResponse> {
+    const { data } = await api.get<RagChunkExplorerResponse>('/admin/rag/chunks', { params });
+    return data;
+  },
+
+  async getRagChunk(chunkId: number): Promise<RagChunkExplorerItem> {
+    const { data } = await api.get<RagChunkExplorerItem>(`/admin/rag/chunks/${chunkId}`);
+    return data;
+  },
+
   async validateCanonicalSources(): Promise<CanonicalSourcesValidationResponse> {
     const { data } = await api.post<CanonicalSourcesValidationResponse>('/admin/ingestion/sources/validate');
     return data;
@@ -257,6 +465,16 @@ export const adminRagApi = {
 
   async getEmbeddingReadiness(): Promise<EmbeddingReadiness> {
     const { data } = await api.get<EmbeddingReadiness>('/admin/ingestion/embedding-readiness');
+    return data;
+  },
+
+  async loadReviewedChunks(payload: { dry_run?: boolean; clear_existing?: boolean } = {}): Promise<LoadReviewedChunksResponse> {
+    const { data } = await api.post<LoadReviewedChunksResponse>('/admin/ingestion/load-reviewed-chunks', {
+      dry_run: payload.dry_run ?? true,
+      clear_existing: payload.clear_existing ?? false,
+      include_textbook: true,
+      include_solution_book: true,
+    });
     return data;
   },
 
@@ -295,6 +513,18 @@ export const adminRagApi = {
 
   async getLatestEvaluation(): Promise<RagEvaluationResponse> {
     const { data } = await api.get<RagEvaluationResponse>('/admin/rag/evaluation/latest');
+    return data;
+  },
+
+  async getLatestQa(): Promise<RagQaResponse> {
+    const { data } = await api.get<RagQaResponse>('/admin/rag/qa/latest');
+    return data;
+  },
+
+  async getOperations(windowHours = 24): Promise<RagOperationsResponse> {
+    const { data } = await api.get<RagOperationsResponse>('/admin/rag/operations', {
+      params: { window_hours: windowHours },
+    });
     return data;
   },
 

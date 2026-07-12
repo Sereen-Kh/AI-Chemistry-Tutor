@@ -567,11 +567,82 @@ def _book_structure_path(source_slug: str = "syria_grade_9_chemistry") -> Path:
     return PROJECT_DIR / "data" / "textbooks" / source_slug / "book_structure.json"
 
 
+def _book_structure_candidates(source_slug: str = "syria_grade_9_chemistry") -> list[Path]:
+    repo_root = Path(__file__).resolve().parents[4]
+    return [
+        repo_root / "src" / "data" / "textbooks" / source_slug / "book_structure.json",
+        repo_root / "data" / "processed" / "book_structure.json",
+        _book_structure_path(source_slug),
+    ]
+
+
+def _lesson_range(values: list | tuple | None, start: int | None, end: int | None) -> list[int]:
+    if isinstance(values, (list, tuple)) and values:
+        return [int(item) for item in values if isinstance(item, int)]
+    if isinstance(start, int) and isinstance(end, int):
+        return [start, end]
+    if isinstance(start, int):
+        return [start]
+    return []
+
+
+def _lesson_keywords(lesson: dict) -> list[str]:
+    if isinstance(lesson.get("keywords"), list):
+        return [str(item) for item in lesson["keywords"] if str(item).strip()]
+    topics = lesson.get("topics") or []
+    if isinstance(topics, list):
+        return [
+            str(item.get("title_ar") or item.get("title") or item.get("subtopic_title"))
+            for item in topics
+            if isinstance(item, dict) and str(item.get("title_ar") or item.get("title") or item.get("subtopic_title") or "").strip()
+        ]
+    return []
+
+
+def _normalize_book_structure(payload: dict) -> dict:
+    if isinstance(payload.get("lessons"), list):
+        return payload
+
+    lessons: list[dict] = []
+    for unit in payload.get("units") or []:
+        unit_lessons = list(unit.get("lessons") or [])
+        for chapter in unit.get("chapters") or []:
+            unit_lessons.extend(chapter.get("lessons") or [])
+        for lesson in unit_lessons:
+            if not isinstance(lesson, dict):
+                continue
+            lesson_no = lesson.get("lesson_no") or lesson.get("lesson_number")
+            try:
+                lesson_no = int(lesson_no)
+            except (TypeError, ValueError):
+                continue
+            lessons.append(
+                {
+                    "lesson_no": lesson_no,
+                    "title": lesson.get("title_ar") or lesson.get("lesson_title") or lesson.get("title") or f"الدرس {lesson_no}",
+                    "objectives": lesson.get("objectives") or [],
+                    "keywords": _lesson_keywords(lesson),
+                    "pdf_pages": _lesson_range(
+                        lesson.get("pdf_pages"),
+                        lesson.get("pdf_page_start"),
+                        lesson.get("pdf_page_end"),
+                    ),
+                    "book_pages": _lesson_range(
+                        lesson.get("book_pages"),
+                        lesson.get("printed_page_start"),
+                        lesson.get("printed_page_end"),
+                    ),
+                }
+            )
+    return {**payload, "lessons": lessons}
+
+
 def load_book_structure(source_slug: str = "syria_grade_9_chemistry") -> dict:
-    path = _book_structure_path(source_slug)
-    if not path.exists():
-        return {"lessons": []}
-    return json.loads(path.read_text(encoding="utf-8"))
+    for path in _book_structure_candidates(source_slug):
+        if path.exists():
+            return _normalize_book_structure(json.loads(path.read_text(encoding="utf-8")))
+    return {"lessons": []}
+
 
 
 def _lesson_number(query: str) -> int | None:

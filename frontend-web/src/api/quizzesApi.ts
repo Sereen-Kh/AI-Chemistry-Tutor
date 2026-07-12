@@ -13,6 +13,8 @@ interface BackendQuizQuestion {
   difficulty?: number | null;
   correct_answer?: string | null;
   explanation?: string | null;
+  quality_status?: string | null;
+  reviewed_metadata_version?: string | null;
 }
 
 interface BackendQuizGenerateResponse {
@@ -27,6 +29,11 @@ interface BackendQuizSubmitResponse {
   total: number;
   weak_topics?: unknown;
   percentage?: number;
+}
+
+export interface QuizSubmitPayload {
+  topicId?: string | number | null;
+  answers: Record<string, string>;
 }
 
 const difficultyNumber = (difficulty: QuizGenerationConfig['difficulty']): number | undefined => {
@@ -72,6 +79,7 @@ const mapBackendQuestion = (question: BackendQuizQuestion): GeneratedQuizQuestio
   return {
     id: String(question.id),
     lessonId: question.lesson_id == null ? 'backend' : String(question.lesson_id),
+    topicId: question.topic_id == null ? undefined : String(question.topic_id),
     chapterId: 'backend',
     questionType: normalizeQuestionType(question.question_type),
     question: question.question_text,
@@ -89,6 +97,13 @@ const extractBackendDetail = (error: unknown): string => {
   const maybeResponse = error as { response?: { status?: number; data?: { detail?: unknown } }; message?: string };
   const detail = maybeResponse.response?.data?.detail;
   if (typeof detail === 'string') return detail;
+  if (detail && typeof detail === 'object' && !Array.isArray(detail)) {
+    const payload = detail as { message?: unknown; code?: unknown; quality_status?: unknown; lesson_title?: unknown };
+    return [payload.message, payload.code, payload.quality_status, payload.lesson_title]
+      .filter(Boolean)
+      .map(String)
+      .join(' ');
+  }
   if (Array.isArray(detail)) return detail.map((item) => {
     if (typeof item === 'string') return item;
     if (item && typeof item === 'object' && 'msg' in item) return String((item as { msg: unknown }).msg);
@@ -109,6 +124,9 @@ export const quizGenerationErrorMessage = (error: unknown): string => {
   if (/not found|لم يتم العثور/i.test(detail)) {
     return 'تعذر تحميل بيانات الدرس المحدد.';
   }
+  if (/LESSON_NOT_READY_FOR_QUIZ_GENERATION|needs_review|blocked|missing_ready_content|توليد الاختبارات مسموح/i.test(detail)) {
+    return 'لا يمكن توليد اختبار لهذا الدرس لأنه غير جاهز بعد.';
+  }
   if (/service|unavailable|ai|llm|timeout|503/i.test(detail)) {
     return 'خدمة توليد الأسئلة غير متاحة حالياً. جرّب لاحقاً أو افتح اسأل AI.';
   }
@@ -124,6 +142,8 @@ export const quizzesApi = {
       const { data } = await api.post<BackendQuizGenerateResponse>('/quizzes/generate', {
         topic_id: config.topicId ? Number(config.topicId) : undefined,
         lesson_id: config.lessonIds[0] ? Number(config.lessonIds[0]) : undefined,
+        lesson_ids: config.lessonIds.map(Number).filter(Number.isFinite),
+        topic_ids: config.topicId ? [Number(config.topicId)].filter(Number.isFinite) : [],
         source_type: 'textbook',
         difficulty: difficultyNumber(config.difficulty),
         limit: Math.min(config.totalQuestions || config.lessonIds.length * config.questionsPerLesson || 5, 30),
@@ -137,7 +157,7 @@ export const quizzesApi = {
       return mapped;
     } catch (error) {
       console.warn('Quiz backend generation unavailable', error);
-      throw new Error(quizGenerationErrorMessage(error));
+      throw new Error(quizGenerationErrorMessage(error), { cause: error });
     }
   },
 
@@ -148,20 +168,16 @@ export const quizzesApi = {
     return { correct: true, explanation: '' };
   },
 
-  async submitQuizResult(quizId: string, score: number, total: number): Promise<BackendQuizSubmitResponse | { success: true }> {
+  async submitQuizResult(payload: QuizSubmitPayload): Promise<BackendQuizSubmitResponse> {
     try {
       const { data } = await api.post<BackendQuizSubmitResponse>('/quizzes/submit', {
-        topic_id: 1,
-        answers: {
-          quiz_id: quizId,
-          score: String(score),
-          total: String(total),
-        },
+        topic_id: payload.topicId == null ? undefined : Number(payload.topicId),
+        answers: payload.answers,
       });
       return data;
     } catch (error) {
-      console.warn('Quiz result submission failed; keeping local result only', error);
-      return { success: true };
+      console.warn('Quiz result submission failed', error);
+      throw new Error('تعذر حفظ نتيجة الاختبار. بقيت النتيجة ظاهرة محلياً.', { cause: error });
     }
   }
 };

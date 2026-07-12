@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+from types import SimpleNamespace
 from unittest import TestCase
 
 from app.services.chat_service import (
@@ -17,7 +18,15 @@ from app.services.chat_service import (
     _valid_book_chunks_for_dictionary_entry,
     ask_question,
 )
-from app.services.rag import RetrievedChunk, _hybrid_score, clean_query, lexical_relevance_score, rewrite_query
+from app.services.rag import (
+    RetrievedChunk,
+    _hybrid_score,
+    _retrieval_eligibility,
+    _retrieved_from_chunk,
+    clean_query,
+    lexical_relevance_score,
+    rewrite_query,
+)
 from app.rag.chunk_validator import validate_chunks
 from app.services.semantic_rag import FusedCandidate, _minimum_score_for_intent, _semantic_relevance_score
 from app.schemas.rag import DEFAULT_RAG_MIN_SIMILARITY, RagRetrieveDebugRequest, RagRetrieveRequest
@@ -41,6 +50,95 @@ def chunk(chunk_id: int, page_number: int, content: str, score: float = 0.8) -> 
 
 
 class ArabicRagRankingTests(TestCase):
+    @staticmethod
+    def _eligibility_contract():
+        return {
+            "version": "test-reviewed-v1",
+            "ready_for_embedding": True,
+            "embedding_contract": {
+                "required_chunk_metadata": [
+                    "lesson_id",
+                    "unit_id",
+                    "source_type",
+                    "printed_page_start",
+                    "printed_page_end",
+                    "quality_status",
+                    "reviewed_metadata_version",
+                ],
+                "allowed_source_types": ["textbook", "solution_book"],
+                "blocked_quality_statuses": ["blocked"],
+            },
+        }
+
+    def test_retrieved_chunk_carries_reviewed_curriculum_metadata_from_metadata_json(self):
+        raw_chunk = SimpleNamespace(
+            id=91,
+            source_id=4,
+            content="قانون التركيز المولي C = n / V",
+            source=SimpleNamespace(title="Chemistry textbook"),
+            source_type="textbook",
+            content_type="formula",
+            page_number=110,
+            unit_id=None,
+            chapter_id=None,
+            lesson_id=None,
+            topic_id=None,
+            metadata_json={
+                "source_type": "textbook",
+                "unit_id": "unit_04",
+                "lesson_id": "unit_04_lesson_01",
+                "printed_page_start": 110,
+                "printed_page_end": 110,
+                "quality_status": "needs_review",
+                "reviewed_metadata_version": "2026-06-reviewed-v1",
+            },
+        )
+
+        retrieved = _retrieved_from_chunk(raw_chunk, 0.87)  # type: ignore[arg-type]
+
+        self.assertEqual(retrieved.unit_id, "unit_04")
+        self.assertEqual(retrieved.lesson_id, "unit_04_lesson_01")
+        self.assertEqual(retrieved.source_type, "textbook")
+        self.assertEqual(retrieved.quality_status, "needs_review")
+        self.assertEqual(retrieved.quality_warning, "This source is marked needs_review.")
+        self.assertEqual(retrieved.reviewed_metadata_version, "2026-06-reviewed-v1")
+        self.assertEqual(retrieved.curriculum_metadata["printed_page_start"], 110)
+
+    def test_retrieval_eligibility_warns_for_needs_review_and_excludes_blocked(self):
+        base_metadata = {
+            "source_type": "textbook",
+            "unit_id": "unit_04",
+            "lesson_id": "unit_04_lesson_01",
+            "printed_page_start": 110,
+            "printed_page_end": 110,
+            "reviewed_metadata_version": "test-reviewed-v1",
+        }
+        needs_review = SimpleNamespace(
+            content="مفهوم كيميائي",
+            source_type="textbook",
+            extraction_method="reviewed_jsonl",
+            unit_id=None,
+            lesson_id=None,
+            page_number=110,
+            metadata_json={**base_metadata, "quality_status": "needs_review"},
+        )
+        blocked = SimpleNamespace(
+            content="محتوى محظور",
+            source_type="textbook",
+            extraction_method="reviewed_jsonl",
+            unit_id=None,
+            lesson_id=None,
+            page_number=111,
+            metadata_json={**base_metadata, "quality_status": "blocked"},
+        )
+
+        review_decision = _retrieval_eligibility(needs_review, self._eligibility_contract())
+        blocked_decision = _retrieval_eligibility(blocked, self._eligibility_contract())
+
+        self.assertTrue(review_decision.rag_search_allowed)
+        self.assertTrue(review_decision.warning_required)
+        self.assertFalse(blocked_decision.rag_search_allowed)
+
     def test_rag_request_defaults_keep_raw_retrieve_strict_and_debug_permissive(self):
         retrieve_request = RagRetrieveRequest(query="ما هي الحموض؟")
         debug_request = RagRetrieveDebugRequest(query="ما هي الحموض؟")

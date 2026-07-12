@@ -85,10 +85,13 @@ class ChatAskRequest(BaseModel):
     parent_message_id: str | None = None
     question: str | None = Field(default=None, min_length=1)
     message: str | None = Field(default=None, min_length=1)
+    subject: str | None = None
+    grade: str | None = None
     lesson_id: int | None = None
     topic_id: int | None = None
     source_types: list[str] | None = None
     preferred_answer_type: str = Field("text", pattern="^(auto|text|image|audio|video|mixed)$")
+    answer_format: str | None = Field(default=None, pattern="^(auto|text|image|audio|video|mixed)$")
     answer_scope: str = Field("auto", pattern="^(auto|book_only|tutor_general)$")
     teaching_style: str | None = None
     teaching_level: TeachingLevel | None = None
@@ -108,6 +111,8 @@ class ChatAskRequest(BaseModel):
             raise ValueError("question or message is required")
         self.question = resolved
         self.message = resolved
+        if self.answer_format:
+            self.preferred_answer_type = self.answer_format
         return self
 
 
@@ -115,8 +120,15 @@ class ChatSourceResponse(BaseModel):
     chunk_id: int
     source_id: int
     source: str | None = None
+    source_type: str | None = None
     page_number: int | None = None
     content_type: str
+    unit_id: int | str | None = None
+    lesson_id: int | str | None = None
+    quality_status: str | None = None
+    quality_warning: str | None = None
+    reviewed_metadata_version: str | None = None
+    curriculum_metadata: dict[str, Any] | None = None
     similarity_score: float
 
 
@@ -135,12 +147,23 @@ class AnswerSourceBlock(BaseModel):
     chunk_id: int
     chunk_type: str
     score: float
+    source_type: str | None = None
+    source_id: int | None = None
+    unit_id: int | str | None = None
+    lesson_id: int | str | None = None
+    quality_status: str | None = None
+    quality_warning: str | None = None
+    reviewed_metadata_version: str | None = None
+    curriculum_metadata: dict[str, Any] | None = None
 
 
 class ChatAnswerResponse(BaseModel):
     answer: str
     answer_text: str = ""
     answer_type: str = "text"
+    format: str = "text"
+    audio_url: str | None = None
+    audio_status: str = "not_required"
     route: str = "textbook_rag"
     grounding: str = "book"
     answer_scope: str = "auto"

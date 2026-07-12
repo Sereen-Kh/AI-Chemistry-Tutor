@@ -196,6 +196,16 @@ const mapAskAiError = (error: unknown, fallback: string): string => {
   const normalized = raw.toLowerCase();
   if (normalized.includes('field required') || normalized.includes('field_required')) return 'السؤال مطلوب';
   if (normalized.includes('not found') || normalized.includes('404')) return 'لم يتم العثور على نتيجة';
+  if (
+    normalized.includes('invalid or expired token')
+    || normalized.includes('unauthorized')
+    || normalized.includes('401')
+  ) return 'انتهت صلاحية الجلسة. سجّل الدخول من جديد.';
+  if (
+    normalized.includes('network error')
+    || normalized.includes('failed to fetch')
+    || normalized.includes('econnrefused')
+  ) return 'تعذر الاتصال بالخادم. تأكد أن الخدمة تعمل ثم أعد المحاولة.';
   if (normalized.includes('server') || normalized.includes('500')) return 'حدث خطأ أثناء توليد الإجابة';
   return raw || fallback;
 };
@@ -230,11 +240,30 @@ const sessionMessagesToChatItems = (messages: ChatMessageResponse[]): ChatItem[]
   });
 };
 
-const sourceConfidence = (sources: SourceCitation[], confidence?: number) => {
-  const bestScore = Math.max(...sources.map((source) => source.score ?? 0), confidence ?? 0);
+const bestSourceScore = (sources: SourceCitation[]): number | null => {
+  const scores = sources
+    .map((source) => source.score)
+    .filter((score): score is number => typeof score === 'number' && Number.isFinite(score));
+  return scores.length ? Math.max(...scores) : null;
+};
+
+const sourceConfidence = (sources: SourceCitation[]) => {
+  const bestScore = bestSourceScore(sources) ?? 0;
   if (!sources.length) return { label: 'لم أجد مصدراً كافياً في الكتاب', tone: 'gold' };
   if (bestScore >= 0.72) return { label: 'مصادر قوية', tone: 'teal' };
   return { label: 'مصادر محدودة', tone: 'gold' };
+};
+
+const evidenceConfidenceLabel = (response: AiAskResponse): string => {
+  if (response.sources.length > 0) {
+    const score = bestSourceScore(response.sources);
+    return score == null
+      ? 'درجة مطابقة المصدر غير متاحة'
+      : `أفضل تطابق مع المصدر ${Math.round(score * 100)}%`;
+  }
+  return typeof response.confidence === 'number'
+    ? `ثقة الإجابة ${Math.round(response.confidence * 100)}% · دون توثيق كتابي`
+    : 'ثقة الإجابة غير متاحة · دون توثيق كتابي';
 };
 
 const AskAIHeader = ({
@@ -344,7 +373,16 @@ const AnswerSettingsPopover = ({
 };
 
 const RagSourcePanel = ({ response }: { response: AiAskResponse }) => {
-  const quality = sourceConfidence(response.sources, response.confidence);
+  const quality = sourceConfidence(response.sources);
+  const sourceTypeLabel = (sourceType?: string) => (
+    sourceType === 'solution_book' ? 'كتاب الحلول' : 'كتاب الكيمياء'
+  );
+  const qualityLabel = (qualityStatus?: string | null) => {
+    if (qualityStatus === 'ready') return 'جاهز';
+    if (qualityStatus === 'needs_review') return 'يحتاج مراجعة';
+    if (qualityStatus === 'blocked') return 'محظور';
+    return null;
+  };
 
   return (
     <div className="rag-source-panel">
@@ -359,9 +397,10 @@ const RagSourcePanel = ({ response }: { response: AiAskResponse }) => {
         <div className="rag-source-grid">
           {response.sources.map((source) => (
             <article key={`${source.chunk_id}-${source.page}`} className="rag-source-card">
-              <strong>{source.title.includes('الحلول') ? 'كتاب الحلول' : 'كتاب الكيمياء'}</strong>
+              <strong>{sourceTypeLabel(source.source_type) || (source.title.includes('الحلول') ? 'كتاب الحلول' : 'كتاب الكيمياء')}</strong>
               <span>{source.page ? `صفحة ${source.page}` : 'صفحة غير محددة'}</span>
               {source.quote && <small>{source.quote}</small>}
+              {qualityLabel(source.quality_status) && <small>{qualityLabel(source.quality_status)}</small>}
               {typeof source.score === 'number' && <em>{Math.round(source.score * 100)}%</em>}
             </article>
           ))}
@@ -415,13 +454,9 @@ const ChatMessageBubble = ({
     {message.role === 'assistant' && message.response && (
       <div className="answer-evidence-bar">
         <StatusPill tone={message.response.sources.length ? 'teal' : 'gold'}>
-          {message.response.sources.length ? sourceConfidence(message.response.sources, message.response.confidence).label : 'لم أجد مصدراً كافياً في الكتاب'}
+          {sourceConfidence(message.response.sources).label}
         </StatusPill>
-        <span>
-          {typeof message.response.confidence === 'number'
-            ? `ثقة المصدر ${Math.round(message.response.confidence * 100)}%`
-            : 'ثقة المصدر غير متاحة'}
-        </span>
+        <span>{evidenceConfidenceLabel(message.response)}</span>
       </div>
     )}
 
@@ -456,9 +491,22 @@ const ChatMessageBubble = ({
       </div>
     )}
 
-    {message.response?.format === 'audio' && !message.response.audio_url && <StatusPill tone="gold">توليد الصوت قيد المعالجة.</StatusPill>}
+    {message.response?.format === 'audio' && !message.response.audio_url && message.response.audio_status !== 'failed' && (
+      <StatusPill tone="gold">توليد الصوت قيد المعالجة.</StatusPill>
+    )}
     {message.response?.audio_url && <audio controls src={message.response.audio_url} />}
-    {message.role === 'assistant' && message.audioStatus === 'failed' && <StatusPill tone="gold">تعذر توليد الصوت. الإجابة النصية متاحة.</StatusPill>}
+    {message.role === 'assistant' && (message.audioStatus === 'failed' || message.response?.audio_status === 'failed') && (
+      <div className="chat-audio-failed">
+        <StatusPill tone="gold">تعذر توليد الصوت. الإجابة النصية متاحة.</StatusPill>
+        <button
+          type="button"
+          onClick={() => onAskAction(message.question || message.content)}
+          disabled={loading}
+        >
+          أعد المحاولة
+        </button>
+      </div>
+    )}
 
     {message.response?.source_page_image_url && (
       <figure className="answer-media">
@@ -766,15 +814,17 @@ export const AskAiPage = ({ preferences, setPreferences }: AskAiPageProps) => {
   ];
 
   useEffect(() => {
-    setQuestion(initialQuestion);
+    queueMicrotask(() => setQuestion(initialQuestion));
   }, [initialQuestion]);
 
   useEffect(() => {
-    setTeachingLevel(preferences.teachingLevel);
-    setExplanationMethod(preferences.explanationMethod);
-    if (preferences.answerFormat === 'audio' || preferences.answerFormat === 'image' || preferences.answerFormat === 'text') {
-      setSelectedResponseFormat(preferences.answerFormat);
-    }
+    queueMicrotask(() => {
+      setTeachingLevel(preferences.teachingLevel);
+      setExplanationMethod(preferences.explanationMethod);
+      if (preferences.answerFormat === 'audio' || preferences.answerFormat === 'image' || preferences.answerFormat === 'text') {
+        setSelectedResponseFormat(preferences.answerFormat);
+      }
+    });
   }, [preferences.answerFormat, preferences.explanationMethod, preferences.teachingLevel]);
 
   useEffect(() => () => {
@@ -1053,6 +1103,7 @@ export const AskAiPage = ({ preferences, setPreferences }: AskAiPageProps) => {
           content: response.answer,
           response,
           question: requestText,
+          audioStatus: response.audio_status,
           preferredResponseFormat: selectedResponseFormat,
         },
       ]);

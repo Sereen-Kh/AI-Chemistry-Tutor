@@ -31,7 +31,7 @@ export const useStudyPlanProgress = (plan: StudyPlan | null) => {
   }, [plan]);
 
   useEffect(() => {
-    void refetch();
+    queueMicrotask(() => void refetch());
   }, [refetch]);
 
   return { progress, loading, error, refetch };

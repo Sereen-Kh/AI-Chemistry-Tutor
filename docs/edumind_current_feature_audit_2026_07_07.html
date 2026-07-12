@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EduMind Current Feature Audit - 2026-07-07</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #071018;
+      --panel: #101d2b;
+      --panel-2: #13283a;
+      --line: #254057;
+      --text: #ecf7f3;
+      --muted: #9db2c6;
+      --ready: #11d7ad;
+      --partial: #f7c948;
+      --stub: #ff766d;
+      --planned: #9b8cff;
+      --risk: #ff5574;
+      --blue: #5b8cff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(17, 215, 173, 0.14), transparent 32rem),
+        radial-gradient(circle at 85% 0%, rgba(155, 140, 255, 0.16), transparent 30rem),
+        linear-gradient(180deg, #071018 0%, #0b1724 100%);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 48px min(6vw, 72px) 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    main {
+      width: min(1400px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 28px 0 64px;
+    }
+
+    h1, h2, h3 { line-height: 1.15; margin: 0; }
+    h1 { font-size: clamp(2rem, 4vw, 4.2rem); letter-spacing: 0; }
+    h2 { font-size: clamp(1.5rem, 2.4vw, 2.4rem); margin-top: 36px; }
+    h3 { font-size: 1.1rem; margin-bottom: 10px; }
+    p { color: var(--muted); margin: 10px 0 0; max-width: 920px; }
+
+    .eyebrow {
+      color: var(--ready);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.78rem;
+      margin-bottom: 12px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .stats {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      margin-top: 28px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(19, 40, 58, 0.88), rgba(12, 24, 37, 0.92));
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22);
+    }
+
+    .stat-number {
+      display: block;
+      font-size: 2rem;
+      font-weight: 900;
+      color: white;
+      margin-top: 6px;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 900;
+      border: 1px solid currentColor;
+      white-space: nowrap;
+    }
+
+    .implemented { color: var(--ready); background: rgba(17, 215, 173, 0.1); }
+    .partial { color: var(--partial); background: rgba(247, 201, 72, 0.12); }
+    .stub { color: var(--stub); background: rgba(255, 118, 109, 0.12); }
+    .planned { color: var(--planned); background: rgba(155, 140, 255, 0.12); }
+    .high { color: var(--risk); background: rgba(255, 85, 116, 0.1); }
+    .medium { color: var(--partial); background: rgba(247, 201, 72, 0.1); }
+    .low { color: var(--ready); background: rgba(17, 215, 173, 0.1); }
+
+    .section {
+      margin-top: 28px;
+    }
+
+    .feature-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-top: 16px;
+    }
+
+    .feature-card {
+      min-height: 178px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 3px;
+      background: var(--line);
+    }
+
+    .feature-card[data-status="Implemented"]::after { background: var(--ready); }
+    .feature-card[data-status*="Partial"]::after { background: var(--partial); }
+    .feature-card[data-status*="Stub"]::after { background: var(--stub); }
+    .feature-card[data-status*="Planned"]::after { background: var(--planned); }
+
+    .feature-title {
+      font-weight: 900;
+      font-size: 1.06rem;
+      margin: 10px 0;
+    }
+
+    .feature-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+      overflow: hidden;
+      border-radius: 12px;
+      background: rgba(8, 19, 31, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    th, td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      vertical-align: top;
+    }
+
+    th {
+      color: #d9e8f8;
+      background: rgba(91, 140, 255, 0.12);
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    td { color: #d7e5ef; }
+    tr:last-child td { border-bottom: 0; }
+
+    code {
+      color: #baf8e6;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 0.9em;
+    }
+
+    .columns {
+      grid-template-columns: 1.1fr 0.9fr;
+      margin-top: 16px;
+    }
+
+    .list {
+      margin: 12px 0 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .list li { margin: 7px 0; }
+
+    .mermaid-wrap {
+      background: #f7fbff;
+      color: #0b1724;
+      border-radius: 12px;
+      padding: 18px;
+      margin-top: 16px;
+      overflow-x: auto;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .button {
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 10px 14px;
+      text-decoration: none;
+      font-weight: 800;
+    }
+
+    @media (max-width: 1100px) {
+      .stats, .feature-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .columns { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 680px) {
+      header { padding: 32px 18px 20px; }
+      main { width: calc(100vw - 20px); }
+      .stats, .feature-grid { grid-template-columns: 1fr; }
+      table { display: block; overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="eyebrow">EduMind System Audit</div>
+    <h1>Current Feature Implementation Dashboard</h1>
+    <p>Source-backed audit snapshot for the EduMind AI Chemistry Tutor repository. This page visualizes feature maturity, backend/API coverage, database domains, and the highest-risk gaps.</p>
+    <div class="toolbar">
+      <a class="button" href="./edumind_current_feature_audit_2026_07_07.md">Open Markdown Version</a>
+      <a class="button" href="#features">Feature Matrix</a>
+      <a class="button" href="#erd">ERD</a>
+      <a class="button" href="#gaps">Top Gaps</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="grid stats">
+      <div class="card"><span class="stat-label">Backend Tests</span><span class="stat-number">592</span><span class="pill implemented">Passed</span></div>
+      <div class="card"><span class="stat-label">Frontend Tests</span><span class="stat-number">28</span><span class="pill implemented">Passed</span></div>
+      <div class="card"><span class="stat-label">Frontend Build</span><span class="stat-number">OK</span><span class="pill implemented">Passed</span></div>
+      <div class="card"><span class="stat-label">Frontend Lint</span><span class="stat-number">21</span><span class="pill high">Errors</span></div>
+      <div class="card"><span class="stat-label">API Routes</span><span class="stat-number">139</span><span class="pill partial">/api/v1</span></div>
+      <div class="card"><span class="stat-label">DB Tables</span><span class="stat-number">42</span><span class="pill partial">SQLAlchemy</span></div>
+    </section>
+
+    <section id="features" class="section">
+      <h2>Feature Status</h2>
+      <p>Implemented means there is a real backend route/service/storage path, frontend usage, and test coverage. Partial means some pieces work but the flow is incomplete or risky.</p>
+      <div class="grid feature-grid">
+        <article class="card feature-card" data-status="Implemented">
+          <span class="pill implemented">Implemented</span>
+          <div class="feature-title">Auth / Login / Register</div>
+          <p>Real auth routes, user model, frontend login/register flow, backend tests.</p>
+          <div class="feature-meta"><span class="pill low">Low risk</span></div>
+        </article>
+        <article class="card feature-card" data-status="Implemented">
+          <span class="pill implemented">Implemented</span>
+          <div class="feature-title">Profile / Onboarding</div>
+          <p>Student profile, interests, preferences, onboarding route and UI.</p>
+          <div class="feature-meta"><span class="pill low">Low risk</span></div>
+        </article>
+        <article class="card feature-card" data-status="Partial">
+          <span class="pill partial">Partial</span>
+          <div class="feature-title">Curriculum</div>
+          <p>Units, chapters, lessons, topics exist, but frontend fallback data and ingestion dependency remain.</p>
+          <div class="feature-meta"><span class="pill medium">Medium risk</span></div>
+        </article>
+        <article class="card feature-card" data-status="Implemented">
+          <span class="pill implemented">MVP</span>
+          <div class="feature-title">Ask AI Text + RAG</div>
+          <p>Persistent chat sessions, RAG retrieval, source blocks, frontend chat UI.</p>
+          <div class="feature-meta"><span class="pill medium">Medium risk</span></div>
+        </article>
+        <article class="card feature-card" data-status="Partial">
+          <span class="pill partial">Partial</span>
+          <div class="feature-title">RAG Ingestion/Admin</div>
+          <p>Admin routes and pages exist, but full readiness and re-embedding workflow is high risk.</p>
+          <div class="feature-meta"><span class="pill high">High risk</span></div>
+        </article>
+        <article class="card feature-card" data-status="Partial">
+          <span class="pill partial">Partial</span>
+          <div class="feature-title">Audio STT/TTS</div>
+          <p>Multipart chat and audio metadata exist; production ElevenLabs flow still needs hardening.</p>
+          <div class="feature-meta"><span class="pill high">High risk</span></div>
+        </article>
+        <article class="card feature-card" data-status="Partial">
+          <span class="pill partial">Partial MVP</span>
+          <div class="feature-title">Study Plan</div>
+          <p>Generates and displays plans, but relies on JSON plan storage and has future panels.</p>
+          <div class="feature-meta"><span class="pill medium">Medium risk</span></div>
+        </article>
+        <article class="card feature-card" data-status="Implemented">
+          <span class="pill implemented">MVP</span>
+          <div class="feature-title">Flashcards</div>
+          <p>Deck generation, review workflow, progress, rating, and scheduling exist.</p>
+          <div class="feature-meta"><span class="pill medium">Medium risk</span></div>
+        </article>
+        <article class="card feature-card" data-status="Partial">
+          <span class="pill partial">Partial</span>
+          <div class="feature-title">Quizzes</div>
+          <p>Generate/submit/history routes and frontend exist; generation quality depends on reviewed content.</p>
+          <div class="feature-meta"><span class="pill medium">Medium risk</span></div>
+        </article>
+        <article class="card feature-card" data-status="Partial">
+          <span class="pill partial">Partial</span>
+          <div class="feature-title">Homework / Guided Lab</div>
+          <p>Solver routes and guided workflow exist; broader lab tools and image solver remain risky.</p>
+          <div class="feature-meta"><span class="pill high">High risk</span></div>
+        </article>
+        <article class="card feature-card" data-status="Implemented">
+          <span class="pill implemented">MVP</span>
+          <div class="feature-title">Notifications</div>
+          <p>In-app notifications/settings are implemented; push delivery remains partial.</p>
+          <div class="feature-meta"><span class="pill medium">Medium risk</span></div>
+        </article>
+        <article class="card feature-card" data-status="Stub">
+          <span class="pill stub">Stub / Planned</span>
+          <div class="feature-title">Achievements, Reels, Billing</div>
+          <p>Models or disabled UI exist, but no full product-grade workflows.</p>
+          <div class="feature-meta"><span class="pill high">High risk</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>API Surface</h2>
+      <table>
+        <thead><tr><th>Group</th><th>Routes</th><th>Important Endpoints</th></tr></thead>
+        <tbody>
+          <tr><td>Auth</td><td>5</td><td><code>POST /auth/login</code>, <code>POST /auth/register</code></td></tr>
+          <tr><td>Chat / AI</td><td>11</td><td><code>POST /chat/messages</code>, <code>POST /chat/ask</code>, <code>POST /ai/ask</code></td></tr>
+          <tr><td>RAG</td><td>6</td><td><code>POST /rag/retrieve</code>, <code>POST /rag/answer</code></td></tr>
+          <tr><td>Admin RAG / Ingestion</td><td>32</td><td><code>GET /admin/rag/sources</code>, <code>POST /admin/rag/reembed</code>, <code>GET /admin/ingestion/embedding-readiness</code></td></tr>
+          <tr><td>Study Plan</td><td>8</td><td><code>POST /study-plans/generate</code>, <code>GET /study-plans/{id}/progress</code></td></tr>
+          <tr><td>Flashcards</td><td>14</td><td><code>POST /flashcards/decks/generate</code>, <code>POST /flashcards/{id}/review</code></td></tr>
+          <tr><td>Quizzes</td><td>4</td><td><code>POST /quizzes/generate</code>, <code>POST /quizzes/submit</code></td></tr>
+          <tr><td>Notifications</td><td>11</td><td><code>GET /notifications</code>, <code>PATCH /notifications/read-all</code>, <code>GET /users/me/notification-settings</code></td></tr>
+          <tr><td>Homework / Lab</td><td>11</td><td><code>POST /homework/solve-text</code>, <code>/interactive-solver/sessions</code></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section">
+      <h2>Database Domains</h2>
+      <div class="grid columns">
+        <div class="card">
+          <h3>Core Tables</h3>
+          <ul class="list">
+            <li><code>users</code>, <code>student_profiles</code>, <code>interest_categories</code>, <code>user_interests</code></li>
+            <li><code>units</code>, <code>chapters</code>, <code>lessons</code>, <code>topics</code>, <code>lesson_topics</code></li>
+            <li><code>chat_sessions</code>, <code>chat_messages</code></li>
+            <li><code>content_sources</code>, <code>rag_chunks</code>, <code>rag_query_logs</code></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Learning Tables</h3>
+          <ul class="list">
+            <li><code>study_plans</code>, <code>lesson_progress</code>, <code>user_progress</code></li>
+            <li><code>extracted_questions</code>, <code>quiz_attempts</code>, <code>question_attempts</code></li>
+            <li><code>flashcards</code>, <code>flashcard_decks</code>, <code>flashcard_progress</code></li>
+            <li><code>notifications</code>, <code>notification_preferences</code>, <code>device_tokens</code></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="erd" class="section">
+      <h2>ERD Preview</h2>
+      <div class="mermaid-wrap">
+        <pre class="mermaid">
+erDiagram
+  users ||--o| student_profiles : owns
+  users ||--o{ chat_sessions : owns
+  chat_sessions ||--o{ chat_messages : contains
+  users ||--o{ study_plans : owns
+  users ||--o{ notifications : receives
+  users ||--o{ flashcard_decks : owns
+  flashcard_decks ||--o{ flashcards : contains
+  flashcards ||--o{ flashcard_progress : reviewed_by
+  units ||--o{ chapters : contains
+  chapters ||--o{ lessons : contains
+  lessons ||--o{ lesson_topics : maps
+  topics ||--o{ lesson_topics : maps
+  content_sources ||--o{ rag_chunks : provides
+  rag_chunks ||--o{ retrieved_chunk_logs : retrieved
+        </pre>
+      </div>
+    </section>
+
+    <section id="gaps" class="section">
+      <h2>Top Gaps To Fix Next</h2>
+      <div class="grid columns">
+        <div class="card">
+          <h3>Engineering Quality</h3>
+          <ol class="list">
+            <li>Fix frontend lint errors.</li>
+            <li>Finish RAG ingestion/re-embedding readiness.</li>
+            <li>Add chunk explorer and source readiness drill-down.</li>
+            <li>Gate mock/fallback data from production UX.</li>
+            <li>Normalize Study Plan items or strengthen JSON validation.</li>
+          </ol>
+        </div>
+        <div class="card">
+          <h3>Product Completeness</h3>
+          <ol class="list">
+            <li>Harden quiz/flashcard generation with reviewed metadata.</li>
+            <li>Verify ElevenLabs audio in production-like conditions.</li>
+            <li>Complete push notification delivery.</li>
+            <li>Replace placeholder AI Companion behavior.</li>
+            <li>Hide or implement reels, billing, and achievement automation.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({ startOnLoad: true, theme: "base", securityLevel: "loose" });
+  </script>
+</body>
+</html>

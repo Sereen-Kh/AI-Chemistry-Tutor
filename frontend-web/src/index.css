@@ -3366,8 +3366,20 @@ label {
   cursor: pointer;
 }
 
+.admin-source-row > button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  text-align: start;
+  display: grid;
+  gap: 8px;
+  cursor: pointer;
+}
+
 .admin-source-row.active,
-.admin-source-row:focus-visible {
+.admin-source-row:focus-within {
   border-color: rgba(78, 135, 245, 0.55);
   background: rgba(78, 135, 245, 0.12);
   outline: none;
@@ -3375,11 +3387,16 @@ label {
 
 .admin-source-row > div,
 .admin-page-row-head,
-.admin-source-counters {
+.admin-source-counters,
+.admin-source-actions {
   display: flex;
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
+}
+
+.admin-source-actions {
+  justify-content: flex-start;
 }
 
 .admin-source-counters span {
@@ -7727,6 +7744,24 @@ input[type='radio'] {
 
 .chat-transcript small {
   color: var(--t2);
+}
+
+.chat-audio-failed {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.chat-audio-failed button {
+  min-height: 34px;
+  border: 1px solid rgba(242, 184, 78, 0.36);
+  border-radius: 999px;
+  background: rgba(242, 184, 78, 0.12);
+  color: #ffe7ad;
+  padding: 0 13px;
+  font-weight: 800;
 }
 
 .chat-toolbar {

@@ -10,6 +10,7 @@ from app.models.assessment import Question, QuestionAttempt, QuizAttempt  # noqa
 from app.models.billing import Subscription  # noqa: F401
 from app.models.chat import ChatMessage, ChatSession  # noqa: F401
 from app.models.chemistry import Chapter, Element, Lesson, LessonProgress, Unit  # noqa: F401
+from app.models.curriculum_mapping import CurriculumEntityMapping  # noqa: F401
 from app.models.device import DeviceToken  # noqa: F401
 from app.models.flashcard import Flashcard, FlashcardDeck, FlashcardProgress  # noqa: F401
 from app.models.homework import Homework  # noqa: F401

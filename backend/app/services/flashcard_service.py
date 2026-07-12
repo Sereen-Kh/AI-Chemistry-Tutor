@@ -16,6 +16,10 @@ from sqlalchemy.orm import selectinload
 from app.models.chemistry import Chapter, Lesson
 from app.models.flashcard import Flashcard, FlashcardDeck, FlashcardProgress
 from app.models.textbook import RagChunk
+from app.services.reviewed_curriculum_metadata import (
+    ensure_reviewed_metadata_ready,
+    evaluate_chunk_eligibility,
+)
 from app.models.topic import Topic
 from app.schemas.flashcards import FlashcardGenerateRequest
 
@@ -61,6 +65,11 @@ GENERIC_BACK_PATTERNS = (
     "راجع درس",
 )
 
+FLASHCARD_NOT_READY_CODE = "LESSON_NOT_READY_FOR_FLASHCARD_GENERATION"
+FLASHCARD_BLOCKED_CODE = "LESSON_BLOCKED_FOR_FLASHCARD_GENERATION"
+FLASHCARD_ADMIN_APPROVAL_CODE = "ADMIN_APPROVAL_REQUIRED_FOR_NEEDS_REVIEW_FLASHCARDS"
+FLASHCARD_INSUFFICIENT_CONTENT_CODE = "INSUFFICIENT_CONTENT_FOR_FLASHCARDS"
+
 
 @dataclass
 class ReviewSchedule:
@@ -74,6 +83,10 @@ class ReviewSchedule:
 
 def now_utc() -> datetime:
     return datetime.now(timezone.utc)
+
+
+def _aware_utc(value: datetime) -> datetime:
+    return value.replace(tzinfo=timezone.utc) if value.tzinfo is None else value
 
 
 def normalize_card_type(value: str) -> str:
@@ -202,6 +215,25 @@ def _is_generic_back(value: str | None) -> bool:
     return any(pattern in text for pattern in GENERIC_BACK_PATTERNS)
 
 
+def _metadata_dict(raw: object) -> dict:
+    return dict(raw) if isinstance(raw, dict) else {}
+
+
+def _chunk_quality_status(chunk: RagChunk | None) -> str:
+    if chunk is None:
+        return "needs_review"
+    metadata = _metadata_dict(chunk.metadata_json)
+    return str(metadata.get("quality_status") or "needs_review")
+
+
+def _chunk_reviewed_metadata_version(chunk: RagChunk | None) -> str | None:
+    if chunk is None:
+        return None
+    metadata = _metadata_dict(chunk.metadata_json)
+    value = metadata.get("reviewed_metadata_version")
+    return str(value) if value else None
+
+
 def _fallback_answer_by_type(card_type: str, topic_title: str, lesson: Lesson) -> str:
     lesson_title = lesson.title_ar
     page_label = (
@@ -277,6 +309,8 @@ def _lesson_metadata(lesson: Lesson, topic: Topic | None, chunk: RagChunk | None
         "source_chunk_ids": [chunk.id] if chunk else [],
         "source_type": chunk.source_type if chunk else "textbook",
         "content_type": chunk.content_type if chunk else "lesson",
+        "quality_status": _chunk_quality_status(chunk),
+        "reviewed_metadata_version": _chunk_reviewed_metadata_version(chunk),
     }
 
 
@@ -386,6 +420,8 @@ def _validate_card_payload(payload: dict) -> list[str]:
         errors.append("وصف البطاقة غير متوفر")
     if not _clean_text(payload.get("technical_description")):
         errors.append("الوصف التقني غير متوفر")
+    if not payload.get("source_page_start"):
+        errors.append("صفحة المصدر غير متوفرة")
     return errors
 
 
@@ -476,25 +512,109 @@ async def _chunks_for_lesson(
     lesson: Lesson,
     topic_ids: list[int],
     limit: int,
+    *,
+    allow_needs_review: bool = False,
 ) -> list[RagChunk]:
-    filters = [RagChunk.lesson_id == lesson.id]
+    lesson_filters = [RagChunk.lesson_id == lesson.id]
+    if lesson.page_start is not None and lesson.page_end is not None:
+        lesson_filters.append(RagChunk.page_number.between(lesson.page_start, lesson.page_end))
+    elif lesson.page_start is not None:
+        lesson_filters.append(RagChunk.page_number == lesson.page_start)
+    filters = [or_(*lesson_filters)]
     lesson_topic_ids = [topic.id for topic in lesson.topics]
     selected_topic_ids = [topic_id for topic_id in topic_ids if topic_id in lesson_topic_ids]
     if selected_topic_ids:
-        filters.append(RagChunk.topic_id.in_(selected_topic_ids))
+        filters.append(or_(RagChunk.topic_id.in_(selected_topic_ids), RagChunk.topic_id.is_(None)))
     result = await db.execute(
         select(RagChunk)
         .where(
             and_(*filters),
             RagChunk.content_type.in_(
-                ("definition", "formula", "equation", "result", "note", "text", "experiment", "example")
+                (
+                    "definition",
+                    "formula",
+                    "equation",
+                    "result",
+                    "note",
+                    "text",
+                    "experiment",
+                    "example",
+                    "mixed",
+                    "solution",
+                    "exercise_answer",
+                )
             ),
             RagChunk.source_type.in_(("textbook", "solution_book")),
         )
         .order_by(RagChunk.page_number.asc().nulls_last(), RagChunk.chunk_index.asc())
         .limit(limit)
     )
-    return list(result.scalars().all())
+    chunks = list(result.scalars().all())
+    if not chunks:
+        raise HTTPException(
+            status_code=409,
+            detail={
+                "code": FLASHCARD_INSUFFICIENT_CONTENT_CODE,
+                "lesson_id": lesson.id,
+                "lesson_title": lesson.title_ar,
+                "quality_status": "missing_ready_content",
+                "message": "لا يوجد محتوى كافٍ لهذا الدرس.",
+            },
+        )
+    reviewed_metadata = ensure_reviewed_metadata_ready()
+    decisions = [
+        (
+            chunk,
+            evaluate_chunk_eligibility(
+                chunk,
+                reviewed_metadata,
+                legacy=chunk.extraction_method != "reviewed_jsonl",
+            ),
+        )
+        for chunk in chunks
+    ]
+    if any(decision.normalized_quality_status == "blocked" for _, decision in decisions):
+        raise HTTPException(
+            status_code=409,
+            detail={
+                "code": FLASHCARD_BLOCKED_CODE,
+                "lesson_id": lesson.id,
+                "lesson_title": lesson.title_ar,
+                "quality_status": "blocked",
+                "message": "هذا الدرس محظور لتوليد البطاقات حالياً.",
+            },
+        )
+    ready_chunks = [chunk for chunk, decision in decisions if decision.student_generation_allowed]
+    if ready_chunks:
+        return ready_chunks
+    needs_review_chunks = [
+        chunk
+        for chunk, decision in decisions
+        if decision.normalized_quality_status == "needs_review" and decision.rag_search_allowed
+    ]
+    if needs_review_chunks and allow_needs_review:
+        return needs_review_chunks
+    if needs_review_chunks:
+        raise HTTPException(
+            status_code=403,
+            detail={
+                "code": FLASHCARD_ADMIN_APPROVAL_CODE,
+                "lesson_id": lesson.id,
+                "lesson_title": lesson.title_ar,
+                "quality_status": "needs_review",
+                "message": "هذا الدرس غير جاهز لتوليد البطاقات بعد.",
+            },
+        )
+    raise HTTPException(
+        status_code=409,
+        detail={
+            "code": FLASHCARD_NOT_READY_CODE,
+            "lesson_id": lesson.id,
+            "lesson_title": lesson.title_ar,
+            "quality_status": "unknown",
+            "message": "هذا الدرس غير جاهز لتوليد البطاقات بعد.",
+        },
+    )
 
 
 async def generate_flashcard_deck(
@@ -508,6 +628,17 @@ async def generate_flashcard_deck(
         raise HTTPException(status_code=422, detail="اختر نوع بطاقة واحداً على الأقل")
 
     lessons = await _load_lessons_for_request(db, request)
+    allow_needs_review = bool(request.allow_needs_review and request.admin_review_approved)
+    lesson_chunks_by_id = {
+        lesson.id: await _chunks_for_lesson(
+            db,
+            lesson,
+            request.topic_ids,
+            max(request.cards_per_lesson * 3, 6),
+            allow_needs_review=allow_needs_review,
+        )
+        for lesson in lessons
+    }
     first_lesson = lessons[0]
     scope_id = request.scope_id
     if not scope_id and len(lessons) == 1:
@@ -536,9 +667,7 @@ async def generate_flashcard_deck(
         lesson_topics = [topic for topic in lesson.topics if not request.topic_ids or topic.id in request.topic_ids]
         if not lesson_topics:
             lesson_topics = list(lesson.topics) or [None]
-        chunks = await _chunks_for_lesson(db, lesson, request.topic_ids, max(request.cards_per_lesson * 3, 6))
-        if request.source_text and len(lessons) == 1:
-            chunks = []
+        chunks = lesson_chunks_by_id[lesson.id]
         source_items: list[tuple[Topic | None, RagChunk | None]] = []
         for index in range(max(request.cards_per_lesson, len(card_types))):
             topic = lesson_topics[index % len(lesson_topics)]
@@ -651,6 +780,7 @@ async def deck_stats(db: AsyncSession, user_id: int, deck_id: int | None = None)
         if due_at is None:
             due_today += 1
             continue
+        due_at = _aware_utc(due_at)
         if due_at <= now:
             due_today += 1
         if due_at < today_start:

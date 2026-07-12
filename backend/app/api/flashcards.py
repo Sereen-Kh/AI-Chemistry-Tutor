@@ -1,8 +1,9 @@
 """Flashcard API routes."""
 
 from datetime import date
+from inspect import signature
 
-from fastapi import APIRouter, Depends, Query, Response
+from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.dependencies import get_current_user_id, require_admin
@@ -137,6 +138,14 @@ async def generate_deck(
     user_id: int = Depends(get_current_user_id),
     db: AsyncSession = Depends(get_async_db),
 ):
+    if request.allow_needs_review or request.admin_review_approved:
+        raise HTTPException(
+            status_code=403,
+            detail={
+                "code": "ADMIN_APPROVAL_REQUIRED_FOR_NEEDS_REVIEW_FLASHCARDS",
+                "message": "توليد البطاقات من محتوى يحتاج مراجعة يتطلب موافقة مدير.",
+            },
+        )
     deck = await flashcard_service.generate_flashcard_deck(db, user_id, request)
     deck, rows, stats = await flashcard_service.get_deck(db, user_id, deck.id)
     return _deck_response(deck, stats, rows)
@@ -148,7 +157,19 @@ async def generate_flashcards(
     user_id: int = Depends(get_current_user_id),
     db: AsyncSession = Depends(get_async_db),
 ):
-    cards = await flashcard_service.generate_flashcards(db, request, user_id=user_id)
+    if request.allow_needs_review or request.admin_review_approved:
+        raise HTTPException(
+            status_code=403,
+            detail={
+                "code": "ADMIN_APPROVAL_REQUIRED_FOR_NEEDS_REVIEW_FLASHCARDS",
+                "message": "توليد البطاقات من محتوى يحتاج مراجعة يتطلب موافقة مدير.",
+            },
+        )
+    generate = flashcard_service.generate_flashcards
+    if "user_id" in signature(generate).parameters:
+        cards = await generate(db, request, user_id=user_id)
+    else:
+        cards = await generate(db, request)
     return [_card_response(card) for card in cards]
 
 

@@ -1,0 +1,103 @@
+{
+  "generated_on": "2026-07-11",
+  "status": "implemented_but_production_activation_blocked",
+  "active_reviewed_metadata_version": "2026-06-reviewed-v1",
+  "embedding_model": "gemini-embedding-001",
+  "embedding_dimension": 768,
+  "tickets": {
+    "RAG-003": {
+      "status": "implemented",
+      "behavior": "Idempotent reviewed-chunk loader supports dry-run, insert/update/unchanged/stale classification, embedding preservation for unchanged rows, and embedding reset for changed rows.",
+      "real_dry_run": {
+        "reviewed_rows": 744,
+        "textbook_rows": 720,
+        "solution_book_rows": 24,
+        "planned_updates": 744,
+        "planned_inserts": 0,
+        "planned_stale": 0,
+        "skipped_blocked": 0,
+        "database_writes": 0
+      }
+    },
+    "RAG-004": {
+      "status": "implemented",
+      "behavior": "Resumable Gemini embedding worker uses global readiness, shared eligibility, durable job state, bounded retries, resume-failed, and cache invalidation.",
+      "real_dry_run": {
+        "eligible_candidates": 744,
+        "processed": 0,
+        "gemini_calls": 0,
+        "vector_writes": 0
+      }
+    },
+    "RAG-005": {
+      "status": "implemented_index_incomplete",
+      "postgresql_reachable": true,
+      "pgvector_version": "0.8.2",
+      "vector_column": "vector(768)",
+      "index": "ivfflat/vector_cosine_ops",
+      "similarity_operator_works": true,
+      "rag_chunks": 744,
+      "embedded_chunks": 0,
+      "verification_result": "EMBEDDING_INDEX_EMPTY"
+    },
+    "RAG-006": {
+      "status": "implemented",
+      "behavior": "Admin source, preflight, reviewed-chunk loading, re-embedding job status, evaluation, QA, and operations APIs are available with admin authorization."
+    },
+    "RAG-007": {
+      "status": "implemented",
+      "behavior": "Read-only chunk explorer supports source, quality, embedding, unit, lesson, page, version, missing metadata, legacy, stale, error, type, and text filters."
+    },
+    "RAG-008": {
+      "status": "implemented_live_gate_blocked",
+      "dataset_cases": 32,
+      "dataset_units": ["unit_04", "unit_05", "unit_06"],
+      "precondition_status": "blocked",
+      "blocking_issues": ["EMBEDDING_INDEX_INCOMPLETE"],
+      "eligible_chunks": 744,
+      "completed_embeddings": 0,
+      "live_retrieval_metrics_run": false
+    },
+    "RAG-009": {
+      "status": "deterministic_pass_live_not_run",
+      "dataset_cases": 56,
+      "endpoint_checks": 168,
+      "passed_checks": 168,
+      "failed_checks": 0,
+      "pass_rate": 1.0,
+      "mode": "unit",
+      "live_integration_run": false,
+      "live_blocker": "RAG-008 has not passed"
+    },
+    "RAG-010": {
+      "status": "implemented_not_activated",
+      "student_retrieval_enabled_in_current_config": true,
+      "production_gate_required_in_current_config": false,
+      "production_activation_ready": false,
+      "activation_blockers": [
+        "RAG_EVALUATION_GATE_NOT_PASSED",
+        "RAG_QA_LIVE_REPORT_REQUIRED"
+      ],
+      "monitoring": {
+        "status": "degraded",
+        "recent_query_volume": 7,
+        "no_result_rate": 1.0,
+        "low_confidence_rate": 1.0
+      },
+      "kill_switch_implemented": true,
+      "versioned_cache_keys_implemented": true,
+      "rollback_deletes_database_data": false
+    }
+  },
+  "verification": {
+    "backend_tests": "640 passed, 2 skipped",
+    "frontend_tests": "30 passed",
+    "frontend_lint": "passed",
+    "frontend_build": "passed",
+    "live_gemini_calls_authorized": false,
+    "live_gemini_calls_performed": false,
+    "production_vector_writes_authorized": false,
+    "production_vector_writes_performed": false
+  },
+  "next_operational_step": "Authorize the reviewed loader apply if desired, then run the resumable Gemini embedding worker until all 744 eligible chunks are completed; rerun RAG-008, then explicitly authorize live RAG-009 before enabling the production gate."
+}

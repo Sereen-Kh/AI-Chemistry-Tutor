@@ -12,7 +12,7 @@ export const AICompanion = () => {
   const { isOpen, currentHint } = useAICompanionStore();
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const seenTooltipRoutes = useRef<Set<string>>(new Set());
-  const dismissedTooltipRoutes = useRef<Set<string>>(new Set());
+  const [dismissedTooltipRoutes, setDismissedTooltipRoutes] = useState<Set<string>>(() => new Set());
   const [tooltipRoute, setTooltipRoute] = useState<string | null>(null);
   const [isHintHovered, setIsHintHovered] = useState(false);
   const hint = useMemo(() => buildCompanionMessage(context), [context]);
@@ -23,11 +23,11 @@ export const AICompanion = () => {
       page: context.currentPage,
       route: context.currentRoute,
     });
-    if (!seenTooltipRoutes.current.has(context.currentRoute) && !dismissedTooltipRoutes.current.has(context.currentRoute)) {
+    if (!seenTooltipRoutes.current.has(context.currentRoute) && !dismissedTooltipRoutes.has(context.currentRoute)) {
       seenTooltipRoutes.current.add(context.currentRoute);
       setTooltipRoute(context.currentRoute);
     }
-  }, [context.currentPage, context.currentRoute, hint]);
+  }, [context.currentPage, context.currentRoute, dismissedTooltipRoutes, hint]);
 
   useEffect(() => {
     if (!tooltipRoute || isOpen) return undefined;
@@ -38,7 +38,7 @@ export const AICompanion = () => {
   }, [isOpen, tooltipRoute]);
 
   useEffect(() => {
-    if (isOpen) setTooltipRoute(null);
+    if (isOpen) queueMicrotask(() => setTooltipRoute(null));
   }, [isOpen]);
 
   const close = () => {
@@ -47,7 +47,11 @@ export const AICompanion = () => {
   };
 
   const dismissHint = () => {
-    dismissedTooltipRoutes.current.add(context.currentRoute);
+    setDismissedTooltipRoutes((current) => {
+      const next = new Set(current);
+      next.add(context.currentRoute);
+      return next;
+    });
     setTooltipRoute(null);
     setIsHintHovered(false);
   };
@@ -56,7 +60,7 @@ export const AICompanion = () => {
 
   const showHintTooltip = !isOpen
     && Boolean(currentHint)
-    && !dismissedTooltipRoutes.current.has(context.currentRoute)
+    && !dismissedTooltipRoutes.has(context.currentRoute)
     && (isHintHovered || tooltipRoute === context.currentRoute);
 
   return createPortal(

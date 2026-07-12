@@ -11,6 +11,7 @@ import {
   SourceCard,
   StatusPill,
 } from '../components/DesignSystem';
+import { allowDemoFallbacks } from '../config/demoFallbacks';
 import type { AiAskResponse, AnswerFormat } from '../types';
 import type { UnitCatalogItem } from '../types';
 
@@ -40,6 +41,7 @@ export const LessonsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [usingFallback, setUsingFallback] = useState(false);
+  const [reloadToken, setReloadToken] = useState(0);
 
   useEffect(() => {
     localStorage.setItem(SEMESTER_STORAGE_KEY, String(activeSemester));
@@ -53,14 +55,28 @@ export const LessonsPage = () => {
     curriculumApi.getUnits(activeSemester)
       .then((data) => {
         if (cancelled) return;
-        setUnits(data.length ? data : filterUnitsBySemester(fallbackCurriculumUnits, activeSemester));
-        setUsingFallback(data.length === 0);
+        if (data.length > 0) {
+          setUnits(data);
+          return;
+        }
+        if (allowDemoFallbacks) {
+          setUnits(filterUnitsBySemester(fallbackCurriculumUnits, activeSemester));
+          setUsingFallback(true);
+          return;
+        }
+        setUnits([]);
+        setError('لا توجد بيانات منهج مستوردة لهذا الفصل. يجب استيراد المنهج المُراجع إلى قاعدة البيانات.');
       })
       .catch(() => {
         if (cancelled) return;
-        setUnits(filterUnitsBySemester(fallbackCurriculumUnits, activeSemester));
-        setUsingFallback(true);
-        setError('تعذر تحميل بنية الكتاب من الخادم. تُعرض بنية مطابقة للكتاب للتجربة فقط.');
+        if (allowDemoFallbacks) {
+          setUnits(filterUnitsBySemester(fallbackCurriculumUnits, activeSemester));
+          setUsingFallback(true);
+          setError('تعذر تحميل بنية الكتاب من الخادم. تُعرض بيانات تجريبية لأن وضع العرض التجريبي مفعّل.');
+          return;
+        }
+        setUnits([]);
+        setError('تعذر تحميل بنية الكتاب من الخادم. تحقق من اتصال الخادم ثم حاول مرة أخرى.');
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -68,7 +84,7 @@ export const LessonsPage = () => {
     return () => {
       cancelled = true;
     };
-  }, [activeSemester]);
+  }, [activeSemester, reloadToken]);
 
   const lessonCount = useMemo(
     () => units.reduce((total, unit) => total + unit.chapters.reduce((sum, chapter) => sum + chapter.lessons.length, 0), 0),
@@ -105,8 +121,10 @@ export const LessonsPage = () => {
         </div>
       </Card>
 
-      {error && <ErrorBanner message={error} />}
-      {usingFallback && !error && <ErrorBanner message="لا توجد وحدات من الخادم لهذا الفصل حالياً. تُعرض بنية تجريبية مطابقة للكتاب." />}
+      {error && <ErrorBanner message={error} onRetry={() => setReloadToken((value) => value + 1)} />}
+      {usingFallback && !error && (
+        <ErrorBanner message="لا توجد وحدات من الخادم لهذا الفصل حالياً. تُعرض بيانات تجريبية لأن وضع العرض التجريبي مفعّل." />
+      )}
       {loading && <LoadingSkeleton rows={5} />}
 
       <div className="chapter-list">

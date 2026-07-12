@@ -55,11 +55,15 @@ class RetrievedChunkResponse(BaseModel):
     source_type: str
     content_type: str
     page_number: int | None = None
-    unit_id: int | None = None
+    unit_id: int | str | None = None
     chapter_id: int | None = None
-    lesson_id: int | None = None
+    lesson_id: int | str | None = None
     topic_id: int | None = None
     metadata_json: dict | list | None = None
+    quality_status: str | None = None
+    quality_warning: str | None = None
+    reviewed_metadata_version: str | None = None
+    curriculum_metadata: dict[str, Any] | None = None
     similarity_score: float
 
 
@@ -126,6 +130,137 @@ class RagReembedResponse(BaseModel):
     message: str
 
 
+class RagSourceStatusResponse(BaseModel):
+    id: str
+    db_source_id: int | None = None
+    source_type: str
+    file_path: str
+    filename: str
+    checksum_sha256: str | None = None
+    page_count: int | None = None
+    file_size_bytes: int | None = None
+    last_modified_at: str | None = None
+    ingestion_status: str
+    extraction_status: str
+    chunk_status: str
+    embedding_status: str
+    errors: list[str] = Field(default_factory=list)
+    warnings: list[str] = Field(default_factory=list)
+    counts: dict[str, int] = Field(default_factory=dict)
+
+
+class RagChunkExplorerItemResponse(BaseModel):
+    id: int
+    source_id: int
+    source_type: str
+    source_file: str | None = None
+    reviewed_chunk_id: int | str | None = None
+    content_type: str
+    page_number: int | None = None
+    unit_id: int | str | None = None
+    lesson_id: int | str | None = None
+    topic_id: int | None = None
+    printed_page_start: int | None = None
+    printed_page_end: int | None = None
+    quality_status: str | None = None
+    reviewed_metadata_version: str | None = None
+    embedding_status: str
+    embedding_model: str | None = None
+    embedding_error: str | None = None
+    content_hash: str | None = None
+    missing_metadata: list[str] = Field(default_factory=list)
+    embedding_allowed: bool = False
+    rag_search_allowed: bool = False
+    student_generation_allowed: bool = False
+    warning_required: bool = False
+    reason_codes: list[str] = Field(default_factory=list)
+    legacy_unmapped: bool = False
+    stale: bool = False
+    content_preview: str
+    metadata_json: dict | list | None = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class RagChunkExplorerResponse(BaseModel):
+    total: int
+    filtered_total: int | None = None
+    limit: int
+    offset: int
+    items: list[RagChunkExplorerItemResponse]
+    counts: dict[str, int] = Field(default_factory=dict)
+    global_counts: dict[str, int] = Field(default_factory=dict)
+
+
+class RagPreflightDatabaseResponse(BaseModel):
+    dialect: str
+    reachable: bool
+    pgvector_available: bool
+    pgvector_version: str | None = None
+    embedding_dimension: int
+    vector_index_present: bool
+    vector_index_name: str | None = None
+    vector_index_type: str | None = None
+    distance_operator: str | None = None
+    vector_column_type: str | None = None
+    vector_dimension_valid: bool = False
+
+
+class RagPreflightProviderResponse(BaseModel):
+    provider: str
+    model: str
+    configured: bool
+
+
+class RagPreflightReviewedMetadataResponse(BaseModel):
+    exists: bool
+    status: str
+    version: str | None = None
+    ready_for_embedding: bool
+    blocking_issues: list[str] = Field(default_factory=list)
+
+
+class RagPreflightSourcesResponse(BaseModel):
+    textbook_found: bool
+    solution_book_found: bool
+    reviewed_textbook_chunks_found: bool
+    reviewed_solution_chunks_found: bool
+
+
+class RagPreflightChunkCountsResponse(BaseModel):
+    reviewed_chunks_total: int = 0
+    database_chunks_total: int = 0
+    ready_chunks: int = 0
+    needs_review_chunks: int = 0
+    blocked_chunks: int = 0
+    missing_metadata_chunks: int = 0
+    pending_embeddings: int = 0
+    processing_embeddings: int = 0
+    completed_embeddings: int = 0
+    failed_embeddings: int = 0
+    wrong_dimension_embeddings: int = 0
+    completed_vectors_missing: int = 0
+    noncompleted_with_embeddings: int = 0
+    embedding_model_mismatch: int = 0
+    stale_chunks: int = 0
+
+
+class RagPreflightResponse(BaseModel):
+    status: str = Field(pattern="^(ready|blocked|degraded)$")
+    database: RagPreflightDatabaseResponse
+    provider: RagPreflightProviderResponse
+    reviewed_metadata: RagPreflightReviewedMetadataResponse
+    sources: RagPreflightSourcesResponse
+    chunks: RagPreflightChunkCountsResponse
+    can_load_chunks: bool
+    can_embed: bool
+    can_evaluate: bool
+    blocking_issues: list[str] = Field(default_factory=list)
+    warnings: list[str] = Field(default_factory=list)
+
+
 class RagReembedStatusResponse(BaseModel):
     job_id: str
     status: str
@@ -141,6 +276,7 @@ class RagReembedStatusResponse(BaseModel):
     metadata_ready: bool = False
     skipped_missing_metadata_count: int = 0
     skipped_blocked_count: int = 0
+    skipped_stale_count: int = 0
     dry_run: bool = False
     source_id: int | None = None
     source_type: str | None = None
@@ -158,10 +294,52 @@ class RagEvaluationRequest(BaseModel):
 class RagEvaluationResponse(BaseModel):
     status: str
     passed: bool
+    reviewed_metadata_version: str | None = None
+    embedding_model: str | None = None
+    preconditions: dict[str, Any] = Field(default_factory=dict)
     report_json_path: str
     report_markdown_path: str
     metrics: dict[str, Any]
     threshold_failures: list[str] = Field(default_factory=list)
+    failed_cases: list[dict[str, Any]] = Field(default_factory=list)
+
+
+class RagQaRequest(BaseModel):
+    mode: str = Field(default="unit", pattern="^(unit|integration)$")
+
+
+class RagQaResponse(BaseModel):
+    status: str
+    reviewed_metadata_version: str | None = None
+    embedding_model: str | None = None
+    preconditions: dict[str, Any] = Field(default_factory=dict)
+    metrics: dict[str, Any] = Field(default_factory=dict)
+    threshold_failures: list[str] = Field(default_factory=list)
+    failed_cases: list[dict[str, Any]] = Field(default_factory=list)
+    report_json_path: str
+    report_markdown_path: str | None = None
+
+
+class RagOperationsResponse(BaseModel):
+    status: str
+    window_hours: int
+    active_reviewed_metadata_version: str | None = None
+    embedding_model: str
+    student_retrieval_enabled: bool
+    production_gate_required: bool
+    production_gate_status: dict[str, Any] = Field(default_factory=dict)
+    query_volume: int = 0
+    no_result_rate: float = 0.0
+    low_confidence_rate: float = 0.0
+    average_retrieval_latency_ms: float = 0.0
+    p95_retrieval_latency_ms: float = 0.0
+    source_type_distribution: dict[str, int] = Field(default_factory=dict)
+    quality_status_counts: dict[str, int] = Field(default_factory=dict)
+    missing_citation_metadata_count: int = 0
+    latest_embedding_job: dict[str, Any] | None = None
+    latest_evaluation: dict[str, Any] | None = None
+    latest_student_flow_qa: dict[str, Any] | None = None
+    degraded_reasons: list[str] = Field(default_factory=list)
 
 
 class RetrievedChunkLogResponse(BaseModel):

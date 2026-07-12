@@ -1010,6 +1010,7 @@ async def store_solution_book_chunks(
             continue
         candidate = {
             **(chunk.metadata or {}),
+            "content": chunk.content,
             "source_type": chunk.source_type,
             "printed_page_start": chunk.metadata.get("printed_page_start"),
             "printed_page_end": chunk.metadata.get("printed_page_end"),

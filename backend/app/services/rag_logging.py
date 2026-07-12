@@ -26,6 +26,39 @@ def _average(values: list[float]) -> float | None:
     return round(sum(values) / len(values), 4) if values else None
 
 
+def _chunk_observability(chunks: Sequence[Any]) -> dict[str, Any]:
+    quality_counts = {"ready": 0, "needs_review": 0, "blocked": 0, "unknown": 0}
+    source_type_counts: dict[str, int] = {}
+    reviewed_versions: set[str] = set()
+    missing_citation_metadata_count = 0
+    for chunk in chunks:
+        quality = str(getattr(chunk, "quality_status", None) or "unknown")
+        quality_counts[quality if quality in quality_counts else "unknown"] += 1
+        source_type = str(getattr(chunk, "source_type", None) or "unknown")
+        source_type_counts[source_type] = source_type_counts.get(source_type, 0) + 1
+        version = str(getattr(chunk, "reviewed_metadata_version", None) or "")
+        if version:
+            reviewed_versions.add(version)
+        required_values = (
+            getattr(chunk, "id", None),
+            getattr(chunk, "source_id", None),
+            getattr(chunk, "source_type", None),
+            getattr(chunk, "page_number", None),
+            getattr(chunk, "unit_id", None),
+            getattr(chunk, "lesson_id", None),
+            getattr(chunk, "quality_status", None),
+            getattr(chunk, "reviewed_metadata_version", None),
+        )
+        if any(value in (None, "", []) for value in required_values):
+            missing_citation_metadata_count += 1
+    return {
+        "quality_status_counts": quality_counts,
+        "source_type_counts": source_type_counts,
+        "reviewed_metadata_versions": sorted(reviewed_versions),
+        "missing_citation_metadata_count": missing_citation_metadata_count,
+    }
+
+
 async def log_rag_retrieval(
     *,
     user_id: int | None,
@@ -60,6 +93,7 @@ async def log_rag_retrieval(
     if retrieval_latency_ms is not None or generation_latency_ms is not None:
         total_latency_ms = int(retrieval_latency_ms or 0) + int(generation_latency_ms or 0)
 
+    enriched_metadata = {**(metadata_json or {}), **_chunk_observability(chunks)}
     try:
         async with AsyncSessionLocal() as db:
             log = RagQueryLog(
@@ -79,7 +113,7 @@ async def log_rag_retrieval(
                 avg_similarity=avg_similarity,
                 low_confidence=low_confidence,
                 answer_confidence=answer_confidence,
-                metadata_json=metadata_json or {},
+                metadata_json=enriched_metadata,
             )
             db.add(log)
             await db.flush()

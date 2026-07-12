@@ -70,7 +70,8 @@ const normalizeType = (type: BackendNotification['type']): NotificationItem['typ
   if (type === 'lesson_reminder') return 'study_reminder';
   if (type === 'exam') return 'exam_countdown';
   if (type === 'lesson') return 'study_reminder';
-  if (type === 'quiz') return 'quiz_reminder';
+  if (type === 'quiz') return 'quiz_due';
+  if (type === 'quiz_reminder') return 'quiz_due';
   return type;
 };
 
@@ -79,7 +80,10 @@ const actionLabelFor = (type: NotificationItem['type'], actionUrl?: string): str
   if (type === 'exam_countdown') return 'عرض خطة الامتحان';
   if (type === 'study_reminder' || type === 'overdue_lesson') return 'افتح الخطة';
   if (type === 'flashcards_due') return 'راجع البطاقات';
-  if (type === 'weak_topic' || type === 'quiz_reminder') return 'ابدأ التدريب';
+  if (type === 'weak_topic' || type === 'quiz_due') return 'ابدأ التدريب';
+  if (type === 'homework_feedback') return 'راجع الملاحظات';
+  if (type === 'achievement_unlocked') return 'عرض الإنجاز';
+  if (type === 'streak_warning') return 'حافظ على السلسلة';
   return 'فتح';
 };
 
@@ -101,133 +105,54 @@ const mapBackendNotification = (item: BackendNotification): NotificationItem => 
   action_label: actionLabelFor(normalizeType(item.type), item.action_url || undefined)
 });
 
-// Client-side local state mock fallback
-let localNotifications: NotificationItem[] = [
-  {
-    id: 'notif-1',
-    title: 'امتحان الكيمياء يقترب!',
-    message: 'تبقت 13 يوماً على الامتحان النهائي. راجع خطة الامتحان الخاصة بك.',
-    type: 'exam_countdown',
-    priority: 'high',
-    status: 'unread',
-    scheduled_at: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
-    related_entity_type: 'plan',
-    action_label: 'عرض خطة الامتحان',
-    action_url: '/study-plan'
-  },
-  {
-    id: 'notif-2',
-    title: 'درس اليوم بانتظارك',
-    message: 'حان وقت درس "الروابط التساهمية والأيونية". ابدأ الدراسة الآن لتحافظ على استمراريتك اليومية.',
-    type: 'study_reminder',
-    priority: 'normal',
-    status: 'unread',
-    scheduled_at: new Date(Date.now() - 1000 * 60 * 120).toISOString(),
-    related_entity_type: 'lesson',
-    related_entity_id: 'lesson_2_2',
-    action_label: 'ابدأ الدرس',
-    action_url: '/lessons/lesson_2_2'
-  }
-];
-
-let localPreferences: NotificationPreferenceItem = {
-  push_enabled: true,
-  email_enabled: false,
-  in_app_enabled: true,
-  daily_study_reminder_enabled: true,
-  daily_study_reminder_time: '08:00',
-  exam_reminder_enabled: true,
-  flashcards_reminder_enabled: true,
-  overdue_lesson_reminder_enabled: true,
-  weak_topic_reminder_enabled: true,
-  quiet_hours_enabled: false,
-  quiet_hours_start: '22:00',
-  quiet_hours_end: '07:00',
-  exam_reminders_enabled: true,
-  lesson_reminders_enabled: true,
-  reminder_time_local: '08:00',
-  timezone: 'UTC'
-};
-
 export const notificationsApi = {
   async getNotifications(query: NotificationQuery = {}): Promise<NotificationItem[]> {
-    try {
-      const { data } = await api.get<BackendNotification[]>('/notifications', { params: query });
-      return data.map(mapBackendNotification);
-    } catch {
-      return [...localNotifications].filter((notification) => {
-        if (query.status && notification.status !== query.status) return false;
-        if (query.type && notification.type !== query.type) return false;
-        return true;
-      }).slice(query.offset ?? 0, (query.offset ?? 0) + (query.limit ?? localNotifications.length));
-    }
+    const { data } = await api.get<BackendNotification[]>('/notifications', { params: query });
+    return data.map(mapBackendNotification);
   },
 
   async getUnreadCount(): Promise<{ unread_count: number }> {
-    try {
-      const { data } = await api.get<{ unread_count: number }>('/notifications/unread-count');
-      return data;
-    } catch {
-      return {
-        unread_count: localNotifications.filter((notification) => notification.status === 'unread').length
-      };
-    }
+    const { data } = await api.get<{ unread_count: number }>('/notifications/unread-count');
+    return data;
   },
 
   async markAsRead(id: string): Promise<NotificationItem | null> {
-    try {
-      const { data } = await api.patch<BackendNotification>(`/notifications/${id}/read`);
-      return mapBackendNotification(data);
-    } catch {
-      localNotifications = localNotifications.map(n =>
-        n.id === id ? { ...n, status: 'read' } : n
-      );
-      return localNotifications.find(n => n.id === id) || null;
-    }
+    const { data } = await api.patch<BackendNotification>(`/notifications/${id}/read`);
+    return mapBackendNotification(data);
   },
 
   async markAllRead(): Promise<{ success: boolean }> {
     try {
-      await api.post('/notifications/mark-all-read');
+      await api.patch('/notifications/read-all');
       return { success: true };
     } catch {
-      try {
-        await api.patch('/notifications/mark-all-read');
-        return { success: true };
-      } catch {
-        localNotifications = localNotifications.map(n => ({ ...n, status: 'read' }));
-        return { success: true };
-      }
+      await api.patch('/notifications/mark-all-read');
+      return { success: true };
     }
   },
 
   async deleteNotification(id: string): Promise<{ success: boolean }> {
-    try {
-      await api.delete(`/notifications/${id}`);
-      return { success: true };
-    } catch {
-      localNotifications = localNotifications.filter(n => n.id !== id);
-      return { success: true };
-    }
+    await api.delete(`/notifications/${id}`);
+    return { success: true };
   },
 
   async getPreferences(): Promise<NotificationPreferenceItem> {
     try {
-      const { data } = await api.get<NotificationPreferenceItem>('/notification-preferences');
+      const { data } = await api.get<NotificationPreferenceItem>('/users/me/notification-settings');
       return data;
     } catch {
-      return { ...localPreferences };
+      const { data } = await api.get<NotificationPreferenceItem>('/notification-preferences');
+      return data;
     }
   },
 
   async updatePreferences(updates: Partial<NotificationPreferenceItem>): Promise<NotificationPreferenceItem> {
     try {
-      const { data } = await api.patch<NotificationPreferenceItem>('/notification-preferences', updates);
-      localPreferences = { ...localPreferences, ...data };
+      const { data } = await api.patch<NotificationPreferenceItem>('/users/me/notification-settings', updates);
       return data;
     } catch {
-      localPreferences = { ...localPreferences, ...updates };
-      return { ...localPreferences };
+      const { data } = await api.patch<NotificationPreferenceItem>('/notification-preferences', updates);
+      return data;
     }
   },
 
@@ -250,24 +175,8 @@ export const notificationsApi = {
   },
 
   async sendTestNotification(): Promise<NotificationItem> {
-    try {
-      const { data } = await api.post<BackendNotification>('/notifications/test');
-      return mapBackendNotification(data);
-    } catch {
-      const notification: NotificationItem = {
-        id: `local-test-${Date.now()}`,
-        title: 'اختبار الإشعارات',
-        message: 'هذه رسالة اختبار محلية.',
-        type: 'system',
-        priority: 'normal',
-        status: 'unread',
-        scheduled_at: new Date().toISOString(),
-        action_url: '/notifications',
-        action_label: 'فتح',
-      };
-      localNotifications = [notification, ...localNotifications];
-      return notification;
-    }
+    const { data } = await api.post<BackendNotification>('/notifications/test');
+    return mapBackendNotification(data);
   },
 
   async registerPushToken(request: PushTokenRequest): Promise<PushTokenResponse> {

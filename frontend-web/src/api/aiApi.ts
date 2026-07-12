@@ -15,8 +15,14 @@ interface BackendChatSource {
   chunk_id: number;
   source_id: number;
   source?: string | null;
+  source_type?: string | null;
   page_number?: number | null;
   content_type: string;
+  unit_id?: string | number | null;
+  lesson_id?: string | number | null;
+  quality_status?: string | null;
+  reviewed_metadata_version?: string | null;
+  curriculum_metadata?: Record<string, unknown> | null;
   similarity_score: number;
 }
 
@@ -24,6 +30,9 @@ interface BackendChatAnswer {
   answer: string;
   answer_text?: string;
   answer_type: string;
+  format?: string;
+  audio_url?: string | null;
+  audio_status?: AiAskResponse['audio_status'];
   route: string;
   blocks?: Array<{ type: string; content: string; url?: string | null; image_url?: string | null; page?: number | null; metadata?: Record<string, unknown> }>;
   sources: BackendChatSource[];
@@ -58,12 +67,26 @@ const asString = (value: unknown): string | undefined => (
   typeof value === 'string' ? value : undefined
 );
 
+const asId = (value: unknown): string | number | null | undefined => (
+  (typeof value === 'string' || (typeof value === 'number' && Number.isFinite(value))) ? value : value === null ? null : undefined
+);
+
+const asRecord = (value: unknown): Record<string, unknown> | null | undefined => (
+  value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : value === null ? null : undefined
+);
+
 const mapSourceRecord = (source: Record<string, unknown>): SourceCitation => ({
   title: asString(source.source) || asString(source.title) || 'كتاب الكيمياء - الصف التاسع',
   page: asNumber(source.page_number) ?? asNumber(source.page) ?? null,
   chunk_id: asNumber(source.chunk_id) ?? asString(source.chunk_id) ?? 'unknown',
   quote: asString(source.content_type) || asString(source.quote),
   score: asNumber(source.similarity_score) ?? asNumber(source.score),
+  source_type: asString(source.source_type),
+  unit_id: asId(source.unit_id),
+  lesson_id: asId(source.lesson_id),
+  quality_status: asString(source.quality_status) ?? null,
+  reviewed_metadata_version: asString(source.reviewed_metadata_version) ?? null,
+  curriculum_metadata: asRecord(source.curriculum_metadata) ?? null,
 });
 
 const mapBackendAnswer = (request: AiAskRequest, response: BackendChatAnswer): AiAskResponse => {
@@ -74,6 +97,12 @@ const mapBackendAnswer = (request: AiAskRequest, response: BackendChatAnswer): A
     chunk_id: source.chunk_id,
     quote: source.content_type,
     score: source.similarity_score,
+    source_type: source.source_type ?? undefined,
+    unit_id: source.unit_id,
+    lesson_id: source.lesson_id,
+    quality_status: source.quality_status ?? null,
+    reviewed_metadata_version: source.reviewed_metadata_version ?? null,
+    curriculum_metadata: source.curriculum_metadata ?? null,
   }));
 
   const result: AiAskResponse = {
@@ -81,10 +110,13 @@ const mapBackendAnswer = (request: AiAskRequest, response: BackendChatAnswer): A
     sources: citations,
     citations,
     confidence: response.confidence,
-    format: request.answer_format,
+    format: (response.format === 'text' || response.format === 'audio' || response.format === 'image' || response.format === 'video')
+      ? response.format
+      : request.answer_format,
     answer_type: response.answer_type,
     route: response.route,
     diagnostics: response.diagnostics,
+    audio_status: response.audio_status,
     teaching_level: response.teaching_level,
     explanation_method: response.explanation_method,
     learning_modes: response.learning_modes,
@@ -95,7 +127,8 @@ const mapBackendAnswer = (request: AiAskRequest, response: BackendChatAnswer): A
   const blocks = [...(response.blocks || []), ...(response.media_blocks || [])];
   const audioBlock = blocks.find((block) => block.type === 'audio' && block.url);
   const imageBlock = blocks.find((block) => ['image', 'source_page', 'source_image'].includes(block.type) && (block.image_url || block.url));
-  if (audioBlock?.url) result.audio_url = mediaUrl(audioBlock.url);
+  if (response.audio_url) result.audio_url = mediaUrl(response.audio_url);
+  if (!result.audio_url && audioBlock?.url) result.audio_url = mediaUrl(audioBlock.url);
   if (imageBlock?.image_url) result.source_page_image_url = mediaUrl(imageBlock.image_url);
   if (imageBlock?.url) result.source_page_image_url = mediaUrl(imageBlock.url);
 
@@ -142,6 +175,7 @@ export const messageResponseToAskResponse = (
     answer_type: message.answer_type || undefined,
     route: message.route || undefined,
     diagnostics: message.diagnostics,
+    audio_status: message.audio_status,
     media_blocks: mediaBlocks,
   };
 
@@ -264,12 +298,15 @@ export const aiApi = {
 
   async ask(request: AiAskRequest): Promise<AiAskResponse> {
     try {
-      const { data } = await api.post<BackendChatAnswer>('/chat/ask', {
+      const { data } = await api.post<BackendChatAnswer>('/ai/ask', {
         conversation_id: request.conversation_id,
         parent_message_id: request.parent_message_id,
         question: request.question,
         message: request.question,
+        subject: request.subject,
+        grade: request.grade,
         source_types: request.source_types,
+        answer_format: request.answer_format,
         preferred_answer_type: request.answer_format,
         answer_scope: request.answer_scope ?? 'auto',
         teaching_style: request.teaching_style,

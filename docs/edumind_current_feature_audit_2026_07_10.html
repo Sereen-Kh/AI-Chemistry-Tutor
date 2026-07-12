@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Source-backed EduMind feature implementation audit for 10 July 2026.">
+  <title>EduMind Current Feature Audit — 2026-07-10</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #071018;
+      --bg-soft: #0b1723;
+      --surface: #101d2a;
+      --surface-strong: #14283a;
+      --surface-muted: #0b1622;
+      --line: #294156;
+      --line-soft: rgba(255, 255, 255, 0.09);
+      --text: #f0f8f5;
+      --muted: #9eb2c4;
+      --ready: #12d7aa;
+      --partial: #f3c74f;
+      --stub: #ff786f;
+      --planned: #aa92ff;
+      --danger: #ff5d78;
+      --blue: #67a0ff;
+      --radius: 8px;
+      --shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      background:
+        radial-gradient(circle at 13% 5%, rgba(18, 215, 170, 0.14), transparent 27rem),
+        radial-gradient(circle at 88% 2%, rgba(170, 146, 255, 0.15), transparent 30rem),
+        linear-gradient(180deg, var(--bg), var(--bg-soft) 55%, #09131e);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.65;
+      letter-spacing: 0;
+    }
+
+    a { color: #a9c7ff; }
+    a:hover { color: #d7e5ff; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button:focus-visible, a:focus-visible { outline: 3px solid rgba(103, 160, 255, 0.7); outline-offset: 3px; }
+
+    .shell { width: min(1440px, calc(100vw - 36px)); margin: 0 auto; }
+
+    .hero {
+      padding: 56px 0 36px;
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+      gap: 32px;
+      align-items: end;
+    }
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--ready);
+      font-size: 0.78rem;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    h1, h2, h3 { line-height: 1.18; letter-spacing: 0; }
+    h1 { margin: 0; max-width: 880px; font-size: clamp(2.35rem, 5vw, 4.9rem); }
+    .hero-copy { margin: 18px 0 0; max-width: 800px; color: var(--muted); font-size: 1.05rem; }
+    .hero-meta { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 10px; }
+
+    .maturity-card {
+      display: grid;
+      grid-template-columns: 148px 1fr;
+      gap: 20px;
+      align-items: center;
+      padding: 22px;
+      border: 1px solid var(--line-soft);
+      border-radius: var(--radius);
+      background: linear-gradient(145deg, rgba(20, 40, 58, 0.9), rgba(9, 22, 33, 0.92));
+      box-shadow: var(--shadow);
+    }
+    .donut {
+      width: 148px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: conic-gradient(var(--ready) 0 40%, var(--partial) 40% 80%, var(--stub) 80% 90%, var(--planned) 90% 100%);
+      position: relative;
+    }
+    .donut::after { content: ""; position: absolute; inset: 18px; border-radius: 50%; background: #0d1a27; }
+    .donut strong { z-index: 1; font-size: 2rem; }
+    .maturity-legend { display: grid; gap: 8px; }
+    .legend-row { display: flex; justify-content: space-between; gap: 14px; color: var(--muted); font-size: 0.88rem; }
+    .legend-label { display: inline-flex; gap: 8px; align-items: center; }
+    .dot { width: 9px; height: 9px; border-radius: 50%; flex: 0 0 auto; }
+    .dot-ready { background: var(--ready); }
+    .dot-partial { background: var(--partial); }
+    .dot-stub { background: var(--stub); }
+    .dot-planned { background: var(--planned); }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--line-soft);
+      background: rgba(7, 16, 24, 0.92);
+      backdrop-filter: blur(16px);
+    }
+    .toolbar-inner { min-height: 64px; display: flex; align-items: center; gap: 9px; overflow-x: auto; scrollbar-width: thin; }
+    .nav-link, .filter-button {
+      flex: 0 0 auto;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: rgba(255, 255, 255, 0.035);
+      color: var(--text);
+      padding: 9px 12px;
+      text-decoration: none;
+      font: inherit;
+      font-size: 0.85rem;
+      font-weight: 760;
+      cursor: pointer;
+    }
+    .nav-link:hover, .filter-button:hover, .filter-button.is-active { border-color: var(--blue); background: rgba(103, 160, 255, 0.12); }
+    .nav-spacer { flex: 1 1 auto; min-width: 14px; }
+
+    main { padding: 32px 0 72px; }
+    .section { margin-top: 42px; scroll-margin-top: 86px; }
+    .section-header { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin-bottom: 18px; }
+    .section-header h2 { margin: 0; font-size: clamp(1.55rem, 2.4vw, 2.35rem); }
+    .section-header p { margin: 7px 0 0; color: var(--muted); }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
+    .stat-card {
+      min-height: 134px;
+      padding: 18px;
+      border: 1px solid var(--line-soft);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(19, 40, 58, 0.85), rgba(12, 24, 36, 0.92));
+    }
+    .stat-label { display: block; color: var(--muted); font-size: 0.78rem; font-weight: 750; text-transform: uppercase; }
+    .stat-value { display: block; margin: 8px 0 10px; font-size: 2rem; font-weight: 900; line-height: 1; }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 3px 9px;
+      border: 1px solid currentColor;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+    .status-implemented { color: var(--ready); background: rgba(18, 215, 170, 0.09); }
+    .status-partial { color: var(--partial); background: rgba(243, 199, 79, 0.1); }
+    .status-stub { color: var(--stub); background: rgba(255, 120, 111, 0.1); }
+    .status-planned { color: var(--planned); background: rgba(170, 146, 255, 0.1); }
+    .risk-high { color: var(--danger); background: rgba(255, 93, 120, 0.08); }
+    .risk-medium { color: var(--partial); background: rgba(243, 199, 79, 0.08); }
+    .risk-low { color: var(--ready); background: rgba(18, 215, 170, 0.08); }
+
+    .feature-controls { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
+    .feature-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+    .feature-card {
+      min-height: 226px;
+      padding: 18px;
+      border: 1px solid var(--line-soft);
+      border-radius: var(--radius);
+      background: linear-gradient(165deg, rgba(20, 40, 58, 0.9), rgba(10, 21, 32, 0.94));
+      box-shadow: 0 14px 38px rgba(0, 0, 0, 0.18);
+      display: flex;
+      flex-direction: column;
+      transition: transform 160ms ease, border-color 160ms ease;
+    }
+    .feature-card:hover { transform: translateY(-3px); border-color: rgba(103, 160, 255, 0.45); }
+    .feature-card[hidden] { display: none; }
+    .feature-card__top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .feature-number { color: #688097; font-size: 0.82rem; font-weight: 900; }
+    .feature-card h3 { margin: 21px 0 9px; font-size: 1.08rem; }
+    .feature-card p { margin: 0 0 18px; color: var(--muted); font-size: 0.9rem; }
+    .feature-card > .pill:last-child { margin-top: auto; align-self: flex-start; }
+
+    .report {
+      padding: clamp(18px, 3.4vw, 44px);
+      border: 1px solid var(--line-soft);
+      border-radius: var(--radius);
+      background: rgba(10, 22, 33, 0.9);
+      box-shadow: var(--shadow);
+    }
+    .report h2 { margin: 52px 0 14px; padding-top: 8px; font-size: clamp(1.55rem, 2.3vw, 2.2rem); scroll-margin-top: 88px; }
+    .report h2:first-child { margin-top: 0; }
+    .report h3 {
+      margin: 32px 0 10px;
+      padding: 16px 18px;
+      border-left: 3px solid var(--blue);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      background: rgba(103, 160, 255, 0.075);
+      font-size: 1.08rem;
+      scroll-margin-top: 88px;
+    }
+    .report p { color: #c5d4df; }
+    .report ul, .report ol { padding-left: 24px; color: #c5d4df; }
+    .report li { margin: 6px 0; }
+    .report code {
+      color: #b9f7e4;
+      background: rgba(255, 255, 255, 0.075);
+      padding: 2px 6px;
+      border-radius: 5px;
+      overflow-wrap: anywhere;
+    }
+    .table-scroll { overflow-x: auto; margin: 16px 0 26px; border: 1px solid var(--line-soft); border-radius: var(--radius); }
+    .report table { width: 100%; min-width: 760px; border-collapse: collapse; background: rgba(7, 16, 24, 0.52); }
+    .report th, .report td { padding: 11px 13px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line-soft); }
+    .report th { position: sticky; top: 63px; z-index: 2; color: #e5efff; background: #14263a; font-size: 0.76rem; text-transform: uppercase; }
+    .report td { color: #d2dfe8; font-size: 0.88rem; }
+    .report .align-right { text-align: right; }
+    .report tr:last-child td { border-bottom: 0; }
+    .report tbody tr:hover { background: rgba(103, 160, 255, 0.055); }
+    .report td.cell-implemented { color: var(--ready); font-weight: 850; }
+    .report td.cell-partial { color: var(--partial); font-weight: 850; }
+    .report td.cell-stub { color: var(--stub); font-weight: 850; }
+    .report td.cell-planned { color: var(--planned); font-weight: 850; }
+    .report td.cell-high { color: var(--danger); font-weight: 850; }
+    .report td.cell-medium { color: var(--partial); font-weight: 850; }
+    .report td.cell-low { color: var(--ready); font-weight: 850; }
+
+    .footer { padding: 28px 0 48px; color: var(--muted); text-align: center; }
+    .back-to-top {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: var(--text);
+      background: rgba(13, 27, 40, 0.92);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+
+    @media (max-width: 1160px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .maturity-card { width: min(560px, 100%); }
+      .stats-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .feature-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 680px) {
+      .shell { width: min(100% - 20px, 1440px); }
+      .hero { padding: 34px 0 24px; }
+      .hero-grid { gap: 22px; }
+      .maturity-card { grid-template-columns: 112px 1fr; padding: 16px; }
+      .donut { width: 112px; }
+      .stats-grid, .feature-grid { grid-template-columns: 1fr; }
+      .stat-card { min-height: 110px; }
+      .section-header { align-items: start; flex-direction: column; }
+      .report { padding: 18px 14px; }
+      .report h3 { padding: 13px 12px; }
+      .report th { top: 63px; }
+      .back-to-top { right: 10px; bottom: 10px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+    @media print {
+      :root { color-scheme: light; }
+      body { background: white; color: #101820; }
+      .toolbar, .feature-controls, .back-to-top { display: none; }
+      .hero, .report, .feature-card, .stat-card, .maturity-card { box-shadow: none; background: white; color: #101820; border-color: #cad2d9; }
+      .hero-copy, .feature-card p, .report p, .report ul, .report ol, .report td, .footer { color: #334550; }
+      .report th { position: static; background: #edf2f6; color: #101820; }
+      .report code { color: #075e4f; background: #edf4f2; }
+    }
+  </style>
+</head>
+<body id="top">
+  <header class="hero">
+    <div class="shell hero-grid">
+      <div>
+        <p class="eyebrow">Source-backed system audit · 10 July 2026</p>
+        <h1>EduMind Feature Implementation Dashboard</h1>
+        <p class="hero-copy">A visual and evidence-backed view of what is implemented, what remains partial, the current API and database surface, and the order in which the remaining risks should be addressed.</p>
+        <div class="hero-meta">
+          <span class="pill status-implemented">8 implemented / MVP</span>
+          <span class="pill status-partial">8 partial</span>
+          <span class="pill status-stub">2 stub / partial</span>
+          <span class="pill status-planned">2 planned only</span>
+        </div>
+      </div>
+      <aside class="maturity-card" aria-label="Feature maturity distribution">
+        <div class="donut" aria-hidden="true"><strong>20</strong></div>
+        <div class="maturity-legend">
+          <strong>Feature maturity</strong>
+          <div class="legend-row"><span class="legend-label"><span class="dot dot-ready"></span>Implemented / MVP</span><b>8</b></div>
+          <div class="legend-row"><span class="legend-label"><span class="dot dot-partial"></span>Partial</span><b>8</b></div>
+          <div class="legend-row"><span class="legend-label"><span class="dot dot-stub"></span>Stub / partial</span><b>2</b></div>
+          <div class="legend-row"><span class="legend-label"><span class="dot dot-planned"></span>Planned only</span><b>2</b></div>
+        </div>
+      </aside>
+    </div>
+  </header>
+
+  <nav class="toolbar" aria-label="Audit sections">
+    <div class="shell toolbar-inner">
+      <a class="nav-link" href="#overview">Overview</a>
+      <a class="nav-link" href="#feature-summary">Features</a>
+      <a class="nav-link" href="#full-audit">Full audit</a>
+      <a class="nav-link" href="#api-map">APIs</a>
+      <a class="nav-link" href="#database-models">Database</a>
+      <a class="nav-link" href="#partial-roadmap">Roadmap</a>
+      <span class="nav-spacer"></span>
+      <a class="nav-link" href="./edumind_current_feature_audit_2026_07_10.md">Markdown source</a>
+    </div>
+  </nav>
+
+  <main class="shell">
+    <section id="overview" class="section">
+      <div class="section-header">
+        <div><h2>Current System Snapshot</h2><p>Counts and risk indicators confirmed in the July 10 source audit.</p></div>
+      </div>
+      <div class="stats-grid">
+        <article class="stat-card"><span class="stat-label">Features audited</span><span class="stat-value">20</span><span class="pill status-implemented">Full scope</span></article>
+        <article class="stat-card"><span class="stat-label">SQLAlchemy tables</span><span class="stat-value">42</span><span class="pill status-partial">Metadata inspected</span></article>
+        <article class="stat-card"><span class="stat-label">Implemented / MVP</span><span class="stat-value">8</span><span class="pill status-implemented">40%</span></article>
+        <article class="stat-card"><span class="stat-label">Partial</span><span class="stat-value">8</span><span class="pill status-partial">40%</span></article>
+        <article class="stat-card"><span class="stat-label">Stub / planned</span><span class="stat-value">4</span><span class="pill status-stub">20%</span></article>
+        <article class="stat-card"><span class="stat-label">High-risk features</span><span class="stat-value">6</span><span class="pill risk-high">Attention</span></article>
+      </div>
+    </section>
+
+    <section id="feature-summary" class="section">
+      <div class="section-header">
+        <div><h2>Feature Status</h2><p>Filter the current product surface by maturity. Each card links conceptually to its detailed evidence below.</p></div>
+      </div>
+      <div class="feature-controls" role="group" aria-label="Filter features by status">
+        <button class="filter-button is-active" type="button" data-filter="all">All · 20</button>
+        <button class="filter-button" type="button" data-filter="implemented">Implemented / MVP · 8</button>
+        <button class="filter-button" type="button" data-filter="partial">Partial · 8</button>
+        <button class="filter-button" type="button" data-filter="stub">Stub / partial · 2</button>
+        <button class="filter-button" type="button" data-filter="planned">Planned only · 2</button>
+      </div>
+      <div class="feature-grid">
+    <article class="feature-card" data-status="implemented" data-risk="low">
+      <div class="feature-card__top">
+        <span class="feature-number">01</span>
+        <span class="pill status-implemented">Implemented</span>
+      </div>
+      <h3>Auth / Login / Register</h3>
+      <p>Authentication, user storage, frontend flows, and tests are present.</p>
+      <span class="pill risk-low">Low risk</span>
+    </article>
+    <article class="feature-card" data-status="implemented" data-risk="low">
+      <div class="feature-card__top">
+        <span class="feature-number">02</span>
+        <span class="pill status-implemented">Implemented</span>
+      </div>
+      <h3>Profile / Onboarding</h3>
+      <p>Persistent profiles, interests, preferences, and onboarding are connected.</p>
+      <span class="pill risk-low">Low risk</span>
+    </article>
+    <article class="feature-card" data-status="partial" data-risk="medium">
+      <div class="feature-card__top">
+        <span class="feature-number">03</span>
+        <span class="pill status-partial">Partial</span>
+      </div>
+      <h3>Curriculum</h3>
+      <p>Core hierarchy exists; production content consistency still needs validation.</p>
+      <span class="pill risk-medium">Medium risk</span>
+    </article>
+    <article class="feature-card" data-status="implemented" data-risk="medium">
+      <div class="feature-card__top">
+        <span class="feature-number">04</span>
+        <span class="pill status-implemented">Implemented MVP</span>
+      </div>
+      <h3>Ask AI Chat</h3>
+      <p>Persistent RAG chat works; unsupported transforms remain limited.</p>
+      <span class="pill risk-medium">Medium risk</span>
+    </article>
+    <article class="feature-card" data-status="implemented" data-risk="medium">
+      <div class="feature-card__top">
+        <span class="feature-number">05</span>
+        <span class="pill status-implemented">Implemented MVP</span>
+      </div>
+      <h3>RAG Retrieval</h3>
+      <p>Retrieval and citations work when reviewed vectors are available.</p>
+      <span class="pill risk-medium">Medium risk</span>
+    </article>
+    <article class="feature-card" data-status="partial" data-risk="high">
+      <div class="feature-card__top">
+        <span class="feature-number">06</span>
+        <span class="pill status-partial">Partial</span>
+      </div>
+      <h3>RAG Ingestion / Admin</h3>
+      <p>Admin visibility exists; indexed reviewed workflow remains the main blocker.</p>
+      <span class="pill risk-high">High risk</span>
+    </article>
+    <article class="feature-card" data-status="partial" data-risk="high">
+      <div class="feature-card__top">
+        <span class="feature-number">07</span>
+        <span class="pill status-partial">Partial</span>
+      </div>
+      <h3>Audio STT / TTS</h3>
+      <p>Provider abstractions exist; production credentials and URLs need verification.</p>
+      <span class="pill risk-high">High risk</span>
+    </article>
+    <article class="feature-card" data-status="implemented" data-risk="medium">
+      <div class="feature-card__top">
+        <span class="feature-number">08</span>
+        <span class="pill status-implemented">Implemented MVP</span>
+      </div>
+      <h3>Study Plan</h3>
+      <p>Plan generation and progress work with a JSON-backed contract.</p>
+      <span class="pill risk-medium">Medium risk</span>
+    </article>
+    <article class="feature-card" data-status="partial" data-risk="medium">
+      <div class="feature-card__top">
+        <span class="feature-number">09</span>
+        <span class="pill status-partial">Partial</span>
+      </div>
+      <h3>Study Session</h3>
+      <p>Frontend session exists without a dedicated persistent lifecycle.</p>
+      <span class="pill risk-medium">Medium risk</span>
+    </article>
+    <article class="feature-card" data-status="implemented" data-risk="medium">
+      <div class="feature-card__top">
+        <span class="feature-number">10</span>
+        <span class="pill status-implemented">Implemented MVP</span>
+      </div>
+      <h3>Quiz Generation / Submission</h3>
+      <p>Reviewed-content gates and attempts work; grading is still basic.</p>
+      <span class="pill risk-medium">Medium risk</span>
+    </article>
+    <article class="feature-card" data-status="implemented" data-risk="medium">
+      <div class="feature-card__top">
+        <span class="feature-number">11</span>
+        <span class="pill status-implemented">Implemented MVP</span>
+      </div>
+      <h3>Flashcard Generation / Review</h3>
+      <p>Ready-only generation and spaced review workflow are connected.</p>
+      <span class="pill risk-medium">Medium risk</span>
+    </article>
+    <article class="feature-card" data-status="partial" data-risk="high">
+      <div class="feature-card__top">
+        <span class="feature-number">12</span>
+        <span class="pill status-partial">Partial</span>
+      </div>
+      <h3>Homework Solver</h3>
+      <p>Text/image paths exist; upload, provider, and citation UX need hardening.</p>
+      <span class="pill risk-high">High risk</span>
+    </article>
+    <article class="feature-card" data-status="partial" data-risk="medium">
+      <div class="feature-card__top">
+        <span class="feature-number">13</span>
+        <span class="pill status-partial">Partial MVP</span>
+      </div>
+      <h3>Guided Lab / Equation Tools</h3>
+      <p>Guided solver works; broader tools are frontend or local-only.</p>
+      <span class="pill risk-medium">Medium risk</span>
+    </article>
+    <article class="feature-card" data-status="partial" data-risk="medium">
+      <div class="feature-card__top">
+        <span class="feature-number">14</span>
+        <span class="pill status-partial">Partial</span>
+      </div>
+      <h3>Dashboard / Progress</h3>
+      <p>Aggregation exists without one authoritative progress definition.</p>
+      <span class="pill risk-medium">Medium risk</span>
+    </article>
+    <article class="feature-card" data-status="implemented" data-risk="medium">
+      <div class="feature-card__top">
+        <span class="feature-number">15</span>
+        <span class="pill status-implemented">Implemented MVP</span>
+      </div>
+      <h3>Notifications / Settings</h3>
+      <p>In-app center and settings work; scheduler deployment needs confirmation.</p>
+      <span class="pill risk-medium">Medium risk</span>
+    </article>
+    <article class="feature-card" data-status="partial" data-risk="high">
+      <div class="feature-card__top">
+        <span class="feature-number">16</span>
+        <span class="pill status-partial">Partial</span>
+      </div>
+      <h3>Push Tokens / Delivery</h3>
+      <p>Provider routing exists; real FCM/Expo delivery is not fully proven.</p>
+      <span class="pill risk-high">High risk</span>
+    </article>
+    <article class="feature-card" data-status="stub" data-risk="medium">
+      <div class="feature-card__top">
+        <span class="feature-number">17</span>
+        <span class="pill status-stub">Stub/partial</span>
+      </div>
+      <h3>Achievements / XP</h3>
+      <p>Storage and display hooks exist without a central awarding engine.</p>
+      <span class="pill risk-medium">Medium risk</span>
+    </article>
+    <article class="feature-card" data-status="planned" data-risk="high">
+      <div class="feature-card__top">
+        <span class="feature-number">18</span>
+        <span class="pill status-planned">Planned only</span>
+      </div>
+      <h3>Reels / Video</h3>
+      <p>Model and placeholder UI exist without a generation pipeline.</p>
+      <span class="pill risk-high">High risk</span>
+    </article>
+    <article class="feature-card" data-status="planned" data-risk="high">
+      <div class="feature-card__top">
+        <span class="feature-number">19</span>
+        <span class="pill status-planned">Planned only</span>
+      </div>
+      <h3>Subscriptions / Billing</h3>
+      <p>A model exists without checkout, webhooks, or entitlement enforcement.</p>
+      <span class="pill risk-high">High risk</span>
+    </article>
+    <article class="feature-card" data-status="stub" data-risk="medium">
+      <div class="feature-card__top">
+        <span class="feature-number">20</span>
+        <span class="pill status-stub">Stub/partial</span>
+      </div>
+      <h3>AI Companion</h3>
+      <p>Guide UI exists, but backend behavior is rule-based and placeholder-level.</p>
+      <span class="pill risk-medium">Medium risk</span>
+    </article>
+      </div>
+    </section>
+
+    <section id="full-audit" class="section">
+      <div class="section-header">
+        <div><h2>Complete Source-Backed Audit</h2><p>The full Markdown report converted to semantic HTML, including file and line evidence.</p></div>
+      </div>
+      <article class="report"><h2>Executive Summary</h2>
+<p>EduMind is a real MVP with working foundations for authentication, profile/onboarding, persistent Ask AI chat, RAG retrieval, Study Plan, quizzes, flashcards, in-app notifications, guided solver, and admin RAG tooling. The current worktree is ahead of the July 7 audit: RAG admin chunk visibility, quiz reviewed-metadata gates, flashcard reviewed-metadata gates, notification settings aliases, and demo fallback gating are now present in source.</p>
+<p>The highest-risk remaining areas are operational RAG indexing/re-embedding, production curriculum consistency, homework image/provider hardening, production ElevenLabs/storage verification, push delivery, Study Plan JSON contract depth, dashboard/progress semantics, and visible placeholder product areas.</p>
+<h3>Verification Snapshot</h3>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Current Evidence</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>API prefix</td>
+<td>FastAPI mounts <code>api_router</code> at <code>/api/v1</code> in <code>src/backend/app/main.py:75</code>.</td>
+</tr>
+<tr>
+<td>Backend route registration</td>
+<td>Routers are included from <code>src/backend/app/api/router.py:32-58</code>.</td>
+</tr>
+<tr>
+<td>Frontend route registration</td>
+<td>Main routes are declared in <code>src/frontend-web/src/App.tsx:1043-1096</code>.</td>
+</tr>
+<tr>
+<td>SQLAlchemy table count</td>
+<td>Metadata inspection found 42 tables.</td>
+</tr>
+<tr>
+<td>Current worktree</td>
+<td>Recent uncommitted changes include RAG admin, quiz, flashcards, Ask AI, Study Plan, notification/fallback files.</td>
+</tr>
+</tbody></table>
+<h2>Feature Status Matrix</h2>
+<table>
+<thead>
+<tr>
+<th class="align-right">#</th>
+<th>Feature</th>
+<th>Status</th>
+<th>Risk</th>
+<th class="align-right">Backend</th>
+<th class="align-right">DB</th>
+<th class="align-right">Frontend</th>
+<th class="align-right">Tests</th>
+<th>Main Missing Piece</th>
+</tr>
+</thead>
+<tbody><tr>
+<td class="align-right">1</td>
+<td>Auth/login/register</td>
+<td>Implemented</td>
+<td>Low</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td>Password reset/admin account UX.</td>
+</tr>
+<tr>
+<td class="align-right">2</td>
+<td>Profile/onboarding/preferences</td>
+<td>Implemented</td>
+<td>Low</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td>Preference taxonomy governance.</td>
+</tr>
+<tr>
+<td class="align-right">3</td>
+<td>Curriculum units/chapters/lessons/topics</td>
+<td>Partial</td>
+<td>Medium</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Limited</td>
+<td>Production content consistency and seed validation.</td>
+</tr>
+<tr>
+<td class="align-right">4</td>
+<td>Ask AI chat</td>
+<td>Implemented MVP</td>
+<td>Medium</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td>Unsupported transforms remain disabled/limited.</td>
+</tr>
+<tr>
+<td class="align-right">5</td>
+<td>RAG retrieval/search</td>
+<td>Implemented MVP</td>
+<td>Medium</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td>Quality depends on indexed reviewed chunks.</td>
+</tr>
+<tr>
+<td class="align-right">6</td>
+<td>RAG ingestion/admin tools</td>
+<td>Partial</td>
+<td>High</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td>Full reviewed chunk load, embedding completion, eval gate.</td>
+</tr>
+<tr>
+<td class="align-right">7</td>
+<td>Audio STT/TTS</td>
+<td>Partial</td>
+<td>High</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td>Production ElevenLabs config and playable media URLs.</td>
+</tr>
+<tr>
+<td class="align-right">8</td>
+<td>Study Plan</td>
+<td>Implemented MVP</td>
+<td>Medium</td>
+<td class="align-right">Yes</td>
+<td class="align-right">JSON</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td>Stronger JSON contract and possible normalized items.</td>
+</tr>
+<tr>
+<td class="align-right">9</td>
+<td>Study Session</td>
+<td>Partial</td>
+<td>Medium</td>
+<td class="align-right">Frontend plus reused APIs</td>
+<td class="align-right">No dedicated session model</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Limited</td>
+<td>Dedicated persistent session lifecycle.</td>
+</tr>
+<tr>
+<td class="align-right">10</td>
+<td>Quiz generation/submission</td>
+<td>Implemented MVP</td>
+<td>Medium</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td>Submission scoring remains exact-match MVP.</td>
+</tr>
+<tr>
+<td class="align-right">11</td>
+<td>Flashcard generation/review</td>
+<td>Implemented MVP</td>
+<td>Medium</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td>Admin-approved needs-review generation path is not exposed to normal users.</td>
+</tr>
+<tr>
+<td class="align-right">12</td>
+<td>Homework solver</td>
+<td>Partial</td>
+<td>High</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Limited</td>
+<td>Image upload/provider errors and source/citation UX.</td>
+</tr>
+<tr>
+<td class="align-right">13</td>
+<td>Guided lab/equation tools</td>
+<td>Partial MVP</td>
+<td>Medium</td>
+<td class="align-right">Guided solver yes</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td>Many lab tools are frontend/static or local-only.</td>
+</tr>
+<tr>
+<td class="align-right">14</td>
+<td>Dashboard/progress</td>
+<td>Partial</td>
+<td>Medium</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Limited</td>
+<td>One authoritative progress contract.</td>
+</tr>
+<tr>
+<td class="align-right">15</td>
+<td>Notifications/settings</td>
+<td>Implemented MVP</td>
+<td>Medium</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td>Scheduler/deployment cadence.</td>
+</tr>
+<tr>
+<td class="align-right">16</td>
+<td>Push tokens/delivery</td>
+<td>Partial</td>
+<td>High</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Partial</td>
+<td class="align-right">Limited</td>
+<td>Production FCM/Expo end-to-end delivery.</td>
+</tr>
+<tr>
+<td class="align-right">17</td>
+<td>Achievements/XP</td>
+<td>Stub/partial</td>
+<td>Medium</td>
+<td class="align-right">Minimal</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Some</td>
+<td class="align-right">Sparse</td>
+<td>Awarding engine and triggers.</td>
+</tr>
+<tr>
+<td class="align-right">18</td>
+<td>Reels/video</td>
+<td>Planned only</td>
+<td>High</td>
+<td class="align-right">Model only</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Disabled/placeholder</td>
+<td class="align-right">No</td>
+<td>Generation, storage, playback pipeline.</td>
+</tr>
+<tr>
+<td class="align-right">19</td>
+<td>Subscriptions/billing</td>
+<td>Planned only</td>
+<td>High</td>
+<td class="align-right">Model only</td>
+<td class="align-right">Yes</td>
+<td class="align-right">No</td>
+<td class="align-right">No</td>
+<td>Billing provider and entitlement enforcement.</td>
+</tr>
+<tr>
+<td class="align-right">20</td>
+<td>AI Companion</td>
+<td>Stub/partial</td>
+<td>Medium</td>
+<td class="align-right">Placeholder</td>
+<td class="align-right">Minimal</td>
+<td class="align-right">Yes</td>
+<td class="align-right">Limited</td>
+<td>Real context-aware assistant behavior.</td>
+</tr>
+</tbody></table>
+<h2>Feature Details</h2>
+<h3>1. Auth/login/register</h3>
+<ul>
+<li>Status: Implemented.</li>
+<li>Backend: <code>POST /api/v1/auth/register</code>, <code>POST /api/v1/auth/login</code>, <code>GET /api/v1/auth/me</code>, onboarding helpers in <code>src/backend/app/api/auth/routes.py:24-55</code>.</li>
+<li>DB: <code>users</code> model in <code>src/backend/app/models/user.py:18</code>.</li>
+<li>Frontend: login/register routes in <code>src/frontend-web/src/App.tsx:1044-1045</code>; auth API client starts at <code>src/frontend-web/src/api/authApi.ts:44</code>.</li>
+<li>Tests: onboarding/profile auth-adjacent coverage in <code>src/backend/tests/test_profile_onboarding_preferences.py:19</code>.</li>
+<li>Evidence summary: Core auth routes, current-user route, frontend pages, and DB user entity exist.</li>
+<li>Limitations: No clear password reset or admin account management flow found in this audit pass.</li>
+<li>Next step: add password reset and admin user management only if MVP requires them.</li>
+</ul>
+<h3>2. Profile/onboarding/preferences</h3>
+<ul>
+<li>Status: Implemented.</li>
+<li>Backend: user profile routes in <code>src/backend/app/api/users.py:16-27</code>; student profile routes in <code>src/backend/app/api/student_profile.py:14-20</code>; onboarding route in <code>src/backend/app/api/auth/routes.py:55</code>.</li>
+<li>DB: <code>student_profiles</code>, <code>interest_categories</code>, <code>user_interests</code> in <code>src/backend/app/models/student_profile.py:17</code> and <code>src/backend/app/models/interest.py:14-30</code>.</li>
+<li>Frontend: onboarding route in <code>src/frontend-web/src/App.tsx:1046-1058</code>; profile route in <code>src/frontend-web/src/App.tsx:1093-1094</code>; profile mapping in <code>src/frontend-web/src/api/userApi.ts:21-61</code>.</li>
+<li>Tests: <code>src/backend/tests/test_profile_onboarding_preferences.py:19</code> and <code>src/backend/tests/test_tutor_preferences.py</code>.</li>
+<li>Evidence summary: User profile and student profile are persisted and mirrored into chat preference fields.</li>
+<li>Limitations: Interest/preference taxonomy can drift without content governance.</li>
+<li>Next step: define canonical interest and preference taxonomy in seed/content validation.</li>
+</ul>
+<h3>3. Curriculum units/chapters/lessons/topics</h3>
+<ul>
+<li>Status: Partial.</li>
+<li>Backend: units, chapters, lessons, topics CRUD/catalog routes in <code>src/backend/app/api/units.py:14-27</code>, <code>src/backend/app/api/chapters.py:14-37</code>, <code>src/backend/app/api/lessons.py:14-37</code>, <code>src/backend/app/api/topics.py:10-45</code>.</li>
+<li>DB: <code>units</code>, <code>chapters</code>, <code>lessons</code>, <code>lesson_topics</code>, <code>lesson_progress</code> in <code>src/backend/app/models/chemistry.py:13-115</code>; <code>topics</code> in <code>src/backend/app/models/topic.py:13</code>.</li>
+<li>Frontend: lessons routes in <code>src/frontend-web/src/App.tsx:1072-1074</code>; curriculum API client in <code>src/frontend-web/src/api/curriculumApi.ts:214-225</code>.</li>
+<li>Tests: limited direct curriculum tests; downstream coverage through Study Plan, RAG, quiz, flashcard tests.</li>
+<li>Evidence summary: Data model and API exist, and frontend loads units/lessons.</li>
+<li>Limitations: Static fallback curriculum still exists as data in <code>src/frontend-web/src/api/curriculumApi.ts:12-212</code>; demo fallback is gated elsewhere by <code>allowDemoFallbacks</code> in <code>src/frontend-web/src/config/demoFallbacks.ts:1-5</code>.</li>
+<li>Next step: add backend seed/content validation confirming full Grade 9 units, chapters, lessons, topics before generation flows run.</li>
+</ul>
+<h3>4. Ask AI chat</h3>
+<ul>
+<li>Status: Implemented MVP.</li>
+<li>Backend: session and message endpoints in <code>src/backend/app/api/chat/routes.py:33-133</code>; <code>/chat/ask</code> and <code>/ai/ask</code> alias in <code>src/backend/app/api/chat/routes.py:222-237</code>.</li>
+<li>DB: <code>chat_sessions</code> and <code>chat_messages</code> in <code>src/backend/app/models/chat.py:12-76</code>; message fields include audio, transcript, answer text/audio URL, sources, citations, diagnostics in <code>src/backend/app/models/chat.py:53-74</code>.</li>
+<li>Frontend: <code>/ask-ai</code> route in <code>src/frontend-web/src/App.tsx:1093</code>; Ask AI page state/recorder/composer in <code>src/frontend-web/src/pages/AskAIPage.tsx:739-980</code>; API client in <code>src/frontend-web/src/api/aiApi.ts:201-280</code>.</li>
+<li>Tests: <code>src/backend/tests/test_ask_ai_pipeline.py</code>, <code>src/backend/tests/test_chat_sessions.py</code>, <code>src/backend/tests/test_chat_audio.py</code>, <code>src/frontend-web/src/AskAiPage.test.tsx</code>.</li>
+<li>Evidence summary: Text chat persists messages, RAG sources are returned, and Ask AI supports session history plus multipart text/audio.</li>
+<li>Limitations: Dedicated <code>transcribeVoiceMessage</code> and <code>generateResponseAudio</code> frontend helper endpoints still throw not-ready errors in <code>src/frontend-web/src/api/aiApi.ts:275-280</code>; image/file fields are appended but current backend multipart endpoint only declares text/audio fields in <code>src/backend/app/api/chat/routes.py:89-133</code>.</li>
+<li>Next step: keep image/file transforms disabled until backend support exists; verify audio answer path in production-like storage.</li>
+</ul>
+<h3>5. RAG retrieval/search</h3>
+<ul>
+<li>Status: Implemented MVP.</li>
+<li>Backend: retrieval/search/answer endpoints in <code>src/backend/app/api/rag/routes.py:67-243</code>.</li>
+<li>DB: <code>rag_chunks</code>, <code>content_sources</code>, <code>textbook_chunks</code>, <code>rag_query_logs</code>, <code>retrieved_chunk_logs</code> in <code>src/backend/app/models/textbook.py:43-163</code> and <code>src/backend/app/models/rag_logging.py:15-53</code>.</li>
+<li>Frontend: RAG search routes in <code>src/frontend-web/src/App.tsx:1075-1076</code>; source metadata mapping in <code>src/frontend-web/src/api/aiApi.ts:14-27</code> and <code>src/frontend-web/src/api/aiApi.ts:78-106</code>.</li>
+<li>Tests: RAG retrieval/QA/hardening tests in <code>src/backend/tests/test_rag_retrieval.py</code>, <code>src/backend/tests/test_rag_grade9_qa.py</code>, <code>src/backend/tests/test_rag_hardening.py</code>.</li>
+<li>Evidence summary: RAG response includes source type, unit ID, lesson ID, quality status, reviewed metadata version, and curriculum metadata in <code>src/backend/app/api/rag/routes.py:29-47</code>.</li>
+<li>Limitations: Retrieval quality depends on reviewed chunks being loaded and embedded; empty or incomplete <code>rag_chunks</code> cannot support live QA.</li>
+<li>Next step: finish the indexed reviewed chunk workflow before relying on live RAG evaluation.</li>
+</ul>
+<h3>6. RAG ingestion/admin tools</h3>
+<ul>
+<li>Status: Partial.</li>
+<li>Backend: ingestion/admin endpoints in <code>src/backend/app/api/ingestion/routes.py:347-797</code>; admin RAG source/chunk/reembed/eval endpoints in <code>src/backend/app/api/admin_rag.py:117-355</code>.</li>
+<li>DB: ingestion and RAG tables include <code>ingestion_jobs</code>, <code>ingestion_pages</code>, <code>content_sources</code>, <code>rag_chunks</code>, <code>extracted_questions</code>.</li>
+<li>Frontend: admin RAG routes in <code>src/frontend-web/src/App.tsx:1088-1092</code>; admin API client includes source discovery, chunk explorer, readiness, and re-embed calls in <code>src/frontend-web/src/api/adminRagApi.ts:293-360</code>.</li>
+<li>Tests: <code>src/backend/tests/test_ingestion_admin.py</code>, <code>src/backend/tests/test_reviewed_ingestion_admin_tools.py</code>, <code>src/frontend-web/src/pages/admin/SourcesPage.test.tsx</code>.</li>
+<li>Evidence summary: Canonical PDF paths and reviewed artifact paths are defined in <code>src/backend/app/services/reviewed_ingestion_assets.py:36-60</code>; source status computes extraction/chunk/embedding status in <code>src/backend/app/services/reviewed_ingestion_assets.py:232-340</code>; admin chunk explorer counts ready/needs-review/blocked/missing/embedded chunks in <code>src/backend/app/api/admin_rag.py:149-216</code>.</li>
+<li>Limitations: Re-embedding still requires global reviewed metadata readiness and real provider/index state; operational vector insert/eval completion is not proven by code presence alone.</li>
+<li>Next step: run the reviewed chunk load into <code>rag_chunks</code>, dry-run readiness, re-embed against real pgvector/Gemini, then run live RAG evaluation.</li>
+</ul>
+<h3>7. Audio STT/TTS</h3>
+<ul>
+<li>Status: Partial.</li>
+<li>Backend: ElevenLabs STT/TTS provider classes in <code>src/backend/app/services/audio_service.py:53-179</code>; local audio storage in <code>src/backend/app/services/audio_storage.py:15-65</code>; chat audio validation in <code>src/backend/app/services/chat_service.py:312-339</code>.</li>
+<li>DB: audio fields on <code>chat_messages</code> in <code>src/backend/app/models/chat.py:53-66</code>.</li>
+<li>Frontend: recorder state and controls in <code>src/frontend-web/src/pages/AskAIPage.tsx:769-907</code>; media URL handling in <code>src/frontend-web/src/api/aiApi.ts:52-60</code> and <code>src/frontend-web/src/api/aiApi.ts:127-133</code>.</li>
+<li>Tests: <code>src/backend/tests/test_chat_audio.py:122-529</code>.</li>
+<li>Evidence summary: Provider abstraction, missing-key errors, TTS timeout/error handling, local media URL generation, and Ask AI audio response shape are implemented.</li>
+<li>Limitations: Production ElevenLabs credentials, media serving, URL reachability, and STT browser recording path still need end-to-end verification.</li>
+<li>Next step: verify <code>/api/v1/ai/ask</code> with <code>answer_format=audio</code> and real ElevenLabs/storage in a production-like environment before enabling broad audio UX.</li>
+</ul>
+<h3>8. Study Plan</h3>
+<ul>
+<li>Status: Implemented MVP.</li>
+<li>Backend: routes in <code>src/backend/app/api/study_plans.py:16-74</code>; generation and progress logic in <code>src/backend/app/services/study_plan_service.py:67-98</code>, <code>src/backend/app/services/study_plan_service.py:207-297</code>, and <code>src/backend/app/services/study_plan_service.py:492-620</code>.</li>
+<li>DB: <code>study_plans</code> in <code>src/backend/app/models/study_plan.py:15</code>; progress relation uses <code>lesson_progress</code> in <code>src/backend/app/models/chemistry.py:115</code>.</li>
+<li>Frontend: <code>/study-plan</code> route in <code>src/frontend-web/src/App.tsx:1079</code>; API client in <code>src/frontend-web/src/api/studyPlanApi.ts:146-265</code>; page component starts in <code>src/frontend-web/src/pages/StudyPlanPage.tsx:1182</code>.</li>
+<li>Tests: <code>src/backend/tests/test_study_plan_service.py</code>, <code>src/frontend-web/src/studyPlanApi.test.ts</code>.</li>
+<li>Evidence summary: Backend validates selected lessons and dates, generates schedule/tasks, validates a basic plan JSON contract in <code>src/backend/app/services/study_plan_service.py:397-411</code>, and calculates progress from scheduled lessons.</li>
+<li>Limitations: Plan items remain embedded in JSON, and validation checks only basic week/day/task shape.</li>
+<li>Next step: strengthen Pydantic-style plan JSON validation before considering normalized <code>study_plan_items</code>.</li>
+</ul>
+<h3>9. Study Session</h3>
+<ul>
+<li>Status: Partial.</li>
+<li>Backend: no dedicated <code>study_sessions</code> table found in the 42-table metadata list.</li>
+<li>DB: currently reuses lessons, flashcards, quizzes, and progress rather than a session lifecycle table.</li>
+<li>Frontend: route exists in <code>src/frontend-web/src/App.tsx:1074</code>; page exists at <code>src/frontend-web/src/pages/StudySessionPage.tsx:24</code>; flashcard card integration exists in <code>src/frontend-web/src/components/study-session/StudySessionFlashcardsCard.tsx</code>.</li>
+<li>Tests: no dedicated backend session lifecycle tests found.</li>
+<li>Evidence summary: Frontend learning session surface exists, but persistence is distributed across other features.</li>
+<li>Limitations: No start/pause/resume/finish session lifecycle or analytics entity.</li>
+<li>Next step: keep stateless for MVP or add a lightweight persistent session model if analytics/progress requires it.</li>
+</ul>
+<h3>10. Quiz generation/submission</h3>
+<ul>
+<li>Status: Implemented MVP.</li>
+<li>Backend: generation, submission, history, recommendations routes in <code>src/backend/app/api/quizzes.py:22-91</code>.</li>
+<li>DB: <code>extracted_questions</code> in <code>src/backend/app/models/textbook.py:125-163</code>; <code>quiz_attempts</code> and <code>question_attempts</code> in <code>src/backend/app/models/assessment.py:33-51</code>.</li>
+<li>Frontend: <code>/quiz</code> and <code>/quizzes</code> routes in <code>src/frontend-web/src/App.tsx:1077-1078</code>; quiz API maps generation/submission in <code>src/frontend-web/src/api/quizzesApi.ts:139-183</code>.</li>
+<li>Tests: <code>src/backend/tests/test_quiz_generation_readiness.py</code>, <code>src/backend/tests/test_quiz_flashcard_generation_fallbacks.py</code>.</li>
+<li>Evidence summary: Generation supports lesson/topic arrays in <code>src/backend/app/schemas/quiz.py:8-18</code>, blocks non-ready lessons in <code>src/backend/app/services/quiz_service.py:134-219</code>, validates generated questions in <code>src/backend/app/services/quiz_service.py:71-90</code>, and persists attempts in <code>src/backend/app/services/quiz_service.py:425-482</code>.</li>
+<li>Limitations: Template fallback questions are marked <code>needs_review=True</code> even when generated from ready content in <code>src/backend/app/services/quiz_service.py:316-324</code>; grading is exact-match MVP in <code>src/backend/app/services/quiz_service.py:458-467</code>.</li>
+<li>Next step: improve answer normalization/fuzzy grading and review policy for generated questions.</li>
+</ul>
+<h3>11. Flashcard generation/review</h3>
+<ul>
+<li>Status: Implemented MVP.</li>
+<li>Backend: deck/card/due/progress/review routes in <code>src/backend/app/api/flashcards.py:113-299</code>.</li>
+<li>DB: <code>flashcard_decks</code>, <code>flashcards</code>, <code>flashcard_progress</code> in <code>src/backend/app/models/flashcard.py:15-89</code>.</li>
+<li>Frontend: <code>/flashcards</code> route in <code>src/frontend-web/src/App.tsx:1082</code>; API client in <code>src/frontend-web/src/api/flashcardsApi.ts:244-308</code>; page starts in <code>src/frontend-web/src/pages/FlashcardsPage.tsx:157</code>.</li>
+<li>Tests: <code>src/backend/tests/test_flashcard_generation_readiness.py</code>, <code>src/backend/tests/test_flashcard_scheduler.py</code>, <code>src/backend/tests/test_contract_gap_endpoints.py:139</code>.</li>
+<li>Evidence summary: Generated cards require useful front/back/hint/explanation/source page in <code>src/backend/app/services/flashcard_service.py:399-421</code>; generation blocks missing/blocked/needs-review chunks for normal users in <code>src/backend/app/services/flashcard_service.py:506-597</code>; review updates SM-2-like scheduling in <code>src/backend/app/services/flashcard_service.py:107-177</code>.</li>
+<li>Limitations: Admin-approved <code>needs_review</code> generation is service-supported but blocked on public student endpoints in <code>src/backend/app/api/flashcards.py:135-167</code>.</li>
+<li>Next step: add an admin-only reviewed/needs-review deck generation route if educators need QA workflows.</li>
+</ul>
+<h3>12. Homework solver</h3>
+<ul>
+<li>Status: Partial.</li>
+<li>Backend: text, upload, image, history, detail routes in <code>src/backend/app/api/homework.py:26-100</code>; service uses RAG context and AI for text solve in <code>src/backend/app/services/homework_service.py:15-28</code>.</li>
+<li>DB: <code>homework</code> table in <code>src/backend/app/models/homework.py:13</code>.</li>
+<li>Frontend: <code>/homework</code> route in <code>src/frontend-web/src/App.tsx:1084</code>; API client in <code>src/frontend-web/src/api/homeworkApi.ts:43</code>.</li>
+<li>Tests: multipart upload contract in <code>src/backend/tests/test_contract_gap_endpoints.py:106</code>.</li>
+<li>Evidence summary: Text solve uses RAG context via <code>retrieve_context</code> and <code>format_context</code> in <code>src/backend/app/services/homework_service.py:15-23</code>; image solve uses Gemini OCR provider in <code>src/backend/app/services/homework_service.py:31-45</code>.</li>
+<li>Limitations: Image solve returns provider configuration errors directly; upload/media workflow and citations are weaker than Ask AI/RAG.</li>
+<li>Next step: harden multipart upload, provider failure UX, and returned source citations.</li>
+</ul>
+<h3>13. Guided lab/equation tools</h3>
+<ul>
+<li>Status: Partial MVP.</li>
+<li>Backend: interactive solver routes in <code>src/backend/app/api/interactive_solver/routes.py:21-68</code>.</li>
+<li>DB: interactive solver tables in <code>src/backend/app/models/interactive_solver.py:15-134</code>.</li>
+<li>Frontend: guided lab routes in <code>src/frontend-web/src/App.tsx:1085-1087</code>; guided lab API in <code>src/frontend-web/src/features/guided-lab/api/interactiveSolverApi.ts:243</code>; lab page local shell in <code>src/frontend-web/src/pages/LabPage.tsx:81</code>.</li>
+<li>Tests: <code>src/backend/tests/test_interactive_solver.py</code>, <code>src/frontend-web/src/features/guided-lab/GuidedLab.test.tsx</code>.</li>
+<li>Evidence summary: Guided solver has backend sessions/steps/answers/hints/finish and frontend session UI.</li>
+<li>Limitations: Broader lab tools like pH simulator/periodic table/atom builder are not all backend-backed.</li>
+<li>Next step: mark local tools clearly or disable unsupported lab actions in production navigation.</li>
+</ul>
+<h3>14. Dashboard/progress</h3>
+<ul>
+<li>Status: Partial.</li>
+<li>Backend: dashboard route in <code>src/backend/app/api/dashboard.py:14</code>; progress routes in <code>src/backend/app/api/progress.py:19-34</code>.</li>
+<li>DB: <code>lesson_progress</code>, <code>user_progress</code>, <code>skill_mastery</code>, <code>achievements</code>.</li>
+<li>Frontend: dashboard route in <code>src/frontend-web/src/App.tsx:1070</code>; dashboard API in <code>src/frontend-web/src/api/dashboardApi.ts:51</code>; Study Plan progress hook in <code>src/frontend-web/src/hooks/useStudyPlanProgress.ts</code>.</li>
+<li>Tests: dashboard contract coverage in <code>src/backend/tests/test_contract_gap_endpoints.py:32</code>.</li>
+<li>Evidence summary: Dashboard aggregates backend data and frontend displays it.</li>
+<li>Limitations: Progress semantics span Study Plan JSON, lesson progress, flashcards, quizzes, skill mastery, and achievements without one canonical definition.</li>
+<li>Next step: define one progress contract and align dashboard, Study Plan, quiz, flashcards, and achievements to it.</li>
+</ul>
+<h3>15. Notifications/settings</h3>
+<ul>
+<li>Status: Implemented MVP.</li>
+<li>Backend: notification CRUD/read-all/settings/test/generate routes in <code>src/backend/app/api/notifications.py:19-145</code>; <code>/users/me/notification-settings</code> aliases in <code>src/backend/app/api/users.py:30-44</code>.</li>
+<li>DB: <code>notifications</code>, <code>notification_preferences</code>, <code>reminder_events</code> in <code>src/backend/app/models/notification.py:16-73</code>.</li>
+<li>Frontend: notifications/settings routes in <code>src/frontend-web/src/App.tsx:1080-1081</code>; notifications API in <code>src/frontend-web/src/api/notificationsApi.ts:108</code>; pages at <code>src/frontend-web/src/pages/NotificationsPage.tsx:45</code> and <code>src/frontend-web/src/pages/NotificationSettingsPage.tsx:46</code>.</li>
+<li>Tests: <code>src/backend/tests/test_notifications.py</code>, <code>src/frontend-web/src/pages/NotificationsPage.test.tsx</code>, <code>src/frontend-web/src/pages/NotificationSettingsPage.test.tsx</code>.</li>
+<li>Evidence summary: In-app notification list, unread count, mark read, mark all read, delete, preferences, test notification, and due reminder generation exist.</li>
+<li>Limitations: Scheduler cadence/deployment is not confirmed by this audit.</li>
+<li>Next step: wire due reminder generation into a deployment-safe scheduled task.</li>
+</ul>
+<h3>16. Push tokens/delivery</h3>
+<ul>
+<li>Status: Partial.</li>
+<li>Backend: device and push-token routes in <code>src/backend/app/api/devices.py:15-60</code>; delivery abstraction in <code>src/backend/app/services/notification_delivery_service.py:49-142</code>.</li>
+<li>DB: <code>device_tokens</code> in <code>src/backend/app/models/device.py:15</code>.</li>
+<li>Frontend: push hook in <code>src/frontend-web/src/hooks/usePushNotifications.ts</code>; notification pages/settings exist.</li>
+<li>Tests: device token route contract in <code>src/backend/tests/test_contract_gap_endpoints.py:57</code>.</li>
+<li>Evidence summary: FCM/Expo provider routing exists and returns skipped when providers are not configured.</li>
+<li>Limitations: Browser service worker/mobile click handling and real FCM/Expo delivery are not proven end-to-end.</li>
+<li>Next step: add a production-like push test notification flow with provider config checks and no first-load permission prompt.</li>
+</ul>
+<h3>17. Achievements/XP</h3>
+<ul>
+<li>Status: Stub/partial.</li>
+<li>Backend: <code>achievements</code> model in <code>src/backend/app/models/achievement.py:15</code>; progress API exposes achievements in <code>src/backend/app/api/progress.py:34</code>.</li>
+<li>DB: <code>achievements</code> table exists.</li>
+<li>Frontend: profile/dashboard surfaces reference XP/streak/badges through user data and UI.</li>
+<li>Tests: sparse direct achievement automation coverage found.</li>
+<li>Evidence summary: Storage and display hooks exist.</li>
+<li>Limitations: No central event-based awarding engine found.</li>
+<li>Next step: either hide automation claims or add a small event service for lesson complete, quiz pass, flashcard streak, and study plan completion.</li>
+</ul>
+<h3>18. Reels/video</h3>
+<ul>
+<li>Status: Planned only.</li>
+<li>Backend: <code>reels</code> model exists in <code>src/backend/app/models/reel.py:15</code>.</li>
+<li>DB: <code>reels</code> table exists.</li>
+<li>Frontend: Ask AI video format is treated as not-ready/placeholder in <code>src/frontend-web/src/api/aiApi.ts:142-145</code> and <code>src/frontend-web/src/api/aiApi.ts:194-197</code>.</li>
+<li>Tests: no generation pipeline tests found.</li>
+<li>Evidence summary: Model and UI placeholder exist; no complete generation/storage/playback route.</li>
+<li>Limitations: Active video generation is not production-ready.</li>
+<li>Next step: keep video/reel actions disabled with <code>قريباً</code> until scoped.</li>
+</ul>
+<h3>19. Subscriptions/billing</h3>
+<ul>
+<li>Status: Planned only.</li>
+<li>Backend: <code>subscriptions</code> model exists in <code>src/backend/app/models/billing.py:15</code>.</li>
+<li>DB: <code>subscriptions</code> table exists.</li>
+<li>Frontend: no complete subscription UX found in current route list.</li>
+<li>Tests: no billing provider tests found.</li>
+<li>Evidence summary: Storage placeholder exists only.</li>
+<li>Limitations: No payment provider, checkout, webhook, entitlement checks, or UI.</li>
+<li>Next step: hide from MVP scope or define billing provider and entitlement model.</li>
+</ul>
+<h3>20. AI Companion / EduMind Guide</h3>
+<ul>
+<li>Status: Stub/partial.</li>
+<li>Backend: placeholder endpoints in <code>src/backend/app/api/ai_companion.py:1-78</code>.</li>
+<li>DB: no dedicated companion memory/model found.</li>
+<li>Frontend: AI Companion API has backend calls plus demo fallback gated by <code>allowDemoFallbacks</code> in <code>src/frontend-web/src/features/ai-companion/api/aiCompanionApi.ts:18-52</code>; companion UI exists in <code>src/frontend-web/src/features/ai-companion/components/AICompanion.tsx:10</code>.</li>
+<li>Tests: limited UI/fallback behavior coverage.</li>
+<li>Evidence summary: Companion messages and actions are rule-based by current page/context, not AI/RAG-backed.</li>
+<li>Limitations: Does not retrieve real learning context, memory, or RAG evidence.</li>
+<li>Next step: keep it as guide/orb only, or implement a context-aware backend endpoint using dashboard/study-plan/lesson state.</li>
+</ul>
+<h2>Backend API Overview</h2>
+<p>All routes are under <code>/api/v1</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Representative Endpoints</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Auth</td>
+<td><code>POST /auth/register</code>, <code>POST /auth/login</code>, <code>GET /auth/me</code>, <code>PATCH /auth/onboarding</code></td>
+<td><code>src/backend/app/api/auth/routes.py:24-55</code></td>
+</tr>
+<tr>
+<td>Users/profile</td>
+<td><code>GET /users/me</code>, <code>PATCH /users/me</code>, <code>GET/PATCH /users/me/notification-settings</code></td>
+<td><code>src/backend/app/api/users.py:16-44</code></td>
+</tr>
+<tr>
+<td>Curriculum</td>
+<td><code>/units</code>, <code>/chapters</code>, <code>/lessons</code>, <code>/topics</code>, <code>/elements</code></td>
+<td><code>src/backend/app/api/units.py:14-27</code>, <code>src/backend/app/api/topics.py:10-45</code></td>
+</tr>
+<tr>
+<td>Ask AI/chat</td>
+<td><code>/chat/sessions</code>, <code>/chat/messages</code>, <code>/chat/ask</code>, <code>/ai/ask</code></td>
+<td><code>src/backend/app/api/chat/routes.py:33-237</code></td>
+</tr>
+<tr>
+<td>RAG</td>
+<td><code>/rag/search</code>, <code>/rag/retrieve</code>, <code>/rag/answer</code>, <code>/rag/semantic-retrieve</code>, <code>/rag/retrieve-debug</code></td>
+<td><code>src/backend/app/api/rag/routes.py:67-243</code></td>
+</tr>
+<tr>
+<td>Admin RAG</td>
+<td><code>/admin/rag/sources</code>, <code>/admin/rag/chunks</code>, <code>/admin/rag/reembed</code>, <code>/admin/rag/evaluate</code>, <code>/admin/rag/query-logs</code></td>
+<td><code>src/backend/app/api/admin_rag.py:117-355</code></td>
+</tr>
+<tr>
+<td>Ingestion</td>
+<td><code>/admin/ingestion/start</code>, <code>/prepare-reviewed-chunks</code>, <code>/load-reviewed-chunks</code>, <code>/embedding-readiness</code>, <code>/retry-page</code>, <code>/questions/*</code></td>
+<td><code>src/backend/app/api/ingestion/routes.py:347-797</code></td>
+</tr>
+<tr>
+<td>Study Plan</td>
+<td><code>/study-plans</code>, <code>/study-plans/generate</code>, <code>/study-plans/{id}/progress</code>, <code>/lessons/{lesson_id}/complete</code></td>
+<td><code>src/backend/app/api/study_plans.py:16-74</code></td>
+</tr>
+<tr>
+<td>Quizzes</td>
+<td><code>/quizzes/generate</code>, <code>/quizzes/submit</code>, <code>/quizzes/history</code>, <code>/quizzes/recommendations</code></td>
+<td><code>src/backend/app/api/quizzes.py:22-91</code></td>
+</tr>
+<tr>
+<td>Flashcards</td>
+<td><code>/flashcards/decks/generate</code>, <code>/flashcards/due</code>, <code>/flashcards/progress</code>, <code>/flashcards/{id}/review</code></td>
+<td><code>src/backend/app/api/flashcards.py:127-299</code></td>
+</tr>
+<tr>
+<td>Homework</td>
+<td><code>/homework/solve-text</code>, <code>/homework/upload</code>, <code>/homework/solve-image</code>, <code>/homework/history</code></td>
+<td><code>src/backend/app/api/homework.py:26-100</code></td>
+</tr>
+<tr>
+<td>Guided solver</td>
+<td><code>/interactive-solver/sessions</code>, <code>/answer</code>, <code>/hint</code>, <code>/finish</code></td>
+<td><code>src/backend/app/api/interactive_solver/routes.py:21-68</code></td>
+</tr>
+<tr>
+<td>Notifications</td>
+<td><code>/notifications</code>, <code>/notifications/unread-count</code>, <code>/notifications/read-all</code>, <code>/notification-preferences</code>, <code>/notifications/test</code></td>
+<td><code>src/backend/app/api/notifications.py:19-145</code></td>
+</tr>
+<tr>
+<td>Devices/push tokens</td>
+<td><code>/devices/register</code>, <code>/push-tokens</code></td>
+<td><code>src/backend/app/api/devices.py:15-60</code></td>
+</tr>
+<tr>
+<td>Dashboard/progress</td>
+<td><code>/dashboard</code>, <code>/progress/lessons/{lesson_id}</code>, <code>/progress/topics</code>, <code>/progress/achievements</code></td>
+<td><code>src/backend/app/api/dashboard.py:14</code>, <code>src/backend/app/api/progress.py:19-34</code></td>
+</tr>
+</tbody></table>
+<h2>Database Model Overview</h2>
+<p>Metadata inspection found 42 SQLAlchemy tables.</p>
+<table>
+<thead>
+<tr>
+<th>Domain</th>
+<th>Tables</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Users/profile</td>
+<td><code>users</code>, <code>student_profiles</code>, <code>interest_categories</code>, <code>user_interests</code></td>
+</tr>
+<tr>
+<td>Curriculum</td>
+<td><code>units</code>, <code>chapters</code>, <code>lessons</code>, <code>topics</code>, <code>lesson_topics</code>, <code>elements</code>, <code>lesson_progress</code></td>
+</tr>
+<tr>
+<td>Chat/RAG</td>
+<td><code>chat_sessions</code>, <code>chat_messages</code>, <code>content_sources</code>, <code>textbook_chunks</code>, <code>rag_chunks</code>, <code>extracted_questions</code>, <code>rag_query_logs</code>, <code>retrieved_chunk_logs</code></td>
+</tr>
+<tr>
+<td>Assessment</td>
+<td><code>questions</code>, <code>quiz_attempts</code>, <code>question_attempts</code></td>
+</tr>
+<tr>
+<td>Flashcards</td>
+<td><code>flashcard_decks</code>, <code>flashcards</code>, <code>flashcard_progress</code></td>
+</tr>
+<tr>
+<td>Study/progress</td>
+<td><code>study_plans</code>, <code>user_progress</code>, <code>skill_mastery</code>, <code>achievements</code></td>
+</tr>
+<tr>
+<td>Notifications/devices</td>
+<td><code>notifications</code>, <code>notification_preferences</code>, <code>reminder_events</code>, <code>device_tokens</code></td>
+</tr>
+<tr>
+<td>Ingestion/admin</td>
+<td><code>ingestion_jobs</code>, <code>ingestion_pages</code></td>
+</tr>
+<tr>
+<td>Interactive solver</td>
+<td><code>interactive_sessions</code>, <code>interactive_steps</code>, <code>student_step_answers</code>, <code>misconception_events</code></td>
+</tr>
+<tr>
+<td>Homework/media/business</td>
+<td><code>homework</code>, <code>reels</code>, <code>subscriptions</code></td>
+</tr>
+</tbody></table>
+<p>Key RAG storage details:</p>
+<ul>
+<li><code>rag_chunks.embedding</code> uses pgvector <code>Vector(768)</code> when the DB URL is Postgres and pgvector is available, otherwise JSON fallback in <code>src/backend/app/models/textbook.py:18-21</code>.</li>
+<li><code>rag_chunks</code> includes direct <code>unit_id</code>, <code>chapter_id</code>, <code>lesson_id</code>, <code>topic_id</code>, source/page/content fields, embedding status/model/error, and metadata JSON in <code>src/backend/app/models/textbook.py:87-117</code>.</li>
+<li>The vector index uses pgvector <code>ivfflat</code> with <code>vector_cosine_ops</code> in <code>src/backend/app/models/textbook.py:78-84</code>.</li>
+</ul>
+<h2>Partial Features Roadmap</h2>
+<ol>
+<li><p>Finish RAG ingestion/re-embedding workflow.</p>
+<ul>
+<li>Load reviewed textbook and solution chunks into <code>rag_chunks</code>.</li>
+<li>Ensure <code>ready_for_embedding=true</code>.</li>
+<li>Re-embed with real Gemini credentials and pgvector DB.</li>
+<li>Run live RAG eval only after embedded chunk counts are complete.</li>
+</ul>
+</li>
+<li><p>Complete admin chunk readiness/explorer visibility.</p>
+<ul>
+<li>The API and UI exist; next add actionable drill-down from readiness cards to filtered chunk lists and latest eval failures.</li>
+</ul>
+</li>
+<li><p>Harden curriculum production data and fallback policy.</p>
+<ul>
+<li>Keep <code>VITE_ALLOW_DEMO_FALLBACKS</code> disabled in production.</li>
+<li>Add backend validation that full Grade 9 curriculum exists before Study Plan, quiz, and flashcard flows run.</li>
+</ul>
+</li>
+<li><p>Finish quiz quality and submission depth.</p>
+<ul>
+<li>Exact-match grading is acceptable for MVP but weak for Arabic free text.</li>
+<li>Add normalized Arabic matching or AI-assisted grading for short-answer/calculation explanations.</li>
+</ul>
+</li>
+<li><p>Finish flashcard quality gates and review UX.</p>
+<ul>
+<li>Normal users are protected by ready-only generation.</li>
+<li>Add educator/admin QA route if <code>needs_review</code> content should be used deliberately.</li>
+</ul>
+</li>
+<li><p>Harden homework upload/provider/citation flow.</p>
+<ul>
+<li>Normalize image upload storage.</li>
+<li>Return RAG citations in the homework response.</li>
+<li>Map provider errors to Arabic frontend messages.</li>
+</ul>
+</li>
+<li><p>Strengthen Study Plan JSON contract.</p>
+<ul>
+<li>Replace minimal shape checks with typed validation for weeks, days, tasks, lesson IDs, status, estimated minutes, and completion timestamps.</li>
+<li>Defer normalized item rows until reporting/query performance requires it.</li>
+</ul>
+</li>
+<li><p>Verify ElevenLabs audio with production-like storage URLs.</p>
+<ul>
+<li>Confirm backend-only key use.</li>
+<li>Confirm generated <code>/media/uploads/...</code> URLs play from frontend.</li>
+<li>Keep text answer visible when TTS fails.</li>
+</ul>
+</li>
+<li><p>Complete push notification delivery.</p>
+<ul>
+<li>Validate FCM/Expo credentials, service worker token registration, test notification, click action URL, and mark-read behavior.</li>
+</ul>
+</li>
+<li><p>Hide or implement placeholder areas.</p>
+</li>
+</ol>
+<ul>
+<li>Keep reels/video, subscriptions/billing, achievement automation, and AI Companion advanced behavior hidden or labeled <code>قريباً</code> until backend-backed.</li>
+</ul>
+<h2>Top Gaps To Fix Next</h2>
+<ol>
+<li>Complete RAG vector index population and evaluation gate.</li>
+<li>Add admin links from source readiness to exact blocking chunks.</li>
+<li>Validate production curriculum completeness before generation flows.</li>
+<li>Improve quiz free-text/calculation grading beyond exact match.</li>
+<li>Add admin QA path for flashcards from <code>needs_review</code> chunks.</li>
+<li>Harden homework image upload/provider/citations.</li>
+<li>Strengthen Study Plan JSON contract.</li>
+<li>Verify ElevenLabs TTS/STT with real storage URLs.</li>
+<li>Complete push delivery end-to-end.</li>
+<li>Hide non-MVP placeholders or implement them intentionally.</li>
+</ol>
+<h2>Features That Look Implemented In UI But Are Not Fully Backend-Ready</h2>
+<table>
+<thead>
+<tr>
+<th>UI Area</th>
+<th>Why It Can Mislead</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Ask AI image/file input</td>
+<td>Frontend appends image/file fields, but unified backend endpoint declares text/audio only.</td>
+<td><code>src/frontend-web/src/api/aiApi.ts:234-238</code>, <code>src/backend/app/api/chat/routes.py:89-133</code></td>
+</tr>
+<tr>
+<td>Ask AI video/reel</td>
+<td>API maps video to placeholder message, no complete video generation route.</td>
+<td><code>src/frontend-web/src/api/aiApi.ts:142-145</code></td>
+</tr>
+<tr>
+<td>Lab tools beyond guided solver</td>
+<td>Guided solver has backend; broader lab page is mostly frontend shell.</td>
+<td><code>src/frontend-web/src/pages/LabPage.tsx:81</code>, <code>src/backend/app/api/interactive_solver/routes.py:21-68</code></td>
+</tr>
+<tr>
+<td>AI Companion</td>
+<td>Backend is explicit placeholder and rule-based.</td>
+<td><code>src/backend/app/api/ai_companion.py:1-78</code></td>
+</tr>
+<tr>
+<td>Achievements</td>
+<td>Storage exists but no awarding engine was found.</td>
+<td><code>src/backend/app/models/achievement.py:15</code></td>
+</tr>
+</tbody></table>
+<h2>Backend-Only Or Mostly Backend Features Needing More Frontend/Operational UX</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Gap</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Admin RAG re-embedding</td>
+<td>Job endpoints exist, but operational flow still needs complete reviewed metadata, real DB, credentials, and eval visibility.</td>
+</tr>
+<tr>
+<td>Push delivery</td>
+<td>Provider routing exists, but service worker/mobile click behavior and production provider config need verification.</td>
+</tr>
+<tr>
+<td>Reminder generation</td>
+<td>Due reminders exist, but deployment scheduler cadence is not proven here.</td>
+</tr>
+<tr>
+<td>Ingestion retry/question review</td>
+<td>Admin endpoints exist; UI should show exact page/chunk/question blockers.</td>
+</tr>
+</tbody></table>
+<h2>Planned Or Stub-Only Features</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Current Reality</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Reels/video generation</td>
+<td>Model and placeholder response only.</td>
+</tr>
+<tr>
+<td>Subscriptions/billing</td>
+<td>Model only.</td>
+</tr>
+<tr>
+<td>Achievement automation</td>
+<td>Model/display hooks, no central awarding engine.</td>
+</tr>
+<tr>
+<td>AI Companion advanced assistant</td>
+<td>Rule-based placeholder, not RAG/memory-backed.</td>
+</tr>
+</tbody></table>
+<h2>Recommended Implementation Order</h2>
+<ol>
+<li>RAG indexed readiness: reviewed chunks loaded, embedded, evaluated.</li>
+<li>Admin RAG blocker visibility: exact chunks/pages/questions causing not-ready status.</li>
+<li>Curriculum production validation.</li>
+<li>Quiz grading and generated-question QA.</li>
+<li>Homework upload/provider/citation hardening.</li>
+<li>Study Plan contract strengthening.</li>
+<li>Audio production verification.</li>
+<li>Push delivery verification.</li>
+<li>Hide or implement non-MVP placeholders.</li>
+</ol>
+</article>
+    </section>
+  </main>
+
+  <footer class="shell footer">EduMind current feature audit · generated from the source-backed Markdown report · 2026-07-10</footer>
+  <a class="back-to-top" href="#top" aria-label="Back to top">↑</a>
+
+  <script>
+    const filterButtons = document.querySelectorAll('[data-filter]');
+    const featureCards = document.querySelectorAll('.feature-card');
+
+    filterButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const filter = button.dataset.filter;
+        filterButtons.forEach((item) => item.classList.toggle('is-active', item === button));
+        featureCards.forEach((card) => {
+          card.hidden = filter !== 'all' && card.dataset.status !== filter;
+        });
+      });
+    });
+
+    document.querySelectorAll('.report table').forEach((table) => {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'table-scroll';
+      table.parentNode.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+    });
+
+    const headingIds = new Map([
+      ['Feature Status Matrix', 'feature-matrix'],
+      ['Feature Details', 'feature-details'],
+      ['Backend API Overview', 'api-map'],
+      ['Database Model Overview', 'database-models'],
+      ['Partial Features Roadmap', 'partial-roadmap'],
+      ['Top Gaps To Fix Next', 'top-gaps']
+    ]);
+    document.querySelectorAll('.report h2').forEach((heading) => {
+      const id = headingIds.get(heading.textContent.trim());
+      if (id) heading.id = id;
+    });
+
+    const cellClass = new Map([
+      ['Implemented', 'cell-implemented'],
+      ['Implemented MVP', 'cell-implemented'],
+      ['Partial', 'cell-partial'],
+      ['Partial MVP', 'cell-partial'],
+      ['Stub/partial', 'cell-stub'],
+      ['Planned only', 'cell-planned'],
+      ['High', 'cell-high'],
+      ['Medium', 'cell-medium'],
+      ['Low', 'cell-low']
+    ]);
+    document.querySelectorAll('.report td').forEach((cell) => {
+      const className = cellClass.get(cell.textContent.trim());
+      if (className) cell.classList.add(className);
+    });
+  </script>
+</body>
+</html>

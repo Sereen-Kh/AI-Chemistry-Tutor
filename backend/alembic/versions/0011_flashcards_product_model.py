@@ -121,7 +121,7 @@ def upgrade() -> None:
 
     if _has_table("flashcard_progress"):
         op.execute(
-            "UPDATE flashcard_progress SET status = CASE WHEN mastered = 1 THEN 'mastered' "
+            "UPDATE flashcard_progress SET status = CASE WHEN mastered IS TRUE THEN 'mastered' "
             "WHEN review_count > 0 THEN 'review' ELSE 'new' END WHERE status IS NULL"
         )
         op.execute("UPDATE flashcard_progress SET due_at = next_review_at WHERE due_at IS NULL")

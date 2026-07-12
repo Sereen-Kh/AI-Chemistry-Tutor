@@ -347,20 +347,22 @@ const OnboardingPage = ({
 
   useEffect(() => {
     let cancelled = false;
-    setInterestsLoading(true);
-    authApi.interests()
-      .then((items) => {
-        if (!cancelled) {
-          setBackendInterests(items);
-          setError('');
-        }
-      })
-      .catch((err) => {
-        if (!cancelled) setError(toErrorMessage(err, 'تعذر تحميل الاهتمامات من الخادم.'));
-      })
-      .finally(() => {
-        if (!cancelled) setInterestsLoading(false);
-      });
+    queueMicrotask(() => {
+      setInterestsLoading(true);
+      authApi.interests()
+        .then((items) => {
+          if (!cancelled) {
+            setBackendInterests(items);
+            setError('');
+          }
+        })
+        .catch((err) => {
+          if (!cancelled) setError(toErrorMessage(err, 'تعذر تحميل الاهتمامات من الخادم.'));
+        })
+        .finally(() => {
+          if (!cancelled) setInterestsLoading(false);
+        });
+    });
     return () => {
       cancelled = true;
     };
@@ -711,26 +713,28 @@ const ProfilePage = ({
   }, []);
 
   useEffect(() => {
-    setDraftPreferences(preferences);
+    queueMicrotask(() => setDraftPreferences(preferences));
   }, [preferences]);
 
   useEffect(() => {
     let cancelled = false;
-    setProfileLoading(true);
-    userApi.getProfile()
-      .then((profile) => {
-        if (cancelled) return;
-        const next = preferencesFromProfile(profile, preferences);
-        setDraftPreferences(next);
-        setPreferences(next);
-        savePreferences(next);
-      })
-      .catch(() => {
-        if (!cancelled) setStatus('تعذر تحميل ملف التفضيلات من الخادم.');
-      })
-      .finally(() => {
-        if (!cancelled) setProfileLoading(false);
-      });
+    queueMicrotask(() => {
+      setProfileLoading(true);
+      userApi.getProfile()
+        .then((profile) => {
+          if (cancelled) return;
+          const next = preferencesFromProfile(profile, preferences);
+          setDraftPreferences(next);
+          setPreferences(next);
+          savePreferences(next);
+        })
+        .catch(() => {
+          if (!cancelled) setStatus('تعذر تحميل ملف التفضيلات من الخادم.');
+        })
+        .finally(() => {
+          if (!cancelled) setProfileLoading(false);
+        });
+    });
     return () => {
       cancelled = true;
     };

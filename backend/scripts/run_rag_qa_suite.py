@@ -7,6 +7,7 @@ Celery-backed processing. Live integration mode is gated by RUN_RAG_INTEGRATION=
 from __future__ import annotations
 
 import argparse
+import asyncio
 from datetime import datetime, timezone
 import json
 import logging
@@ -21,7 +22,11 @@ sys.path.insert(0, str(BACKEND_DIR))
 from fastapi.testclient import TestClient  # noqa: E402
 
 from app.core.dependencies import get_current_user_id  # noqa: E402
+from app.core.config import settings  # noqa: E402
+from app.database import AsyncSessionLocal  # noqa: E402
 from app.main import app  # noqa: E402
+from app.services.rag_evaluation import build_evaluation_preconditions  # noqa: E402
+from app.services.rag_runtime import active_reviewed_metadata_version, load_json_report  # noqa: E402
 from scripts.rag_qa_harness import (  # noqa: E402
     DATASET_PATH,
     REPORT_PATH,
@@ -88,13 +93,47 @@ def _confidence(endpoint: str, payload: dict[str, Any]) -> float:
     return 0.0
 
 
-def _has_required_source_metadata(endpoint: str, sources: list[dict[str, Any]]) -> bool:
-    if not sources:
-        return False
-    fields = ("source_id", "page_number", "similarity_score")
-    id_field = "id" if endpoint == "rag/retrieve" else "chunk_id"
-    top = sources[0]
-    return top.get(id_field) is not None and all(top.get(field) is not None for field in fields)
+def _citation_value(source: dict[str, Any], field: str) -> Any:
+    metadata = source.get("curriculum_metadata") if isinstance(source.get("curriculum_metadata"), dict) else {}
+    if field == "chunk_id":
+        return source.get("id") if source.get("id") is not None else source.get("chunk_id")
+    if field == "printed_page":
+        return (
+            source.get("printed_page_start")
+            or metadata.get("printed_page_start")
+            or source.get("page_number")
+        )
+    if field == "score":
+        return source.get("similarity_score") if source.get("similarity_score") is not None else source.get("score")
+    return source.get(field) if source.get(field) is not None else metadata.get(field)
+
+
+def _citation_issues(sources: list[dict[str, Any]]) -> list[str]:
+    issues: list[str] = []
+    required = (
+        "chunk_id",
+        "source_id",
+        "source_type",
+        "printed_page",
+        "unit_id",
+        "lesson_id",
+        "score",
+        "quality_status",
+        "reviewed_metadata_version",
+    )
+    for source in sources:
+        missing = [field for field in required if _citation_value(source, field) in (None, "", [])]
+        if missing:
+            issues.append(f"missing metadata: {missing}")
+        quality = str(_citation_value(source, "quality_status") or "")
+        metadata = source.get("curriculum_metadata") if isinstance(source.get("curriculum_metadata"), dict) else {}
+        if quality == "blocked" or metadata.get("stale") is True:
+            issues.append("blocked or stale citation")
+        if _citation_value(source, "reviewed_metadata_version") != active_reviewed_metadata_version():
+            issues.append("reviewed metadata version mismatch")
+        if quality == "needs_review" and not source.get("quality_warning"):
+            issues.append("needs_review citation missing warning")
+    return issues
 
 
 def _evaluate_endpoint(case: dict[str, Any], endpoint: str, payload: dict[str, Any]) -> dict[str, Any]:
@@ -120,8 +159,10 @@ def _evaluate_endpoint(case: dict[str, Any], endpoint: str, payload: dict[str, A
         missing_topics = missing_terms(answer, case["expected_source_topics"])
         if endpoint == "rag/retrieve" and missing_topics:
             failures.append({"stage": "retrieval", "detail": f"Missing expected source topics: {missing_topics}"})
-        if not _has_required_source_metadata(endpoint, sources):
-            failures.append({"stage": "citation", "detail": "Missing chunk/source/page/score metadata"})
+        citation_issues = _citation_issues(sources)
+        for issue in citation_issues:
+            stage = "safety" if issue == "blocked or stale citation" else "citation"
+            failures.append({"stage": stage, "detail": issue})
         if _confidence(endpoint, payload) < float(case["min_confidence"]):
             failures.append({"stage": "confidence", "detail": "Confidence below expected minimum"})
 
@@ -199,19 +240,125 @@ def run_suite(cases: list[dict[str, Any]], *, mode: str) -> dict[str, Any]:
             stage = str(failure.get("stage") or "unknown")
             failures_by_stage[stage] = failures_by_stage.get(stage, 0) + 1
 
+    answerable_results = [result for result in results if result.get("expected_behavior") == "answerable"]
+    out_of_scope_results = [result for result in results if result.get("expected_behavior") == "out_of_scope"]
+    citation_failures = sum(
+        1 for result in answerable_results for failure in result.get("failures", []) if failure.get("stage") == "citation"
+    )
+    safety_failures = sum(
+        1
+        for result in results
+        for failure in result.get("failures", [])
+        if failure.get("stage") in {"hallucination_guard", "safety"}
+    )
+    blocked_stale_citations = sum(
+        1
+        for result in results
+        for failure in result.get("failures", [])
+        if failure.get("detail") == "blocked or stale citation"
+    )
+    out_of_scope_passed = sum(result.get("passed") is True for result in out_of_scope_results)
+    pass_rate = round(passed / total, 4) if total else 0.0
+    citation_completeness = round(
+        (len(answerable_results) - citation_failures) / max(len(answerable_results), 1), 4
+    )
+    out_of_scope_safety = round(out_of_scope_passed / max(len(out_of_scope_results), 1), 4)
+    thresholds = {
+        "overall_pass_rate": 1.0 if mode == "unit" else 0.90,
+        "safety_hallucination_failures": 0,
+        "blocked_stale_citations": 0,
+        "citation_metadata_completeness": 1.0,
+        "out_of_scope_safety_behavior": 1.0,
+    }
+    threshold_failures: list[str] = []
+    if pass_rate < thresholds["overall_pass_rate"]:
+        threshold_failures.append("overall_pass_rate_below_threshold")
+    if safety_failures:
+        threshold_failures.append("safety_hallucination_failures_above_threshold")
+    if blocked_stale_citations:
+        threshold_failures.append("blocked_stale_citations_above_threshold")
+    if citation_completeness < 1.0:
+        threshold_failures.append("citation_metadata_completeness_below_threshold")
+    if out_of_scope_safety < 1.0:
+        threshold_failures.append("out_of_scope_safety_behavior_below_threshold")
+
+    endpoint_metrics: dict[str, dict[str, int]] = {}
+    for result in results:
+        endpoint = str(result.get("endpoint") or "unknown")
+        metric = endpoint_metrics.setdefault(endpoint, {"total": 0, "passed": 0, "failed": 0})
+        metric["total"] += 1
+        metric["passed" if result.get("passed") else "failed"] += 1
+
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(),
+        "status": "passed" if not threshold_failures else "failed",
         "mode": mode,
         "dataset": str(DATASET_PATH),
+        "reviewed_metadata_version": active_reviewed_metadata_version(),
+        "embedding_model": settings.gemini_embedding_model,
+        "preconditions": {
+            "mode": mode,
+            "live_integration_authorized": mode == "integration" and os.getenv("RUN_RAG_INTEGRATION") == "1",
+        },
+        "metrics": {
+            "overall_pass_rate": pass_rate,
+            "safety_hallucination_failures": safety_failures,
+            "blocked_stale_citations": blocked_stale_citations,
+            "citation_metadata_completeness": citation_completeness,
+            "out_of_scope_safety_behavior": out_of_scope_safety,
+            "by_endpoint": endpoint_metrics,
+            "failures_by_stage": failures_by_stage,
+            "thresholds": thresholds,
+        },
+        "threshold_failures": threshold_failures,
+        "failed_cases": [result for result in results if not result.get("passed")],
         "summary": {
             "total_checks": total,
             "passed_checks": passed,
             "failed_checks": total - passed,
-            "pass_rate": round(passed / total, 4) if total else 0.0,
+            "pass_rate": pass_rate,
             "failures_by_stage": failures_by_stage,
         },
         "results": results,
     }
+
+
+async def _integration_preconditions() -> dict[str, Any]:
+    async with AsyncSessionLocal() as db:
+        preconditions = await build_evaluation_preconditions(db)
+    evaluation = load_json_report(settings.rag_evaluation_report_path)
+    issues = list(preconditions.get("blocking_issues") or [])
+    if not evaluation or evaluation.get("status") != "passed":
+        issues.append("RAG_EVALUATION_GATE_NOT_PASSED")
+    elif (
+        evaluation.get("reviewed_metadata_version") != active_reviewed_metadata_version()
+        or evaluation.get("embedding_model") != settings.gemini_embedding_model
+    ):
+        issues.append("RAG_EVALUATION_REPORT_VERSION_MISMATCH")
+    return {**preconditions, "blocking_issues": list(dict.fromkeys(issues)), "ready": not issues}
+
+
+def _write_markdown(report: dict[str, Any], output_path: Path) -> Path:
+    markdown_path = output_path.with_suffix(".md")
+    metrics = report.get("metrics") or {}
+    lines = [
+        "# Grade 9 Student-Flow RAG QA",
+        "",
+        f"Status: `{report.get('status')}`",
+        f"Mode: `{report.get('mode')}`",
+        f"Reviewed metadata: `{report.get('reviewed_metadata_version')}`",
+        f"Embedding model: `{report.get('embedding_model')}`",
+        "",
+        "## Metrics",
+        "",
+    ]
+    lines.extend(f"- `{key}`: `{value}`" for key, value in metrics.items())
+    lines.extend(["", "## Threshold Failures", ""])
+    lines.extend(f"- `{item}`" for item in report.get("threshold_failures") or [])
+    if not report.get("threshold_failures"):
+        lines.append("- None")
+    markdown_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return markdown_path
 
 
 def main() -> None:
@@ -222,15 +369,46 @@ def main() -> None:
     args = parser.parse_args()
 
     cases = load_cases(Path(args.dataset).expanduser().resolve())
+    if args.mode == "integration":
+        if os.getenv("RUN_RAG_INTEGRATION") != "1":
+            raise SystemExit("Set RUN_RAG_INTEGRATION=1 to run integration mode.")
+        preconditions = asyncio.run(_integration_preconditions())
+        if not preconditions["ready"]:
+            blocked_report = {
+                "generated_at": datetime.now(timezone.utc).isoformat(),
+                "status": "blocked",
+                "mode": args.mode,
+                "dataset": str(args.dataset),
+                "reviewed_metadata_version": active_reviewed_metadata_version(),
+                "embedding_model": settings.gemini_embedding_model,
+                "preconditions": preconditions,
+                "metrics": {},
+                "threshold_failures": preconditions["blocking_issues"],
+                "failed_cases": [],
+                "summary": {"total_checks": 0, "passed_checks": 0, "failed_checks": 0, "pass_rate": 0.0},
+                "results": [],
+            }
+            output_path = Path(args.output).expanduser().resolve()
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            blocked_report["report_json_path"] = str(output_path)
+            blocked_report["report_markdown_path"] = str(output_path.with_suffix(".md"))
+            output_path.write_text(json.dumps(blocked_report, ensure_ascii=False, indent=2), encoding="utf-8")
+            _write_markdown(blocked_report, output_path)
+            print(json.dumps(blocked_report["preconditions"], ensure_ascii=False, indent=2))
+            raise SystemExit(1)
     report = run_suite(cases, mode=args.mode)
 
     output_path = Path(args.output).expanduser().resolve()
     output_path.parent.mkdir(parents=True, exist_ok=True)
+    report["report_json_path"] = str(output_path)
+    report["report_markdown_path"] = str(output_path.with_suffix(".md"))
     output_path.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    markdown_path = _write_markdown(report, output_path)
     print(json.dumps(report["summary"], ensure_ascii=False, indent=2))
     print(f"Wrote RAG QA report to {output_path}")
+    print(f"Wrote RAG QA Markdown report to {markdown_path}")
 
-    if report["summary"]["failed_checks"]:
+    if report["threshold_failures"]:
         raise SystemExit(1)
 
 

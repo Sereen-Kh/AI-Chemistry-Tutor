@@ -42,6 +42,11 @@ class Settings(BaseSettings):
     allow_local_embeddings: bool = False
     local_embedding_model: str = "intfloat/multilingual-e5-base"
     rag_query_logging_enabled: bool = True
+    rag_student_retrieval_enabled: bool = True
+    rag_active_reviewed_metadata_version: str = "2026-06-reviewed-v1"
+    rag_require_production_gate: bool = False
+    rag_evaluation_report_path: str = "data/eval/reports/rag_eval_latest.json"
+    rag_qa_report_path: str = "backend/reports/rag_qa_report.json"
     audio_enabled: bool = False
     stt_provider: str = "elevenlabs"
     tts_provider: str = "elevenlabs"
@@ -165,6 +170,11 @@ class Settings(BaseSettings):
         if dimension != 768:
             raise ValueError("EMBEDDING_DIMENSION must be 768 unless the pgvector column is migrated")
         return dimension
+
+    @field_validator("rag_active_reviewed_metadata_version", mode="before")
+    @classmethod
+    def validate_active_reviewed_metadata_version(cls, value):
+        return str(value or "").strip()
 
     @field_validator("allowed_audio_mime_types", mode="before")
     @classmethod

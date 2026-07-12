@@ -1,0 +1,1587 @@
+[
+  {
+    "id": "unit_04_lesson_01_subtopic_001",
+    "question_ar": "ما المقصود بـ «المحلول المائي»؟",
+    "paraphrases_ar": [
+      "اشرح «المحلول المائي» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «المحلول المائي»."
+    ],
+    "expected_concepts": [
+      "المحلول المائي"
+    ],
+    "expected_unit_id": "unit_04",
+    "expected_lesson_id": "unit_04_lesson_01",
+    "expected_printed_pages": [
+      108
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "المحاليل المائية",
+    "source_subtopic_id": "unit_04_lesson_01_subtopic_001",
+    "source_evidence": [
+      "page_002.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_04_lesson_01_subtopic_002",
+    "question_ar": "ما المقصود بـ «المادة المذيبة»؟",
+    "paraphrases_ar": [
+      "اشرح «المادة المذيبة» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «المادة المذيبة»."
+    ],
+    "expected_concepts": [
+      "المادة المذيبة"
+    ],
+    "expected_unit_id": "unit_04",
+    "expected_lesson_id": "unit_04_lesson_01",
+    "expected_printed_pages": [
+      108
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "المحاليل المائية",
+    "source_subtopic_id": "unit_04_lesson_01_subtopic_002",
+    "source_evidence": [
+      "page_002.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_04_lesson_01_subtopic_003",
+    "question_ar": "ما المقصود بـ «المادة المذابة»؟",
+    "paraphrases_ar": [
+      "اشرح «المادة المذابة» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «المادة المذابة»."
+    ],
+    "expected_concepts": [
+      "المادة المذابة"
+    ],
+    "expected_unit_id": "unit_04",
+    "expected_lesson_id": "unit_04_lesson_01",
+    "expected_printed_pages": [
+      108,
+      109,
+      110,
+      111,
+      112,
+      113,
+      114
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "المحاليل المائية",
+    "source_subtopic_id": "unit_04_lesson_01_subtopic_003",
+    "source_evidence": [
+      "page_002.json text match",
+      "page_004.json text match",
+      "page_006.json text match",
+      "page_007.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_04_lesson_01_subtopic_004",
+    "question_ar": "ما المقصود بـ «التركيز الغرامي»؟",
+    "paraphrases_ar": [
+      "اشرح «التركيز الغرامي» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «التركيز الغرامي»."
+    ],
+    "expected_concepts": [
+      "التركيز الغرامي"
+    ],
+    "expected_unit_id": "unit_04",
+    "expected_lesson_id": "unit_04_lesson_01",
+    "expected_printed_pages": [
+      108,
+      109,
+      110,
+      111,
+      112,
+      113
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "المحاليل المائية",
+    "source_subtopic_id": "unit_04_lesson_01_subtopic_004",
+    "source_evidence": [
+      "page_002.json text match",
+      "page_004.json text match",
+      "page_005.json text match",
+      "page_007.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_04_lesson_01_subtopic_005",
+    "question_ar": "ما المقصود بـ «التركيز المولي»؟",
+    "paraphrases_ar": [
+      "اشرح «التركيز المولي» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «التركيز المولي»."
+    ],
+    "expected_concepts": [
+      "التركيز المولي"
+    ],
+    "expected_unit_id": "unit_04",
+    "expected_lesson_id": "unit_04_lesson_01",
+    "expected_printed_pages": [
+      108,
+      109,
+      110,
+      111,
+      112,
+      113
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "المحاليل المائية",
+    "source_subtopic_id": "unit_04_lesson_01_subtopic_005",
+    "source_evidence": [
+      "page_002.json text match",
+      "page_004.json text match",
+      "page_005.json text match",
+      "page_007.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_04_lesson_01_subtopic_006",
+    "question_ar": "ما المقصود بـ «تمديد المحاليل»؟",
+    "paraphrases_ar": [
+      "اشرح «تمديد المحاليل» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «تمديد المحاليل»."
+    ],
+    "expected_concepts": [
+      "تمديد المحاليل"
+    ],
+    "expected_unit_id": "unit_04",
+    "expected_lesson_id": "unit_04_lesson_01",
+    "expected_printed_pages": [
+      112,
+      113
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "المحاليل المائية",
+    "source_subtopic_id": "unit_04_lesson_01_subtopic_006",
+    "source_evidence": [
+      "page_006.json text match",
+      "page_007.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_04_lesson_02_subtopic_001",
+    "question_ar": "ما المقصود بـ «الحموض»؟",
+    "paraphrases_ar": [
+      "اشرح «الحموض» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «الحموض»."
+    ],
+    "expected_concepts": [
+      "الحموض"
+    ],
+    "expected_unit_id": "unit_04",
+    "expected_lesson_id": "unit_04_lesson_02",
+    "expected_printed_pages": [
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "المحاليل الحمضية",
+    "source_subtopic_id": "unit_04_lesson_02_subtopic_001",
+    "source_evidence": [
+      "page_010.json text match",
+      "page_011.json text match",
+      "page_013.json text match",
+      "page_014.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_04_lesson_02_subtopic_002",
+    "question_ar": "ما المقصود بـ «أيون الهدروجين»؟",
+    "paraphrases_ar": [
+      "اشرح «أيون الهدروجين» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «أيون الهدروجين»."
+    ],
+    "expected_concepts": [
+      "أيون الهدروجين"
+    ],
+    "expected_unit_id": "unit_04",
+    "expected_lesson_id": "unit_04_lesson_02",
+    "expected_printed_pages": [
+      119
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "المحاليل الحمضية",
+    "source_subtopic_id": "unit_04_lesson_02_subtopic_002",
+    "source_evidence": [
+      "page_013.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_04_lesson_02_subtopic_003",
+    "question_ar": "ما المقصود بـ «حمض قوي»؟",
+    "paraphrases_ar": [
+      "اشرح «حمض قوي» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «حمض قوي»."
+    ],
+    "expected_concepts": [
+      "حمض قوي"
+    ],
+    "expected_unit_id": "unit_04",
+    "expected_lesson_id": "unit_04_lesson_02",
+    "expected_printed_pages": [
+      116
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "المحاليل الحمضية",
+    "source_subtopic_id": "unit_04_lesson_02_subtopic_003",
+    "source_evidence": [
+      "page_010.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_04_lesson_02_subtopic_004",
+    "question_ar": "ما المقصود بـ «حمض ضعيف»؟",
+    "paraphrases_ar": [
+      "اشرح «حمض ضعيف» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «حمض ضعيف»."
+    ],
+    "expected_concepts": [
+      "حمض ضعيف"
+    ],
+    "expected_unit_id": "unit_04",
+    "expected_lesson_id": "unit_04_lesson_02",
+    "expected_printed_pages": [
+      116
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "المحاليل الحمضية",
+    "source_subtopic_id": "unit_04_lesson_02_subtopic_004",
+    "source_evidence": [
+      "page_010.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_04_lesson_02_subtopic_005",
+    "question_ar": "ما المقصود بـ «كواشف الحموض»؟",
+    "paraphrases_ar": [
+      "اشرح «كواشف الحموض» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «كواشف الحموض»."
+    ],
+    "expected_concepts": [
+      "كواشف الحموض"
+    ],
+    "expected_unit_id": "unit_04",
+    "expected_lesson_id": "unit_04_lesson_02",
+    "expected_printed_pages": [
+      116,
+      117,
+      118,
+      119,
+      120,
+      121,
+      122,
+      123
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "المحاليل الحمضية",
+    "source_subtopic_id": "unit_04_lesson_02_subtopic_005",
+    "source_evidence": [
+      "page_010.json text match",
+      "page_011.json text match",
+      "page_013.json text match",
+      "page_014.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_04_lesson_03_subtopic_001",
+    "question_ar": "ما المقصود بـ «الأسس»؟",
+    "paraphrases_ar": [
+      "اشرح «الأسس» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «الأسس»."
+    ],
+    "expected_concepts": [
+      "الأسس"
+    ],
+    "expected_unit_id": "unit_04",
+    "expected_lesson_id": "unit_04_lesson_03",
+    "expected_printed_pages": [
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "المحاليل الأساسية",
+    "source_subtopic_id": "unit_04_lesson_03_subtopic_001",
+    "source_evidence": [
+      "page_018.json text match",
+      "page_019.json text match",
+      "page_023.json text match",
+      "page_024.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_04_lesson_03_subtopic_002",
+    "question_ar": "ما المقصود بـ «أيون الهدروكسيد»؟",
+    "paraphrases_ar": [
+      "اشرح «أيون الهدروكسيد» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «أيون الهدروكسيد»."
+    ],
+    "expected_concepts": [
+      "أيون الهدروكسيد"
+    ],
+    "expected_unit_id": "unit_04",
+    "expected_lesson_id": "unit_04_lesson_03",
+    "expected_printed_pages": [
+      125,
+      126,
+      127,
+      128,
+      129,
+      130
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "المحاليل الأساسية",
+    "source_subtopic_id": "unit_04_lesson_03_subtopic_002",
+    "source_evidence": [
+      "page_019.json text match",
+      "page_023.json text match",
+      "page_024.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_04_lesson_03_subtopic_003",
+    "question_ar": "ما المقصود بـ «أساس قوي»؟",
+    "paraphrases_ar": [
+      "اشرح «أساس قوي» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «أساس قوي»."
+    ],
+    "expected_concepts": [
+      "أساس قوي"
+    ],
+    "expected_unit_id": "unit_04",
+    "expected_lesson_id": "unit_04_lesson_03",
+    "expected_printed_pages": [
+      124
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "المحاليل الأساسية",
+    "source_subtopic_id": "unit_04_lesson_03_subtopic_003",
+    "source_evidence": [
+      "page_018.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_04_lesson_03_subtopic_004",
+    "question_ar": "ما المقصود بـ «أساس ضعيف»؟",
+    "paraphrases_ar": [
+      "اشرح «أساس ضعيف» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «أساس ضعيف»."
+    ],
+    "expected_concepts": [
+      "أساس ضعيف"
+    ],
+    "expected_unit_id": "unit_04",
+    "expected_lesson_id": "unit_04_lesson_03",
+    "expected_printed_pages": [
+      124
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "المحاليل الأساسية",
+    "source_subtopic_id": "unit_04_lesson_03_subtopic_004",
+    "source_evidence": [
+      "page_018.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_04_lesson_03_subtopic_005",
+    "question_ar": "ما المقصود بـ «المحاليل القلوية»؟",
+    "paraphrases_ar": [
+      "اشرح «المحاليل القلوية» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «المحاليل القلوية»."
+    ],
+    "expected_concepts": [
+      "المحاليل القلوية"
+    ],
+    "expected_unit_id": "unit_04",
+    "expected_lesson_id": "unit_04_lesson_03",
+    "expected_printed_pages": [
+      124,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "المحاليل الأساسية",
+    "source_subtopic_id": "unit_04_lesson_03_subtopic_005",
+    "source_evidence": [
+      "page_018.json text match",
+      "page_021.json text match",
+      "page_022.json text match",
+      "page_023.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_04_lesson_04_subtopic_001",
+    "question_ar": "ما المقصود بـ «تفاعل الاتحاد»؟",
+    "paraphrases_ar": [
+      "اشرح «تفاعل الاتحاد» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «تفاعل الاتحاد»."
+    ],
+    "expected_concepts": [
+      "تفاعل الاتحاد"
+    ],
+    "expected_unit_id": "unit_04",
+    "expected_lesson_id": "unit_04_lesson_04",
+    "expected_printed_pages": [
+      132,
+      133,
+      134,
+      135,
+      136,
+      137,
+      138,
+      139,
+      140,
+      141,
+      142,
+      143
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "أنواع التفاعلات الكيميائية",
+    "source_subtopic_id": "unit_04_lesson_04_subtopic_001",
+    "source_evidence": [
+      "page_026.json text match",
+      "page_027.json text match",
+      "page_028.json text match",
+      "page_029.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_04_lesson_04_subtopic_002",
+    "question_ar": "ما المقصود بـ «تفاعل التفكك»؟",
+    "paraphrases_ar": [
+      "اشرح «تفاعل التفكك» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «تفاعل التفكك»."
+    ],
+    "expected_concepts": [
+      "تفاعل التفكك"
+    ],
+    "expected_unit_id": "unit_04",
+    "expected_lesson_id": "unit_04_lesson_04",
+    "expected_printed_pages": [
+      132,
+      133,
+      134,
+      135,
+      136,
+      137,
+      138,
+      139,
+      140,
+      141,
+      142,
+      143
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "أنواع التفاعلات الكيميائية",
+    "source_subtopic_id": "unit_04_lesson_04_subtopic_002",
+    "source_evidence": [
+      "page_026.json text match",
+      "page_027.json text match",
+      "page_028.json text match",
+      "page_029.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_04_lesson_04_subtopic_003",
+    "question_ar": "ما المقصود بـ «تفاعل الإزاحة»؟",
+    "paraphrases_ar": [
+      "اشرح «تفاعل الإزاحة» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «تفاعل الإزاحة»."
+    ],
+    "expected_concepts": [
+      "تفاعل الإزاحة"
+    ],
+    "expected_unit_id": "unit_04",
+    "expected_lesson_id": "unit_04_lesson_04",
+    "expected_printed_pages": [
+      132,
+      133,
+      134,
+      135,
+      136,
+      137,
+      138,
+      139,
+      140,
+      141,
+      142,
+      143
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "أنواع التفاعلات الكيميائية",
+    "source_subtopic_id": "unit_04_lesson_04_subtopic_003",
+    "source_evidence": [
+      "page_026.json text match",
+      "page_027.json text match",
+      "page_028.json text match",
+      "page_029.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_04_lesson_04_subtopic_004",
+    "question_ar": "ما المقصود بـ «تفاعل التبادل الثنائي»؟",
+    "paraphrases_ar": [
+      "اشرح «تفاعل التبادل الثنائي» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «تفاعل التبادل الثنائي»."
+    ],
+    "expected_concepts": [
+      "تفاعل التبادل الثنائي"
+    ],
+    "expected_unit_id": "unit_04",
+    "expected_lesson_id": "unit_04_lesson_04",
+    "expected_printed_pages": [
+      132,
+      133,
+      134,
+      135,
+      136,
+      137,
+      138,
+      139,
+      140,
+      141,
+      142,
+      143
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "أنواع التفاعلات الكيميائية",
+    "source_subtopic_id": "unit_04_lesson_04_subtopic_004",
+    "source_evidence": [
+      "page_026.json text match",
+      "page_027.json text match",
+      "page_028.json text match",
+      "page_029.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_04_lesson_04_subtopic_005",
+    "question_ar": "ما المقصود بـ «المعادلة الكيميائية»؟",
+    "paraphrases_ar": [
+      "اشرح «المعادلة الكيميائية» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «المعادلة الكيميائية»."
+    ],
+    "expected_concepts": [
+      "المعادلة الكيميائية"
+    ],
+    "expected_unit_id": "unit_04",
+    "expected_lesson_id": "unit_04_lesson_04",
+    "expected_printed_pages": [
+      132,
+      133,
+      134,
+      135,
+      136,
+      137,
+      138,
+      139,
+      140,
+      141,
+      142,
+      143
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "أنواع التفاعلات الكيميائية",
+    "source_subtopic_id": "unit_04_lesson_04_subtopic_005",
+    "source_evidence": [
+      "page_026.json text match",
+      "page_027.json text match",
+      "page_028.json text match",
+      "page_030.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_04_lesson_05_subtopic_001",
+    "question_ar": "ما المقصود بـ «الملح»؟",
+    "paraphrases_ar": [
+      "اشرح «الملح» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «الملح»."
+    ],
+    "expected_concepts": [
+      "الملح"
+    ],
+    "expected_unit_id": "unit_04",
+    "expected_lesson_id": "unit_04_lesson_05",
+    "expected_printed_pages": [
+      146,
+      147,
+      148,
+      149,
+      150,
+      151,
+      152,
+      153,
+      154,
+      155
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "الأملاح",
+    "source_subtopic_id": "unit_04_lesson_05_subtopic_001",
+    "source_evidence": [
+      "page_040.json text match",
+      "page_042.json text match",
+      "page_043.json text match",
+      "page_044.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_04_lesson_05_subtopic_002",
+    "question_ar": "ما المقصود بـ «تشكل الأملاح»؟",
+    "paraphrases_ar": [
+      "اشرح «تشكل الأملاح» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «تشكل الأملاح»."
+    ],
+    "expected_concepts": [
+      "تشكل الأملاح"
+    ],
+    "expected_unit_id": "unit_04",
+    "expected_lesson_id": "unit_04_lesson_05",
+    "expected_printed_pages": [
+      146,
+      147,
+      148,
+      149,
+      150,
+      151,
+      152,
+      153,
+      154,
+      155
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "الأملاح",
+    "source_subtopic_id": "unit_04_lesson_05_subtopic_002",
+    "source_evidence": [
+      "page_040.json text match",
+      "page_041.json text match",
+      "page_044.json text match",
+      "page_045.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_04_lesson_05_subtopic_003",
+    "question_ar": "ما المقصود بـ «ذوبان الأملاح»؟",
+    "paraphrases_ar": [
+      "اشرح «ذوبان الأملاح» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «ذوبان الأملاح»."
+    ],
+    "expected_concepts": [
+      "ذوبان الأملاح"
+    ],
+    "expected_unit_id": "unit_04",
+    "expected_lesson_id": "unit_04_lesson_05",
+    "expected_printed_pages": [
+      151,
+      152,
+      153,
+      154,
+      155
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "الأملاح",
+    "source_subtopic_id": "unit_04_lesson_05_subtopic_003",
+    "source_evidence": [
+      "page_045.json text match",
+      "page_047.json text match",
+      "page_049.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_04_lesson_05_subtopic_004",
+    "question_ar": "ما المقصود بـ «أهمية الأملاح»؟",
+    "paraphrases_ar": [
+      "اشرح «أهمية الأملاح» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «أهمية الأملاح»."
+    ],
+    "expected_concepts": [
+      "أهمية الأملاح"
+    ],
+    "expected_unit_id": "unit_04",
+    "expected_lesson_id": "unit_04_lesson_05",
+    "expected_printed_pages": [
+      146,
+      147,
+      148,
+      149,
+      150,
+      151,
+      152,
+      153,
+      154,
+      155
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "الأملاح",
+    "source_subtopic_id": "unit_04_lesson_05_subtopic_004",
+    "source_evidence": [
+      "page_040.json text match",
+      "page_041.json text match",
+      "page_044.json text match",
+      "page_045.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_05_lesson_01_subtopic_001",
+    "question_ar": "ما المقصود بـ «المواد العضوية»؟",
+    "paraphrases_ar": [
+      "اشرح «المواد العضوية» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «المواد العضوية»."
+    ],
+    "expected_concepts": [
+      "المواد العضوية"
+    ],
+    "expected_unit_id": "unit_05",
+    "expected_lesson_id": "unit_05_lesson_01",
+    "expected_printed_pages": [
+      162
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "مدخل إلى الكيمياء العضوية",
+    "source_subtopic_id": "unit_05_lesson_01_subtopic_001",
+    "source_evidence": [
+      "page_056.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_05_lesson_01_subtopic_002",
+    "question_ar": "ما المقصود بـ «الكربون»؟",
+    "paraphrases_ar": [
+      "اشرح «الكربون» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «الكربون»."
+    ],
+    "expected_concepts": [
+      "الكربون"
+    ],
+    "expected_unit_id": "unit_05",
+    "expected_lesson_id": "unit_05_lesson_01",
+    "expected_printed_pages": [
+      162,
+      163,
+      164,
+      165,
+      166,
+      167,
+      168,
+      169
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "مدخل إلى الكيمياء العضوية",
+    "source_subtopic_id": "unit_05_lesson_01_subtopic_002",
+    "source_evidence": [
+      "page_056.json text match",
+      "page_058.json text match",
+      "page_059.json text match",
+      "page_060.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_05_lesson_01_subtopic_003",
+    "question_ar": "ما المقصود بـ «الكيمياء العضوية»؟",
+    "paraphrases_ar": [
+      "اشرح «الكيمياء العضوية» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «الكيمياء العضوية»."
+    ],
+    "expected_concepts": [
+      "الكيمياء العضوية"
+    ],
+    "expected_unit_id": "unit_05",
+    "expected_lesson_id": "unit_05_lesson_01",
+    "expected_printed_pages": [
+      162
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "مدخل إلى الكيمياء العضوية",
+    "source_subtopic_id": "unit_05_lesson_01_subtopic_003",
+    "source_evidence": [
+      "page_056.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_05_lesson_01_subtopic_004",
+    "question_ar": "ما المقصود بـ «الروابط بين ذرات الكربون»؟",
+    "paraphrases_ar": [
+      "اشرح «الروابط بين ذرات الكربون» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «الروابط بين ذرات الكربون»."
+    ],
+    "expected_concepts": [
+      "الروابط بين ذرات الكربون"
+    ],
+    "expected_unit_id": "unit_05",
+    "expected_lesson_id": "unit_05_lesson_01",
+    "expected_printed_pages": [
+      162,
+      163,
+      164,
+      165,
+      166,
+      167,
+      168,
+      169
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "مدخل إلى الكيمياء العضوية",
+    "source_subtopic_id": "unit_05_lesson_01_subtopic_004",
+    "source_evidence": [
+      "page_056.json text match",
+      "page_058.json text match",
+      "page_059.json text match",
+      "page_060.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_05_lesson_01_subtopic_005",
+    "question_ar": "ما المقصود بـ «خصائص المركبات العضوية»؟",
+    "paraphrases_ar": [
+      "اشرح «خصائص المركبات العضوية» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «خصائص المركبات العضوية»."
+    ],
+    "expected_concepts": [
+      "خصائص المركبات العضوية"
+    ],
+    "expected_unit_id": "unit_05",
+    "expected_lesson_id": "unit_05_lesson_01",
+    "expected_printed_pages": [
+      162,
+      163,
+      164,
+      165,
+      166,
+      167,
+      168,
+      169,
+      170
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "مدخل إلى الكيمياء العضوية",
+    "source_subtopic_id": "unit_05_lesson_01_subtopic_005",
+    "source_evidence": [
+      "page_056.json text match",
+      "page_063.json text match",
+      "page_064.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_05_lesson_01_subtopic_006",
+    "question_ar": "ما المقصود بـ «المذيبات العضوية»؟",
+    "paraphrases_ar": [
+      "اشرح «المذيبات العضوية» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «المذيبات العضوية»."
+    ],
+    "expected_concepts": [
+      "المذيبات العضوية"
+    ],
+    "expected_unit_id": "unit_05",
+    "expected_lesson_id": "unit_05_lesson_01",
+    "expected_printed_pages": [
+      162,
+      163,
+      164,
+      165,
+      166,
+      167,
+      168,
+      169,
+      170
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "مدخل إلى الكيمياء العضوية",
+    "source_subtopic_id": "unit_05_lesson_01_subtopic_006",
+    "source_evidence": [
+      "page_056.json text match",
+      "page_063.json text match",
+      "page_064.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_05_lesson_02_subtopic_001",
+    "question_ar": "ما المقصود بـ «الهيدروكربونات»؟",
+    "paraphrases_ar": [
+      "اشرح «الهيدروكربونات» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «الهيدروكربونات»."
+    ],
+    "expected_concepts": [
+      "الهيدروكربونات"
+    ],
+    "expected_unit_id": "unit_05",
+    "expected_lesson_id": "unit_05_lesson_02",
+    "expected_printed_pages": [
+      172
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "المركبات الهيدروكربونية المشبعة الألكانات",
+    "source_subtopic_id": "unit_05_lesson_02_subtopic_001",
+    "source_evidence": [
+      "curriculum metadata; no direct string hit in cache"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_05_lesson_02_subtopic_002",
+    "question_ar": "ما المقصود بـ «الألكانات»؟",
+    "paraphrases_ar": [
+      "اشرح «الألكانات» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «الألكانات»."
+    ],
+    "expected_concepts": [
+      "الألكانات"
+    ],
+    "expected_unit_id": "unit_05",
+    "expected_lesson_id": "unit_05_lesson_02",
+    "expected_printed_pages": [
+      172,
+      173,
+      174,
+      175,
+      176
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "المركبات الهيدروكربونية المشبعة الألكانات",
+    "source_subtopic_id": "unit_05_lesson_02_subtopic_002",
+    "source_evidence": [
+      "page_066.json text match",
+      "page_067.json text match",
+      "page_069.json text match",
+      "page_070.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_05_lesson_02_subtopic_003",
+    "question_ar": "ما المقصود بـ «الميثان»؟",
+    "paraphrases_ar": [
+      "اشرح «الميثان» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «الميثان»."
+    ],
+    "expected_concepts": [
+      "الميثان"
+    ],
+    "expected_unit_id": "unit_05",
+    "expected_lesson_id": "unit_05_lesson_02",
+    "expected_printed_pages": [
+      173
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "المركبات الهيدروكربونية المشبعة الألكانات",
+    "source_subtopic_id": "unit_05_lesson_02_subtopic_003",
+    "source_evidence": [
+      "page_067.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_05_lesson_02_subtopic_004",
+    "question_ar": "ما المقصود بـ «الإيتان»؟",
+    "paraphrases_ar": [
+      "اشرح «الإيتان» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «الإيتان»."
+    ],
+    "expected_concepts": [
+      "الإيتان"
+    ],
+    "expected_unit_id": "unit_05",
+    "expected_lesson_id": "unit_05_lesson_02",
+    "expected_printed_pages": [
+      173,
+      174,
+      175,
+      176
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "المركبات الهيدروكربونية المشبعة الألكانات",
+    "source_subtopic_id": "unit_05_lesson_02_subtopic_004",
+    "source_evidence": [
+      "page_067.json text match",
+      "page_070.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_05_lesson_02_subtopic_005",
+    "question_ar": "ما المقصود بـ «الصيغة العامة للألكانات»؟",
+    "paraphrases_ar": [
+      "اشرح «الصيغة العامة للألكانات» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «الصيغة العامة للألكانات»."
+    ],
+    "expected_concepts": [
+      "الصيغة العامة للألكانات"
+    ],
+    "expected_unit_id": "unit_05",
+    "expected_lesson_id": "unit_05_lesson_02",
+    "expected_printed_pages": [
+      174,
+      175,
+      176
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "المركبات الهيدروكربونية المشبعة الألكانات",
+    "source_subtopic_id": "unit_05_lesson_02_subtopic_005",
+    "source_evidence": [
+      "page_068.json text match",
+      "page_070.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_05_lesson_02_subtopic_006",
+    "question_ar": "ما المقصود بـ «الصيغة المنشورة ونصف المنشورة»؟",
+    "paraphrases_ar": [
+      "اشرح «الصيغة المنشورة ونصف المنشورة» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «الصيغة المنشورة ونصف المنشورة»."
+    ],
+    "expected_concepts": [
+      "الصيغة المنشورة ونصف المنشورة"
+    ],
+    "expected_unit_id": "unit_05",
+    "expected_lesson_id": "unit_05_lesson_02",
+    "expected_printed_pages": [
+      172
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "المركبات الهيدروكربونية المشبعة الألكانات",
+    "source_subtopic_id": "unit_05_lesson_02_subtopic_006",
+    "source_evidence": [
+      "page_066.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_05_lesson_03_subtopic_001",
+    "question_ar": "ما المقصود بـ «المركبات الهيدروكربونية غير المشبعة»؟",
+    "paraphrases_ar": [
+      "اشرح «المركبات الهيدروكربونية غير المشبعة» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «المركبات الهيدروكربونية غير المشبعة»."
+    ],
+    "expected_concepts": [
+      "المركبات الهيدروكربونية غير المشبعة"
+    ],
+    "expected_unit_id": "unit_05",
+    "expected_lesson_id": "unit_05_lesson_03",
+    "expected_printed_pages": [
+      178
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "المركبات الهيدروكربونية غير المشبعة الألكنات",
+    "source_subtopic_id": "unit_05_lesson_03_subtopic_001",
+    "source_evidence": [
+      "page_072.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_05_lesson_03_subtopic_002",
+    "question_ar": "ما المقصود بـ «الألكنات»؟",
+    "paraphrases_ar": [
+      "اشرح «الألكنات» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «الألكنات»."
+    ],
+    "expected_concepts": [
+      "الألكنات"
+    ],
+    "expected_unit_id": "unit_05",
+    "expected_lesson_id": "unit_05_lesson_03",
+    "expected_printed_pages": [
+      178,
+      179,
+      180,
+      181,
+      182
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "المركبات الهيدروكربونية غير المشبعة الألكنات",
+    "source_subtopic_id": "unit_05_lesson_03_subtopic_002",
+    "source_evidence": [
+      "page_072.json text match",
+      "page_076.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_05_lesson_03_subtopic_003",
+    "question_ar": "ما المقصود بـ «الألكينات»؟",
+    "paraphrases_ar": [
+      "اشرح «الألكينات» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «الألكينات»."
+    ],
+    "expected_concepts": [
+      "الألكينات"
+    ],
+    "expected_unit_id": "unit_05",
+    "expected_lesson_id": "unit_05_lesson_03",
+    "expected_printed_pages": [
+      178,
+      179,
+      180,
+      181,
+      182
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "المركبات الهيدروكربونية غير المشبعة الألكنات",
+    "source_subtopic_id": "unit_05_lesson_03_subtopic_003",
+    "source_evidence": [
+      "page_072.json text match",
+      "page_073.json text match",
+      "page_074.json text match",
+      "page_075.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_05_lesson_03_subtopic_004",
+    "question_ar": "ما المقصود بـ «الإيتن»؟",
+    "paraphrases_ar": [
+      "اشرح «الإيتن» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «الإيتن»."
+    ],
+    "expected_concepts": [
+      "الإيتن"
+    ],
+    "expected_unit_id": "unit_05",
+    "expected_lesson_id": "unit_05_lesson_03",
+    "expected_printed_pages": [
+      178
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "المركبات الهيدروكربونية غير المشبعة الألكنات",
+    "source_subtopic_id": "unit_05_lesson_03_subtopic_004",
+    "source_evidence": [
+      "curriculum metadata; no direct string hit in cache"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_05_lesson_03_subtopic_005",
+    "question_ar": "ما المقصود بـ «البروبين»؟",
+    "paraphrases_ar": [
+      "اشرح «البروبين» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «البروبين»."
+    ],
+    "expected_concepts": [
+      "البروبين"
+    ],
+    "expected_unit_id": "unit_05",
+    "expected_lesson_id": "unit_05_lesson_03",
+    "expected_printed_pages": [
+      179,
+      180,
+      181,
+      182,
+      183
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "المركبات الهيدروكربونية غير المشبعة الألكنات",
+    "source_subtopic_id": "unit_05_lesson_03_subtopic_005",
+    "source_evidence": [
+      "page_073.json text match",
+      "page_075.json text match",
+      "page_077.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_05_lesson_03_subtopic_006",
+    "question_ar": "ما المقصود بـ «الإستيلين»؟",
+    "paraphrases_ar": [
+      "اشرح «الإستيلين» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «الإستيلين»."
+    ],
+    "expected_concepts": [
+      "الإستيلين"
+    ],
+    "expected_unit_id": "unit_05",
+    "expected_lesson_id": "unit_05_lesson_03",
+    "expected_printed_pages": [
+      180,
+      181
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "المركبات الهيدروكربونية غير المشبعة الألكنات",
+    "source_subtopic_id": "unit_05_lesson_03_subtopic_006",
+    "source_evidence": [
+      "page_074.json text match",
+      "page_075.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_05_lesson_03_subtopic_007",
+    "question_ar": "ما المقصود بـ «الصيغة العامة للألكينات»؟",
+    "paraphrases_ar": [
+      "اشرح «الصيغة العامة للألكينات» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «الصيغة العامة للألكينات»."
+    ],
+    "expected_concepts": [
+      "الصيغة العامة للألكينات"
+    ],
+    "expected_unit_id": "unit_05",
+    "expected_lesson_id": "unit_05_lesson_03",
+    "expected_printed_pages": [
+      178,
+      179,
+      180,
+      181,
+      182
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "المركبات الهيدروكربونية غير المشبعة الألكنات",
+    "source_subtopic_id": "unit_05_lesson_03_subtopic_007",
+    "source_evidence": [
+      "page_072.json text match",
+      "page_073.json text match",
+      "page_074.json text match",
+      "page_075.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_06_lesson_01_subtopic_001",
+    "question_ar": "ما المقصود بـ «النشاط الإشعاعي»؟",
+    "paraphrases_ar": [
+      "اشرح «النشاط الإشعاعي» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «النشاط الإشعاعي»."
+    ],
+    "expected_concepts": [
+      "النشاط الإشعاعي"
+    ],
+    "expected_unit_id": "unit_06",
+    "expected_lesson_id": "unit_06_lesson_01",
+    "expected_printed_pages": [
+      192,
+      193,
+      194,
+      195
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "النشاط الإشعاعي",
+    "source_subtopic_id": "unit_06_lesson_01_subtopic_001",
+    "source_evidence": [
+      "page_086.json text match",
+      "page_088.json text match",
+      "page_089.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_06_lesson_01_subtopic_002",
+    "question_ar": "ما المقصود بـ «النظائر»؟",
+    "paraphrases_ar": [
+      "اشرح «النظائر» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «النظائر»."
+    ],
+    "expected_concepts": [
+      "النظائر"
+    ],
+    "expected_unit_id": "unit_06",
+    "expected_lesson_id": "unit_06_lesson_01",
+    "expected_printed_pages": [
+      192,
+      193,
+      194,
+      195,
+      196,
+      197,
+      198
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "النشاط الإشعاعي",
+    "source_subtopic_id": "unit_06_lesson_01_subtopic_002",
+    "source_evidence": [
+      "page_086.json text match",
+      "page_088.json text match",
+      "page_092.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_06_lesson_01_subtopic_003",
+    "question_ar": "ما المقصود بـ «الإشعاعات النووية»؟",
+    "paraphrases_ar": [
+      "اشرح «الإشعاعات النووية» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «الإشعاعات النووية»."
+    ],
+    "expected_concepts": [
+      "الإشعاعات النووية"
+    ],
+    "expected_unit_id": "unit_06",
+    "expected_lesson_id": "unit_06_lesson_01",
+    "expected_printed_pages": [
+      192,
+      193,
+      194
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "النشاط الإشعاعي",
+    "source_subtopic_id": "unit_06_lesson_01_subtopic_003",
+    "source_evidence": [
+      "page_086.json text match",
+      "page_088.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_06_lesson_01_subtopic_004",
+    "question_ar": "ما المقصود بـ «جسيمات ألفا»؟",
+    "paraphrases_ar": [
+      "اشرح «جسيمات ألفا» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «جسيمات ألفا»."
+    ],
+    "expected_concepts": [
+      "جسيمات ألفا"
+    ],
+    "expected_unit_id": "unit_06",
+    "expected_lesson_id": "unit_06_lesson_01",
+    "expected_printed_pages": [
+      192,
+      193,
+      194,
+      195,
+      196,
+      197,
+      198
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "النشاط الإشعاعي",
+    "source_subtopic_id": "unit_06_lesson_01_subtopic_004",
+    "source_evidence": [
+      "page_086.json text match",
+      "page_088.json text match",
+      "page_089.json text match",
+      "page_091.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_06_lesson_01_subtopic_005",
+    "question_ar": "ما المقصود بـ «جسيمات بيتا»؟",
+    "paraphrases_ar": [
+      "اشرح «جسيمات بيتا» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «جسيمات بيتا»."
+    ],
+    "expected_concepts": [
+      "جسيمات بيتا"
+    ],
+    "expected_unit_id": "unit_06",
+    "expected_lesson_id": "unit_06_lesson_01",
+    "expected_printed_pages": [
+      192,
+      193,
+      194,
+      195,
+      196,
+      197,
+      198
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "النشاط الإشعاعي",
+    "source_subtopic_id": "unit_06_lesson_01_subtopic_005",
+    "source_evidence": [
+      "page_086.json text match",
+      "page_088.json text match",
+      "page_089.json text match",
+      "page_091.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_06_lesson_01_subtopic_006",
+    "question_ar": "ما المقصود بـ «أشعة غاما»؟",
+    "paraphrases_ar": [
+      "اشرح «أشعة غاما» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «أشعة غاما»."
+    ],
+    "expected_concepts": [
+      "أشعة غاما"
+    ],
+    "expected_unit_id": "unit_06",
+    "expected_lesson_id": "unit_06_lesson_01",
+    "expected_printed_pages": [
+      192,
+      193,
+      194,
+      195,
+      196,
+      197,
+      198
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "النشاط الإشعاعي",
+    "source_subtopic_id": "unit_06_lesson_01_subtopic_006",
+    "source_evidence": [
+      "page_086.json text match",
+      "page_088.json text match",
+      "page_089.json text match",
+      "page_091.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_06_lesson_01_subtopic_007",
+    "question_ar": "ما المقصود بـ «الكتلة والطاقة»؟",
+    "paraphrases_ar": [
+      "اشرح «الكتلة والطاقة» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «الكتلة والطاقة»."
+    ],
+    "expected_concepts": [
+      "الكتلة والطاقة"
+    ],
+    "expected_unit_id": "unit_06",
+    "expected_lesson_id": "unit_06_lesson_01",
+    "expected_printed_pages": [
+      192,
+      193,
+      194,
+      195,
+      196
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "النشاط الإشعاعي",
+    "source_subtopic_id": "unit_06_lesson_01_subtopic_007",
+    "source_evidence": [
+      "page_086.json text match",
+      "page_090.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_06_lesson_01_subtopic_008",
+    "question_ar": "ما المقصود بـ «الطاقة النووية»؟",
+    "paraphrases_ar": [
+      "اشرح «الطاقة النووية» كما ورد في كتاب الكيمياء.",
+      "وضّح لي مفهوم «الطاقة النووية»."
+    ],
+    "expected_concepts": [
+      "الطاقة النووية"
+    ],
+    "expected_unit_id": "unit_06",
+    "expected_lesson_id": "unit_06_lesson_01",
+    "expected_printed_pages": [
+      192
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "النشاط الإشعاعي",
+    "source_subtopic_id": "unit_06_lesson_01_subtopic_008",
+    "source_evidence": [
+      "page_086.json text match"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  },
+  {
+    "id": "unit_04_lesson_01_safety_acid_into_water",
+    "question_ar": "لماذا نضيف الحمض إلى الماء وليس العكس؟",
+    "paraphrases_ar": [
+      "ما قاعدة الأمان عند خلط الحمض بالماء؟",
+      "هل نضيف الماء إلى الحمض أم الحمض إلى الماء؟"
+    ],
+    "expected_concepts": [
+      "أضف الحمض إلى الماء"
+    ],
+    "expected_unit_id": "unit_04",
+    "expected_lesson_id": "unit_04_lesson_01",
+    "expected_printed_pages": [
+      113
+    ],
+    "expected_source_type": "textbook",
+    "answerable_from_book": true,
+    "lesson_title": "المحاليل المائية",
+    "source_subtopic_id": null,
+    "source_evidence": [
+      "chunk_unit_04_lesson_01_0084"
+    ],
+    "reviewed_metadata_version": "2026-06-reviewed-v1"
+  }
+]

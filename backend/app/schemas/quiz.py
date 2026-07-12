@@ -8,6 +8,8 @@ from pydantic import BaseModel, Field
 class QuizGenerateRequest(BaseModel):
     topic_id: int | None = None
     lesson_id: int | None = None
+    topic_ids: list[int] = Field(default_factory=list)
+    lesson_ids: list[int] = Field(default_factory=list)
     source_type: str | None = None
     source: str | None = None
     difficulty: int | None = Field(default=None, ge=1, le=5)
@@ -28,6 +30,8 @@ class QuizQuestionResponse(BaseModel):
     difficulty: int | None = None
     correct_answer: str | None = None
     explanation: str | None = None
+    quality_status: str | None = None
+    reviewed_metadata_version: str | None = None
 
 
 class QuizGenerateResponse(BaseModel):
@@ -37,7 +41,7 @@ class QuizGenerateResponse(BaseModel):
 
 
 class QuizSubmitRequest(BaseModel):
-    topic_id: int
+    topic_id: int | None = None
     answers: dict[str, str]
 
 

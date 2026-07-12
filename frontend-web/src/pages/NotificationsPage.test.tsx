@@ -5,6 +5,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { notificationsApi } from '../api';
+import { NotificationBell } from '../components/notifications/NotificationBell';
 import { NotificationsPage } from './NotificationsPage';
 import type { NotificationItem } from '../types';
 
@@ -114,5 +115,39 @@ describe('NotificationsPage', () => {
 
     expect(await screen.findByText('لا توجد تذكيرات بعد')).toBeInTheDocument();
     expect(screen.getByText('خطة الدراسة تسير بشكل جيد، وسنظهر التذكيرات هنا عند توفرها.')).toBeInTheDocument();
+  });
+
+  it('shows unread count in the notification bell', async () => {
+    mockedNotificationsApi.getNotifications.mockResolvedValue([
+      {
+        id: 'study-1',
+        type: 'study_reminder',
+        title: 'درس اليوم جاهز',
+        message: 'حان وقت دراسة المحاليل.',
+        priority: 'normal',
+        status: 'unread',
+        scheduled_at: scheduledAt(0),
+      },
+      {
+        id: 'quiz-1',
+        type: 'quiz_due',
+        title: 'اختبار قصير مستحق',
+        message: 'لديك اختبار مراجعة جاهز.',
+        priority: 'normal',
+        status: 'unread',
+        scheduled_at: scheduledAt(0),
+      },
+    ]);
+
+    render(
+      <MemoryRouter>
+        <NotificationBell />
+      </MemoryRouter>,
+    );
+
+    expect(await screen.findByText('2')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'الإشعارات' }));
+    expect(await screen.findByText('درس اليوم جاهز')).toBeInTheDocument();
+    expect(screen.getByText('اختبار قصير مستحق')).toBeInTheDocument();
   });
 });

@@ -118,6 +118,12 @@ export interface SourceCitation {
   chunk_id: string | number;
   quote?: string;
   score?: number;
+  source_type?: string;
+  unit_id?: string | number | null;
+  lesson_id?: string | number | null;
+  quality_status?: string | null;
+  reviewed_metadata_version?: string | null;
+  curriculum_metadata?: Record<string, unknown> | null;
 }
 
 export interface AiAskRequest {
@@ -161,6 +167,7 @@ export interface AiAskResponse {
   route?: string;
   diagnostics?: Record<string, unknown>;
   audio_url?: string;
+  audio_status?: 'not_required' | 'processing' | 'ready' | 'failed' | null;
   image_url?: string;
   source_page_image_url?: string;
   video_url?: string;
@@ -494,6 +501,7 @@ export type QuizGenerationConfig = {
 export type GeneratedQuizQuestion = {
   id: string;
   lessonId: string;
+  topicId?: string;
   chapterId: string;
   questionType:
     | 'mcq'
@@ -602,6 +610,10 @@ export interface NotificationItem {
   body_ar?: string;
   type:
     | 'study_reminder'
+    | 'quiz_due'
+    | 'homework_feedback'
+    | 'streak_warning'
+    | 'achievement_unlocked'
     | 'exam_countdown'
     | 'overdue_lesson'
     | 'flashcards_due'

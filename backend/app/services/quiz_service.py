@@ -1,6 +1,6 @@
 """Quiz and exam trainer service functions."""
 
-from sqlalchemy import desc, select
+from sqlalchemy import desc, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -8,9 +8,13 @@ from fastapi import HTTPException
 
 from app.models.chemistry import Lesson
 from app.models.assessment import QuizAttempt
-from app.models.textbook import ContentSource, ExtractedQuestion
+from app.models.textbook import ContentSource, ExtractedQuestion, RagChunk
 from app.models.topic import Topic
 from app.services import ai_quiz_generator
+from app.services.reviewed_curriculum_metadata import (
+    ensure_reviewed_metadata_ready,
+    evaluate_chunk_eligibility,
+)
 
 
 QUESTION_TYPE_ALIASES = {
@@ -22,6 +26,35 @@ QUESTION_TYPE_ALIASES = {
     "calculation": "calculation",
     "equation_balancing": "equation_balancing",
 }
+
+
+QUIZ_NOT_READY_CODE = "LESSON_NOT_READY_FOR_QUIZ_GENERATION"
+
+
+def _unique_ints(values: list[int] | None, extra: int | None = None) -> list[int]:
+    result: list[int] = []
+    for value in [*(values or []), extra]:
+        if value is None:
+            continue
+        item = int(value)
+        if item not in result:
+            result.append(item)
+    return result
+
+
+def _metadata_dict(raw: object) -> dict:
+    return dict(raw) if isinstance(raw, dict) else {}
+
+
+def _chunk_quality(chunk: RagChunk) -> str:
+    metadata = _metadata_dict(chunk.metadata_json)
+    return str(metadata.get("quality_status") or "needs_review")
+
+
+def _chunk_reviewed_version(chunk: RagChunk) -> str | None:
+    metadata = _metadata_dict(chunk.metadata_json)
+    value = metadata.get("reviewed_metadata_version")
+    return str(value) if value else None
 
 
 def _canonical_question_types(question_types: list[str] | None) -> set[str]:
@@ -102,6 +135,110 @@ async def _lesson_context(db: AsyncSession, lesson_id: int | None, topic_id: int
     return lesson, topic
 
 
+async def _lesson_ready_for_quiz(db: AsyncSession, lesson: Lesson) -> tuple[bool, str, str | None]:
+    filters = [RagChunk.lesson_id == lesson.id]
+    if lesson.page_start is not None and lesson.page_end is not None:
+        filters.append(RagChunk.page_number.between(lesson.page_start, lesson.page_end))
+    elif lesson.page_start is not None:
+        filters.append(RagChunk.page_number == lesson.page_start)
+
+    result = await db.execute(
+        select(RagChunk)
+        .where(
+            or_(*filters),
+            RagChunk.source_type.in_(("textbook", "solution_book")),
+        )
+        .order_by(RagChunk.page_number.asc().nulls_last(), RagChunk.chunk_index.asc())
+        .limit(250)
+    )
+    chunks = list(result.scalars().all())
+    if not chunks:
+        return False, "missing_ready_content", None
+    reviewed_metadata = ensure_reviewed_metadata_ready()
+    decisions = [
+        (
+            chunk,
+            evaluate_chunk_eligibility(
+                chunk,
+                reviewed_metadata,
+                legacy=chunk.extraction_method != "reviewed_jsonl",
+            ),
+        )
+        for chunk in chunks
+    ]
+    blocked = next((item for item in decisions if item[1].normalized_quality_status == "blocked"), None)
+    if blocked:
+        return False, "blocked", _chunk_reviewed_version(blocked[0])
+    ready = next((item for item in decisions if item[1].student_generation_allowed), None)
+    if ready is None:
+        reviewable = next((item for item in decisions if item[1].rag_search_allowed), None)
+        version_chunk = reviewable[0] if reviewable else chunks[0]
+        status = reviewable[1].normalized_quality_status if reviewable else "missing_ready_content"
+        return False, status, _chunk_reviewed_version(version_chunk)
+    return True, "ready", _chunk_reviewed_version(ready[0])
+
+
+async def _resolve_lessons_for_generation(
+    db: AsyncSession,
+    *,
+    lesson_ids: list[int],
+    topic_ids: list[int],
+) -> list[Lesson]:
+    lessons: list[Lesson] = []
+    if lesson_ids:
+        result = await db.execute(
+            select(Lesson)
+            .where(Lesson.id.in_(lesson_ids))
+            .options(selectinload(Lesson.topics), selectinload(Lesson.chapter))
+            .order_by(Lesson.order, Lesson.id)
+        )
+        lessons = list(result.scalars().unique().all())
+        missing = set(lesson_ids) - {lesson.id for lesson in lessons}
+        if missing:
+            raise HTTPException(status_code=404, detail="لم يتم العثور على الدرس المحدد")
+
+    if topic_ids:
+        result = await db.execute(
+            select(Lesson)
+            .join(Lesson.topics)
+            .where(Topic.id.in_(topic_ids))
+            .options(selectinload(Lesson.topics), selectinload(Lesson.chapter))
+            .order_by(Lesson.order, Lesson.id)
+        )
+        for lesson in result.scalars().unique().all():
+            if lesson.id not in {item.id for item in lessons}:
+                lessons.append(lesson)
+    return lessons
+
+
+async def _assert_lessons_ready_for_quiz(
+    db: AsyncSession,
+    *,
+    lesson_ids: list[int],
+    topic_ids: list[int],
+) -> dict[int, str | None]:
+    lessons = await _resolve_lessons_for_generation(db, lesson_ids=lesson_ids, topic_ids=topic_ids)
+    if not lessons:
+        raise HTTPException(status_code=422, detail="اختر درساً أو موضوعاً لتوليد الاختبار")
+
+    reviewed_versions: dict[int, str | None] = {}
+    for lesson in lessons:
+        ready, status, version = await _lesson_ready_for_quiz(db, lesson)
+        reviewed_versions[lesson.id] = version
+        if not ready:
+            raise HTTPException(
+                status_code=409,
+                detail={
+                    "code": QUIZ_NOT_READY_CODE,
+                    "lesson_id": lesson.id,
+                    "lesson_title": lesson.title_ar,
+                    "quality_status": status,
+                    "message": "توليد الاختبارات مسموح فقط للدروس المراجعة والجاهزة.",
+                },
+            )
+    return reviewed_versions
+
+
 def _template_question_payloads(
     *,
     lesson: Lesson,
@@ -176,10 +313,13 @@ async def _save_template_questions(
     count: int,
     difficulty: int | None,
     question_types: set[str],
+    reviewed_metadata_version: str | None = None,
 ) -> list[ExtractedQuestion]:
     lesson, topic = await _lesson_context(db, lesson_id, topic_id)
     if lesson is None:
         raise HTTPException(status_code=404, detail="لم يتم العثور على الدرس المحدد")
+    if topic is None and lesson.topics:
+        topic = lesson.topics[0]
     source = await _generated_source(db)
     questions = [
         ExtractedQuestion(
@@ -196,7 +336,12 @@ async def _save_template_questions(
             answer_source="template_fallback",
             difficulty=payload["difficulty"],
             needs_review=True,
-            metadata_json={"generated": True, "generator": "template_fallback"},
+            metadata_json={
+                "generated": True,
+                "generator": "template_fallback",
+                "quality_status": "ready",
+                "reviewed_metadata_version": reviewed_metadata_version,
+            },
         )
         for payload in _template_question_payloads(
             lesson=lesson,
@@ -217,6 +362,8 @@ async def generate_quiz(
     db: AsyncSession,
     topic_id: int | None = None,
     lesson_id: int | None = None,
+    topic_ids: list[int] | None = None,
+    lesson_ids: list[int] | None = None,
     source_type: str | None = None,
     limit: int = 5,
     *,
@@ -224,12 +371,23 @@ async def generate_quiz(
     question_types: list[str] | None = None,
     user_id: int = 0,
 ):
+    selected_lesson_ids = _unique_ints(lesson_ids, lesson_id)
+    selected_topic_ids = _unique_ints(topic_ids, topic_id)
+    reviewed_versions = await _assert_lessons_ready_for_quiz(
+        db,
+        lesson_ids=selected_lesson_ids,
+        topic_ids=selected_topic_ids,
+    )
+
     allowed_types = _canonical_question_types(question_types)
     stmt = select(ExtractedQuestion).where(ExtractedQuestion.question_text.isnot(None))
-    if topic_id is not None:
-        stmt = stmt.where(ExtractedQuestion.topic_id == topic_id)
-    elif lesson_id is not None:
-        stmt = stmt.where(ExtractedQuestion.lesson_id == lesson_id)
+    filters = []
+    if selected_topic_ids:
+        filters.append(ExtractedQuestion.topic_id.in_(selected_topic_ids))
+    if selected_lesson_ids:
+        filters.append(ExtractedQuestion.lesson_id.in_(selected_lesson_ids))
+    if filters:
+        stmt = stmt.where(or_(*filters))
     if difficulty is not None:
         stmt = stmt.where(ExtractedQuestion.difficulty == difficulty)
     if source_type is not None:
@@ -241,13 +399,15 @@ async def generate_quiz(
         return existing[:limit], False, "database"
 
     generated: list[ExtractedQuestion] = []
-    if topic_id is not None and len(existing) < limit:
+    for current_topic_id in selected_topic_ids:
+        if len(existing) + len(generated) >= limit:
+            break
         try:
             ai_questions = await ai_quiz_generator.generate_questions_for_topic(
                 db,
-                topic_id=topic_id,
+                topic_id=current_topic_id,
                 user_id=user_id,
-                num_questions=limit - len(existing),
+                num_questions=limit - len(existing) - len(generated),
             )
             generated.extend([question for question in ai_questions if _valid_question(question, allowed_types)])
         except Exception:
@@ -255,21 +415,25 @@ async def generate_quiz(
 
     remaining = limit - len(existing) - len(generated)
     if remaining > 0:
-        if lesson_id is None and topic_id is None:
-            raise HTTPException(status_code=422, detail="اختر درساً أو موضوعاً لتوليد الاختبار")
-        lesson, _topic = await _lesson_context(db, lesson_id, topic_id)
-        if lesson is None:
-            raise HTTPException(status_code=404, detail="لم يتم العثور على الدرس المحدد")
-        generated.extend(
-            await _save_template_questions(
-                db,
-                lesson_id=lesson.id,
-                topic_id=topic_id,
-                count=remaining,
-                difficulty=difficulty,
-                question_types=allowed_types,
-            )
+        lessons = await _resolve_lessons_for_generation(
+            db,
+            lesson_ids=selected_lesson_ids,
+            topic_ids=selected_topic_ids,
         )
+        for index in range(remaining):
+            lesson = lessons[index % len(lessons)]
+            selected_topic_id = selected_topic_ids[0] if selected_topic_ids else None
+            generated.extend(
+                await _save_template_questions(
+                    db,
+                    lesson_id=lesson.id,
+                    topic_id=selected_topic_id,
+                    count=1,
+                    difficulty=difficulty,
+                    question_types=allowed_types,
+                    reviewed_metadata_version=reviewed_versions.get(lesson.id),
+                )
+            )
 
     questions = [question for question in [*existing, *generated] if _valid_question(question, allowed_types)]
     if not questions:
@@ -278,7 +442,7 @@ async def generate_quiz(
     return questions[:limit], bool(generated), source
 
 
-async def submit_quiz(db: AsyncSession, user_id: int, topic_id: int, answers: dict[str, str]) -> QuizAttempt:
+async def submit_quiz(db: AsyncSession, user_id: int, topic_id: int | None, answers: dict[str, str]) -> QuizAttempt:
     question_ids = []
     for qid in answers.keys():
         try:
@@ -290,6 +454,7 @@ async def submit_quiz(db: AsyncSession, user_id: int, topic_id: int, answers: di
     total = len(answers)
     weak_topics = {}
 
+    resolved_topic_id = topic_id
     if question_ids:
         # Fetch questions to grade
         result = await db.execute(
@@ -297,6 +462,18 @@ async def submit_quiz(db: AsyncSession, user_id: int, topic_id: int, answers: di
         )
         questions = result.scalars().all()
         q_map = {str(q.id): q for q in questions}
+        if resolved_topic_id is None:
+            resolved_topic_id = next((question.topic_id for question in questions if question.topic_id), None)
+        if resolved_topic_id is None:
+            lesson_id_for_topic = next((question.lesson_id for question in questions if question.lesson_id), None)
+            if lesson_id_for_topic is not None:
+                lesson = await db.scalar(
+                    select(Lesson)
+                    .where(Lesson.id == lesson_id_for_topic)
+                    .options(selectinload(Lesson.topics))
+                )
+                if lesson and lesson.topics:
+                    resolved_topic_id = lesson.topics[0].id
 
         for qid_str, user_ans in answers.items():
             question = q_map.get(qid_str)
@@ -306,12 +483,14 @@ async def submit_quiz(db: AsyncSession, user_id: int, topic_id: int, answers: di
                 if user_ans.strip().lower() == correct.strip().lower():
                     score += 1
                 else:
-                    topic_str = str(question.topic_id) if question.topic_id else "unknown"
+                    topic_str = str(question.topic_id or resolved_topic_id or "unknown")
                     weak_topics[topic_str] = weak_topics.get(topic_str, 0) + 1
+    if resolved_topic_id is None:
+        raise HTTPException(status_code=422, detail="لا يمكن حفظ محاولة الاختبار دون موضوع مرتبط")
 
     attempt = QuizAttempt(
         user_id=user_id,
-        topic_id=topic_id,
+        topic_id=resolved_topic_id,
         answers=answers,
         score=score,
         total=total,

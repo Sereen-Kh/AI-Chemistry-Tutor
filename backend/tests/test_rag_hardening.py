@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import asyncio
 from collections.abc import AsyncIterator
+import json
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -18,6 +20,10 @@ from app.services.embeddings import EMBEDDING_DIM, embed_document, embed_query
 from app.services.rag_evaluation import _threshold_failures
 from app.services.rag_logging import log_rag_retrieval
 from app.services.rag_reembed import _metadata_with_embedding_model, reembed_all_chunks, reembed_rag_chunks
+from app.services.reviewed_curriculum_metadata import (
+    NOT_READY_CODE,
+    ReviewedCurriculumMetadataError,
+)
 from app.workers.celery_app import celery_app
 
 
@@ -145,6 +151,32 @@ def test_logging_failure_does_not_break_retrieval_path(monkeypatch: pytest.Monke
     assert result is None
 
 
+def test_reembedding_service_fails_fast_when_reviewed_metadata_not_ready(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    metadata_path = tmp_path / "reviewed_curriculum_metadata.json"
+    metadata_path.write_text(
+        json.dumps({"ready_for_embedding": False, "version": "test"}),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr("app.services.reviewed_curriculum_metadata.REVIEWED_METADATA_PATH", metadata_path)
+
+    class FakeDb:
+        scalar_calls = 0
+
+        async def scalar(self, _stmt):
+            self.scalar_calls += 1
+            return 7
+
+    fake_db = FakeDb()
+    with pytest.raises(ReviewedCurriculumMetadataError) as exc:
+        asyncio.run(reembed_rag_chunks(fake_db, dry_run=True, batch_size=10))
+
+    assert exc.value.code == NOT_READY_CODE
+    assert fake_db.scalar_calls == 0
+
+
 def test_reembedding_dry_run_does_not_update_embeddings() -> None:
     class FakeDb:
         async def scalar(self, _stmt):
@@ -199,8 +231,88 @@ def test_reembedding_updates_vectors_and_metadata(
             assert refreshed.embedding_status == "completed"
             assert refreshed.embedding_updated_at is not None
             assert refreshed.embedding_error is None
+            assert isinstance(refreshed.metadata_json, dict)
+            assert refreshed.metadata_json["quality_status"] == "needs_review"
+            assert refreshed.metadata_json["review_status"] == "legacy_unmapped"
+            assert str(refreshed.metadata_json["unit_id"]).startswith("unmapped:textbook:")
+            assert str(refreshed.metadata_json["lesson_id"]).startswith("unmapped:textbook:")
             assert result.updated == 3
             assert result.failed == 0
+
+    run_async(scenario())
+
+
+def test_reembedding_downgrades_legacy_ready_chunks_without_lesson_unit_metadata(
+    rag_session_factory: async_sessionmaker[AsyncSession],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    async def fake_batch(texts: list[str], batch_size: int = 50) -> list[list[float]]:
+        return [_vector(8.0) for _text in texts]
+
+    monkeypatch.setattr("app.services.rag_reembed.embed_documents_batch", fake_batch)
+
+    async def scenario() -> None:
+        async with rag_session_factory() as db:
+            _textbook, _solutions, chunks = await _seed_rag_chunks(db)
+            legacy_ready = chunks[0]
+            legacy_ready.metadata_json = {
+                "source_type": "textbook",
+                "printed_page_start": 11,
+                "printed_page_end": 11,
+                "quality_status": "ready",
+            }
+            await db.commit()
+
+            result = await reembed_rag_chunks(db, dry_run=False, force=True, batch_size=2)
+            refreshed = await db.get(RagChunk, legacy_ready.id)
+            assert refreshed is not None
+            assert isinstance(refreshed.metadata_json, dict)
+            assert refreshed.metadata_json["quality_status"] == "needs_review"
+            assert refreshed.metadata_json["review_status"] == "legacy_unmapped"
+            assert str(refreshed.metadata_json["unit_id"]).startswith("unmapped:textbook:")
+            assert str(refreshed.metadata_json["lesson_id"]).startswith("unmapped:textbook:")
+            assert refreshed.embedding == _vector(8.0)
+            assert result.updated == 3
+
+    run_async(scenario())
+
+
+def test_reembedding_excludes_blocked_chunks_from_readiness_checks(
+    rag_session_factory: async_sessionmaker[AsyncSession],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    embedded_texts: list[str] = []
+
+    async def fake_batch(texts: list[str], batch_size: int = 50) -> list[list[float]]:
+        embedded_texts.extend(texts)
+        return [_vector(6.0) for _text in texts]
+
+    monkeypatch.setattr("app.services.rag_reembed.embed_documents_batch", fake_batch)
+
+    async def scenario() -> None:
+        async with rag_session_factory() as db:
+            _textbook, _solutions, chunks = await _seed_rag_chunks(db)
+            blocked = chunks[0]
+            blocked.metadata_json = {
+                "lesson_id": "unit_04_lesson_02",
+                "unit_id": "unit_04",
+                "source_type": "textbook",
+                "printed_page_start": 11,
+                "printed_page_end": 11,
+                "quality_status": "blocked",
+                "reviewed_metadata_version": "2026-06-reviewed-v1",
+            }
+            await db.commit()
+
+            result = await reembed_rag_chunks(db, dry_run=False, force=True, batch_size=3)
+            refreshed_blocked = await db.get(RagChunk, blocked.id)
+            assert refreshed_blocked is not None
+            assert refreshed_blocked.embedding is None
+            assert refreshed_blocked.embedding_status == "skipped"
+            assert refreshed_blocked.embedding_error == "blocked_quality_status"
+            assert result.updated == 2
+            assert result.skipped_blocked_count == 1
+            assert "تعريف الحمض" not in embedded_texts
 
     run_async(scenario())
 
@@ -312,9 +424,14 @@ def test_failed_chunks_store_embedding_error_and_resume_failed_only(
             assert failed_chunk.embedding_status == "failed"
             assert "cannot embed" in (failed_chunk.embedding_error or "")
             assert result.failed >= 1
+            stale_processing_chunk = await db.get(RagChunk, chunks[2].id)
+            assert stale_processing_chunk is not None
+            stale_processing_chunk.embedding_status = "processing"
+            stale_processing_chunk.embedding = None
+            await db.commit()
 
             resume = await reembed_rag_chunks(db, dry_run=True, resume_failed=True)
-            assert resume.total_candidates >= 1
+            assert resume.total_candidates >= 2
 
     run_async(scenario())
 

@@ -77,7 +77,10 @@ def _assert_source_topics(case: dict[str, Any], text: str, *, chunks=None, paylo
 def _assert_retrieve_source_metadata(case: dict[str, Any], chunks: list[dict[str, Any]], payload: dict[str, Any]) -> None:
     assert chunks, _failure_message(case, chunks=chunks, payload=payload)
     top = chunks[0]
-    for field in ("id", "source_id", "page_number", "similarity_score"):
+    for field in (
+        "id", "source_id", "source_type", "page_number", "unit_id", "lesson_id",
+        "quality_status", "reviewed_metadata_version", "similarity_score",
+    ):
         assert top.get(field) is not None, _failure_message(case, chunks=chunks, payload=payload)
     assert float(top["similarity_score"]) >= float(case["min_confidence"]), _failure_message(
         case, chunks=chunks, payload=payload
@@ -87,7 +90,10 @@ def _assert_retrieve_source_metadata(case: dict[str, Any], chunks: list[dict[str
 def _assert_chat_source_metadata(case: dict[str, Any], sources: list[dict[str, Any]], payload: dict[str, Any]) -> None:
     assert sources, _failure_message(case, actual_answer=payload.get("answer", ""), chunks=sources, payload=payload)
     top = sources[0]
-    for field in ("chunk_id", "source_id", "page_number", "similarity_score"):
+    for field in (
+        "chunk_id", "source_id", "source_type", "page_number", "unit_id", "lesson_id",
+        "quality_status", "reviewed_metadata_version", "similarity_score",
+    ):
         assert top.get(field) is not None, _failure_message(
             case, actual_answer=payload.get("answer", ""), chunks=sources, payload=payload
         )
@@ -100,7 +106,10 @@ def _assert_homework_source_metadata(
         case, actual_answer=payload.get("solution", ""), chunks=source_chunks, payload=payload
     )
     top = source_chunks[0]
-    for field in ("chunk_id", "source_id", "page_number", "similarity_score"):
+    for field in (
+        "chunk_id", "source_id", "source_type", "page_number", "unit_id", "lesson_id",
+        "quality_status", "reviewed_metadata_version", "similarity_score",
+    ):
         assert top.get(field) is not None, _failure_message(
             case, actual_answer=payload.get("solution", ""), chunks=source_chunks, payload=payload
         )

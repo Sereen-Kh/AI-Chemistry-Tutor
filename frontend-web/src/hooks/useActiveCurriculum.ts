@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { curriculumApi, fallbackCurriculumUnits } from '../api';
+import { allowDemoFallbacks } from '../config/demoFallbacks';
 import type { ChapterCatalogItem, LessonCatalogItem, UnitCatalogItem } from '../types';
 
 export type CurriculumLessonOption = LessonCatalogItem & {
@@ -16,8 +17,7 @@ export type CurriculumLessonQuality = {
 
 const fallbackBySemester = (semester?: number) => {
   if (!semester) return fallbackCurriculumUnits;
-  const filtered = fallbackCurriculumUnits.filter((unit) => unit.semester === semester);
-  return filtered.length ? filtered : fallbackCurriculumUnits;
+  return fallbackCurriculumUnits.filter((unit) => unit.semester === semester);
 };
 
 export const lessonPageRange = (lesson: Pick<LessonCatalogItem, 'page_start' | 'page_end'>) => {
@@ -63,9 +63,14 @@ export const getCurriculumLessonQuality = (lesson: LessonCatalogItem): Curriculu
 };
 
 export const useActiveCurriculum = (semester?: number) => {
-  const [units, setUnits] = useState<UnitCatalogItem[]>(() => fallbackBySemester(semester));
+  const [units, setUnits] = useState<UnitCatalogItem[]>(() => (
+    allowDemoFallbacks ? fallbackBySemester(semester) : []
+  ));
   const [loading, setLoading] = useState(true);
   const [usingFallback, setUsingFallback] = useState(false);
+  const [error, setError] = useState('');
+  const [reloadToken, setReloadToken] = useState(0);
+  const reload = useCallback(() => setReloadToken((value) => value + 1), []);
 
   useEffect(() => {
     let cancelled = false;
@@ -73,19 +78,33 @@ export const useActiveCurriculum = (semester?: number) => {
       if (cancelled) return;
       setLoading(true);
       setUsingFallback(false);
+      setError('');
     });
 
     curriculumApi.getUnits(semester)
       .then((data) => {
         if (cancelled) return;
-        const nextUnits = data.length ? data : fallbackBySemester(semester);
-        setUnits(nextUnits);
-        setUsingFallback(data.length === 0);
+        if (data.length > 0) {
+          setUnits(data);
+          return;
+        }
+        if (allowDemoFallbacks) {
+          setUnits(fallbackBySemester(semester));
+          setUsingFallback(true);
+          return;
+        }
+        setUnits([]);
+        setError('لا توجد بيانات منهج مستوردة. يجب استيراد المنهج المُراجع قبل استخدام أدوات التعلم.');
       })
       .catch(() => {
         if (cancelled) return;
-        setUnits(fallbackBySemester(semester));
-        setUsingFallback(true);
+        if (allowDemoFallbacks) {
+          setUnits(fallbackBySemester(semester));
+          setUsingFallback(true);
+          return;
+        }
+        setUnits([]);
+        setError('تعذر تحميل المنهج من الخادم. تحقق من الاتصال ثم حاول مرة أخرى.');
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -94,7 +113,7 @@ export const useActiveCurriculum = (semester?: number) => {
     return () => {
       cancelled = true;
     };
-  }, [semester]);
+  }, [semester, reloadToken]);
 
   const allLessons = useMemo<CurriculumLessonOption[]>(
     () => units.flatMap((unit) => (
@@ -116,5 +135,7 @@ export const useActiveCurriculum = (semester?: number) => {
     allLessons,
     loading,
     usingFallback,
+    error,
+    reload,
   };
 };

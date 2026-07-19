@@ -5,7 +5,9 @@ from __future__ import annotations
 import asyncio
 from types import SimpleNamespace
 from unittest import TestCase
+from unittest.mock import patch
 
+from app.core.config import settings
 from app.services.chat_service import (
     _classify_question,
     _dictionary_entry_for_question,
@@ -50,6 +52,14 @@ def chunk(chunk_id: int, page_number: int, content: str, score: float = 0.8) -> 
 
 
 class ArabicRagRankingTests(TestCase):
+    def setUp(self) -> None:
+        super().setUp()
+        # Production defaults fail closed. These focused ranking tests opt in
+        # explicitly, while kill-switch coverage overrides the setting to false.
+        self._retrieval_setting = patch.object(settings, "rag_student_retrieval_enabled", True)
+        self._retrieval_setting.start()
+        self.addCleanup(self._retrieval_setting.stop)
+
     @staticmethod
     def _eligibility_contract():
         return {

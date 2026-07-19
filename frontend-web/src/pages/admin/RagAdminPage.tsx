@@ -269,8 +269,8 @@ export const RagAdminPage = () => {
       <Card>
         <div className="section-title">
           <h2>تشغيل RAG في الإنتاج</h2>
-          <StatusPill tone={operations?.status === 'healthy' ? 'teal' : 'coral'}>
-            {operations?.status || 'غير متاح'}
+          <StatusPill tone={operations?.status === 'healthy' ? 'teal' : operations?.status === 'disabled' ? 'gold' : 'coral'}>
+            {operations?.status === 'healthy' ? 'نشط' : operations?.status === 'disabled' ? 'متوقف' : operations?.status || 'غير متاح'}
           </StatusPill>
         </div>
         <div className="admin-metric-list">
@@ -282,6 +282,12 @@ export const RagAdminPage = () => {
           <article><span>اقتباسات ناقصة</span><strong>{operations?.missing_citation_metadata_count ?? 0}</strong></article>
           <article><span>نسخة metadata</span><strong>{operations?.active_reviewed_metadata_version || '—'}</strong></article>
           <article><span>نموذج التضمين</span><strong>{operations?.embedding_model || '—'}</strong></article>
+          <article><span>المقاطع المؤهلة</span><strong>{operations?.total_eligible_chunks ?? 0}</strong></article>
+          <article><span>المقاطع المضمّنة</span><strong>{operations?.embedded_eligible_chunks ?? 0}</strong></article>
+          <article><span>جاهزة</span><strong>{operations?.ready_chunks ?? 0}</strong></article>
+          <article><span>تحتاج مراجعة</span><strong>{operations?.needs_review_chunks ?? 0}</strong></article>
+          <article><span>محجوبة</span><strong>{operations?.blocked_chunks ?? 0}</strong></article>
+          <article><span>قديمة</span><strong>{operations?.stale_chunks ?? 0}</strong></article>
         </div>
         {operations?.degraded_reasons.length ? (
           <ErrorBanner message={`حالة متدهورة: ${operations.degraded_reasons.join('، ')}`} />

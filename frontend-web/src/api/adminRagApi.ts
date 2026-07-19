@@ -339,11 +339,20 @@ export interface RagQaResponse {
 export interface RagOperationsResponse {
   status: string;
   window_hours: number;
+  last_updated_at: string;
   active_reviewed_metadata_version?: string | null;
   embedding_model: string;
   student_retrieval_enabled: boolean;
   production_gate_required: boolean;
   production_gate_status: Record<string, unknown>;
+  preflight_status: string;
+  total_eligible_chunks: number;
+  embedded_eligible_chunks: number;
+  embedding_completion_rate: number;
+  ready_chunks: number;
+  needs_review_chunks: number;
+  blocked_chunks: number;
+  stale_chunks: number;
   query_volume: number;
   no_result_rate: number;
   low_confidence_rate: number;
@@ -503,10 +512,11 @@ export const adminRagApi = {
     return data;
   },
 
-  async runEvaluation(): Promise<RagEvaluationResponse> {
+  async runEvaluation(confirmLiveProviderCalls: boolean): Promise<RagEvaluationResponse> {
     const { data } = await api.post<RagEvaluationResponse>('/admin/rag/evaluate', {
       fail_on_threshold: false,
       top_k: 5,
+      confirm_live_provider_calls: confirmLiveProviderCalls,
     });
     return data;
   },

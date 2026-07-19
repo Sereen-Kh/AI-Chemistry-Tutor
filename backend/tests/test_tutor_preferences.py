@@ -144,6 +144,20 @@ def test_rag_safety_learning_modes_do_not_change_citations() -> None:
         source="textbook",
         page_number=11,
         content_type="definition",
+        source_type="textbook",
+        unit_id="unit_04",
+        lesson_id="unit_04_lesson_01",
+        quality_status="ready",
+        reviewed_metadata_version="2026-06-reviewed-v1",
+        curriculum_metadata={
+            "source_type": "textbook",
+            "unit_id": "unit_04",
+            "lesson_id": "unit_04_lesson_01",
+            "printed_page_start": 11,
+            "printed_page_end": 11,
+            "quality_status": "ready",
+            "reviewed_metadata_version": "2026-06-reviewed-v1",
+        },
         similarity_score=0.87,
     )
     citations = _citation_blocks([chunk])
@@ -155,15 +169,11 @@ def test_rag_safety_learning_modes_do_not_change_citations() -> None:
         diagnostics=diagnostics,
     )
 
-    assert citations == [
-        {
-            "chunk_id": 17,
-            "source_id": 3,
-            "source": "textbook",
-            "page_number": 11,
-            "content_type": "definition",
-            "similarity_score": 0.87,
-        }
-    ]
+    assert citations[0]["chunk_id"] == 17
+    assert citations[0]["printed_page_start"] == 11
+    assert citations[0]["unit_id"] == "unit_04"
+    assert citations[0]["lesson_id"] == "unit_04_lesson_01"
+    assert citations[0]["quality_status"] == "ready"
+    assert citations[0]["reviewed_metadata_version"] == "2026-06-reviewed-v1"
     assert all(block.get("type") != "citation" for block in media_blocks)
     assert diagnostics["audio_requested_but_tts_unavailable"] is True

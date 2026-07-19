@@ -6,7 +6,6 @@ from dataclasses import dataclass
 from datetime import datetime
 import json
 import logging
-from pathlib import Path
 import time
 import re
 from types import SimpleNamespace
@@ -51,19 +50,28 @@ from app.services.rag import (
     lexical_relevance_score,
     rewrite_query,
 )
+from app.services.rag_citations import citations_from_chunks, source_blocks_from_chunks
 from app.services.rag_runtime import student_retrieval_is_enabled
 from app.services.safety_rules import answer_safety_rule, is_acid_to_water_safety_question
 from app.services.semantic_rag import semantic_retrieve_context
 from app.services.source_router import route_source
 from app.services.learning_mode_router import resolve_learning_modes
+from app.services.learning_memory import append_learning_memory, build_learning_memory_context
 from app.services.preference_mapping import TutorPreferences, preferences_from_user
 from app.services.tutor_prompt_builder import build_teaching_instruction
+from app.services.web_grounding import (
+    WebGroundingError,
+    WebSearchNoVerifiableSourcesError,
+    search_web_for_chemistry,
+)
 
 logger = logging.getLogger(__name__)
 
 _QUESTION_PASSAGE_HINTS = ("؟", "السؤال", "اختر", "ضع اشارة", "المطلوب", "احسب", "اعط تفسير")
 _LOW_VALUE_PASSAGE_HINTS = ("اهداف", "اﻫﺪاف", "الكلمات المفتاحية", "اﻟﻜﻠﻤﺎت", "نشاط", "ﻧﺸﺎط")
 _PASSAGE_SPLIT_RE = re.compile(r"(?<=[.؟!])\s+")
+_CHAT_CONTEXT_MAX_MESSAGES = 12
+_CHAT_CONTEXT_MAX_CHARS = 8000
 
 # Minimum confidence required before the chat layer is allowed to present an
 # answer as grounded in textbook/solutions context. The semantic retriever now
@@ -83,6 +91,96 @@ _INTENT_BOOK_GROUNDED_THRESHOLDS = {
     "safety_question": 0.45,
     "general": 0.45,
 }
+
+
+def bounded_session_history(
+    messages: list[ChatMessage],
+    *,
+    current_question: str,
+    max_messages: int = _CHAT_CONTEXT_MAX_MESSAGES,
+    max_chars: int = _CHAT_CONTEXT_MAX_CHARS,
+) -> list[dict[str, str]]:
+    """Return the latest six turns while always retaining the current question."""
+    current = {"role": "user", "content": current_question}
+    remaining_chars = max(0, max_chars - len(current_question))
+    selected_reversed: list[dict[str, str]] = []
+
+    for message in reversed(messages):
+        if message.role not in {"user", "assistant"}:
+            continue
+        content = (message.content or "").strip()
+        if not content or (message.role == "user" and content == current_question):
+            continue
+        if len(selected_reversed) >= max(0, max_messages - 1):
+            break
+        if len(content) > remaining_chars:
+            break
+        selected_reversed.append({"role": message.role, "content": content})
+        remaining_chars -= len(content)
+
+    return [*reversed(selected_reversed), current]
+
+
+async def _explicit_web_grounded_answer(
+    *,
+    question: str,
+    answer_scope: str,
+    preferred_answer_type: str,
+    diagnostics: dict,
+    subject: str = "chemistry",
+    grade: str = "9",
+) -> dict:
+    if answer_scope == "book_only":
+        raise HTTPException(
+            status_code=422,
+            detail={
+                "code": "WEB_SEARCH_DISABLED",
+                "message": "Web search is not available in book-only mode.",
+            },
+        )
+    try:
+        web_result = await search_web_for_chemistry(
+            question,
+            subject=subject,
+            grade=grade,
+        )
+    except WebGroundingError as exc:
+        status_code = 422 if isinstance(exc, WebSearchNoVerifiableSourcesError) else 503
+        raise HTTPException(
+            status_code=status_code,
+            detail={"code": exc.code, "message": str(exc)},
+        ) from exc
+
+    external_sources = [source.as_dict() for source in web_result.sources]
+    diagnostics.update(
+        {
+            "route": "web_grounding",
+            "grounding": "web",
+            "answer_scope": answer_scope,
+            "web_search_requested": True,
+            "web_source_count": len(external_sources),
+            "retrieved_chunks": [],
+            "selected_context": [],
+        }
+    )
+    return _finalize_answer(
+        {
+            "answer": web_result.answer,
+            "answer_type": _select_answer_type("general", preferred_answer_type),
+            "route": "web_grounding",
+            "grounding": "web",
+            "answer_scope": answer_scope,
+            "blocks": [{"type": "text", "content": web_result.answer}],
+            "sources": [],
+            "external_sources": external_sources,
+            "source_blocks": [],
+            "page_numbers": [],
+            "confidence": 0.65,
+            "diagnostics": diagnostics,
+            "suggested_next_action": "راجع المصادر الخارجية قبل اعتماد المعلومة.",
+        },
+        question,
+    )
 
 # ---------------------------------------------------------------------------
 # Intent classification
@@ -556,61 +654,18 @@ def _append_audio_unavailable_if_requested(
     )
 
 
-def _chunk_attr(chunk: RetrievedChunk, name: str, default=None):
-    return getattr(chunk, name, default)
-
-
-def _has_chunk_attr(chunk: RetrievedChunk, name: str) -> bool:
-    return hasattr(chunk, name)
-
-
 def _source_blocks(chunks: list[RetrievedChunk]) -> list[dict]:
-    return [
-        {
-            "book_id": _chunk_attr(chunk, "source") or _SOURCE_SLUG,
-            "page": _chunk_attr(chunk, "page_number"),
-            "chunk_id": _chunk_attr(chunk, "id"),
-            "source_id": _chunk_attr(chunk, "source_id"),
-            "chunk_type": _chunk_attr(chunk, "content_type"),
-            "source_type": _chunk_attr(chunk, "source_type"),
-            "unit_id": _chunk_attr(chunk, "unit_id"),
-            "lesson_id": _chunk_attr(chunk, "lesson_id"),
-            "quality_status": _chunk_attr(chunk, "quality_status"),
-            "quality_warning": _chunk_attr(chunk, "quality_warning"),
-            "reviewed_metadata_version": _chunk_attr(chunk, "reviewed_metadata_version"),
-            "curriculum_metadata": _chunk_attr(chunk, "curriculum_metadata", {}) or {},
-            "score": round(float(_chunk_attr(chunk, "similarity_score", 0.0)), 4),
-        }
-        for chunk in chunks
-    ]
+    blocks = source_blocks_from_chunks(chunks)
+    for block in blocks:
+        block["book_id"] = block.get("book_id") or _SOURCE_SLUG
+    return blocks
 
 
 def _citation_blocks(chunks: list[RetrievedChunk]) -> list[dict]:
     """Return citation metadata for clients that use the new response shape."""
-    citations: list[dict] = []
-    for chunk in chunks:
-        citation = {
-            "chunk_id": _chunk_attr(chunk, "id"),
-            "source_id": _chunk_attr(chunk, "source_id"),
-            "source": _chunk_attr(chunk, "source") or _SOURCE_SLUG,
-            "page_number": _chunk_attr(chunk, "page_number"),
-            "content_type": _chunk_attr(chunk, "content_type"),
-            "similarity_score": round(float(_chunk_attr(chunk, "similarity_score", 0.0)), 4),
-        }
-        for key in (
-            "source_type",
-            "unit_id",
-            "lesson_id",
-            "quality_status",
-            "quality_warning",
-            "reviewed_metadata_version",
-            "curriculum_metadata",
-        ):
-            if _has_chunk_attr(chunk, key):
-                citation[key] = _chunk_attr(chunk, key, {} if key == "curriculum_metadata" else None) or (
-                    {} if key == "curriculum_metadata" else None
-                )
-        citations.append(citation)
+    citations = citations_from_chunks(chunks)
+    for citation in citations:
+        citation["source"] = citation.get("source") or _SOURCE_SLUG
     return citations
 
 
@@ -1972,6 +2027,7 @@ async def get_owned_session(db: AsyncSession, session_id: int, user_id: int) -> 
     result = await db.execute(
         select(ChatSession)
         .options(selectinload(ChatSession.messages))
+        .execution_options(populate_existing=True)
         .where(ChatSession.id == session_id)
     )
     session = result.scalars().first()
@@ -1994,10 +2050,16 @@ async def send_message(
     learning_modes: list[str] | None = None,
     student_interests: list[str] | None = None,
     action: str | None = None,
+    web_search_requested: bool = False,
 ) -> ChatMessage:
     """Save a user message, retrieve RAG context, generate and save an AI reply."""
     session = await get_owned_session(db, session_id, user_id)
     answer_scope = _normalize_answer_scope(answer_scope)
+    if web_search_requested and answer_scope == "book_only":
+        raise HTTPException(
+            status_code=422,
+            detail={"code": "WEB_SEARCH_DISABLED", "message": "Web search is not available in book-only mode."},
+        )
     user_result = await db.execute(
         select(User).options(selectinload(User.student_profile)).where(User.id == user_id)
     )
@@ -2047,6 +2109,7 @@ async def send_message(
         "teaching_style": teaching_style,
         "teaching_preferences": preferences.as_diagnostics(),
         "action": action,
+        "web_search_requested": web_search_requested,
         "lesson_id": session.lesson_id,
         "source_route": {
             "route": source_route.route,
@@ -2059,7 +2122,7 @@ async def send_message(
         "gemini_available": bool(settings.effective_gemini_api_key),
     }
 
-    if not action:
+    if not action and not web_search_requested:
         classification = _classify_question(content)
         direct_intent = classification["intent"]
         diagnostics.update(
@@ -2273,6 +2336,43 @@ async def send_message(
             confidence=confidence,
         )
     )
+    if web_search_requested:
+        confidence_threshold = _confidence_threshold_for_intent(intent)
+        if not chunks or confidence < confidence_threshold:
+            web_answer = await _explicit_web_grounded_answer(
+                question=content,
+                answer_scope=answer_scope,
+                preferred_answer_type=preferred_answer_type,
+                diagnostics=diagnostics,
+                subject=getattr(user, "subject", "chemistry"),
+                grade=getattr(user, "grade", "9"),
+            )
+            assistant_message = ChatMessage(
+                session_id=session.id,
+                role="assistant",
+                content=web_answer.get("answer_text") or web_answer["answer"],
+                answer_text=web_answer.get("answer_text") or web_answer["answer"],
+                format=message_format,
+                confidence=web_answer["confidence"],
+                answer_type=web_answer["answer_type"],
+                route=web_answer["route"],
+                grounding=web_answer["grounding"],
+                sources_json=[],
+                citations_json=[],
+                external_sources_json=web_answer["external_sources"],
+                blocks_json=web_answer.get("blocks") or [],
+                media_blocks_json=web_answer.get("media_blocks") or [],
+                source_blocks_json=[],
+                page_numbers_json=[],
+                diagnostics_json=web_answer.get("diagnostics") or {},
+                suggested_next_action=web_answer.get("suggested_next_action"),
+            )
+            db.add(assistant_message)
+            session.updated_at = datetime.now()
+            await db.commit()
+            await db.refresh(assistant_message)
+            return assistant_message
+        diagnostics["web_search_skipped"] = "BOOK_EVIDENCE_SUFFICIENT"
     context = format_context(chunks)
 
     if context:
@@ -2280,14 +2380,23 @@ async def send_message(
     else:
         system_prompt = _SYSTEM_PROMPT_NO_CONTEXT
     system_prompt = _append_teaching_instruction(system_prompt, preferences)
+    profile = getattr(user, "student_profile", None)
+    memory = await build_learning_memory_context(
+        db,
+        user_id=user_id,
+        enabled=getattr(profile, "learning_memory_enabled", True),
+        current_lesson_id=session.lesson_id,
+    )
+    system_prompt = append_learning_memory(system_prompt, memory)
+    diagnostics["learning_memory"] = memory.diagnostics()
 
-    history = [
-        {"role": message.role, "content": message.content}
-        for message in session.messages
-        if message.role in {"user", "assistant"}
-    ]
-    if not history or history[-1]["content"] != content:
-        history.append({"role": "user", "content": content})
+    history = bounded_session_history(session.messages, current_question=content)
+    diagnostics["session_context"] = {
+        "message_count": len(history),
+        "character_count": sum(len(item["content"]) for item in history),
+        "max_messages": _CHAT_CONTEXT_MAX_MESSAGES,
+        "max_characters": _CHAT_CONTEXT_MAX_CHARS,
+    }
 
     start = time.time()
     answer = await _answer_with_rag_fallback(
@@ -2401,6 +2510,7 @@ async def send_multimodal_message(
     learning_modes: list[str] | None = None,
     student_interests: list[str] | None = None,
     action: str | None = None,
+    web_search_requested: bool = False,
     audio_service: AudioService | None = None,
     storage: LocalAudioStorage | None = None,
 ) -> ChatMessage:
@@ -2473,6 +2583,7 @@ async def send_multimodal_message(
         learning_modes=learning_modes,
         student_interests=student_interests,
         action=action,
+        web_search_requested=web_search_requested,
     )
 
     user_message = await _latest_user_message_for_session(db, session_id)
@@ -2674,9 +2785,15 @@ async def ask_question(
     previous_answer: str | None = None,
     previous_sources: list[dict] | None = None,
     previous_selected_chunks: list[dict] | None = None,
+    web_search_requested: bool = False,
 ) -> dict:
     """Answer a one-off question with RAG sources."""
     answer_scope = _normalize_answer_scope(answer_scope)
+    if web_search_requested and answer_scope == "book_only":
+        raise HTTPException(
+            status_code=422,
+            detail={"code": "WEB_SEARCH_DISABLED", "message": "Web search is not available in book-only mode."},
+        )
     user = None
     if db is not None:
         user_result = await db.execute(
@@ -2700,6 +2817,48 @@ async def ask_question(
         student_interests=student_interests,
     )
     preferred_answer_type = _preferred_answer_type_from_learning_modes(preferred_answer_type, preferences.learning_modes)
+
+    if web_search_requested:
+        web_diagnostics = {
+            "original_query": question,
+            "normalized_query": clean_query(question),
+            "answer_scope": answer_scope,
+            "web_search_requested": True,
+            "teaching_preferences": preferences.as_diagnostics(),
+        }
+        if student_retrieval_is_enabled():
+            precheck_intent = _classify_question(question)["intent"]
+            precheck_route = await route_source(question, source_types)
+            precheck = await semantic_retrieve_context(
+                db,
+                question,
+                user_id=user_id,
+                lesson_id=lesson_id,
+                top_k=6,
+                intent=precheck_intent,
+                source_types=precheck_route.source_types,
+            )
+            precheck_confidence = _compute_confidence(question, precheck.chunks)
+            if precheck.chunks and precheck_confidence >= _confidence_threshold_for_intent(precheck_intent):
+                web_search_requested = False
+            else:
+                return await _explicit_web_grounded_answer(
+                    question=question,
+                    answer_scope=answer_scope,
+                    preferred_answer_type=preferred_answer_type,
+                    diagnostics=web_diagnostics,
+                    subject=getattr(user, "subject", "chemistry"),
+                    grade=getattr(user, "grade", "9"),
+                )
+        else:
+            return await _explicit_web_grounded_answer(
+                question=question,
+                answer_scope=answer_scope,
+                preferred_answer_type=preferred_answer_type,
+                diagnostics=web_diagnostics,
+                subject=getattr(user, "subject", "chemistry"),
+                grade=getattr(user, "grade", "9"),
+            )
 
     if not student_retrieval_is_enabled():
         diagnostics = {
@@ -3250,6 +3409,15 @@ async def ask_question(
     else:
         system_prompt = _SYSTEM_PROMPT_ASK_NO_CONTEXT
     system_prompt = _append_teaching_instruction(system_prompt, preferences)
+    profile = getattr(user, "student_profile", None)
+    memory = await build_learning_memory_context(
+        db,
+        user_id=user_id,
+        enabled=getattr(profile, "learning_memory_enabled", True),
+        current_lesson_id=lesson_id,
+    )
+    system_prompt = append_learning_memory(system_prompt, memory)
+    diagnostics["learning_memory"] = memory.diagnostics()
 
     answer = await _answer_with_rag_fallback(
         messages=[{"role": "user", "content": question}],

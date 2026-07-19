@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-11T12:46:31.306829+00:00",
+  "generated_at": "2026-07-14T08:48:36.998709+00:00",
   "status": "passed",
   "mode": "unit",
   "dataset": "/Users/sereenkh/Github-Projects/edumind-team-06/src/backend/tests/fixtures/rag_grade9_qa_cases.json",
@@ -59,7 +59,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الحموض",
         "أيونات الهيدروجين",
@@ -90,7 +93,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الحموض",
         "أيونات الهيدروجين",
@@ -121,7 +127,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الحموض",
         "أيونات الهيدروجين",
@@ -140,7 +149,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما هي الحموض؟\nموضوعات المصدر: الحموض، المحاليل الحمضية\nإجابة الكتاب: الحموض، أيونات الهيدروجين، H+"
+          "content": ""
         }
       ]
     },
@@ -152,7 +161,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "أيونات الهيدروجين",
         "H+",
@@ -183,7 +195,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "أيونات الهيدروجين",
         "H+",
@@ -214,7 +229,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "أيونات الهيدروجين",
         "H+",
@@ -233,7 +251,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما الأيون الذي تعطيه الحموض في الماء؟\nموضوعات المصدر: الحموض، التأين\nإجابة الكتاب: أيونات الهيدروجين، H+، الماء"
+          "content": ""
         }
       ]
     },
@@ -245,7 +263,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "حمض قوي",
         "تأين كلي",
@@ -276,7 +297,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "حمض قوي",
         "تأين كلي",
@@ -307,7 +331,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "حمض قوي",
         "تأين كلي",
@@ -326,7 +353,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ماذا يعني الحمض القوي؟\nموضوعات المصدر: الحموض القوية، التأين\nإجابة الكتاب: حمض قوي، تأين كلي، الماء"
+          "content": ""
         }
       ]
     },
@@ -338,7 +365,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "حمض ضعيف",
         "تأين جزئي",
@@ -369,7 +399,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "حمض ضعيف",
         "تأين جزئي",
@@ -400,7 +433,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "حمض ضعيف",
         "تأين جزئي",
@@ -419,7 +455,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ماذا يعني الحمض الضعيف؟\nموضوعات المصدر: الحموض الضعيفة، التأين\nإجابة الكتاب: حمض ضعيف، تأين جزئي، الماء"
+          "content": ""
         }
       ]
     },
@@ -431,7 +467,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "ورقة عباد الشمس",
         "الأحمر",
@@ -462,7 +501,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "ورقة عباد الشمس",
         "الأحمر",
@@ -493,7 +535,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "ورقة عباد الشمس",
         "الأحمر",
@@ -512,7 +557,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما لون ورقة عباد الشمس في المحلول الحمضي؟\nموضوعات المصدر: خواص الحموض، الكواشف\nإجابة الكتاب: ورقة عباد الشمس، الأحمر، محلول حمضي"
+          "content": ""
         }
       ]
     },
@@ -524,7 +569,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "عدد الوظائف الحمضية",
         "أيونات الهيدروجين",
@@ -555,7 +603,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "عدد الوظائف الحمضية",
         "أيونات الهيدروجين",
@@ -586,7 +637,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "عدد الوظائف الحمضية",
         "أيونات الهيدروجين",
@@ -605,7 +659,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما عدد الوظائف الحمضية؟\nموضوعات المصدر: الحموض، الصيغ الأيونية\nإجابة الكتاب: عدد الوظائف الحمضية، أيونات الهيدروجين، الصيغة الأيونية"
+          "content": ""
         }
       ]
     },
@@ -617,7 +671,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "حمض كلور الماء",
         "HCl"
@@ -647,7 +704,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "حمض كلور الماء",
         "HCl"
@@ -677,7 +737,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "حمض كلور الماء",
         "HCl"
@@ -695,7 +758,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما صيغة حمض كلور الماء؟\nموضوعات المصدر: الحموض، الصيغ الكيميائية\nإجابة الكتاب: حمض كلور الماء، HCl"
+          "content": ""
         }
       ]
     },
@@ -707,7 +770,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "حمض الكبريت",
         "H2SO4"
@@ -737,7 +803,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "حمض الكبريت",
         "H2SO4"
@@ -767,7 +836,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "حمض الكبريت",
         "H2SO4"
@@ -785,7 +857,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما صيغة حمض الكبريت؟\nموضوعات المصدر: الحموض، الصيغ الكيميائية\nإجابة الكتاب: حمض الكبريت، H2SO4"
+          "content": ""
         }
       ]
     },
@@ -797,7 +869,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الأسس",
         "أيونات الهيدروكسيد",
@@ -828,7 +903,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الأسس",
         "أيونات الهيدروكسيد",
@@ -859,7 +937,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الأسس",
         "أيونات الهيدروكسيد",
@@ -878,7 +959,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما هي الأسس؟\nموضوعات المصدر: الأسس، المحاليل الأساسية\nإجابة الكتاب: الأسس، أيونات الهيدروكسيد، OH-"
+          "content": ""
         }
       ]
     },
@@ -890,7 +971,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "أيونات الهيدروكسيد",
         "OH-",
@@ -921,7 +1005,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "أيونات الهيدروكسيد",
         "OH-",
@@ -952,7 +1039,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "أيونات الهيدروكسيد",
         "OH-",
@@ -971,7 +1061,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما الأيون الذي تعطيه الأسس في الماء؟\nموضوعات المصدر: الأسس، التأين\nإجابة الكتاب: أيونات الهيدروكسيد، OH-، الماء"
+          "content": ""
         }
       ]
     },
@@ -983,7 +1073,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "أساس قوي",
         "تأين كلي",
@@ -1014,7 +1107,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "أساس قوي",
         "تأين كلي",
@@ -1045,7 +1141,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "أساس قوي",
         "تأين كلي",
@@ -1064,7 +1163,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ماذا يعني الأساس القوي؟\nموضوعات المصدر: الأسس القوية، التأين\nإجابة الكتاب: أساس قوي، تأين كلي، أيونات الهيدروكسيد"
+          "content": ""
         }
       ]
     },
@@ -1076,7 +1175,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "أساس ضعيف",
         "تأين جزئي",
@@ -1107,7 +1209,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "أساس ضعيف",
         "تأين جزئي",
@@ -1138,7 +1243,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "أساس ضعيف",
         "تأين جزئي",
@@ -1157,7 +1265,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ماذا يعني الأساس الضعيف؟\nموضوعات المصدر: الأسس الضعيفة، التأين\nإجابة الكتاب: أساس ضعيف، تأين جزئي، أيونات الهيدروكسيد"
+          "content": ""
         }
       ]
     },
@@ -1169,7 +1277,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "ورقة عباد الشمس",
         "الأزرق",
@@ -1200,7 +1311,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "ورقة عباد الشمس",
         "الأزرق",
@@ -1231,7 +1345,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "ورقة عباد الشمس",
         "الأزرق",
@@ -1250,7 +1367,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما لون ورقة عباد الشمس في المحلول الأساسي؟\nموضوعات المصدر: خواص الأسس، الكواشف\nإجابة الكتاب: ورقة عباد الشمس، الأزرق، محلول أساسي"
+          "content": ""
         }
       ]
     },
@@ -1262,7 +1379,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "هيدروكسيد الصوديوم",
         "NaOH"
@@ -1292,7 +1412,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "هيدروكسيد الصوديوم",
         "NaOH"
@@ -1322,7 +1445,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "هيدروكسيد الصوديوم",
         "NaOH"
@@ -1340,7 +1466,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما صيغة هيدروكسيد الصوديوم؟\nموضوعات المصدر: الأسس، الصيغ الكيميائية\nإجابة الكتاب: هيدروكسيد الصوديوم، NaOH"
+          "content": ""
         }
       ]
     },
@@ -1352,7 +1478,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الأملاح",
         "أيونات الملح",
@@ -1383,7 +1512,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الأملاح",
         "أيونات الملح",
@@ -1414,7 +1546,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الأملاح",
         "أيونات الملح",
@@ -1433,7 +1568,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما هي الأملاح؟\nموضوعات المصدر: الأملاح، المركبات الشاردية\nإجابة الكتاب: الأملاح، أيونات الملح، الصيغة الجزيئية"
+          "content": ""
         }
       ]
     },
@@ -1445,7 +1580,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "حمض",
         "أساس",
@@ -1477,7 +1615,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "حمض",
         "أساس",
@@ -1509,7 +1650,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "حمض",
         "أساس",
@@ -1529,7 +1673,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ماذا ينتج من تفاعل حمض مع أساس؟\nموضوعات المصدر: تعديل، تحضير الأملاح\nإجابة الكتاب: حمض، أساس، ملح، ماء"
+          "content": ""
         }
       ]
     },
@@ -1541,7 +1685,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "كلوريد الصوديوم",
         "NaCl"
@@ -1571,7 +1718,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "كلوريد الصوديوم",
         "NaCl"
@@ -1601,7 +1751,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "كلوريد الصوديوم",
         "NaCl"
@@ -1619,7 +1772,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما صيغة كلوريد الصوديوم؟\nموضوعات المصدر: الأملاح، الصيغ الكيميائية\nإجابة الكتاب: كلوريد الصوديوم، NaCl"
+          "content": ""
         }
       ]
     },
@@ -1631,7 +1784,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "كربونات الصوديوم",
         "Na2CO3"
@@ -1661,7 +1817,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "كربونات الصوديوم",
         "Na2CO3"
@@ -1691,7 +1850,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "كربونات الصوديوم",
         "Na2CO3"
@@ -1709,7 +1871,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما صيغة كربونات الصوديوم؟\nموضوعات المصدر: الأملاح، الكربونات\nإجابة الكتاب: كربونات الصوديوم، Na2CO3"
+          "content": ""
         }
       ]
     },
@@ -1721,7 +1883,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "تحضير الأملاح",
         "حمض",
@@ -1752,7 +1917,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "تحضير الأملاح",
         "حمض",
@@ -1783,7 +1951,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "تحضير الأملاح",
         "حمض",
@@ -1802,7 +1973,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: اذكر طريقة لتحضير الأملاح.\nموضوعات المصدر: طرائق تحضير الأملاح، تعديل\nإجابة الكتاب: تحضير الأملاح، حمض، أساس"
+          "content": ""
         }
       ]
     },
@@ -1814,7 +1985,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "محلول مائي",
         "ماء",
@@ -1845,7 +2019,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "محلول مائي",
         "ماء",
@@ -1876,7 +2053,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "محلول مائي",
         "ماء",
@@ -1895,7 +2075,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما هو المحلول المائي؟\nموضوعات المصدر: المحاليل المائية، المذيب والمذاب\nإجابة الكتاب: محلول مائي، ماء، مذيب"
+          "content": ""
         }
       ]
     },
@@ -1907,7 +2087,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "المذاب",
         "المذيب",
@@ -1938,7 +2121,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "المذاب",
         "المذيب",
@@ -1969,7 +2155,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "المذاب",
         "المذيب",
@@ -1988,7 +2177,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما الفرق بين المذاب والمذيب؟\nموضوعات المصدر: المحاليل، المذيب والمذاب\nإجابة الكتاب: المذاب، المذيب، المحلول"
+          "content": ""
         }
       ]
     },
@@ -2000,7 +2189,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "التركيز المولي",
         "مول",
@@ -2031,7 +2223,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "التركيز المولي",
         "مول",
@@ -2062,7 +2257,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "التركيز المولي",
         "مول",
@@ -2081,7 +2279,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما هو التركيز المولي؟\nموضوعات المصدر: التركيز، المحاليل\nإجابة الكتاب: التركيز المولي، مول، حجم المحلول"
+          "content": ""
         }
       ]
     },
@@ -2093,7 +2291,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "التركيز الغرامي",
         "كتلة المذاب",
@@ -2124,7 +2325,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "التركيز الغرامي",
         "كتلة المذاب",
@@ -2155,7 +2359,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "التركيز الغرامي",
         "كتلة المذاب",
@@ -2174,7 +2381,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما هو التركيز الغرامي؟\nموضوعات المصدر: التركيز، المحاليل\nإجابة الكتاب: التركيز الغرامي، كتلة المذاب، حجم المحلول"
+          "content": ""
         }
       ]
     },
@@ -2186,7 +2393,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "تمديد",
         "ينقص التركيز",
@@ -2217,7 +2427,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "تمديد",
         "ينقص التركيز",
@@ -2248,7 +2461,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "تمديد",
         "ينقص التركيز",
@@ -2267,7 +2483,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ماذا يحدث للتركيز عند تمديد المحلول؟\nموضوعات المصدر: تمديد المحاليل، التركيز\nإجابة الكتاب: تمديد، ينقص التركيز، المحلول"
+          "content": ""
         }
       ]
     },
@@ -2279,7 +2495,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "مول",
         "لتر",
@@ -2310,7 +2529,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "مول",
         "لتر",
@@ -2341,7 +2563,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "مول",
         "لتر",
@@ -2360,7 +2585,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما وحدات قياس التركيز في المحاليل؟\nموضوعات المصدر: التركيز، وحدات القياس\nإجابة الكتاب: مول، لتر، غرام"
+          "content": ""
         }
       ]
     },
@@ -2372,7 +2597,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الماء",
         "H2O"
@@ -2402,7 +2630,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الماء",
         "H2O"
@@ -2432,7 +2663,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الماء",
         "H2O"
@@ -2450,7 +2684,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما صيغة الماء؟\nموضوعات المصدر: الماء، الصيغ الكيميائية\nإجابة الكتاب: الماء، H2O"
+          "content": ""
         }
       ]
     },
@@ -2462,7 +2696,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "تفكك الماء",
         "الهيدروجين",
@@ -2493,7 +2730,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "تفكك الماء",
         "الهيدروجين",
@@ -2524,7 +2764,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "تفكك الماء",
         "الهيدروجين",
@@ -2543,7 +2786,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما نواتج تفكك الماء كهربائياً؟\nموضوعات المصدر: تفكك الماء، وعاء فولتا\nإجابة الكتاب: تفكك الماء، الهيدروجين، الأكسجين"
+          "content": ""
         }
       ]
     },
@@ -2555,7 +2798,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "أكسيد الكالسيوم",
         "الماء",
@@ -2586,7 +2832,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "أكسيد الكالسيوم",
         "الماء",
@@ -2617,7 +2866,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "أكسيد الكالسيوم",
         "الماء",
@@ -2636,7 +2888,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما ناتج تفاعل أكسيد الكالسيوم مع الماء؟\nموضوعات المصدر: الأكاسيد، هيدروكسيد الكالسيوم\nإجابة الكتاب: أكسيد الكالسيوم، الماء، هيدروكسيد الكالسيوم"
+          "content": ""
         }
       ]
     },
@@ -2648,7 +2900,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "تفاعل الإزاحة",
         "عنصر",
@@ -2679,7 +2934,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "تفاعل الإزاحة",
         "عنصر",
@@ -2710,7 +2968,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "تفاعل الإزاحة",
         "عنصر",
@@ -2729,7 +2990,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما المقصود بتفاعل الإزاحة؟\nموضوعات المصدر: تفاعلات الإزاحة، سلسلة النشاط\nإجابة الكتاب: تفاعل الإزاحة، عنصر، مركب"
+          "content": ""
         }
       ]
     },
@@ -2741,7 +3002,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "معدن نشيط",
         "حمض ممدد",
@@ -2772,7 +3036,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "معدن نشيط",
         "حمض ممدد",
@@ -2803,7 +3070,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "معدن نشيط",
         "حمض ممدد",
@@ -2822,7 +3092,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ماذا ينتج من تفاعل معدن نشيط مع حمض ممدد؟\nموضوعات المصدر: سلسلة النشاط، تفاعل المعادن مع الحموض\nإجابة الكتاب: معدن نشيط، حمض ممدد، غاز الهيدروجين"
+          "content": ""
         }
       ]
     },
@@ -2834,7 +3104,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "النحاس",
         "حمض الكبريت الممدد",
@@ -2865,7 +3138,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "النحاس",
         "حمض الكبريت الممدد",
@@ -2896,7 +3172,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "النحاس",
         "حمض الكبريت الممدد",
@@ -2915,7 +3194,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: هل يتفاعل النحاس مع حمض الكبريت الممدد؟\nموضوعات المصدر: سلسلة النشاط، النحاس\nإجابة الكتاب: النحاس، حمض الكبريت الممدد، لا يحدث تفاعل"
+          "content": ""
         }
       ]
     },
@@ -2927,7 +3206,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الزنك",
         "حمض كلور الماء",
@@ -2958,7 +3240,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الزنك",
         "حمض كلور الماء",
@@ -2989,7 +3274,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الزنك",
         "حمض كلور الماء",
@@ -3008,7 +3296,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ماذا ينتج من تفاعل الزنك مع حمض كلور الماء؟\nموضوعات المصدر: سلسلة النشاط، كلوريد الزنك\nإجابة الكتاب: الزنك، حمض كلور الماء، الهيدروجين"
+          "content": ""
         }
       ]
     },
@@ -3020,7 +3308,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "التأكسد",
         "فقد الإلكترونات",
@@ -3051,7 +3342,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "التأكسد",
         "فقد الإلكترونات",
@@ -3082,7 +3376,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "التأكسد",
         "فقد الإلكترونات",
@@ -3101,7 +3398,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما هو التأكسد؟\nموضوعات المصدر: الأكسدة والإرجاع، التأكسد\nإجابة الكتاب: التأكسد، فقد الإلكترونات، زيادة عدد الأكسدة"
+          "content": ""
         }
       ]
     },
@@ -3113,7 +3410,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الإرجاع",
         "كسب الإلكترونات",
@@ -3144,7 +3444,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الإرجاع",
         "كسب الإلكترونات",
@@ -3175,7 +3478,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الإرجاع",
         "كسب الإلكترونات",
@@ -3194,7 +3500,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما هو الإرجاع؟\nموضوعات المصدر: الأكسدة والإرجاع، الإرجاع\nإجابة الكتاب: الإرجاع، كسب الإلكترونات، نقصان عدد الأكسدة"
+          "content": ""
         }
       ]
     },
@@ -3206,7 +3512,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "سلسلة النشاط",
         "ترتيب المعادن",
@@ -3237,7 +3546,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "سلسلة النشاط",
         "ترتيب المعادن",
@@ -3268,7 +3580,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "سلسلة النشاط",
         "ترتيب المعادن",
@@ -3287,7 +3602,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: لماذا نستخدم سلسلة النشاط الكيميائي؟\nموضوعات المصدر: سلسلة النشاط، المعادن\nإجابة الكتاب: سلسلة النشاط، ترتيب المعادن، الإزاحة"
+          "content": ""
         }
       ]
     },
@@ -3299,7 +3614,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الكيمياء العضوية",
         "مركبات الكربون",
@@ -3330,7 +3648,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الكيمياء العضوية",
         "مركبات الكربون",
@@ -3361,7 +3682,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الكيمياء العضوية",
         "مركبات الكربون",
@@ -3380,7 +3704,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما هي الكيمياء العضوية؟\nموضوعات المصدر: الكيمياء العضوية، الكربون\nإجابة الكتاب: الكيمياء العضوية، مركبات الكربون، فرع من الكيمياء"
+          "content": ""
         }
       ]
     },
@@ -3392,7 +3716,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الهيدروكربونات",
         "الكربون",
@@ -3423,7 +3750,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الهيدروكربونات",
         "الكربون",
@@ -3454,7 +3784,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الهيدروكربونات",
         "الكربون",
@@ -3473,7 +3806,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما هي الهيدروكربونات؟\nموضوعات المصدر: الهيدروكربونات، الكيمياء العضوية\nإجابة الكتاب: الهيدروكربونات، الكربون، الهيدروجين"
+          "content": ""
         }
       ]
     },
@@ -3485,7 +3818,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الألكانات",
         "CnH2n+2",
@@ -3516,7 +3852,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الألكانات",
         "CnH2n+2",
@@ -3547,7 +3886,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الألكانات",
         "CnH2n+2",
@@ -3566,7 +3908,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما الصيغة العامة للألكانات؟\nموضوعات المصدر: الألكانات، الهيدروكربونات\nإجابة الكتاب: الألكانات، CnH2n+2، روابط أحادية"
+          "content": ""
         }
       ]
     },
@@ -3578,7 +3920,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الميثان",
         "CH4"
@@ -3608,7 +3953,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الميثان",
         "CH4"
@@ -3638,7 +3986,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الميثان",
         "CH4"
@@ -3656,7 +4007,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما صيغة الميثان؟\nموضوعات المصدر: الألكانات، الميثان\nإجابة الكتاب: الميثان، CH4"
+          "content": ""
         }
       ]
     },
@@ -3668,7 +4019,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الإيثان",
         "C2H6"
@@ -3698,7 +4052,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الإيثان",
         "C2H6"
@@ -3728,7 +4085,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الإيثان",
         "C2H6"
@@ -3746,7 +4106,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما صيغة الإيثان؟\nموضوعات المصدر: الألكانات، الإيثان\nإجابة الكتاب: الإيثان، C2H6"
+          "content": ""
         }
       ]
     },
@@ -3758,7 +4118,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "البروبان",
         "C3H8"
@@ -3788,7 +4151,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "البروبان",
         "C3H8"
@@ -3818,7 +4184,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "البروبان",
         "C3H8"
@@ -3836,7 +4205,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما صيغة البروبان؟\nموضوعات المصدر: الألكانات، البروبان\nإجابة الكتاب: البروبان، C3H8"
+          "content": ""
         }
       ]
     },
@@ -3848,7 +4217,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الألكينات",
         "CnH2n",
@@ -3879,7 +4251,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الألكينات",
         "CnH2n",
@@ -3910,7 +4285,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الألكينات",
         "CnH2n",
@@ -3929,7 +4307,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما الصيغة العامة للألكينات؟\nموضوعات المصدر: الألكينات، الهيدروكربونات\nإجابة الكتاب: الألكينات، CnH2n، رابطة ثنائية"
+          "content": ""
         }
       ]
     },
@@ -3941,7 +4319,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الإيتين",
         "C2H4"
@@ -3971,7 +4352,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الإيتين",
         "C2H4"
@@ -4001,7 +4385,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الإيتين",
         "C2H4"
@@ -4019,7 +4406,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما صيغة الإيتين؟\nموضوعات المصدر: الألكينات، الإيتين\nإجابة الكتاب: الإيتين، C2H4"
+          "content": ""
         }
       ]
     },
@@ -4031,7 +4418,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الألكاينات",
         "CnH2n-2",
@@ -4062,7 +4452,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الألكاينات",
         "CnH2n-2",
@@ -4093,7 +4486,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الألكاينات",
         "CnH2n-2",
@@ -4112,7 +4508,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما الصيغة العامة للألكينات الثلاثية أو الألكاينات؟\nموضوعات المصدر: الألكاينات، الهيدروكربونات\nإجابة الكتاب: الألكاينات، CnH2n-2، رابطة ثلاثية"
+          "content": ""
         }
       ]
     },
@@ -4124,7 +4520,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الإيتين",
         "الأسيتيلين",
@@ -4155,7 +4554,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الإيتين",
         "الأسيتيلين",
@@ -4186,7 +4588,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الإيتين",
         "الأسيتيلين",
@@ -4205,7 +4610,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما صيغة الإيتين الثلاثي أو الأسيتيلين؟\nموضوعات المصدر: الألكاينات، الأسيتيلين\nإجابة الكتاب: الإيتين، الأسيتيلين، C2H2"
+          "content": ""
         }
       ]
     },
@@ -4217,7 +4622,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "رابطة أحادية",
         "رابطة ثنائية",
@@ -4248,7 +4656,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "رابطة أحادية",
         "رابطة ثنائية",
@@ -4279,7 +4690,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "رابطة أحادية",
         "رابطة ثنائية",
@@ -4298,7 +4712,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما أنواع الروابط بين ذرات الكربون؟\nموضوعات المصدر: روابط الكربون، الكيمياء العضوية\nإجابة الكتاب: رابطة أحادية، رابطة ثنائية، رابطة ثلاثية"
+          "content": ""
         }
       ]
     },
@@ -4310,7 +4724,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الأسيتون",
         "مذيب عضوي",
@@ -4341,7 +4758,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الأسيتون",
         "مذيب عضوي",
@@ -4372,7 +4792,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الأسيتون",
         "مذيب عضوي",
@@ -4391,7 +4814,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: لماذا يستخدم الأسيتون في إزالة طلاء الأظافر؟\nموضوعات المصدر: المركبات العضوية، الأسيتون\nإجابة الكتاب: الأسيتون، مذيب عضوي، طلاء الأظافر"
+          "content": ""
         }
       ]
     },
@@ -4403,7 +4826,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "المركبات العضوية",
         "درجات الغليان",
@@ -4434,7 +4860,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "المركبات العضوية",
         "درجات الغليان",
@@ -4465,7 +4894,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "المركبات العضوية",
         "درجات الغليان",
@@ -4484,7 +4916,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: كيف تقارن درجات غليان المركبات العضوية مع اللاعضوية؟\nموضوعات المصدر: خواص المركبات العضوية، درجات الغليان\nإجابة الكتاب: المركبات العضوية، درجات الغليان، أقل"
+          "content": ""
         }
       ]
     },
@@ -4496,7 +4928,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "النشاط الإشعاعي",
         "عناصر مشعة",
@@ -4527,7 +4962,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "النشاط الإشعاعي",
         "عناصر مشعة",
@@ -4558,7 +4996,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "النشاط الإشعاعي",
         "عناصر مشعة",
@@ -4577,7 +5018,7 @@
           "quality_warning": null,
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: ما المقصود بالنشاط الإشعاعي؟\nموضوعات المصدر: النشاط الإشعاعي، العناصر المشعة\nإجابة الكتاب: النشاط الإشعاعي، عناصر مشعة، إشعاعات"
+          "content": ""
         }
       ]
     },
@@ -4589,7 +5030,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الألكان",
         "CnH2n+2",
@@ -4621,7 +5065,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الألكان",
         "CnH2n+2",
@@ -4653,7 +5100,10 @@
       "expected_behavior": "answerable",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.82,
+      "citation_count": 1,
+      "complete_citation_count": 1,
       "expected_answer_keywords": [
         "الألكان",
         "CnH2n+2",
@@ -4673,7 +5123,7 @@
           "quality_warning": "This source is marked needs_review.",
           "reviewed_metadata_version": "2026-06-reviewed-v1",
           "similarity_score": 0.82,
-          "content": "سؤال: في أسئلة الهيدروكربونات، كيف أميز بين الألكان والألكين من الصيغة؟\nموضوعات المصدر: تمارين الهيدروكربونات، الصيغ العامة\nإجابة الكتاب: الألكان، CnH2n+2، الألكين، CnH2n"
+          "content": ""
         }
       ]
     },
@@ -4685,7 +5135,10 @@
       "expected_behavior": "out_of_scope",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.0,
+      "citation_count": 0,
+      "complete_citation_count": 0,
       "expected_answer_keywords": [
         "لم أجد",
         "غير كاف"
@@ -4701,7 +5154,10 @@
       "expected_behavior": "out_of_scope",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.08,
+      "citation_count": 0,
+      "complete_citation_count": 0,
       "expected_answer_keywords": [
         "لم أجد",
         "غير كاف"
@@ -4717,7 +5173,10 @@
       "expected_behavior": "out_of_scope",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.08,
+      "citation_count": 0,
+      "complete_citation_count": 0,
       "expected_answer_keywords": [
         "لم أجد",
         "غير كاف"
@@ -4733,7 +5192,10 @@
       "expected_behavior": "out_of_scope",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.0,
+      "citation_count": 0,
+      "complete_citation_count": 0,
       "expected_answer_keywords": [
         "لم أجد",
         "غير كاف"
@@ -4749,7 +5211,10 @@
       "expected_behavior": "out_of_scope",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.08,
+      "citation_count": 0,
+      "complete_citation_count": 0,
       "expected_answer_keywords": [
         "لم أجد",
         "غير كاف"
@@ -4765,7 +5230,10 @@
       "expected_behavior": "out_of_scope",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.08,
+      "citation_count": 0,
+      "complete_citation_count": 0,
       "expected_answer_keywords": [
         "لم أجد",
         "غير كاف"
@@ -4781,7 +5249,10 @@
       "expected_behavior": "out_of_scope",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.0,
+      "citation_count": 0,
+      "complete_citation_count": 0,
       "expected_answer_keywords": [
         "لم أجد",
         "غير كاف"
@@ -4797,7 +5268,10 @@
       "expected_behavior": "out_of_scope",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.08,
+      "citation_count": 0,
+      "complete_citation_count": 0,
       "expected_answer_keywords": [
         "لم أجد",
         "غير كاف"
@@ -4813,7 +5287,10 @@
       "expected_behavior": "out_of_scope",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.08,
+      "citation_count": 0,
+      "complete_citation_count": 0,
       "expected_answer_keywords": [
         "لم أجد",
         "غير كاف"
@@ -4829,7 +5306,10 @@
       "expected_behavior": "out_of_scope",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.0,
+      "citation_count": 0,
+      "complete_citation_count": 0,
       "expected_answer_keywords": [
         "لم أجد",
         "غير كاف"
@@ -4845,7 +5325,10 @@
       "expected_behavior": "out_of_scope",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.08,
+      "citation_count": 0,
+      "complete_citation_count": 0,
       "expected_answer_keywords": [
         "لم أجد",
         "غير كاف"
@@ -4861,7 +5344,10 @@
       "expected_behavior": "out_of_scope",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.08,
+      "citation_count": 0,
+      "complete_citation_count": 0,
       "expected_answer_keywords": [
         "لم أجد",
         "غير كاف"
@@ -4877,7 +5363,10 @@
       "expected_behavior": "out_of_scope",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.0,
+      "citation_count": 0,
+      "complete_citation_count": 0,
       "expected_answer_keywords": [
         "لم أجد",
         "غير كاف"
@@ -4893,7 +5382,10 @@
       "expected_behavior": "out_of_scope",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.08,
+      "citation_count": 0,
+      "complete_citation_count": 0,
       "expected_answer_keywords": [
         "لم أجد",
         "غير كاف"
@@ -4909,7 +5401,10 @@
       "expected_behavior": "out_of_scope",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.08,
+      "citation_count": 0,
+      "complete_citation_count": 0,
       "expected_answer_keywords": [
         "لم أجد",
         "غير كاف"
@@ -4925,7 +5420,10 @@
       "expected_behavior": "out_of_scope",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.0,
+      "citation_count": 0,
+      "complete_citation_count": 0,
       "expected_answer_keywords": [
         "لم أجد",
         "غير كاف"
@@ -4941,7 +5439,10 @@
       "expected_behavior": "out_of_scope",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.08,
+      "citation_count": 0,
+      "complete_citation_count": 0,
       "expected_answer_keywords": [
         "لم أجد",
         "غير كاف"
@@ -4957,7 +5458,10 @@
       "expected_behavior": "out_of_scope",
       "passed": true,
       "failures": [],
+      "failure_codes": [],
       "confidence": 0.08,
+      "citation_count": 0,
+      "complete_citation_count": 0,
       "expected_answer_keywords": [
         "لم أجد",
         "غير كاف"

@@ -21,12 +21,14 @@ from app.schemas.rag import (
     RetrievedChunkResponse,
 )
 from app.services.rag import retrieve_context
+from app.services.rag_citations import citation_from_chunk, citations_from_chunks
 from app.services.semantic_rag import SemanticSearchResult, semantic_retrieve_context, semantic_search
 
 router = APIRouter(prefix="/rag", tags=["rag"])
 
 
 def _chunk_response(item) -> RetrievedChunkResponse:
+    citation = citation_from_chunk(item)
     return RetrievedChunkResponse(
         id=item.id,
         source_id=item.source_id,
@@ -35,6 +37,8 @@ def _chunk_response(item) -> RetrievedChunkResponse:
         source_type=item.source_type,
         content_type=item.content_type,
         page_number=item.page_number,
+        printed_page_start=citation["printed_page_start"],
+        printed_page_end=citation["printed_page_end"],
         unit_id=item.unit_id,
         chapter_id=item.chapter_id,
         lesson_id=item.lesson_id,
@@ -127,7 +131,10 @@ async def retrieve_rag(
         min_similarity=request.min_similarity,
         intent=request.intent,
     )
-    return RagRetrieveResponse(chunks=[_chunk_response(item) for item in chunks])
+    return RagRetrieveResponse(
+        chunks=[_chunk_response(item) for item in chunks],
+        citations=citations_from_chunks(chunks),
+    )
 
 
 @router.post("/search", response_model=RagSearchResponse)

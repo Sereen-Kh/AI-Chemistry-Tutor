@@ -4,16 +4,57 @@ from __future__ import annotations
 
 import asyncio
 
+import pytest
+from fastapi import HTTPException
 from sqlalchemy import create_engine
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
 from app.database import Base
+from app.models.interest import InterestCategory, UserInterest
 from app.models.student_profile import StudentProfile
 from app.models.user import User
 from app.services.auth_service import get_all_interests, register_user, update_user_onboarding
+from app.services.interest_service import INTEREST_CATALOG, validate_interest_keys
 from app.services.onboarding_service import is_user_onboarding_complete
 from app.services.profile_service import upsert_profile
+
+
+def _seed_interests(db) -> list[InterestCategory]:
+    interests = [InterestCategory(**payload) for payload in INTEREST_CATALOG]
+    db.add_all(interests)
+    db.commit()
+    return get_all_interests(db)
+
+
+def test_interest_catalog_read_does_not_seed_missing_rows() -> None:
+    engine = create_engine("sqlite:///:memory:", connect_args={"check_same_thread": False})
+    Base.metadata.create_all(engine)
+    SessionLocal = sessionmaker(bind=engine)
+    db = SessionLocal()
+    try:
+        assert get_all_interests(db) == []
+        assert db.query(InterestCategory).count() == 0
+    finally:
+        db.close()
+        Base.metadata.drop_all(engine)
+        engine.dispose()
+
+
+@pytest.mark.parametrize(
+    ("values", "code"),
+    [
+        ([], "INTEREST_REQUIRED"),
+        (["cars", "cars"], "DUPLICATE_INTEREST"),
+        (["cars", "laboratory", "nature", "gaming"], "TOO_MANY_INTERESTS"),
+        (["unknown"], "INVALID_INTEREST"),
+    ],
+)
+def test_interest_selection_validation_returns_stable_codes(values: list[str], code: str) -> None:
+    with pytest.raises(HTTPException) as exc_info:
+        validate_interest_keys(values)
+    assert exc_info.value.status_code == 422
+    assert exc_info.value.detail["code"] == code
 
 
 def test_onboarding_saves_canonical_profile_and_legacy_user_fields() -> None:
@@ -25,7 +66,7 @@ def test_onboarding_saves_canonical_profile_and_legacy_user_fields() -> None:
         user = register_user(db, email="new@example.com", password="123456789", first_name="سارة")
         assert is_user_onboarding_complete(user) is False
 
-        interests = get_all_interests(db)
+        interests = _seed_interests(db)
         selected_ids = [interests[0].id, interests[1].id]
         updated = update_user_onboarding(
             db,
@@ -53,6 +94,21 @@ def test_onboarding_saves_canonical_profile_and_legacy_user_fields() -> None:
         assert profile.goals == "تقوية مسائل التركيز"
         assert updated.teaching_level == profile.teaching_level
         assert updated.learning_modes == profile.learning_modes
+        links = db.query(UserInterest).filter(UserInterest.user_id == user.id).all()
+        assert {link.interest_id for link in links} == set(selected_ids)
+
+        update_user_onboarding(
+            db,
+            user_id=user.id,
+            grade="grade_9",
+            subject="chemistry",
+            teaching_style="step_by_step",
+            answer_format="text",
+            language="ar",
+            interest_ids=[],
+            student_interests=[interests[0].key, interests[1].key],
+        )
+        assert db.query(UserInterest).filter(UserInterest.user_id == user.id).count() == 2
     finally:
         db.close()
         Base.metadata.drop_all(engine)
@@ -68,6 +124,7 @@ def test_student_profile_update_mirrors_legacy_user_for_chat_preferences() -> No
         async with SessionLocal() as db:
             user = User(first_name="علي", last_name="", email="ali@example.com", hashed_password="hashed")
             db.add(user)
+            db.add(InterestCategory(**INTEREST_CATALOG[4]))
             await db.commit()
             await db.refresh(user)
 
@@ -83,6 +140,7 @@ def test_student_profile_update_mirrors_legacy_user_for_chat_preferences() -> No
                     "student_interests": ["cars"],
                     "preferred_language": "ar",
                     "goals": "الاستعداد للامتحان",
+                    "learning_memory_enabled": False,
                 },
             )
             refreshed = await db.get(User, user.id)
@@ -93,6 +151,8 @@ def test_student_profile_update_mirrors_legacy_user_for_chat_preferences() -> No
             assert refreshed.explanation_method == "exam_mode"
             assert refreshed.learning_modes == ["text", "image"]
             assert refreshed.student_interests == ["cars"]
+            assert profile.learning_memory_enabled is False
+            assert profile.metadata_json == {"learning_memory_enabled": False}
         await engine.dispose()
 
     asyncio.run(scenario())

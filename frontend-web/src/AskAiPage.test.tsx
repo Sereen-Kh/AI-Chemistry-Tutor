@@ -33,7 +33,8 @@ vi.mock('./api', () => ({
         title: String(source.source || 'كتاب الكيمياء - الصف التاسع'),
         page: Number(source.page_number || 0) || null,
         chunk_id: Number(source.chunk_id || 0),
-        quote: String(source.content_type || ''),
+        quote: String(source.content_preview || ''),
+        content_type: String(source.content_type || ''),
         score: Number(source.similarity_score || 0),
       })),
       citations: [],
@@ -41,6 +42,8 @@ vi.mock('./api', () => ({
       format,
       answer_type: message.answer_type || undefined,
       route: message.route || undefined,
+      grounding: message.grounding || undefined,
+      external_sources: message.external_sources || [],
       diagnostics: message.diagnostics,
       audio_url: message.answer_audio_url || message.media_url || undefined,
       audio_status: message.audio_status,
@@ -61,6 +64,7 @@ const preferences: UserPreferences = {
   language: 'ar',
   grade: 'grade_9',
   subject: 'chemistry',
+  learningMemoryEnabled: true,
 };
 
 const assistantMessage: ChatMessageResponse = {
@@ -81,6 +85,7 @@ const assistantMessage: ChatMessageResponse = {
       source: 'syria_grade_9_chemistry',
       page_number: 11,
       content_type: 'definition',
+      content_preview: 'التركيز المولي هو عدد مولات المادة المذابة في حجم المحلول.',
       similarity_score: 0.86,
     },
   ],
@@ -141,9 +146,12 @@ describe('AskAiPage persistent sessions', () => {
 
     expect((await screen.findAllByText('جلسة تركيز')).length).toBeGreaterThan(0);
     expect((await screen.findAllByText(/التركيز المولي يحسب بالعلاقة/)).length).toBeGreaterThan(0);
-    expect(screen.getAllByText('مصادر قوية').length).toBeGreaterThan(0);
+    const sourceSummary = screen.getByText('من الكتاب · مصدر واحد');
+    expect(sourceSummary.closest('details')).not.toHaveAttribute('open');
     expect(screen.getByText('أفضل تطابق مع المصدر 86%')).toBeInTheDocument();
+    await userEvent.click(sourceSummary);
     expect(screen.getByText('صفحة 11')).toBeInTheDocument();
+    expect(screen.getByText('التركيز المولي هو عدد مولات المادة المذابة في حجم المحلول.')).toBeInTheDocument();
   });
 
   it('keeps answer confidence separate when no textbook source was retrieved', async () => {
@@ -170,9 +178,115 @@ describe('AskAiPage persistent sessions', () => {
 
     renderAskAi();
 
-    expect((await screen.findAllByText('لم أجد مصدراً كافياً في الكتاب')).length).toBeGreaterThan(0);
-    expect(screen.getByText('ثقة الإجابة 95% · دون توثيق كتابي')).toBeInTheDocument();
+    expect((await screen.findAllByText('دون مصدر كتابي')).length).toBe(1);
+    expect(screen.queryByText('المصادر من الكتاب')).not.toBeInTheDocument();
     expect(screen.queryByText('ثقة المصدر 95%')).not.toBeInTheDocument();
+  });
+
+  it('uses an explicit insufficient-evidence message only for not-found answers', async () => {
+    mockedAiApi.listSessions.mockResolvedValue([buildSession([
+      {
+        id: 1,
+        session_id: 10,
+        role: 'user',
+        content: 'سؤال خارج نطاق الكتاب',
+        format: 'text',
+        created_at: new Date().toISOString(),
+      },
+      {
+        ...assistantMessage,
+        id: 6,
+        content: 'لم أجد معلومات كافية في المصادر المراجعة.',
+        answer_text: 'لم أجد معلومات كافية في المصادر المراجعة.',
+        confidence: 0.08,
+        answer_type: 'not_found',
+        route: 'not_found',
+        sources: [],
+        citations: [],
+        page_numbers: [],
+      },
+    ])]);
+
+    renderAskAi();
+
+    expect((await screen.findAllByText('دون مصدر كتابي')).length).toBe(1);
+  });
+
+  it('renders assistant Markdown without exposing raw HTML', async () => {
+    const markdownMessage = {
+      ...assistantMessage,
+      content: '**الماء** مركب كيميائي.\n\n- H2O\n- NaCl\n\n<script>alert("x")</script>',
+      answer_text: '**الماء** مركب كيميائي.\n\n- H2O\n- NaCl\n\n<script>alert("x")</script>',
+    };
+    mockedAiApi.listSessions.mockResolvedValue([buildSession([markdownMessage])]);
+
+    const view = renderAskAi();
+
+    const boldText = await screen.findByText('الماء');
+    expect(boldText.closest('strong')).toBeInTheDocument();
+    expect(view.container.textContent).not.toContain('**');
+    expect(view.container.querySelector('script')).not.toBeInTheDocument();
+    expect(view.container.textContent).not.toContain('alert("x")');
+    expect(screen.getByText('H2O')).toHaveClass('chem-formula');
+  });
+
+  it('renders external sources separately from textbook sources', async () => {
+    mockedAiApi.listSessions.mockResolvedValue([buildSession([{
+      ...assistantMessage,
+      sources: [],
+      citations: [],
+      grounding: 'web',
+      external_sources: [{
+        title: 'مصدر علمي خارجي',
+        url: 'https://example.org/water',
+        domain: 'example.org',
+        cited_text: 'Water is used in cooling.',
+      }],
+    }])]);
+
+    renderAskAi();
+
+    const summary = await screen.findByText('مصادر خارجية · مصدر واحد');
+    expect(summary.closest('details')).not.toHaveAttribute('open');
+    expect(screen.queryByText('دون مصدر كتابي')).not.toBeInTheDocument();
+    await userEvent.click(summary);
+    expect(screen.getByRole('link', { name: 'فتح المصدر' })).toHaveAttribute(
+      'href',
+      'https://example.org/water',
+    );
+  });
+
+  it('requests web grounding only after the student clicks the fallback action', async () => {
+    const noSourceMessage = {
+      ...assistantMessage,
+      sources: [],
+      citations: [],
+      confidence: 0.1,
+      route: 'not_found',
+    };
+    const webMessage = {
+      ...noSourceMessage,
+      id: 9,
+      grounding: 'web',
+      external_sources: [{
+        title: 'مصدر خارجي',
+        url: 'https://example.org/source',
+        domain: 'example.org',
+        cited_text: 'Grounded text.',
+      }],
+    };
+    mockedAiApi.listSessions.mockResolvedValue([buildSession([noSourceMessage])]);
+    mockedAiApi.sendSessionMessage.mockResolvedValue(webMessage);
+    mockedAiApi.getSession.mockResolvedValue(buildSession([noSourceMessage, webMessage]));
+
+    renderAskAi();
+    await userEvent.click(await screen.findByRole('button', { name: 'ابحث في مصادر ويب' }));
+
+    await waitFor(() => {
+      expect(mockedAiApi.sendSessionMessage).toHaveBeenCalledWith(10, expect.objectContaining({
+        webSearchRequested: true,
+      }));
+    });
   });
 
   it('creates a session on first send and posts through the session endpoint', async () => {
@@ -209,26 +323,46 @@ describe('AskAiPage persistent sessions', () => {
     expect((await screen.findAllByText(/التركيز المولي يحسب بالعلاقة/)).length).toBeGreaterThan(0);
   });
 
-  it('uses one answer format and disables unsupported formats', async () => {
+  it('keeps response formats and advanced dropdowns out of the student interface', async () => {
     mockedAiApi.listSessions.mockResolvedValue([]);
 
     renderAskAi();
 
     await screen.findByLabelText('سؤال للذكاء الاصطناعي');
     expect(screen.queryByLabelText('اختيار نوع الإجابة')).not.toBeInTheDocument();
+    expect(screen.queryByRole('radio')).not.toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole('button', { name: /إعدادات الإجابة/ }));
-    const textMode = screen.getByRole('radio', { name: 'صيغة الإجابة: نص' });
-    const audioMode = screen.getByRole('radio', { name: 'صيغة الإجابة: صوت' });
-    const shortVideoMode = screen.getByRole('radio', { name: 'صيغة الإجابة: فيديو قصير، قريباً' });
+    await userEvent.click(screen.getByRole('button', { name: /غيّر أسلوب الشرح/ }));
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /مختصر وواضح/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /علّمني خطوة بخطوة/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /من الكتاب فقط/ })).toBeInTheDocument();
+  });
 
-    expect(textMode).toHaveAttribute('aria-checked', 'true');
-    expect(shortVideoMode).toBeDisabled();
-    expect(screen.getAllByText('قريباً').length).toBeGreaterThan(0);
+  it('lets the student apply a guided explanation preset before sending', async () => {
+    mockedAiApi.listSessions.mockResolvedValue([]);
+    mockedAiApi.createSession.mockResolvedValue(buildSession());
+    mockedAiApi.sendSessionMessage.mockResolvedValue(assistantMessage);
+    mockedAiApi.getSession.mockResolvedValue(buildSession([assistantMessage]));
 
-    await userEvent.click(audioMode);
-    expect(textMode).toHaveAttribute('aria-checked', 'false');
-    expect(audioMode).toHaveAttribute('aria-checked', 'true');
+    renderAskAi();
+
+    await screen.findByLabelText('سؤال للذكاء الاصطناعي');
+    await userEvent.click(screen.getByRole('button', { name: /غيّر أسلوب الشرح/ }));
+    const guidedPreset = screen.getByRole('button', { name: /علّمني خطوة بخطوة/ });
+    await userEvent.click(guidedPreset);
+    expect(guidedPreset).toHaveAttribute('aria-pressed', 'true');
+
+    await userEvent.type(screen.getByLabelText('سؤال للذكاء الاصطناعي'), 'اشرح التركيز المولي');
+    await userEvent.click(screen.getByRole('button', { name: 'إرسال' }));
+
+    await waitFor(() => {
+      expect(mockedAiApi.sendSessionMessage).toHaveBeenCalledWith(10, expect.objectContaining({
+        teaching_level: 'standard',
+        explanation_method: 'step_by_step',
+        answer_scope: 'auto',
+      }));
+    });
   });
 
   it('shows inline validation without calling backend for an empty composer', async () => {

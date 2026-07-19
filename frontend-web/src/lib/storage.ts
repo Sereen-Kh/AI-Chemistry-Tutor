@@ -16,6 +16,7 @@ export const defaultPreferences: UserPreferences = {
   subject: 'chemistry',
   goals: '',
   targetExamDate: '',
+  learningMemoryEnabled: true,
 };
 
 export const getToken = (): string | null => localStorage.getItem(TOKEN_KEY);
@@ -58,6 +59,7 @@ export const loadPreferences = (): UserPreferences => {
       interests: studentInterests,
       goals: parsed.goals ?? defaultPreferences.goals,
       targetExamDate: parsed.targetExamDate ?? defaultPreferences.targetExamDate,
+      learningMemoryEnabled: parsed.learningMemoryEnabled ?? true,
     };
   } catch {
     return defaultPreferences;

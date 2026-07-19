@@ -35,3 +35,9 @@ class StudentProfile(Base, TimestampMixin):
     @property
     def onboarding_completed(self) -> bool:
         return is_profile_onboarding_complete(self)
+
+    @property
+    def learning_memory_enabled(self) -> bool:
+        """Return the opt-out preference stored in profile metadata."""
+        metadata = self.metadata_json if isinstance(self.metadata_json, dict) else {}
+        return metadata.get("learning_memory_enabled", True) is not False

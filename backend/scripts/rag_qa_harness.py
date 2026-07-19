@@ -16,6 +16,7 @@ from typing import Any, Callable
 
 from app.rag.arabic_normalizer import normalize_arabic
 from app.services.rag import RetrievedChunk
+from app.services.rag_citations import citation_from_chunk
 
 BACKEND_DIR = Path(__file__).resolve().parents[1]
 DATASET_PATH = BACKEND_DIR / "tests" / "fixtures" / "rag_grade9_qa_cases.json"
@@ -194,22 +195,7 @@ def chunk_for_case(case: dict[str, Any]) -> RetrievedChunk:
 
 def chunk_dict_for_case(case: dict[str, Any]) -> dict[str, Any]:
     chunk = chunk_for_case(case)
-    return {
-        "chunk_id": chunk.id,
-        "source_id": chunk.source_id,
-        "source_type": chunk.source_type,
-        "page_number": chunk.page_number,
-        "printed_page_start": chunk.curriculum_metadata["printed_page_start"],
-        "printed_page_end": chunk.curriculum_metadata["printed_page_end"],
-        "unit_id": chunk.unit_id,
-        "lesson_id": chunk.lesson_id,
-        "content_type": chunk.content_type,
-        "similarity_score": chunk.similarity_score,
-        "quality_status": chunk.quality_status,
-        "quality_warning": chunk.quality_warning,
-        "reviewed_metadata_version": chunk.reviewed_metadata_version,
-        "preview": chunk.content[:180],
-    }
+    return {**citation_from_chunk(chunk), "preview": chunk.content[:180]}
 
 
 def chunk_previews(chunks: list[dict[str, Any]] | list[RetrievedChunk] | None) -> list[dict[str, Any]]:
@@ -336,6 +322,7 @@ def install_deterministic_api_overrides(app, cases: list[dict[str, Any]], monkey
                 "answer_scope": answer_scope,
                 "blocks": [{"type": "text", "content": answer}],
                 "sources": [],
+                "citations": [],
                 "source_blocks": [],
                 "page_numbers": [],
                 "confidence": 0.08,
@@ -344,6 +331,7 @@ def install_deterministic_api_overrides(app, cases: list[dict[str, Any]], monkey
             }
 
         chunk = chunk_for_case(case)
+        citation = chunk_dict_for_case(case)
         answer = answer_text_for_case(case)
         return {
             "answer": answer,
@@ -353,6 +341,7 @@ def install_deterministic_api_overrides(app, cases: list[dict[str, Any]], monkey
             "answer_scope": answer_scope,
             "blocks": [{"type": "text", "content": answer}],
             "sources": [chunk],
+            "citations": [citation],
             "source_blocks": [
                 {
                     "book_id": "qa_fixture",
@@ -361,6 +350,8 @@ def install_deterministic_api_overrides(app, cases: list[dict[str, Any]], monkey
                     "source_id": chunk.source_id,
                     "chunk_type": chunk.content_type,
                     "source_type": chunk.source_type,
+                    "printed_page_start": chunk.curriculum_metadata["printed_page_start"],
+                    "printed_page_end": chunk.curriculum_metadata["printed_page_end"],
                     "unit_id": chunk.unit_id,
                     "lesson_id": chunk.lesson_id,
                     "quality_status": chunk.quality_status,

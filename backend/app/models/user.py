@@ -55,6 +55,7 @@ class User(Base, TimestampMixin):
     )
     user_progress = relationship("UserProgress", back_populates="user", cascade="all, delete-orphan")
     study_plans = relationship("StudyPlan", back_populates="user", cascade="all, delete-orphan")
+    study_sessions = relationship("StudySession", back_populates="user", cascade="all, delete-orphan")
     homework_items = relationship("Homework", back_populates="user", cascade="all, delete-orphan")
     achievements = relationship("Achievement", back_populates="user", cascade="all, delete-orphan")
     subscriptions = relationship("Subscription", back_populates="user", cascade="all, delete-orphan")
@@ -89,3 +90,8 @@ class User(Base, TimestampMixin):
     def target_exam_date(self) -> date | None:
         profile = self.__dict__.get("student_profile")
         return getattr(profile, "target_exam_date", None)
+
+    @property
+    def learning_memory_enabled(self) -> bool:
+        profile = self.__dict__.get("student_profile")
+        return getattr(profile, "learning_memory_enabled", True)

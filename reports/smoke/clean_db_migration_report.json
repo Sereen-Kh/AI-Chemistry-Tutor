@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-06-16T21:31:34.680214+00:00",
-  "database_url": "sqlite:////tmp/edumind_migration_test_verifier.db",
+  "generated_at": "2026-07-17T19:24:43.236991+00:00",
+  "database_url": "postgresql://***:***@localhost:5432/edumind_migration_test",
   "migration_command": "/Users/sereenkh/Github-Projects/edumind-team-06/src/backend/.venv/bin/python -m alembic upgrade head",
   "database_considered_disposable": true,
   "started_empty": true,
   "migration_returncode": 0,
-  "migration_head_revision": "0008_curriculum_units",
-  "tables_count": 42,
+  "migration_head_revision": "0014_ask_ai_memory_web_grounding",
+  "tables_count": 44,
   "expected_tables_present": [
     "chapters",
     "chat_messages",
@@ -20,10 +20,10 @@
     "users"
   ],
   "expected_tables_missing": [],
-  "pgvector_extension_installed": false,
+  "pgvector_extension_installed": true,
   "rag_chunks_table_exists": true,
   "embedding_column_exists": true,
-  "embedding_column_type": "JSON",
+  "embedding_column_type": "vector(768)",
   "errors": [],
   "result": "passed"
 }

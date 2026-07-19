@@ -4,6 +4,8 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field
 
+from app.schemas.rag import RagCitationResponse
+
 
 class HomeworkSolveTextRequest(BaseModel):
     problem_text: str = Field(..., min_length=1)
@@ -23,7 +25,7 @@ class HomeworkResponse(BaseModel):
     problem_text: str
     extracted_text: str | None = None
     solution: str
-    source_chunks: list | dict | None = None
+    source_chunks: list[RagCitationResponse] | dict | None = None
     confidence_score: float | None = None
     created_at: datetime
     updated_at: datetime

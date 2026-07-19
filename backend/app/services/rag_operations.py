@@ -17,6 +17,7 @@ from app.services.rag_runtime import (
     production_gate_status,
     student_retrieval_is_enabled,
 )
+from app.services.rag_preflight import build_rag_preflight
 
 
 def _dict(raw: Any) -> dict[str, Any]:
@@ -103,7 +104,32 @@ def build_rag_operations(db: Session, *, window_hours: int = 24) -> dict[str, An
     evaluation = load_json_report(settings.rag_evaluation_report_path)
     qa = load_json_report(settings.rag_qa_report_path)
     gate = production_gate_status()
+    try:
+        preflight = build_rag_preflight(db)
+    except Exception:
+        preflight = {
+            "status": "blocked",
+            "can_evaluate": False,
+            "chunks": {},
+            "blocking_issues": ["RAG_PREFLIGHT_UNAVAILABLE"],
+            "warnings": [],
+        }
+    chunk_counts = _dict(preflight.get("chunks"))
+    total_eligible_chunks = sum(
+        int(chunk_counts.get(field) or 0)
+        for field in (
+            "pending_embeddings",
+            "processing_embeddings",
+            "completed_embeddings",
+            "failed_embeddings",
+        )
+    )
+    embedded_eligible_chunks = int(chunk_counts.get("completed_embeddings") or 0)
+    retrieval_enabled = student_retrieval_is_enabled()
     degraded: list[str] = list(gate.get("blocking_issues") or [])
+    if retrieval_enabled and not preflight.get("can_evaluate"):
+        degraded.extend(preflight.get("blocking_issues") or [])
+        degraded.extend(preflight.get("warnings") or [])
     if query_volume and no_result_count / query_volume > 0.10:
         degraded.append("NO_RESULT_RATE_HIGH")
     if query_volume and low_confidence_count / query_volume > 0.25:
@@ -111,15 +137,27 @@ def build_rag_operations(db: Session, *, window_hours: int = 24) -> dict[str, An
     if missing_citation_metadata_count:
         degraded.append("CITATION_METADATA_INCOMPLETE")
     degraded = list(dict.fromkeys(degraded))
+    status = "disabled" if not retrieval_enabled else "healthy" if not degraded else "degraded"
 
     return {
-        "status": "healthy" if not degraded else "degraded",
+        "status": status,
         "window_hours": window_hours,
+        "last_updated_at": datetime.now(timezone.utc).isoformat(),
         "active_reviewed_metadata_version": active_reviewed_metadata_version() or None,
         "embedding_model": settings.gemini_embedding_model,
-        "student_retrieval_enabled": student_retrieval_is_enabled(),
+        "student_retrieval_enabled": retrieval_enabled,
         "production_gate_required": bool(settings.rag_require_production_gate),
         "production_gate_status": gate,
+        "preflight_status": str(preflight.get("status") or "unknown"),
+        "total_eligible_chunks": total_eligible_chunks,
+        "embedded_eligible_chunks": embedded_eligible_chunks,
+        "embedding_completion_rate": round(
+            embedded_eligible_chunks / total_eligible_chunks, 4
+        ) if total_eligible_chunks else 0.0,
+        "ready_chunks": int(chunk_counts.get("ready_chunks") or 0),
+        "needs_review_chunks": int(chunk_counts.get("needs_review_chunks") or 0),
+        "blocked_chunks": int(chunk_counts.get("blocked_chunks") or 0),
+        "stale_chunks": int(chunk_counts.get("stale_chunks") or 0),
         "query_volume": query_volume,
         "no_result_rate": round(no_result_count / query_volume, 4) if query_volume else 0.0,
         "low_confidence_rate": round(low_confidence_count / query_volume, 4) if query_volume else 0.0,

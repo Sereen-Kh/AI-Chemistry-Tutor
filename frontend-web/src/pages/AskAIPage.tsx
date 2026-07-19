@@ -16,6 +16,7 @@ import {
   PageHeader,
   StatusPill,
 } from '../components/DesignSystem';
+import { MarkdownAnswer } from '../components/MarkdownAnswer';
 import { savePreferences } from '../lib/storage';
 import type {
   AiAskRequest,
@@ -64,42 +65,40 @@ interface AskAiPageProps {
   setPreferences: (preferences: UserPreferences) => void;
 }
 
-const SUPPORTED_RESPONSE_FORMATS: PreferredResponseFormat[] = ['text', 'audio', 'image'];
+const ASK_AI_RESPONSE_FORMAT: PreferredResponseFormat = 'text';
 
-const responseFormatOptions: Array<{
-  value: PreferredResponseFormat;
+const answerPresetOptions: Array<{
+  id: string;
   label: string;
-  icon: string;
   description: string;
-  available: boolean;
+  teachingLevel: TeachingLevel;
+  explanationMethod: ExplanationMethod;
+  answerScope: AnswerScope;
 }> = [
-  { value: 'text', label: 'نص', icon: 'T', description: 'إجابة عربية واضحة مع المصادر.', available: true },
-  { value: 'audio', label: 'صوت', icon: 'A', description: 'إجابة صوتية مع حفظ النص.', available: true },
-  { value: 'image', label: 'صورة', icon: 'I', description: 'شرح بصري أو صفحة مصدر عند توفرها.', available: true },
-  { value: 'short_video', label: 'فيديو قصير', icon: 'V', description: 'تحويل الشرح إلى فيديو قصير.', available: false },
-  { value: 'interactive', label: 'تفاعلي', icon: 'X', description: 'تجربة تفاعلية خطوة بخطوة.', available: false },
-  { value: 'quiz', label: 'اختبار', icon: 'Q', description: 'توليد اختبار من الإجابة.', available: false },
-  { value: 'flashcards', label: 'بطاقات', icon: 'F', description: 'توليد بطاقات مراجعة.', available: false },
-];
-
-const teachingLevelLabels: Array<{ value: TeachingLevel; label: string }> = [
-  { value: 'simple', label: 'مبسط' },
-  { value: 'standard', label: 'قياسي' },
-  { value: 'academic', label: 'أكاديمي' },
-];
-
-const explanationMethodLabels: Array<{ value: ExplanationMethod; label: string }> = [
-  { value: 'direct', label: 'مباشر' },
-  { value: 'step_by_step', label: 'خطوة بخطوة' },
-  { value: 'hints_first', label: 'تلميحات أولاً' },
-  { value: 'exam_mode', label: 'نمط امتحاني' },
-  { value: 'real_life_example', label: 'مثال من الحياة' },
-];
-
-const answerScopeLabels: Array<{ value: AnswerScope; label: string }> = [
-  { value: 'auto', label: 'تلقائي' },
-  { value: 'book_only', label: 'من الكتاب فقط' },
-  { value: 'tutor_general', label: 'شرح عام عند الحاجة' },
+  {
+    id: 'quick',
+    label: 'مختصر وواضح',
+    description: 'إجابة مباشرة بلغة مبسطة',
+    teachingLevel: 'simple',
+    explanationMethod: 'direct',
+    answerScope: 'auto',
+  },
+  {
+    id: 'guided',
+    label: 'علّمني خطوة بخطوة',
+    description: 'شرح متدرج يساعدك على الفهم',
+    teachingLevel: 'standard',
+    explanationMethod: 'step_by_step',
+    answerScope: 'auto',
+  },
+  {
+    id: 'book',
+    label: 'من الكتاب فقط',
+    description: 'إجابة مقيدة بالمصادر المراجعة',
+    teachingLevel: 'standard',
+    explanationMethod: 'direct',
+    answerScope: 'book_only',
+  },
 ];
 
 const suggestedChemistryQuestions = [
@@ -138,6 +137,15 @@ const parsePositiveInt = (value: string | null): number | null => {
   return Number.isInteger(parsed) && parsed > 0 ? parsed : null;
 };
 
+const safeExternalHref = (value: string): string | null => {
+  try {
+    const url = new URL(value);
+    return url.protocol === 'http:' || url.protocol === 'https:' ? url.toString() : null;
+  } catch {
+    return null;
+  }
+};
+
 const legacyTeachingStyle = (level: TeachingLevel, method: ExplanationMethod): UserPreferences['teachingStyle'] => {
   if (method === 'real_life_example') return 'real_life';
   if (method === 'exam_mode' || level === 'academic') return 'exam';
@@ -159,9 +167,6 @@ const responseFormatToAnswerFormat = (format: PreferredResponseFormat): AnswerFo
 const responseFormatToRequestedReturnType = (format: PreferredResponseFormat): ChatRequestedReturnType => (
   format === 'audio' ? 'audio' : 'text'
 );
-
-const isSupportedResponseFormat = (format: PreferredResponseFormat): boolean =>
-  SUPPORTED_RESPONSE_FORMATS.includes(format);
 
 const isAnswerFormat = (value: string): value is AnswerFormat => (
   value === 'text' || value === 'audio' || value === 'image' || value === 'video'
@@ -191,10 +196,22 @@ const formatSessionTimestamp = (value: string): string => {
   return `منذ ${diffDays} يوم`;
 };
 
+const plainTextPreview = (value: string): string => (
+  value
+    .replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, ' ')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/[*_`#>~-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+);
+
 const mapAskAiError = (error: unknown, fallback: string): string => {
   const raw = toErrorMessage(error, fallback);
   const normalized = raw.toLowerCase();
   if (normalized.includes('field required') || normalized.includes('field_required')) return 'السؤال مطلوب';
+  if (normalized.includes('web_search_disabled')) return 'البحث في الويب غير مفعّل حالياً.';
+  if (normalized.includes('web_search_no_verifiable_sources')) return 'لم نجد مصادر ويب موثوقة لهذا السؤال.';
+  if (normalized.includes('web_search_unavailable')) return 'تعذر الوصول إلى مصادر الويب حالياً. أعد المحاولة لاحقاً.';
   if (normalized.includes('not found') || normalized.includes('404')) return 'لم يتم العثور على نتيجة';
   if (
     normalized.includes('invalid or expired token')
@@ -247,13 +264,6 @@ const bestSourceScore = (sources: SourceCitation[]): number | null => {
   return scores.length ? Math.max(...scores) : null;
 };
 
-const sourceConfidence = (sources: SourceCitation[]) => {
-  const bestScore = bestSourceScore(sources) ?? 0;
-  if (!sources.length) return { label: 'لم أجد مصدراً كافياً في الكتاب', tone: 'gold' };
-  if (bestScore >= 0.72) return { label: 'مصادر قوية', tone: 'teal' };
-  return { label: 'مصادر محدودة', tone: 'gold' };
-};
-
 const evidenceConfidenceLabel = (response: AiAskResponse): string => {
   if (response.sources.length > 0) {
     const score = bestSourceScore(response.sources);
@@ -266,19 +276,23 @@ const evidenceConfidenceLabel = (response: AiAskResponse): string => {
     : 'ثقة الإجابة غير متاحة · دون توثيق كتابي';
 };
 
+const sourceCountLabel = (count: number): string => {
+  if (count === 1) return 'مصدر واحد';
+  if (count === 2) return 'مصدران';
+  return `${count} مصادر`;
+};
+
 const AskAIHeader = ({
-  compactLabel,
   onToggleHistory,
   onNewChat,
 }: {
-  compactLabel: string;
   onToggleHistory: () => void;
   onNewChat: () => void;
 }) => (
   <PageHeader
     eyebrow="اسأل الذكاء"
-    title="معلّم الكيمياء RAG"
-    subtitle={`محادثات محفوظة بذاكرة جلسة. ${compactLabel}`}
+    title="معلّم الكيمياء"
+    subtitle="اسأل، راجع الإجابة، وافتح المصادر عند الحاجة."
     action={(
       <div className="chat-header-actions">
         <Button variant="secondary" onClick={onToggleHistory}>سجل المحادثات</Button>
@@ -288,92 +302,62 @@ const AskAIHeader = ({
   />
 );
 
-const AnswerFormatPicker = ({
-  value,
-  onChange,
-}: {
-  value: PreferredResponseFormat;
-  onChange: (format: PreferredResponseFormat) => void;
-}) => (
-  <div className="answer-format-picker" role="radiogroup" aria-label="اختيار صيغة إجابة الذكاء">
-    {responseFormatOptions.map((option) => (
-      <button
-        key={option.value}
-        type="button"
-        role="radio"
-        aria-label={`صيغة الإجابة: ${option.label}${option.available ? '' : '، قريباً'}`}
-        aria-checked={value === option.value}
-        disabled={!option.available}
-        className={[
-          'answer-format-card',
-          value === option.value ? 'active' : '',
-          option.available ? '' : 'coming-soon',
-        ].filter(Boolean).join(' ')}
-        onClick={() => {
-          if (option.available) onChange(option.value);
-        }}
-      >
-        <span className="answer-format-icon">{option.icon}</span>
-        <strong>{option.label}</strong>
-        <small>{option.description}</small>
-        {!option.available && <em>قريباً</em>}
-      </button>
-    ))}
-  </div>
-);
-
 const AnswerSettingsPopover = ({
   open,
-  selectedResponseFormat,
   teachingLevel,
   explanationMethod,
   answerScope,
-  onFormatChange,
-  onTeachingLevelChange,
-  onExplanationMethodChange,
-  onAnswerScopeChange,
+  onApplyPreset,
 }: {
   open: boolean;
-  selectedResponseFormat: PreferredResponseFormat;
   teachingLevel: TeachingLevel;
   explanationMethod: ExplanationMethod;
   answerScope: AnswerScope;
-  onFormatChange: (format: PreferredResponseFormat) => void;
-  onTeachingLevelChange: (level: TeachingLevel) => void;
-  onExplanationMethodChange: (method: ExplanationMethod) => void;
-  onAnswerScopeChange: (scope: AnswerScope) => void;
+  onApplyPreset: (
+    teachingLevel: TeachingLevel,
+    explanationMethod: ExplanationMethod,
+    answerScope: AnswerScope,
+  ) => void;
 }) => {
   if (!open) return null;
 
   return (
     <div className="answer-settings-popover">
-      <AnswerFormatPicker value={selectedResponseFormat} onChange={onFormatChange} />
-      <div className="chat-toolbar answer-settings-controls">
-        <label>
-          مستوى الشرح
-          <select value={teachingLevel} onChange={(event) => onTeachingLevelChange(event.target.value as TeachingLevel)}>
-            {teachingLevelLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-          </select>
-        </label>
-        <label>
-          طريقة الشرح
-          <select value={explanationMethod} onChange={(event) => onExplanationMethodChange(event.target.value as ExplanationMethod)}>
-            {explanationMethodLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-          </select>
-        </label>
-        <label>
-          نطاق الإجابة
-          <select value={answerScope} onChange={(event) => onAnswerScopeChange(event.target.value as AnswerScope)}>
-            {answerScopeLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-          </select>
-        </label>
+      <div className="answer-settings-intro">
+        <div>
+          <strong>كيف تريد أن يشرح لك المعلّم؟</strong>
+          <span>اختر إعداداً سريعاً أو خصّص التفاصيل بنفسك.</span>
+        </div>
+        <div className="answer-preset-row" aria-label="إعدادات شرح سريعة">
+          {answerPresetOptions.map((preset) => {
+            const active = teachingLevel === preset.teachingLevel
+              && explanationMethod === preset.explanationMethod
+              && answerScope === preset.answerScope;
+            return (
+              <button
+                key={preset.id}
+                type="button"
+                className={active ? 'answer-preset active' : 'answer-preset'}
+                aria-pressed={active}
+                onClick={() => onApplyPreset(
+                  preset.teachingLevel,
+                  preset.explanationMethod,
+                  preset.answerScope,
+                )}
+              >
+                <strong>{preset.label}</strong>
+                <small>{preset.description}</small>
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
 };
 
 const RagSourcePanel = ({ response }: { response: AiAskResponse }) => {
-  const quality = sourceConfidence(response.sources);
+  if (!response.sources.length) return null;
   const sourceTypeLabel = (sourceType?: string) => (
     sourceType === 'solution_book' ? 'كتاب الحلول' : 'كتاب الكيمياء'
   );
@@ -385,50 +369,87 @@ const RagSourcePanel = ({ response }: { response: AiAskResponse }) => {
   };
 
   return (
-    <div className="rag-source-panel">
-      <div className="rag-source-head">
-        <div>
-          <strong>المصادر من الكتاب</strong>
-          <span>{response.sources.length ? `${response.sources.length} مصدر يدعم الإجابة` : 'لا توجد مصادر كافية'}</span>
-        </div>
-        <StatusPill tone={quality.tone}>{quality.label}</StatusPill>
-      </div>
-      {response.sources.length > 0 && (
+    <details className="rag-source-panel">
+      <summary className="rag-source-summary">
+        <strong>من الكتاب · {sourceCountLabel(response.sources.length)}</strong>
+      </summary>
+      <div className="rag-source-content">
+        <span className="rag-source-confidence">{evidenceConfidenceLabel(response)}</span>
         <div className="rag-source-grid">
           {response.sources.map((source) => (
             <article key={`${source.chunk_id}-${source.page}`} className="rag-source-card">
               <strong>{sourceTypeLabel(source.source_type) || (source.title.includes('الحلول') ? 'كتاب الحلول' : 'كتاب الكيمياء')}</strong>
-              <span>{source.page ? `صفحة ${source.page}` : 'صفحة غير محددة'}</span>
-              {source.quote && <small>{source.quote}</small>}
+              <span>
+                {source.printed_page_start && source.printed_page_end && source.printed_page_end !== source.printed_page_start
+                  ? `الصفحات ${source.printed_page_start}–${source.printed_page_end}`
+                  : source.page ? `صفحة ${source.page}` : 'صفحة غير محددة'}
+              </span>
+              {source.quote && (
+                <details className="rag-source-excerpt">
+                  <summary>عرض المقتطف</summary>
+                  <blockquote dir="rtl">{source.quote}</blockquote>
+                </details>
+              )}
               {qualityLabel(source.quality_status) && <small>{qualityLabel(source.quality_status)}</small>}
+              {source.quality_status === 'needs_review' && (
+                <small className="rag-source-warning">تنبيه: يحتاج هذا المصدر إلى مراجعة بشرية.</small>
+              )}
               {typeof source.score === 'number' && <em>{Math.round(source.score * 100)}%</em>}
             </article>
           ))}
         </div>
-      )}
-    </div>
+      </div>
+    </details>
+  );
+};
+
+const ExternalSourcesPanel = ({ response }: { response: AiAskResponse }) => {
+  const sources = response.external_sources || [];
+  if (!sources.length) return null;
+
+  return (
+    <details className="rag-source-panel external-source-panel">
+      <summary className="rag-source-summary">
+        <strong>مصادر خارجية · {sourceCountLabel(sources.length)}</strong>
+      </summary>
+      <div className="rag-source-content">
+        <span className="rag-source-confidence">استُخدمت مصادر ويب لأن دليل الكتاب لم يكن كافياً.</span>
+        <div className="rag-source-grid">
+          {sources.map((source) => {
+            const safeHref = safeExternalHref(source.url);
+            return (
+              <article className="rag-source-card" key={`${source.url}-${source.start_index ?? 0}`}>
+                <strong>{source.title}</strong>
+                <span dir="ltr">{source.domain}</span>
+                {source.cited_text && <blockquote>{source.cited_text}</blockquote>}
+                {safeHref && (
+                  <a href={safeHref} target="_blank" rel="noopener noreferrer">فتح المصدر</a>
+                )}
+              </article>
+            );
+          })}
+        </div>
+      </div>
+    </details>
   );
 };
 
 const ResponseActionChips = ({
   message,
   loading,
+  allowWebSearch,
   onAskAction,
 }: {
   message: ChatItem;
   loading: boolean;
-  onAskAction: (question: string, action?: AiAskRequest['action']) => void;
+  allowWebSearch: boolean;
+  onAskAction: (question: string, action?: AiAskRequest['action'], webSearchRequested?: boolean) => void;
 }) => {
   if (!message.response) return null;
   const encodedQuestion = encodeURIComponent(message.question || message.content);
 
   return (
     <div className="answer-action-row response-action-chips">
-      <button type="button" disabled>استمع <small>قريباً</small></button>
-      <button type="button" disabled>حوّل إلى صورة <small>قريباً</small></button>
-      <button type="button" disabled>فيديو قصير <small>قريباً</small></button>
-      <Link to="/quiz" aria-label={`اختبرني عن ${message.question || 'الإجابة'}`}>اختبرني</Link>
-      <button type="button" disabled>اصنع بطاقات <small>قريباً</small></button>
       <button
         type="button"
         onClick={() => onAskAction('اشرح الإجابة السابقة بطريقة أبسط وبمثال قصير.', 'simplify_previous')}
@@ -437,6 +458,19 @@ const ResponseActionChips = ({
         بسّط الشرح
       </button>
       <Link to={`/guided-lab?problem=${encodedQuestion}`}>اشرح خطوة بخطوة</Link>
+      {allowWebSearch && message.response.sources.length === 0 && !(message.response.external_sources || []).length && (
+        <button
+          type="button"
+          onClick={() => onAskAction(message.question || message.content, undefined, true)}
+          disabled={loading}
+        >
+          ابحث في مصادر ويب
+        </button>
+      )}
+      <details className="response-more-menu">
+        <summary>المزيد</summary>
+        <Link to="/quiz" aria-label={`اختبرني عن ${message.question || 'الإجابة'}`}>اختبرني</Link>
+      </details>
     </div>
   );
 };
@@ -444,22 +478,15 @@ const ResponseActionChips = ({
 const ChatMessageBubble = ({
   message,
   loading,
+  allowWebSearch,
   onAskAction,
 }: {
   message: ChatItem;
   loading: boolean;
-  onAskAction: (question: string, action?: AiAskRequest['action']) => void;
+  allowWebSearch: boolean;
+  onAskAction: (question: string, action?: AiAskRequest['action'], webSearchRequested?: boolean) => void;
 }) => (
   <article className={`chat-bubble ${message.role}`}>
-    {message.role === 'assistant' && message.response && (
-      <div className="answer-evidence-bar">
-        <StatusPill tone={message.response.sources.length ? 'teal' : 'gold'}>
-          {sourceConfidence(message.response.sources).label}
-        </StatusPill>
-        <span>{evidenceConfidenceLabel(message.response)}</span>
-      </div>
-    )}
-
     {message.role === 'user' && (message.inputType === 'audio' || message.inputType === 'voice') && message.audioUrl && (
       <div className="chat-audio-player">
         <audio controls src={message.audioUrl} />
@@ -477,9 +504,13 @@ const ChatMessageBubble = ({
       </div>
     )}
 
-    <p>
-      <FormattedText text={(message.inputType === 'audio' || message.inputType === 'voice') && message.role === 'user' ? 'رسالة صوتية' : message.content} />
-    </p>
+    {message.role === 'assistant' ? (
+      <MarkdownAnswer text={message.content} />
+    ) : (
+      <p>
+        <FormattedText text={(message.inputType === 'audio' || message.inputType === 'voice') ? 'رسالة صوتية' : message.content} />
+      </p>
+    )}
 
     {(message.inputType === 'audio' || message.inputType === 'voice') && message.role === 'user' && (
       <div className="chat-transcript">
@@ -521,9 +552,26 @@ const ChatMessageBubble = ({
       </figure>
     )}
 
-    {message.role === 'assistant' && message.response && <RagSourcePanel response={message.response} />}
+    {message.role === 'assistant' && message.response && message.response.sources.length > 0 && (
+      <RagSourcePanel response={message.response} />
+    )}
+    {message.role === 'assistant' && message.response && (message.response.external_sources || []).length > 0 && (
+      <ExternalSourcesPanel response={message.response} />
+    )}
+    {message.role === 'assistant' && message.response
+      && message.response.sources.length === 0
+      && (message.response.external_sources || []).length === 0 && (
+      <div className="answer-evidence-bar compact-evidence">
+        <StatusPill tone="gold">دون مصدر كتابي</StatusPill>
+      </div>
+    )}
     {message.role === 'assistant' && (
-      <ResponseActionChips message={message} loading={loading} onAskAction={onAskAction} />
+      <ResponseActionChips
+        message={message}
+        loading={loading}
+        allowWebSearch={allowWebSearch}
+        onAskAction={onAskAction}
+      />
     )}
   </article>
 );
@@ -624,7 +672,6 @@ const VoiceRecorder = ({
 
 const ChatComposer = ({
   question,
-  selectedResponseFormat,
   attachment,
   attachmentMenuOpen,
   recordingState,
@@ -647,7 +694,6 @@ const ChatComposer = ({
   onEscape,
 }: {
   question: string;
-  selectedResponseFormat: PreferredResponseFormat;
   attachment: AttachmentDraft | null;
   attachmentMenuOpen: boolean;
   recordingState: RecordingState;
@@ -693,10 +739,7 @@ const ChatComposer = ({
       onChange={(event) => onSelectAttachment(event.target.files?.[0], 'file')}
     />
 
-    <div className="composer-meta-row">
-      <span className="composer-response-pill">الإجابة كـ: {preferenceLabel(selectedResponseFormat)}</span>
-      <AttachmentPreview attachment={attachment} onClear={onClearAttachment} />
-    </div>
+    <AttachmentPreview attachment={attachment} onClear={onClearAttachment} />
 
     <VoiceRecorder
       recordingState={recordingState}
@@ -772,9 +815,6 @@ export const AskAiPage = ({ preferences, setPreferences }: AskAiPageProps) => {
   const [teachingLevel, setTeachingLevel] = useState<TeachingLevel>(preferences.teachingLevel);
   const [explanationMethod, setExplanationMethod] = useState<ExplanationMethod>(preferences.explanationMethod);
   const [answerScope, setAnswerScope] = useState<AnswerScope>('auto');
-  const [selectedResponseFormat, setSelectedResponseFormat] = useState<PreferredResponseFormat>(
-    preferences.answerFormat === 'audio' || preferences.answerFormat === 'image' ? preferences.answerFormat : 'text',
-  );
   const [sessions, setSessions] = useState<ChatSessionResponse[]>([]);
   const [activeSessionId, setActiveSessionId] = useState<number | null>(null);
   const [sessionLoading, setSessionLoading] = useState(true);
@@ -821,11 +861,8 @@ export const AskAiPage = ({ preferences, setPreferences }: AskAiPageProps) => {
     queueMicrotask(() => {
       setTeachingLevel(preferences.teachingLevel);
       setExplanationMethod(preferences.explanationMethod);
-      if (preferences.answerFormat === 'audio' || preferences.answerFormat === 'image' || preferences.answerFormat === 'text') {
-        setSelectedResponseFormat(preferences.answerFormat);
-      }
     });
-  }, [preferences.answerFormat, preferences.explanationMethod, preferences.teachingLevel]);
+  }, [preferences.explanationMethod, preferences.teachingLevel]);
 
   useEffect(() => () => {
     if (recordedAudioUrl) URL.revokeObjectURL(recordedAudioUrl);
@@ -875,15 +912,6 @@ export const AskAiPage = ({ preferences, setPreferences }: AskAiPageProps) => {
       kind,
       url: kind === 'image' ? URL.createObjectURL(file) : undefined,
     });
-    setInlineError('');
-  };
-
-  const setSafeResponseFormat = (format: PreferredResponseFormat) => {
-    if (!isSupportedResponseFormat(format)) {
-      setInlineError('هذا النمط غير متاح حالياً.');
-      return;
-    }
-    setSelectedResponseFormat(format);
     setInlineError('');
   };
 
@@ -1036,7 +1064,11 @@ export const AskAiPage = ({ preferences, setPreferences }: AskAiPageProps) => {
     }
   };
 
-  const sendTextOrAttachment = async (override?: string, action?: AiAskRequest['action']) => {
+  const sendTextOrAttachment = async (
+    override?: string,
+    action?: AiAskRequest['action'],
+    webSearchRequested = false,
+  ) => {
     const typedText = (override ?? question).trim();
     const draftAttachment = attachment;
     const hasInput = Boolean(typedText || draftAttachment);
@@ -1044,11 +1076,6 @@ export const AskAiPage = ({ preferences, setPreferences }: AskAiPageProps) => {
       if (!loading) setInlineError('اكتب سؤالاً أو أرفق صورة قبل الإرسال.');
       return;
     }
-    if (!isSupportedResponseFormat(selectedResponseFormat)) {
-      setInlineError('هذا النمط غير متاح حالياً.');
-      return;
-    }
-
     const requestText = typedText || (draftAttachment?.kind === 'image' ? 'اشرح هذه الصورة في سياق الكيمياء.' : 'اشرح هذا الملف في سياق الكيمياء.');
     const displayText = typedText || (draftAttachment?.kind === 'image' ? 'صورة مرفقة' : 'ملف مرفق');
     setQuestion('');
@@ -1078,21 +1105,22 @@ export const AskAiPage = ({ preferences, setPreferences }: AskAiPageProps) => {
         sessionId = created.id;
         setMessages((current) => [...current.filter((item) => item.id !== 'welcome'), optimisticUserMessage]);
       }
-      const answerFormat = responseFormatToAnswerFormat(selectedResponseFormat);
+      const answerFormat = responseFormatToAnswerFormat(ASK_AI_RESPONSE_FORMAT);
       const assistantMessage = await aiApi.sendSessionMessage(sessionId, {
         content: requestText,
         image: draftAttachment?.kind === 'image' ? draftAttachment.file : undefined,
         file: draftAttachment?.kind === 'file' ? draftAttachment.file : undefined,
         format: answerFormat,
-        preferredResponseFormat: selectedResponseFormat,
-        requestedReturnType: responseFormatToRequestedReturnType(selectedResponseFormat),
+        preferredResponseFormat: ASK_AI_RESPONSE_FORMAT,
+        requestedReturnType: responseFormatToRequestedReturnType(ASK_AI_RESPONSE_FORMAT),
         answer_scope: answerScope,
         teaching_style: legacyTeachingStyle(teachingLevel, explanationMethod),
         teaching_level: teachingLevel,
         explanation_method: explanationMethod,
-        learning_modes: [responseFormatToLearningMode(selectedResponseFormat)],
+        learning_modes: [responseFormatToLearningMode(ASK_AI_RESPONSE_FORMAT)],
         student_interests: preferences.studentInterests,
         action,
+        webSearchRequested,
       });
       const response = messageResponseToAskResponse(assistantMessage, answerFormat);
       setMessages((current) => [
@@ -1104,7 +1132,7 @@ export const AskAiPage = ({ preferences, setPreferences }: AskAiPageProps) => {
           response,
           question: requestText,
           audioStatus: response.audio_status,
-          preferredResponseFormat: selectedResponseFormat,
+          preferredResponseFormat: ASK_AI_RESPONSE_FORMAT,
         },
       ]);
       const refreshed = await aiApi.getSession(sessionId);
@@ -1123,11 +1151,6 @@ export const AskAiPage = ({ preferences, setPreferences }: AskAiPageProps) => {
       if (!loading) setInlineError('سجّل رسالة صوتية قبل الإرسال.');
       return;
     }
-    if (!isSupportedResponseFormat(selectedResponseFormat)) {
-      setInlineError('هذا النمط غير متاح حالياً.');
-      return;
-    }
-
     setInlineError('');
     setPageError('');
     setLoading(true);
@@ -1153,19 +1176,19 @@ export const AskAiPage = ({ preferences, setPreferences }: AskAiPageProps) => {
         sessionId = created.id;
         setMessages((current) => [...current.filter((item) => item.id !== 'welcome'), optimisticUserMessage]);
       }
-      const answerFormat = responseFormatToAnswerFormat(selectedResponseFormat);
+      const answerFormat = responseFormatToAnswerFormat(ASK_AI_RESPONSE_FORMAT);
       const assistantMessage = await aiApi.sendSessionMessage(sessionId, {
         audio: recordedAudio,
         audioFilename: 'student-message.webm',
-        preferredResponseFormat: selectedResponseFormat,
-        requestedReturnType: responseFormatToRequestedReturnType(selectedResponseFormat),
+        preferredResponseFormat: ASK_AI_RESPONSE_FORMAT,
+        requestedReturnType: responseFormatToRequestedReturnType(ASK_AI_RESPONSE_FORMAT),
         language: 'ar',
         format: answerFormat,
         answer_scope: answerScope,
         teaching_style: legacyTeachingStyle(teachingLevel, explanationMethod),
         teaching_level: teachingLevel,
         explanation_method: explanationMethod,
-        learning_modes: [responseFormatToLearningMode(selectedResponseFormat)],
+        learning_modes: [responseFormatToLearningMode(ASK_AI_RESPONSE_FORMAT)],
         student_interests: preferences.studentInterests,
       });
       const response = messageResponseToAskResponse(assistantMessage, answerFormat);
@@ -1180,7 +1203,7 @@ export const AskAiPage = ({ preferences, setPreferences }: AskAiPageProps) => {
           inputType: assistantMessage.input_type,
           audioTranscript: assistantMessage.audio_transcript,
           audioStatus: assistantMessage.audio_status,
-          preferredResponseFormat: selectedResponseFormat,
+          preferredResponseFormat: ASK_AI_RESPONSE_FORMAT,
         },
       ]);
       const refreshed = await aiApi.getSession(sessionId);
@@ -1195,40 +1218,35 @@ export const AskAiPage = ({ preferences, setPreferences }: AskAiPageProps) => {
     }
   };
 
-  const saveTeachingLevel = (nextLevel: TeachingLevel) => {
+  const applyAnswerPreset = (
+    nextLevel: TeachingLevel,
+    nextMethod: ExplanationMethod,
+    nextScope: AnswerScope,
+  ) => {
     setTeachingLevel(nextLevel);
+    setExplanationMethod(nextMethod);
+    setAnswerScope(nextScope);
     const next = {
       ...preferences,
       teachingLevel: nextLevel,
-      teachingStyle: legacyTeachingStyle(nextLevel, explanationMethod),
-    };
-    setPreferences(next);
-    savePreferences(next);
-  };
-
-  const saveExplanationMethod = (nextMethod: ExplanationMethod) => {
-    setExplanationMethod(nextMethod);
-    const next = {
-      ...preferences,
       explanationMethod: nextMethod,
-      teachingStyle: legacyTeachingStyle(teachingLevel, nextMethod),
+      teachingStyle: legacyTeachingStyle(nextLevel, nextMethod),
     };
     setPreferences(next);
     savePreferences(next);
   };
 
-  const compactPreferenceLabel = [
-    preferenceLabel(teachingLevel),
-    preferenceLabel(explanationMethod),
-    `الإجابة كـ: ${preferenceLabel(selectedResponseFormat)}`,
-  ].join(' · ');
+  const activePreset = answerPresetOptions.find((preset) => (
+    preset.teachingLevel === teachingLevel
+    && preset.explanationMethod === explanationMethod
+    && preset.answerScope === answerScope
+  ));
   const activeSession = sessions.find((session) => session.id === activeSessionId);
   const activeLessonContext = routeLessonId ? `درس محدد #${routeLessonId}` : 'كل الكتاب';
 
   return (
     <div className="ask-layout">
       <AskAIHeader
-        compactLabel={compactPreferenceLabel}
         onToggleHistory={() => setHistoryOpen((open) => !open)}
         onNewChat={() => void startNewChat()}
       />
@@ -1257,7 +1275,7 @@ export const AskAiPage = ({ preferences, setPreferences }: AskAiPageProps) => {
                   >
                     <span>
                       <strong>{session.title || 'محادثة كيمياء'}</strong>
-                      <small>{lastMessage?.content || 'ابدأ بسؤال جديد'}</small>
+                      <small>{lastMessage?.content ? plainTextPreview(lastMessage.content) : 'ابدأ بسؤال جديد'}</small>
                     </span>
                     <em>{formatSessionTimestamp(session.updated_at)}</em>
                     <span
@@ -1292,37 +1310,31 @@ export const AskAiPage = ({ preferences, setPreferences }: AskAiPageProps) => {
         </aside>
 
         <Card className="chat-panel">
-          <div className="active-session-strip">
-            <span>الجلسة الحالية</span>
-            <strong>{activeSession?.title || 'محادثة جديدة'}</strong>
-            <small>{activeLessonContext} · {activeSession ? `آخر تحديث ${formatSessionTimestamp(activeSession.updated_at)}` : 'سيتم إنشاء جلسة عند إرسال أول سؤال'}</small>
-          </div>
-
-          <div className="chat-settings-summary ask-answer-summary">
-            <button
-              type="button"
-              className="answer-format-compact"
-              onClick={() => setSettingsOpen((open) => !open)}
-              aria-expanded={settingsOpen}
-            >
-              الإجابة كـ: {preferenceLabel(selectedResponseFormat)} <span>▼</span>
-            </button>
-            <span>{preferenceLabel(answerScope)}</span>
-            <Button variant="ghost" onClick={() => setSettingsOpen((open) => !open)} className="ed-btn-xs">
-              {settingsOpen ? 'إخفاء الإعدادات' : 'إعدادات الإجابة'}
-            </Button>
+          <div className="chat-context-toolbar">
+            <div className="chat-context-primary">
+              <strong>{activeSession?.title || 'محادثة جديدة'}</strong>
+              <span>{activeLessonContext}</span>
+            </div>
+            <div className="chat-context-actions">
+              <span>{activePreset?.label || preferenceLabel(explanationMethod)}</span>
+              <button
+                type="button"
+                onClick={() => setSettingsOpen((open) => !open)}
+                className="ed-btn ed-btn-ghost ed-btn-xs"
+                aria-expanded={settingsOpen}
+                aria-label="غيّر أسلوب الشرح"
+              >
+                {settingsOpen ? 'تم' : 'إعدادات'}
+              </button>
+            </div>
           </div>
 
           <AnswerSettingsPopover
             open={settingsOpen}
-            selectedResponseFormat={selectedResponseFormat}
             teachingLevel={teachingLevel}
             explanationMethod={explanationMethod}
             answerScope={answerScope}
-            onFormatChange={setSafeResponseFormat}
-            onTeachingLevelChange={saveTeachingLevel}
-            onExplanationMethodChange={saveExplanationMethod}
-            onAnswerScopeChange={setAnswerScope}
+            onApplyPreset={applyAnswerPreset}
           />
 
           {pageError && <ErrorBanner message={pageError} onRetry={() => void loadSessions()} />}
@@ -1336,7 +1348,10 @@ export const AskAiPage = ({ preferences, setPreferences }: AskAiPageProps) => {
                   key={message.id}
                   message={message}
                   loading={loading}
-                  onAskAction={(text, action) => void sendTextOrAttachment(text, action)}
+                  allowWebSearch={answerScope !== 'book_only'}
+                  onAskAction={(text, action, webSearchRequested) => (
+                    void sendTextOrAttachment(text, action, webSearchRequested)
+                  )}
                 />
               ))
             )}
@@ -1345,20 +1360,8 @@ export const AskAiPage = ({ preferences, setPreferences }: AskAiPageProps) => {
 
           <SuggestedQuestions loading={loading} onAsk={(text) => void sendTextOrAttachment(text)} />
 
-          <div className="chat-actions">
-            <Button
-              variant="secondary"
-              onClick={() => void sendTextOrAttachment('اشرح هذا بطريقة أبسط مع مثال واضح.', 'rephrase_previous')}
-              disabled={loading}
-            >
-              أعد الشرح
-            </Button>
-            <Button variant="ghost" onClick={() => setInlineError('تم تسجيل أنك فهمت هذه الإجابة في الجلسة الحالية.')}>فهمت</Button>
-          </div>
-
           <ChatComposer
             question={question}
-            selectedResponseFormat={selectedResponseFormat}
             attachment={attachment}
             attachmentMenuOpen={attachmentMenuOpen}
             recordingState={recordingState}

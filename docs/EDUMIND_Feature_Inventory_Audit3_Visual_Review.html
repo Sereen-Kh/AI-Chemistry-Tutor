@@ -1,0 +1,1000 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>EduMind Feature Inventory Audit - Visual Review v3</title>
+  <style>
+    :root {
+      --bg: #071426;
+      --bg2: #0b1b33;
+      --card: #0d1d35;
+      --card2: #091423;
+      --border: #203a63;
+      --border2: #2f5b94;
+      --text: #eef5ff;
+      --muted: #8196b8;
+      --muted2: #506682;
+      --blue: #4e87f5;
+      --teal: #00d4a8;
+      --green: #28d17c;
+      --gold: #f5a623;
+      --coral: #ff6b6b;
+      --red: #f04444;
+      --purple: #8b7fe8;
+      --shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--text);
+      background:
+        linear-gradient(rgba(47, 91, 148, 0.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(47, 91, 148, 0.055) 1px, transparent 1px),
+        var(--bg);
+      background-size: 48px 48px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+      letter-spacing: 0;
+    }
+
+    button, input, select { font: inherit; letter-spacing: 0; }
+    button, select { cursor: pointer; }
+    button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible {
+      outline: 3px solid rgba(78, 135, 245, 0.65);
+      outline-offset: 2px;
+    }
+    a { color: #9bc0ff; }
+    code {
+      color: #bcd3ff;
+      background: #07111f;
+      border: 1px solid #1a3153;
+      border-radius: 5px;
+      padding: 2px 5px;
+      overflow-wrap: anywhere;
+    }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .shell { width: min(1540px, 100%); margin: 0 auto; padding: 28px; }
+    .panel {
+      background: rgba(13, 29, 53, 0.96);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 30px;
+      border-color: var(--border2);
+      background: linear-gradient(130deg, rgba(78, 135, 245, 0.15), rgba(0, 212, 168, 0.07) 48%, rgba(139, 127, 232, 0.11));
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--teal), var(--blue), var(--purple), var(--coral));
+    }
+    .hero-top { display: flex; justify-content: space-between; gap: 24px; align-items: flex-start; }
+    .eyebrow { margin: 0 0 8px; color: #7fa9ff; font-size: 13px; font-weight: 800; text-transform: uppercase; }
+    h1 { margin: 0; max-width: 860px; font-size: clamp(30px, 5vw, 54px); line-height: 1.04; }
+    .hero-subtitle { max-width: 760px; margin: 14px 0 0; color: var(--muted); font-size: 16px; }
+    .hero-meta { display: grid; gap: 8px; justify-items: end; flex: 0 0 auto; }
+    .version, .generated {
+      padding: 7px 11px;
+      border: 1px solid var(--border2);
+      border-radius: 999px;
+      background: rgba(9, 20, 35, 0.72);
+      color: #cbdcff;
+      font-size: 12px;
+      font-weight: 750;
+    }
+    .summary-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+    .summary-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 34px;
+      padding: 6px 10px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(9, 20, 35, 0.82);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .summary-chip strong { color: var(--text); font-size: 14px; }
+
+    .evidence-banner {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-top: 16px;
+      padding: 14px 16px;
+      border: 1px solid rgba(0, 212, 168, 0.35);
+      border-radius: 12px;
+      background: rgba(0, 212, 168, 0.08);
+      color: #bfeee2;
+      font-size: 13px;
+    }
+    .evidence-dot { width: 10px; height: 10px; margin-top: 5px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 14px rgba(0, 212, 168, 0.8); flex: 0 0 auto; }
+
+    .section { margin-top: 34px; scroll-margin-top: 110px; }
+    .section-heading { display: flex; justify-content: space-between; gap: 18px; align-items: end; margin-bottom: 15px; }
+    .section-heading h2 { margin: 0; font-size: 24px; }
+    .section-heading p { margin: 5px 0 0; color: var(--muted); font-size: 14px; }
+    .result-count { color: var(--muted); font-size: 13px; white-space: nowrap; }
+
+    .stat-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
+    .stat-card {
+      min-height: 132px;
+      padding: 17px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--card);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.16);
+    }
+    .stat-card .label { color: var(--muted); font-size: 12px; font-weight: 750; text-transform: uppercase; }
+    .stat-card .value { margin-top: 14px; font-size: 33px; font-weight: 850; line-height: 1; }
+    .stat-card .note { margin-top: 9px; color: var(--muted2); font-size: 12px; }
+    .stat-card.completion .value { color: var(--teal); }
+    .stat-card.risk .value { color: var(--coral); }
+    .stat-card.backend .value { color: var(--blue); }
+    .stat-card.frontend .value { color: var(--purple); }
+    .stat-card.tests .value { color: var(--gold); }
+    .stat-card.mocks .value { color: #aab9cf; }
+
+    .toolbar {
+      position: sticky;
+      top: 10px;
+      z-index: 20;
+      display: grid;
+      grid-template-columns: minmax(230px, 2fr) repeat(4, minmax(145px, 1fr)) auto;
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid var(--border2);
+      border-radius: 14px;
+      background: rgba(9, 20, 35, 0.94);
+      box-shadow: 0 15px 42px rgba(0, 0, 0, 0.34);
+      backdrop-filter: blur(16px);
+    }
+    .control {
+      width: 100%;
+      min-height: 43px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: #07111f;
+      color: var(--text);
+      padding: 9px 11px;
+    }
+    .control::placeholder { color: var(--muted2); }
+    .button {
+      min-height: 43px;
+      border: 1px solid var(--border2);
+      border-radius: 9px;
+      background: #102746;
+      color: var(--text);
+      padding: 9px 13px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+    .button:hover { background: #17355d; border-color: var(--blue); }
+    .button.primary { background: var(--blue); border-color: var(--blue); color: #061225; }
+    .button.primary:hover { background: #6a9af7; }
+    .button.ghost { background: transparent; }
+    .button.danger { border-color: rgba(255, 107, 107, 0.5); color: #ffb5b5; }
+
+    .feature-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
+    .feature-card {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: rgba(13, 29, 53, 0.97);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.2);
+    }
+    .feature-card:hover { border-color: var(--border2); }
+    .feature-card.high-risk { border-color: rgba(255, 107, 107, 0.4); }
+    .card-top { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
+    .feature-kicker { color: var(--muted2); font-size: 12px; font-weight: 800; text-transform: uppercase; }
+    .feature-name { margin: 4px 0 10px; font-size: 21px; line-height: 1.2; }
+    .pills { display: flex; flex-wrap: wrap; gap: 7px; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 27px;
+      padding: 4px 9px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .status-complete { color: #82f0b4; background: rgba(40, 209, 124, 0.11); border-color: rgba(40, 209, 124, 0.35); }
+    .status-mostly { color: #b9b2ff; background: rgba(139, 127, 232, 0.13); border-color: rgba(139, 127, 232, 0.38); }
+    .status-partial { color: #ffc766; background: rgba(245, 166, 35, 0.12); border-color: rgba(245, 166, 35, 0.38); }
+    .status-mock { color: #c2cfe0; background: rgba(129, 150, 184, 0.12); border-color: rgba(129, 150, 184, 0.35); }
+    .status-broken { color: #ff9999; background: rgba(240, 68, 68, 0.13); border-color: rgba(240, 68, 68, 0.42); }
+    .status-missing, .status-unknown { color: #a4b2c7; background: rgba(80, 102, 130, 0.14); border-color: rgba(80, 102, 130, 0.42); }
+    .risk-high { color: #ff9b9b; background: rgba(255, 107, 107, 0.12); border-color: rgba(255, 107, 107, 0.38); }
+    .risk-medium { color: #ffd27e; background: rgba(245, 166, 35, 0.09); border-color: rgba(245, 166, 35, 0.28); }
+    .risk-low { color: #77e8d1; background: rgba(0, 212, 168, 0.09); border-color: rgba(0, 212, 168, 0.3); }
+
+    .layer-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin-top: 18px; }
+    .layer-block { min-width: 0; min-height: 108px; padding: 11px; border: 1px solid #1b3459; border-radius: 9px; background: var(--card2); }
+    .layer-label { display: block; color: var(--muted2); font-size: 10px; font-weight: 800; text-transform: uppercase; }
+    .layer-status { display: block; margin-top: 6px; color: #dbe8ff; font-size: 12px; font-weight: 800; }
+    .layer-summary { display: block; margin-top: 6px; color: var(--muted); font-size: 11px; line-height: 1.35; overflow-wrap: anywhere; }
+
+    .progress-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; margin-top: 17px; }
+    .progress-track { height: 9px; overflow: hidden; border: 1px solid #1b3459; border-radius: 999px; background: #07111f; }
+    .progress-fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--teal), var(--blue), var(--purple)); }
+    .progress-value { color: #cfe0ff; font-size: 12px; font-weight: 800; }
+    .next-action { margin: 15px 0 0; padding: 12px; border-left: 3px solid var(--blue); border-radius: 7px; background: rgba(78, 135, 245, 0.08); color: #c9dcff; font-size: 13px; }
+    .next-action strong { color: var(--text); }
+    .quick-details { margin-top: 14px; border-top: 1px solid var(--border); padding-top: 12px; }
+    .quick-details summary { color: #a9c8ff; font-size: 13px; font-weight: 750; cursor: pointer; }
+    .quick-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 12px; }
+    .quick-grid h4 { margin: 0 0 7px; font-size: 12px; color: var(--muted); text-transform: uppercase; }
+    .quick-grid ul { margin: 0; padding-left: 18px; color: #d5e3fa; font-size: 12px; }
+    .card-actions { display: flex; justify-content: flex-end; margin-top: 16px; }
+    .empty-results { grid-column: 1 / -1; padding: 34px; text-align: center; color: var(--muted); }
+
+    .risk-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+    .risk-card { padding: 16px; border: 1px solid rgba(255, 107, 107, 0.36); border-radius: 12px; background: rgba(240, 68, 68, 0.07); }
+    .risk-number { color: var(--coral); font-size: 12px; font-weight: 850; }
+    .risk-card h3 { margin: 8px 0 6px; font-size: 16px; }
+    .risk-card p { margin: 0; color: var(--muted); font-size: 12px; }
+    .risk-card button { margin-top: 14px; width: 100%; }
+
+    .roadmap { display: grid; gap: 0; overflow: hidden; }
+    .roadmap-item { display: grid; grid-template-columns: 52px minmax(0, 1fr) auto; gap: 16px; align-items: center; padding: 16px 18px; border-bottom: 1px solid var(--border); }
+    .roadmap-item:last-child { border-bottom: 0; }
+    .roadmap-index { display: grid; place-items: center; width: 36px; height: 36px; border: 1px solid var(--border2); border-radius: 50%; color: var(--teal); font-weight: 850; }
+    .roadmap-title { font-weight: 800; }
+    .roadmap-note { margin-top: 3px; color: var(--muted); font-size: 12px; }
+    .roadmap-phase { color: #9fbaf0; font-size: 11px; font-weight: 800; text-transform: uppercase; white-space: nowrap; }
+
+    .legend-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+    .legend-item { padding: 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--card2); }
+    .legend-item p { margin: 9px 0 0; color: var(--muted); font-size: 12px; }
+    footer { margin-top: 34px; padding: 22px; color: var(--muted); font-size: 12px; text-align: center; }
+
+    dialog {
+      width: min(980px, calc(100% - 32px));
+      max-height: calc(100vh - 40px);
+      padding: 0;
+      overflow: auto;
+      color: var(--text);
+      border: 1px solid var(--border2);
+      border-radius: 16px;
+      background: var(--card);
+      box-shadow: 0 28px 90px rgba(0, 0, 0, 0.65);
+    }
+    dialog::backdrop { background: rgba(1, 8, 18, 0.8); backdrop-filter: blur(5px); }
+    .modal-header { position: sticky; top: 0; z-index: 2; display: flex; justify-content: space-between; gap: 20px; padding: 20px 22px; border-bottom: 1px solid var(--border); background: rgba(13, 29, 53, 0.98); }
+    .modal-header h2 { margin: 3px 0 8px; font-size: 24px; }
+    .icon-button { width: 42px; height: 42px; padding: 0; border: 1px solid var(--border); border-radius: 50%; background: var(--card2); color: var(--text); font-size: 22px; }
+    .modal-body { padding: 22px; }
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .detail-section { padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: var(--card2); }
+    .detail-section.full { grid-column: 1 / -1; }
+    .detail-section h3 { margin: 0 0 10px; color: #bcd3ff; font-size: 14px; text-transform: uppercase; }
+    .detail-section ul { margin: 0; padding-left: 20px; color: #dce8fb; font-size: 13px; }
+    .detail-section li + li { margin-top: 7px; }
+    .prompt-preview { margin: 0; padding: 14px; overflow: auto; white-space: pre-wrap; color: #c9dcff; border: 1px solid #1b3459; border-radius: 8px; background: #06101e; font: 12px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .modal-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; margin-top: 16px; }
+    .toast { position: fixed; right: 24px; bottom: 24px; z-index: 50; max-width: 380px; padding: 12px 15px; border: 1px solid rgba(0, 212, 168, 0.45); border-radius: 9px; background: #0b2a2b; color: #d5fff5; box-shadow: var(--shadow); opacity: 0; transform: translateY(12px); pointer-events: none; transition: opacity 160ms ease, transform 160ms ease; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 1250px) {
+      .stat-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .toolbar { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .toolbar .search-wrap { grid-column: 1 / -1; }
+      .layer-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .risk-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+    @media (max-width: 850px) {
+      .shell { padding: 18px; }
+      .hero-top, .section-heading { align-items: flex-start; flex-direction: column; }
+      .hero-meta { justify-items: start; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .risk-grid, .legend-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .roadmap-item { grid-template-columns: 42px minmax(0, 1fr); }
+      .roadmap-phase { grid-column: 2; }
+    }
+    @media (max-width: 620px) {
+      .shell { padding: 12px; }
+      .hero { padding: 21px; }
+      .toolbar { position: sticky; top: 4px; grid-template-columns: 1fr 1fr; padding: 8px; }
+      .toolbar .search-wrap { grid-column: 1 / -1; }
+      .stat-grid, .risk-grid, .legend-grid, .detail-grid, .quick-grid { grid-template-columns: 1fr; }
+      .layer-grid { grid-template-columns: 1fr 1fr; }
+      .layer-block { min-height: 94px; }
+      .card-top { flex-direction: column; }
+      .card-top .button { width: 100%; }
+      .modal-header { padding: 16px; }
+      .modal-body { padding: 14px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+    }
+    @media print {
+      :root { --bg: #ffffff; --card: #ffffff; --card2: #f4f7fb; --text: #0a1730; --muted: #42536d; --muted2: #64748b; --border: #b8c4d4; --border2: #8194ad; }
+      body { background: #fff; color: #111827; }
+      .shell { width: 100%; padding: 0; }
+      .hero, .panel, .feature-card, .stat-card, .risk-card, .legend-item, .detail-section { box-shadow: none; break-inside: avoid; }
+      .toolbar, .card-actions, .modal-actions, dialog, .toast { display: none !important; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .quick-details > * { display: block; }
+      .quick-details summary { display: none; }
+      .section { margin-top: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="hero panel">
+      <div class="hero-top">
+        <div>
+          <p class="eyebrow">Technical product audit dashboard</p>
+          <h1>EduMind Feature Inventory Audit</h1>
+          <p class="hero-subtitle">Implementation status, risk review, evidence, and next-action dashboard for the Grade 9 AI Chemistry Tutor.</p>
+        </div>
+        <div class="hero-meta">
+          <span class="version">Visual Review v3</span>
+          <span class="generated">Generated 2026-07-13</span>
+        </div>
+      </div>
+      <div id="summaryChips" class="summary-chips" aria-label="Feature status summary"></div>
+      <div class="evidence-banner">
+        <span class="evidence-dot" aria-hidden="true"></span>
+        <div><strong>Source-backed audit data.</strong> Built from <code>src/docs/edumind_current_feature_audit_2026_07_10.md</code> and updated with the verified RAG embedding result in <code>reports/rag_embedding/rag_embedding_run_report.json</code>. Re-check live code before implementing a ticket because repository state can advance after this report.</div>
+      </div>
+    </header>
+
+    <section class="section" aria-labelledby="summaryTitle">
+      <div class="section-heading">
+        <div><h2 id="summaryTitle">Audit summary</h2><p>Completion and implementation pressure by technical layer.</p></div>
+      </div>
+      <div id="statGrid" class="stat-grid"></div>
+    </section>
+
+    <section class="section" aria-labelledby="featuresTitle">
+      <div class="section-heading">
+        <div><h2 id="featuresTitle">Feature review</h2><p>Search, filter, sort, inspect evidence, and copy a scoped implementation prompt.</p></div>
+        <div id="resultCount" class="result-count" aria-live="polite"></div>
+      </div>
+      <div class="toolbar" aria-label="Feature filters">
+        <div class="search-wrap">
+          <label class="sr-only" for="searchInput">Search features</label>
+          <input id="searchInput" class="control" type="search" placeholder="Search features, evidence, or next action">
+        </div>
+        <div>
+          <label class="sr-only" for="statusFilter">Filter by status</label>
+          <select id="statusFilter" class="control">
+            <option value="All">All statuses</option>
+            <option>Complete</option>
+            <option>Mostly complete</option>
+            <option>Partial</option>
+            <option>Mock-only</option>
+            <option>Broken</option>
+            <option>Missing</option>
+          </select>
+        </div>
+        <div>
+          <label class="sr-only" for="riskFilter">Filter by risk</label>
+          <select id="riskFilter" class="control">
+            <option value="All">All risks</option>
+            <option>High</option>
+            <option>Medium</option>
+            <option>Low</option>
+          </select>
+        </div>
+        <div>
+          <label class="sr-only" for="areaFilter">Filter by work area</label>
+          <select id="areaFilter" class="control">
+            <option value="All">All work areas</option>
+            <option value="backend">Backend</option>
+            <option value="db">DB</option>
+            <option value="frontend">Frontend</option>
+            <option value="tests">Tests</option>
+            <option value="docs">Docs</option>
+          </select>
+        </div>
+        <div>
+          <label class="sr-only" for="sortSelect">Sort features</label>
+          <select id="sortSelect" class="control">
+            <option value="number">Feature number</option>
+            <option value="risk">Risk</option>
+            <option value="completion">Completion</option>
+            <option value="status">Status</option>
+          </select>
+        </div>
+        <button id="expandAllButton" class="button ghost" type="button">Expand all</button>
+      </div>
+      <div id="featureGrid" class="feature-grid"></div>
+    </section>
+
+    <section class="section" aria-labelledby="riskTitle">
+      <div class="section-heading">
+        <div><h2 id="riskTitle">High-risk implementation queue</h2><p>These five flows need production proof or stronger end-to-end contracts.</p></div>
+      </div>
+      <div id="highRiskGrid" class="risk-grid"></div>
+    </section>
+
+    <section class="section" aria-labelledby="roadmapTitle">
+      <div class="section-heading">
+        <div><h2 id="roadmapTitle">Prioritized roadmap</h2><p>Recommended vertical-slice order based on learning quality and operational risk.</p></div>
+      </div>
+      <div id="roadmap" class="roadmap panel"></div>
+    </section>
+
+    <section class="section" aria-labelledby="legendTitle">
+      <div class="section-heading">
+        <div><h2 id="legendTitle">Status definitions</h2><p>Consistent classification rules used throughout this dashboard.</p></div>
+      </div>
+      <div id="legendGrid" class="legend-grid"></div>
+    </section>
+
+    <footer class="panel">
+      Generated from EduMind repository audit evidence. Statuses describe the audited snapshot, not a permanent guarantee. Verify current routes, services, migrations, frontend calls, and tests before beginning implementation.
+    </footer>
+  </main>
+
+  <dialog id="reviewDialog" aria-labelledby="modalTitle">
+    <div class="modal-header">
+      <div>
+        <div id="modalKicker" class="feature-kicker"></div>
+        <h2 id="modalTitle"></h2>
+        <div id="modalPills" class="pills"></div>
+      </div>
+      <button id="closeDialogButton" class="icon-button" type="button" aria-label="Close feature review">&times;</button>
+    </div>
+    <div id="modalBody" class="modal-body"></div>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    "use strict";
+
+    const FEATURE_AUDIT = [
+      {
+        id: 1,
+        name: "Authentication",
+        status: "Complete",
+        risk: "Low",
+        completion: 92,
+        backend: { status: "Complete", summary: "Register, login, current-user, logout, and protected-route dependencies." },
+        db: { status: "Complete", summary: "Durable User and StudentProfile records with credential hashing." },
+        frontend: { status: "Mostly complete", summary: "Login/register pages, token handling, and protected routes." },
+        tests: { status: "Partial", summary: "Backend auth-adjacent coverage; direct browser session-expiry coverage is thin." },
+        docs: { status: "Partial", summary: "Architecture is audited; password reset and expiry UX need a focused flow document." },
+        implemented: ["Registration and login forms", "Current-user endpoint", "Password hashing and token authentication", "Protected frontend routes"],
+        missing: ["Password reset/admin account UX if required for MVP", "Broader frontend tests for expired and invalid sessions"],
+        risks: ["Expired-token behavior can surface inconsistent UX if API errors are not normalized."],
+        evidence: ["src/backend/app/api/auth/routes.py:24-55", "src/backend/app/services/auth_service.py", "src/backend/app/models/user.py:18", "src/frontend-web/src/api/authApi.ts:44", "src/frontend-web/src/App.tsx:1044-1058"],
+        mocks: [],
+        nextAction: "Add route-protection regression tests and one consistent session-expiry redirect/error flow.",
+        acceptanceCriteria: ["Logged-out users cannot access protected routes", "Expired sessions clear local auth state and return to login", "Login/register and auth regression tests pass"]
+      },
+      {
+        id: 2,
+        name: "Onboarding / user preferences",
+        status: "Complete",
+        risk: "Low",
+        completion: 90,
+        backend: { status: "Complete", summary: "Profile, interests, onboarding, and tutor-preference mapping services." },
+        db: { status: "Complete", summary: "Student profiles, interest categories, and user-interest relationships." },
+        frontend: { status: "Complete", summary: "Onboarding and profile screens call real user/profile APIs." },
+        tests: { status: "Complete", summary: "Profile, onboarding, and tutor preference suites exist." },
+        docs: { status: "Mostly complete", summary: "Profile and preference flow is documented; taxonomy governance remains." },
+        implemented: ["Interest selection", "Student profile persistence", "Tutor style preferences", "Onboarding completion state"],
+        missing: ["Canonical governance for interest and preference taxonomy"],
+        risks: ["Seeded preference names can drift from frontend labels without a shared catalog."],
+        evidence: ["src/backend/app/api/student_profile.py:14-20", "src/backend/app/services/profile_service.py", "src/backend/app/models/student_profile.py:17", "src/backend/app/models/interest.py:14-30", "src/backend/tests/test_profile_onboarding_preferences.py"],
+        mocks: [],
+        nextAction: "Define and validate one canonical interest/preference taxonomy shared by seed data and frontend types.",
+        acceptanceCriteria: ["Onboarding choices persist after refresh", "Unknown preference values are rejected or mapped safely", "Profile and preference tests pass"]
+      },
+      {
+        id: 3,
+        name: "Dashboard / home",
+        status: "Partial",
+        risk: "Medium",
+        completion: 66,
+        backend: { status: "Mostly complete", summary: "Dashboard service aggregates plans, progress, weak topics, and review data." },
+        db: { status: "Mostly complete", summary: "Lesson progress, user progress, mastery, plans, quizzes, and cards exist." },
+        frontend: { status: "Mostly complete", summary: "Dashboard consumes backend aggregates and renders study indicators." },
+        tests: { status: "Partial", summary: "Contract coverage exists, but cross-feature progress semantics are under-tested." },
+        docs: { status: "Partial", summary: "No single authoritative progress definition spans every dashboard metric." },
+        implemented: ["Dashboard route", "Active plan overview", "Progress and weak-topic summaries", "Frontend dashboard page"],
+        missing: ["One authoritative progress contract", "Consistent completion semantics across plan, lessons, quizzes, and flashcards"],
+        risks: ["Different data sources can produce conflicting percentages or next-action recommendations."],
+        evidence: ["src/backend/app/api/dashboard.py:14", "src/backend/app/services/dashboard_service.py", "src/backend/app/api/progress.py:19-34", "src/frontend-web/src/api/dashboardApi.ts:51", "src/frontend-web/src/hooks/useStudyPlanProgress.ts"],
+        mocks: [],
+        nextAction: "Define one dashboard progress schema and align Study Plan, lesson progress, quiz, and flashcard calculations to it.",
+        acceptanceCriteria: ["Dashboard metrics have documented formulas", "Progress is calculated from authoritative persisted records", "Cross-feature dashboard tests cover empty, active, and completed states"]
+      },
+      {
+        id: 4,
+        name: "Study plan / lessons",
+        status: "Mostly complete",
+        risk: "Medium",
+        completion: 82,
+        backend: { status: "Mostly complete", summary: "Generate/list/update/delete/progress and lesson-completion routes work." },
+        db: { status: "Mostly complete", summary: "StudyPlan persists typed concepts inside plan_json plus lesson progress." },
+        frontend: { status: "Mostly complete", summary: "Empty/setup/active states, task views, and progress controls." },
+        tests: { status: "Mostly complete", summary: "Service and API-client tests cover core generation and progress behavior." },
+        docs: { status: "Mostly complete", summary: "Flow documentation exists; deeper JSON invariants remain to formalize." },
+        implemented: ["Plan generation from selected lessons and dates", "Persistent plan refresh", "Scheduled-task progress", "Empty, setup, and active dashboard states"],
+        missing: ["Full Pydantic validation for nested weeks/days/tasks", "Potential normalized task rows if reporting requires them", "Production curriculum completeness gate"],
+        risks: ["Weak plan_json validation can allow structurally valid but semantically incomplete plans."],
+        evidence: ["src/backend/app/api/study_plans.py:16-74", "src/backend/app/services/study_plan_service.py", "src/backend/app/models/study_plan.py:15", "src/frontend-web/src/pages/StudyPlanPage.tsx", "src/backend/tests/test_study_plan_service.py"],
+        mocks: [],
+        nextAction: "Strengthen the StudyPlan.plan_json contract with nested schemas and reject invalid generated plans before saving.",
+        acceptanceCriteria: ["Every saved plan validates weeks, days, tasks, IDs, dates, status, and estimated minutes", "No generated dashboard is shown for zero tasks", "Completing a task updates persisted progress"]
+      },
+      {
+        id: 5,
+        name: "Ask AI / RAG tutor",
+        status: "Mostly complete",
+        risk: "Medium",
+        completion: 86,
+        backend: { status: "Mostly complete", summary: "Persistent sessions, multipart messages, RAG retrieval, answer generation, and citations." },
+        db: { status: "Complete", summary: "Chat sessions/messages plus RAG query and retrieved-chunk logs." },
+        frontend: { status: "Mostly complete", summary: "Chat sessions, response format, recorder, sources, audio bubbles, and Arabic errors." },
+        tests: { status: "Mostly complete", summary: "Ask AI, chat session, audio, retrieval, and Grade 9 QA suites exist." },
+        docs: { status: "Mostly complete", summary: "RAG and chat contracts are documented; live quality gate remains operational." },
+        implemented: ["Persistent chat history", "Text and audio-input pipeline", "Reviewed source metadata and citations", "Needs-review warning contract"],
+        missing: ["Grade 9 live retrieval evaluation gate", "Backend image/file question support", "Production proof for every enabled transformation"],
+        risks: ["Answer quality depends on retrieval thresholds and the live evaluation gate, not embedding completion alone."],
+        evidence: ["src/backend/app/api/chat/routes.py:33-237", "src/backend/app/api/rag/routes.py:67-243", "src/backend/app/models/chat.py:12-76", "src/frontend-web/src/pages/AskAIPage.tsx", "src/backend/tests/test_ask_ai_pipeline.py"],
+        mocks: ["Image/video/quiz/flashcard response actions remain disabled or placeholder when no backend contract exists."],
+        nextAction: "Run and fix the Grade 9 retrieval evaluation gate, then verify grounded citations through Ask AI integration cases.",
+        acceptanceCriteria: ["Evaluation thresholds pass on reviewed cases", "Blocked/stale chunks never appear", "Every returned citation carries source, page, unit, lesson, quality, and metadata version"]
+      },
+      {
+        id: 6,
+        name: "RAG ingestion/admin tools",
+        status: "Partial",
+        risk: "High",
+        completion: 78,
+        backend: { status: "Mostly complete", summary: "Source discovery, readiness, chunk loader, re-embed, verification, eval, logs, and operations routes." },
+        db: { status: "Complete", summary: "744 reviewed chunks now have completed Gemini vector(768) embeddings in pgvector." },
+        frontend: { status: "Mostly complete", summary: "Admin sources, readiness, chunk explorer, re-embed, evaluation, and query-log pages." },
+        tests: { status: "Mostly complete", summary: "Loader, readiness, admin, hardening, evaluation, and routing suites exist." },
+        docs: { status: "Mostly complete", summary: "Production operations and embedding run reports exist." },
+        implemented: ["Canonical PDF source discovery", "Reviewed chunk eligibility and idempotent loading", "Resumable quota-safe Gemini embedding", "744/744 completed vectors", "Admin status and chunk explorer surfaces"],
+        missing: ["Passing Grade 9 retrieval evaluation gate", "Student-flow grounding QA", "Production activation, monitoring, and rollback gate"],
+        risks: ["A complete vector index does not prove retrieval relevance or safe student answers."],
+        evidence: ["src/backend/app/api/admin_rag.py", "src/backend/app/api/ingestion/routes.py", "src/backend/app/services/rag_reembed.py", "src/frontend-web/src/pages/admin/RagAdminPage.tsx", "reports/rag_embedding/rag_embedding_run_report.json"],
+        mocks: [],
+        nextAction: "Run the Grade 9 RAG retrieval evaluation gate and fix failed cases without weakening reviewed expectations.",
+        acceptanceCriteria: ["Top-5 expected printed-page hit rate meets threshold", "Blocked/stale result rate is zero", "Citation metadata completeness is 100%", "Admin shows the latest passing gate"]
+      },
+      {
+        id: 7,
+        name: "Audio chat / STT / TTS",
+        status: "Partial",
+        risk: "High",
+        completion: 68,
+        backend: { status: "Mostly complete", summary: "Provider abstraction, ElevenLabs STT/TTS, chat pipeline, validation, timeout, and local storage." },
+        db: { status: "Complete", summary: "Chat messages store input audio, transcript, grounded text answer, output audio, and statuses." },
+        frontend: { status: "Partial", summary: "Recorder and audio bubbles exist; production browser/media behavior needs proof." },
+        tests: { status: "Mostly complete", summary: "Mocked matrix, missing-key, STT failure, TTS failure, and response-shape coverage." },
+        docs: { status: "Mostly complete", summary: "Audio flow is documented, but production storage/provider QA remains." },
+        implemented: ["Audio input validation", "ElevenLabs provider interfaces", "Transcript to the same RAG pipeline", "Optional TTS from final grounded answer", "Text-preserving TTS failure behavior"],
+        missing: ["Production-like ElevenLabs end-to-end verification", "Durable authenticated media storage/URLs", "Browser recording compatibility matrix"],
+        risks: ["Provider credentials, codec support, and inaccessible media URLs can break the user flow despite passing mocked tests."],
+        evidence: ["src/backend/app/services/audio_service.py:53-179", "src/backend/app/services/audio_storage.py:15-65", "src/backend/app/services/chat_service.py", "src/frontend-web/src/pages/AskAIPage.tsx", "src/backend/tests/test_chat_audio.py"],
+        mocks: [],
+        nextAction: "Verify text-to-audio first, then voice recording/STT, using production-like storage URLs and explicit provider authorization.",
+        acceptanceCriteria: ["Text question with audio response produces a playable URL", "Audio question transcript is used for RAG", "STT failure stops before RAG", "TTS failure keeps answer text visible"]
+      },
+      {
+        id: 8,
+        name: "Flashcards",
+        status: "Mostly complete",
+        risk: "Medium",
+        completion: 84,
+        backend: { status: "Mostly complete", summary: "Generation, deck/card CRUD, due cards, progress, and spaced-review scheduling." },
+        db: { status: "Complete", summary: "Deck, card, and per-user progress/scheduling tables." },
+        frontend: { status: "Mostly complete", summary: "Generate, hint, reveal, explanation, source, rating, and feedback workflow." },
+        tests: { status: "Mostly complete", summary: "Reviewed readiness and scheduler behavior are covered." },
+        docs: { status: "Partial", summary: "Student flow is audited; educator QA workflow is not fully specified." },
+        implemented: ["Ready-only student generation", "Useful front/back/hint/explanation validation", "Source-page metadata", "Hint then reveal then rate review flow", "SM-2-like scheduling"],
+        missing: ["Admin-only deliberate generation from needs-review content", "Broader frontend review interaction coverage"],
+        risks: ["Generated quality still depends on reviewed lesson content and provider availability."],
+        evidence: ["src/backend/app/api/flashcards.py:113-299", "src/backend/app/services/flashcard_service.py", "src/backend/app/models/flashcard.py:15-89", "src/frontend-web/src/pages/FlashcardsPage.tsx", "src/backend/tests/test_flashcard_generation_readiness.py"],
+        mocks: [],
+        nextAction: "Add an educator-only QA path if needs-review cards are required; otherwise keep the public ready-only contract.",
+        acceptanceCriteria: ["Normal users cannot generate from blocked or needs-review lessons", "Every card has useful answer, hint, explanation, and source", "Ratings update the due schedule"]
+      },
+      {
+        id: 9,
+        name: "Lab tools",
+        status: "Partial",
+        risk: "Medium",
+        completion: 62,
+        backend: { status: "Partial", summary: "Guided interactive solver has sessions/steps/hints; broader tools are not all backend-backed." },
+        db: { status: "Mostly complete", summary: "Interactive session, step, answer, and misconception records exist." },
+        frontend: { status: "Partial", summary: "Guided solver UI is real; several lab utilities are local/static experiences." },
+        tests: { status: "Mostly complete", summary: "Guided solver backend and frontend tests exist." },
+        docs: { status: "Partial", summary: "Supported versus local-only lab tools need explicit product labeling." },
+        implemented: ["Guided solver sessions", "Step answers and hints", "Source citation panel", "Equation-oriented frontend tools"],
+        missing: ["Clear support matrix for each lab tool", "Backend contracts for tools that require persistence or AI", "Production disabling of unsupported actions"],
+        risks: ["Students can interpret static/local tools as validated backend simulations."],
+        evidence: ["src/backend/app/api/interactive_solver/routes.py:21-68", "src/backend/app/models/interactive_solver.py:15-134", "src/frontend-web/src/features/guided-lab/pages/GuidedLabPage.tsx", "src/frontend-web/src/pages/LabPage.tsx", "src/frontend-web/src/features/guided-lab/GuidedLab.test.tsx"],
+        mocks: ["Guided lab includes mockData for example/local states; non-backed tools must be labeled clearly."],
+        nextAction: "Publish a lab capability matrix and disable or label every tool without a complete backend/validation contract.",
+        acceptanceCriteria: ["Each visible tool is marked backend-backed or local-only", "Unsupported actions cannot call missing APIs", "Guided solver tests and source citations pass"]
+      },
+      {
+        id: 10,
+        name: "Quiz generation / submission",
+        status: "Partial",
+        risk: "High",
+        completion: 72,
+        backend: { status: "Partial", summary: "Generate, submit, history, recommendations, AI/template fallback, and readiness gates." },
+        db: { status: "Complete", summary: "Extracted questions, quiz attempts, and question attempts persist." },
+        frontend: { status: "Mostly complete", summary: "Lesson selection, generation, answering, submission, and Arabic error UX." },
+        tests: { status: "Partial", summary: "Generation readiness/fallback tests exist; scoring depth and browser flow need expansion." },
+        docs: { status: "Partial", summary: "Generation contract is documented; grading policy remains MVP-level." },
+        implemented: ["Cold-database generation fallback", "Reviewed-ready lesson gate", "Question validation", "Attempt persistence", "Quiz history and recommendations"],
+        missing: ["Arabic free-text normalization or assisted grading", "Calculation-step grading", "Clear QA lifecycle for fallback questions marked needs_review"],
+        risks: ["Exact-match grading can incorrectly reject valid Arabic answers and distort weak-topic signals."],
+        evidence: ["src/backend/app/api/quizzes.py:22-91", "src/backend/app/services/quiz_service.py", "src/backend/app/models/assessment.py:33-51", "src/frontend-web/src/api/quizzesApi.ts:139-183", "src/backend/tests/test_quiz_generation_readiness.py"],
+        mocks: [],
+        nextAction: "Harden quiz submission scoring for normalized Arabic answers and calculation explanations while preserving reviewed-ready generation gates.",
+        acceptanceCriteria: ["Ready lessons generate non-empty validated questions", "Needs-review and blocked lessons return structured Arabic errors", "Equivalent Arabic answers are graded consistently", "Real answers persist in question attempts"]
+      },
+      {
+        id: 11,
+        name: "Profile / progress",
+        status: "Partial",
+        risk: "Medium",
+        completion: 74,
+        backend: { status: "Mostly complete", summary: "Profile is mature; lesson/topic progress and achievement reads exist." },
+        db: { status: "Mostly complete", summary: "Profiles, lesson progress, user progress, mastery, and achievement storage." },
+        frontend: { status: "Mostly complete", summary: "Profile, XP/streak/badge, and progress surfaces are visible." },
+        tests: { status: "Partial", summary: "Profile is covered; progress aggregation and awarding have sparse direct tests." },
+        docs: { status: "Partial", summary: "No single event/progress model defines XP, streak, mastery, and completion." },
+        implemented: ["Student profile", "Lesson/topic progress endpoints", "XP/streak/badge display hooks", "Study Plan progress integration"],
+        missing: ["Authoritative progress semantics", "Central achievement/XP awarding engine", "Cross-feature event consistency"],
+        risks: ["Displayed achievements may imply automation that is not backed by a central awarding service."],
+        evidence: ["src/backend/app/api/progress.py:19-34", "src/backend/app/models/achievement.py:15", "src/backend/app/models/user_progress.py", "src/frontend-web/src/App.tsx:1093-1094", "src/backend/tests/test_profile_onboarding_preferences.py"],
+        mocks: [],
+        nextAction: "Define a progress event contract and either implement achievement triggers or hide automation claims for MVP.",
+        acceptanceCriteria: ["Progress updates have one documented source of truth", "XP and badges change only through tested events", "Profile totals match dashboard totals"]
+      },
+      {
+        id: 12,
+        name: "Homework solver",
+        status: "Partial",
+        risk: "High",
+        completion: 58,
+        backend: { status: "Partial", summary: "Text, upload, image, history, and detail routes with RAG/AI services." },
+        db: { status: "Complete", summary: "Homework requests and results persist." },
+        frontend: { status: "Partial", summary: "Homework page and API client exist; upload/citation/provider UX is weaker than Ask AI." },
+        tests: { status: "Partial", summary: "Multipart contract coverage exists; provider and citation QA is limited." },
+        docs: { status: "Partial", summary: "Solver flow is audited but production media and grounding behavior need a runbook." },
+        implemented: ["Text homework solve", "Image solve route", "RAG context for text questions", "History/detail storage"],
+        missing: ["Safe durable multipart storage", "Consistent reviewed citations", "Arabic provider failure mapping", "Grounding/hallucination integration QA"],
+        risks: ["Raw provider failures or weak citations can produce an untrustworthy student-facing answer."],
+        evidence: ["src/backend/app/api/homework.py:26-100", "src/backend/app/services/homework_service.py", "src/backend/app/models/homework.py:13", "src/frontend-web/src/api/homeworkApi.ts:43", "src/backend/tests/test_contract_gap_endpoints.py:106"],
+        mocks: [],
+        nextAction: "Harden multipart image upload and make homework return the same reviewed citation contract used by Ask AI.",
+        acceptanceCriteria: ["Uploaded files are validated and stored safely", "Provider failures map to safe Arabic errors", "Every grounded answer includes complete reviewed citations", "Out-of-scope questions do not invent sources"]
+      },
+      {
+        id: 13,
+        name: "Admin / monitoring",
+        status: "Partial",
+        risk: "Medium",
+        completion: 69,
+        backend: { status: "Partial", summary: "RAG sources, chunks, jobs, readiness, evaluation, query logs, and operational status routes." },
+        db: { status: "Mostly complete", summary: "Ingestion jobs/pages plus RAG query and retrieved-chunk logs." },
+        frontend: { status: "Partial", summary: "Admin sources, RAG, evaluation, re-embed, and query-log pages exist." },
+        tests: { status: "Mostly complete", summary: "Admin protection, discovery, readiness, and page rendering have focused tests." },
+        docs: { status: "Mostly complete", summary: "RAG operations are documented; wider application monitoring is not unified." },
+        implemented: ["Admin authorization", "Source and chunk status", "Embedding readiness and jobs", "RAG evaluation and query-log views"],
+        missing: ["Unified operations dashboard across providers/workers", "Alert thresholds and retention policy", "Links from metrics to exact failures across all features"],
+        risks: ["Operational failures outside RAG can still require terminal/database inspection."],
+        evidence: ["src/backend/app/api/admin_rag.py", "src/backend/app/api/ingestion/routes.py", "src/backend/app/models/rag_logging.py", "src/frontend-web/src/pages/admin/RagAdminPage.tsx", "src/frontend-web/src/api/adminRagApi.ts"],
+        mocks: [],
+        nextAction: "Complete a read-only operations view linking provider, worker, ingestion, retrieval, and evaluation failures to actionable records.",
+        acceptanceCriteria: ["Admins can identify failed jobs without terminal access", "Every metric links to filtered source/chunk/log evidence", "Viewing monitoring never triggers mutation"]
+      },
+      {
+        id: 14,
+        name: "Frontend design system",
+        status: "Mostly complete",
+        risk: "Medium",
+        completion: 76,
+        backend: { status: "Complete", summary: "Not backend-dependent; API conventions are centralized in clients." },
+        db: { status: "Complete", summary: "Not applicable to visual tokens and reusable frontend components." },
+        frontend: { status: "Mostly complete", summary: "Dark RTL EduMind language, shared shell, notifications, guide, chemistry visuals, and responsive pages." },
+        tests: { status: "Partial", summary: "Feature tests exist, but component-level accessibility and visual regression coverage is uneven." },
+        docs: { status: "Partial", summary: "Several design documents exist without one enforced token/component reference." },
+        implemented: ["Arabic-first RTL shell", "Shared dark chemistry visual language", "Responsive page layouts", "Reusable notification and study components"],
+        missing: ["Single token/component source of truth", "Accessibility regression suite", "Reduced duplication in large App.css/page implementations"],
+        risks: ["Multiple prototype/design documents can drift from the active React implementation."],
+        evidence: ["src/frontend-web/src/App.css", "src/frontend-web/src/index.css", "src/frontend-web/src/components/AvatarGuide.css", "src/frontend-web/src/components/MoleculeBackground.css", "src/frontend-web/src/components/notifications/NotificationBell.tsx"],
+        mocks: [],
+        nextAction: "Document and extract stable design tokens and high-reuse components without redesigning existing product flows.",
+        acceptanceCriteria: ["Core colors, spacing, typography, states, and focus styles are centralized", "RTL/mobile layouts remain stable", "Lint, tests, build, and accessibility checks pass"]
+      },
+      {
+        id: 15,
+        name: "Notifications / push tokens",
+        status: "Partial",
+        risk: "High",
+        completion: 70,
+        backend: { status: "Mostly complete", summary: "In-app CRUD, preferences, reminders, device tokens, FCM/Expo abstraction, and test route." },
+        db: { status: "Complete", summary: "Notifications, preferences, reminder events, and device tokens persist." },
+        frontend: { status: "Partial", summary: "Bell, unread badge, pages, settings, permission banner, push hook, and service worker." },
+        tests: { status: "Mostly complete", summary: "In-app/settings tests exist; production push delivery and click lifecycle remain limited." },
+        docs: { status: "Partial", summary: "In-app behavior is clear; deployment scheduler and provider operations need proof." },
+        implemented: ["In-app notification center", "Unread count and mark-all-read", "Notification preferences", "Push token registration", "FCM/Expo delivery abstraction"],
+        missing: ["Production FCM/Expo end-to-end delivery", "Deployment-safe scheduler cadence", "Background/cold-start click handling", "Token lifecycle cleanup proof"],
+        risks: ["Provider configuration or service-worker scope can silently prevent push while in-app notifications continue to work."],
+        evidence: ["src/backend/app/api/notifications.py:19-145", "src/backend/app/api/devices.py:15-60", "src/backend/app/services/notification_delivery_service.py:49-142", "src/frontend-web/src/hooks/usePushNotifications.ts", "src/frontend-web/public/firebase-messaging-sw.js"],
+        mocks: [],
+        nextAction: "Verify user-initiated browser push registration, backend test delivery, click routing, and mark-read behavior in a production-like environment.",
+        acceptanceCriteria: ["Permission is requested only after user action", "Valid token reaches backend and test push arrives", "Notification click opens action URL and marks it read", "Delivery failure never removes the stored in-app notification"]
+      }
+    ];
+
+    const ROADMAP = [
+      { title: "RAG ingestion/admin tools", note: "Pass retrieval evaluation and student-flow grounding gates now that 744 vectors are complete.", phase: "Learning quality" },
+      { title: "Homework solver", note: "Harden uploads, reviewed citations, and provider-safe errors.", phase: "Grounding" },
+      { title: "Quiz generation/submission", note: "Improve Arabic/free-text and calculation grading without weakening readiness gates.", phase: "Assessment" },
+      { title: "Audio TTS", note: "Prove playable production-like media URLs while preserving grounded text on failure.", phase: "Audio 1" },
+      { title: "Audio recording/STT", note: "Verify browser codecs, transcription, and transcript-to-RAG behavior.", phase: "Audio 2" },
+      { title: "Notifications in-app", note: "Confirm scheduler cadence and reminder deduplication in deployment.", phase: "Retention 1" },
+      { title: "Push tokens/service worker", note: "Prove FCM/Expo delivery, click routing, and token lifecycle.", phase: "Retention 2" },
+      { title: "UI animation/avatar polish", note: "Polish only after learning and operational flows are stable.", phase: "Polish" }
+    ];
+
+    const STATUS_DEFINITIONS = [
+      ["Complete", "Feature is implemented end-to-end with backend, DB if needed, frontend, tests, and no obvious blocking issue."],
+      ["Mostly complete", "Feature works but has minor missing pieces, weak tests, operational proof, or UX gaps."],
+      ["Partial", "Some backend/frontend pieces exist, but the feature is not complete end-to-end."],
+      ["Mock-only", "UI or API exists but real backend/data integration is missing."],
+      ["Broken", "Feature exists but has broken routes, imports, tests, build, or unusable UX."],
+      ["Missing", "No meaningful implementation was found."],
+      ["Unknown", "There is not enough verified evidence to classify the feature."]
+    ];
+
+    const AREA_KEYS = ["backend", "db", "frontend", "tests", "docs"];
+    const STATUS_PRIORITY = { "Missing": 0, "Broken": 1, "Mock-only": 2, "Partial": 3, "Mostly complete": 4, "Complete": 5, "Unknown": 6 };
+    const RISK_PRIORITY = { "High": 0, "Medium": 1, "Low": 2 };
+    let expandedAll = false;
+    let lastReviewButton = null;
+
+    const elements = {
+      summaryChips: document.getElementById("summaryChips"),
+      statGrid: document.getElementById("statGrid"),
+      featureGrid: document.getElementById("featureGrid"),
+      highRiskGrid: document.getElementById("highRiskGrid"),
+      roadmap: document.getElementById("roadmap"),
+      legendGrid: document.getElementById("legendGrid"),
+      resultCount: document.getElementById("resultCount"),
+      search: document.getElementById("searchInput"),
+      status: document.getElementById("statusFilter"),
+      risk: document.getElementById("riskFilter"),
+      area: document.getElementById("areaFilter"),
+      sort: document.getElementById("sortSelect"),
+      expand: document.getElementById("expandAllButton"),
+      dialog: document.getElementById("reviewDialog"),
+      modalKicker: document.getElementById("modalKicker"),
+      modalTitle: document.getElementById("modalTitle"),
+      modalPills: document.getElementById("modalPills"),
+      modalBody: document.getElementById("modalBody"),
+      closeDialog: document.getElementById("closeDialogButton"),
+      toast: document.getElementById("toast")
+    };
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>'"]/g, character => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", "\"": "&quot;" })[character]);
+    }
+
+    function statusClass(status) {
+      return ({
+        "Complete": "status-complete",
+        "Mostly complete": "status-mostly",
+        "Partial": "status-partial",
+        "Mock-only": "status-mock",
+        "Broken": "status-broken",
+        "Missing": "status-missing",
+        "Unknown": "status-unknown"
+      })[status] || "status-unknown";
+    }
+
+    function riskClass(risk) { return `risk-${risk.toLowerCase()}`; }
+    function needsAreaWork(feature, area) { return ["Partial", "Mock-only", "Broken", "Missing", "Unknown"].includes(feature[area].status); }
+    function listHtml(items) { return `<ul>${items.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`; }
+    function evidenceHtml(items) { return `<ul>${items.map(item => `<li><code>${escapeHtml(item)}</code></li>`).join("")}</ul>`; }
+
+    function renderSummary() {
+      const statusCounts = Object.fromEntries(["Complete", "Mostly complete", "Partial", "Mock-only", "Broken", "Missing"].map(status => [status, FEATURE_AUDIT.filter(feature => feature.status === status).length]));
+      const highRisk = FEATURE_AUDIT.filter(feature => feature.risk === "High").length;
+      const chips = [
+        ["Total features", FEATURE_AUDIT.length], ["Complete", statusCounts["Complete"]], ["Mostly complete", statusCounts["Mostly complete"]],
+        ["Partial", statusCounts["Partial"]], ["Mock-only", statusCounts["Mock-only"]], ["Broken", statusCounts["Broken"]],
+        ["Missing", statusCounts["Missing"]], ["High risk", highRisk]
+      ];
+      elements.summaryChips.innerHTML = chips.map(([label, value]) => `<span class="summary-chip"><strong>${value}</strong>${escapeHtml(label)}</span>`).join("");
+
+      const average = Math.round(FEATURE_AUDIT.reduce((sum, feature) => sum + feature.completion, 0) / FEATURE_AUDIT.length);
+      const areaCount = area => FEATURE_AUDIT.filter(feature => needsAreaWork(feature, area)).length;
+      const mockCount = FEATURE_AUDIT.filter(feature => feature.mocks.length > 0).length;
+      const stats = [
+        ["completion", "Completion", `${average}%`, "Average audited implementation score"],
+        ["risk", "High risk", highRisk, "Requires production or quality proof"],
+        ["backend", "Backend work", areaCount("backend"), "Features with partial or weaker backend layer"],
+        ["frontend", "Frontend work", areaCount("frontend"), "Features with partial or weaker frontend layer"],
+        ["tests", "Tests needed", areaCount("tests"), "Features with partial or weaker test layer"],
+        ["mocks", "Mocks/placeholders", mockCount, "Features explicitly carrying placeholder behavior"]
+      ];
+      elements.statGrid.innerHTML = stats.map(([kind, label, value, note]) => `<article class="stat-card ${kind}"><span class="label">${escapeHtml(label)}</span><div class="value">${value}</div><div class="note">${escapeHtml(note)}</div></article>`).join("");
+    }
+
+    function layerBlock(label, layer) {
+      return `<div class="layer-block"><span class="layer-label">${escapeHtml(label)}</span><span class="layer-status">${escapeHtml(layer.status)}</span><span class="layer-summary">${escapeHtml(layer.summary)}</span></div>`;
+    }
+
+    function cardHtml(feature) {
+      return `<article class="feature-card ${feature.risk === "High" ? "high-risk" : ""}">
+        <div class="card-top">
+          <div><div class="feature-kicker">Feature ${feature.id}</div><h3 class="feature-name">${escapeHtml(feature.name)}</h3><div class="pills"><span class="pill ${statusClass(feature.status)}">${escapeHtml(feature.status)}</span><span class="pill ${riskClass(feature.risk)}">${escapeHtml(feature.risk)} risk</span></div></div>
+          <button class="button review-button" type="button" data-review-id="${feature.id}">Review</button>
+        </div>
+        <div class="layer-grid">${layerBlock("Backend", feature.backend)}${layerBlock("DB", feature.db)}${layerBlock("Frontend", feature.frontend)}${layerBlock("Tests", feature.tests)}${layerBlock("Docs", feature.docs)}</div>
+        <div class="progress-row"><div class="progress-track" role="progressbar" aria-label="${escapeHtml(feature.name)} completion" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${feature.completion}"><div class="progress-fill" style="width:${feature.completion}%"></div></div><span class="progress-value">${feature.completion}%</span></div>
+        <p class="next-action"><strong>Next:</strong> ${escapeHtml(feature.nextAction)}</p>
+        <details class="quick-details" ${expandedAll ? "open" : ""}><summary>Quick evidence</summary><div class="quick-grid"><div><h4>Implemented</h4>${listHtml(feature.implemented.slice(0, 4))}</div><div><h4>Missing</h4>${listHtml(feature.missing.slice(0, 4))}</div></div></details>
+        <div class="card-actions"><button class="button primary review-button" type="button" data-review-id="${feature.id}">Open full review</button></div>
+      </article>`;
+    }
+
+    function filteredFeatures() {
+      const query = elements.search.value.trim().toLowerCase();
+      const status = elements.status.value;
+      const risk = elements.risk.value;
+      const area = elements.area.value;
+      const sort = elements.sort.value;
+      const matches = FEATURE_AUDIT.filter(feature => {
+        const searchable = [feature.name, feature.nextAction, ...feature.evidence, ...feature.implemented, ...feature.missing].join(" ").toLowerCase();
+        return (!query || searchable.includes(query)) && (status === "All" || feature.status === status) && (risk === "All" || feature.risk === risk) && (area === "All" || needsAreaWork(feature, area));
+      });
+      matches.sort((a, b) => {
+        if (sort === "risk") return RISK_PRIORITY[a.risk] - RISK_PRIORITY[b.risk] || a.id - b.id;
+        if (sort === "completion") return a.completion - b.completion || a.id - b.id;
+        if (sort === "status") return STATUS_PRIORITY[a.status] - STATUS_PRIORITY[b.status] || a.id - b.id;
+        return a.id - b.id;
+      });
+      return matches;
+    }
+
+    function renderFeatures() {
+      const features = filteredFeatures();
+      elements.resultCount.textContent = `${features.length} of ${FEATURE_AUDIT.length} features`;
+      elements.featureGrid.innerHTML = features.length ? features.map(cardHtml).join("") : `<div class="panel empty-results"><strong>No features match these filters.</strong><br>Reset one or more filters to continue.</div>`;
+      document.querySelectorAll(".review-button").forEach(button => button.addEventListener("click", () => openReview(Number(button.dataset.reviewId), button)));
+    }
+
+    function renderHighRisk() {
+      const requiredIds = [6, 7, 10, 12, 15];
+      elements.highRiskGrid.innerHTML = requiredIds.map(id => FEATURE_AUDIT.find(feature => feature.id === id)).map(feature => `<article class="risk-card"><div class="risk-number">${feature.id}. HIGH RISK</div><h3>${escapeHtml(feature.name)}</h3><p>${escapeHtml(feature.nextAction)}</p><button class="button danger risk-review" type="button" data-review-id="${feature.id}">Review risk</button></article>`).join("");
+      document.querySelectorAll(".risk-review").forEach(button => button.addEventListener("click", () => openReview(Number(button.dataset.reviewId), button)));
+    }
+
+    function renderRoadmap() {
+      elements.roadmap.innerHTML = ROADMAP.map((item, index) => `<div class="roadmap-item"><span class="roadmap-index">${index + 1}</span><div><div class="roadmap-title">${escapeHtml(item.title)}</div><div class="roadmap-note">${escapeHtml(item.note)}</div></div><span class="roadmap-phase">${escapeHtml(item.phase)}</span></div>`).join("");
+    }
+
+    function renderLegend() {
+      elements.legendGrid.innerHTML = STATUS_DEFINITIONS.map(([status, definition]) => `<article class="legend-item"><span class="pill ${statusClass(status)}">${escapeHtml(status)}</span><p>${escapeHtml(definition)}</p></article>`).join("");
+    }
+
+    function implementationPrompt(feature) {
+      const evidence = AREA_KEYS.map(area => `${area.toUpperCase()}: ${feature[area].status} - ${feature[area].summary}`).join("\n");
+      return `You are implementing one EduMind feature only:\n\nFEATURE:\n${feature.name}\n\nCURRENT STATUS:\n${feature.status}\n\nRISK:\n${feature.risk}\n\nEXISTING EVIDENCE:\n${evidence}\n\nNEXT ACTION:\n${feature.nextAction}\n\nSCOPE:\nImplement only the next vertical slice for this feature.\nDo not modify unrelated features.\nDo not rewrite the whole app.\nAdd/update backend, DB, frontend, API client/types, tests, and docs only where required.\nRun typecheck, lint, tests, and build.\nReport files changed, what was implemented, what remains missing, and quality command results.\n\nACCEPTANCE CRITERIA:\n${feature.acceptanceCriteria.map(item => `- ${item}`).join("\n")}`;
+    }
+
+    function openReview(id, trigger) {
+      const feature = FEATURE_AUDIT.find(item => item.id === id);
+      if (!feature) return;
+      lastReviewButton = trigger || null;
+      elements.modalKicker.textContent = `Feature ${feature.id} audit`;
+      elements.modalTitle.textContent = feature.name;
+      elements.modalPills.innerHTML = `<span class="pill ${statusClass(feature.status)}">${escapeHtml(feature.status)}</span><span class="pill ${riskClass(feature.risk)}">${escapeHtml(feature.risk)} risk</span><span class="pill status-mostly">${feature.completion}% complete</span>`;
+      const mockContent = feature.mocks.length ? listHtml(feature.mocks) : "<p>No explicit mock or placeholder behavior recorded for this feature.</p>";
+      elements.modalBody.innerHTML = `<div class="detail-grid">
+        <section class="detail-section"><h3>Implemented</h3>${listHtml(feature.implemented)}</section>
+        <section class="detail-section"><h3>Missing</h3>${listHtml(feature.missing)}</section>
+        <section class="detail-section"><h3>Risks</h3>${listHtml(feature.risks)}</section>
+        <section class="detail-section"><h3>Mocks / placeholders</h3>${mockContent}</section>
+        <section class="detail-section full"><h3>File evidence</h3>${evidenceHtml(feature.evidence)}</section>
+        <section class="detail-section full"><h3>Recommended next slice</h3><p>${escapeHtml(feature.nextAction)}</p></section>
+        <section class="detail-section full"><h3>Acceptance criteria</h3>${listHtml(feature.acceptanceCriteria)}</section>
+        <section class="detail-section full"><h3>Implementation prompt</h3><pre class="prompt-preview">${escapeHtml(implementationPrompt(feature))}</pre><div class="modal-actions"><button id="copyPromptButton" class="button primary" type="button">Copy implementation prompt</button><button id="printButton" class="button" type="button">Print dashboard</button></div></section>
+      </div>`;
+      document.getElementById("copyPromptButton").addEventListener("click", () => copyPrompt(feature));
+      document.getElementById("printButton").addEventListener("click", () => window.print());
+      if (typeof elements.dialog.showModal === "function") elements.dialog.showModal(); else elements.dialog.setAttribute("open", "");
+    }
+
+    async function copyPrompt(feature) {
+      const prompt = implementationPrompt(feature);
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(prompt);
+        } else {
+          const textarea = document.createElement("textarea");
+          textarea.value = prompt;
+          textarea.setAttribute("readonly", "");
+          textarea.style.position = "fixed";
+          textarea.style.opacity = "0";
+          document.body.appendChild(textarea);
+          textarea.select();
+          if (!document.execCommand("copy")) throw new Error("Copy command was rejected");
+          textarea.remove();
+        }
+        showToast(`Implementation prompt copied for ${feature.name}.`);
+      } catch (_error) {
+        showToast("Copy was blocked by the browser. Select the prompt text and copy it manually.");
+      }
+    }
+
+    function showToast(message) {
+      elements.toast.textContent = message;
+      elements.toast.classList.add("show");
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => elements.toast.classList.remove("show"), 3200);
+    }
+
+    function closeDialog() {
+      if (typeof elements.dialog.close === "function") elements.dialog.close(); else elements.dialog.removeAttribute("open");
+    }
+
+    [elements.search, elements.status, elements.risk, elements.area, elements.sort].forEach(control => control.addEventListener(control === elements.search ? "input" : "change", renderFeatures));
+    elements.expand.addEventListener("click", () => {
+      expandedAll = !expandedAll;
+      document.querySelectorAll(".quick-details").forEach(details => { details.open = expandedAll; });
+      elements.expand.textContent = expandedAll ? "Collapse all" : "Expand all";
+    });
+    elements.closeDialog.addEventListener("click", closeDialog);
+    elements.dialog.addEventListener("click", event => { if (event.target === elements.dialog) closeDialog(); });
+    elements.dialog.addEventListener("close", () => { if (lastReviewButton) lastReviewButton.focus(); });
+
+    renderSummary();
+    renderFeatures();
+    renderHighRisk();
+    renderRoadmap();
+    renderLegend();
+  </script>
+</body>
+</html>

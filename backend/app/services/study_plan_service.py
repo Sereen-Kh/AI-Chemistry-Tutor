@@ -796,20 +796,38 @@ async def get_study_plan_progress(db: AsyncSession, plan_id: int, user_id: int) 
     )
 
 
-async def complete_study_plan_lesson(db: AsyncSession, plan_id: int, user_id: int, lesson_id: int) -> StudyPlan:
-    plan = await get_study_plan(db, plan_id, user_id)
-    metadata = deepcopy(plan.plan_json) if isinstance(plan.plan_json, dict) else {}
-    planned_lesson_ids = set(_scheduled_lesson_ids(metadata))
+def study_plan_lesson_ids(plan: StudyPlan) -> set[int]:
+    """Return every lesson referenced by the persisted plan document."""
+
+    metadata = plan.plan_json if isinstance(plan.plan_json, dict) else {}
+    lesson_ids = set(_scheduled_lesson_ids(metadata))
     chapters = metadata.get("chapters") if isinstance(metadata.get("chapters"), list) else []
     for chapter in chapters:
         lessons = chapter.get("lessons") if isinstance(chapter, dict) else []
         if not isinstance(lessons, list):
             continue
         for lesson in lessons:
-            if isinstance(lesson, dict):
-                lesson_id_from_chapter = _as_int(lesson.get("id"))
-                if lesson_id_from_chapter:
-                    planned_lesson_ids.add(lesson_id_from_chapter)
+            if not isinstance(lesson, dict):
+                continue
+            lesson_id = _as_int(lesson.get("id"))
+            if lesson_id:
+                lesson_ids.add(lesson_id)
+    return lesson_ids
+
+
+async def complete_study_plan_lesson(
+    db: AsyncSession,
+    plan_id: int,
+    user_id: int,
+    lesson_id: int,
+    *,
+    completed_at: datetime | None = None,
+    commit: bool = True,
+) -> StudyPlan:
+    plan = await get_study_plan(db, plan_id, user_id)
+    metadata = deepcopy(plan.plan_json) if isinstance(plan.plan_json, dict) else {}
+    planned_lesson_ids = study_plan_lesson_ids(plan)
+    chapters = metadata.get("chapters") if isinstance(metadata.get("chapters"), list) else []
     if planned_lesson_ids and int(lesson_id) not in planned_lesson_ids:
         raise HTTPException(status_code=422, detail="Lesson is not part of this study plan")
 
@@ -820,7 +838,7 @@ async def complete_study_plan_lesson(db: AsyncSession, plan_id: int, user_id: in
     next_current = None
     total = 0
     done = 0
-    completed_at = datetime.now(timezone.utc)
+    completed_at = completed_at or datetime.now(timezone.utc)
     for chapter in chapters:
         lessons = chapter.get("lessons") if isinstance(chapter, dict) else []
         if not isinstance(lessons, list):
@@ -896,8 +914,11 @@ async def complete_study_plan_lesson(db: AsyncSession, plan_id: int, user_id: in
         progress.status = "completed"
         progress.completed_at = completed_at
 
-    await db.commit()
-    await db.refresh(plan)
+    if commit:
+        await db.commit()
+        await db.refresh(plan)
+    else:
+        await db.flush()
     return plan
 
 async def delete_study_plan(db: AsyncSession, plan_id: int, user_id: int) -> None:

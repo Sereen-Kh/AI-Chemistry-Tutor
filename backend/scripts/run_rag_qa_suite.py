@@ -42,6 +42,20 @@ from scripts.rag_qa_harness import (  # noqa: E402
 logging.getLogger("app.main").setLevel(logging.WARNING)
 logging.getLogger("httpx").setLevel(logging.WARNING)
 
+RETRIEVAL_FAILURE = "RETRIEVAL_FAILURE"
+GENERATION_FAILURE = "GENERATION_FAILURE"
+MISSING_CITATION = "MISSING_CITATION"
+INCOMPLETE_CITATION_METADATA = "INCOMPLETE_CITATION_METADATA"
+BLOCKED_OR_STALE_CITATION = "BLOCKED_OR_STALE_CITATION"
+REVIEWED_VERSION_MISMATCH = "REVIEWED_VERSION_MISMATCH"
+UNGROUNDED_ANSWER = "UNGROUNDED_ANSWER"
+CONFIDENCE_CONTRACT_FAILURE = "CONFIDENCE_CONTRACT_FAILURE"
+OUT_OF_SCOPE_HALLUCINATION = "OUT_OF_SCOPE_HALLUCINATION"
+
+
+def _failure(code: str, stage: str, detail: str) -> dict[str, str]:
+    return {"code": code, "stage": stage, "detail": detail}
+
 
 def _endpoint_payload(endpoint: str, case: dict[str, Any]) -> tuple[str, dict[str, Any]]:
     if endpoint == "rag/retrieve":
@@ -97,10 +111,16 @@ def _citation_value(source: dict[str, Any], field: str) -> Any:
     metadata = source.get("curriculum_metadata") if isinstance(source.get("curriculum_metadata"), dict) else {}
     if field == "chunk_id":
         return source.get("id") if source.get("id") is not None else source.get("chunk_id")
-    if field == "printed_page":
+    if field == "printed_page_start":
         return (
             source.get("printed_page_start")
             or metadata.get("printed_page_start")
+            or source.get("page_number")
+        )
+    if field == "printed_page_end":
+        return (
+            source.get("printed_page_end")
+            or metadata.get("printed_page_end")
             or source.get("page_number")
         )
     if field == "score":
@@ -108,13 +128,14 @@ def _citation_value(source: dict[str, Any], field: str) -> Any:
     return source.get(field) if source.get(field) is not None else metadata.get(field)
 
 
-def _citation_issues(sources: list[dict[str, Any]]) -> list[str]:
-    issues: list[str] = []
+def _citation_issues(sources: list[dict[str, Any]]) -> list[dict[str, str]]:
+    issues: list[dict[str, str]] = []
     required = (
         "chunk_id",
         "source_id",
         "source_type",
-        "printed_page",
+        "printed_page_start",
+        "printed_page_end",
         "unit_id",
         "lesson_id",
         "score",
@@ -124,15 +145,35 @@ def _citation_issues(sources: list[dict[str, Any]]) -> list[str]:
     for source in sources:
         missing = [field for field in required if _citation_value(source, field) in (None, "", [])]
         if missing:
-            issues.append(f"missing metadata: {missing}")
+            issues.append(
+                _failure(
+                    INCOMPLETE_CITATION_METADATA,
+                    "citation",
+                    f"Missing citation metadata: {missing}",
+                )
+            )
         quality = str(_citation_value(source, "quality_status") or "")
         metadata = source.get("curriculum_metadata") if isinstance(source.get("curriculum_metadata"), dict) else {}
         if quality == "blocked" or metadata.get("stale") is True:
-            issues.append("blocked or stale citation")
+            issues.append(
+                _failure(BLOCKED_OR_STALE_CITATION, "safety", "Blocked or stale citation")
+            )
         if _citation_value(source, "reviewed_metadata_version") != active_reviewed_metadata_version():
-            issues.append("reviewed metadata version mismatch")
+            issues.append(
+                _failure(
+                    REVIEWED_VERSION_MISMATCH,
+                    "citation",
+                    "Reviewed metadata version mismatch",
+                )
+            )
         if quality == "needs_review" and not source.get("quality_warning"):
-            issues.append("needs_review citation missing warning")
+            issues.append(
+                _failure(
+                    INCOMPLETE_CITATION_METADATA,
+                    "citation",
+                    "needs_review citation missing warning",
+                )
+            )
     return issues
 
 
@@ -143,28 +184,73 @@ def _evaluate_endpoint(case: dict[str, Any], endpoint: str, payload: dict[str, A
 
     forbidden_hits = present_terms(answer, case["forbidden_keywords"])
     if forbidden_hits:
-        failures.append({"stage": "hallucination_guard", "detail": f"Forbidden terms present: {forbidden_hits}"})
+        failures.append(
+            _failure(
+                OUT_OF_SCOPE_HALLUCINATION if case["expected_behavior"] == "out_of_scope" else UNGROUNDED_ANSWER,
+                "hallucination_guard",
+                f"Forbidden terms present: {forbidden_hits}",
+            )
+        )
 
     if case["expected_behavior"] == "out_of_scope":
         if sources:
-            failures.append({"stage": "hallucination_guard", "detail": "Out-of-scope case returned source citations"})
+            failures.append(
+                _failure(
+                    OUT_OF_SCOPE_HALLUCINATION,
+                    "hallucination_guard",
+                    "Out-of-scope case returned source citations",
+                )
+            )
         if _confidence(endpoint, payload) > 0.25:
-            failures.append({"stage": "confidence", "detail": "Out-of-scope confidence is too high"})
+            failures.append(
+                _failure(
+                    CONFIDENCE_CONTRACT_FAILURE,
+                    "confidence",
+                    "Out-of-scope confidence is too high",
+                )
+            )
         if endpoint != "rag/retrieve" and not (contains_term(answer, "لم أجد") or contains_term(answer, "غير كاف")):
-            failures.append({"stage": "generation", "detail": "Out-of-scope answer did not state insufficient context"})
+            failures.append(
+                _failure(
+                    OUT_OF_SCOPE_HALLUCINATION,
+                    "generation",
+                    "Out-of-scope answer did not state insufficient context",
+                )
+            )
     else:
+        if not sources:
+            failures.append(_failure(MISSING_CITATION, "citation", "Answerable response has no citation"))
         missing_keywords = missing_terms(answer, case["expected_answer_keywords"])
         if missing_keywords:
-            failures.append({"stage": "generation", "detail": f"Missing expected keywords: {missing_keywords}"})
+            failures.append(
+                _failure(
+                    GENERATION_FAILURE,
+                    "generation",
+                    f"Missing expected keywords: {missing_keywords}",
+                )
+            )
         missing_topics = missing_terms(answer, case["expected_source_topics"])
         if endpoint == "rag/retrieve" and missing_topics:
-            failures.append({"stage": "retrieval", "detail": f"Missing expected source topics: {missing_topics}"})
-        citation_issues = _citation_issues(sources)
-        for issue in citation_issues:
-            stage = "safety" if issue == "blocked or stale citation" else "citation"
-            failures.append({"stage": stage, "detail": issue})
+            failures.append(
+                _failure(
+                    RETRIEVAL_FAILURE,
+                    "retrieval",
+                    f"Missing expected source topics: {missing_topics}",
+                )
+            )
+        failures.extend(_citation_issues(sources))
         if _confidence(endpoint, payload) < float(case["min_confidence"]):
-            failures.append({"stage": "confidence", "detail": "Confidence below expected minimum"})
+            failures.append(
+                _failure(
+                    CONFIDENCE_CONTRACT_FAILURE,
+                    "confidence",
+                    "Confidence below expected minimum",
+                )
+            )
+
+    citation_issue_sources = sum(
+        bool(_citation_issues([source])) for source in sources
+    )
 
     return {
         "case_id": case["id"],
@@ -174,7 +260,10 @@ def _evaluate_endpoint(case: dict[str, Any], endpoint: str, payload: dict[str, A
         "expected_behavior": case["expected_behavior"],
         "passed": not failures,
         "failures": failures,
+        "failure_codes": sorted({failure["code"] for failure in failures}),
         "confidence": _confidence(endpoint, payload),
+        "citation_count": len(sources),
+        "complete_citation_count": max(0, len(sources) - citation_issue_sources),
         "expected_answer_keywords": case["expected_answer_keywords"],
         "actual_answer": answer[:1000],
         "retrieved_chunk_previews": chunk_previews(sources),
@@ -242,26 +331,23 @@ def run_suite(cases: list[dict[str, Any]], *, mode: str) -> dict[str, Any]:
 
     answerable_results = [result for result in results if result.get("expected_behavior") == "answerable"]
     out_of_scope_results = [result for result in results if result.get("expected_behavior") == "out_of_scope"]
-    citation_failures = sum(
-        1 for result in answerable_results for failure in result.get("failures", []) if failure.get("stage") == "citation"
-    )
+    citation_denominator = sum(max(1, int(result.get("citation_count") or 0)) for result in answerable_results)
+    complete_citations = sum(int(result.get("complete_citation_count") or 0) for result in answerable_results)
     safety_failures = sum(
         1
         for result in results
         for failure in result.get("failures", [])
-        if failure.get("stage") in {"hallucination_guard", "safety"}
+        if failure.get("code") in {OUT_OF_SCOPE_HALLUCINATION, BLOCKED_OR_STALE_CITATION}
     )
     blocked_stale_citations = sum(
         1
         for result in results
         for failure in result.get("failures", [])
-        if failure.get("detail") == "blocked or stale citation"
+        if failure.get("code") == BLOCKED_OR_STALE_CITATION
     )
     out_of_scope_passed = sum(result.get("passed") is True for result in out_of_scope_results)
     pass_rate = round(passed / total, 4) if total else 0.0
-    citation_completeness = round(
-        (len(answerable_results) - citation_failures) / max(len(answerable_results), 1), 4
-    )
+    citation_completeness = round(complete_citations / max(citation_denominator, 1), 4)
     out_of_scope_safety = round(out_of_scope_passed / max(len(out_of_scope_results), 1), 4)
     thresholds = {
         "overall_pass_rate": 1.0 if mode == "unit" else 0.90,

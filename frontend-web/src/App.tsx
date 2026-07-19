@@ -1,11 +1,10 @@
-import { useEffect, useState, lazy, Suspense } from 'react';
+import { useCallback, useEffect, useState, lazy, Suspense } from 'react';
 import type { FormEvent, ReactElement } from 'react';
 import { Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import {
 	  AUTH_EXPIRED_EVENT,
 	  AUTH_EXPIRED_MESSAGE,
 	  authApi,
-	  dashboardApi,
 	  labApi,
 	  notificationsApi,
 	  preferencesFromProfile,
@@ -13,6 +12,7 @@ import {
 	  userApi,
 	} from './api';
 import { ChemistryFlask } from './components/ChemistryFlask';
+import { InterestSelector } from './components/InterestSelector';
 import { MoleculeBackground } from './components/MoleculeBackground';
 import {
   AppShell,
@@ -24,13 +24,12 @@ import {
   LoadingSkeleton,
   PageHeader,
   ProgressBar,
-  RecommendationCard,
   StatusPill,
-  StudyMissionCard,
 } from './components/DesignSystem';
 import { clearToken, getToken, loadPreferences, savePreferences } from './lib/storage';
 import { isUserOnboardingComplete } from './lib/onboarding';
 import { AskAiPage } from './pages/AskAIPage';
+import { DashboardPage } from './pages/DashboardPage';
 import { LessonsPage, RagSearchPage } from './pages/LearningPages';
 
 const QuizzesPage = lazy(() => import('./pages/QuizzesPage').then(module => ({ default: module.QuizzesPage })));
@@ -81,39 +80,6 @@ const explanationMethodLabels: Array<{ value: ExplanationMethod; label: string }
   { value: 'real_life_example', label: 'مثال من الحياة' },
 ];
 
-const studentInterestOptions: Array<{ value: StudentInterest; label: string; icon: string }> = [
-  { value: 'football', label: 'كرة القدم', icon: 'FB' },
-  { value: 'cars', label: 'السيارات', icon: 'CAR' },
-  { value: 'cooking', label: 'الطبخ', icon: 'CK' },
-  { value: 'gaming', label: 'الألعاب', icon: 'GM' },
-  { value: 'daily_life', label: 'الحياة اليومية', icon: 'DL' },
-  { value: 'laboratory', label: 'المختبر', icon: 'LAB' },
-  { value: 'nature', label: 'الطبيعة', icon: 'NAT' },
-];
-
-const preferenceLabel = (value: string): string =>
-  ({
-    simple: 'مبسط',
-    standard: 'قياسي',
-    academic: 'أكاديمي',
-    direct: 'مباشر',
-    step_by_step: 'خطوة بخطوة',
-    hints_first: 'تلميحات أولاً',
-    exam_mode: 'نمط امتحاني',
-    real_life_example: 'مثال من الحياة',
-    text: 'نص',
-    audio: 'صوت',
-    image: 'صورة',
-    video: 'فيديو قصير',
-    reel: 'فيديو قصير',
-    interactive: 'تفاعلي',
-    quiz: 'اختبار',
-    flashcards: 'بطاقات',
-    auto: 'تلقائي',
-    book_only: 'من الكتاب فقط',
-    tutor_general: 'شرح عام عند الحاجة',
-  })[value] ?? value;
-
 const primaryAnswerFormat = (modes: LearningMode[]): AnswerFormat => {
   if (modes.includes('video') || modes.includes('reel')) return 'video';
   if (modes.includes('image')) return 'image';
@@ -153,6 +119,7 @@ const preferencesFromUser = (user: UserProfile, current: UserPreferences): UserP
 	    answerFormat: primaryAnswerFormat(learningModes),
 	    goals: user.goals ?? current.goals,
 	    targetExamDate: user.target_exam_date ?? current.targetExamDate,
+	    learningMemoryEnabled: user.learning_memory_enabled ?? current.learningMemoryEnabled,
 	  };
 	};
 
@@ -325,7 +292,7 @@ const RegisterPage = ({ onRegistered }: { onRegistered: () => Promise<UserProfil
   );
 };
 
-const OnboardingPage = ({
+export const OnboardingPage = ({
   preferences,
   onSave,
 }: {
@@ -335,299 +302,111 @@ const OnboardingPage = ({
   const navigate = useNavigate();
   const [backendInterests, setBackendInterests] = useState<InterestCategory[]>([]);
   const [selected, setSelected] = useState<StudentInterest[]>(preferences.studentInterests);
-  const [teachingLevel, setTeachingLevel] = useState<TeachingLevel>(preferences.teachingLevel);
-  const [explanationMethod, setExplanationMethod] = useState<ExplanationMethod>(preferences.explanationMethod);
-  const [learningModes, setLearningModes] = useState<LearningMode[]>(preferences.learningModes);
-  const [language, setLanguage] = useState<UserPreferences['language']>(preferences.language);
-  const [goals, setGoals] = useState(preferences.goals || '');
-  const [targetExamDate, setTargetExamDate] = useState(preferences.targetExamDate || '');
-  const [error, setError] = useState('');
+  const [catalogError, setCatalogError] = useState('');
+  const [validationError, setValidationError] = useState('');
   const [interestsLoading, setInterestsLoading] = useState(true);
   const [loading, setLoading] = useState(false);
+
+  const loadInterestCatalog = useCallback(async (cancelled?: () => boolean) => {
+    setInterestsLoading(true);
+    setCatalogError('');
+    try {
+      const items = await authApi.interests();
+      if (cancelled?.()) return;
+      setBackendInterests(items);
+      if (!items.length) setCatalogError('لا توجد اهتمامات متاحة حالياً.');
+    } catch (err) {
+      if (cancelled?.()) return;
+      setBackendInterests([]);
+      setCatalogError(toErrorMessage(err, 'تعذر تحميل الاهتمامات من الخادم.'));
+    } finally {
+      if (!cancelled?.()) setInterestsLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
     queueMicrotask(() => {
-      setInterestsLoading(true);
-      authApi.interests()
-        .then((items) => {
-          if (!cancelled) {
-            setBackendInterests(items);
-            setError('');
-          }
-        })
-        .catch((err) => {
-          if (!cancelled) setError(toErrorMessage(err, 'تعذر تحميل الاهتمامات من الخادم.'));
-        })
-        .finally(() => {
-          if (!cancelled) setInterestsLoading(false);
-        });
+      void loadInterestCatalog(() => cancelled);
     });
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [loadInterestCatalog]);
 
   const toggle = (key: StudentInterest) => {
-    setSelected((current) => (current.includes(key) ? current.filter((item) => item !== key) : [...current, key]));
+    if (selected.includes(key)) {
+      setSelected(selected.filter((item) => item !== key));
+      setValidationError('');
+      return;
+    }
+    if (selected.length >= 3) {
+      setValidationError('يمكنك اختيار ثلاثة اهتمامات كحد أقصى.');
+      return;
+    }
+    setSelected([...selected, key]);
+    setValidationError('');
   };
 
   const save = async () => {
-    const normalizedLearningModes = normalizeModes(learningModes);
     if (selected.length === 0) {
-      setError('اختر اهتماماً واحداً على الأقل حتى نخصص الأمثلة لك.');
-      return;
-    }
-    if (normalizedLearningModes.length === 0) {
-      setError('اختر نمط تعلم واحداً على الأقل.');
+      setValidationError('اختر اهتماماً واحداً على الأقل حتى نخصص الأمثلة لك.');
       return;
     }
     const next: UserPreferences = {
       ...preferences,
       interests: selected,
       studentInterests: selected,
-      teachingLevel,
-      explanationMethod,
-      learningModes: normalizedLearningModes,
-      teachingStyle: legacyTeachingStyle(teachingLevel, explanationMethod),
-      answerFormat: primaryAnswerFormat(normalizedLearningModes),
-      language,
-      goals,
-      targetExamDate,
     };
     setLoading(true);
-    setError('');
+    setValidationError('');
     try {
-      const ids = backendInterests.filter((interest) => selected.includes(interest.key as StudentInterest)).map((interest) => interest.id);
-      const user = await authApi.completeOnboarding(next, ids);
+      const user = await authApi.completeOnboarding(next);
       onSave(next, user);
       navigate('/', { replace: true });
     } catch (err) {
-      setError(toErrorMessage(err, 'تعذر حفظ التفضيلات في الخادم.'));
+      setValidationError(toErrorMessage(err, 'تعذر حفظ الاهتمامات في الخادم.'));
     } finally {
       setLoading(false);
     }
   };
 
-  const options = backendInterests.length
-    ? backendInterests.map((interest) => ({
-        value: interest.key as StudentInterest,
-        label: interest.name_ar,
-        icon: interest.icon || interest.key.slice(0, 2).toUpperCase(),
-      }))
-    : studentInterestOptions;
-
   return (
     <main className="onboarding-page">
-      <Card className="onboarding-card">
+      <Card className="onboarding-card interest-onboarding-card">
         <PageHeader
           eyebrow="التخصيص"
-          title="اختر كيف تريد أن يشرح EduMind"
-          subtitle="هذه التفضيلات تضبط الأمثلة وصيغة الإجابة واقتراحات المراجعة."
+          title="ما الذي تحبّه؟"
+          subtitle="اختر من اهتمام واحد إلى ثلاثة اهتمامات، وسنستخدمها لتقديم أمثلة أقرب إليك."
         />
-        {error && <ErrorBanner message={error} />}
-        {interestsLoading && <LoadingSkeleton rows={2} />}
-        <div className="interest-grid">
-          {options.map((interest) => (
-            <button
-              key={interest.value}
-              type="button"
-              className={selected.includes(interest.value) ? 'interest active' : 'interest'}
-              onClick={() => toggle(interest.value)}
-            >
-              <span>{interest.icon}</span>
-              <strong>{interest.label}</strong>
-            </button>
-          ))}
-        </div>
-        <div className="preference-row">
-          <label>
-            مستوى الشرح
-            <select value={teachingLevel} onChange={(event) => setTeachingLevel(event.target.value as TeachingLevel)}>
-              {teachingLevelLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-            </select>
-          </label>
-          <label>
-            طريقة الشرح
-            <select value={explanationMethod} onChange={(event) => setExplanationMethod(event.target.value as ExplanationMethod)}>
-              {explanationMethodLabels.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-            </select>
-          </label>
-        </div>
-        <div className="preference-stack">
-          <span>أنماط التعلم</span>
-          <LearningModeSelector value={learningModes} onChange={(modes) => setLearningModes(normalizeModes(modes))} />
-        </div>
-        <div className="preference-row">
-          <label>
-            اللغة
-            <select value={language} onChange={(event) => setLanguage(event.target.value as UserPreferences['language'])}>
-              <option value="ar">العربية</option>
-              <option value="en">English</option>
-            </select>
-          </label>
-          <label>
-            تاريخ الامتحان الهدف
-            <input type="date" value={targetExamDate} onChange={(event) => setTargetExamDate(event.target.value)} />
-          </label>
-        </div>
-        <label>
-          هدفك الدراسي
-          <textarea
-            value={goals}
-            onChange={(event) => setGoals(event.target.value)}
-            placeholder="مثلاً: أريد تقوية مسائل التركيز قبل الامتحان."
+        {catalogError && (
+          <ErrorBanner
+            message={catalogError}
+            onRetry={() => void loadInterestCatalog()}
           />
-        </label>
-        <Button onClick={save} disabled={loading || interestsLoading}>{loading ? 'جار الحفظ...' : 'المتابعة إلى الرئيسية'}</Button>
+        )}
+        {interestsLoading && <LoadingSkeleton rows={2} />}
+        {!interestsLoading && backendInterests.length > 0 && (
+          <InterestSelector
+            interests={backendInterests}
+            selected={selected}
+            onToggle={toggle}
+            disabled={loading}
+          />
+        )}
+        <div className="interest-selection-footer">
+          <span>{selected.length} من 3 محددة</span>
+          <small>يمكنك تعديل اختياراتك لاحقاً من الملف الشخصي.</small>
+        </div>
+        {validationError && <p className="interest-inline-error" role="alert">{validationError}</p>}
+        <Button
+          onClick={save}
+          disabled={loading || interestsLoading || Boolean(catalogError) || selected.length === 0}
+        >
+          {loading ? 'جار الحفظ...' : 'ابدأ التعلّم'}
+        </Button>
       </Card>
     </main>
-  );
-};
-
-const DashboardPage = ({ user, preferences }: { user: UserProfile; preferences: UserPreferences }) => {
-  const [dashboard, setDashboard] = useState<Awaited<ReturnType<typeof dashboardApi.getDashboard>> | null>(null);
-  const [dashboardError, setDashboardError] = useState('');
-
-  useEffect(() => {
-    let cancelled = false;
-    dashboardApi.getDashboard()
-      .then((data) => {
-        if (!cancelled) {
-          setDashboard(data);
-          setDashboardError('');
-        }
-      })
-      .catch((error) => {
-        if (!cancelled) {
-          setDashboardError(toErrorMessage(error, 'تعذر تحميل بيانات لوحة التعلم، لذلك نعرض قيماً تجريبية مؤقتاً.'));
-        }
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  const continueLesson = {
-    title: dashboard?.continue_lesson?.title_ar || 'الحموض والأسس في المحاليل المائية',
-    progress: dashboard?.continue_lesson?.progress ?? 62,
-    duration: dashboard?.continue_lesson?.duration_min ?? 18,
-  };
-  const weakTopics = dashboard?.weak_topics.length
-    ? dashboard.weak_topics.map((topic) => topic.title_ar)
-    : ['الحموض الضعيفة', 'تحويل mL إلى L', 'موازنة المعادلات'];
-  const dueFlashcards = dashboard?.due_flashcards.due_count ?? 14;
-  const nextQuiz = dashboard?.next_quiz?.title ?? 'اختبار قصير: التركيز المولي';
-  const examDaysLeft = dashboard?.study_plan?.days_to_exam ?? 9;
-  const unreadCount = dashboard?.notifications.unread_count ?? 0;
-  const mission = dashboard?.today_mission || 'أكمل درساً قصيراً، حل مسألة تركيز خطوة بخطوة، ثم راجع البطاقات المستحقة.';
-  const quickActions = [
-    { to: '/ask-ai', label: 'اسأل الذكاء', icon: 'ذك', tone: 'blue' },
-    { to: '/guided-lab', label: 'حل موجه', icon: 'حل', tone: 'purple' },
-    { to: '/quiz', label: 'اختبار', icon: 'اخ', tone: 'gold' },
-    { to: '/flashcards', label: 'بطاقات', icon: 'بط', tone: 'teal' },
-    { to: '/homework', label: 'حل واجب', icon: 'وا', tone: 'coral' },
-  ];
-
-  return (
-    <div className="dashboard-grid">
-      <section className="hero-card">
-        <p className="eyebrow">مركز تعلم اليوم</p>
-        <h1>أهلاً {dashboard?.student_name || user.first_name || user.name || 'كيميائي'}</h1>
-        <p className="dashboard-hero-copy">
-          هدف اليوم: {mission}
-        </p>
-        <div className="badge-row">
-          <StatusPill tone="gold">{dashboard?.streak_days ?? user.streak_days ?? 5} أيام متتالية</StatusPill>
-          <StatusPill tone="blue">{dashboard?.xp ?? user.xp ?? 1240} XP</StatusPill>
-          <StatusPill tone="teal">المستوى {dashboard?.level ?? user.level ?? 4}</StatusPill>
-          {dashboardError && <StatusPill tone="purple">بيانات تجريبية عند غياب API</StatusPill>}
-        </div>
-        {dashboardError && <ErrorBanner message={dashboardError} />}
-      </section>
-
-      <StudyMissionCard
-        title="احسب تركيز HCl خطوة بخطوة"
-        meta={`${continueLesson.duration} دقيقة · ${preferenceLabel(preferences.teachingLevel)} · ${preferenceLabel(preferences.explanationMethod)}`}
-        to="/guided-lab"
-      />
-
-      <div className="stats-row">
-        <Card><strong>{continueLesson.progress}%</strong><span>درس مستمر</span></Card>
-        <Card><strong>{dueFlashcards}</strong><span>بطاقة مستحقة</span></Card>
-        <Card><strong>{examDaysLeft}</strong><span>أيام حتى الاختبار</span></Card>
-      </div>
-
-      <Card className="dashboard-command-card">
-        <div className="section-title">
-          <h2>متابعة الدرس</h2>
-          <Link to="/lessons">عرض الدروس</Link>
-        </div>
-        <div className="continue-lesson-card">
-          <div>
-            <StatusPill tone="blue">الدرس الحالي</StatusPill>
-            <h3>{continueLesson.title}</h3>
-            <p>ابدأ من مصدر الدرس، ثم انتقل إلى اختبار قصير أو حل موجه حسب حاجتك.</p>
-          </div>
-          <ProgressBar value={continueLesson.progress} tone="teal" />
-          <div className="guided-card-actions">
-            <Link className="ed-btn ed-btn-primary" to="/lessons">تابع الدرس</Link>
-            <Link className="ed-btn ed-btn-secondary" to="/ask-ai?question=اشرح درس الحموض والأسس من الكتاب">اسأل عن الدرس</Link>
-          </div>
-        </div>
-      </Card>
-
-      <Card className="dashboard-command-card">
-        <div className="section-title">
-          <h2>نقاط ضعف تحتاج تدريباً</h2>
-          <Link to="/study-plan">عرض الخطة</Link>
-        </div>
-        <div className="recommendation-grid">
-          {weakTopics.map((topic, index) => (
-            <RecommendationCard
-              key={topic}
-              tone={index === 0 ? 'coral' : index === 1 ? 'gold' : 'purple'}
-              label="موضوع ضعيف"
-              title={topic}
-              description="حوّله إلى اختبار قصير أو بطاقات مراجعة."
-            />
-          ))}
-        </div>
-      </Card>
-
-      <Card className="dashboard-command-card">
-        <div className="section-title"><h2>المراجعة والتنبيهات</h2><Link to="/notifications">الإشعارات</Link></div>
-        <div className="dashboard-mini-grid">
-          <article>
-            <StatusPill tone="teal">بطاقات</StatusPill>
-            <strong>{dueFlashcards} بطاقة للمراجعة اليوم</strong>
-            <Link to="/flashcards">راجع الآن</Link>
-          </article>
-          <article>
-            <StatusPill tone="gold">اختبار</StatusPill>
-            <strong>{nextQuiz}</strong>
-            <Link to="/quiz">ابدأ الاختبار</Link>
-          </article>
-          <article>
-            <StatusPill tone={unreadCount ? 'coral' : 'blue'}>إشعارات</StatusPill>
-            <strong>{unreadCount ? `${unreadCount} تنبيهات غير مقروءة` : 'لا توجد تنبيهات عاجلة'}</strong>
-            <Link to="/notifications">افتح المركز</Link>
-          </article>
-        </div>
-      </Card>
-
-      <Card className="wide-card">
-        <div className="section-title"><h2>أدوات سريعة</h2><span>انتقل مباشرة إلى طريقة التعلم المناسبة.</span></div>
-        <div className="quick-grid">
-          {quickActions.map((action) => (
-            <Link key={action.label} to={action.to} className={`quick-action tone-${action.tone}`}>
-              <span>{action.icon}</span>
-              {action.label}
-            </Link>
-          ))}
-        </div>
-      </Card>
-    </div>
   );
 };
 
@@ -702,6 +481,9 @@ const ProfilePage = ({
   const [draftPreferences, setDraftPreferences] = useState<UserPreferences>(preferences);
   const [profileLoading, setProfileLoading] = useState(true);
   const [profileSaving, setProfileSaving] = useState(false);
+  const [interestCatalog, setInterestCatalog] = useState<InterestCategory[]>([]);
+  const [interestCatalogLoading, setInterestCatalogLoading] = useState(true);
+  const [interestError, setInterestError] = useState('');
   const [notifPrefs, setNotifPrefs] = useState({
     exam_reminders_enabled: true,
     lesson_reminders_enabled: true,
@@ -711,6 +493,28 @@ const ProfilePage = ({
   useEffect(() => {
     notificationsApi.getPreferences().then(setNotifPrefs).catch(() => {});
   }, []);
+
+  const loadProfileInterestCatalog = useCallback(async () => {
+    setInterestCatalogLoading(true);
+    setInterestError('');
+    try {
+      const items = await authApi.interests();
+      setInterestCatalog(items);
+      if (!items.length) setInterestError('لا توجد اهتمامات متاحة حالياً.');
+    } catch (error) {
+      setInterestCatalog([]);
+      setInterestError(toErrorMessage(error, 'تعذر تحميل الاهتمامات من الخادم.'));
+    } finally {
+      setInterestCatalogLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      void loadProfileInterestCatalog();
+    }, 0);
+    return () => window.clearTimeout(timeoutId);
+  }, [loadProfileInterestCatalog]);
 
   useEffect(() => {
     queueMicrotask(() => setDraftPreferences(preferences));
@@ -758,8 +562,17 @@ const ProfilePage = ({
   };
 
   const saveLearningPreferences = async () => {
+    if (draftPreferences.studentInterests.length === 0) {
+      setInterestError('اختر اهتماماً واحداً على الأقل.');
+      return;
+    }
+    if (draftPreferences.studentInterests.length > 3) {
+      setInterestError('يمكنك اختيار ثلاثة اهتمامات كحد أقصى.');
+      return;
+    }
     setProfileSaving(true);
     setStatus('');
+    setInterestError('');
     try {
       const saved = await userApi.updateProfile(draftPreferences);
       const next = preferencesFromProfile(saved, draftPreferences);
@@ -804,9 +617,15 @@ const ProfilePage = ({
   };
 
   const toggleInterest = (value: StudentInterest) => {
-    const nextInterests = draftPreferences.studentInterests.includes(value)
-      ? draftPreferences.studentInterests.filter((item) => item !== value)
-      : [...draftPreferences.studentInterests, value];
+    const selected = draftPreferences.studentInterests;
+    if (!selected.includes(value) && selected.length >= 3) {
+      setInterestError('يمكنك اختيار ثلاثة اهتمامات كحد أقصى.');
+      return;
+    }
+    const nextInterests = selected.includes(value)
+      ? selected.filter((item) => item !== value)
+      : [...selected, value];
+    setInterestError(nextInterests.length ? '' : 'اختر اهتماماً واحداً على الأقل.');
     setDraftPreferences((current) => ({
       ...current,
       studentInterests: nextInterests,
@@ -850,19 +669,28 @@ const ProfilePage = ({
           </div>
           <div className="preference-stack">
             <span>اهتمامات الطالب</span>
-            <div className="interest-grid compact">
-              {studentInterestOptions.map((interest) => (
-                <button
-	                  key={interest.value}
-	                  type="button"
-	                  className={draftPreferences.studentInterests.includes(interest.value) ? 'interest active' : 'interest'}
-	                  onClick={() => toggleInterest(interest.value)}
-	                >
-                  <span>{interest.icon}</span>
-                  <strong>{interest.label}</strong>
-                </button>
-              ))}
-            </div>
+            {interestCatalogLoading ? (
+              <LoadingSkeleton rows={2} />
+            ) : (
+              <InterestSelector
+                interests={interestCatalog}
+                selected={draftPreferences.studentInterests}
+                onToggle={toggleInterest}
+                compact
+                disabled={profileSaving}
+              />
+            )}
+            <small>{draftPreferences.studentInterests.length} من 3 محددة</small>
+            {interestError && (
+              <div>
+                <p className="interest-inline-error" role="alert">{interestError}</p>
+                {!interestCatalog.length && (
+                  <Button variant="ghost" onClick={() => void loadProfileInterestCatalog()}>
+                    إعادة المحاولة
+                  </Button>
+                )}
+              </div>
+            )}
           </div>
           <label>
             اللغة
@@ -886,6 +714,17 @@ const ProfilePage = ({
               value={draftPreferences.targetExamDate || ''}
               onChange={(event) => updatePreference('targetExamDate', event.target.value)}
             />
+          </label>
+          <label className="profile-memory-toggle">
+            <input
+              type="checkbox"
+              checked={draftPreferences.learningMemoryEnabled}
+              onChange={(event) => updatePreference('learningMemoryEnabled', event.target.checked)}
+            />
+            <span>
+              <strong>استخدام تقدّمي لتحسين الشرح</strong>
+              <small>يستخدم المعلّم تفضيلاتك وتقدّمك ونقاط الضعف المثبتة، وليس نصوص محادثاتك السابقة.</small>
+            </span>
           </label>
 
           {/* User notifications preferences */}
@@ -1067,7 +906,7 @@ function App() {
                 : <ProtectedRoute user={auth.user} booting={auth.booting} />
             }
           >
-            <Route index element={auth.user && <DashboardPage user={auth.user} preferences={auth.preferences} />} />
+            <Route index element={auth.user && <DashboardPage />} />
             <Route path="dashboard" element={<Navigate to="/" replace />} />
             <Route path="lessons" element={<LessonsPage />} />
             <Route path="lessons/:lessonId" element={<LessonDetailPage />} />

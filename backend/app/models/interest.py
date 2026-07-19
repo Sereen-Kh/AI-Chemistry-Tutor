@@ -1,6 +1,6 @@
 """Interest category models for personalization."""
 
-from sqlalchemy import ForeignKey, Integer, String
+from sqlalchemy import ForeignKey, Integer, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 from sqlalchemy import DateTime
@@ -28,6 +28,9 @@ class UserInterest(Base):
     """Many-to-many link between users and interest categories."""
 
     __tablename__ = "user_interests"
+    __table_args__ = (
+        UniqueConstraint("user_id", "interest_id", name="uq_user_interests_user_interest"),
+    )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)

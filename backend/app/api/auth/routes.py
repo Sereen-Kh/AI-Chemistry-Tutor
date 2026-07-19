@@ -70,7 +70,7 @@ def onboarding(
         teaching_level=request.teaching_level,
         explanation_method=request.explanation_method,
         learning_modes=[mode.value for mode in request.learning_modes],
-        student_interests=[interest.value for interest in request.student_interests],
+        student_interests=request.student_interests,
         goals=request.goals,
         target_exam_date=request.target_exam_date,
     )

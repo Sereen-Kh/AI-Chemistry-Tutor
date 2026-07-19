@@ -11,7 +11,12 @@ from fastapi.testclient import TestClient
 from app.core.dependencies import get_current_user_id
 from app.database import get_async_db
 from app.main import app
-from app.schemas.dashboard import DashboardResponse
+from app.schemas.dashboard import (
+    DashboardCurriculumProgress,
+    DashboardDataQuality,
+    DashboardPrimaryMission,
+    DashboardResponse,
+)
 
 
 @pytest.fixture()
@@ -30,14 +35,40 @@ def contract_client():
 
 
 def test_dashboard_endpoint_returns_aggregate(contract_client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+    now = datetime.now(timezone.utc)
+
     async def fake_dashboard(_db, user_id: int):
         assert user_id == 10
         return DashboardResponse(
+            generated_at=now,
             user_id=10,
             student_name="سارة",
             xp=120,
             level=2,
             streak_days=4,
+            curriculum_progress=DashboardCurriculumProgress(
+                total_lessons=20,
+                completed_lessons=7,
+                percent=35,
+            ),
+            primary_mission=DashboardPrimaryMission(
+                kind="create_plan",
+                title_ar="راجع درس التركيز",
+                description_ar="راجع درس التركيز.",
+                action_label_ar="فتح الخطة",
+                action_url="/study-plan",
+                reason_code="TEST_MISSION",
+            ),
+            weak_topics_state="insufficient_evidence",
+            data_quality=DashboardDataQuality(
+                has_curriculum_data=True,
+                has_lesson_progress=True,
+                has_active_study_plan=False,
+                has_plan_items=False,
+                has_quiz_evidence=False,
+                has_weak_topic_evidence=False,
+                weak_topic_answer_count=0,
+            ),
             overall_progress=35,
             today_mission="راجع درس التركيز.",
             weak_topics=[],

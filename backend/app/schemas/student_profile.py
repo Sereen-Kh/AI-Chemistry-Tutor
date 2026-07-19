@@ -22,6 +22,7 @@ class StudentProfileResponse(BaseModel):
     target_exam_date: date | None = None
     metadata_json: dict | list | None = None
     onboarding_completed: bool
+    learning_memory_enabled: bool = True
     created_at: datetime
     updated_at: datetime
 
@@ -35,8 +36,9 @@ class StudentProfileUpsertRequest(BaseModel):
     teaching_level: TeachingLevel = TeachingLevel.STANDARD
     explanation_method: ExplanationMethod = ExplanationMethod.DIRECT
     learning_modes: list[LearningMode] = Field(default_factory=lambda: [LearningMode.TEXT])
-    student_interests: list[StudentInterest] = Field(default_factory=list)
+    student_interests: list[str] = Field(default_factory=list)
     preferred_language: str = "ar"
     goals: str | None = None
     target_exam_date: date | None = None
     metadata_json: dict | list | None = None
+    learning_memory_enabled: bool | None = None

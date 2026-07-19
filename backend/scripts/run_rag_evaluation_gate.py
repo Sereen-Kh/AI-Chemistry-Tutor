@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import argparse
 import asyncio
-from dataclasses import asdict
 import json
 from pathlib import Path
 import shutil
@@ -16,7 +15,11 @@ PROJECT_DIR = BACKEND_DIR.parent
 sys.path.insert(0, str(BACKEND_DIR))
 
 from app.database import AsyncSessionLocal  # noqa: E402
-from app.services.rag_evaluation import evaluate_rag_dataset  # noqa: E402
+from app.services.rag_evaluation import (  # noqa: E402
+    RAG_LIVE_EVALUATION_NOT_AUTHORIZED,
+    evaluate_rag_dataset,
+    live_evaluation_authorized,
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -29,6 +32,19 @@ def parse_args() -> argparse.Namespace:
 
 async def run() -> int:
     args = parse_args()
+    if not live_evaluation_authorized(confirmed=True):
+        print(
+            json.dumps(
+                {
+                    "status": "blocked",
+                    "blocking_issues": [RAG_LIVE_EVALUATION_NOT_AUTHORIZED],
+                    "message": "Set RUN_RAG_INTEGRATION=1 only after explicit live-provider authorization.",
+                },
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
+        return 1
     async with AsyncSessionLocal() as db:
         result = await evaluate_rag_dataset(
             db,
@@ -45,7 +61,6 @@ async def run() -> int:
     shutil.copyfile(result.report_json_path, stable_json)
     shutil.copyfile(result.report_markdown_path, stable_md)
 
-    payload = asdict(result)
     print(
         json.dumps(
             {

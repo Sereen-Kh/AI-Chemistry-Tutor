@@ -2,9 +2,15 @@ from datetime import date
 from sqlalchemy.orm import Session, joinedload
 from fastapi import HTTPException
 from app.models.user import User
-from app.models.interest import InterestCategory, UserInterest
+from app.models.interest import InterestCategory
 from app.models.student_profile import StudentProfile
 from app.core.security import get_password_hash, verify_password, create_access_token
+from app.services.interest_service import (
+    get_interest_catalog,
+    interest_keys_from_ids,
+    sync_user_interests,
+    validate_interest_keys,
+)
 from app.services.preference_mapping import (
     apply_user_preference_updates,
     legacy_teaching_style_from_new,
@@ -13,17 +19,6 @@ from app.services.preference_mapping import (
     normalize_student_interests,
     normalize_teaching_level,
 )
-
-
-DEFAULT_INTEREST_CATEGORIES = [
-    {"key": "daily_life", "name_ar": "الحياة اليومية", "name_en": "Daily life", "icon": "DL", "display_order": 10},
-    {"key": "laboratory", "name_ar": "المختبر", "name_en": "Laboratory", "icon": "LAB", "display_order": 20},
-    {"key": "nature", "name_ar": "الطبيعة", "name_en": "Nature", "icon": "NAT", "display_order": 30},
-    {"key": "football", "name_ar": "كرة القدم", "name_en": "Football", "icon": "FB", "display_order": 40},
-    {"key": "cars", "name_ar": "السيارات", "name_en": "Cars", "icon": "CAR", "display_order": 50},
-    {"key": "cooking", "name_ar": "الطبخ", "name_en": "Cooking", "icon": "CK", "display_order": 60},
-    {"key": "gaming", "name_ar": "الألعاب", "name_en": "Gaming", "icon": "GM", "display_order": 70},
-]
 
 
 def split_name(name: str | None, first_name: str | None, last_name: str | None) -> tuple[str, str]:
@@ -89,12 +84,7 @@ def get_user_by_id(db: Session, user_id: int) -> User:
 
 def get_all_interests(db: Session) -> list[InterestCategory]:
     """Return selectable personalization interests ordered for the UI."""
-    interests = db.query(InterestCategory).order_by(InterestCategory.display_order).all()
-    if interests:
-        return interests
-    db.add_all(InterestCategory(**payload) for payload in DEFAULT_INTEREST_CATEGORIES)
-    db.commit()
-    return db.query(InterestCategory).order_by(InterestCategory.display_order).all()
+    return get_interest_catalog(db)
 
 
 def _raw_value(value: object) -> str:
@@ -121,17 +111,6 @@ def _profile_for_user(db: Session, user: User) -> StudentProfile:
     return profile
 
 
-def _interest_keys_from_ids(db: Session, interest_ids: list[int]) -> list[str]:
-    if not interest_ids:
-        return []
-    interests = db.query(InterestCategory).filter(InterestCategory.id.in_(interest_ids)).all()
-    found_ids = {interest.id for interest in interests}
-    missing = [interest_id for interest_id in interest_ids if interest_id not in found_ids]
-    if missing:
-        raise HTTPException(status_code=400, detail=f"Interest ID {missing[0]} not found")
-    return [interest.key for interest in sorted(interests, key=lambda item: item.display_order)]
-
-
 def update_user_onboarding(
     db: Session,
     user_id: int,
@@ -150,11 +129,11 @@ def update_user_onboarding(
 ) -> User:
     """Persist onboarding preferences and selected interests."""
     user = get_user_by_id(db, user_id)
-    selected_interest_keys = student_interests or _interest_keys_from_ids(db, interest_ids)
+    selected_interest_keys = student_interests or interest_keys_from_ids(db, interest_ids)
     normalized_level = normalize_teaching_level(_raw_value(teaching_level))
     normalized_method = normalize_explanation_method(_raw_value(explanation_method))
     normalized_modes = normalize_learning_modes(learning_modes)
-    normalized_interests = normalize_student_interests(selected_interest_keys)
+    normalized_interests = normalize_student_interests(validate_interest_keys(selected_interest_keys))
 
     user.grade = grade
     user.subject = subject
@@ -166,7 +145,6 @@ def update_user_onboarding(
             "teaching_level": normalized_level,
             "explanation_method": normalized_method,
             "learning_modes": normalized_modes,
-            "student_interests": normalized_interests,
         },
     )
     user.language = language
@@ -177,17 +155,16 @@ def update_user_onboarding(
     profile.teaching_level = normalized_level
     profile.explanation_method = normalized_method
     profile.learning_modes = normalized_modes
-    profile.student_interests = normalized_interests
     profile.preferred_language = language
     profile.goals = goals
     profile.target_exam_date = target_exam_date
 
-    db.query(UserInterest).filter(UserInterest.user_id == user_id).delete()
-    for interest_id in interest_ids:
-        exists = db.query(InterestCategory.id).filter(InterestCategory.id == interest_id).first()
-        if not exists:
-            raise HTTPException(status_code=400, detail=f"Interest ID {interest_id} not found")
-        db.add(UserInterest(user_id=user_id, interest_id=interest_id))
+    sync_user_interests(
+        db,
+        user=user,
+        profile=profile,
+        interest_keys=normalized_interests,
+    )
 
     db.commit()
     db.refresh(user)

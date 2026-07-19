@@ -16,7 +16,9 @@ from fastapi.testclient import TestClient  # noqa: E402
 from app.core.dependencies import get_current_user_id  # noqa: E402
 from app.main import app  # noqa: E402
 from app.services.rag import clean_query, rewrite_query  # noqa: E402
+from scripts import run_rag_qa_suite as qa_suite  # noqa: E402
 from scripts.rag_qa_harness import (  # noqa: E402
+    chunk_dict_for_case,
     chunk_previews,
     contains_term,
     install_deterministic_api_overrides,
@@ -87,6 +89,20 @@ def _assert_retrieve_source_metadata(case: dict[str, Any], chunks: list[dict[str
     )
 
 
+def _assert_complete_citation(
+    case: dict[str, Any], citations: list[dict[str, Any]], payload: dict[str, Any]
+) -> None:
+    assert citations, _failure_message(case, chunks=citations, payload=payload)
+    top = citations[0]
+    for field in (
+        "chunk_id", "source_id", "source_type", "printed_page_start", "printed_page_end",
+        "unit_id", "lesson_id", "quality_status", "reviewed_metadata_version", "score",
+    ):
+        assert top.get(field) is not None, _failure_message(case, chunks=citations, payload=payload)
+    if top["quality_status"] == "needs_review":
+        assert top.get("quality_warning"), _failure_message(case, chunks=citations, payload=payload)
+
+
 def _assert_chat_source_metadata(case: dict[str, Any], sources: list[dict[str, Any]], payload: dict[str, Any]) -> None:
     assert sources, _failure_message(case, actual_answer=payload.get("answer", ""), chunks=sources, payload=payload)
     top = sources[0]
@@ -130,6 +146,29 @@ def test_rag_grade9_fixture_contract():
     assert _target_cases("homework/solve-text")
 
 
+def test_qa_evaluator_rejects_answerable_response_without_citations() -> None:
+    case = next(case for case in CASES if case["expected_behavior"] == "answerable")
+    payload = {
+        "answer": "، ".join(case["expected_answer_keywords"]),
+        "confidence": 0.95,
+        "sources": [],
+    }
+    result = qa_suite._evaluate_endpoint(case, "chat/ask", payload)
+    assert qa_suite.MISSING_CITATION in result["failure_codes"]
+
+
+def test_qa_evaluator_requires_page_range_and_needs_review_warning() -> None:
+    case = next(case for case in CASES if case["expected_behavior"] == "answerable")
+    source = chunk_dict_for_case(case)
+    source.pop("printed_page_end")
+    source.pop("page_number")
+    source["quality_status"] = "needs_review"
+    source["quality_warning"] = None
+    issues = qa_suite._citation_issues([source])
+    codes = {issue["code"] for issue in issues}
+    assert qa_suite.INCOMPLETE_CITATION_METADATA in codes
+
+
 @pytest.mark.parametrize(
     ("variant", "expected_terms"),
     [
@@ -168,9 +207,11 @@ def test_rag_retrieve_grade9_qa_cases(deterministic_client: TestClient, case: di
 
     if case["expected_behavior"] == "out_of_scope":
         assert not chunks, _failure_message(case, chunks=chunks, payload=payload)
+        assert not payload.get("citations"), _failure_message(case, chunks=chunks, payload=payload)
         return
 
     _assert_retrieve_source_metadata(case, chunks, payload)
+    _assert_complete_citation(case, payload.get("citations", []), payload)
     retrieved_text = "\n".join(chunk.get("content", "") for chunk in chunks)
     _assert_expected_keywords(case, retrieved_text, chunks=chunks, payload=payload)
     _assert_source_topics(case, retrieved_text, chunks=chunks, payload=payload)
@@ -202,6 +243,7 @@ def test_chat_ask_grade9_qa_cases(deterministic_client: TestClient, case: dict[s
             case, actual_answer=answer, chunks=payload.get("sources", []), payload=payload
         )
         assert not payload.get("sources"), _failure_message(case, actual_answer=answer, payload=payload)
+        assert not payload.get("citations"), _failure_message(case, actual_answer=answer, payload=payload)
         assert contains_term(answer, "لم أجد") or contains_term(answer, "غير كاف"), _failure_message(
             case, actual_answer=answer, payload=payload
         )
@@ -209,6 +251,7 @@ def test_chat_ask_grade9_qa_cases(deterministic_client: TestClient, case: dict[s
 
     _assert_expected_keywords(case, answer, chunks=payload.get("sources", []), payload=payload)
     _assert_chat_source_metadata(case, payload.get("sources", []), payload)
+    _assert_complete_citation(case, payload.get("citations", []), payload)
     assert payload.get("confidence", 0.0) >= float(case["min_confidence"]), _failure_message(
         case, actual_answer=answer, chunks=payload.get("sources", []), payload=payload
     )
@@ -241,6 +284,7 @@ def test_homework_solve_text_grade9_qa_cases(deterministic_client: TestClient, c
 
     _assert_expected_keywords(case, solution, chunks=payload.get("source_chunks", []), payload=payload)
     _assert_homework_source_metadata(case, payload.get("source_chunks", []), payload)
+    _assert_complete_citation(case, payload.get("source_chunks", []), payload)
     assert payload.get("confidence_score", 0.0) >= float(case["min_confidence"]), _failure_message(
         case, actual_answer=solution, chunks=payload.get("source_chunks", []), payload=payload
     )

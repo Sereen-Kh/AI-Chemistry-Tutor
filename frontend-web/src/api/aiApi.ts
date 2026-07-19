@@ -17,10 +17,14 @@ interface BackendChatSource {
   source?: string | null;
   source_type?: string | null;
   page_number?: number | null;
+  printed_page_start?: number | null;
+  printed_page_end?: number | null;
   content_type: string;
+  content_preview?: string | null;
   unit_id?: string | number | null;
   lesson_id?: string | number | null;
   quality_status?: string | null;
+  quality_warning?: string | null;
   reviewed_metadata_version?: string | null;
   curriculum_metadata?: Record<string, unknown> | null;
   similarity_score: number;
@@ -34,6 +38,8 @@ interface BackendChatAnswer {
   audio_url?: string | null;
   audio_status?: AiAskResponse['audio_status'];
   route: string;
+  grounding?: AiAskResponse['grounding'];
+  external_sources?: AiAskResponse['external_sources'];
   blocks?: Array<{ type: string; content: string; url?: string | null; image_url?: string | null; page?: number | null; metadata?: Record<string, unknown> }>;
   sources: BackendChatSource[];
   citations?: BackendChatSource[];
@@ -77,14 +83,18 @@ const asRecord = (value: unknown): Record<string, unknown> | null | undefined =>
 
 const mapSourceRecord = (source: Record<string, unknown>): SourceCitation => ({
   title: asString(source.source) || asString(source.title) || 'كتاب الكيمياء - الصف التاسع',
-  page: asNumber(source.page_number) ?? asNumber(source.page) ?? null,
+  page: asNumber(source.printed_page_start) ?? asNumber(source.page_number) ?? asNumber(source.page) ?? null,
   chunk_id: asNumber(source.chunk_id) ?? asString(source.chunk_id) ?? 'unknown',
-  quote: asString(source.content_type) || asString(source.quote),
+  quote: asString(source.content_preview) || asString(source.quote),
+  content_type: asString(source.content_type),
   score: asNumber(source.similarity_score) ?? asNumber(source.score),
   source_type: asString(source.source_type),
   unit_id: asId(source.unit_id),
   lesson_id: asId(source.lesson_id),
   quality_status: asString(source.quality_status) ?? null,
+  quality_warning: asString(source.quality_warning) ?? null,
+  printed_page_start: asNumber(source.printed_page_start) ?? null,
+  printed_page_end: asNumber(source.printed_page_end) ?? null,
   reviewed_metadata_version: asString(source.reviewed_metadata_version) ?? null,
   curriculum_metadata: asRecord(source.curriculum_metadata) ?? null,
 });
@@ -93,14 +103,18 @@ const mapBackendAnswer = (request: AiAskRequest, response: BackendChatAnswer): A
   const backendSources = response.sources?.length ? response.sources : response.citations || [];
   const citations: SourceCitation[] = backendSources.map((source) => ({
     title: source.source || 'كتاب الكيمياء - الصف التاسع',
-    page: source.page_number ?? null,
+    page: source.printed_page_start ?? source.page_number ?? null,
     chunk_id: source.chunk_id,
-    quote: source.content_type,
+    quote: source.content_preview || undefined,
+    content_type: source.content_type,
     score: source.similarity_score,
     source_type: source.source_type ?? undefined,
     unit_id: source.unit_id,
     lesson_id: source.lesson_id,
     quality_status: source.quality_status ?? null,
+    quality_warning: source.quality_warning ?? null,
+    printed_page_start: source.printed_page_start ?? null,
+    printed_page_end: source.printed_page_end ?? null,
     reviewed_metadata_version: source.reviewed_metadata_version ?? null,
     curriculum_metadata: source.curriculum_metadata ?? null,
   }));
@@ -115,6 +129,8 @@ const mapBackendAnswer = (request: AiAskRequest, response: BackendChatAnswer): A
       : request.answer_format,
     answer_type: response.answer_type,
     route: response.route,
+    grounding: response.grounding,
+    external_sources: response.external_sources || [],
     diagnostics: response.diagnostics,
     audio_status: response.audio_status,
     teaching_level: response.teaching_level,
@@ -174,6 +190,8 @@ export const messageResponseToAskResponse = (
     format,
     answer_type: message.answer_type || undefined,
     route: message.route || undefined,
+    grounding: message.grounding || undefined,
+    external_sources: message.external_sources || [],
     diagnostics: message.diagnostics,
     audio_status: message.audio_status,
     media_blocks: mediaBlocks,
@@ -226,6 +244,7 @@ export const aiApi = {
     if (request.learning_modes?.length) formData.append('learningModes', request.learning_modes.join(','));
     if (request.student_interests?.length) formData.append('studentInterests', request.student_interests.join(','));
     if (request.action) formData.append('action', request.action);
+    formData.append('webSearchRequested', String(request.webSearchRequested ?? false));
     if (request.audio) {
       formData.append('audio', request.audio, request.audioFilename ?? 'student-message.webm');
     } else if (request.content) {
@@ -319,6 +338,7 @@ export const aiApi = {
         previous_answer: request.previous_answer,
         previous_sources: request.previous_sources,
         previous_selected_chunks: request.previous_selected_chunks,
+        web_search_requested: request.web_search_requested ?? false,
         lesson_id: request.lesson_id,
         topic_id: request.topic_id,
       }, {

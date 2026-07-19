@@ -14,10 +14,14 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 from app.database import Base
 from app.models.chat import ChatMessage
 from app.models.student_profile import StudentProfile
+from app.models.topic import Topic
 from app.models.user import User
+from app.models.user_progress import UserProgress
 from app.services import chat_service
+from app.services.learning_memory import build_learning_memory_context
 from app.services.rag import RetrievedChunk
 from app.services.semantic_rag import SemanticRagResult
+from app.services.web_grounding import ExternalSource, WebGroundingResult
 
 
 def run_async(coro):
@@ -222,5 +226,217 @@ def test_delete_session_cascades_messages(session_factory):
                 await chat_service.get_owned_session(db, session.id, user.id)
             count = await db.scalar(select(func.count(ChatMessage.id)))
             assert count == 0
+
+    run_async(scenario())
+
+
+def test_session_history_is_bounded_and_preserves_current_question():
+    messages = [
+        SimpleNamespace(role="user" if index % 2 == 0 else "assistant", content=f"message-{index}")
+        for index in range(20)
+    ]
+
+    history = chat_service.bounded_session_history(
+        messages,
+        current_question="current-question",
+        max_messages=6,
+        max_chars=80,
+    )
+
+    assert len(history) <= 6
+    assert history[-1] == {"role": "user", "content": "current-question"}
+    assert sum(len(item["content"]) for item in history) <= 80
+    assert history[0]["content"] != "message-0"
+
+
+def test_learning_memory_can_be_disabled_from_profile(session_factory):
+    async def scenario():
+        async with session_factory() as db:
+            user = await _create_user(db)
+            db.add(
+                StudentProfile(
+                    user_id=user.id,
+                    teaching_level="standard",
+                    explanation_method="direct",
+                    learning_modes=["text"],
+                    student_interests=["cars"],
+                    metadata_json={"learning_memory_enabled": False},
+                )
+            )
+            await db.commit()
+            session = await chat_service.create_session(db, user.id)
+
+            assistant = await chat_service.send_message(
+                db,
+                session.id,
+                user.id,
+                "اشرح من الكتاب ما هو التركيز المولي؟",
+            )
+
+            assert assistant.diagnostics["learning_memory"] == {
+                "enabled": False,
+                "applied": False,
+                "counts": {},
+            }
+
+    run_async(scenario())
+
+
+def test_learning_memory_uses_only_authenticated_students_records(session_factory):
+    async def scenario():
+        async with session_factory() as db:
+            owner = await _create_user(db, email="memory-owner@example.com")
+            other = await _create_user(db, email="memory-other@example.com")
+            owner_topic = Topic(title_ar="المحاليل المائية", order=1)
+            other_topic = Topic(title_ar="بيانات طالب آخر", order=2)
+            db.add_all([owner_topic, other_topic])
+            await db.flush()
+            db.add_all(
+                [
+                    UserProgress(
+                        user_id=owner.id,
+                        topic_id=owner_topic.id,
+                        quizzes_completed=2,
+                        best_quiz_score=45,
+                    ),
+                    UserProgress(
+                        user_id=other.id,
+                        topic_id=other_topic.id,
+                        quizzes_completed=3,
+                        best_quiz_score=10,
+                    ),
+                ]
+            )
+            await db.commit()
+
+            memory = await build_learning_memory_context(db, user_id=owner.id)
+
+            assert "المحاليل المائية" in memory.prompt_text
+            assert "بيانات طالب آخر" not in memory.prompt_text
+            assert len(memory.prompt_text) <= 1200
+            assert memory.diagnostics()["counts"]["weak_topics"] == 1
+
+    run_async(scenario())
+
+
+def test_new_student_learning_memory_is_safe(session_factory):
+    async def scenario():
+        async with session_factory() as db:
+            user = await _create_user(db)
+
+            memory = await build_learning_memory_context(db, user_id=user.id)
+
+            assert memory.enabled is True
+            assert memory.applied is False
+            assert memory.prompt_text == ""
+            assert all(value == 0 for value in memory.diagnostics()["counts"].values())
+
+    run_async(scenario())
+
+
+def test_web_search_is_never_called_without_explicit_request(session_factory, monkeypatch):
+    async def fail_if_called(*_args, **_kwargs):
+        raise AssertionError("web provider must require explicit user action")
+
+    monkeypatch.setattr(chat_service, "search_web_for_chemistry", fail_if_called)
+
+    async def scenario():
+        async with session_factory() as db:
+            user = await _create_user(db)
+            session = await chat_service.create_session(db, user.id)
+
+            assistant = await chat_service.send_message(db, session.id, user.id, "ما هو الماء؟")
+
+            assert assistant.grounding != "web"
+
+    run_async(scenario())
+
+
+def test_explicit_web_search_persists_external_sources(session_factory, monkeypatch):
+    async def fake_no_results(*_args, **_kwargs):
+        return SemanticRagResult(
+            chunks=[],
+            diagnostics={"pipeline": "test", "cache_hit": False, "quality_gate": {"passed": True}},
+        )
+
+    async def fake_web_search(question, **_kwargs):
+        assert question == "ما استخدامات الماء في الصناعة؟"
+        return WebGroundingResult(
+            answer="تُستخدم المياه في التبريد والتنظيف الصناعي.",
+            sources=[
+                ExternalSource(
+                    title="مصدر علمي",
+                    url="https://example.org/water",
+                    domain="example.org",
+                    cited_text="Industrial water is used for cooling.",
+                    start_index=0,
+                    end_index=20,
+                )
+            ],
+        )
+
+    monkeypatch.setattr(chat_service, "semantic_retrieve_context", fake_no_results)
+    monkeypatch.setattr(chat_service, "search_web_for_chemistry", fake_web_search)
+
+    async def scenario():
+        async with session_factory() as db:
+            user = await _create_user(db)
+            session = await chat_service.create_session(db, user.id)
+            assistant = await chat_service.send_message(
+                db,
+                session.id,
+                user.id,
+                "ما استخدامات الماء في الصناعة؟",
+                web_search_requested=True,
+            )
+
+            assert assistant.grounding == "web"
+            assert assistant.sources == []
+            assert assistant.external_sources[0]["domain"] == "example.org"
+            reloaded = await chat_service.get_owned_session(db, session.id, user.id)
+            assert reloaded.messages[-1].external_sources[0]["url"] == "https://example.org/water"
+
+    run_async(scenario())
+
+
+def test_web_search_is_not_called_when_book_evidence_is_sufficient(session_factory, monkeypatch):
+    async def fail_if_called(*_args, **_kwargs):
+        raise AssertionError("web provider must not run when book evidence is sufficient")
+
+    monkeypatch.setattr(chat_service, "search_web_for_chemistry", fail_if_called)
+
+    async def scenario():
+        async with session_factory() as db:
+            user = await _create_user(db)
+            session = await chat_service.create_session(db, user.id)
+            assistant = await chat_service.send_message(
+                db,
+                session.id,
+                user.id,
+                "اشرح من الكتاب ما هو التركيز المولي؟",
+                web_search_requested=True,
+            )
+
+            assert assistant.grounding == "book"
+            assert assistant.diagnostics["web_search_skipped"] == "BOOK_EVIDENCE_SUFFICIENT"
+
+    run_async(scenario())
+
+
+def test_web_search_is_rejected_in_book_only_mode(session_factory):
+    async def scenario():
+        async with session_factory() as db:
+            user = await _create_user(db)
+            session = await chat_service.create_session(db, user.id)
+            with pytest.raises(HTTPException) as exc_info:
+                await chat_service.send_message(
+                    db,
+                    session.id,
+                    user.id,
+                    "ما هو الماء؟",
+                    answer_scope="book_only",
+                    web_search_requested=True,
+                )
+            assert exc_info.value.detail["code"] == "WEB_SEARCH_DISABLED"
 
     run_async(scenario())

@@ -16,10 +16,22 @@ from app.core.config import settings
 from app.database import Base
 from app.main import app
 from app.models.textbook import ContentSource, RagChunk
-from app.services.embeddings import EMBEDDING_DIM, embed_document, embed_query
+from app.services.embeddings import (
+    EMBEDDING_DIM,
+    GeminiEmbeddingQuotaError,
+    embed_document,
+    embed_documents_batch,
+    embed_query,
+)
 from app.services.rag_evaluation import _threshold_failures
 from app.services.rag_logging import log_rag_retrieval
-from app.services.rag_reembed import _metadata_with_embedding_model, reembed_all_chunks, reembed_rag_chunks
+from app.services.rag_reembed import (
+    QUOTA_ERROR_CODE,
+    _metadata_with_embedding_model,
+    redact_embedding_error,
+    reembed_all_chunks,
+    reembed_rag_chunks,
+)
 from app.services.reviewed_curriculum_metadata import (
     NOT_READY_CODE,
     ReviewedCurriculumMetadataError,
@@ -412,8 +424,12 @@ def test_failed_chunks_store_embedding_error_and_resume_failed_only(
             raise RuntimeError("cannot embed concentration chunk")
         return _vector(5.0)
 
+    async def no_wait(_delay: float) -> None:
+        return None
+
     monkeypatch.setattr("app.services.rag_reembed.embed_documents_batch", failing_batch)
     monkeypatch.setattr("app.services.rag_reembed.embed_document", selective_document)
+    monkeypatch.setattr("app.services.rag_reembed.asyncio.sleep", no_wait)
 
     async def scenario() -> None:
         async with rag_session_factory() as db:
@@ -434,6 +450,282 @@ def test_failed_chunks_store_embedding_error_and_resume_failed_only(
             assert resume.total_candidates >= 2
 
     run_async(scenario())
+
+
+def test_reembedding_retries_transient_batch_failure_with_backoff(
+    rag_session_factory: async_sessionmaker[AsyncSession],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    attempts = 0
+    delays: list[float] = []
+
+    async def flaky_batch(texts: list[str], batch_size: int = 50) -> list[list[float]]:
+        nonlocal attempts
+        attempts += 1
+        if attempts == 1:
+            raise RuntimeError("temporary network failure")
+        return [_vector(3.0) for _text in texts]
+
+    async def fake_sleep(delay: float) -> None:
+        delays.append(delay)
+
+    monkeypatch.setattr("app.services.rag_reembed.embed_documents_batch", flaky_batch)
+    monkeypatch.setattr("app.services.rag_reembed.asyncio.sleep", fake_sleep)
+    monkeypatch.setattr("app.services.rag_reembed.random.uniform", lambda _start, _end: 0.0)
+
+    async def scenario() -> None:
+        async with rag_session_factory() as db:
+            await _seed_rag_chunks(db)
+            result = await reembed_rag_chunks(db, dry_run=False, force=True, batch_size=3)
+            assert result.status == "completed"
+            assert result.updated == 3
+            assert result.retry_count == 1
+            assert result.last_retry_delay_seconds == 2.0
+            assert attempts == 2
+            assert delays == [2.0]
+
+    run_async(scenario())
+
+
+def test_reembedding_quota_failure_pauses_without_per_chunk_fanout(
+    rag_session_factory: async_sessionmaker[AsyncSession],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    batch_calls = 0
+    document_calls = 0
+
+    def quota_batch(_texts: list[str], _task_type: str) -> list[list[float]]:
+        nonlocal batch_calls
+        batch_calls += 1
+        raise RuntimeError("429 RESOURCE_EXHAUSTED retryDelay: 17s")
+
+    async def document_must_not_run(_text: str) -> list[float]:
+        nonlocal document_calls
+        document_calls += 1
+        return _vector(1.0)
+
+    monkeypatch.setattr(settings, "embedding_provider", "gemini")
+    monkeypatch.setattr(settings, "gemini_api_key", "configured-test-key")
+    monkeypatch.setattr(settings, "allow_hash_embeddings", False)
+    monkeypatch.setattr("app.services.embeddings._GEMINI_DISABLED_REASON", None)
+    monkeypatch.setattr("app.services.embeddings._embed_gemini_batch", quota_batch)
+    monkeypatch.setattr("app.services.rag_reembed.embed_document", document_must_not_run)
+
+    async def scenario() -> None:
+        async with rag_session_factory() as db:
+            _textbook, _solutions, chunks = await _seed_rag_chunks(db)
+            result = await reembed_rag_chunks(db, dry_run=False, force=True, batch_size=3)
+            assert result.status == "paused_quota"
+            assert result.stopped_reason == QUOTA_ERROR_CODE
+            assert result.quota_events == 1
+            assert result.retry_after_seconds == 17.0
+            assert result.updated == 0
+            assert batch_calls == 1
+            assert document_calls == 0
+            for chunk in chunks:
+                refreshed = await db.get(RagChunk, chunk.id)
+                assert refreshed is not None
+                assert refreshed.embedding is None
+                assert refreshed.embedding_status == "pending"
+                assert refreshed.embedding_error == QUOTA_ERROR_CODE
+
+    run_async(scenario())
+
+
+def test_embedding_wrapper_preserves_quota_classification(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def quota_batch(_texts: list[str], _task_type: str) -> list[list[float]]:
+        raise RuntimeError("429 RESOURCE_EXHAUSTED retryDelay: 23s")
+
+    def hash_fallback_must_not_run(_text: str, _dim: int = EMBEDDING_DIM) -> list[float]:
+        raise AssertionError("hash fallback must not run after Gemini quota exhaustion")
+
+    monkeypatch.setattr(settings, "embedding_provider", "gemini")
+    monkeypatch.setattr(settings, "gemini_api_key", "configured-test-key")
+    monkeypatch.setattr(settings, "allow_hash_embeddings", False)
+    monkeypatch.setattr("app.services.embeddings._GEMINI_DISABLED_REASON", None)
+    monkeypatch.setattr("app.services.embeddings._embed_gemini_batch", quota_batch)
+    monkeypatch.setattr("app.services.embeddings._fallback_embedding", hash_fallback_must_not_run)
+
+    with pytest.raises(GeminiEmbeddingQuotaError, match="GEMINI_EMBEDDING_QUOTA_EXCEEDED"):
+        run_async(embed_documents_batch(["first", "second"], batch_size=2))
+
+
+def test_reembedding_progress_callback_runs_after_each_committed_batch(
+    rag_session_factory: async_sessionmaker[AsyncSession],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    progress_events: list[dict] = []
+
+    async def fake_batch(texts: list[str], batch_size: int = 50) -> list[list[float]]:
+        return [_vector(4.0) for _text in texts]
+
+    monkeypatch.setattr("app.services.rag_reembed.embed_documents_batch", fake_batch)
+
+    async def scenario() -> None:
+        async with rag_session_factory() as db:
+            await _seed_rag_chunks(db)
+            result = await reembed_rag_chunks(
+                db,
+                dry_run=False,
+                force=True,
+                batch_size=2,
+                progress_callback=progress_events.append,
+            )
+            assert result.updated == 3
+            assert result.batches_completed == 2
+            assert [event["updated"] for event in progress_events] == [2, 3]
+            assert [event["batches_completed"] for event in progress_events] == [1, 2]
+            assert progress_events[-1]["last_chunk_id"] == result.last_chunk_id
+
+    run_async(scenario())
+
+
+def test_reembedding_paces_later_batches(
+    rag_session_factory: async_sessionmaker[AsyncSession],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    delays: list[float] = []
+
+    async def fake_batch(texts: list[str], batch_size: int = 50) -> list[list[float]]:
+        return [_vector(4.0) for _text in texts]
+
+    async def fake_sleep(delay: float) -> None:
+        delays.append(delay)
+
+    monkeypatch.setattr("app.services.rag_reembed.embed_documents_batch", fake_batch)
+    monkeypatch.setattr("app.services.rag_reembed.asyncio.sleep", fake_sleep)
+
+    async def scenario() -> None:
+        async with rag_session_factory() as db:
+            await _seed_rag_chunks(db)
+            result = await reembed_rag_chunks(
+                db,
+                dry_run=False,
+                force=True,
+                batch_size=2,
+                batch_delay_seconds=21.0,
+            )
+            assert result.status == "completed"
+            assert result.batches_completed == 2
+            assert result.batch_delay_seconds == 21.0
+            assert delays == [21.0]
+
+    run_async(scenario())
+
+
+def test_reembedding_resumes_after_checkpoint_and_preserves_completed_vector(
+    rag_session_factory: async_sessionmaker[AsyncSession],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    async def fake_batch(texts: list[str], batch_size: int = 50) -> list[list[float]]:
+        return [_vector(7.0) for _text in texts]
+
+    monkeypatch.setattr("app.services.rag_reembed.embed_documents_batch", fake_batch)
+
+    async def scenario() -> None:
+        async with rag_session_factory() as db:
+            _textbook, _solutions, chunks = await _seed_rag_chunks(db)
+            chunks[0].embedding = _vector(2.0)
+            chunks[0].embedding_model = settings.gemini_embedding_model
+            chunks[0].embedding_status = "completed"
+            chunks[1].embedding_status = "processing"
+            await db.commit()
+
+            result = await reembed_rag_chunks(
+                db,
+                dry_run=False,
+                force=False,
+                resume_failed=True,
+                resume_after_chunk_id=chunks[0].id,
+                batch_size=2,
+            )
+            first = await db.get(RagChunk, chunks[0].id)
+            second = await db.get(RagChunk, chunks[1].id)
+            third = await db.get(RagChunk, chunks[2].id)
+            assert first is not None and first.embedding == _vector(2.0)
+            assert second is not None and second.embedding == _vector(7.0)
+            assert third is not None and third.embedding == _vector(7.0)
+            assert result.updated == 2
+
+    run_async(scenario())
+
+
+def test_reembedding_rejects_wrong_dimension_without_marking_completed(
+    rag_session_factory: async_sessionmaker[AsyncSession],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    async def wrong_batch(texts: list[str], batch_size: int = 50) -> list[list[float]]:
+        return [[0.1, 0.2, 0.3] for _text in texts]
+
+    async def wrong_document(_text: str) -> list[float]:
+        return [0.1, 0.2, 0.3]
+
+    monkeypatch.setattr("app.services.rag_reembed.embed_documents_batch", wrong_batch)
+    monkeypatch.setattr("app.services.rag_reembed.embed_document", wrong_document)
+
+    async def scenario() -> None:
+        async with rag_session_factory() as db:
+            _textbook, _solutions, chunks = await _seed_rag_chunks(db)
+            result = await reembed_rag_chunks(db, dry_run=False, force=True, batch_size=3)
+            assert result.status == "completed_with_errors"
+            assert result.failed == 3
+            for chunk in chunks:
+                refreshed = await db.get(RagChunk, chunk.id)
+                assert refreshed is not None
+                assert refreshed.embedding is None
+                assert refreshed.embedding_status == "failed"
+
+    run_async(scenario())
+
+
+def test_reembedding_excludes_invalid_source_metadata_without_provider_call(
+    rag_session_factory: async_sessionmaker[AsyncSession],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    embedded_texts: list[str] = []
+
+    async def fake_batch(texts: list[str], batch_size: int = 50) -> list[list[float]]:
+        embedded_texts.extend(texts)
+        return [_vector(6.0) for _text in texts]
+
+    monkeypatch.setattr("app.services.rag_reembed.embed_documents_batch", fake_batch)
+
+    async def scenario() -> None:
+        async with rag_session_factory() as db:
+            _textbook, _solutions, chunks = await _seed_rag_chunks(db)
+            invalid = chunks[0]
+            invalid.source_type = "unknown"
+            invalid.metadata_json = {
+                "unit_id": "unit_04",
+                "lesson_id": "unit_04_lesson_01",
+                "printed_page_start": 11,
+                "printed_page_end": 11,
+                "quality_status": "ready",
+                "reviewed_metadata_version": "2026-06-reviewed-v1",
+            }
+            await db.commit()
+
+            result = await reembed_rag_chunks(db, dry_run=False, force=True, batch_size=3)
+            refreshed = await db.get(RagChunk, invalid.id)
+            assert refreshed is not None
+            assert refreshed.embedding is None
+            assert refreshed.embedding_status == "skipped"
+            assert result.updated == 2
+            assert "تعريف الحمض" not in embedded_texts
+
+    run_async(scenario())
+
+
+def test_embedding_errors_are_redacted(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(settings, "gemini_api_key", "secret-test-key")
+    error = RuntimeError("api_key=secret-test-key provider connection failed")
+
+    redacted = redact_embedding_error(error)
+
+    assert "secret-test-key" not in redacted
+    assert "***redacted***" in redacted
 
 
 def test_reembedding_metadata_records_model() -> None:

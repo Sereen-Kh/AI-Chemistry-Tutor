@@ -92,7 +92,7 @@ export const FormattedText = ({ text }: { text: string }) => {
     <>
       {parts.map((part, index) => (
         isFormulaLike(part) ? (
-          <span key={`${part}-${index}`} className="formula">{part}</span>
+          <span key={`${part}-${index}`} className="formula chem-formula">{part}</span>
         ) : (
           <span key={`${part}-${index}`}>{part}</span>
         )

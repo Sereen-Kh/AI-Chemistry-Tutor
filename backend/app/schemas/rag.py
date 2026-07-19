@@ -55,6 +55,8 @@ class RetrievedChunkResponse(BaseModel):
     source_type: str
     content_type: str
     page_number: int | None = None
+    printed_page_start: int | None = None
+    printed_page_end: int | None = None
     unit_id: int | str | None = None
     chapter_id: int | None = None
     lesson_id: int | str | None = None
@@ -67,8 +69,29 @@ class RetrievedChunkResponse(BaseModel):
     similarity_score: float
 
 
+class RagCitationResponse(BaseModel):
+    chunk_id: int
+    source_id: int
+    source: str | None = None
+    source_type: str
+    page_number: int | None = None
+    printed_page_start: int
+    printed_page_end: int
+    unit_id: int | str
+    lesson_id: int | str
+    content_type: str
+    content_preview: str | None = None
+    quality_status: str
+    quality_warning: str | None = None
+    reviewed_metadata_version: str
+    score: float
+    similarity_score: float
+    curriculum_metadata: dict[str, Any] = Field(default_factory=dict)
+
+
 class RagRetrieveResponse(BaseModel):
     chunks: list[RetrievedChunkResponse]
+    citations: list[RagCitationResponse] = Field(default_factory=list)
 
 
 class RagRetrieveDebugResponse(BaseModel):
@@ -120,8 +143,10 @@ class RagReembedRequest(BaseModel):
     source_type: str | None = None
     batch_size: int = Field(default=50, ge=1, le=500)
     dry_run: bool = False
-    force: bool = True
+    force: bool = False
     resume_failed: bool = False
+    resume_after_chunk_id: int | None = Field(default=None, ge=0)
+    batch_delay_seconds: float = Field(default=0.0, ge=0, le=300)
 
 
 class RagReembedResponse(BaseModel):
@@ -286,6 +311,7 @@ class RagReembedStatusResponse(BaseModel):
 
 class RagEvaluationRequest(BaseModel):
     fail_on_threshold: bool = False
+    confirm_live_provider_calls: bool = False
     dataset_path: str = "data/eval/rag_gold_questions.json"
     report_dir: str = "data/eval/reports"
     top_k: int = Field(default=5, ge=1, le=20)
@@ -323,11 +349,20 @@ class RagQaResponse(BaseModel):
 class RagOperationsResponse(BaseModel):
     status: str
     window_hours: int
+    last_updated_at: datetime
     active_reviewed_metadata_version: str | None = None
     embedding_model: str
     student_retrieval_enabled: bool
     production_gate_required: bool
     production_gate_status: dict[str, Any] = Field(default_factory=dict)
+    preflight_status: str
+    total_eligible_chunks: int = 0
+    embedded_eligible_chunks: int = 0
+    embedding_completion_rate: float = 0.0
+    ready_chunks: int = 0
+    needs_review_chunks: int = 0
+    blocked_chunks: int = 0
+    stale_chunks: int = 0
     query_volume: int = 0
     no_result_rate: float = 0.0
     low_confidence_rate: float = 0.0

@@ -21,3 +21,4 @@ class StudyPlan(Base, TimestampMixin):
     status: Mapped[str] = mapped_column(String(30), default="active", nullable=False)
 
     user = relationship("User", back_populates="study_plans")
+    study_sessions = relationship("StudySession", back_populates="study_plan")

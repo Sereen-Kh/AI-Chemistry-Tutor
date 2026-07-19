@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.student_profile import StudentProfile
 from app.models.user import User
+from app.services.interest_service import sync_user_interests_async, validate_interest_keys
 from app.services.preference_mapping import (
     apply_user_preference_updates,
     legacy_teaching_style_from_new,
@@ -63,6 +64,7 @@ def _sync_user_from_profile(user: User | None, profile: StudentProfile) -> None:
 
 async def upsert_profile(db: AsyncSession, user_id: int, updates: dict) -> StudentProfile:
     profile = await get_or_create_profile(db, user_id)
+    interest_keys = None
     if updates.get("learning_style") is not None:
         raw_style = _raw_value(updates["learning_style"])
         level, method = map_legacy_teaching_style(raw_style)
@@ -76,14 +78,34 @@ async def upsert_profile(db: AsyncSession, user_id: int, updates: dict) -> Stude
     if updates.get("learning_modes") is not None:
         profile.learning_modes = normalize_learning_modes(updates["learning_modes"])
     if updates.get("student_interests") is not None:
-        profile.student_interests = normalize_student_interests(updates["student_interests"])
+        interest_keys = validate_interest_keys(updates["student_interests"])
+        profile.student_interests = interest_keys
     if updates.get("teaching_level") is not None or updates.get("explanation_method") is not None:
         profile.learning_style = legacy_teaching_style_from_new(profile.teaching_level, profile.explanation_method)
-    handled = {"learning_style", "teaching_level", "explanation_method", "learning_modes", "student_interests"}
+    if updates.get("learning_memory_enabled") is not None:
+        metadata = dict(profile.metadata_json) if isinstance(profile.metadata_json, dict) else {}
+        metadata["learning_memory_enabled"] = bool(updates["learning_memory_enabled"])
+        profile.metadata_json = metadata
+    handled = {
+        "learning_style",
+        "teaching_level",
+        "explanation_method",
+        "learning_modes",
+        "student_interests",
+        "learning_memory_enabled",
+    }
     for field, value in updates.items():
         if field not in handled and hasattr(profile, field):
             setattr(profile, field, value)
-    _sync_user_from_profile(await db.get(User, user_id), profile)
+    user = await db.get(User, user_id)
+    _sync_user_from_profile(user, profile)
+    if interest_keys is not None and user is not None:
+        await sync_user_interests_async(
+            db,
+            user=user,
+            profile=profile,
+            interest_keys=interest_keys,
+        )
     await db.commit()
     await db.refresh(profile)
     return profile

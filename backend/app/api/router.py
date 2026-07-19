@@ -22,6 +22,7 @@ from app.api.topics import router as topics_router
 from app.api.units import router as units_router
 from app.api.elements import router as elements_router
 from app.api.study_plans import router as study_plans_router
+from app.api.study_sessions import router as study_sessions_router
 from app.api.progress import router as progress_router
 from app.api.quizzes import router as quizzes_router
 from app.api.rag.routes import router as rag_router
@@ -43,6 +44,7 @@ api_router.include_router(lessons_router)
 api_router.include_router(topics_router)
 api_router.include_router(elements_router)
 api_router.include_router(study_plans_router)
+api_router.include_router(study_sessions_router)
 api_router.include_router(ai_companion_router)
 api_router.include_router(chat_router)
 api_router.include_router(ai_alias_router)

@@ -128,11 +128,20 @@ describe('RagAdminPage', () => {
     mockedApi.getOperations.mockResolvedValue({
       status: 'degraded',
       window_hours: 24,
+      last_updated_at: '2026-07-13T08:00:00Z',
       active_reviewed_metadata_version: '2026-06-reviewed-v1',
       embedding_model: 'gemini-embedding-001',
       student_retrieval_enabled: true,
       production_gate_required: false,
       production_gate_status: {},
+      preflight_status: 'ready',
+      total_eligible_chunks: 744,
+      embedded_eligible_chunks: 744,
+      embedding_completion_rate: 1,
+      ready_chunks: 629,
+      needs_review_chunks: 115,
+      blocked_chunks: 0,
+      stale_chunks: 0,
       query_volume: 12,
       no_result_rate: 0.1,
       low_confidence_rate: 0.2,
@@ -154,6 +163,7 @@ describe('RagAdminPage', () => {
     expect(mockedApi.getReembedStatus).not.toHaveBeenCalled();
     expect(screen.getByText('تشغيل RAG في الإنتاج')).toBeInTheDocument();
     expect(screen.getByText('12')).toBeInTheDocument();
+    expect(screen.getAllByText('744').length).toBeGreaterThan(0);
   });
 
   it('disables write actions when preflight is blocked', async () => {

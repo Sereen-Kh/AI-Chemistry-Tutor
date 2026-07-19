@@ -3,9 +3,26 @@
 from datetime import datetime
 from typing import Any
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 from app.models.enums import ExplanationMethod, LearningMode, StudentInterest, TeachingLevel
+from app.schemas.rag import RagCitationResponse
+
+
+class ExternalSourceResponse(BaseModel):
+    title: str
+    url: str
+    domain: str
+    cited_text: str
+    start_index: int | None = None
+    end_index: int | None = None
+
+    @field_validator("url")
+    @classmethod
+    def validate_url_scheme(cls, value: str) -> str:
+        if not value.startswith(("http://", "https://")):
+            raise ValueError("external source URL must use http or https")
+        return value
 
 
 class SessionCreate(BaseModel):
@@ -43,6 +60,7 @@ class MessageResponse(BaseModel):
     voice_id: str | None = None
     sources: list[dict[str, Any]] = Field(default_factory=list)
     citations: list[dict[str, Any]] = Field(default_factory=list)
+    external_sources: list[ExternalSourceResponse] = Field(default_factory=list)
     blocks: list[dict[str, Any]] = Field(default_factory=list)
     media_blocks: list[dict[str, Any]] = Field(default_factory=list)
     source_blocks: list[dict[str, Any]] = Field(default_factory=list)
@@ -78,6 +96,7 @@ class SendMessageRequest(BaseModel):
     learning_modes: list[LearningMode] | None = None
     student_interests: list[StudentInterest] | None = None
     action: str | None = None
+    web_search_requested: bool = False
 
 
 class ChatAskRequest(BaseModel):
@@ -103,6 +122,7 @@ class ChatAskRequest(BaseModel):
     previous_answer: str | None = None
     previous_sources: list[dict[str, Any]] = Field(default_factory=list)
     previous_selected_chunks: list[dict[str, Any]] = Field(default_factory=list)
+    web_search_requested: bool = False
 
     @model_validator(mode="after")
     def require_question_or_message(self) -> "ChatAskRequest":
@@ -122,7 +142,10 @@ class ChatSourceResponse(BaseModel):
     source: str | None = None
     source_type: str | None = None
     page_number: int | None = None
+    printed_page_start: int | None = None
+    printed_page_end: int | None = None
     content_type: str
+    content_preview: str | None = None
     unit_id: int | str | None = None
     lesson_id: int | str | None = None
     quality_status: str | None = None
@@ -146,9 +169,12 @@ class AnswerSourceBlock(BaseModel):
     page: int | None = None
     chunk_id: int
     chunk_type: str
+    content_preview: str | None = None
     score: float
     source_type: str | None = None
     source_id: int | None = None
+    printed_page_start: int | None = None
+    printed_page_end: int | None = None
     unit_id: int | str | None = None
     lesson_id: int | str | None = None
     quality_status: str | None = None
@@ -173,7 +199,8 @@ class ChatAnswerResponse(BaseModel):
     student_interests: list[StudentInterest] = Field(default_factory=list)
     blocks: list[AnswerBlock] = Field(default_factory=list)
     sources: list[ChatSourceResponse] = Field(default_factory=list)
-    citations: list[dict[str, Any]] = Field(default_factory=list)
+    citations: list[RagCitationResponse] = Field(default_factory=list)
+    external_sources: list[ExternalSourceResponse] = Field(default_factory=list)
     media_blocks: list[AnswerBlock] = Field(default_factory=list)
     source_blocks: list[AnswerSourceBlock] = Field(default_factory=list)
     page_numbers: list[int] = Field(default_factory=list)

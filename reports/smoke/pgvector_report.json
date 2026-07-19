@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-12T13:37:21.193666+00:00",
+  "generated_at": "2026-07-14T08:48:52.518543+00:00",
   "database_url": "postgresql://***:***@localhost:5432/edumind",
   "postgres_reachable": true,
   "pgvector_extension_installed": true,
@@ -13,14 +13,12 @@
   "embedding_index_type": "ivfflat",
   "embedding_distance_operator": "vector_cosine_ops",
   "rag_chunks_count": 744,
-  "embedded_chunks_count": 0,
+  "embedded_chunks_count": 744,
   "completed_vectors_missing": 0,
   "noncompleted_with_embeddings": 0,
   "wrong_dimension_embeddings": 0,
   "embedding_model_mismatch": 0,
-  "embedding_index_empty": true,
-  "errors": [
-    "EMBEDDING_INDEX_EMPTY: rag_chunks has no stored embeddings."
-  ],
-  "result": "failed"
+  "embedding_index_empty": false,
+  "errors": [],
+  "result": "passed"
 }

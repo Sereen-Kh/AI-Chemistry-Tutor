@@ -23,7 +23,7 @@ from app.models.textbook import ContentSource, RagChunk
 from app.services import rag_evaluation, rag_operations, rag_runtime
 from app.services import homework_service
 from app.services.chat_service import ask_question
-from app.services.rag import retrieve_context
+from app.services.rag import RetrievedChunk, cached_retrieved_chunk_allowed, retrieve_context
 
 
 def run_async(coro):
@@ -114,6 +114,12 @@ def test_gold_dataset_has_explicit_page_number_contract() -> None:
     assert all("expected_pdf_pages" in case for case in cases)
     assert all(case["expected_unit_ids"] and case["expected_lesson_ids"] for case in cases)
     assert any("unit_06" in case["expected_unit_ids"] for case in cases)
+    coverage = rag_evaluation.build_dataset_coverage(cases)
+    assert coverage["reviewed_ready_lesson_count"] == 9
+    assert coverage["covered_ready_lesson_count"] == 9
+    assert coverage["missing_ready_lesson_ids"] == []
+    assert coverage["source_type_case_counts"]["textbook"] >= 1
+    assert coverage["source_type_case_counts"]["solution_book"] >= 1
 
 
 def test_legacy_expected_pages_requires_declared_number_type(tmp_path: Path) -> None:
@@ -124,6 +130,16 @@ def test_legacy_expected_pages_requires_declared_number_type(tmp_path: Path) -> 
     )
     with pytest.raises(rag_evaluation.EvaluationDatasetError, match=rag_evaluation.EVALUATION_DATASET_INVALID):
         rag_evaluation.load_eval_cases(dataset)
+
+
+def test_live_evaluation_requires_environment_and_explicit_confirmation(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv("RUN_RAG_INTEGRATION", raising=False)
+    assert rag_evaluation.live_evaluation_authorized(confirmed=True) is False
+    monkeypatch.setenv("RUN_RAG_INTEGRATION", "1")
+    assert rag_evaluation.live_evaluation_authorized(confirmed=False) is False
+    assert rag_evaluation.live_evaluation_authorized(confirmed=True) is True
 
 
 def test_evaluation_preflight_excludes_blocked_and_stale_and_requires_complete_vectors(
@@ -155,6 +171,50 @@ def test_evaluation_preflight_excludes_blocked_and_stale_and_requires_complete_v
             assert rag_evaluation.EMBEDDING_INDEX_INCOMPLETE in result["blocking_issues"]
 
     run_async(scenario())
+
+
+def test_evaluation_preflight_uses_stable_dimension_and_metadata_readiness_codes(
+    async_factory,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(settings, "rag_active_reviewed_metadata_version", "2026-06-reviewed-v1")
+
+    async def metadata_not_ready():
+        async with async_factory() as db:
+            monkeypatch.setattr(
+                rag_evaluation,
+                "load_reviewed_curriculum_metadata",
+                lambda **_kwargs: (_ for _ in ()).throw(
+                    rag_evaluation.ReviewedCurriculumMetadataError(
+                        "REVIEWED_CURRICULUM_METADATA_NOT_READY",
+                        "not ready",
+                    )
+                ),
+            )
+            result = await rag_evaluation.build_evaluation_preconditions(db)
+            assert rag_evaluation.REVIEWED_METADATA_NOT_READY in result["blocking_issues"]
+
+    run_async(metadata_not_ready())
+
+    async def wrong_dimension():
+        async with async_factory() as db:
+            monkeypatch.setattr(
+                rag_evaluation,
+                "load_reviewed_curriculum_metadata",
+                lambda **_kwargs: _reviewed_metadata(),
+            )
+            source = ContentSource(source_type="textbook", title="Book", status="completed")
+            db.add(source)
+            await db.flush()
+            chunk = _chunk(source.id, 0, complete=True)
+            db.add(chunk)
+            await db.commit()
+            monkeypatch.setattr(settings, "embedding_dimension", 10)
+            result = await rag_evaluation.build_evaluation_preconditions(db)
+            assert rag_evaluation.EMBEDDING_DIMENSION_MISMATCH in result["blocking_issues"]
+            assert rag_evaluation.EMBEDDING_MODEL_MISMATCH not in result["blocking_issues"]
+
+    run_async(wrong_dimension())
 
 
 def test_kill_switch_returns_before_query_embedding(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -215,6 +275,47 @@ def test_cache_namespace_changes_with_active_version(monkeypatch: pytest.MonkeyP
     assert first != second
 
 
+def test_cached_retrieval_requires_current_model_version_and_completed_embedding(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(settings, "rag_active_reviewed_metadata_version", "current-v1")
+    monkeypatch.setattr(settings, "gemini_embedding_model", "gemini-embedding-001")
+    chunk = RetrievedChunk(
+        id=1,
+        source_id=1,
+        content="محتوى مراجع",
+        source="Chemistry.pdf",
+        source_type="textbook",
+        content_type="concept",
+        page_number=108,
+        quality_status="ready",
+        reviewed_metadata_version="current-v1",
+        curriculum_metadata={
+            "quality_status": "ready",
+            "reviewed_metadata_version": "current-v1",
+            "stale": False,
+        },
+        embedding_status="completed",
+        embedding_model="gemini-embedding-001",
+    )
+
+    assert cached_retrieved_chunk_allowed(chunk) is True
+    chunk.reviewed_metadata_version = "old-v0"
+    assert cached_retrieved_chunk_allowed(chunk) is False
+    chunk.reviewed_metadata_version = "current-v1"
+    chunk.embedding_model = "legacy-model"
+    assert cached_retrieved_chunk_allowed(chunk) is False
+    chunk.embedding_model = "gemini-embedding-001"
+    chunk.embedding_status = "pending"
+    assert cached_retrieved_chunk_allowed(chunk) is False
+    chunk.embedding_status = "completed"
+    chunk.curriculum_metadata = {
+        **(chunk.curriculum_metadata or {}),
+        "stale": True,
+    }
+    assert cached_retrieved_chunk_allowed(chunk) is False
+
+
 def test_production_gate_requires_live_qa_report(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     evaluation_path = tmp_path / "evaluation.json"
     qa_path = tmp_path / "qa.json"
@@ -270,12 +371,37 @@ def test_operations_aggregates_existing_logs_without_writes(
     sync_db.commit()
     monkeypatch.setattr(rag_operations, "production_gate_status", lambda: {"blocking_issues": []})
     monkeypatch.setattr(rag_operations, "load_json_report", lambda _path: None)
+    monkeypatch.setattr(
+        rag_operations,
+        "build_rag_preflight",
+        lambda _db: {
+            "status": "ready",
+            "can_evaluate": True,
+            "chunks": {
+                "ready_chunks": 629,
+                "needs_review_chunks": 115,
+                "blocked_chunks": 0,
+                "stale_chunks": 0,
+                "pending_embeddings": 0,
+                "processing_embeddings": 0,
+                "completed_embeddings": 744,
+                "failed_embeddings": 0,
+            },
+            "blocking_issues": [],
+            "warnings": [],
+        },
+    )
 
     payload = rag_operations.build_rag_operations(sync_db)
     assert payload["query_volume"] == 1
     assert payload["source_type_distribution"] == {"textbook": 2}
     assert payload["quality_status_counts"]["needs_review"] == 1
     assert payload["latest_embedding_job"]["job_id"] == "embed-1"
+    assert payload["total_eligible_chunks"] == 744
+    assert payload["embedded_eligible_chunks"] == 744
+    assert payload["embedding_completion_rate"] == 1.0
+    assert payload["ready_chunks"] == 629
+    assert payload["needs_review_chunks"] == 115
 
 
 def test_admin_operations_endpoint_is_read_only(
@@ -284,6 +410,26 @@ def test_admin_operations_endpoint_is_read_only(
 ) -> None:
     monkeypatch.setattr(rag_operations, "production_gate_status", lambda: {"blocking_issues": []})
     monkeypatch.setattr(rag_operations, "load_json_report", lambda _path: None)
+    monkeypatch.setattr(
+        rag_operations,
+        "build_rag_preflight",
+        lambda _db: {
+            "status": "blocked",
+            "can_evaluate": False,
+            "chunks": {
+                "ready_chunks": 0,
+                "needs_review_chunks": 0,
+                "blocked_chunks": 0,
+                "stale_chunks": 0,
+                "pending_embeddings": 0,
+                "processing_embeddings": 0,
+                "completed_embeddings": 0,
+                "failed_embeddings": 0,
+            },
+            "blocking_issues": ["EMBEDDING_INDEX_EMPTY"],
+            "warnings": [],
+        },
+    )
 
     def override_db():
         yield sync_db
@@ -295,6 +441,8 @@ def test_admin_operations_endpoint_is_read_only(
             response = client.get("/api/v1/admin/rag/operations")
         assert response.status_code == 200
         assert response.json()["embedding_model"] == "gemini-embedding-001"
+        assert response.json()["preflight_status"] == "blocked"
+        assert response.json()["total_eligible_chunks"] == 0
     finally:
         app.dependency_overrides.pop(require_admin, None)
         app.dependency_overrides.pop(get_db, None)

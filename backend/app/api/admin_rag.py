@@ -33,7 +33,11 @@ from app.schemas.rag import (
     RagReembedStatusResponse,
     RagSourceStatusResponse,
 )
-from app.services.rag_evaluation import evaluate_rag_dataset
+from app.services.rag_evaluation import (
+    RAG_LIVE_EVALUATION_NOT_AUTHORIZED,
+    evaluate_rag_dataset,
+    live_evaluation_authorized,
+)
 from app.services.rag_preflight import build_rag_preflight
 from app.services.rag_operations import build_rag_operations
 from app.services.rag_runtime import load_json_report
@@ -335,6 +339,8 @@ def start_rag_reembed(
             dry_run=request.dry_run,
             force=request.force,
             resume_failed=request.resume_failed,
+            resume_after_chunk_id=request.resume_after_chunk_id,
+            batch_delay_seconds=request.batch_delay_seconds,
         )
     except Exception as exc:  # pragma: no cover - broker availability
         raise HTTPException(status_code=503, detail=f"Could not queue RAG re-embedding job: {exc}") from exc
@@ -399,6 +405,14 @@ async def run_rag_evaluation(
     _admin=Depends(require_admin),
     db: AsyncSession = Depends(get_async_db),
 ):
+    if not live_evaluation_authorized(confirmed=request.confirm_live_provider_calls):
+        raise HTTPException(
+            status_code=409,
+            detail={
+                "code": RAG_LIVE_EVALUATION_NOT_AUTHORIZED,
+                "message": "Set RUN_RAG_INTEGRATION=1 and explicitly confirm live provider calls.",
+            },
+        )
     result = await evaluate_rag_dataset(
         db,
         dataset_path=request.dataset_path,

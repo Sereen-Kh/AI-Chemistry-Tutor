@@ -28,6 +28,7 @@ from app.services.gemini_client import (
 )
 from app.services.rag import (
     RetrievedChunk,
+    cached_retrieved_chunk_allowed,
     clean_query,
     lexical_relevance_score,
     retrieve_context,
@@ -216,6 +217,8 @@ def _chunk_to_dict(chunk: RetrievedChunk) -> dict[str, Any]:
         "quality_warning": chunk.quality_warning,
         "reviewed_metadata_version": chunk.reviewed_metadata_version,
         "curriculum_metadata": chunk.curriculum_metadata,
+        "embedding_status": chunk.embedding_status,
+        "embedding_model": chunk.embedding_model,
         "similarity_score": chunk.similarity_score,
     }
 
@@ -226,6 +229,8 @@ def _chunk_from_dict(payload: dict[str, Any]) -> RetrievedChunk:
     payload.setdefault("quality_warning", None)
     payload.setdefault("reviewed_metadata_version", None)
     payload.setdefault("curriculum_metadata", None)
+    payload.setdefault("embedding_status", None)
+    payload.setdefault("embedding_model", None)
     return RetrievedChunk(**payload)
 
 
@@ -642,7 +647,14 @@ async def semantic_retrieve_context(
     )
     cached = await _redis_get_json(cache_key)
     if isinstance(cached, dict) and isinstance(cached.get("chunks"), list):
-        chunks = [_chunk_from_dict(item) for item in cached["chunks"]]
+        chunks = [
+            chunk
+            for chunk in (_chunk_from_dict(item) for item in cached["chunks"])
+            if cached_retrieved_chunk_allowed(chunk)
+        ]
+        if not chunks:
+            cached = None
+    if isinstance(cached, dict) and isinstance(cached.get("chunks"), list):
         diagnostics = dict(cached.get("diagnostics") or {})
         diagnostics["cache_hit"] = True
         await log_rag_retrieval(

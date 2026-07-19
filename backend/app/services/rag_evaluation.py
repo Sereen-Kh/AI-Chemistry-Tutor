@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 import json
+import os
 import time
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
@@ -15,6 +16,7 @@ from app.core.config import PROJECT_DIR, settings
 from app.models.textbook import RagChunk
 from app.services.rag import RetrievedChunk, retrieve_context
 from app.services.rag_runtime import active_reviewed_metadata_version
+from app.services.reviewed_curriculum_catalog import CANONICAL_CURRICULUM_PATH
 from app.services.reviewed_curriculum_metadata import (
     ReviewedCurriculumMetadataError,
     evaluate_chunk_eligibility,
@@ -24,8 +26,11 @@ from app.services.reviewed_curriculum_metadata import (
 EMBEDDING_INDEX_INCOMPLETE = "EMBEDDING_INDEX_INCOMPLETE"
 EMBEDDING_INDEX_EMPTY = "EMBEDDING_INDEX_EMPTY"
 EMBEDDING_MODEL_MISMATCH = "EMBEDDING_MODEL_MISMATCH"
+EMBEDDING_DIMENSION_MISMATCH = "EMBEDDING_DIMENSION_MISMATCH"
 REVIEWED_METADATA_VERSION_MISMATCH = "REVIEWED_METADATA_VERSION_MISMATCH"
+REVIEWED_METADATA_NOT_READY = "REVIEWED_METADATA_NOT_READY"
 EVALUATION_DATASET_INVALID = "EVALUATION_DATASET_INVALID"
+RAG_LIVE_EVALUATION_NOT_AUTHORIZED = "RAG_LIVE_EVALUATION_NOT_AUTHORIZED"
 
 THRESHOLDS = {
     "top5_expected_printed_page_hit_rate": 0.80,
@@ -60,6 +65,12 @@ class EvaluationDatasetError(ValueError):
         self.code = EVALUATION_DATASET_INVALID
         self.detail = detail
         super().__init__(f"{self.code}: {detail}")
+
+
+def live_evaluation_authorized(*, confirmed: bool) -> bool:
+    """Require both an operator confirmation and the integration environment gate."""
+
+    return bool(confirmed and os.getenv("RUN_RAG_INTEGRATION") == "1")
 
 
 @dataclass
@@ -172,6 +183,72 @@ def load_eval_cases(path: str | Path) -> list[dict[str, Any]]:
     return normalized_cases
 
 
+def build_dataset_coverage(
+    cases: list[dict[str, Any]],
+    *,
+    catalog_path: str | Path = CANONICAL_CURRICULUM_PATH,
+) -> dict[str, Any]:
+    """Require gold coverage for every reviewed-ready lesson and both source types."""
+
+    resolved = resolve_project_path(catalog_path)
+    try:
+        catalog = json.loads(resolved.read_text(encoding="utf-8"))
+    except (OSError, ValueError, TypeError) as exc:
+        raise EvaluationDatasetError(f"Could not read reviewed curriculum catalog: {resolved}") from exc
+    if not isinstance(catalog, dict):
+        raise EvaluationDatasetError("reviewed curriculum catalog must be an object")
+
+    ready_lesson_ids: set[str] = set()
+    for unit in catalog.get("units") or []:
+        if not isinstance(unit, dict):
+            continue
+        for chapter in unit.get("chapters") or []:
+            if not isinstance(chapter, dict):
+                continue
+            for lesson in chapter.get("lessons") or []:
+                if not isinstance(lesson, dict) or lesson.get("quality_status") != "ready":
+                    continue
+                lesson_id = str(lesson.get("stable_id") or "").strip()
+                if lesson_id:
+                    ready_lesson_ids.add(lesson_id)
+
+    covered_lesson_ids = {
+        lesson_id
+        for case in cases
+        for lesson_id in case.get("expected_lesson_ids") or []
+        if lesson_id
+    }
+    source_case_counts = {
+        source_type: sum(
+            source_type in set(case.get("expected_source_types") or []) for case in cases
+        )
+        for source_type in sorted(_ALLOWED_SOURCE_TYPES)
+    }
+    missing_ready_lessons = sorted(ready_lesson_ids - covered_lesson_ids)
+    missing_source_types = sorted(
+        source_type for source_type, count in source_case_counts.items() if count == 0
+    )
+    if not ready_lesson_ids:
+        raise EvaluationDatasetError("reviewed curriculum catalog has no ready lessons")
+    if missing_ready_lessons:
+        raise EvaluationDatasetError(
+            "dataset does not cover reviewed-ready lessons: " + ", ".join(missing_ready_lessons)
+        )
+    if missing_source_types:
+        raise EvaluationDatasetError(
+            "dataset has no representative cases for source types: " + ", ".join(missing_source_types)
+        )
+
+    return {
+        "case_count": len(cases),
+        "reviewed_ready_lesson_count": len(ready_lesson_ids),
+        "covered_ready_lesson_count": len(ready_lesson_ids & covered_lesson_ids),
+        "missing_ready_lesson_ids": missing_ready_lessons,
+        "source_type_case_counts": source_case_counts,
+        "catalog_path": str(resolved),
+    }
+
+
 def _metadata_dict(raw: Any) -> dict[str, Any]:
     return dict(raw) if isinstance(raw, dict) else {}
 
@@ -258,7 +335,7 @@ async def build_evaluation_preconditions(db: AsyncSession) -> dict[str, Any]:
         reviewed = load_reviewed_curriculum_metadata(require_ready=True)
     except ReviewedCurriculumMetadataError as exc:
         reviewed = {}
-        issues.append(exc.code)
+        issues.extend([REVIEWED_METADATA_NOT_READY, exc.code])
     reviewed_version = str(reviewed.get("version") or "")
     if not active_version or reviewed_version != active_version:
         issues.append(REVIEWED_METADATA_VERSION_MISMATCH)
@@ -321,8 +398,10 @@ async def build_evaluation_preconditions(db: AsyncSession) -> dict[str, Any]:
         issues.append(EMBEDDING_INDEX_EMPTY)
     if counts["incomplete_embeddings"]:
         issues.append(EMBEDDING_INDEX_INCOMPLETE)
-    if counts["model_mismatch_chunks"] or counts["wrong_dimension_chunks"]:
+    if counts["model_mismatch_chunks"]:
         issues.append(EMBEDDING_MODEL_MISMATCH)
+    if counts["wrong_dimension_chunks"]:
+        issues.append(EMBEDDING_DIMENSION_MISMATCH)
     if counts["wrong_version_chunks"] or counts["missing_version_chunks_excluded"]:
         issues.append(REVIEWED_METADATA_VERSION_MISMATCH)
 
@@ -420,6 +499,7 @@ async def evaluate_rag_dataset(
     preconditions = await build_evaluation_preconditions(db)
     try:
         cases = load_eval_cases(dataset_path)
+        dataset_coverage = build_dataset_coverage(cases)
     except EvaluationDatasetError as exc:
         preconditions = {
             **preconditions,
@@ -446,6 +526,7 @@ async def evaluate_rag_dataset(
             )
         )
 
+    preconditions = {**preconditions, "dataset_coverage": dataset_coverage}
     if not preconditions["ready"]:
         return _write_result(
             RagEvaluationResult(
@@ -571,6 +652,7 @@ async def evaluate_rag_dataset(
     printed_rate = round(printed_page_hits / max(printed_page_cases, 1), 4)
     metrics = {
         "dataset_case_count": len(cases),
+        "dataset_coverage": dataset_coverage,
         "printed_page_expectation_case_count": printed_page_cases,
         "top5_expected_printed_page_hit_rate": printed_rate,
         "top5_expected_page_hit_rate": printed_rate,

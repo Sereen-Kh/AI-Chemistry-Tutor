@@ -18,6 +18,7 @@ from app.schemas.chat import (
     SessionResponse,
 )
 from app.services import chat_service
+from app.services.rag_citations import citation_from_chunk
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 ai_alias_router = APIRouter(prefix="/ai", tags=["chat"])
@@ -28,6 +29,28 @@ def _csv_values(value: str | None) -> list[str] | None:
         return None
     values = [item.strip() for item in value.split(",") if item.strip()]
     return values or None
+
+
+def _chat_source_response(chunk) -> ChatSourceResponse:
+    citation = citation_from_chunk(chunk)
+    return ChatSourceResponse(
+        chunk_id=citation["chunk_id"],
+        source_id=citation["source_id"],
+        source=citation["source"],
+        source_type=citation["source_type"],
+        page_number=citation["page_number"],
+        printed_page_start=citation["printed_page_start"],
+        printed_page_end=citation["printed_page_end"],
+        content_type=citation["content_type"],
+        content_preview=citation["content_preview"],
+        unit_id=citation["unit_id"],
+        lesson_id=citation["lesson_id"],
+        quality_status=citation["quality_status"],
+        quality_warning=citation["quality_warning"],
+        reviewed_metadata_version=citation["reviewed_metadata_version"],
+        curriculum_metadata=citation["curriculum_metadata"],
+        similarity_score=citation["similarity_score"],
+    )
 
 
 @router.post("/sessions", response_model=SessionResponse, status_code=201)
@@ -83,6 +106,7 @@ async def send_chat_message(
         learning_modes=[mode.value for mode in request.learning_modes] if request.learning_modes else None,
         student_interests=[interest.value for interest in request.student_interests] if request.student_interests else None,
         action=request.action,
+        web_search_requested=request.web_search_requested,
     )
 
 
@@ -100,6 +124,7 @@ async def send_unified_chat_message(
     learning_modes: str | None = Form(None, alias="learningModes"),
     student_interests: str | None = Form(None, alias="studentInterests"),
     action: str | None = Form(None),
+    web_search_requested: bool = Form(False, alias="webSearchRequested"),
     audio: UploadFile | None = File(None),
     user_id: int = Depends(get_current_user_id),
     db: AsyncSession = Depends(get_async_db),
@@ -130,6 +155,7 @@ async def send_unified_chat_message(
         learning_modes=_csv_values(learning_modes),
         student_interests=_csv_values(student_interests),
         action=action,
+        web_search_requested=web_search_requested,
     )
 
 
@@ -160,6 +186,7 @@ async def _ask_chat_response(
         previous_answer=request.previous_answer,
         previous_sources=request.previous_sources,
         previous_selected_chunks=request.previous_selected_chunks,
+        web_search_requested=request.web_search_requested,
     )
     requested_format = request.answer_format or request.preferred_answer_type or "text"
     media_blocks = list(result.get("media_blocks", []))
@@ -198,25 +225,9 @@ async def _ask_chat_response(
         learning_modes=result.get("learning_modes", ["text"]),
         student_interests=result.get("student_interests", []),
         blocks=[AnswerBlock(**block) for block in result["blocks"]],
-        sources=[
-            ChatSourceResponse(
-                chunk_id=chunk.id,
-                source_id=chunk.source_id,
-                source=chunk.source,
-                source_type=getattr(chunk, "source_type", None),
-                page_number=chunk.page_number,
-                content_type=chunk.content_type,
-                unit_id=getattr(chunk, "unit_id", None),
-                lesson_id=getattr(chunk, "lesson_id", None),
-                quality_status=getattr(chunk, "quality_status", None),
-                quality_warning=getattr(chunk, "quality_warning", None),
-                reviewed_metadata_version=getattr(chunk, "reviewed_metadata_version", None),
-                curriculum_metadata=getattr(chunk, "curriculum_metadata", None),
-                similarity_score=chunk.similarity_score,
-            )
-            for chunk in result["sources"]
-        ],
+        sources=[_chat_source_response(chunk) for chunk in result["sources"]],
         citations=result.get("citations", []),
+        external_sources=result.get("external_sources", []),
         media_blocks=[AnswerBlock(**block) for block in media_blocks],
         source_blocks=[AnswerSourceBlock(**block) for block in result.get("source_blocks", [])],
         page_numbers=result["page_numbers"],

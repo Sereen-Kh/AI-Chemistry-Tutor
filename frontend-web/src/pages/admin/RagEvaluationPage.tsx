@@ -7,6 +7,7 @@ export const RagEvaluationPage = () => {
   const [evaluation, setEvaluation] = useState<RagEvaluationResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [liveAuthorized, setLiveAuthorized] = useState(false);
   const displayValue = (value: unknown) => typeof value === 'object' && value !== null
     ? JSON.stringify(value)
     : String(value);
@@ -27,7 +28,7 @@ export const RagEvaluationPage = () => {
     setLoading(true);
     setError('');
     try {
-      setEvaluation(await adminRagApi.runEvaluation());
+      setEvaluation(await adminRagApi.runEvaluation(liveAuthorized));
     } catch (err) {
       setError(toErrorMessage(err, 'تعذر تشغيل تقييم RAG.'));
     } finally {
@@ -45,8 +46,17 @@ export const RagEvaluationPage = () => {
       {error && <ErrorBanner message={error} />}
 
       <Card>
+        <label className="admin-inline-check">
+          <input
+            type="checkbox"
+            checked={liveAuthorized}
+            onChange={(event) => setLiveAuthorized(event.target.checked)}
+          />
+          أؤكد أن تشغيل التقييم الحي واستخدام مزود التضمين مصرح بهما في هذه البيئة.
+        </label>
+        <p className="admin-muted">يتطلب الخادم أيضاً ضبط RUN_RAG_INTEGRATION=1. تحميل التقرير السابق لا يجري أي اتصال خارجي.</p>
         <div className="guided-card-actions">
-          <Button onClick={runEvaluation} disabled={loading}>{loading ? 'جار التشغيل...' : 'تشغيل التقييم'}</Button>
+          <Button onClick={runEvaluation} disabled={loading || !liveAuthorized}>{loading ? 'جار التشغيل...' : 'تشغيل التقييم الحي'}</Button>
           <Button variant="secondary" onClick={loadLatest} disabled={loading}>تحميل آخر تقرير</Button>
         </div>
       </Card>

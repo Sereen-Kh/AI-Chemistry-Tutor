@@ -75,7 +75,7 @@ export const authApi = {
     }
   },
 
-  async completeOnboarding(preferences: UserPreferences, interestIds: number[]): Promise<UserProfile> {
+  async completeOnboarding(preferences: UserPreferences): Promise<UserProfile> {
     const { data } = await api.patch<UserProfile>('/auth/onboarding', {
       grade: preferences.grade,
       subject: preferences.subject,
@@ -89,7 +89,6 @@ export const authApi = {
       preferred_language: preferences.language,
       goals: preferences.goals || null,
       target_exam_date: preferences.targetExamDate || null,
-      interest_ids: interestIds,
     });
     return data;
   },

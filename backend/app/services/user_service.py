@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.user import User
 from app.models.student_profile import StudentProfile
+from app.services.interest_service import sync_user_interests_async, validate_interest_keys
 from app.services.preference_mapping import apply_user_preference_updates, legacy_teaching_style_from_new
 
 
@@ -18,6 +19,10 @@ async def get_user(db: AsyncSession, user_id: int) -> User:
 
 async def update_user(db: AsyncSession, user_id: int, updates: dict) -> User:
     user = await get_user(db, user_id)
+    interest_keys = None
+    if updates.get("student_interests") is not None:
+        interest_keys = validate_interest_keys(updates["student_interests"])
+        updates = {**updates, "student_interests": interest_keys}
     apply_user_preference_updates(user, updates)
     handled = {
         "teaching_style",
@@ -46,6 +51,13 @@ async def update_user(db: AsyncSession, user_id: int, updates: dict) -> User:
         profile.learning_modes = user.learning_modes
         profile.student_interests = user.student_interests
         profile.preferred_language = user.language
+        if interest_keys is not None:
+            await sync_user_interests_async(
+                db,
+                user=user,
+                profile=profile,
+                interest_keys=interest_keys,
+            )
     await db.commit()
     await db.refresh(user)
     return user

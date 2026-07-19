@@ -105,6 +105,7 @@ class Lesson(Base, TimestampMixin):
         order_by="Topic.order",
     )
     progress_records = relationship("LessonProgress", back_populates="lesson", cascade="all, delete-orphan")
+    study_sessions = relationship("StudySession", back_populates="lesson")
     reels = relationship("Reel", back_populates="lesson", cascade="all, delete-orphan")
     rag_chunks = relationship("RagChunk", back_populates="lesson")
 

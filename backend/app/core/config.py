@@ -32,6 +32,8 @@ class Settings(BaseSettings):
     gemini_semantic_helpers_enabled: bool = False
     gemini_semantic_helper_timeout_seconds: int = 10
     gemini_semantic_helper_retry_attempts: int = 3
+    ask_ai_web_search_enabled: bool = False
+    ask_ai_web_search_timeout_seconds: int = 12
     gemini_document_model: str = "gemini-2.5-flash"
     gemini_document_fallback_model: str = "gemini-2.5-pro,gemini-2.5-flash-lite"
     gemini_embedding_model: str = "gemini-embedding-001"
@@ -42,9 +44,9 @@ class Settings(BaseSettings):
     allow_local_embeddings: bool = False
     local_embedding_model: str = "intfloat/multilingual-e5-base"
     rag_query_logging_enabled: bool = True
-    rag_student_retrieval_enabled: bool = True
+    rag_student_retrieval_enabled: bool = False
     rag_active_reviewed_metadata_version: str = "2026-06-reviewed-v1"
-    rag_require_production_gate: bool = False
+    rag_require_production_gate: bool = True
     rag_evaluation_report_path: str = "data/eval/reports/rag_eval_latest.json"
     rag_qa_report_path: str = "backend/reports/rag_qa_report.json"
     audio_enabled: bool = False

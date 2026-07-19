@@ -56,7 +56,7 @@ class OnboardingRequest(BaseModel):
     teaching_level: TeachingLevel = TeachingLevel.STANDARD
     explanation_method: ExplanationMethod = ExplanationMethod.DIRECT
     learning_modes: list[LearningMode] = Field(default_factory=lambda: [LearningMode.TEXT])
-    student_interests: list[StudentInterest] = Field(default_factory=list)
+    student_interests: list[str] = Field(default_factory=list)
     language: str = "ar"
     preferred_language: str | None = None
     goals: str | None = None
@@ -84,6 +84,7 @@ class UserResponse(BaseModel):
     goals: str | None = None
     target_exam_date: date | None = None
     onboarding_completed: bool
+    learning_memory_enabled: bool = True
     xp: int
     level: int
     streak_days: int

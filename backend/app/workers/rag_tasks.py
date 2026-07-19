@@ -9,7 +9,7 @@ from typing import Any
 from app.database import AsyncSessionLocal, SessionLocal
 from app.models.ingestion import IngestionJob
 from app.services.rag_cache import invalidate_rag_caches
-from app.services.rag_reembed import reembed_rag_chunks
+from app.services.rag_reembed import redact_embedding_error, reembed_rag_chunks
 from app.workers.celery_app import celery_app
 
 
@@ -39,7 +39,7 @@ def _persist_job(
             job.result_json = result
         if errors is not None:
             job.errors_json = errors
-        if status in {"completed", "completed_with_errors", "failed"}:
+        if status in {"completed", "completed_with_errors", "failed", "paused_quota"}:
             job.updated_at = datetime.now(timezone.utc)
         db.commit()
 
@@ -51,8 +51,10 @@ def reembed_rag_chunks_task(
     source_type: str | None = None,
     batch_size: int = 50,
     dry_run: bool = False,
-    force: bool = True,
+    force: bool = False,
     resume_failed: bool = False,
+    resume_after_chunk_id: int | None = None,
+    batch_delay_seconds: float = 0.0,
 ):
     """Re-embed RAG chunks with the configured production embedding model."""
 
@@ -89,6 +91,8 @@ def reembed_rag_chunks_task(
                 dry_run=dry_run,
                 force=force,
                 resume_failed=resume_failed,
+                resume_after_chunk_id=resume_after_chunk_id,
+                batch_delay_seconds=batch_delay_seconds,
                 progress_callback=update_progress,
             )
             payload = result.to_dict()
@@ -109,6 +113,7 @@ def reembed_rag_chunks_task(
         self.update_state(state="SUCCESS", meta={"progress": 100, **payload})
         return {"status": "done", "progress": 100, **payload}
     except Exception as exc:
+        safe_error = redact_embedding_error(exc)
         _persist_job(
             str(self.request.id),
             status="failed",
@@ -116,7 +121,7 @@ def reembed_rag_chunks_task(
             message="re-embedding failed",
             source_id=source_id,
             result={"source_id": source_id, "source_type": source_type},
-            errors=[str(exc)],
+            errors=[safe_error],
         )
-        self.update_state(state="FAILED", meta={"error": str(exc)})
+        self.update_state(state="FAILED", meta={"error": safe_error})
         raise

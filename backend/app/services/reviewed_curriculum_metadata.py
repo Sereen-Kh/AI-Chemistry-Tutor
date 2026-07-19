@@ -187,6 +187,7 @@ def evaluate_chunk_eligibility(
     allowed_source_types = set(contract.get("allowed_source_types") or ["textbook", "solution_book"])
     blocked_statuses = set(contract.get("blocked_quality_statuses") or ["blocked"])
     normalized = _chunk_metadata_dict(chunk)
+    declared_rag_search_allowed = normalized.get("rag_search_allowed")
 
     for field in (
         "source_type",
@@ -263,7 +264,13 @@ def evaluate_chunk_eligibility(
     embedding_allowed = not (
         normalized_quality == "blocked" or invalid_source or empty_content or bool(blocking_missing)
     )
-    rag_search_allowed = embedding_allowed and normalized_quality in {"ready", "needs_review"}
+    rag_search_allowed = (
+        embedding_allowed
+        and normalized_quality in {"ready", "needs_review"}
+        and declared_rag_search_allowed is not False
+    )
+    if declared_rag_search_allowed is False:
+        reason_codes.append("rag_search_disabled")
     student_generation_allowed = embedding_allowed and normalized_quality == "ready" and not legacy_unmapped
     warning_required = rag_search_allowed and normalized_quality == "needs_review"
     if embedding_allowed:

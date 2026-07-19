@@ -11,13 +11,57 @@ from collections.abc import Sequence
 from typing import Iterable
 
 from app.core.config import settings
-from app.services.gemini_client import embedding_config, get_gemini_client
+from app.services.gemini_client import (
+    embedding_config,
+    get_gemini_client,
+    is_gemini_auth_error,
+    is_gemini_quota_error,
+)
 
 EMBEDDING_DIM = settings.embedding_dimension
 logger = logging.getLogger(__name__)
 _GEMINI_DISABLED_REASON: str | None = None
 _LOCAL_MODEL = None
 _LOCAL_MODEL_NAME: str | None = None
+
+GEMINI_EMBEDDING_QUOTA_CODE = "GEMINI_EMBEDDING_QUOTA_EXCEEDED"
+GEMINI_EMBEDDING_AUTH_CODE = "GEMINI_EMBEDDING_AUTH_FAILED"
+GEMINI_EMBEDDING_PROVIDER_CODE = "GEMINI_EMBEDDING_PROVIDER_FAILED"
+
+
+class GeminiEmbeddingQuotaError(RuntimeError):
+    """Preserve a Gemini quota failure across the provider abstraction."""
+
+    def __init__(self) -> None:
+        super().__init__(GEMINI_EMBEDDING_QUOTA_CODE)
+
+
+class GeminiEmbeddingAuthenticationError(RuntimeError):
+    """Preserve a Gemini authentication failure without provider details."""
+
+    def __init__(self) -> None:
+        super().__init__(GEMINI_EMBEDDING_AUTH_CODE)
+
+
+class GeminiEmbeddingProviderError(RuntimeError):
+    """Represent a non-quota Gemini failure with a stable safe message."""
+
+    def __init__(self) -> None:
+        super().__init__(GEMINI_EMBEDDING_PROVIDER_CODE)
+
+
+def _raise_terminal_gemini_error(exc: Exception) -> None:
+    """Raise stable errors that callers can handle without parsing raw payloads."""
+
+    if is_gemini_quota_error(exc):
+        logger.warning("Gemini embedding paused because provider quota was exhausted")
+        raise GeminiEmbeddingQuotaError() from exc
+    if is_gemini_auth_error(exc):
+        logger.warning("Gemini embedding stopped because provider authentication failed")
+        raise GeminiEmbeddingAuthenticationError() from exc
+    if _provider() == "gemini":
+        logger.warning("Gemini embedding provider failed with %s", type(exc).__name__)
+        raise GeminiEmbeddingProviderError() from exc
 
 
 def _fallback_embedding(text: str, dim: int = EMBEDDING_DIM) -> list[float]:
@@ -186,8 +230,9 @@ async def _embed_one(text: str, task_type: str) -> list[float]:
         try:
             return await asyncio.to_thread(_embed_gemini_one, text, task_type)
         except Exception as exc:  # pragma: no cover - external API failure
+            _raise_terminal_gemini_error(exc)
             _disable_gemini_embeddings(exc)
-            logger.exception("Gemini embedding failed: %s", exc)
+            logger.warning("Gemini embedding unavailable in auto mode: %s", type(exc).__name__)
     if provider == "gemini":
         if _hash_embeddings_allowed():
             logger.warning("Using hash embedding fallback because ALLOW_HASH_EMBEDDINGS=true")
@@ -281,8 +326,9 @@ async def embed_batch(texts: Iterable[str], batch_size: int = 100) -> list[list[
                 )
                 continue
             except Exception as exc:  # pragma: no cover - external API failure
+                _raise_terminal_gemini_error(exc)
                 _disable_gemini_embeddings(exc)
-                logger.exception("Gemini batch embedding failed: %s", exc)
+                logger.warning("Gemini batch embedding unavailable in auto mode: %s", type(exc).__name__)
         if provider == "gemini":
             if _hash_embeddings_allowed():
                 logger.warning("Using hash embedding fallback because ALLOW_HASH_EMBEDDINGS=true")

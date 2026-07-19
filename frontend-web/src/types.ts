@@ -78,6 +78,7 @@ export interface UserPreferences {
   subject: string;
   goals?: string;
   targetExamDate?: string;
+  learningMemoryEnabled: boolean;
 }
 
 export interface UserProfile {
@@ -99,9 +100,19 @@ export interface UserProfile {
   goals?: string | null;
   target_exam_date?: string | null;
   onboarding_completed?: boolean;
+  learning_memory_enabled?: boolean;
   xp: number;
   level: number;
   streak_days: number;
+}
+
+export interface ExternalSourceCitation {
+  title: string;
+  url: string;
+  domain: string;
+  cited_text?: string | null;
+  start_index?: number | null;
+  end_index?: number | null;
 }
 
 export interface InterestCategory {
@@ -117,11 +128,15 @@ export interface SourceCitation {
   page: number | null;
   chunk_id: string | number;
   quote?: string;
+  content_type?: string;
   score?: number;
   source_type?: string;
   unit_id?: string | number | null;
   lesson_id?: string | number | null;
   quality_status?: string | null;
+  quality_warning?: string | null;
+  printed_page_start?: number | null;
+  printed_page_end?: number | null;
   reviewed_metadata_version?: string | null;
   curriculum_metadata?: Record<string, unknown> | null;
 }
@@ -149,6 +164,7 @@ export interface AiAskRequest {
   previous_answer?: string;
   previous_sources?: SourceCitation[];
   previous_selected_chunks?: Record<string, unknown>[];
+  web_search_requested?: boolean;
 }
 
 export interface AiAskResponse {
@@ -165,6 +181,8 @@ export interface AiAskResponse {
   media_blocks?: Array<Record<string, unknown>>;
   answer_type?: string;
   route?: string;
+  grounding?: 'book' | 'general_tutor' | 'web' | string;
+  external_sources?: ExternalSourceCitation[];
   diagnostics?: Record<string, unknown>;
   audio_url?: string;
   audio_status?: 'not_required' | 'processing' | 'ready' | 'failed' | null;
@@ -204,6 +222,7 @@ export interface ChatMessageResponse {
   voice_id?: string | null;
   sources?: Array<Record<string, unknown>>;
   citations?: Array<Record<string, unknown>>;
+  external_sources?: ExternalSourceCitation[];
   blocks?: Array<Record<string, unknown>>;
   media_blocks?: Array<Record<string, unknown>>;
   source_blocks?: Array<Record<string, unknown>>;
@@ -248,6 +267,7 @@ export interface SendSessionMessageRequest {
   learning_modes?: LearningMode[];
   student_interests?: StudentInterest[];
   action?: AiAskRequest['action'];
+  webSearchRequested?: boolean;
 }
 
 export interface LessonItem {

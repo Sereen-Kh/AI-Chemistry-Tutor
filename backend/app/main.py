@@ -10,6 +10,7 @@ import app.models  # noqa: F401
 from app.api.router import api_router
 from app.core.config import PROJECT_DIR, settings
 from app.core.middleware import RateLimitMiddleware
+from app.core.redis import close_redis_pool
 from app.database import SessionLocal, init_sqlite_schema_for_dev
 from app.schemas.common import HealthResponse
 from app.services.rag_cache import invalidate_rag_caches
@@ -33,8 +34,11 @@ async def lifespan(app: FastAPI):
             assert_database_activation_ready(db)
     if settings.rag_require_production_gate or not student_retrieval_is_enabled():
         await invalidate_rag_caches()
-    yield
-    logger.info("Shutting down EduMind API...")
+    try:
+        yield
+    finally:
+        await close_redis_pool()
+        logger.info("Shutting down EduMind API...")
 
 # PostgreSQL migrations are handled by Alembic. Local SQLite dev startup
 # creates missing tables so Swagger/frontend smoke tests work from any cwd.

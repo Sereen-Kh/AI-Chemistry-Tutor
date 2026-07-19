@@ -6,6 +6,8 @@ import asyncio
 from collections.abc import Callable
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
+import random
+import re
 from typing import Any
 
 from sqlalchemy import func, or_, select
@@ -15,11 +17,14 @@ from app.core.config import settings
 from app.models.textbook import RagChunk
 from app.services.embeddings import (
     EMBEDDING_DIM,
+    GeminiEmbeddingAuthenticationError,
+    GeminiEmbeddingQuotaError,
     current_embedding_model_name,
     embed_document,
     embed_documents_batch,
     embedding_provider_status,
 )
+from app.services.gemini_client import is_gemini_auth_error, is_gemini_quota_error
 from app.services.reviewed_curriculum_metadata import (
     ensure_reviewed_metadata_ready,
     evaluate_chunk_eligibility,
@@ -28,7 +33,27 @@ from app.services.reviewed_curriculum_metadata import (
 
 VALID_EMBEDDING_STATUSES = {"pending", "processing", "completed", "failed", "skipped"}
 EMBEDDING_RETRY_ATTEMPTS = 3
-EMBEDDING_RETRY_BASE_DELAY_SECONDS = 0.25
+EMBEDDING_RETRY_BASE_DELAY_SECONDS = 2.0
+EMBEDDING_RETRY_MAX_DELAY_SECONDS = 60.0
+EMBEDDING_RETRY_JITTER_SECONDS = 0.5
+QUOTA_ERROR_CODE = "GEMINI_EMBEDDING_QUOTA_EXCEEDED"
+AUTH_ERROR_CODE = "GEMINI_EMBEDDING_AUTH_FAILED"
+PROVIDER_ERROR_CODE = "GEMINI_EMBEDDING_PROVIDER_FAILED"
+
+
+class EmbeddingQuotaExceededError(RuntimeError):
+    """Pause a resumable embedding job after a Gemini quota response."""
+
+    def __init__(self, *, retry_after_seconds: float | None = None) -> None:
+        super().__init__(QUOTA_ERROR_CODE)
+        self.retry_after_seconds = retry_after_seconds
+
+
+class EmbeddingAuthenticationError(RuntimeError):
+    """Stop embedding when the configured Gemini credential is rejected."""
+
+    def __init__(self) -> None:
+        super().__init__(AUTH_ERROR_CODE)
 
 
 @dataclass
@@ -39,7 +64,7 @@ class ReembedResult:
     source_id: int | None = None
     source_type: str | None = None
     dry_run: bool = False
-    force: bool = True
+    force: bool = False
     resume_failed: bool = False
     embedding_model: str = ""
     embedding_dimension: int = EMBEDDING_DIM
@@ -57,6 +82,13 @@ class ReembedResult:
     skipped_missing_metadata_count: int = 0
     skipped_blocked_count: int = 0
     skipped_stale_count: int = 0
+    batches_completed: int = 0
+    retry_count: int = 0
+    last_retry_delay_seconds: float | None = None
+    quota_events: int = 0
+    retry_after_seconds: float | None = None
+    stopped_reason: str | None = None
+    batch_delay_seconds: float = 0.0
 
     def to_dict(self) -> dict[str, Any]:
         payload = asdict(self)
@@ -65,6 +97,68 @@ class ReembedResult:
 
 
 ReembedProgress = ReembedResult
+
+
+def _retry_after_seconds(exc: BaseException) -> float | None:
+    """Extract a provider retry delay without retaining raw provider details."""
+
+    for attribute in ("retry_after_seconds", "retry_after", "retry_delay"):
+        value = getattr(exc, attribute, None)
+        if hasattr(value, "total_seconds"):
+            value = value.total_seconds()
+        try:
+            if value is not None:
+                return max(0.0, float(value))
+        except (TypeError, ValueError):
+            pass
+
+    response = getattr(exc, "response", None)
+    headers = getattr(response, "headers", None)
+    if headers:
+        try:
+            raw_header = headers.get("Retry-After") or headers.get("retry-after")
+            if raw_header is not None:
+                return max(0.0, float(raw_header))
+        except (AttributeError, TypeError, ValueError):
+            pass
+
+    text = str(exc)
+    patterns = (
+        r"retry(?:Delay|[-_ ]after| in)?[^0-9]{0,20}([0-9]+(?:\.[0-9]+)?)\s*s",
+        r"'retryDelay'\s*:\s*'([0-9]+(?:\.[0-9]+)?)s'",
+    )
+    for pattern in patterns:
+        match = re.search(pattern, text, flags=re.IGNORECASE)
+        if match:
+            return max(0.0, float(match.group(1)))
+    cause = exc.__cause__ or exc.__context__
+    if cause is not None and cause is not exc:
+        return _retry_after_seconds(cause)
+    return None
+
+
+def redact_embedding_error(exc: BaseException | str) -> str:
+    """Return a stable provider error without credentials or verbose payloads."""
+
+    if isinstance(exc, GeminiEmbeddingQuotaError) or is_gemini_quota_error(exc):
+        return QUOTA_ERROR_CODE
+    if isinstance(exc, GeminiEmbeddingAuthenticationError) or is_gemini_auth_error(exc):
+        return AUTH_ERROR_CODE
+    text = str(exc)
+    api_key = settings.effective_gemini_api_key
+    if api_key:
+        text = text.replace(api_key, "***redacted***")
+    text = re.sub(r"(?i)(api[_ -]?key[=: ]+)[^\s,;&]+", r"\1***redacted***", text)
+    text = " ".join(text.split())
+    return f"{PROVIDER_ERROR_CODE}:{type(exc).__name__}:{text[:300]}"
+
+
+def _retry_delay_seconds(attempt: int) -> float:
+    exponential = min(
+        EMBEDDING_RETRY_MAX_DELAY_SECONDS,
+        EMBEDDING_RETRY_BASE_DELAY_SECONDS * (2**attempt),
+    )
+    return exponential + random.uniform(0.0, EMBEDDING_RETRY_JITTER_SECONDS)
 
 
 def _metadata_with_embedding_model(
@@ -198,6 +292,13 @@ def _validate_batch_size(batch_size: int) -> None:
         raise ValueError("batch_size must be <= 500")
 
 
+def _validate_batch_delay(batch_delay_seconds: float) -> None:
+    if batch_delay_seconds < 0:
+        raise ValueError("batch_delay_seconds must be >= 0")
+    if batch_delay_seconds > 300:
+        raise ValueError("batch_delay_seconds must be <= 300")
+
+
 def _progress_percent(progress: ReembedResult) -> int:
     if progress.total_candidates <= 0:
         return 100
@@ -267,28 +368,55 @@ def _mark_completed(
     )
 
 
-async def _embed_batch_with_retry(texts: list[str], batch_size: int) -> list[list[float]]:
+async def _embed_batch_with_retry(
+    texts: list[str],
+    batch_size: int,
+    *,
+    retry_callback: Callable[[float], None] | None = None,
+) -> list[list[float]]:
     last_error: Exception | None = None
     for attempt in range(EMBEDDING_RETRY_ATTEMPTS):
         try:
             return await embed_documents_batch(texts, batch_size=batch_size)
-        except Exception as exc:  # provider/transient network/quota failures
+        except Exception as exc:  # provider/transient network failures
+            if isinstance(exc, GeminiEmbeddingQuotaError) or is_gemini_quota_error(exc):
+                raise EmbeddingQuotaExceededError(
+                    retry_after_seconds=_retry_after_seconds(exc)
+                ) from exc
+            if isinstance(exc, GeminiEmbeddingAuthenticationError) or is_gemini_auth_error(exc):
+                raise EmbeddingAuthenticationError() from exc
             last_error = exc
             if attempt + 1 < EMBEDDING_RETRY_ATTEMPTS:
-                await asyncio.sleep(EMBEDDING_RETRY_BASE_DELAY_SECONDS * (2**attempt))
+                delay = _retry_delay_seconds(attempt)
+                if retry_callback:
+                    retry_callback(delay)
+                await asyncio.sleep(delay)
     assert last_error is not None
     raise last_error
 
 
-async def _embed_document_with_retry(text: str) -> list[float]:
+async def _embed_document_with_retry(
+    text: str,
+    *,
+    retry_callback: Callable[[float], None] | None = None,
+) -> list[float]:
     last_error: Exception | None = None
     for attempt in range(EMBEDDING_RETRY_ATTEMPTS):
         try:
             return await embed_document(text)
         except Exception as exc:
+            if isinstance(exc, GeminiEmbeddingQuotaError) or is_gemini_quota_error(exc):
+                raise EmbeddingQuotaExceededError(
+                    retry_after_seconds=_retry_after_seconds(exc)
+                ) from exc
+            if isinstance(exc, GeminiEmbeddingAuthenticationError) or is_gemini_auth_error(exc):
+                raise EmbeddingAuthenticationError() from exc
             last_error = exc
             if attempt + 1 < EMBEDDING_RETRY_ATTEMPTS:
-                await asyncio.sleep(EMBEDDING_RETRY_BASE_DELAY_SECONDS * (2**attempt))
+                delay = _retry_delay_seconds(attempt)
+                if retry_callback:
+                    retry_callback(delay)
+                await asyncio.sleep(delay)
     assert last_error is not None
     raise last_error
 
@@ -303,6 +431,7 @@ async def reembed_rag_chunks(
     force: bool = False,
     resume_failed: bool = False,
     resume_after_chunk_id: int | None = None,
+    batch_delay_seconds: float = 0.0,
     progress_callback: Callable[[dict[str, Any]], None] | None = None,
 ) -> ReembedResult:
     """Regenerate embeddings for stored ``rag_chunks`` rows.
@@ -311,6 +440,7 @@ async def reembed_rag_chunks(
     chunks already embedded with the active model, and resume failed/pending rows.
     """
     _validate_batch_size(batch_size)
+    _validate_batch_delay(batch_delay_seconds)
 
     reviewed_metadata = ensure_reviewed_metadata_ready()
     model_name = current_embedding_model_name()
@@ -350,7 +480,39 @@ async def reembed_rag_chunks(
         errors=[],
         reviewed_metadata_version=str(reviewed_metadata.get("version") or ""),
         metadata_ready=True,
+        batch_delay_seconds=batch_delay_seconds,
     )
+
+    def record_retry(delay: float) -> None:
+        progress.retry_count += 1
+        progress.last_retry_delay_seconds = round(delay, 3)
+
+    async def stop_for_provider(
+        *,
+        chunks: list[RagChunk],
+        status: str,
+        reason: str,
+        retry_after_seconds: float | None = None,
+    ) -> ReembedResult:
+        for pending_chunk in chunks:
+            if pending_chunk.embedding_status != "completed":
+                pending_chunk.embedding_status = "pending"
+                pending_chunk.embedding_error = reason
+        progress.status = status
+        progress.stopped_reason = reason
+        progress.retry_after_seconds = retry_after_seconds
+        progress.errors = progress.errors or []
+        progress.errors.append(
+            {
+                "error": reason,
+                "retry_after_seconds": retry_after_seconds,
+            }
+        )
+        await db.commit()
+        progress.progress = _progress_percent(progress)
+        if progress_callback:
+            progress_callback(progress.to_dict())
+        return progress
 
     if dry_run and not hasattr(db, "execute"):
         progress.status = "completed"
@@ -441,41 +603,94 @@ async def reembed_rag_chunks(
             continue
 
         now = datetime.now(timezone.utc)
+        if progress.batches_completed > 0 and batch_delay_seconds > 0:
+            await asyncio.sleep(batch_delay_seconds)
         try:
-            embeddings = await _embed_batch_with_retry([chunk.content for chunk in non_empty_chunks], batch_size=batch_size)
+            embeddings = await _embed_batch_with_retry(
+                [chunk.content for chunk in non_empty_chunks],
+                batch_size=batch_size,
+                retry_callback=record_retry,
+            )
+            if len(embeddings) != len(non_empty_chunks):
+                raise RuntimeError(
+                    f"Embedding provider returned {len(embeddings)} vectors for "
+                    f"{len(non_empty_chunks)} chunks."
+                )
+            bad_dimensions = sorted(
+                {len(embedding) for embedding in embeddings if len(embedding) != EMBEDDING_DIM}
+            )
+            if bad_dimensions:
+                raise RuntimeError(
+                    f"Embedding provider returned dimensions {bad_dimensions}; expected {EMBEDDING_DIM}."
+                )
             for chunk, embedding in zip(non_empty_chunks, embeddings, strict=True):
                 _mark_completed(chunk, embedding, model_name, now, reviewed_metadata)
                 progress.updated += 1
                 progress.processed += 1
                 progress.last_chunk_id = chunk.id
                 last_id = chunk.id
+            progress.batches_completed += 1
+        except EmbeddingQuotaExceededError as quota_exc:
+            progress.quota_events += 1
+            return await stop_for_provider(
+                chunks=non_empty_chunks,
+                status="paused_quota",
+                reason=QUOTA_ERROR_CODE,
+                retry_after_seconds=quota_exc.retry_after_seconds,
+            )
+        except EmbeddingAuthenticationError:
+            return await stop_for_provider(
+                chunks=non_empty_chunks,
+                status="failed",
+                reason=AUTH_ERROR_CODE,
+            )
         except Exception as batch_exc:
             progress.errors = progress.errors or []
             progress.errors.append(
                 {
                     "chunk_id_start": non_empty_chunks[0].id,
                     "chunk_id_end": non_empty_chunks[-1].id,
-                    "error": str(batch_exc),
+                    "error": redact_embedding_error(batch_exc),
                 }
             )
-            for chunk in non_empty_chunks:
+            for chunk_index, chunk in enumerate(non_empty_chunks):
                 try:
-                    embedding = await _embed_document_with_retry(chunk.content)
+                    embedding = await _embed_document_with_retry(
+                        chunk.content,
+                        retry_callback=record_retry,
+                    )
                     _mark_completed(chunk, embedding, model_name, datetime.now(timezone.utc), reviewed_metadata)
                     progress.updated += 1
                     progress.processed += 1
                     progress.last_chunk_id = chunk.id
+                except EmbeddingQuotaExceededError as quota_exc:
+                    progress.quota_events += 1
+                    return await stop_for_provider(
+                        chunks=non_empty_chunks[chunk_index:],
+                        status="paused_quota",
+                        reason=QUOTA_ERROR_CODE,
+                        retry_after_seconds=quota_exc.retry_after_seconds,
+                    )
+                except EmbeddingAuthenticationError:
+                    return await stop_for_provider(
+                        chunks=non_empty_chunks[chunk_index:],
+                        status="failed",
+                        reason=AUTH_ERROR_CODE,
+                    )
                 except Exception as exc:
-                    _record_failure(progress, chunk, str(exc))
+                    safe_error = redact_embedding_error(exc)
+                    _record_failure(progress, chunk, safe_error)
                     if progress.failed > failure_limit:
                         progress.status = "failed"
                         progress.progress = _progress_percent(progress)
                         await db.commit()
                         raise RuntimeError(
-                            f"RAG re-embedding stopped after {progress.failed} failures. Last error: {exc}"
+                            f"RAG re-embedding stopped after {progress.failed} failures. "
+                            f"Last error: {safe_error}"
                         ) from exc
                 finally:
                     last_id = chunk.id
+            progress.batches_completed += 1
 
         await db.commit()
         progress.progress = _progress_percent(progress)
@@ -497,6 +712,7 @@ async def reembed_all_chunks(
     force: bool = True,
     resume_failed: bool = False,
     resume_after_chunk_id: int | None = None,
+    batch_delay_seconds: float = 0.0,
     progress_callback: Callable[[dict[str, Any]], None] | None = None,
 ) -> ReembedResult:
     """Backward-compatible wrapper for earlier hardening tests/tasks."""
@@ -509,5 +725,6 @@ async def reembed_all_chunks(
         force=force,
         resume_failed=resume_failed,
         resume_after_chunk_id=resume_after_chunk_id,
+        batch_delay_seconds=batch_delay_seconds,
         progress_callback=progress_callback,
     )

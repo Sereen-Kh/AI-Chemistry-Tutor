@@ -66,6 +66,7 @@ class ChatMessage(Base, TimestampMixin):
     voice_id: Mapped[str | None] = mapped_column(String(120), nullable=True)
     sources_json: Mapped[list[dict[str, Any]] | None] = mapped_column(JSON, nullable=True)
     citations_json: Mapped[list[dict[str, Any]] | None] = mapped_column(JSON, nullable=True)
+    external_sources_json: Mapped[list[dict[str, Any]] | None] = mapped_column(JSON, nullable=True)
     blocks_json: Mapped[list[dict[str, Any]] | None] = mapped_column(JSON, nullable=True)
     media_blocks_json: Mapped[list[dict[str, Any]] | None] = mapped_column(JSON, nullable=True)
     source_blocks_json: Mapped[list[dict[str, Any]] | None] = mapped_column(JSON, nullable=True)
@@ -82,6 +83,10 @@ class ChatMessage(Base, TimestampMixin):
     @property
     def citations(self) -> list[dict[str, Any]]:
         return self.citations_json or []
+
+    @property
+    def external_sources(self) -> list[dict[str, Any]]:
+        return self.external_sources_json or []
 
     @property
     def blocks(self) -> list[dict[str, Any]]:

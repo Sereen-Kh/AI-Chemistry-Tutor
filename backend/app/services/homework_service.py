@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.homework import Homework
 from app.services import ai_service
 from app.services.rag import retrieve_context, format_context
+from app.services.rag_citations import citation_from_chunk
 from app.services.ocr import get_vision_provider
 
 
@@ -16,25 +17,7 @@ _INSUFFICIENT_CONTEXT = "لم أجد معلومات كافية في المصاد
 
 
 def _source_citation(chunk) -> dict:
-    metadata = chunk.curriculum_metadata if isinstance(chunk.curriculum_metadata, dict) else {}
-    if not metadata and isinstance(chunk.metadata_json, dict):
-        metadata = chunk.metadata_json
-    return {
-        "chunk_id": chunk.id,
-        "source_id": chunk.source_id,
-        "source_type": chunk.source_type,
-        "page_number": chunk.page_number,
-        "printed_page_start": metadata.get("printed_page_start") or chunk.page_number,
-        "printed_page_end": metadata.get("printed_page_end") or chunk.page_number,
-        "unit_id": chunk.unit_id or metadata.get("unit_id"),
-        "lesson_id": chunk.lesson_id or metadata.get("lesson_id"),
-        "content_type": chunk.content_type,
-        "similarity_score": round(float(chunk.similarity_score), 4),
-        "quality_status": chunk.quality_status or metadata.get("quality_status"),
-        "quality_warning": chunk.quality_warning,
-        "reviewed_metadata_version": chunk.reviewed_metadata_version
-        or metadata.get("reviewed_metadata_version"),
-    }
+    return citation_from_chunk(chunk)
 
 
 async def solve_text(db: AsyncSession, user_id: int, problem_text: str, topic_id: int | None = None) -> Homework:

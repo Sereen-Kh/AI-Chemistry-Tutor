@@ -209,7 +209,7 @@ def run() -> int:
                     status_line("embedding distance operator", report["embedding_distance_operator"]),
                     status_line("rag_chunks count", report["rag_chunks_count"]),
                     status_line("embedded chunks", report["embedded_chunks_count"]),
-                    status_line("empty embedding index", not report["embedding_index_empty"]),
+                    status_line("empty embedding index", report["embedding_index_empty"]),
                     status_line("similarity operator works", report["similarity_operator_works"]),
                 ],
             ),

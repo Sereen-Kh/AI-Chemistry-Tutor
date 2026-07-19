@@ -27,6 +27,7 @@ from app.models.reel import Reel  # noqa: F401
 from app.models.rag_logging import RagQueryLog, RetrievedChunkLog  # noqa: F401
 from app.models.student_profile import StudentProfile  # noqa: F401
 from app.models.study_plan import StudyPlan  # noqa: F401
+from app.models.study_session import StudySession  # noqa: F401
 from app.models.textbook import ContentSource, ExtractedQuestion, RagChunk, TextbookChunk  # noqa: F401
 from app.models.topic import Topic  # noqa: F401
 from app.models.user import User  # noqa: F401

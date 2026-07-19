@@ -411,6 +411,8 @@ class RetrievedChunk:
     quality_warning: str | None = None
     reviewed_metadata_version: str | None = None
     curriculum_metadata: dict[str, Any] | None = None
+    embedding_status: str | None = None
+    embedding_model: str | None = None
     similarity_score: float = 0.0
 
 
@@ -832,6 +834,8 @@ def _retrieved_from_chunk(chunk: RagChunk, score: float, decision=None) -> Retri
         quality_warning=quality_warning,
         reviewed_metadata_version=metadata.get("reviewed_metadata_version"),
         curriculum_metadata=metadata,
+        embedding_status=getattr(chunk, "embedding_status", None),
+        embedding_model=getattr(chunk, "embedding_model", None),
         similarity_score=score,
     )
 
@@ -849,18 +853,40 @@ def _retrieval_eligibility(chunk: Any, reviewed_metadata: dict[str, Any] | None)
 
 
 def _production_candidate_allowed(chunk: Any, decision: Any) -> bool:
-    if not settings.rag_require_production_gate:
-        return True
     metadata = decision.normalized_metadata if decision is not None else _metadata_dict(
         getattr(chunk, "metadata_json", None)
     )
     return bool(
         decision
         and decision.rag_search_allowed
+        and metadata.get("rag_search_allowed") is not False
+        and decision.normalized_quality_status in {"ready", "needs_review"}
         and metadata.get("stale") is not True
-        and str(metadata.get("reviewed_metadata_version") or "") == active_reviewed_metadata_version()
-        and getattr(chunk, "embedding_status", "completed") == "completed"
-        and getattr(chunk, "embedding_model", settings.gemini_embedding_model) == settings.gemini_embedding_model
+        and str(metadata.get("reviewed_metadata_version") or "")
+        == active_reviewed_metadata_version()
+        and getattr(chunk, "embedding_status", None) == "completed"
+        and getattr(chunk, "embedding_model", None) == settings.gemini_embedding_model
+    )
+
+
+def cached_retrieved_chunk_allowed(chunk: RetrievedChunk) -> bool:
+    """Reject stale cache payloads that predate the active vector/version contract."""
+
+    metadata = {
+        **_metadata_dict(chunk.metadata_json),
+        **_metadata_dict(chunk.curriculum_metadata),
+    }
+    quality_status = str(chunk.quality_status or metadata.get("quality_status") or "")
+    reviewed_version = str(
+        chunk.reviewed_metadata_version or metadata.get("reviewed_metadata_version") or ""
+    )
+    return bool(
+        quality_status in {"ready", "needs_review"}
+        and metadata.get("rag_search_allowed") is not False
+        and metadata.get("stale") is not True
+        and reviewed_version == active_reviewed_metadata_version()
+        and chunk.embedding_status == "completed"
+        and chunk.embedding_model == settings.gemini_embedding_model
     )
 
 
@@ -952,6 +978,7 @@ async def retrieve_context(
                     not decision
                     or not decision.rag_search_allowed
                     or not _production_candidate_allowed(candidate, decision)
+                    or not cached_retrieved_chunk_allowed(candidate)
                 ):
                     continue
                 candidate.quality_status = decision.normalized_quality_status
@@ -1012,11 +1039,10 @@ async def retrieve_context(
             ContentSource.status.in_(_RETRIEVABLE_SOURCE_STATUSES),
         )
     )
-    if settings.rag_require_production_gate:
-        stmt = stmt.where(
-            RagChunk.embedding_status == "completed",
-            RagChunk.embedding_model == settings.gemini_embedding_model,
-        )
+    stmt = stmt.where(
+        RagChunk.embedding_status == "completed",
+        RagChunk.embedding_model == settings.gemini_embedding_model,
+    )
 
     if unit_id is not None:
         stmt = stmt.where(RagChunk.unit_id == unit_id)

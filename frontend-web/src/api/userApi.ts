@@ -16,6 +16,7 @@ export interface StudentProfileResponse {
   goals?: string | null;
   target_exam_date?: string | null;
   onboarding_completed?: boolean;
+  learning_memory_enabled: boolean;
 }
 
 export const preferencesFromProfile = (
@@ -42,6 +43,7 @@ export const preferencesFromProfile = (
     answerFormat,
     goals: profile.goals ?? '',
     targetExamDate: profile.target_exam_date ?? '',
+    learningMemoryEnabled: profile.learning_memory_enabled ?? true,
   };
 };
 
@@ -56,6 +58,7 @@ const toStudentProfilePayload = (preferences: Partial<UserPreferences>) => ({
   preferred_language: preferences.language,
   goals: preferences.goals || null,
   target_exam_date: preferences.targetExamDate || null,
+  learning_memory_enabled: preferences.learningMemoryEnabled,
 });
 
 export const userApi = {

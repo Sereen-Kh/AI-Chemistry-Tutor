@@ -1,39 +1,12 @@
-from fastapi import (
-    APIRouter,
-    Depends
-)
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
 
-from sqlalchemy.orm import (
-    Session
-)
-
-from app.api.dependencies import (
-    get_db,
-    get_current_user
-)
-
-from app.models.user import (
-    User
-)
-
-from app.schemas.student import (
-    StudentProfileUpdate,
-    StudentProfileResponse
-)
-
-from app.schemas.preference import (
-    PreferenceUpdate,
-    PreferenceResponse
-)
-
-from app.services.student_service import (
-    StudentService
-)
-
-from app.services.preference_service import (
-    PreferenceService
-)
-
+from app.api.dependencies import get_current_user, get_db
+from app.models.user import User
+from app.schemas.preference import PreferenceResponse, PreferenceUpdate
+from app.schemas.student import StudentProfileResponse, StudentProfileUpdate
+from app.services.preference_service import PreferenceService
+from app.services.student_service import StudentService
 
 router = APIRouter(
     prefix="/students",

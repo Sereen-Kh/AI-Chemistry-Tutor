@@ -1,14 +1,9 @@
-import uuid
 from datetime import datetime
+import uuid
 
-from pydantic import (
-    BaseModel,
-    ConfigDict
-)
-
-from app.core.constants import (
-    PreferredLanguage
-)
+from pydantic import BaseModel, ConfigDict
+from app.core.constants import LearningMode, TeachingStyle
+from app.core.constants import PreferredLanguage
 
 
 class StudentProfileUpdate(
@@ -38,6 +33,8 @@ class StudentProfileResponse(
     preferred_language: (
         PreferredLanguage
     )
+    learning_mode: LearningMode | None = None
+    teaching_style: TeachingStyle | None = None
 
     avatar_url: str | None
 

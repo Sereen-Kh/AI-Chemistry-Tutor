@@ -1,31 +1,17 @@
-from contextlib import (
-    asynccontextmanager
-)
+from contextlib import asynccontextmanager
 from os import getenv
 
+from fastapi import FastAPI
+from loguru import logger
 import ngrok
+from sqlalchemy import text
 import uvicorn
 
-from loguru import logger
-
-from fastapi import (
-    FastAPI
-)
-
-from sqlalchemy import text
-
-from app.db.session import (
-    engine
-)
-
-from app.api.auth import (
-    router as auth_router
-)
-
-from app.api.students import (
-    router as student_router
-)
-
+from app.api.auth import router as auth_router
+from app.api.chat import router as chat_router
+from app.api.students import router as student_router
+from app.api.question_router import router as question_router
+from app.db.session import engine   
 
 NGROK_AUTH_TOKEN = getenv(
     "NGROK_AUTH_TOKEN",
@@ -123,14 +109,10 @@ app = FastAPI(
 # Routers
 # --------------------
 
-app.include_router(
-    auth_router
-)
-
-app.include_router(
-    student_router
-)
-
+app.include_router(auth_router)
+app.include_router(student_router)
+app.include_router(chat_router)
+app.include_router(question_router)
 
 # --------------------
 # Health Routes

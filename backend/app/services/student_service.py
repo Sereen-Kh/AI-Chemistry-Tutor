@@ -1,43 +1,18 @@
-from fastapi import (
-    HTTPException
-)
+from fastapi import HTTPException
+from sqlalchemy.orm import Session
+from starlette import status
 
-from sqlalchemy.orm import (
-    Session
-)
-
-from starlette import (
-    status
-)
-
-from app.models.user import (
-    User
-)
-
-from app.repositories.student_repository import (
-    StudentRepository
-)
-
-from app.schemas.student import (
-    StudentProfileUpdate
-)
-
+from app.models.user import User
+from app.repositories.preference_repository import PreferenceRepository
+from app.repositories.student_repository import StudentRepository
+from app.schemas.student import StudentProfileUpdate
+from app.schemas.student import StudentProfileResponse
 
 class StudentService:
 
     @staticmethod
-    def get_profile(
-        db: Session,
-        user: User
-    ):
-
-        profile = (
-            StudentRepository
-            .get_by_user_id(
-                db,
-                user.id
-            )
-        )
+    def get_profile(db: Session, user: User):
+        profile = (StudentRepository.get_by_user_id(db, user.id))
 
         if not profile:
             raise HTTPException(
@@ -49,6 +24,9 @@ class StudentService:
                     "Profile not found"
                 )
             )
+        preference = (PreferenceRepository.get_by_user_id(db,user.id))
+        profile.learning_mode = (preference.learning_mode if preference else None)
+        profile.teaching_style = (preference.teaching_style if preference else None)
 
         return profile
 

@@ -1,70 +1,30 @@
+from datetime import datetime, timedelta
 import hashlib
 import secrets
 from uuid import UUID
-from datetime import (
-    datetime,
-    timedelta
-)
 
-from fastapi import (
-    HTTPException,
-    BackgroundTasks
-)
-
-from sqlalchemy.orm import (
-    Session
-)
-
+from fastapi import BackgroundTasks, HTTPException
+from sqlalchemy.orm import Session
 from starlette import status
 
+from app.core.email import send_reset_email
+from app.core.security import create_access_token, hash_password, verify_password
+from app.models.learning_preference import LearningPreference
+from app.models.password_reset import PasswordResetToken
+from app.models.student_profile import StudentProfile
+from app.models.token_blacklist import BlacklistedToken
 from app.models.user import User
-from app.models.student_profile import (
-    StudentProfile
-)
-from app.models.learning_preference import (
-    LearningPreference
-)
-from app.models.password_reset import (
-    PasswordResetToken
-)
-from app.models.token_blacklist import (
-    BlacklistedToken
-)
-
-from app.repositories.user_repository import (
-    UserRepository
-)
-from app.repositories.student_repository import (
-    StudentRepository
-)
-from app.repositories.preference_repository import (
-    PreferenceRepository
-)
-
-from app.schemas.user import (
-    UserRegister
-)
-
+from app.repositories.preference_repository import PreferenceRepository
+from app.repositories.student_repository import StudentRepository
+from app.repositories.user_repository import UserRepository
 from app.schemas.auth import (
-    UserLogin,
-    TokenResponse,
     ForgotPasswordRequest,
-    ResetPasswordRequest
+    ResetPasswordRequest,
+    TokenResponse,
+    UserLogin,
 )
-
-from app.schemas.response import (
-    MessageResponse
-)
-
-from app.core.security import (
-    hash_password,
-    verify_password,
-    create_access_token
-)
-
-from app.core.email import (
-    send_reset_email
-)
+from app.schemas.response import MessageResponse
+from app.schemas.user import UserRegister
 
 
 class AuthService:
@@ -73,7 +33,7 @@ class AuthService:
     def register(
         db: Session,
         user_data: UserRegister
-    ) -> User:
+    ) -> TokenResponse:
 
         existing_user = (
             UserRepository
@@ -143,7 +103,9 @@ class AuthService:
             preference
         )
 
-        return created_user
+        access_token = create_access_token({"sub": str(created_user.id)})
+
+        return TokenResponse( access_token= access_token)
 
     @staticmethod
     def login(

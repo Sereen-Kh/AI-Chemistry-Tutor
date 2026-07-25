@@ -1,45 +1,18 @@
-from fastapi import (
-    APIRouter,
-    Depends,
-    BackgroundTasks
-)
+from fastapi import APIRouter, BackgroundTasks, Depends
+from fastapi.security import OAuth2PasswordBearer
+from sqlalchemy.orm import Session
 
-from sqlalchemy.orm import (
-    Session
-)
-
-from fastapi.security import (
-    OAuth2PasswordBearer
-)
-
-from app.api.dependencies import (
-    get_db,
-    get_current_user
-)
-
-from app.models.user import (
-    User
-)
-
-from app.schemas.user import (
-    UserRegister,
-    UserResponse
-)
-
+from app.api.dependencies import get_current_user, get_db
+from app.models.user import User
 from app.schemas.auth import (
-    UserLogin,
-    TokenResponse,
     ForgotPasswordRequest,
-    ResetPasswordRequest
+    ResetPasswordRequest,
+    TokenResponse,
+    UserLogin,
 )
-
-from app.schemas.response import (
-    MessageResponse
-)
-
-from app.services.auth_service import (
-    AuthService
-)
+from app.schemas.response import MessageResponse
+from app.schemas.user import UserRegister, UserResponse
+from app.services.auth_service import AuthService
 
 
 router = APIRouter(
@@ -54,59 +27,22 @@ oauth2_scheme = (
 )
 
 
-@router.post(
-    "/register",
-    response_model=UserResponse,
-    status_code=201
-)
-def register(
-    user_data: UserRegister,
-    db: Session = Depends(
-        get_db
-    )
-):
+@router.post("/register", response_model=TokenResponse, status_code=201)
+def register( user_data: UserRegister,
+              db: Session = Depends(get_db)):
 
-    return (
-        AuthService
-        .register(
-            db,
-            user_data
-        )
-    )
+    return (AuthService.register(db, user_data))
 
 
-@router.post(
-    "/login",
-    response_model=TokenResponse
-)
-def login(
-    login_data: UserLogin,
-    db: Session = Depends(
-        get_db
-    )
-):
+@router.post("/login", response_model=TokenResponse)
+def login( login_data: UserLogin,
+           db: Session = Depends(get_db)):
 
-    return (
-        AuthService
-        .login(
-            db,
-            login_data
-        )
-    )
+    return (AuthService.login(db, login_data))
 
 
-@router.get(
-    "/me",
-    response_model=UserResponse
-)
-def get_me(
-    current_user: User = (
-        Depends(
-            get_current_user
-        )
-    )
-):
-
+@router.get("/me",response_model=UserResponse)
+def get_me(current_user: User = (Depends(get_current_user))):
     return current_user
 
 

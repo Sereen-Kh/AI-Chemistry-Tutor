@@ -1,17 +1,8 @@
-import uuid
 from datetime import datetime
+import uuid
 
-from pydantic import (
-    BaseModel,
-    EmailStr,
-    ConfigDict
-)
-
-from app.core.constants import (
-    Gender,
-    UserRole,
-    SubscriptionStatus
-)
+from pydantic import BaseModel, ConfigDict, EmailStr
+from app.core.constants import Gender, SubscriptionStatus, UserRole
 
 
 class UserBase(BaseModel):

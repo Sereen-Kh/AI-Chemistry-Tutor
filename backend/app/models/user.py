@@ -80,3 +80,15 @@ class User(Base):
         "PasswordResetToken",
         cascade="all, delete-orphan"
     )
+
+    conversations = relationship(
+        "Conversation",
+        backref="user",
+        cascade="all, delete-orphan"
+    )
+
+    student_attempts = relationship(
+        "StudentAttempt",
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )

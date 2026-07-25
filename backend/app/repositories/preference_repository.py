@@ -1,10 +1,7 @@
 import uuid
-
 from sqlalchemy.orm import Session
+from app.models.learning_preference import LearningPreference
 
-from app.models.learning_preference import (
-    LearningPreference
-)
 
 
 class PreferenceRepository:
